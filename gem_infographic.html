@@ -355,30 +355,35 @@
 
         <!-- Category Summary -->
         <div class="grid grid-cols-2 md:grid-cols-5 gap-4 my-6">
-            <div class="bg-cyan-glow/10 border border-cyan-glow/30 rounded-lg p-4 text-center hover:bg-cyan-glow/20 transition-colors">
+            <div onclick="showCategoryDrillDown('season')" class="cursor-pointer bg-cyan-glow/10 border border-cyan-glow/30 rounded-lg p-4 text-center hover:bg-cyan-glow/20 transition-all hover:scale-105">
                 <i class="fas fa-trophy text-3xl text-cyan-glow mb-2"></i>
                 <p class="text-2xl font-bold text-white">1,820</p>
                 <p class="text-xs text-cyan-glow uppercase tracking-wider">Season</p>
+                <p class="text-[10px] text-white/40 mt-1">Click for details</p>
             </div>
-            <div class="bg-orange-accent/10 border border-orange-accent/30 rounded-lg p-4 text-center hover:bg-orange-accent/20 transition-colors">
+            <div onclick="showCategoryDrillDown('event')" class="cursor-pointer bg-orange-accent/10 border border-orange-accent/30 rounded-lg p-4 text-center hover:bg-orange-accent/20 transition-all hover:scale-105">
                 <i class="fas fa-dragon text-3xl text-orange-accent mb-2"></i>
                 <p class="text-2xl font-bold text-white">500</p>
                 <p class="text-xs text-orange-accent uppercase tracking-wider">Events</p>
+                <p class="text-[10px] text-white/40 mt-1">Click for details</p>
             </div>
-            <div class="bg-purple-accent/10 border border-purple-accent/30 rounded-lg p-4 text-center hover:bg-purple-accent/20 transition-colors">
+            <div onclick="showCategoryDrillDown('warfare')" class="cursor-pointer bg-purple-accent/10 border border-purple-accent/30 rounded-lg p-4 text-center hover:bg-purple-accent/20 transition-all hover:scale-105">
                 <i class="fas fa-shield-halved text-3xl text-purple-accent mb-2"></i>
                 <p class="text-2xl font-bold text-white">750</p>
                 <p class="text-xs text-purple-accent uppercase tracking-wider">Warfare</p>
+                <p class="text-[10px] text-white/40 mt-1">Click for details</p>
             </div>
-            <div class="bg-yellow-accent/10 border border-yellow-accent/30 rounded-lg p-4 text-center hover:bg-yellow-accent/20 transition-colors">
+            <div onclick="showCategoryDrillDown('daily')" class="cursor-pointer bg-yellow-accent/10 border border-yellow-accent/30 rounded-lg p-4 text-center hover:bg-yellow-accent/20 transition-all hover:scale-105">
                 <i class="fas fa-calendar-day text-3xl text-yellow-accent mb-2"></i>
                 <p class="text-2xl font-bold text-white">1,100</p>
                 <p class="text-xs text-yellow-accent uppercase tracking-wider">Daily/Weekly</p>
+                <p class="text-[10px] text-white/40 mt-1">Click for details</p>
             </div>
-            <div class="bg-green-accent/10 border border-green-accent/30 rounded-lg p-4 text-center hover:bg-green-accent/20 transition-colors">
+            <div onclick="showCategoryDrillDown('code')" class="cursor-pointer bg-green-accent/10 border border-green-accent/30 rounded-lg p-4 text-center hover:bg-green-accent/20 transition-all hover:scale-105">
                 <i class="fas fa-gift text-3xl text-green-accent mb-2"></i>
                 <p class="text-2xl font-bold text-white">300</p>
                 <p class="text-xs text-green-accent uppercase tracking-wider">Code</p>
+                <p class="text-[10px] text-white/40 mt-1">Click for details</p>
             </div>
         </div>
 
@@ -757,6 +762,27 @@
             </div>
         </div>
 
+        <!-- Drill-Down Modal -->
+        <div id="drilldownModal" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeDrillDown()"></div>
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-[rgba(10,35,60,0.98)] border-2 border-cyan-glow/40 rounded-2xl p-6 shadow-[0_0_60px_rgba(0,229,255,0.3)]">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-3">
+                        <div id="drilldownIcon" class="w-10 h-10 rounded-lg flex items-center justify-center"></div>
+                        <div>
+                            <h3 id="drilldownTitle" class="text-2xl font-bold text-white uppercase"></h3>
+                            <p id="drilldownTotal" class="text-cyan-glow text-lg font-bold"></p>
+                        </div>
+                    </div>
+                    <button onclick="closeDrillDown()" class="text-white/60 hover:text-white text-2xl">&times;</button>
+                </div>
+                <div id="drilldownContent" class="space-y-3 max-h-64 overflow-y-auto"></div>
+                <button onclick="closeDrillDown()" class="w-full mt-4 py-2 bg-cyan-glow/20 border border-cyan-glow/30 text-cyan-glow rounded-lg hover:bg-cyan-glow/30 transition-colors">
+                    Close
+                </button>
+            </div>
+        </div>
+
         <!-- Contributors -->
         <div class="border-t border-white/10 mt-8 pt-6 text-center">
             <p class="text-white/60 text-xs uppercase tracking-widest mb-3">Contributors</p>
@@ -830,6 +856,103 @@
                 }
             });
         }
+
+        const categoryData = {
+            season: {
+                title: 'Season Rewards',
+                icon: 'fa-trophy',
+                color: 'cyan-glow',
+                bgColor: 'bg-cyan-glow',
+                total: 1820,
+                rewards: [
+                    { name: 'Elite League I', gems: 810, desc: 'Highest tier season finish', pct: '44.5%' },
+                    { name: 'Invincible League', gems: 560, desc: 'Rank 38 leaderboard', pct: '30.8%' },
+                    { name: 'Elite League II', gems: 450, desc: 'Rank 86 leaderboard', pct: '24.7%' }
+                ]
+            },
+            event: {
+                title: 'Event Rewards',
+                icon: 'fa-dragon',
+                color: 'orange-accent',
+                bgColor: 'bg-orange-accent',
+                total: 500,
+                rewards: [
+                    { name: 'The Long Haul', gems: 300, desc: 'Top 5% event ranking', pct: '60%' },
+                    { name: "Earth's Defenders", gems: 200, desc: 'Top 10% event ranking', pct: '40%' }
+                ]
+            },
+            warfare: {
+                title: 'Warfare Rewards',
+                icon: 'fa-shield-halved',
+                color: 'purple-accent',
+                bgColor: 'bg-purple-accent',
+                total: 750,
+                rewards: [
+                    { name: 'Warfare Battles', gems: 750, desc: '150 gems × 5 battles per 2 weeks', pct: '100%' }
+                ]
+            },
+            daily: {
+                title: 'Daily/Weekly Rewards',
+                icon: 'fa-calendar-day',
+                color: 'yellow-accent',
+                bgColor: 'bg-yellow-accent',
+                total: 1100,
+                rewards: [
+                    { name: 'Weekly Reward', gems: 400, desc: 'Weekly login bonus', pct: '36.4%' },
+                    { name: 'Daily Login', gems: 700, desc: '100 gems × 7 days per week', pct: '63.6%' }
+                ]
+            },
+            code: {
+                title: 'Promo Code',
+                icon: 'fa-gift',
+                color: 'green-accent',
+                bgColor: 'bg-green-accent',
+                total: 300,
+                rewards: [
+                    { name: 'Code: 30KGTG', gems: 300, desc: 'One-time redemption', pct: '100%' }
+                ]
+            }
+        };
+
+        function showCategoryDrillDown(category) {
+            const data = categoryData[category];
+            const modal = document.getElementById('drilldownModal');
+            const iconEl = document.getElementById('drilldownIcon');
+            const titleEl = document.getElementById('drilldownTitle');
+            const totalEl = document.getElementById('drilldownTotal');
+            const contentEl = document.getElementById('drilldownContent');
+            
+            iconEl.className = `w-10 h-10 rounded-lg flex items-center justify-center ${data.bgColor}/20`;
+            iconEl.innerHTML = `<i class="fas ${data.icon} text-${data.color} text-xl"></i>`;
+            titleEl.textContent = data.title;
+            titleEl.className = `text-2xl font-bold text-${data.color} uppercase`;
+            totalEl.textContent = data.total.toLocaleString() + ' Gems';
+            
+            contentEl.innerHTML = data.rewards.map(r => `
+                <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+                    <div>
+                        <p class="text-white font-bold">${r.name}</p>
+                        <p class="text-white/50 text-sm">${r.desc}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-${data.color} font-bold text-lg">${r.gems.toLocaleString()}</p>
+                        <p class="text-white/40 text-xs">${r.pct}</p>
+                    </div>
+                </div>
+            `).join('');
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrillDown() {
+            document.getElementById('drilldownModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeDrillDown();
+        });
 
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
