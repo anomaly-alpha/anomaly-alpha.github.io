@@ -211,11 +211,36 @@
             border-color: rgba(0, 229, 255, 0.5);
         }
         .light-mode .card-hover {
-            background: rgba(0, 229, 255, 0.1);
+            background: rgba(0, 229, 255, 0.15);
             color: #1a202c;
         }
         .light-mode .text-white {
             color: #1a202c;
+        }
+        .light-mode .bg-cyan-glow\/8,
+        .light-mode .bg-orange-accent\/8,
+        .light-mode .bg-purple-accent\/8,
+        .light-mode .bg-yellow-accent\/8,
+        .light-mode .bg-green-accent\/8,
+        .light-mode .bg-pink-glow\/15,
+        .light-mode .bg-pink-glow\/8 {
+            background: rgba(0, 229, 255, 0.2);
+        }
+        .light-mode .text-white\/60,
+        .light-mode .text-white\/40,
+        .light-mode .text-white\/80 {
+            color: rgba(26, 32, 44, 0.7);
+        }
+        .light-mode .border-white\/10 {
+            border-color: rgba(26, 32, 44, 0.1);
+        }
+        .light-mode .border-white\/30 {
+            border-color: rgba(26, 32, 44, 0.3);
+        }
+        .light-mode .tooltip {
+            background: rgba(240, 244, 248, 0.98);
+            color: #1a202c;
+            border-color: rgba(0, 229, 255, 0.5);
         }
     </style>
 </head>
@@ -244,24 +269,7 @@
         <div class="particle" style="left: 90%; animation-duration: 19s; animation-delay: 1s;"></div>
     </div>
 
-    <!-- Filter Buttons -->
-    <div class="fixed top-4 left-4 z-50 flex gap-2 flex-wrap max-w-xs">
-        <button onclick="filterCards('all')" class="px-3 py-2 rounded-full bg-cyan-glow/20 border border-cyan-glow/30 text-cyan-glow text-xs hover:bg-cyan-glow/30 transition-colors filter-btn active">
-            All
-        </button>
-        <button onclick="filterCards('season')" class="px-3 py-2 rounded-full bg-cyan-glow/10 border border-cyan-glow/20 text-cyan-glow text-xs hover:bg-cyan-glow/20 transition-colors filter-btn">
-            Season
-        </button>
-        <button onclick="filterCards('event')" class="px-3 py-2 rounded-full bg-orange-accent/10 border border-orange-accent/20 text-orange-accent text-xs hover:bg-orange-accent/20 transition-colors filter-btn">
-            Event
-        </button>
-        <button onclick="filterCards('warfare')" class="px-3 py-2 rounded-full bg-purple-accent/10 border border-purple-accent/20 text-purple-accent text-xs hover:bg-purple-accent/20 transition-colors filter-btn">
-            Warfare
-        </button>
-        <button onclick="filterCards('daily')" class="px-3 py-2 rounded-full bg-yellow-accent/10 border border-yellow-accent/20 text-yellow-accent text-xs hover:bg-yellow-accent/20 transition-colors filter-btn">
-            Daily
-        </button>
-    </div>
+    
 
     <div class="relative bg-gradient-to-br from-[rgba(10,35,60,0.98)] to-[rgba(5,15,30,0.99)] border-2 border-cyan-glow/30 rounded-3xl p-8 md:p-12 max-w-7xl shadow-[0_0_60px_rgba(0,229,255,0.2),inset_0_0_80px_rgba(0,229,255,0.05)]">
         
@@ -326,6 +334,73 @@
             </div>
         </div>
 
+        <!-- Unified Modes & Countdowns Card -->
+        <div class="border-t border-cyan-glow/20 pt-6 mt-8">
+            <div class="bg-gradient-to-br from-[rgba(10,35,60,0.6)] to-[rgba(5,15,30,0.8)] border border-cyan-glow/20 rounded-xl p-5">
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <!-- Mode Filters -->
+                    <div class="flex-1">
+                        <h3 class="text-center text-cyan-glow text-sm uppercase tracking-widest mb-3">
+                            <i class="fas fa-layer-group mr-2"></i>Modes
+                        </h3>
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <button onclick="filterCards('all', event)" class="px-4 py-2 rounded-full bg-cyan-glow/20 border border-cyan-glow/30 text-cyan-glow text-xs hover:bg-cyan-glow/30 transition-colors filter-btn filter-all active">
+                                <i class="fas fa-th-large mr-1"></i>All
+                            </button>
+                            <button onclick="filterCards('season', event)" class="px-4 py-2 rounded-full bg-cyan-glow/10 border border-cyan-glow/20 text-cyan-glow text-xs hover:bg-cyan-glow/20 transition-colors filter-btn filter-season">
+                                <i class="fas fa-trophy mr-1"></i>Season
+                            </button>
+                            <button onclick="filterCards('event', event)" class="px-4 py-2 rounded-full bg-orange-accent/10 border border-orange-accent/20 text-orange-accent text-xs hover:bg-orange-accent/20 transition-colors filter-btn filter-event">
+                                <i class="fas fa-dragon mr-1"></i>Event
+                            </button>
+                            <button onclick="filterCards('warfare', event)" class="px-4 py-2 rounded-full bg-purple-accent/10 border border-purple-accent/20 text-purple-accent text-xs hover:bg-purple-accent/20 transition-colors filter-btn filter-warfare">
+                                <i class="fas fa-shield-halved mr-1"></i>Warfare
+                            </button>
+                            <button onclick="filterCards('daily', event)" class="px-4 py-2 rounded-full bg-yellow-accent/10 border border-yellow-accent/20 text-yellow-accent text-xs hover:bg-yellow-accent/20 transition-colors filter-btn filter-daily">
+                                <i class="fas fa-calendar-day mr-1"></i>Daily
+                            </button>
+                            <button onclick="filterCards('code', event)" class="px-4 py-2 rounded-full bg-green-accent/10 border border-green-accent/20 text-green-accent text-xs hover:bg-green-accent/20 transition-colors filter-btn filter-code">
+                                <i class="fas fa-gift mr-1"></i>Code
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Countdowns -->
+                    <div class="flex-1 border-t lg:border-t-0 lg:border-l border-cyan-glow/20 pt-4 lg:pt-0 lg:pl-6">
+                        <h3 class="text-center text-cyan-glow text-sm uppercase tracking-widest mb-3">
+                            <i class="fas fa-stopwatch mr-2"></i>Countdowns
+                        </h3>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+                            <div class="bg-yellow-accent/10 border border-yellow-accent/30 rounded-lg p-2 text-center">
+                                <i class="fas fa-sun text-yellow-accent text-sm mb-1"></i>
+                                <p class="text-[10px] text-white/60 uppercase">Daily</p>
+                                <p class="text-lg font-bold text-white" id="countdown-daily">--:--</p>
+                            </div>
+                            <div class="bg-yellow-accent/10 border border-yellow-accent/30 rounded-lg p-2 text-center">
+                                <i class="fas fa-calendar-week text-yellow-accent text-sm mb-1"></i>
+                                <p class="text-[10px] text-white/60 uppercase">Weekly</p>
+                                <p class="text-lg font-bold text-white" id="countdown-weekly">--:--</p>
+                            </div>
+                            <div class="bg-purple-accent/10 border border-purple-accent/30 rounded-lg p-2 text-center">
+                                <i class="fas fa-shield-halved text-purple-accent text-sm mb-1"></i>
+                                <p class="text-[10px] text-white/60 uppercase">Warfare</p>
+                                <p class="text-lg font-bold text-white" id="countdown-warfare">--:--</p>
+                            </div>
+                            <div class="bg-cyan-glow/10 border border-cyan-glow/30 rounded-lg p-2 text-center">
+                                <i class="fas fa-globe text-cyan-glow text-sm mb-1"></i>
+                                <p class="text-[10px] text-white/60 uppercase">Multiverse</p>
+                                <p class="text-lg font-bold text-white" id="countdown-multiverse">--:--</p>
+                            </div>
+                            <div class="bg-orange-accent/10 border border-orange-accent/30 rounded-lg p-2 text-center">
+                                <i class="fas fa-ghost text-orange-accent text-sm mb-1"></i>
+                                <p class="text-[10px] text-white/60 uppercase">Nightmares</p>
+                                <p class="text-lg font-bold text-white" id="countdown-nightmares">--:--</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-10">
             
@@ -346,7 +421,7 @@
                     <p class="text-white/60 text-sm">Highest tier season completion</p>
                     <span class="inline-block bg-cyan-glow/10 text-cyan-glow text-xs px-2 py-1 rounded mt-2 border border-cyan-glow/30">25.2% of total</span>
                 </div>
-                <div class="tooltip -top-16 left-1/2 -translate-x-1/2">
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
                     Season finish reward - Highest tier
                 </div>
             </div>
@@ -368,7 +443,7 @@
                     <p class="text-white/60 text-sm">Leaderboard rank 38</p>
                     <span class="inline-block bg-cyan-glow/10 text-cyan-glow text-xs px-2 py-1 rounded mt-2 border border-cyan-glow/30">17.4% of total</span>
                 </div>
-                <div class="tooltip -top-16 left-1/2 -translate-x-1/2">
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
                     Leaderboard position 38
                 </div>
             </div>
@@ -390,7 +465,7 @@
                     <p class="text-white/60 text-sm">Leaderboard rank 86</p>
                     <span class="inline-block bg-cyan-glow/10 text-cyan-glow text-xs px-2 py-1 rounded mt-2 border border-cyan-glow/30">14.0% of total</span>
                 </div>
-                <div class="tooltip -top-16 left-1/2 -translate-x-1/2">
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
                     Leaderboard position 86
                 </div>
             </div>
@@ -419,7 +494,7 @@
                     <p class="text-white/60 text-sm">Per cycle (bi-weekly)</p>
                     <span class="inline-block bg-purple-accent/10 text-purple-accent text-xs px-2 py-1 rounded mt-2 border border-purple-accent/30">23.3% of total</span>
                 </div>
-                <div class="tooltip -top-16 left-1/2 -translate-x-1/2">
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
                     150 gems × 5 battles
                 </div>
             </div>
@@ -441,7 +516,7 @@
                     <p class="text-white/60 text-sm">Elite event ranking</p>
                     <span class="inline-block bg-orange-accent/10 text-orange-accent text-xs px-2 py-1 rounded mt-2 border border-orange-accent/30">9.3% of total</span>
                 </div>
-                <div class="tooltip -top-16 left-1/2 -translate-x-1/2">
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
                     Top 5% event ranking
                 </div>
             </div>
@@ -462,7 +537,7 @@
                     <p class="text-white/60 text-sm">Code: 30KGTG</p>
                     <span class="inline-block bg-green-accent/10 text-green-accent text-xs px-2 py-1 rounded mt-2 border border-green-accent/30">9.3% of total</span>
                 </div>
-                <div class="tooltip -top-16 left-1/2 -translate-x-1/2">
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
                     Click to copy code
                 </div>
             </div>
@@ -483,7 +558,7 @@
                     <p class="text-white/60 text-sm">Weekly login bonus</p>
                     <span class="inline-block bg-yellow-accent/10 text-yellow-accent text-xs px-2 py-1 rounded mt-2 border border-yellow-accent/30">10.2% of total</span>
                 </div>
-                <div class="tooltip -top-16 left-1/2 -translate-x-1/2">
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
                     Received weekly
                 </div>
             </div>
@@ -505,7 +580,7 @@
                     <p class="text-white/60 text-sm">Event ranking reward</p>
                     <span class="inline-block bg-orange-accent/10 text-orange-accent text-xs px-2 py-1 rounded mt-2 border border-orange-accent/30">6.2% of total</span>
                 </div>
-                <div class="tooltip -top-16 left-1/2 -translate-x-1/2">
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
                     Top 10% event ranking
                 </div>
             </div>
@@ -534,7 +609,7 @@
                     <p class="text-white/60 text-sm">Per week (daily login)</p>
                     <span class="inline-block bg-yellow-accent/10 text-yellow-accent text-xs px-2 py-1 rounded mt-2 border border-yellow-accent/30">21.7% of total</span>
                 </div>
-                <div class="tooltip -top-16 left-1/2 -translate-x-1/2">
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
                     100 gems × 7 days
                 </div>
             </div>
@@ -545,7 +620,7 @@
         <div class="bg-purple-accent/15 border border-purple-accent/30 rounded-lg p-5 mt-8 text-center">
             <p class="text-white/80 text-sm mb-2"><span class="text-purple-accent font-bold">WARFARE CYCLE:</span> 5 battles every 2 weeks = 750 gems per cycle</p>
             <p class="text-white/80 text-sm"><span class="text-purple-accent font-bold">DAILY LOGIN:</span> 100 gems × 7 days = 700 gems per week</p>
-            <p class="text-white/80 text-sm mt-2"><span class="text-cyan-glow font-bold">TOTAL SHOWN:</span> 3,920 gems (one-time + recurring)</p>
+            <p class="text-white/80 text-sm mt-2"><span class="text-cyan-glow font-bold">TOTAL SHOWN:</span> 4,470 gems (one-time + recurring)</p>
         </div>
 
         <!-- Legend -->
@@ -573,14 +648,22 @@
         </div>
 
         <!-- Charts -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10 pt-8 border-t border-cyan-glow/20">
-            <div class="bg-[rgba(10,35,60,0.5)] rounded-xl p-4">
-                <h4 class="text-white text-center uppercase tracking-wider mb-4">Gem Distribution by Category</h4>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-10 pt-8 border-t border-cyan-glow/20">
+            <div class="bg-[rgba(10,35,60,0.5)] rounded-xl p-3">
+                <h4 class="text-white text-center uppercase tracking-wider text-xs mb-2">Distribution</h4>
                 <canvas id="categoryChart"></canvas>
             </div>
-            <div class="bg-[rgba(10,35,60,0.5)] rounded-xl p-4">
-                <h4 class="text-white text-center uppercase tracking-wider mb-4">Individual Rewards</h4>
+            <div class="bg-[rgba(10,35,60,0.5)] rounded-xl p-3">
+                <h4 class="text-white text-center uppercase tracking-wider text-xs mb-2">Rewards</h4>
                 <canvas id="rewardsChart"></canvas>
+            </div>
+            <div class="bg-[rgba(10,35,60,0.5)] rounded-xl p-3">
+                <h4 class="text-white text-center uppercase tracking-wider text-xs mb-2">Performance</h4>
+                <canvas id="spiderChart"></canvas>
+            </div>
+            <div class="bg-[rgba(10,35,60,0.5)] rounded-xl p-3">
+                <h4 class="text-white text-center uppercase tracking-wider text-xs mb-2">Progress</h4>
+                <canvas id="lineChart"></canvas>
             </div>
         </div>
 
@@ -605,16 +688,48 @@
             setTimeout(() => feedback.remove(), 2000);
         }
 
-        function filterCards(category) {
+        function filterCards(category, evt) {
             const cards = document.querySelectorAll('[data-category]');
             const buttons = document.querySelectorAll('.filter-btn');
             
             buttons.forEach(btn => {
-                btn.classList.remove('bg-cyan-glow/20', 'border-cyan-glow/30');
-                btn.classList.add('bg-cyan-glow/10', 'border-cyan-glow/20');
+                btn.classList.remove('active');
+                if (btn.classList.contains('filter-all')) {
+                    btn.classList.remove('bg-cyan-glow/20', 'border-cyan-glow/30');
+                    btn.classList.add('bg-cyan-glow/10', 'border-cyan-glow/20');
+                } else if (btn.classList.contains('filter-season')) {
+                    btn.classList.remove('bg-cyan-glow/20', 'border-cyan-glow/30');
+                    btn.classList.add('bg-cyan-glow/10', 'border-cyan-glow/20');
+                } else if (btn.classList.contains('filter-event')) {
+                    btn.classList.remove('bg-orange-accent/20', 'border-orange-accent/30');
+                    btn.classList.add('bg-orange-accent/10', 'border-orange-accent/20');
+                } else if (btn.classList.contains('filter-warfare')) {
+                    btn.classList.remove('bg-purple-accent/20', 'border-purple-accent/30');
+                    btn.classList.add('bg-purple-accent/10', 'border-purple-accent/20');
+                } else if (btn.classList.contains('filter-daily')) {
+                    btn.classList.remove('bg-yellow-accent/20', 'border-yellow-accent/30');
+                    btn.classList.add('bg-yellow-accent/10', 'border-yellow-accent/20');
+                } else if (btn.classList.contains('filter-code')) {
+                    btn.classList.remove('bg-green-accent/20', 'border-green-accent/30');
+                    btn.classList.add('bg-green-accent/10', 'border-green-accent/20');
+                }
             });
-            event.target.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
-            event.target.classList.add('bg-cyan-glow/20', 'border-cyan-glow/30');
+            
+            const targetBtn = evt.currentTarget;
+            targetBtn.classList.add('active');
+            targetBtn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20', 'bg-orange-accent/10', 'border-orange-accent/20', 'bg-purple-accent/10', 'border-purple-accent/20', 'bg-yellow-accent/10', 'border-yellow-accent/20', 'bg-green-accent/10', 'border-green-accent/20');
+            
+            if (targetBtn.classList.contains('filter-all') || targetBtn.classList.contains('filter-season')) {
+                targetBtn.classList.add('bg-cyan-glow/20', 'border-cyan-glow/30');
+            } else if (targetBtn.classList.contains('filter-event')) {
+                targetBtn.classList.add('bg-orange-accent/20', 'border-orange-accent/30');
+            } else if (targetBtn.classList.contains('filter-warfare')) {
+                targetBtn.classList.add('bg-purple-accent/20', 'border-purple-accent/30');
+            } else if (targetBtn.classList.contains('filter-daily')) {
+                targetBtn.classList.add('bg-yellow-accent/20', 'border-yellow-accent/30');
+            } else if (targetBtn.classList.contains('filter-code')) {
+                targetBtn.classList.add('bg-green-accent/20', 'border-green-accent/30');
+            }
             
             cards.forEach(card => {
                 if (category === 'all' || card.dataset.category === category) {
@@ -639,7 +754,7 @@
 
         function exportData() {
             const data = {
-                totalGems: 3920,
+                totalGems: 4470,
                 categories: {
                     season: 1820,
                     events: 500,
@@ -670,7 +785,7 @@
         }
 
         function animateCounter() {
-            const target = 3920;
+            const target = 4470;
             const duration = 1500;
             const step = target / (duration / 16);
             let current = 0;
@@ -685,6 +800,88 @@
                 counter.textContent = Math.floor(current).toLocaleString();
             }, 16);
         }
+
+// ═══════════════════════════════════════════════════════════════
+        // COUNTDOWN TIMER CONFIGURATION
+        // ═══════════════════════════════════════════════════════════════
+        // Edit these target dates to adjust countdown times
+        // Format: new Date('YYYY-MM-DDTHH:MM:00')
+        const COUNTDOWN_TARGETS = {
+            warfare: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+            weekly: getNextSunday(),
+            daily: getNextDailyReset(),
+            multiverseArena: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            cecilNightmares: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+        };
+
+        function getNextSunday() {
+            const now = new Date();
+            const nextSunday = new Date(now);
+            nextSunday.setDate(now.getDate() + (7 - now.getDay()) % 7);
+            nextSunday.setHours(20, 0, 0, 0);
+            if (nextSunday <= now) {
+                nextSunday.setDate(nextSunday.getDate() + 7);
+            }
+            return nextSunday;
+        }
+
+        function getNextDailyReset() {
+            const now = new Date();
+            const targetHour = 20;
+            const targetMinute = 0;
+            
+            const estOffset = -4 * 60 * 60 * 1000;
+            const estNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000) + estOffset);
+            
+            const nextReset = new Date(now);
+            if (estNow.getHours() >= targetHour || (estNow.getHours() === targetHour && estNow.getMinutes() >= targetMinute)) {
+                nextReset.setDate(nextReset.getDate() + 1);
+            }
+            nextReset.setHours(targetHour - now.getTimezoneOffset() / 60, targetMinute, 0, 0);
+            
+            return nextReset;
+        }
+
+        function formatCountdown(distance) {
+            if (distance < 0) return "NOW!";
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            if (days > 0) {
+                return `${days}d ${hours}h`;
+            } else if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            } else if (minutes > 0) {
+                return `${minutes}m ${seconds}s`;
+            } else {
+                return `${seconds}s`;
+            }
+        }
+
+        function updateCountdowns() {
+            const now = new Date();
+            
+            const dailyMs = COUNTDOWN_TARGETS.daily.getTime() - now.getTime();
+            document.getElementById('countdown-daily').textContent = formatCountdown(dailyMs);
+            
+            const weeklyMs = COUNTDOWN_TARGETS.weekly.getTime() - now.getTime();
+            document.getElementById('countdown-weekly').textContent = formatCountdown(weeklyMs);
+            
+            const warfareMs = COUNTDOWN_TARGETS.warfare.getTime() - now.getTime();
+            document.getElementById('countdown-warfare').textContent = formatCountdown(warfareMs);
+            
+            const multiverseMs = COUNTDOWN_TARGETS.multiverseArena.getTime() - now.getTime();
+            document.getElementById('countdown-multiverse').textContent = formatCountdown(multiverseMs);
+            
+            const nightmaresMs = COUNTDOWN_TARGETS.cecilNightmares.getTime() - now.getTime();
+            document.getElementById('countdown-nightmares').textContent = formatCountdown(nightmaresMs);
+        }
+
+        setInterval(updateCountdowns, 1000);
+        updateCountdowns();
 
         Chart.defaults.color = '#ffffff';
         Chart.defaults.borderColor = 'rgba(0, 229, 255, 0.2)';
@@ -723,9 +920,84 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: true,
                 scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' } },
-                    x: { grid: { display: false } }
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false } },
+                    x: { grid: { display: false }, ticks: { display: false } }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('spiderChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Season', 'Events', 'Warfare', 'Daily', 'Code'],
+                datasets: [{
+                    label: 'Gems',
+                    data: [1820, 500, 750, 1100, 300],
+                    backgroundColor: 'rgba(0, 229, 255, 0.2)',
+                    borderColor: '#00e5ff',
+                    pointBackgroundColor: '#00e5ff',
+                    borderWidth: 2
+                }, {
+                    label: 'Target',
+                    data: [2000, 800, 1000, 1200, 500],
+                    backgroundColor: 'rgba(233, 30, 138, 0.1)',
+                    borderColor: '#e91e8a',
+                    pointBackgroundColor: '#e91e8a',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        grid: { color: 'rgba(0,229,255,0.2)' },
+                        pointLabels: { color: '#fff', font: { size: 10 } },
+                        ticks: { display: false }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('lineChart'), {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'],
+                datasets: [{
+                    label: 'Cumulative Gems',
+                    data: [450, 950, 1450, 1950, 2450, 2950, 3450, 4470],
+                    borderColor: '#00e5ff',
+                    backgroundColor: 'rgba(0, 229, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#00e5ff'
+                }, {
+                    label: 'Daily Average',
+                    data: [450, 475, 483, 488, 490, 492, 493, 559],
+                    borderColor: '#f39c12',
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    tension: 0.4,
+                    pointRadius: 3,
+                    pointBackgroundColor: '#f39c12'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                scales: {
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false } },
+                    x: { grid: { display: false }, ticks: { display: false } }
                 },
                 plugins: {
                     legend: { display: false }

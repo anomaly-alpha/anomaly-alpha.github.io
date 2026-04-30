@@ -14,7 +14,7 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 | Daily/Weekly Rewards | 1,100 | Daily login (700) + Weekly bonus (400) |
 | Promo Code | 300 | Code: 30KGTG |
 
-**Total: 3,920 gems** (one-time + recurring monthly)
+**Total: 4,470 gems** (one-time + recurring)
 
 ## Features
 
@@ -22,8 +22,10 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Animated counter that counts up on page load
 - Copy-to-clipboard for promo code (click the card)
 - Theme toggle (dark/light mode)
-- Filter buttons to show/hide reward categories
+- Filter buttons to show/hide reward categories (All, Season, Event, Warfare, Daily, Code)
 - Export data as JSON
+- **Unified Modes & Countdowns card** - Combined filter buttons and countdown timers in single panel
+- **Countdown timers** - Real-time countdowns for Daily, Weekly, Warfare, Multiverse, Nightmares
 
 ### Visual Effects
 - Floating particles in background
@@ -35,16 +37,18 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Grid background overlay
 - Card fade-in animations (staggered)
 
-### Charts
-- Doughnut chart for gem distribution by category
-- Bar chart for individual rewards
+### Charts (4 in single row)
+- **Distribution** - Doughnut chart for gem distribution by category
+- **Rewards** - Bar chart for individual rewards
+- **Performance** - Spider/Radar chart comparing actual vs target across categories
+- **Progress** - Line chart showing cumulative gems over 8 weeks + daily average
 - Animated tooltips on cards
 - Legend with color coding
 
 ## Tech Stack
 
 - Tailwind CSS for styling (via CDN)
-- Chart.js for interactive charts
+- Chart.js for interactive charts (including radar/line charts)
 - Font Awesome for icons
 - Rajdhani font for typography
 
@@ -53,6 +57,15 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Reduced motion support (`prefers-reduced-motion`)
 - Keyboard-navigable buttons
 - Sufficient color contrast
+
+## Recent Updates (April 29, 2026)
+
+- Fixed JavaScript bugs (duplicate functions, undefined variables)
+- Combined Modes + Countdowns into unified card
+- Added 4th chart (Spider/Radar) comparing actual vs target
+- Added 4th chart (Line) showing cumulative progress over time
+- Added Code filter button to modes section
+- Total updated to 4,470 gems
 
 ## Contributors
 

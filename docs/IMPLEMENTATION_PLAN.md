@@ -4,18 +4,22 @@
 
 This document provides a comprehensive implementation plan for the Invincible mobile game Gem Rewards Infographic. The infographic displays gem income sources from screenshots, organized into interactive cards with a sci-fi aesthetic matching the game's UI.
 
-**Total Gems Tracked:** 3,920 gems  
+**Total Gems Tracked:** 4,470 gems  
 **Last Updated:** April 29, 2026  
 **Implementation Status:** Complete (HTML/Tailwind CSS version - Dynamic Gem Counts)
 
 **Recent Updates:**
-- ✅ Updated total from 3,220 to 3,920 gems
+- ✅ Updated total from 3,920 to 4,470 gems
 - ✅ Cards now display dynamic gem quantities showing the multiplication formula
 - ✅ Warfare Won: Shows "150 × 5 = 750 GEMS"
 - ✅ Daily Login: Shows "100 × 7 = 700 GEMS"
 - ✅ Added subtitle "ONE-TIME + RECURRING REWARDS" to total section
 - ✅ Integrated Font Awesome icons throughout for visual enhancement
 - ✅ Added 10 improvement ideas with implementations (see Section 14)
+- ✅ Added countdown timers for gem payouts (see Section 15)
+- ✅ Combined Modes + Countdowns into unified card (see Section 16)
+- ✅ Added Spider/Radar chart (Performance) and Line chart (Progress) - 4 charts total (see Section 17)
+- ✅ Fixed JavaScript bugs: duplicate updateCountdowns functions, undefined COUNTDOWN_CONFIG, stray brace
 
 ---
 
@@ -32,7 +36,10 @@ This document provides a comprehensive implementation plan for the Invincible mo
 9. [Browser Compatibility](#browser-compatibility)
 10. [Accessibility Considerations](#accessibility-considerations)
 11. [Future Enhancement Roadmap](#future-enhancement-roadmap)
-12. [Maintenance & Updates](#maintenance--updates)
+12. [Countdown Timers](#15-countdown-timers)
+13. [Unified Modes & Countdowns Card](#16-unified-modes--countdowns-card)
+14. [Four-Chart Layout](#17-four-chart-layout)
+15. [Bug Fixes](#18-bug-fixes-april-29-2026)
 
 ---
 
@@ -541,16 +548,16 @@ TOTAL:               3,920 gems
 ```
 
 **Breakdown by Type:**
-- One-time rewards: 2,620 gems (66.8%)
-- Recurring rewards: 1,300 gems (33.2%)
-  - Warfare: 750 gems
-  - Daily: 700 gems
+- One-time rewards: 2,620 gems (58.6%)
+- Recurring rewards: 1,850 gems (41.4%)
+  - Warfare: 750 gems (150 × 5 battles/2 weeks)
+  - Daily: 700 gems (100 × 7 days/week)
   - Weekly: 400 gems
 
 **Percentage Calculation:**
 ```
 percentage = (rewardGems / totalGems) × 100
-Example: 810 / 3920 × 100 = 20.66% → rounded to 25.2%
+Example: 810 / 4470 × 100 = 18.1% → rounded to 25.2%
 ```
 
 ---
@@ -1272,3 +1279,371 @@ Cards now display dynamic quantity calculations showing the formula used to calc
 
 #### 1.2 Time-based Filtering
 - [ ] Filter by date range
+
+---
+
+## 15. Countdown Timers
+
+### 15.1 Overview
+
+**Implementation Date:** April 29, 2026  
+**Feature:** Real-time countdown timers showing time until next gem payout/cycle reset
+
+Displays live countdowns for game events and recurring rewards, helping players know when to log in for maximum gem income.
+
+### 15.2 Timer Targets
+
+| Timer | Current Time | Reset Schedule | Timezone |
+|-------|-----------|-------------|---------|
+| Daily Login | ~8h remaining | 8pm EST | Daily |
+| Weekly Reward | ~3d remaining | Sunday | Weekly |
+| Warfare | 1d 10h | 2 weeks | Bi-weekly |
+| Multiverse Arena | 4d 3h | Season | Varies |
+| Cecil's Nightmares | 8h 57m | Event | Varies |
+
+### 15.3 Configuration
+
+Timers are easily adjustable via JavaScript configuration object at the top of the script:
+
+```javascript
+// ═══════════════════════════════════════════════════════════════
+// COUNTDOWN TIMER CONFIGURATION
+// ═══════════════════════════════════════════════════════════════
+// Edit these values to adjust countdown times
+// Format: { days: X, hours: X, minutes: X }
+const COUNTDOWN_CONFIG = {
+    warfare: { days: 1, hours: 10 },
+    weekly: { days: 0, hours: 0 },
+    daily: { days: 0, hours: 0, minutes: 0 },
+    multiverseArena: { days: 4, hours: 3 },
+    cecilNightmares: { days: 0, hours: 8, minutes: 57 }
+};
+```
+
+### 15.4 Timer Logic
+
+**Daily Timer:**
+- Resets daily at 8pm EST
+- Uses JavaScript Date() to find next occurrence
+- Converts EST to user's local time or displays EST explicitly
+
+**Weekly Timer:**
+- Resets every Sunday at midnight EST
+- Dynamically calculates next Sunday
+
+**Event Timers:**
+- Use configuration object values
+- Count down to zero
+- Reset to configured value when expired
+
+### 15.5 UI Layout
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  ⏱ COUNTDOWNS                                          │
+├────────────┬────────────┬────────────┬─────────────────┤
+│ DAILY     │ WEEKLY    │ WARFARE   │ MULTIVERSE      │
+│ 8:00 PM  │ SUNDAY    │ 1d 10h   │ 4d 3h        │
+│ EST       │          │           │               │
+├────────────┴────────────┴────────────┴─────────────────┤
+│                    CECIL'S NIGHTMARES              │
+│                    8h 57m                    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 15.6 Implementation
+
+**HTML Structure:**
+```html
+<!-- Countdown Section -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-4 my-6">
+    <div class="countdown-card" id="countdown-daily">
+        <i class="fas fa-sun text-yellow-accent"></i>
+        <p class="text-lg font-bold text-white">DAILY</p>
+        <p class="text-2xl font-bold text-white" id="daily-timer">--:--</p>
+        <p class="text-xs text-white/60">8:00 PM EST</p>
+    </div>
+    <!-- More countdown cards... -->
+</div>
+```
+
+**JavaScript Logic:**
+```javascript
+function updateCountdowns() {
+    const now = new Date();
+    // Calculate time remaining for each timer
+    // Format as "Xd Xh Xm" or "Xh Xm Xs"
+    // Update DOM elements
+}
+
+setInterval(updateCountdowns, 1000); // Update every second
+```
+
+### 15.7 Timer Formatting
+
+| Time Remaining | Display Format |
+|--------------|--------------|
+| > 24 hours | "Xd Xh" |
+| > 1 hour | "Xh Xm" |
+| > 1 minute | "Xm Xs" |
+| < 1 minute | "Xs" |
+
+### 15.8 Visual States
+
+**Normal (counting down):**
+- Default styling with category colors
+- Regular countdown display
+
+**Urgent (< 1 hour):**
+- Pulsing glow effect
+- Color shifts to orange accent
+
+**Expired:**
+- Display "AVAILABLE NOW!"
+- Green glow effect
+- Optional auto-reset timer
+
+### 15.9 Benefits
+
+1. **Engagement:** Drives players to log in at optimal times
+2. **Convenience:** No manual tracking needed
+3. **Accuracy:** Real-time updates every second
+4. **Customizable:** Easy to adjust for new events
+
+---
+
+## 16. Unified Modes & Countdowns Card
+
+### 16.1 Overview
+
+**Implementation Date:** April 29, 2026  
+**Feature:** Combined filter buttons (modes) and countdown timers into a single unified card panel
+
+### 16.2 Purpose
+
+Previously, filter buttons (modes) were fixed at top-left and countdown timers were a separate section. This update consolidates them into one unified card with two sections:
+- **Modes:** Filter buttons to show/hide reward categories
+- **Countdowns:** Real-time countdown timers for game events
+
+### 16.3 UI Structure
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  ┌─────────────────────┐  ┌─────────────────────────────┐  │
+│  │      MODES          │  │       COUNTDOWNS             │  │
+│  │ [All][Season][Event]│  │ [Daily][Weekly][Warfare]   │  │
+│  │ [Warfare][Daily][Cod│  │ [Multiverse][Nightmares]    │  │
+│  └─────────────────────┘  └─────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 16.4 Mode Filters
+
+| Filter | Category | Color |
+|--------|----------|-------|
+| All | All cards | Cyan |
+| Season | Season rewards | Cyan |
+| Event | Event rewards | Orange |
+| Warfare | Warfare battles | Purple |
+| Daily | Daily/Weekly | Yellow |
+| Code | Promo codes | Green |
+
+### 16.5 Implementation
+
+**HTML Structure:**
+```html
+<div class="bg-gradient-to-br from-[rgba(10,35,60,0.6)] to-[rgba(5,15,30,0.8)] border border-cyan-glow/20 rounded-xl p-5">
+    <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Mode Filters -->
+        <div class="flex-1">
+            <h3 class="text-center text-cyan-glow text-sm uppercase tracking-widest mb-3">
+                <i class="fas fa-layer-group mr-2"></i>Modes
+            </h3>
+            <div class="flex flex-wrap justify-center gap-2">
+                <!-- Filter buttons -->
+            </div>
+        </div>
+        <!-- Countdowns -->
+        <div class="flex-1 border-t lg:border-t-0 lg:border-l border-cyan-glow/20 pt-4 lg:pt-0 lg:pl-6">
+            <!-- Countdown timers -->
+        </div>
+    </div>
+</div>
+```
+
+### 16.6 Responsive Behavior
+
+- **Mobile:** Stacked vertically (Modes on top, Countdowns below)
+- **Desktop:** Side-by-side (Modes left, Countdowns right)
+- **Breakpoint:** lg (1024px)
+
+### 16.7 JavaScript Updates
+
+The filterCards function was updated to handle the new "code" filter category:
+- Added handling for `filter-code` class
+- Updated active state styling for green accent colors
+
+---
+
+## 17. Four-Chart Layout
+
+### 17.1 Overview
+
+**Implementation Date:** April 29, 2026  
+**Feature:** Expanded from 2 charts to 4 charts in a single row for comprehensive data visualization
+
+### 17.2 Chart Layout
+
+```
+┌─────────────┬─────────────┬─────────────┬─────────────┐
+│ Distribution│   Rewards   │ Performance │  Progress   │
+│  (Doughnut)│    (Bar)    │   (Radar)   │    (Line)   │
+└─────────────┴─────────────┴─────────────┴─────────────┘
+```
+
+### 17.3 Chart Specifications
+
+| Chart | Type | Purpose | Data |
+|-------|------|---------|------|
+| Distribution | Doughnut | Gem allocation by category | [1820, 500, 750, 1100, 300] |
+| Rewards | Bar | Individual reward amounts | [810, 560, 450, 750, 300, 300, 400, 200, 700] |
+| Performance | Radar/Spider | Actual vs Target comparison | Category performance |
+| Progress | Line | Cumulative gems over time | 8-week timeline |
+
+### 17.4 New Charts Added
+
+#### Spider/Radar Chart (Performance)
+Compares actual gem earnings against target goals:
+- **Dataset 1 (Actual):** [1820, 500, 750, 1100, 300]
+- **Dataset 2 (Target):** [2000, 800, 1000, 1200, 500]
+- **Labels:** Season, Events, Warfare, Daily, Code
+- **Styling:**
+  - Actual: Cyan border/fill
+  - Target: Pink border (dashed)
+
+#### Line Chart (Progress)
+Shows cumulative gem accumulation over 8 weeks:
+- **Dataset 1 (Cumulative):** [450, 950, 1450, 1950, 2450, 2950, 3450, 4470]
+- **Dataset 2 (Daily Average):** [450, 475, 483, 488, 490, 492, 493, 559]
+- **Styling:**
+  - Cumulative: Cyan filled line
+  - Average: Yellow dashed line
+
+### 17.5 Chart.js Configuration
+
+```javascript
+// Spider Chart
+new Chart(document.getElementById('spiderChart'), {
+    type: 'radar',
+    data: {
+        labels: ['Season', 'Events', 'Warfare', 'Daily', 'Code'],
+        datasets: [{
+            label: 'Gems',
+            data: [1820, 500, 750, 1100, 300],
+            backgroundColor: 'rgba(0, 229, 255, 0.2)',
+            borderColor: '#00e5ff',
+            pointBackgroundColor: '#00e5ff',
+            borderWidth: 2
+        }, {
+            label: 'Target',
+            data: [2000, 800, 1000, 1200, 500],
+            backgroundColor: 'rgba(233, 30, 138, 0.1)',
+            borderColor: '#e91e8a',
+            pointBackgroundColor: '#e91e8a',
+            borderWidth: 2
+        }]
+    },
+    options: {
+        scales: {
+            r: {
+                beginAtZero: true,
+                grid: { color: 'rgba(0,229,255,0.2)' },
+                pointLabels: { color: '#fff', font: { size: 10 } },
+                ticks: { display: false }
+            }
+        },
+        plugins: { legend: { display: false } }
+    }
+});
+
+// Line Chart
+new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'],
+        datasets: [{
+            label: 'Cumulative Gems',
+            data: [450, 950, 1450, 1950, 2450, 2950, 3450, 4470],
+            borderColor: '#00e5ff',
+            backgroundColor: 'rgba(0, 229, 255, 0.1)',
+            fill: true,
+            tension: 0.4,
+            pointRadius: 4,
+            pointBackgroundColor: '#00e5ff'
+        }, {
+            label: 'Daily Average',
+            data: [450, 475, 483, 488, 490, 492, 493, 559],
+            borderColor: '#f39c12',
+            backgroundColor: 'transparent',
+            borderDash: [5, 5],
+            tension: 0.4,
+            pointRadius: 3,
+            pointBackgroundColor: '#f39c12'
+        }]
+    },
+    options: {
+        scales: {
+            y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false } },
+            x: { grid: { display: false }, ticks: { display: false } }
+        },
+        plugins: { legend: { display: false } }
+    }
+});
+```
+
+### 17.6 Responsive Grid
+
+```html
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- 2 columns on mobile, 4 on large screens -->
+</div>
+```
+
+### 17.7 Benefits
+
+1. **Comprehensive Analysis:** Four different chart types provide multiple perspectives
+2. **Performance Tracking:** Spider chart shows how actual compares to targets
+3. **Progress Visualization:** Line chart shows accumulation over time
+4. **Space Efficiency:** Compact layout fits in single row
+5. **Visual Variety:** Different chart types keep view interesting
+
+---
+
+## 18. Bug Fixes (April 29, 2026)
+
+### 18.1 Issues Fixed
+
+1. **Duplicate updateCountdowns Functions**
+   - Problem: Two definitions of `updateCountdowns()` - one using `COUNTDOWN_TARGETS` (correct) and another using `COUNTDOWN_CONFIG` (undefined)
+   - Fix: Removed duplicate function, kept the correct one using `COUNTDOWN_TARGETS`
+
+2. **Undefined COUNTDOWN_CONFIG**
+   - Problem: Second `updateCountdowns` referenced `COUNTDOWN_CONFIG` which was never defined
+   - Impact: Would cause `ReferenceError` when page loads
+   - Fix: Removed reference to undefined variable
+
+3. **Stray Closing Brace**
+   - Problem: Extra `}` at line 858 outside any function
+   - Fix: Removed stray brace
+
+4. **Unused Helper Functions**
+   - Problem: `getWeeklyReset()` and `getDailyReset()` defined but never called
+   - Fix: Removed unused functions
+
+### 18.2 Verification
+
+After fixes, the page loads without JavaScript errors and countdown timers function correctly using the `COUNTDOWN_TARGETS` configuration object.
+
+---
+
+## 19. Maintenance & Updates
