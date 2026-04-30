@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invincible - Gem Rewards Infographic</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>
@@ -380,6 +381,67 @@
                 <span>Promo Code</span>
             </div>
         </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10 pt-8 border-t border-cyan-glow/20">
+            <div class="bg-[rgba(10,35,60,0.5)] rounded-xl p-4">
+                <h4 class="text-white text-center uppercase tracking-wider mb-4">Gem Distribution by Category</h4>
+                <canvas id="categoryChart"></canvas>
+            </div>
+            <div class="bg-[rgba(10,35,60,0.5)] rounded-xl p-4">
+                <h4 class="text-white text-center uppercase tracking-wider mb-4">Individual Rewards</h4>
+                <canvas id="rewardsChart"></canvas>
+            </div>
+        </div>
+
+        <script>
+            Chart.defaults.color = '#ffffff';
+            Chart.defaults.borderColor = 'rgba(0, 229, 255, 0.2)';
+            
+            new Chart(document.getElementById('categoryChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Season', 'Events', 'Warfare', 'Daily/Weekly', 'Code'],
+                    datasets: [{
+                        data: [1820, 500, 750, 1100, 300],
+                        backgroundColor: ['#00e5ff', '#ff6b35', '#9b59b6', '#f39c12', '#2ecc71'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 20, font: { family: 'Rajdhani', size: 12 } }
+                        }
+                    }
+                }
+            });
+
+            new Chart(document.getElementById('rewardsChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Elite I', 'Invincible', 'Elite II', 'Warfare', 'Long Haul', 'Code', 'Weekly', 'Defenders', 'Daily'],
+                    datasets: [{
+                        label: 'Gems',
+                        data: [810, 560, 450, 750, 300, 300, 400, 200, 700],
+                        backgroundColor: ['#00e5ff', '#00e5ff', '#00e5ff', '#9b59b6', '#ff6b35', '#2ecc71', '#f39c12', '#ff6b35', '#f39c12'],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' } },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        </script>
     </div>
 </body>
 </html>
