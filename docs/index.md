@@ -22,10 +22,23 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Animated counter that counts up on page load
 - Copy-to-clipboard for promo code (click the card)
 - Theme toggle (dark/light mode)
-- Filter buttons to show/hide reward categories (All, Season, Event, Warfare, Daily, Code)
+- Card filter buttons (All, Season, Event, Warfare, Daily, Code)
+- Chart filter buttons (All/Season/Event/Warfare/Daily/Code) - filters all 4 charts
+- **Search/Find** - Expandable search bar with text highlighting
+- **Gem Calculator** - Personalized projections with rank, warfare %, days inputs
+- **Save/Share** - Save views, load saved, copy share link, export as PNG
 - Export data as JSON
 - **Unified Modes & Countdowns card** - Combined filter buttons and countdown timers in single panel
 - **Countdown timers** - Real-time countdowns for Daily, Weekly, Warfare, Multiverse, Nightmares
+
+### Data Drill-Down
+- Click on category summary cards to open detailed modal
+- Modal shows each reward in category with name, description, gem amount, percentage
+
+### Chart Interactions
+- **Hover tooltips** - Rich tooltips showing gems, percentage, vs average comparison
+- **Animated transitions** - Staggered entry animations, smooth data transitions on filter changes
+- **Chart filtering** - Filter buttons update all 4 charts simultaneously
 
 ### Visual Effects
 - Floating particles in background
@@ -48,7 +61,8 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 ## Tech Stack
 
 - Tailwind CSS for styling (via CDN)
-- Chart.js for interactive charts (including radar/line charts)
+- Chart.js for interactive charts (doughnut, bar, radar, line)
+- html2canvas for PNG export
 - Font Awesome for icons
 - Rajdhani font for typography
 
@@ -57,14 +71,21 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Reduced motion support (`prefers-reduced-motion`)
 - Keyboard-navigable buttons
 - Sufficient color contrast
+- Escape key closes modal
 
-## Recent Updates (April 29, 2026)
+## Recent Updates (April 2026)
 
+- Added interactive chart filtering (filters all 4 charts)
+- Added rich hover tooltips with gems, %, vs avg
+- Added staggered chart entry animations + smooth transitions
+- Added data drill-down modal (click category cards)
+- Added personalized projections calculator
+- Added search/find with text highlighting
+- Added save/load views, share link, export PNG
 - Fixed JavaScript bugs (duplicate functions, undefined variables)
 - Combined Modes + Countdowns into unified card
-- Added 4th chart (Spider/Radar) comparing actual vs target
-- Added 4th chart (Line) showing cumulative progress over time
-- Added Code filter button to modes section
+- Added Spider/Radar and Line charts (4 total)
+- Added Code filter button
 - Total updated to 4,470 gems
 
 ## Contributors

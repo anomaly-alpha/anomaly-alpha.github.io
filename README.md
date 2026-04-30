@@ -23,9 +23,14 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Copy-to-clipboard for promo code (click the card)
 - Theme toggle (dark/light mode)
 - **Unified Modes + Countdowns card** - Combined filter buttons and countdown timers
-- Filter buttons: All, Season, Event, Warfare, Daily, Code
+- Card filter buttons: All, Season, Event, Warfare, Daily, Code
+- Chart filter buttons: Filters all 4 charts simultaneously
+- **Search** - Find rewards by name/description with text highlighting
+- **Gem Calculator** - Project future gems based on rank, warfare %, days
+- **Save/Share** - Save views, load saved, copy link, export as PNG
 - Export data as JSON
 - **Countdown timers** - Daily, Weekly, Warfare, Multiverse, Nightmares
+- **Data Drill-Down** - Click category cards for detailed modal view
 
 ### Visual Effects
 - Floating particles in background
@@ -42,6 +47,8 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - **Rewards** - Bar chart for individual rewards
 - **Performance** - Spider/Radar chart (actual vs target)
 - **Progress** - Line chart (cumulative gems over 8 weeks)
+- Rich hover tooltips with gems, %, vs average
+- Smooth animated transitions on filter changes
 
 ## Files
 
@@ -56,16 +63,20 @@ Open `gem_infographic.html` in a browser to view the infographic.
 
 - Tailwind CSS (via CDN)
 - Chart.js for charts (doughnut, bar, radar, line)
+- html2canvas for PNG export
 - Font Awesome icons
 - Rajdhani font (Google Fonts)
 
 ## Recent Updates (April 2026)
 
+- Added chart filtering (All/Season/Event/Warfare/Daily/Code)
+- Added rich hover tooltips with comparison data
+- Added staggered chart animations + transitions
+- Added data drill-down modal (click categories)
+- Added personalized projections calculator
+- Added search with highlighting
+- Added save/load/share/export features
 - Total updated to 4,470 gems
-- Combined Modes + Countdowns into unified card
-- Added Spider/Radar and Line charts (4 total)
-- Added Code filter button
-- Fixed JavaScript bugs
 
 ## Contributors
 

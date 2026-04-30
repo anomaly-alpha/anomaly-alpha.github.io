@@ -20,6 +20,13 @@ This document provides a comprehensive implementation plan for the Invincible mo
 - ✅ Combined Modes + Countdowns into unified card (see Section 16)
 - ✅ Added Spider/Radar chart (Performance) and Line chart (Progress) - 4 charts total (see Section 17)
 - ✅ Fixed JavaScript bugs: duplicate updateCountdowns functions, undefined COUNTDOWN_CONFIG, stray brace
+- ✅ Added interactive chart filtering (see Section 20)
+- ✅ Added rich hover tooltips with deep data (see Section 21)
+- ✅ Added animated chart transitions (see Section 22)
+- ✅ Added data drill-down modal (see Section 23)
+- ✅ Added personalized projections calculator (see Section 24)
+- ✅ Added search/find function (see Section 25)
+- ✅ Added save/share views (see Section 26)
 
 ---
 
@@ -40,6 +47,13 @@ This document provides a comprehensive implementation plan for the Invincible mo
 13. [Unified Modes & Countdowns Card](#16-unified-modes--countdowns-card)
 14. [Four-Chart Layout](#17-four-chart-layout)
 15. [Bug Fixes](#18-bug-fixes-april-29-2026)
+16. [Interactive Chart Filtering](#20-interactive-chart-filtering)
+17. [Enhanced Tooltips](#21-enhanced-tooltips)
+18. [Chart Animations](#22-chart-animations)
+19. [Data Drill-Down Modal](#23-data-drill-down-modal)
+20. [Personalized Projections](#24-personalized-projections)
+21. [Search Function](#25-search-function)
+22. [Save/Share Views](#26-save-share-views)
 
 ---
 
@@ -1646,4 +1660,172 @@ After fixes, the page loads without JavaScript errors and countdown timers funct
 
 ---
 
-## 19. Maintenance & Updates
+## 20. Interactive Chart Filtering
+
+### 20.1 Overview
+
+**Implementation Date:** April 2026  
+**Feature:** Segmented button controls above charts to filter all 4 charts simultaneously
+
+### 20.2 UI Design
+
+Position: Above charts section, left-aligned
+Buttons: All | Season | Event | Warfare | Daily | Code
+Active state: Highlighted with category color
+
+### 20.3 Behavior
+
+- Single filter affects all 4 charts (doughnut, bar, radar, line)
+- Smooth Chart.js animation on data change (750ms easeOutQuart)
+- Dimmed colors (#333333) for non-selected categories
+
+### 20.4 Implementation
+
+- `chartFilterData` object maps filter to data arrays for each chart
+- `filterChart(filter)` updates all chart datasets
+- Tracks `currentChartFilter` for share functionality
+
+---
+
+## 21. Enhanced Tooltips
+
+### 21.1 Overview
+
+**Implementation Date:** April 2026  
+**Feature:** Rich Chart.js tooltips showing gems, percentage, and vs average comparison
+
+### 21.2 Tooltip Content
+
+```
+Category Name
+1,820 Gems
+40.7% of category
+vs Avg: +15% more
+```
+
+### 21.3 Styling
+
+- Background: rgba(10,35,60,0.95)
+- Border: 1px cyan glow
+- Padding: 12px
+- Font: Rajdhani family
+
+---
+
+## 22. Chart Animations
+
+### 22.1 Overview
+
+**Implementation Date:** April 2026  
+**Feature:** Staggered entry animations and smooth data transitions
+
+### 22.2 Entry Animations
+
+- Distribution: delay 0ms
+- Rewards: delay 100ms
+- Performance: delay 200ms
+- Progress: delay 300ms
+
+### 22.3 Data Transitions
+
+- Duration: 750ms
+- Easing: easeOutQuart
+- Trigger: Chart filter changes
+
+---
+
+## 23. Data Drill-Down Modal
+
+### 23.1 Overview
+
+**Implementation Date:** April 2026  
+**Feature:** Click category summary cards to view detailed breakdown
+
+### 23.2 Trigger
+
+- Click on any category card (Season, Event, Warfare, Daily, Code)
+- Cards now show "Click for details" text
+
+### 23.3 Modal Content
+
+- Category icon with color
+- Total gems for category
+- List of each reward with: name, description, gem amount, percentage
+- Close via X button, Close button, Escape key, or backdrop click
+
+---
+
+## 24. Personalized Projections
+
+### 24.1 Overview
+
+**Implementation Date:** April 2026  
+**Feature:** Interactive calculator projecting future gem earnings
+
+### 24.2 Inputs
+
+- Season Rank (number 1-1000)
+- Warfare Win % (range slider 0-100)
+- Days Remaining (number 0-90)
+
+### 24.3 Calculation
+
+```
+Season: Rank 1-25 = 810, 26-50 = 560, 51-100 = 450, 101+ = 200
+Warfare: Win% × 150 × 5 × (weeks / 2)
+Daily: 1100 × (weeks / 4)
+```
+
+### 24.4 Output
+
+Real-time "Projected Season Total" display
+
+---
+
+## 25. Search Function
+
+### 25.1 Overview
+
+**Implementation Date:** April 2026  
+**Feature:** Search rewards by name, description, category, or gem amount
+
+### 25.2 UI
+
+- Expandable search icon (fixed top-right)
+- Input expands on click
+- Clear button when text present
+
+### 25.3 Behavior
+
+- In-place card filtering (hides non-matching)
+- Text highlighting with yellow background
+- "No results" message with suggestions
+
+---
+
+## 26. Save/Share Views
+
+### 26.1 Overview
+
+**Implementation Date:** April 2026  
+**Feature:** Save current state, load saved, share link, export image
+
+### 26.2 Features
+
+**Save View:** Saves filter + theme to localStorage with custom name
+
+**Load View:** Dropdown of saved views, applies selected
+
+**Share Link:** URL with ?mode=...&chart=...&theme=... params
+
+**Export PNG:** Uses html2canvas to download infographic as image
+
+### 26.3 Dependencies
+
+```html
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+```
+
+---
+
+## 27. Maintenance & Updates
