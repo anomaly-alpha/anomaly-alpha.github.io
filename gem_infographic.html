@@ -6,6 +6,7 @@
     <title>Invincible - Gem Rewards Infographic</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>
@@ -185,6 +186,21 @@
         .counter {
             display: inline-block;
         }
+        .search-highlight {
+            background-color: rgba(243, 156, 18, 0.4);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        .search-no-results {
+            text-align: center;
+            padding: 2rem;
+            color: white/60;
+        }
+        .search-no-results i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -255,6 +271,38 @@
     <button onclick="exportData()" class="fixed top-4 right-16 z-50 p-3 rounded-full bg-white/10 border border-cyan-glow/30 hover:bg-white/20 transition-colors" title="Export data">
         <i class="fas fa-download text-cyan-glow"></i>
     </button>
+
+    <!-- Search Button & Input -->
+    <div class="fixed top-4 right-28 z-50 flex items-center">
+        <button onclick="toggleSearch()" id="searchToggleBtn" class="p-3 rounded-full bg-white/10 border border-cyan-glow/30 hover:bg-white/20 transition-colors" title="Search rewards">
+            <i class="fas fa-search text-cyan-glow"></i>
+        </button>
+        <input type="text" id="searchInput" placeholder="Search..." class="hidden w-0 px-0 bg-white/10 border border-cyan-glow/30 rounded-full text-white text-sm outline-none transition-all duration-300 placeholder-white/40" oninput="searchRewards(this.value)" onkeydown="handleSearchKeydown(event)">
+        <button onclick="clearSearch()" id="searchClearBtn" class="hidden p-2 rounded-full bg-white/10 border border-cyan-glow/30 hover:bg-white/20 transition-colors ml-1" title="Clear search">
+            <i class="fas fa-times text-cyan-glow text-xs"></i>
+        </button>
+    </div>
+
+    <!-- Save/Share Buttons -->
+    <div class="fixed top-4 right-40 z-50 flex items-center gap-1">
+        <button onclick="toggleSaveMenu()" class="p-3 rounded-full bg-white/10 border border-cyan-glow/30 hover:bg-white/20 transition-colors" title="Save & Share">
+            <i class="fas fa-save text-cyan-glow"></i>
+        </button>
+        <div id="saveMenu" class="hidden absolute top-12 right-0 bg-[rgba(10,35,60,0.98)] border border-cyan-glow/30 rounded-lg p-2 min-w-[160px] shadow-lg z-50">
+            <button onclick="saveCurrentView()" class="block w-full text-left px-3 py-2 text-white/80 hover:bg-cyan-glow/20 rounded text-sm">
+                <i class="fas fa-bookmark mr-2 text-cyan-glow"></i>Save View
+            </button>
+            <button onclick="loadSavedView()" class="block w-full text-left px-3 py-2 text-white/80 hover:bg-cyan-glow/20 rounded text-sm">
+                <i class="fas fa-folder-open mr-2 text-cyan-glow"></i>Load View
+            </button>
+            <button onclick="shareLink()" class="block w-full text-left px-3 py-2 text-white/80 hover:bg-cyan-glow/20 rounded text-sm">
+                <i class="fas fa-link mr-2 text-cyan-glow"></i>Copy Link
+            </button>
+            <button onclick="exportAsImage()" class="block w-full text-left px-3 py-2 text-white/80 hover:bg-cyan-glow/20 rounded text-sm">
+                <i class="fas fa-image mr-2 text-cyan-glow"></i>Export PNG
+            </button>
+        </div>
+    </div>
 
     <!-- Particles Container -->
     <div class="particles">
@@ -331,6 +379,37 @@
                 <i class="fas fa-gift text-3xl text-green-accent mb-2"></i>
                 <p class="text-2xl font-bold text-white">300</p>
                 <p class="text-xs text-green-accent uppercase tracking-wider">Code</p>
+            </div>
+        </div>
+
+        <!-- Gem Projections Calculator -->
+        <div class="border-t border-cyan-glow/20 pt-6 mt-8">
+            <div class="bg-gradient-to-br from-[rgba(10,35,60,0.6)] to-[rgba(5,15,30,0.8)] border border-cyan-glow/20 rounded-xl p-5">
+                <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-calculator text-cyan-glow text-xl"></i>
+                        <h3 class="text-cyan-glow text-sm uppercase tracking-widest">Gem Calculator</h3>
+                    </div>
+                    <div class="flex flex-wrap gap-3 items-center">
+                        <div class="flex items-center gap-2">
+                            <label class="text-white/60 text-xs">Season Rank:</label>
+                            <input type="number" id="projRank" value="38" min="1" max="1000" class="w-16 bg-white/10 border border-cyan-glow/20 rounded px-2 py-1 text-white text-sm text-center" onchange="calculateProjection()">
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label class="text-white/60 text-xs">Warfare %:</label>
+                            <input type="range" id="projWarfare" value="80" min="0" max="100" class="w-20" oninput="document.getElementById('warfareVal').textContent = this.value + '%'; calculateProjection()">
+                            <span id="warfareVal" class="text-white text-xs w-8">80%</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label class="text-white/60 text-xs">Days Left:</label>
+                            <input type="number" id="projDays" value="14" min="0" max="90" class="w-14 bg-white/10 border border-cyan-glow/20 rounded px-2 py-1 text-white text-sm text-center" onchange="calculateProjection()">
+                        </div>
+                        <div class="text-right">
+                            <p class="text-white/40 text-xs">Projected Season</p>
+                            <p class="text-2xl font-bold text-cyan-glow" id="projSeasonTotal">0</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -647,8 +726,19 @@
             </div>
         </div>
 
+        <!-- Chart Filters -->
+        <div class="flex flex-wrap justify-center gap-2 mt-10 pt-8 border-t border-cyan-glow/20">
+            <span class="text-white/60 text-xs uppercase tracking-wider self-center mr-2">Filter:</span>
+            <button onclick="filterChart('all')" class="chart-filter-btn px-3 py-1.5 rounded-full bg-cyan-glow/20 border border-cyan-glow/30 text-cyan-glow text-xs hover:bg-cyan-glow/30 transition-colors active">All</button>
+            <button onclick="filterChart('season')" class="chart-filter-btn px-3 py-1.5 rounded-full bg-cyan-glow/10 border border-cyan-glow/20 text-cyan-glow text-xs hover:bg-cyan-glow/20 transition-colors">Season</button>
+            <button onclick="filterChart('event')" class="chart-filter-btn px-3 py-1.5 rounded-full bg-orange-accent/10 border border-orange-accent/20 text-orange-accent text-xs hover:bg-orange-accent/20 transition-colors">Event</button>
+            <button onclick="filterChart('warfare')" class="chart-filter-btn px-3 py-1.5 rounded-full bg-purple-accent/10 border border-purple-accent/20 text-purple-accent text-xs hover:bg-purple-accent/20 transition-colors">Warfare</button>
+            <button onclick="filterChart('daily')" class="chart-filter-btn px-3 py-1.5 rounded-full bg-yellow-accent/10 border border-yellow-accent/20 text-yellow-accent text-xs hover:bg-yellow-accent/20 transition-colors">Daily</button>
+            <button onclick="filterChart('code')" class="chart-filter-btn px-3 py-1.5 rounded-full bg-green-accent/10 border border-green-accent/20 text-green-accent text-xs hover:bg-green-accent/20 transition-colors">Code</button>
+        </div>
+
         <!-- Charts -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-10 pt-8 border-t border-cyan-glow/20">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
             <div class="bg-[rgba(10,35,60,0.5)] rounded-xl p-3">
                 <h4 class="text-white text-center uppercase tracking-wider text-xs mb-2">Distribution</h4>
                 <canvas id="categoryChart"></canvas>
@@ -689,6 +779,7 @@
         }
 
         function filterCards(category, evt) {
+            currentMode = category;
             const cards = document.querySelectorAll('[data-category]');
             const buttons = document.querySelectorAll('.filter-btn');
             
@@ -750,6 +841,257 @@
                 icon.classList.remove('fa-sun');
                 icon.classList.add('fa-moon');
             }
+        }
+
+        let searchExpanded = false;
+        function toggleSearch() {
+            const btn = document.getElementById('searchToggleBtn');
+            const input = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('searchClearBtn');
+            
+            if (!searchExpanded) {
+                btn.classList.add('hidden');
+                input.classList.remove('hidden');
+                input.classList.remove('w-0', 'px-0');
+                input.classList.add('w-48', 'px-3');
+                input.focus();
+                clearBtn.classList.remove('hidden');
+                searchExpanded = true;
+            }
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('searchClearBtn');
+            const btn = document.getElementById('searchToggleBtn');
+            
+            input.value = '';
+            input.classList.add('w-0', 'px-0');
+            input.classList.remove('w-48', 'px-3');
+            setTimeout(() => {
+                input.classList.add('hidden');
+                btn.classList.remove('hidden');
+            }, 300);
+            clearBtn.classList.add('hidden');
+            searchExpanded = false;
+            
+            document.querySelectorAll('[data-category]').forEach(card => {
+                card.style.display = 'block';
+                card.classList.remove('opacity-30');
+                const title = card.querySelector('h3');
+                if (title) title.innerHTML = title.textContent;
+            });
+            
+            const noResults = document.getElementById('noSearchResults');
+            if (noResults) noResults.remove();
+        }
+
+        function searchRewards(query) {
+            const cards = document.querySelectorAll('[data-category]');
+            const clearBtn = document.getElementById('searchClearBtn');
+            
+            if (query.length === 0) {
+                clearSearch();
+                return;
+            }
+            
+            clearBtn.classList.remove('hidden');
+            
+            const noResults = document.getElementById('noSearchResults');
+            if (noResults) noResults.remove();
+            
+            let matchCount = 0;
+            const lowerQuery = query.toLowerCase();
+            
+            cards.forEach(card => {
+                const title = card.querySelector('h3');
+                const desc = card.querySelector('.text-white\\/60');
+                const category = card.dataset.category;
+                const gemsText = card.querySelector('.text-5xl')?.textContent || '';
+                
+                const searchableText = (
+                    (title ? title.textContent : '') + ' ' +
+                    (desc ? desc.textContent : '') + ' ' +
+                    category + ' ' +
+                    gemsText
+                ).toLowerCase();
+                
+                if (searchableText.includes(lowerQuery)) {
+                    card.style.display = 'block';
+                    card.classList.remove('opacity-30');
+                    matchCount++;
+                    
+                    if (title) {
+                        const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+                        title.innerHTML = title.textContent.replace(regex, '<span class="search-highlight">$1</span>');
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            if (matchCount === 0) {
+                const grid = document.querySelector('.grid.grid-cols-1');
+                if (grid) {
+                    const msg = document.createElement('div');
+                    msg.id = 'noSearchResults';
+                    msg.className = 'search-no-results col-span-full';
+                    msg.innerHTML = `<i class="fas fa-search text-white/30 mb-2"></i>No rewards found for "${query}"<p class="text-xs text-white/40 mt-2">Try: daily, warfare, season, event, code</p>`;
+                    grid.appendChild(msg);
+                }
+            }
+        }
+
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function handleSearchKeydown(e) {
+            if (e.key === 'Escape') {
+                clearSearch();
+            }
+        }
+
+        function calculateProjection() {
+            const rank = parseInt(document.getElementById('projRank').value) || 1;
+            const warfarePct = parseInt(document.getElementById('projWarfare').value) / 100;
+            const days = parseInt(document.getElementById('projDays').value) || 0;
+            
+            let seasonGems = 0;
+            if (rank <= 25) seasonGems = 810;
+            else if (rank <= 50) seasonGems = 560;
+            else if (rank <= 100) seasonGems = 450;
+            else seasonGems = 200;
+            
+            const warfareBiweekly = (warfarePct * 150 * 5);
+            const weeksRemaining = days / 7;
+            const warfareTotal = (warfareBiweekly * (weeksRemaining / 2));
+            
+            const dailyWeekly = 1100 * (weeksRemaining / 4);
+            
+            const total = Math.round(seasonGems + warfareTotal + dailyWeekly);
+            document.getElementById('projSeasonTotal').textContent = total.toLocaleString();
+        }
+
+        calculateProjection();
+
+        let currentMode = 'all';
+        let currentChartFilter = 'all';
+
+        function toggleSaveMenu() {
+            const menu = document.getElementById('saveMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('saveMenu');
+            const btn = e.target.closest('[onclick="toggleSaveMenu()"]');
+            if (!btn && !menu?.contains(e.target)) {
+                menu?.classList.add('hidden');
+            }
+        });
+
+        function saveCurrentView() {
+            const name = prompt('Enter a name for this view:', 'My View');
+            if (!name) return;
+            
+            const view = {
+                id: 'view_' + Date.now(),
+                name: name,
+                mode: currentMode,
+                chartFilter: currentChartFilter,
+                theme: document.body.classList.contains('light-mode') ? 'light' : 'dark',
+                createdAt: new Date().toISOString()
+            };
+            
+            const saved = JSON.parse(localStorage.getItem('gemInfographicViews') || '[]');
+            saved.push(view);
+            localStorage.setItem('gemInfographicViews', JSON.stringify(saved));
+            
+            showToast('View "' + name + '" saved!', 'success');
+            toggleSaveMenu();
+        }
+
+        function loadSavedView() {
+            const saved = JSON.parse(localStorage.getItem('gemInfographicViews') || '[]');
+            if (saved.length === 0) {
+                showToast('No saved views yet', 'info');
+                toggleSaveMenu();
+                return;
+            }
+            
+            const options = saved.map((v, i) => v.name + (v.createdAt ? ' (' + new Date(v.createdAt).toLocaleDateString() + ')' : '')).join('\n');
+            const choice = prompt('Enter the number of the view to load:\n' + options.split('\n').map((v, i) => (i+1) + '. ' + v).join('\n'));
+            
+            const index = parseInt(choice) - 1;
+            if (index >= 0 && index < saved.length) {
+                const view = saved[index];
+                if (view.theme === 'light') {
+                    document.body.classList.add('light-mode');
+                    document.getElementById('themeIcon').classList.remove('fa-moon');
+                    document.getElementById('themeIcon').classList.add('fa-sun');
+                }
+                showToast('View "' + view.name + '" loaded!', 'success');
+            }
+            toggleSaveMenu();
+        }
+
+        function shareLink() {
+            const params = new URLSearchParams({
+                mode: currentMode,
+                chart: currentChartFilter,
+                theme: document.body.classList.contains('light-mode') ? 'light' : 'dark'
+            });
+            const url = window.location.origin + window.location.pathname + '?' + params.toString();
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Link copied to clipboard!', 'success');
+            });
+            toggleSaveMenu();
+        }
+
+        async function exportAsImage() {
+            showToast('Generating image...', 'info');
+            const container = document.querySelector('.max-w-7xl');
+            try {
+                const canvas = await html2canvas(container, {
+                    backgroundColor: '#050a14',
+                    scale: 2
+                });
+                const link = document.createElement('a');
+                link.download = 'gem-rewards-' + Date.now() + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast('Image exported!', 'success');
+            } catch (e) {
+                showToast('Export failed: ' + e.message, 'error');
+            }
+            toggleSaveMenu();
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'bg-green-accent',
+                error: 'bg-red-500',
+                info: 'bg-cyan-glow'
+            };
+            toast.className = 'fixed bottom-4 right-4 ' + colors[type] + ' text-white px-4 py-2 rounded-lg shadow-lg z-50 card-fade-in';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('theme') === 'light') {
+            document.body.classList.add('light-mode');
+            document.getElementById('themeIcon').classList.remove('fa-moon');
+            document.getElementById('themeIcon').classList.add('fa-sun');
+        }
+        if (urlParams.get('mode')) {
+            filterCards(urlParams.get('mode'), { currentTarget: document.querySelector('.filter-' + urlParams.get('mode')) || document.querySelector('.filter-all') });
+        }
+        if (urlParams.get('chart')) {
+            filterChart(urlParams.get('chart'));
         }
 
         function exportData() {
@@ -886,6 +1228,37 @@
         Chart.defaults.color = '#ffffff';
         Chart.defaults.borderColor = 'rgba(0, 229, 255, 0.2)';
         
+        const chartTooltipConfig = {
+            backgroundColor: 'rgba(10, 35, 60, 0.95)',
+            borderColor: 'rgba(0, 229, 255, 0.5)',
+            borderWidth: 1,
+            titleFont: { family: 'Rajdhani', size: 14, weight: 'bold' },
+            bodyFont: { family: 'Rajdhani', size: 13 },
+            padding: 12,
+            cornerRadius: 8,
+            displayColors: true,
+            boxPadding: 4,
+            callbacks: {
+                label: function(context) {
+                    const value = context.raw;
+                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                    const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                    const avg = total / context.dataset.data.length;
+                    const vsAvg = value > avg ? '+' : '';
+                    return [
+                        `${value.toLocaleString()} Gems`,
+                        `${pct}% of category`,
+                        value > avg ? `${vsAvg}${(value - avg).toLocaleString()} vs avg` : ''
+                    ];
+                }
+            }
+        };
+
+        const chartAnimationConfig = {
+            duration: 750,
+            easing: 'easeOutQuart'
+        };
+
         new Chart(document.getElementById('categoryChart'), {
             type: 'doughnut',
             data: {
@@ -893,16 +1266,19 @@
                 datasets: [{
                     data: [1820, 500, 750, 1100, 300],
                     backgroundColor: ['#00e5ff', '#ff6b35', '#9b59b6', '#f39c12', '#2ecc71'],
-                    borderWidth: 0
+                    borderWidth: 0,
+                    hoverOffset: 8
                 }]
             },
             options: {
                 responsive: true,
+                animation: { ...chartAnimationConfig, delay: 0 },
                 plugins: {
                     legend: {
                         position: 'bottom',
                         labels: { padding: 20, font: { family: 'Rajdhani', size: 12 } }
-                    }
+                    },
+                    tooltip: chartTooltipConfig
                 }
             }
         });
@@ -915,18 +1291,21 @@
                     label: 'Gems',
                     data: [810, 560, 450, 750, 300, 300, 400, 200, 700],
                     backgroundColor: ['#00e5ff', '#00e5ff', '#00e5ff', '#9b59b6', '#ff6b35', '#2ecc71', '#f39c12', '#ff6b35', '#f39c12'],
-                    borderRadius: 4
+                    borderRadius: 4,
+                    borderSkipped: false
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                animation: { ...chartAnimationConfig, delay: 100 },
                 scales: {
                     y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false } },
                     x: { grid: { display: false }, ticks: { display: false } }
                 },
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: chartTooltipConfig
                 }
             }
         });
@@ -954,6 +1333,7 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                animation: { ...chartAnimationConfig, delay: 200 },
                 scales: {
                     r: {
                         beginAtZero: true,
@@ -963,7 +1343,8 @@
                     }
                 },
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: chartTooltipConfig
                 }
             }
         });
@@ -995,15 +1376,125 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: true,
+                animation: { ...chartAnimationConfig, delay: 300 },
                 scales: {
                     y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false } },
                     x: { grid: { display: false }, ticks: { display: false } }
                 },
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: chartTooltipConfig
                 }
             }
         });
+
+        const chartFilterData = {
+            all: {
+                distribution: [1820, 500, 750, 1100, 300],
+                rewards: [810, 560, 450, 750, 300, 300, 400, 200, 700],
+                spider: [[1820, 500, 750, 1100, 300], [2000, 800, 1000, 1200, 500]],
+                colors: ['#00e5ff', '#ff6b35', '#9b59b6', '#f39c12', '#2ecc71'],
+                rewardColors: ['#00e5ff', '#00e5ff', '#00e5ff', '#9b59b6', '#ff6b35', '#2ecc71', '#f39c12', '#ff6b35', '#f39c12']
+            },
+            season: {
+                distribution: [1820, 0, 0, 0, 0],
+                rewards: [810, 560, 450, 0, 0, 0, 0, 0, 0],
+                spider: [[1820, 0, 0, 0, 0], [2000, 0, 0, 0, 0]],
+                colors: ['#00e5ff', '#333333', '#333333', '#333333', '#333333'],
+                rewardColors: ['#00e5ff', '#00e5ff', '#00e5ff', '#333333', '#333333', '#333333', '#333333', '#333333', '#333333']
+            },
+            event: {
+                distribution: [0, 500, 0, 0, 0],
+                rewards: [0, 0, 0, 0, 300, 0, 0, 0, 200],
+                spider: [[0, 500, 0, 0, 0], [0, 800, 0, 0, 0]],
+                colors: ['#333333', '#ff6b35', '#333333', '#333333', '#333333'],
+                rewardColors: ['#333333', '#333333', '#333333', '#333333', '#ff6b35', '#333333', '#333333', '#333333', '#ff6b35']
+            },
+            warfare: {
+                distribution: [0, 0, 750, 0, 0],
+                rewards: [0, 0, 0, 750, 0, 0, 0, 0, 0],
+                spider: [[0, 0, 750, 0, 0], [0, 0, 1000, 0, 0]],
+                colors: ['#333333', '#333333', '#9b59b6', '#333333', '#333333'],
+                rewardColors: ['#333333', '#333333', '#333333', '#9b59b6', '#333333', '#333333', '#333333', '#333333', '#333333']
+            },
+            daily: {
+                distribution: [0, 0, 0, 1100, 0],
+                rewards: [0, 0, 0, 0, 0, 0, 400, 0, 700],
+                spider: [[0, 0, 0, 1100, 0], [0, 0, 0, 1200, 0]],
+                colors: ['#333333', '#333333', '#333333', '#f39c12', '#333333'],
+                rewardColors: ['#333333', '#333333', '#333333', '#333333', '#333333', '#333333', '#f39c12', '#333333', '#f39c12']
+            },
+            code: {
+                distribution: [0, 0, 0, 0, 300],
+                rewards: [0, 0, 0, 0, 0, 300, 0, 0, 0],
+                spider: [[0, 0, 0, 0, 300], [0, 0, 0, 0, 500]],
+                colors: ['#333333', '#333333', '#333333', '#333333', '#2ecc71'],
+                rewardColors: ['#333333', '#333333', '#333333', '#333333', '#333333', '#2ecc71', '#333333', '#333333', '#333333']
+            }
+        };
+
+        let categoryChart, rewardsChart, spiderChart, lineChart;
+
+        function filterChart(filter) {
+            currentChartFilter = filter;
+            const data = chartFilterData[filter];
+            const buttons = document.querySelectorAll('.chart-filter-btn');
+            
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-cyan-glow/20', 'border-cyan-glow/30', 'active');
+                btn.classList.add('bg-cyan-glow/10', 'border-cyan-glow/20');
+                if (btn.textContent.toLowerCase() === filter || (filter === 'all' && btn.textContent === 'All')) {
+                    btn.classList.add('bg-cyan-glow/20', 'border-cyan-glow/30');
+                    btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
+                    btn.classList.add('active');
+                } else if (btn.textContent.toLowerCase() === 'event') {
+                    btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
+                    btn.classList.add('bg-orange-accent/10', 'border-orange-accent/20');
+                    if (filter === 'event') {
+                        btn.classList.add('bg-orange-accent/20', 'border-orange-accent/30');
+                        btn.classList.remove('bg-orange-accent/10', 'border-orange-accent/20');
+                    }
+                } else if (btn.textContent.toLowerCase() === 'warfare') {
+                    btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
+                    btn.classList.add('bg-purple-accent/10', 'border-purple-accent/20');
+                    if (filter === 'warfare') {
+                        btn.classList.add('bg-purple-accent/20', 'border-purple-accent/30');
+                        btn.classList.remove('bg-purple-accent/10', 'border-purple-accent/20');
+                    }
+                } else if (btn.textContent.toLowerCase() === 'daily') {
+                    btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
+                    btn.classList.add('bg-yellow-accent/10', 'border-yellow-accent/20');
+                    if (filter === 'daily') {
+                        btn.classList.add('bg-yellow-accent/20', 'border-yellow-accent/30');
+                        btn.classList.remove('bg-yellow-accent/10', 'border-yellow-accent/20');
+                    }
+                } else if (btn.textContent.toLowerCase() === 'code') {
+                    btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
+                    btn.classList.add('bg-green-accent/10', 'border-green-accent/20');
+                    if (filter === 'code') {
+                        btn.classList.add('bg-green-accent/20', 'border-green-accent/30');
+                        btn.classList.remove('bg-green-accent/10', 'border-green-accent/20');
+                    }
+                }
+            });
+
+            categoryChart.data.datasets[0].data = data.distribution;
+            categoryChart.data.datasets[0].backgroundColor = data.colors;
+            categoryChart.update('active');
+
+            rewardsChart.data.datasets[0].data = data.rewards;
+            rewardsChart.data.datasets[0].backgroundColor = data.rewardColors;
+            rewardsChart.update('active');
+
+            spiderChart.data.datasets[0].data = data.spider[0];
+            spiderChart.data.datasets[1].data = data.spider[1];
+            spiderChart.update('active');
+        }
+
+        categoryChart = Chart.getChart('categoryChart');
+        rewardsChart = Chart.getChart('rewardsChart');
+        spiderChart = Chart.getChart('spiderChart');
+        lineChart = Chart.getChart('lineChart');
 
         window.addEventListener('load', animateCounter);
     </script>
