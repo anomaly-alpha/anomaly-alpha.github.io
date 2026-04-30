@@ -40,8 +40,8 @@ ScaffoldingReadMe.txt
 .env
 
 # Others
+package-lock.json
 ~$*
-*~
 CodeCoverage/
 
 # MSBuild Binary and Structured Log
