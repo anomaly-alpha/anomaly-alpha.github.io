@@ -1,12 +1,12 @@
 # anomaly-alpha.github.io
 
-Gem rewards infographic for Invincible Mobile Game featuring interactive charts and visualizations.
+Gem rewards infographic for Invincible Mobile Game featuring interactive charts and visualizations with a sci-fi aesthetic.
 
 ## Gem Summary
 
 - **Total Gems**: 3,920 (one-time + recurring rewards)
-- **One-Time**: 1,820 gems
-- **Recurring/mo**: 2,100 gems
+- **One-Time**: 2,620 gems
+- **Recurring/mo**: 1,300 gems
 
 ### By Category
 
@@ -16,23 +16,45 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - **Daily/Weekly Rewards**: 1,100 gems (daily login + weekly bonus)
 - **Promo Codes**: 300 gems (code: 30KGTG)
 
-## Files
-
-- `gem_infographic.html` - Desktop version (full size)
-- `gem_infographic_small.html` - Mobile/compact version
-- `gem_infographic.png` - Static infographic image
-
 ## Features
 
-- Interactive doughnut chart for gem distribution
+### Interactive Elements
+- Animated counter that counts up on page load
+- Copy-to-clipboard for promo code (click the card)
+- Theme toggle (dark/light mode)
+- Filter buttons to show/hide reward categories
+- Export data as JSON
+
+### Visual Effects
+- Floating particles in background
+- Scanning line animation
+- Rotating gradient on total section
+- Corner decorations
+- Sparkle particles on cards
+- Glow hover effects on cards
+- Grid background overlay
+
+### Charts
+- Doughnut chart for gem distribution by category
 - Bar chart for individual rewards
-- Line chart for monthly income
-- Radar chart for performance metrics
-- Styled legend and contributor sections
+- Animated tooltips on cards
+- Legend with color coding
+
+## Files
+
+- `gem_infographic.html` - Interactive infographic
+- `gem_infographic.png` - Static infographic image
 
 ## Usage
 
 Open `gem_infographic.html` in a browser to view the infographic.
+
+## Tech Stack
+
+- Tailwind CSS (via CDN)
+- Chart.js for charts
+- Font Awesome icons
+- Rajdhani font (Google Fonts)
 
 ## Contributors
 
