@@ -1042,20 +1042,8 @@ function exportData() {
 
 // ===== COUNTDOWN TIMERS =====
 
-let lastSecond = -1;
-
 function updateCountdowns() {
   const now = new Date();
-  const currentSecond = now.getSeconds();
-
-  if (currentSecond !== lastSecond && lastSecond !== -1) {
-    document.querySelectorAll('[id^="countdown-"]').forEach(el => {
-      el.classList.remove('gem-animate--countdown-pulse');
-      void el.offsetWidth;
-      el.classList.add('gem-animate--countdown-pulse');
-    });
-  }
-  lastSecond = currentSecond;
 
   const eventEl = document.getElementById('countdown-event');
   const pvpEl = document.getElementById('countdown-pvp');
@@ -1366,16 +1354,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Restart sparkle animations when page becomes visible (fixes animation freeze after charts toggle)
-document.addEventListener('visibilitychange', function() {
-  if (document.visibilityState === 'visible') {
-    document.querySelectorAll('.gem-sparkle').forEach(s => {
-      s.style.animation = 'none';
-      s.offsetHeight; // force reflow
-      s.style.animation = '';
-    });
-  }
-});
+
 
 // Debug helpers
 window.debugPvp = () => {

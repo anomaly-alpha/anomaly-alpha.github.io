@@ -446,25 +446,25 @@
                 <i class="fas fa-gift gem-mode-btn__icon gem-text--code"></i>
                 <p class="gem-mode-btn__count gem-text--code"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>300</p>
                 <p class="gem-mode-btn__label gem-text--code">Code</p>
-                <span id="countdown-code" class="gem-mode-btn__countdown gem-text--code gem-countdown">--:--:--</span>
+                <span id="countdown-code" class="gem-mode-btn__countdown gem-text--code gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
             <button onclick="filterCards('event', event)" class="gem-mode-btn gem-mode-btn--event active">
                 <i class="fas fa-dragon gem-mode-btn__icon gem-text--event"></i>
                 <p class="gem-mode-btn__count gem-text--event"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>500</p>
                 <p class="gem-mode-btn__label gem-text--event">Event</p>
-                <span id="countdown-event" class="gem-mode-btn__countdown gem-text--event gem-countdown">--:--:--</span>
+                <span id="countdown-event" class="gem-mode-btn__countdown gem-text--event gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
             <button onclick="filterCards('pvp', event)" class="gem-mode-btn gem-mode-btn--pvp active">
                 <i class="fas fa-fist-raised gem-mode-btn__icon gem-text--pvp"></i>
                 <p class="gem-mode-btn__count gem-text--pvp"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>750</p>
                 <p class="gem-mode-btn__label gem-text--pvp">PvP</p>
-                <span id="countdown-pvp" class="gem-mode-btn__countdown gem-text--pvp gem-countdown">--:--:--</span>
+                <span id="countdown-pvp" class="gem-mode-btn__countdown gem-text--pvp gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
             <button onclick="filterCards('login', event)" class="gem-mode-btn gem-mode-btn--login active">
                 <i class="fas fa-sign-in-alt gem-mode-btn__icon gem-text--login"></i>
                 <p class="gem-mode-btn__count gem-text--login"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>293</p>
                 <p class="gem-mode-btn__label gem-text--login">Login</p>
-                <span id="countdown-login" class="gem-mode-btn__countdown gem-text--login gem-countdown">--:--:--</span>
+                <span id="countdown-login" class="gem-mode-btn__countdown gem-text--login gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
         </nav>
 
@@ -472,9 +472,6 @@
 
             <div class="gem-card gem-card--code gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-0" data-category="code" onclick="revealCode(this)">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-accent to-transparent opacity-50"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 0.4rem; animation-delay: 0.05s;"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 3rem; animation-delay: 0.3s;"></div>
-                <div class="gem-sparkle" style="top: 3rem; right: 0.4rem; animation-delay: 0.55s;"></div>
                 <button onclick="showCardModal('promo-code')" class="gem-card__info-btn" title="About this reward">
                     <i class="fas fa-info-circle gem-text--code"></i>
                 </button>
@@ -498,9 +495,6 @@
 
             <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-1" data-category="event">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 0.4rem; animation-delay: 0s;"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 3rem; animation-delay: 0.2s;"></div>
-                <div class="gem-sparkle" style="top: 3rem; right: 0.4rem; animation-delay: 0.4s;"></div>
                 <button onclick="showCardModal('the-long-haul')" class="gem-card__info-btn" title="About this event">
                     <i class="fas fa-info-circle gem-text--event"></i>
                 </button>
@@ -524,9 +518,6 @@
 
             <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-2" data-category="event">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 0.4rem; animation-delay: 0.1s;"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 3rem; animation-delay: 0.3s;"></div>
-                <div class="gem-sparkle" style="top: 3rem; right: 0.4rem; animation-delay: 0.5s;"></div>
                 <button onclick="showCardModal('earths-defenders')" class="gem-card__info-btn" title="About this event">
                     <i class="fas fa-info-circle gem-text--event"></i>
                 </button>
@@ -550,9 +541,6 @@
 
             <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-2" data-category="pvp" data-league="eliteI" data-rank="50">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-50"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 0.4rem; animation-delay: 0s;"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 3rem; animation-delay: 0.15s;"></div>
-                <div class="gem-sparkle" style="top: 3rem; right: 0.4rem; animation-delay: 0.3s;"></div>
                 <button onclick="showCardModal('restricted-arena')" class="gem-card__info-btn" title="About this event">
                     <i class="fas fa-info-circle gem-text--pvp"></i>
                 </button>
@@ -610,9 +598,6 @@
 
             <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="pvp" data-league="eliteIII" data-rank="50">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-50"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 0.4rem; animation-delay: 0.05s;"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 3rem; animation-delay: 0.25s;"></div>
-                <div class="gem-sparkle" style="top: 3rem; right: 0.4rem; animation-delay: 0.45s;"></div>
                 <button onclick="showCardModal('open-arena')" class="gem-card__info-btn" title="About this event">
                     <i class="fas fa-info-circle gem-text--pvp"></i>
                 </button>
@@ -670,9 +655,6 @@
 
             <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="pvp" data-league="eliteII" data-rank="50">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-glow to-transparent opacity-50"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 0.4rem; animation-delay: 0.1s;"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 3rem; animation-delay: 0.35s;"></div>
-                <div class="gem-sparkle" style="top: 3rem; right: 0.4rem; animation-delay: 0.55s;"></div>
                 <button onclick="showCardModal('multiverse-war')" class="gem-card__info-btn" title="About this event">
                     <i class="fas fa-info-circle gem-text--pvp"></i>
                 </button>
@@ -735,9 +717,6 @@
 
             <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-5" data-category="login">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 0.4rem; animation-delay: 0.15s;"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 3rem; animation-delay: 0.35s;"></div>
-                <div class="gem-sparkle" style="top: 3rem; right: 0.4rem; animation-delay: 0.55s;"></div>
                 <button onclick="showCardModal('daily-login')" class="gem-card__info-btn" title="About this reward">
                     <i class="fas fa-info-circle gem-text--login"></i>
                 </button>
@@ -760,9 +739,6 @@
 
             <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="login">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 0.4rem; animation-delay: 0.2s;"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 3rem; animation-delay: 0.4s;"></div>
-                <div class="gem-sparkle" style="top: 3rem; right: 0.4rem; animation-delay: 0.6s;"></div>
                 <button onclick="showCardModal('weekly-login')" class="gem-card__info-btn" title="About this reward">
                     <i class="fas fa-info-circle gem-text--login"></i>
                 </button>
@@ -785,9 +761,6 @@
 
             <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="login">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 0.4rem; animation-delay: 0.25s;"></div>
-                <div class="gem-sparkle" style="top: 0.4rem; right: 3rem; animation-delay: 0.5s;"></div>
-                <div class="gem-sparkle" style="top: 3rem; right: 0.4rem; animation-delay: 0.7s;"></div>
                 <button onclick="showCardModal('monthly-login')" class="gem-card__info-btn" title="About this reward">
                     <i class="fas fa-info-circle gem-text--login"></i>
                 </button>

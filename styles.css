@@ -950,7 +950,6 @@ body .gem-card--mode-highlight--all {
   width: 200%;
   height: 200%;
   background: radial-gradient(circle, rgba(233,30,138,0.15) 0%, transparent 70%);
-  animation: gem-rotate-bg 20s linear infinite;
   pointer-events: none;
 }
 
@@ -1075,15 +1074,7 @@ body .gem-card--mode-highlight--all {
   background: rgba(255, 107, 53, 0.60);
 }
 
-/* Sparkle */
-.gem-sparkle {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: white;
-  border-radius: 50%;
-  animation: gem-sparkle 1.5s ease-in-out infinite;
-}
+
 
 /* Divider */
 .gem-divider {
@@ -1177,33 +1168,6 @@ body .gem-card--mode-highlight--all {
   }
 }
 
-@keyframes gem-glow-pulse {
-  0%, 100% {
-    box-shadow: 0 0 3px rgba(0, 229, 255, 0.15);
-  }
-  50% {
-    box-shadow: 0 0 6px rgba(0, 229, 255, 0.25);
-  }
-}
-
-@keyframes gem-float-gem {
-  0%, 100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-10px) rotate(5deg);
-  }
-}
-
-@keyframes gem-rotate-bg {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @keyframes gem-scanline {
   0%, 100% {
     transform: translateX(-100%);
@@ -1218,16 +1182,7 @@ body .gem-card--mode-highlight--all {
   }
 }
 
-@keyframes gem-sparkle {
-  0%, 100% {
-    transform: scale(0);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
+
 
 @keyframes gem-float-particle {
   0% {
@@ -1259,28 +1214,12 @@ body .gem-card--mode-highlight--all {
 }
 
 /* Animation utility classes */
-.gem-animate--pulse-slow {
-  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.gem-animate--glow-pulse {
-  animation: gem-glow-pulse 2s ease-in-out infinite;
-}
-
 .gem-animate--fade-in {
   animation: gem-fade-in 0.6s ease-out forwards;
 }
 
-.gem-animate--float {
-  animation: gem-float-gem 3s ease-in-out infinite;
-}
-
-.gem-animate--sparkle {
-  animation: gem-sparkle 1.5s ease-in-out infinite;
-}
-
 .gem-animate--countdown-pulse {
-  animation: gem-countdown-pulse 1s ease-out;
+  animation: gem-countdown-pulse 1s ease-out infinite;
 }
 
 /* Countdown transition */

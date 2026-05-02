@@ -416,10 +416,8 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 | `gem-code--fade-in` | 0.5s | ease-out | Copy hint appear |
 | `gem-code--copied` | 0.4s | ease-out | Copied flash |
 | `gem-scanline` | 3s | ease-in-out | Header scan line (infinite) |
-| `gem-sparkle` | 1.5s | ease-in-out | Card sparkle (infinite) |
-| `gem-rotate-bg` | 20s | linear | Total section bg (infinite) |
 | `gem-float-particle` | 15s | linear | Background particles (infinite) |
-| `gem-countdown-pulse` | 1s | ease-out | Countdown second tick |
+| `gem-countdown-pulse` | 1s | ease-out infinite | Countdown second tick (CSS-only) |
 | `gem-modal--pop-in` | 0.3s | cubic-bezier(0.34, 1.56, 0.64, 1) | Modal entry |
 
 ---
@@ -428,9 +426,9 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 
 ```
 anomaly-alpha/
-├── styles.css       (1307 lines) — Design tokens + BEM classes + animations
-├── index.html       (874 lines)  — HTML with inline JSON configs
-├── script.js        (1399 lines) — JavaScript with token-aware logic
+├── styles.css       (1239 lines) — Design tokens + BEM classes + animations
+├── index.html       (847 lines)  — HTML with inline JSON configs
+├── script.js        (1377 lines) — JavaScript with token-aware logic
 └── docs/
     └── DESIGN_SYSTEM.md          — This file
 ```

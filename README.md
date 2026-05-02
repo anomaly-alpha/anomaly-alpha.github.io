@@ -62,10 +62,8 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ### Visual Effects
 - Floating particles in background (9 particles, varied sizes/speeds)
-- Scanning line animation on header
-- Rotating gradient on total section
+- Scanning line animation on header (signature sci-fi effect)
 - Corner decorations on main container
-- Sparkle particles on cards
 - Glow hover effects with category colors
 - Grid background overlay
 - Card fade-in animations (staggered 0–0.5s delays)
@@ -82,9 +80,9 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (857 lines) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (1363 lines) — All JS: charts, filters, PvP, modals, countdowns, search
-├── styles.css           (1298 lines) — CSS custom properties + BEM component classes
+├── index.html           (847 lines) — Main HTML + inline JSON configs (6 in <head>)
+├── script.js            (1377 lines) — All JS: charts, filters, PvP, modals, countdowns, search
+├── styles.css           (1239 lines) — CSS custom properties + BEM component classes
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
 ├── PLAN_card_modals.md  — Card modal feature plan and implementation notes
 ├── README.md            — This file
@@ -148,7 +146,6 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Login total corrected** — 293/week (210+60+23)
 - ✅ **Card modals (9 cards)** — All cards trigger modal via info icon; modal has hero tagline, description, tips, live PvP data, demotion warning
 - ✅ **Active mode selector opacity** — Toned down active mode button solid colors to be more transparent
-- ✅ **Sparkle clusters around info button** — All 9 cards have 3-sparkle clusters positioned around the info icon (top-right corner area) with staggered animation delays
 
 ### Data & Calculations
 - ✅ **GAME.pvp structure** — 14 leagues with `rankStart`/`rankEnd` fields
@@ -156,6 +153,14 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Spider chart targets** — (550, 1500, 360, 330)
 - ✅ **PvP defaults** — Elite II, rank 13
 - ✅ **Spider chart live updates** — Spider actuals recompute from live PvP form values via `getModeTotal('pvp')`; spider updates on PvP selector changes and mode toggles (matches distribution + rewards behavior)
+
+### Performance Improvements
+- ✅ **Removed 27 sparkle elements** — All `.gem-sparkle` divs removed from 9 cards (3 per card), eliminating continuous scale/opacity animation overhead
+- ✅ **Removed rotating background animation** — `.gem-section__rotating-bg` kept as static element, removed continuous 20s rotation of large 200%×200% gradient
+- ✅ **Countdown pulse optimized** — Changed JS-driven class toggle (every 1s, forced reflow) to pure CSS infinite animation on `gem-countdown-pulse`
+- ✅ **Removed 3 unused animation utility classes** — `gem-animate--glow-pulse`, `gem-animate--float`, `gem-animate--pulse-slow` and their `@keyframes` deleted
+- ✅ **Removed visibilitychange animation restarter** — Dead code after sparkle removal
+- **Net result:** 37 → 10 continuous animations (9 particles + 1 scanline)
 
 ### Bug Fixes
 - ✅ **Card hover shadow** — Hardcoded cyan values replacing undefined `var(--gem-shadow--card)`
