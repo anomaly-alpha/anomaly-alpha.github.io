@@ -100,6 +100,12 @@
                 <p class="gem-mode-btn__count gem-text--cyan"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>1843</p>
                 <p class="gem-mode-btn__label gem-text--cyan">All Modes</p>
             </button>
+            <button onclick="filterCards('code', event)" class="gem-mode-btn gem-mode-btn--code active">
+                <i class="fas fa-gift gem-mode-btn__icon gem-text--code"></i>
+                <p class="gem-mode-btn__count gem-text--code"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>300</p>
+                <p class="gem-mode-btn__label gem-text--code">Code</p>
+                <span id="countdown-code" class="gem-mode-btn__countdown gem-text--code gem-countdown">--:--:--</span>
+            </button>
             <button onclick="filterCards('event', event)" class="gem-mode-btn gem-mode-btn--event active">
                 <i class="fas fa-dragon gem-mode-btn__icon gem-text--event"></i>
                 <p class="gem-mode-btn__count gem-text--event"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>500</p>
@@ -118,17 +124,32 @@
                 <p class="gem-mode-btn__label gem-text--login">Login</p>
                 <span id="countdown-login" class="gem-mode-btn__countdown gem-text--login gem-countdown">--:--:--</span>
             </button>
-            <button onclick="filterCards('code', event)" class="gem-mode-btn gem-mode-btn--code active">
-                <i class="fas fa-gift gem-mode-btn__icon gem-text--code"></i>
-                <p class="gem-mode-btn__count gem-text--code"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>300</p>
-                <p class="gem-mode-btn__label gem-text--code">Code</p>
-                <span id="countdown-code" class="gem-mode-btn__countdown gem-text--code gem-countdown">--:--:--</span>
-            </button>
         </nav>
 
         <main class="gem-grid--cards my-8">
 
-            <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-0" data-category="event">
+            <div class="gem-card gem-card--code gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-0" data-category="code" onclick="revealCode(this)">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-accent to-transparent opacity-50"></div>
+                <div class="gem-sparkle" style="top: 1.5rem; right: 2.5rem; animation-delay: 0.5s;"></div>
+                <div class="gem-card__body">
+                    <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>300</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                    </p>
+                    <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Promo Code</h3>
+                    <div class="gem-label gem-label--code mb-4">
+                        <span>Code Redemption</span>
+                    </div>
+                </div>
+                <div class="gem-divider">
+                    <p class="text-white/60 text-sm gem-code__hint">A secret code whispered among allies—tap to reveal</p>
+                    <div class="gem-code__reveal hidden">
+                        <span class="gem-code__value">30KGTG</span>
+                        <span class="gem-code__copy-hint">click to copy</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-1" data-category="event">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
                 <div class="gem-sparkle" style="top: 1.25rem; right: 2rem; animation-delay: 0.1s;"></div>
                 <div class="gem-card__body">
@@ -149,7 +170,7 @@
                 </div>
             </div>
 
-            <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-1" data-category="event">
+            <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-2" data-category="event">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
                 <div class="gem-sparkle" style="top: 1.25rem; right: 2rem; animation-delay: 0.2s;"></div>
                 <div class="gem-card__body">
@@ -371,27 +392,7 @@
                 </div>
             </div>
 
-            <div class="gem-card gem-card--code gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-8" data-category="code" onclick="revealCode(this)">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-accent to-transparent opacity-50"></div>
-                <div class="gem-sparkle" style="top: 1.5rem; right: 2.5rem; animation-delay: 0.5s;"></div>
-                <div class="gem-card__body">
-                    <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>300</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
-                    </p>
-                    <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Promo Code</h3>
-                    <div class="gem-label gem-label--code mb-4">
-                        <span>Code Redemption</span>
-                    </div>
-                </div>
-                <div class="gem-divider">
-                    <p class="text-white/60 text-sm gem-code__hint">A secret code whispered among allies—tap to reveal</p>
-                    <div class="gem-code__reveal hidden">
-                        <span class="gem-code__value">30KGTG</span>
-                        <span class="gem-code__copy-hint">click to copy</span>
-                    </div>
-                </div>
-            </div>
-        </main>
+            </main>
 
         <section>
             <div class="gem-grid--charts mt-6">

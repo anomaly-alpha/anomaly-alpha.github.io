@@ -410,7 +410,7 @@ function updateAllPageTotals() {
 
 function getRewardsChartData(modes) {
   if (!modes || modes.length === 0) return { labels: [], data: [], colors: [] };
-  const order = ['event', 'pvp', 'login', 'code'];
+  const order = ['code', 'event', 'pvp', 'login'];
   const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
   const valueMap = {
     event: GAME.ev.event[0][1] + GAME.ev.event[1][1],
