@@ -1109,8 +1109,10 @@ document.addEventListener('DOMContentLoaded', function() {
       cards.forEach(card => card.classList.add(`gem-card--mode-highlight--${mode}`));
     });
     btn.addEventListener('mouseleave', () => {
-      document.querySelectorAll('[class*="gem-card--mode-highlight--"]').forEach(card => {
-        card.className = card.className.replace(/gem-card--mode-highlight--\w+/g, '');
+      ['event', 'pvp', 'login', 'code', 'all'].forEach(m => {
+        document.querySelectorAll(`.gem-card--mode-highlight--${m}`).forEach(card => {
+          card.classList.remove(`gem-card--mode-highlight--${m}`);
+        });
       });
     });
   });
