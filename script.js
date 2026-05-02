@@ -1080,7 +1080,7 @@ function updatePvpCard(cardId, skipTotals) {
   }
   savePvpSelection(cardId);
   if (!skipTotals) {
-  updateAllPageTotals(true);
+    updateAllPageTotals();
     updateChartsByModes(selectedModes);
   }
 }
@@ -1115,7 +1115,7 @@ function initializePvPCards() {
   loadPvpSelection(1);
   loadPvpSelection(2);
   loadPvpSelection(3);
-  updateAllPageTotals();
+  updateAllPageTotals(true);
 }
 
 // ===== INITIALIZATION =====
