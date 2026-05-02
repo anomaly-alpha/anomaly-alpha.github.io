@@ -112,6 +112,9 @@ Open `gem_infographic.html` in a browser to view the infographic.
 - ✅ Updated PvP defaults to Elite II rank 13 (user's settings)
 - ✅ Fixed PvP mode selector showing 0 issue
 - ✅ Unified event card tag styles - all login cards use yellow-accent
+- ✅ Reordered cards: Event → PvP → Login → Code
+- ✅ Moved League/Rank selectors to bottom of PvP cards
+- ✅ Moved Cards/Chips info to right below gems payout in PvP cards
 
 ## Contributors
 

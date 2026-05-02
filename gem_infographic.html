@@ -447,8 +447,149 @@
                 </div>
             </div>
 
+            <!-- PvP Card 1: Restricted Arena -->
+            <article class="pvp-card card-1 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.2s;" data-category="pvp" data-league="eliteI" data-rank="50">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-50"></div>
+                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0s;"></div>
+                <div class="absolute top-5 right-10 w-1 h-1 bg-purple-accent rounded-full sparkle" style="animation-delay: 0.3s;"></div>
+                <!-- GEM_ICON_PVP_RESTRICTED_ARENA -->
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span><span id="pvp1-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+                
+                <div class="flex gap-4 text-sm text-white/60 mb-3">
+                    <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp1-cards">0</span> Cards</span>
+                    <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp1-chips">0</span> Chips</span>
+                </div>
+
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Restricted Arena</h3>
+                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
+                    <span>Player vs Player</span>
+                </div>
+                
+                <div class="inline-flex items-center gap-1 bg-pink-glow/15 px-3 py-1 rounded-full text-xs text-pink-glow border border-pink-glow/30 mb-3">
+                    <i class="fas fa-clock"></i> Weekly
+                </div>
+                
+                <div class="border-t border-pink-glow/20 mt-4 pt-3">
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">League:</label>
+                        <select id="pvp1-league" onchange="updatePvpCard(1)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm cursor-pointer">
+                            <option value="eliteI">Elite I</option>
+                            <option value="eliteII">Elite II</option>
+                            <option value="eliteIII">Elite III</option>
+                            <option value="invincible">Invincible</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">Rank:</label>
+                        <select id="pvp1-rank" onchange="updatePvpCard(1)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm w-20 cursor-pointer">
+                        </select>
+                        <button onclick="clearPvpSelection(1)" class="text-white/40 hover:text-white/80 text-xs p-1" title="Reset to default">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PvP Card 2: Open Arena -->
+            <article class="pvp-card card-2 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.3s;" data-category="pvp" data-league="eliteIII" data-rank="50">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-50"></div>
+                <div class="absolute top-6 right-10 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.2s;"></div>
+                <!-- GEM_ICON_PVP_OPEN_ARENA -->
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span><span id="pvp2-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+                
+                <div class="flex gap-4 text-sm text-white/60 mb-3">
+                    <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp2-cards">0</span> Cards</span>
+                    <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp2-chips">0</span> Chips</span>
+                </div>
+
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Open Arena</h3>
+                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
+                    <span>Player vs Player</span>
+                </div>
+                
+                <div class="inline-flex items-center gap-1 bg-pink-glow/15 px-3 py-1 rounded-full text-xs text-pink-glow border border-pink-glow/30 mb-3">
+                    <i class="fas fa-clock"></i> Weekly
+                </div>
+                
+                <div class="border-t border-pink-glow/20 mt-4 pt-3">
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">League:</label>
+                        <select id="pvp2-league" onchange="updatePvpCard(2)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm cursor-pointer">
+                            <option value="eliteI">Elite I</option>
+                            <option value="eliteII">Elite II</option>
+                            <option value="eliteIII">Elite III</option>
+                            <option value="invincible">Invincible</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">Rank:</label>
+                        <select id="pvp2-rank" onchange="updatePvpCard(2)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm w-20 cursor-pointer">
+                        </select>
+                        <button onclick="clearPvpSelection(2)" class="text-white/40 hover:text-white/80 text-xs p-1" title="Reset to default">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PvP Card 3: Multiverse Alliance War -->
+            <article class="pvp-card card-3 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.4s;" data-category="pvp" data-league="eliteII" data-rank="50">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-glow to-transparent opacity-50"></div>
+                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.4s;"></div>
+                
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span><span id="pvp3-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+                
+                <div class="flex gap-4 text-sm text-white/60 mb-3">
+                    <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp3-cards">0</span> Cards</span>
+                    <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp3-chips">0</span> Chips</span>
+                </div>
+
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Multiverse Alliance War</h3>
+                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
+                    <span>Player vs Player</span>
+                </div>
+                
+                <div class="inline-flex items-center gap-1 bg-pink-glow/15 px-3 py-1 rounded-full text-xs text-pink-glow border border-pink-glow/30 mb-3">
+                    <i class="fas fa-globe"></i> 5 matches / 2 weeks
+                </div>
+                
+                <div id="pvp3-demotion" class="hidden bg-red-500/20 border border-red-500/50 rounded-lg p-2 text-center mb-2">
+                    <i class="fas fa-exclamation-triangle text-red-400 mr-1"></i>
+                    <span class="text-red-400 text-xs font-bold">DEMOTION ZONE</span>
+                </div>
+                
+                <div class="border-t border-pink-glow/20 mt-4 pt-3">
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">League:</label>
+                        <select id="pvp3-league" onchange="updatePvpCard(3)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm cursor-pointer">
+                            <option value="eliteI">Elite I</option>
+                            <option value="eliteII">Elite II</option>
+                            <option value="eliteIII">Elite III</option>
+                            <option value="invincible">Invincible</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">Rank:</label>
+                        <select id="pvp3-rank" onchange="updatePvpCard(3)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm w-20 cursor-pointer">
+                        </select>
+                        <button onclick="clearPvpSelection(3)" class="text-white/40 hover:text-white/80 text-xs p-1" title="Reset to default">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
             <!-- Daily Login -->
-            <div class="card-hover relative bg-yellow-accent/8 p-6 rounded-xl border border-yellow-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.2s;" data-category="login">
+            <div class="card-hover relative bg-yellow-accent/8 p-6 rounded-xl border border-yellow-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.5s;" data-category="login">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
                 <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.3s;"></div>
                 <!-- GEM_ICON_LOGIN_DAILY -->
@@ -506,147 +647,6 @@
                     90 gems per month ÷ 4 = 23/week
                 </div>
             </div>
-
-            <!-- PVP_CARD_1_RESTRICTED_ARENA_START -->
-            <article class="pvp-card card-1 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.5s;" data-category="pvp" data-league="eliteI" data-rank="50">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-50"></div>
-                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0s;"></div>
-                <div class="absolute top-5 right-10 w-1 h-1 bg-purple-accent rounded-full sparkle" style="animation-delay: 0.3s;"></div>
-                <!-- GEM_ICON_PVP_RESTRICTED_ARENA -->
-                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
-                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span><span id="pvp1-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
-                </p>
-                
-                <div class="flex items-center gap-2 mb-3 mt-3">
-                    <label class="text-white/60 text-xs">League:</label>
-                    <select id="pvp1-league" onchange="updatePvpCard(1)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm cursor-pointer">
-                        <option value="eliteI">Elite I</option>
-                        <option value="eliteII">Elite II</option>
-                        <option value="eliteIII">Elite III</option>
-                        <option value="invincible">Invincible</option>
-                    </select>
-                </div>
-                
-                <div class="flex items-center gap-2 mb-4">
-                    <label class="text-white/60 text-xs">Rank:</label>
-                    <select id="pvp1-rank" onchange="updatePvpCard(1)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm w-20 cursor-pointer">
-                    </select>
-                    <button onclick="clearPvpSelection(1)" class="text-white/40 hover:text-white/80 text-xs p-1" title="Reset to default">
-                        <i class="fas fa-times-circle"></i>
-                    </button>
-                </div>
-                
-                <div class="flex gap-4 text-sm text-white/60 mb-2">
-                    <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp1-cards">0</span> Cards</span>
-                    <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp1-chips">0</span> Chips</span>
-                </div>
-
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Restricted Arena</h3>
-                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
-                    <span>Player vs Player</span>
-                </div>
-                
-<div class="inline-flex items-center gap-1 bg-pink-glow/15 px-3 py-1 rounded-full text-xs text-pink-glow border border-pink-glow/30 mb-3">
-                    <i class="fas fa-clock"></i> Weekly
-                </div>
-                
-                
-            </article>
-
-            <!-- PvP Card 2: Open Arena -->
-            <article class="pvp-card card-2 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.6s;" data-category="pvp" data-league="eliteIII" data-rank="50">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-50"></div>
-                <div class="absolute top-6 right-10 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.2s;"></div>
-                <!-- GEM_ICON_PVP_OPEN_ARENA -->
-                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
-                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span><span id="pvp2-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
-                </p>
-                
-                <div class="flex items-center gap-2 mb-3 mt-3">
-                    <label class="text-white/60 text-xs">League:</label>
-                    <select id="pvp2-league" onchange="updatePvpCard(2)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm cursor-pointer">
-                        <option value="eliteI">Elite I</option>
-                        <option value="eliteII">Elite II</option>
-                        <option value="eliteIII">Elite III</option>
-                        <option value="invincible">Invincible</option>
-                    </select>
-                </div>
-                
-                <div class="flex items-center gap-2 mb-4">
-                    <label class="text-white/60 text-xs">Rank:</label>
-                    <select id="pvp2-rank" onchange="updatePvpCard(2)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm w-20 cursor-pointer">
-                    </select>
-                    <button onclick="clearPvpSelection(2)" class="text-white/40 hover:text-white/80 text-xs p-1" title="Reset to default">
-                        <i class="fas fa-times-circle"></i>
-                    </button>
-                </div>
-                
-                <div class="flex gap-4 text-sm text-white/60 mb-2">
-                    <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp2-cards">0</span> Cards</span>
-                    <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp2-chips">0</span> Chips</span>
-                </div>
-
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Open Arena</h3>
-                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
-                    <span>Player vs Player</span>
-                </div>
-                
-<div class="inline-flex items-center gap-1 bg-pink-glow/15 px-3 py-1 rounded-full text-xs text-pink-glow border border-pink-glow/30 mb-3">
-                    <i class="fas fa-clock"></i> Weekly
-                </div>
-                
-                
-            </article>
-
-            <!-- PvP Card 3: Multiverse Alliance War -->
-            <article class="pvp-card card-3 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.7s;" data-category="pvp" data-league="eliteII" data-rank="50">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-glow to-transparent opacity-50"></div>
-                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.4s;"></div>
-                
-                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
-                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span><span id="pvp3-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
-                </p>
-                
-                <div class="flex items-center gap-2 mb-3 mt-3">
-                    <label class="text-white/60 text-xs">League:</label>
-                    <select id="pvp3-league" onchange="updatePvpCard(3)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm cursor-pointer">
-                        <option value="eliteI">Elite I</option>
-                        <option value="eliteII">Elite II</option>
-                        <option value="eliteIII">Elite III</option>
-                        <option value="invincible">Invincible</option>
-                    </select>
-                </div>
-                
-                <div class="flex items-center gap-2 mb-4">
-                    <label class="text-white/60 text-xs">Rank:</label>
-                    <select id="pvp3-rank" onchange="updatePvpCard(3)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm w-20 cursor-pointer">
-                    </select>
-                    <button onclick="clearPvpSelection(3)" class="text-white/40 hover:text-white/80 text-xs p-1" title="Reset to default">
-                        <i class="fas fa-times-circle"></i>
-                    </button>
-                </div>
-                
-                <div class="flex gap-4 text-sm text-white/60 mb-2">
-                    <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp3-cards">0</span> Cards</span>
-                    <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp3-chips">0</span> Chips</span>
-                </div>
-
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Multiverse Alliance War</h3>
-                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
-                    <span>Player vs Player</span>
-                </div>
-                
-                <div class="inline-flex items-center gap-1 bg-pink-glow/15 px-3 py-1 rounded-full text-xs text-pink-glow border border-pink-glow/30 mb-3">
-                    <i class="fas fa-globe"></i> 5 matches / 2 weeks
-                </div>
-                
-                <div id="pvp3-demotion" class="hidden bg-red-500/20 border border-red-500/50 rounded-lg p-2 text-center mb-2">
-                    <i class="fas fa-exclamation-triangle text-red-400 mr-1"></i>
-                    <span class="text-red-400 text-xs font-bold">DEMOTION ZONE</span>
-                </div>
-                
-                
-            </article>
 
             <!-- Promo Code -->
             <div class="card-hover relative bg-green-accent/8 p-6 rounded-xl border border-green-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.8s;" data-category="code" onclick="copyCode()">
@@ -1824,9 +1824,6 @@
             animateValue(`pvp${cardId}-gems`, payout.gems);
             animateValue(`pvp${cardId}-cards`, payout.cards);
             animateValue(`pvp${cardId}-chips`, payout.chips);
-            const totalGems = getModeTotal('event') + getModeTotal('pvp') + getModeTotal('login') + getModeTotal('code');
-            const percent = ((payout.gems / totalGems) * 100).toFixed(1);
-            document.getElementById(`pvp${cardId}-percent`).textContent = percent + '%';
             const demotionEl = document.getElementById(`pvp${cardId}-demotion`);
             if (demotionEl) {
                 if (payout.isDemotion) {
