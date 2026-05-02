@@ -70,7 +70,7 @@ function buildModeData(mode, totals) {
   return { distribution: d, rewards: r, spider: sp, colors: cols, rewardColors: rCols };
 }
 
-const chartFilterData = {
+let chartFilterData = {
   all: buildModeData('all', modeTotals),
   event: buildModeData('event', modeTotals),
   pvp: buildModeData('pvp', modeTotals),
@@ -354,10 +354,10 @@ function getRewardsChartData(modes) {
   const order = ['code', 'event', 'pvp', 'login'];
   const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
   const valueMap = {
-    event: GAME.ev.event[0][1] + GAME.ev.event[1][1],
+    event: REWARDS.categories.event.total,
     pvp: getModeTotal('pvp'),
     login: getModeTotal('login'),
-    code: GAME.ev.code[0][1]
+    code: REWARDS.categories.code.total
   };
   const filtered = modes.filter(m => order.includes(m));
   return {
@@ -965,7 +965,7 @@ document.addEventListener('DOMContentLoaded', function() {
   buildCountdownTargets();
 
   // Rebuild chartFilterData now that configs are loaded
-  modeTotals = { event: 0, pvp: 0, login: 0, code: 0 };
+  Object.assign(modeTotals, { event: 0, pvp: 0, login: 0, code: 0 });
   chartFilterData = {
     all: buildModeData('all', modeTotals),
     event: buildModeData('event', modeTotals),
