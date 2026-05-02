@@ -38,7 +38,18 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, an
 - CSS custom properties as design tokens (`--gem-event`, `--gem-pvp`, etc.)
 - BEM naming for component classes
 - Rajdhani font for consistent sci-fi typography
-- Category colors: event=orange, pvp=pink, login=amber, code=green, all=cyan
+- Category colors: event=orange (#ff6b35), pvp=pink (#e91e8a), login=amber (#f39c12), code=green (#2ecc71), all=cyan (#00e5ff)
+
+### Design Token System
+All visual values are defined as CSS custom properties in `:root` with full dark/light mode support:
+- **Category tokens**: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, `--gem-purple`
+- **Semantic tokens**: `--gem-star` (badges/tips), `--gem-gem` (gem icon glow)
+- **Background tokens**: `--gem-bg-dark`, `--gem-bg-mid`, `--gem-bg-light`
+- **Alert tokens**: complete set with bg/border/text for danger/success/info
+- **Shadow tokens**: `--gem-shadow--card`, `--gem-shadow--glow-cyan`, `--gem-shadow--glow-pink`, `--gem-shadow--main`, `--gem-shadow--gem`
+- **Light mode**: `:root.light-mode` overrides all tokens needing different values
+
+Full token reference: `docs/DESIGN_SYSTEM.md`
 
 ## Constraints
 - No build step — works directly from disk

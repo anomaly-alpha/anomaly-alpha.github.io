@@ -311,18 +311,48 @@ function getPvpPayout(leagueId, rank) {
 
 CSS custom properties for all colors, backgrounds, borders, text, shadows, buttons, modals, tooltips, and fonts.
 
-Key tokens:
+Category tokens:
 ```css
 :root {
-  --gem-event: #ff6b35;
-  --gem-pvp: #e91e8a;
-  --gem-login: #f39c12;
-  --gem-code: #2ecc71;
-  --gem-cyan: #00e5ff;
-  --gem-bg-dark: #050a14;
-  --gem-shadow--card: 0 15px 40px rgba(0, 229, 255, 0.3), 0 0 60px rgba(0, 229, 255, 0.1);
+  --gem-event: #ff6b35;    /* orange */
+  --gem-pvp: #e91e8a;      /* pink */
+  --gem-login: #f39c12;    /* amber */
+  --gem-code: #2ecc71;     /* green */
+  --gem-cyan: #00e5ff;     /* cyan accent */
+  --gem-purple: #9b59b6;   /* purple */
+  --gem-star: #ffeb3b;     /* badge/tips yellow */
 }
 ```
+
+Background tokens:
+```css
+--gem-bg-dark: #050a14;   /* dark mode base */
+--gem-bg-mid: #0a1628;    /* dark mode container */
+--gem-bg-light: #0d1f3c;  /* dark mode elevated */
+```
+
+Alert tokens (complete set per variant):
+```css
+--gem-alert--danger-bg: rgba(239, 68, 68, 0.20);
+--gem-alert--danger-border: rgba(239, 68, 68, 0.50);
+--gem-alert--danger-text: #ef4444;
+--gem-alert--success-bg: rgba(46, 204, 113, 0.20);
+--gem-alert--success-border: rgba(46, 204, 113, 0.30);
+--gem-alert--success-text: #2ecc71;
+--gem-alert--info-bg: rgba(0, 229, 255, 0.20);
+--gem-alert--info-border: rgba(0, 229, 255, 0.30);
+--gem-alert--info-text: #00e5ff;
+```
+
+Shadow tokens:
+```css
+--gem-shadow--card: 0 15px 40px rgba(0, 229, 255, 0.3), 0 0 60px rgba(0, 229, 255, 0.1);
+--gem-shadow--glow-cyan: 0 0 20px rgba(0, 229, 255, 0.5);
+--gem-shadow--glow-pink: 0 0 20px rgba(233, 30, 138, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.3);
+--gem-shadow--gem: 0 0 30px rgba(233, 30, 138, 0.6);
+```
+
+Full token reference: [docs/DESIGN_SYSTEM.md](../DESIGN_SYSTEM.md)
 
 ### 5.2 BEM Component Classes
 
@@ -330,7 +360,7 @@ Key tokens:
 |-----------|-------|----------|-----------|
 | Card | `.gem-card` | `__body`, `__divider`, `__info-btn` | `--event`, `--pvp`, `--login`, `--code`, `--hover`, `--fade-in`, `--delay-N`, `--mode-highlight--*` |
 | Label | `.gem-label` | - | `--event`, `--pvp`, `--login`, `--code`, `--cyan` |
-| Mode Button | `.gem-mode-btn` | `__icon`, `__count`, `__label`, `__countdown` | `--all`, `--event`, `--pvp`, `--login`, `--code` (active state uses toned opacity) |
+| Mode Button | `.gem-mode-btn` | `__icon`, `__count`, `__label`, `__countdown` | `--all`, `--event`, `--pvp`, `--login`, `--code` |
 | Chart | `.gem-chart` | `__title` | - |
 | Toast | `.gem-toast` | - | `--success`, `--error`, `--info` |
 | Modal | `.gem-modal` | `__overlay`, `__content`, `__header`, `__body`, `__footer`, `__icon-box`, `__title`, `__total`, `__badge`, `__close` | `--visible` |
@@ -341,7 +371,13 @@ Key tokens:
 
 ### 5.3 Light Mode
 
-`:root.light-mode` overrides background colors, text colors, borders, and card backgrounds for a light theme. Toggle adds `light-mode` class to `<body>`.
+`:root.light-mode` overrides background colors, text colors, borders, card backgrounds, and button/modal tokens for a light theme. Toggle adds `light-mode` class to `<body>`.
+
+Key light mode differences:
+- Backgrounds: dark grays → light grays
+- Text: white with opacity → dark slate with opacity
+- Card backgrounds: category-colored translucent → cyan-tinted translucent
+- Button/modal: adjusted for light surface contrast
 
 ---
 

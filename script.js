@@ -1336,9 +1336,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const btn = document.querySelector(`.gem-mode-btn--${mode}`);
     if (!btn) return;
     btn.addEventListener('mouseenter', () => {
-      const cards = mode === 'all'
-        ? document.querySelectorAll('.gem-card')
-        : document.querySelectorAll(`.gem-card[data-category="${mode}"]`);
+      if (mode === 'all') return;
+      const cards = document.querySelectorAll(`.gem-card[data-category="${mode}"]`);
       cards.forEach(card => card.classList.add(`gem-card--mode-highlight--${mode}`));
     });
     btn.addEventListener('mouseleave', () => {

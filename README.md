@@ -110,15 +110,18 @@ Open `index.html` in any browser — no build step required. The page loads inli
 ## Design System
 
 CSS custom property design tokens with BEM naming convention:
-- **Color tokens**: `--gem-event` (#ff6b35), `--gem-pvp` (#e91e8a), `--gem-login` (#f39c12), `--gem-code` (#2ecc71), `--gem-cyan` (#00e5ff)
+- **Category tokens**: `--gem-event` (#ff6b35), `--gem-pvp` (#e91e8a), `--gem-login` (#f39c12), `--gem-code` (#2ecc71), `--gem-cyan` (#00e5ff), `--gem-purple` (#9b59b6), `--gem-star` (#ffeb3b)
 - **Card modifiers**: `.gem-card--event`, `.gem-card--pvp`, `.gem-card--login`, `.gem-card--code`
 - **Label classes**: `.gem-label--event`, `.gem-label--pvp`, etc.
 - **Text classes**: `.gem-text--event`, `.gem-text--pvp`, etc.
-- **Shadow tokens**: `--gem-shadow--card`, `--gem-shadow--glow-cyan`
+- **Shadow tokens**: `--gem-shadow--card`, `--gem-shadow--glow-cyan`, `--gem-shadow--glow-pink`, `--gem-shadow--gem`
+- **Alert tokens**: `--gem-alert--danger-bg/border/text`, `--gem-alert--success-*`, `--gem-alert--info-*`
 - **Hover highlight**: `--card-color` CSS variable per card for dynamic category-color hover effects
 - **Info icon**: `.gem-card__info-btn` — circular icon button on every card, triggers modal
 - **Modal badge**: `.gem-modal__badge--star` — yellow star badge in modal header
 - Light mode via `:root.light-mode` token overrides
+
+Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 
 ## Tech Stack
 
