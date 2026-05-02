@@ -176,7 +176,9 @@ const CM = { event:'#ff6b35', pvp:'#e91e8a', login:'#f39c12', code:'#2ecc71' };
 const modeTotals = { event: 0, pvp: 0, login: 0, code: 0 };
 
 function buildModeData(mode, totals) {
-  if (!GAME || !REWARDS) return { distribution: [0,0,0,0,0], rewards: [0,0,0,0,0,0,0], spider: [[0,0,0,0],[0,0,0,0]], colors: [], rewardColors: [] };
+  if (!GAME || !REWARDS) {
+    return { distribution: [0,0,0,0,0], rewards: [0,0,0,0,0,0,0], spider: [[0,0,0,0],[0,0,0,0]], colors: [], rewardColors: [] };
+  }
 
   const spiderTargets = GAME.spiderTargets || { events: 550, pvp: 1500, login: 360, code: 330 };
   const d = [0,0,0,0,0], r = [0,0,0,0,0,0,0], sp = [[0,0,0,0,0],[0,0,0,0,0]];
@@ -203,8 +205,21 @@ function buildModeData(mode, totals) {
     d[4] = REWARDS.categories.code.total; r[3] = d[4];
     sp[0] = [0, 0, 0, d[4]]; sp[1] = [0, 0, 0, spiderTargets.code];
   }
-  const cols = d.map((v,i) => v>0 ? (i===1?CM.event:i===2?CM.pvp:i===3?CM.login:CM.code) : DC);
-  const rCols = r.map((v,i) => v>0 ? (i===3?CM.event:i===4?CM.event:i===5?CM.pvp:i===6?CM.login:CM.code) : DC);
+
+  const cols = d.map((v, i) => {
+    if (v === 0) return DC;
+    if (i === 1) return CM.event;
+    if (i === 2) return CM.pvp;
+    if (i === 3) return CM.login;
+    return CM.code;
+  });
+  const rCols = r.map((v, i) => {
+    if (v === 0) return DC;
+    if (i === 3 || i === 4) return CM.event;
+    if (i === 5) return CM.pvp;
+    if (i === 6) return CM.login;
+    return CM.code;
+  });
   return { distribution: d, rewards: r, spider: sp, colors: cols, rewardColors: rCols };
 }
 
@@ -413,7 +428,7 @@ function filterCards(category, evt) {
   const cards = document.querySelectorAll('[data-category]');
 
   if (category === 'all') {
-selectedModes = UI?.defaults?.selectedModes ? [...UI.defaults.selectedModes] : ['event', 'pvp', 'login', 'code'];
+    selectedModes = UI?.defaults?.selectedModes ? [...UI.defaults.selectedModes] : ['event', 'pvp', 'login', 'code'];
     updateAllButtons();
   } else {
     const modeIndex = selectedModes.indexOf(category);
@@ -498,16 +513,10 @@ function getRewardsChartData(modes) {
   if (!modes || modes.length === 0) return { labels: [], data: [], colors: [] };
   const order = ['code', 'event', 'pvp', 'login'];
   const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
-  const valueMap = {
-    event: REWARDS.categories.event.total,
-    pvp: getModeTotal('pvp'),
-    login: getModeTotal('login'),
-    code: REWARDS.categories.code.total
-  };
   const filtered = modes.filter(m => order.includes(m));
   return {
     labels: filtered.map(m => m.charAt(0).toUpperCase() + m.slice(1)),
-    data: filtered.map(m => valueMap[m] || 0),
+    data: filtered.map(m => getModeTotal(m)),
     colors: filtered.map(m => colorMap[m] || '#333333')
   };
 }
@@ -558,7 +567,12 @@ function updateChartsByModes(modes) {
   });
 
   combinedData.distribution.forEach((v, i) => {
-    combinedData.colors[i] = v > 0 ? (colorMap[modes.find(m => chartFilterData[m].distribution[i] > 0)] || '#00e5ff') : '#333333';
+    if (v > 0) {
+      const activeMode = modes.find(m => chartFilterData[m].distribution[i] > 0);
+      combinedData.colors[i] = colorMap[activeMode] || '#00e5ff';
+    } else {
+      combinedData.colors[i] = '#333333';
+    }
   });
 
   combinedData.rewards.forEach((v, i) => {
@@ -584,10 +598,9 @@ function updateChartsByModes(modes) {
   modes.forEach(mode => {
     const data = chartFilterData[mode];
     if (data) {
-      spiderActual[0] += data.spider[0][0];
-      spiderActual[1] += data.spider[0][1];
-      spiderActual[2] += data.spider[0][2];
-      spiderActual[3] += data.spider[0][3];
+      for (let j = 0; j < 4; j++) {
+        spiderActual[j] += data.spider[0][j];
+      }
     }
   });
 
@@ -601,40 +614,33 @@ function filterChart(filter) {
   const data = chartFilterData[filter];
   const buttons = document.querySelectorAll('.chart-filter-btn');
 
+  const colorMap = {
+    event: { base: 'orange-accent' },
+    login: { base: 'yellow-accent' },
+    code: { base: 'green-accent' },
+    pvp: { base: 'pink-glow' }
+  };
+
   buttons.forEach(btn => {
+    const btnLower = btn.textContent.toLowerCase();
+    const isAllBtn = btn.textContent === 'All';
+    const isActive = btnLower === filter || (filter === 'all' && isAllBtn);
+    const colorConfig = colorMap[btnLower];
+
     btn.classList.remove('bg-cyan-glow/20', 'border-cyan-glow/30', 'active');
     btn.classList.add('bg-cyan-glow/10', 'border-cyan-glow/20');
-    if (btn.textContent.toLowerCase() === filter || (filter === 'all' && btn.textContent === 'All')) {
+
+    if (isActive) {
       btn.classList.add('bg-cyan-glow/20', 'border-cyan-glow/30');
       btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
       btn.classList.add('active');
-    } else if (btn.textContent.toLowerCase() === 'event') {
+    } else if (colorConfig) {
+      const base = colorConfig.base;
       btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
-      btn.classList.add('bg-orange-accent/10', 'border-orange-accent/20');
-      if (filter === 'event') {
-        btn.classList.add('bg-orange-accent/20', 'border-orange-accent/30');
-        btn.classList.remove('bg-orange-accent/10', 'border-orange-accent/20');
-      }
-    } else if (btn.textContent.toLowerCase() === 'login') {
-      btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
-      btn.classList.add('bg-yellow-accent/10', 'border-yellow-accent/20');
-      if (filter === 'login') {
-        btn.classList.add('bg-yellow-accent/20', 'border-yellow-accent/30');
-        btn.classList.remove('bg-yellow-accent/10', 'border-yellow-accent/20');
-      }
-    } else if (btn.textContent.toLowerCase() === 'code') {
-      btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
-      btn.classList.add('bg-green-accent/10', 'border-green-accent/20');
-      if (filter === 'code') {
-        btn.classList.add('bg-green-accent/20', 'border-green-accent/30');
-        btn.classList.remove('bg-green-accent/10', 'border-green-accent/20');
-      }
-    } else if (btn.textContent.toLowerCase() === 'pvp') {
-      btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
-      btn.classList.add('bg-pink-glow/10', 'border-pink-glow/20');
-      if (filter === 'pvp') {
-        btn.classList.add('bg-pink-glow/20', 'border-pink-glow/30');
-        btn.classList.remove('bg-pink-glow/10', 'border-pink-glow/20');
+      btn.classList.add(`bg-${base}/10`, `border-${base}/20`);
+      if (filter === btnLower) {
+        btn.classList.add(`bg-${base}/20`, `border-${base}/30`);
+        btn.classList.remove(`bg-${base}/10`, `border-${base}/20`);
       }
     }
   });
@@ -922,19 +928,11 @@ function showCardModal(cardId) {
     if (data.gems !== null) {
         gemsDisplay = `${data.gems.toLocaleString()} Gems`;
     } else {
-        if (cardId === 'restricted-arena') {
-            const league = document.getElementById('pvp1-league')?.value || 'eliteII';
-            const rank = parseInt(document.getElementById('pvp1-rank')?.value) || 13;
-            const payout = getPvpPayout(league, rank);
-            gemsDisplay = `${payout.gems.toLocaleString()} Gems · ${payout.cards} Cards · ${payout.chips.toLocaleString()} Chips`;
-        } else if (cardId === 'open-arena') {
-            const league = document.getElementById('pvp2-league')?.value || 'eliteII';
-            const rank = parseInt(document.getElementById('pvp2-rank')?.value) || 13;
-            const payout = getPvpPayout(league, rank);
-            gemsDisplay = `${payout.gems.toLocaleString()} Gems · ${payout.cards} Cards · ${payout.chips.toLocaleString()} Chips`;
-        } else if (cardId === 'multiverse-war') {
-            const league = document.getElementById('pvp3-league')?.value || 'eliteII';
-            const rank = parseInt(document.getElementById('pvp3-rank')?.value) || 13;
+        const pvpCardMap = { 'restricted-arena': 1, 'open-arena': 2, 'multiverse-war': 3 };
+        const cardNum = pvpCardMap[cardId];
+        if (cardNum) {
+            const league = document.getElementById(`pvp${cardNum}-league`)?.value || 'eliteII';
+            const rank = parseInt(document.getElementById(`pvp${cardNum}-rank`)?.value) || 13;
             const payout = getPvpPayout(league, rank);
             gemsDisplay = `${payout.gems.toLocaleString()} Gems · ${payout.cards} Cards · ${payout.chips.toLocaleString()} Chips`;
         }
@@ -1138,19 +1136,9 @@ function savePvpSelection(cardId) {
 }
 
 function loadPvpSelection(cardId) {
-  const savedLeague = localStorage.getItem(`pvp${cardId}_league`);
-  const savedRank = localStorage.getItem(`pvp${cardId}_rank`);
   const defaults = pvpDefaults[cardId];
-  if (savedLeague) {
-    document.getElementById(`pvp${cardId}-league`).value = savedLeague;
-  } else {
-    document.getElementById(`pvp${cardId}-league`).value = defaults.league;
-  }
-  if (savedRank) {
-    document.getElementById(`pvp${cardId}-rank`).value = savedRank;
-  } else {
-    document.getElementById(`pvp${cardId}-rank`).value = defaults.rank;
-  }
+  document.getElementById(`pvp${cardId}-league`).value = localStorage.getItem(`pvp${cardId}_league`) || defaults.league;
+  document.getElementById(`pvp${cardId}-rank`).value = localStorage.getItem(`pvp${cardId}_rank`) || defaults.rank;
   updatePvpCard(cardId);
 }
 
@@ -1196,7 +1184,30 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   const chartAnimConfig = CHARTS.animation || { duration: 750, easing: 'easeOutQuart' };
-  const chartTtipConfig = CHARTS.tooltip || { backgroundColor: 'rgba(10, 35, 60, 0.95)', borderColor: 'rgba(0, 229, 255, 0.5)', borderWidth: 1, titleFont: { family: 'Rajdhani', size: 14, weight: 'bold' }, bodyFont: { family: 'Rajdhani', size: 13 }, padding: 12, cornerRadius: 8, displayColors: true, boxPadding: 4, callbacks: { label: function(context) { const value = context.raw; const total = context.dataset.data.reduce((a, b) => a + b, 0); const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0; const avg = total / context.dataset.data.length; const vsAvg = value > avg ? '+' : ''; return [ `${value.toLocaleString()} Gems`, `${pct}% of category`, value > avg ? `${vsAvg}${(value - avg).toLocaleString()} vs avg` : '' ]; } } };
+
+  function tooltipLabelCallback(context) {
+    const value = context.raw;
+    const data = context.dataset.data;
+    const total = data.reduce((a, b) => a + b, 0);
+    const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+    const avg = total / data.length;
+    const vsAvg = value > avg ? '+' : '';
+    const thirdLine = value > avg ? `${vsAvg}${(value - avg).toLocaleString()} vs avg` : '';
+    return [`${value.toLocaleString()} Gems`, `${pct}% of category`, thirdLine];
+  }
+
+  const chartTtipConfig = CHARTS.tooltip || {
+    backgroundColor: 'rgba(10, 35, 60, 0.95)',
+    borderColor: 'rgba(0, 229, 255, 0.5)',
+    borderWidth: 1,
+    titleFont: { family: 'Rajdhani', size: 14, weight: 'bold' },
+    bodyFont: { family: 'Rajdhani', size: 13 },
+    padding: 12,
+    cornerRadius: 8,
+    displayColors: true,
+    boxPadding: 4,
+    callbacks: { label: tooltipLabelCallback }
+  };
 
   const initDistribution = CHARTS.initialData?.distribution || [500, 750, 293, 300];
   const initSpiderActual = CHARTS.initialData?.spiderActual || [500, 750, 293, 300];
