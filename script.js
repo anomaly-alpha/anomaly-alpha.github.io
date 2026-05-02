@@ -1356,6 +1356,17 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+// Restart sparkle animations when page becomes visible (fixes animation freeze after charts toggle)
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'visible') {
+    document.querySelectorAll('.gem-sparkle').forEach(s => {
+      s.style.animation = 'none';
+      s.offsetHeight; // force reflow
+      s.style.animation = '';
+    });
+  }
+});
+
 // Debug helpers
 window.debugPvp = () => {
   const l1 = document.getElementById('pvp1-league').value;
