@@ -7,29 +7,20 @@
 
 // ===== CONFIG LOADING =====
 
-async function loadConfig(id) {
-  try {
-    const res = await fetch(`data/${id}.json`);
-    if (!res.ok) throw new Error(`Failed to load ${id}`);
-    return await res.json();
-  } catch (e) {
-    console.error(e);
-    return {};
-  }
+function loadConfig(id) {
+  const el = document.getElementById(id);
+  return el ? JSON.parse(el.textContent) : {};
 }
 
 let GAME, REWARDS, CHARTS, COUNTDOWN, UI, THEME;
 
-async function loadAllConfigs() {
-  const configs = await Promise.all([
-    loadConfig('game-config'),
-    loadConfig('rewards-config'),
-    loadConfig('chart-config'),
-    loadConfig('countdown-config'),
-    loadConfig('ui-config'),
-    loadConfig('theme-config')
-  ]);
-  [GAME, REWARDS, CHARTS, COUNTDOWN, UI, THEME] = configs;
+function loadAllConfigs() {
+  GAME = loadConfig('game-config');
+  REWARDS = loadConfig('rewards-config');
+  CHARTS = loadConfig('chart-config');
+  COUNTDOWN = loadConfig('countdown-config');
+  UI = loadConfig('ui-config');
+  THEME = loadConfig('theme-config');
 }
 
 // PvP Defaults - loaded from config in DOMContentLoaded
@@ -969,8 +960,8 @@ function initializePvPCards() {
 
 // ===== INITIALIZATION =====
 
-document.addEventListener('DOMContentLoaded', async function() {
-  await loadAllConfigs();
+document.addEventListener('DOMContentLoaded', function() {
+  loadAllConfigs();
   buildCountdownTargets();
 
   // Rebuild chartFilterData now that configs are loaded
