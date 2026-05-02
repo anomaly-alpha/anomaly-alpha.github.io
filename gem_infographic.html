@@ -375,27 +375,27 @@
                 <i class="fas fa-th-large text-3xl text-cyan-glow mb-2"></i>
                 <p class="text-3xl font-bold text-white">2,550</p>
                 <p class="text-xs text-cyan-glow uppercase tracking-wider mt-1">All Modes</p>
-                <span class="absolute top-2 right-2 text-[10px] text-cyan-glow/60">TOTAL</span>
+                
             </button>
-            <button onclick="filterCards('event', event)" class="filter-btn filter-event relative bg-orange-accent/10 border border-orange-accent/30 rounded-xl p-4 text-center hover:scale-105 transition-all">
+            <button onclick="filterCards('event', event)" class="filter-btn filter-event active relative bg-orange-accent/30 border border-orange-accent/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
                 <i class="fas fa-dragon text-3xl text-orange-accent mb-2"></i>
                 <p class="text-3xl font-bold text-white">500</p>
                 <p class="text-xs text-orange-accent uppercase tracking-wider mt-1">Event</p>
                 <span id="countdown-event" class="text-orange-accent text-xs font-bold mt-1 block">--:--:--</span>
             </button>
-            <button onclick="filterCards('pvp', event)" class="filter-btn filter-pvp relative bg-pink-glow/10 border border-pink-glow/30 rounded-xl p-4 text-center hover:scale-105 transition-all">
+            <button onclick="filterCards('pvp', event)" class="filter-btn filter-pvp active relative bg-pink-glow/30 border border-pink-glow/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
                 <i class="fas fa-fist-raised text-3xl text-pink-glow mb-2"></i>
                 <p class="text-3xl font-bold text-white">750</p>
                 <p class="text-xs text-pink-glow uppercase tracking-wider mt-1">PvP</p>
                 <span id="countdown-pvp" class="text-pink-glow text-xs font-bold mt-1 block">--:--:--</span>
             </button>
-            <button onclick="filterCards('daily', event)" class="filter-btn filter-daily relative bg-yellow-accent/10 border border-yellow-accent/30 rounded-xl p-4 text-center hover:scale-105 transition-all">
+            <button onclick="filterCards('daily', event)" class="filter-btn filter-daily active relative bg-yellow-accent/30 border border-yellow-accent/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
                 <i class="fas fa-calendar-day text-3xl text-yellow-accent mb-2"></i>
-                <p class="text-3xl font-bold text-white">1,100</p>
+                <p class="text-3xl font-bold text-white">610</p>
                 <p class="text-xs text-yellow-accent uppercase tracking-wider mt-1">Daily</p>
                 <span id="countdown-daily" class="text-yellow-accent text-xs font-bold mt-1 block">--:--:--</span>
             </button>
-            <button onclick="filterCards('code', event)" class="filter-btn filter-code relative bg-green-accent/10 border border-green-accent/30 rounded-xl p-4 text-center hover:scale-105 transition-all">
+            <button onclick="filterCards('code', event)" class="filter-btn filter-code active relative bg-green-accent/30 border border-green-accent/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
                 <i class="fas fa-gift text-3xl text-green-accent mb-2"></i>
                 <p class="text-3xl font-bold text-white">300</p>
                 <p class="text-xs text-green-accent uppercase tracking-wider mt-1">Code</p>
@@ -665,19 +665,19 @@
                     <span class="bg-yellow-accent/20 border border-yellow-accent/40 px-2 py-0.5 rounded-full text-[10px]">7x / week</span>
                 </div>
                 <div class="flex items-baseline gap-2 mb-1">
-                    <span class="text-3xl font-bold text-white drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">100</span>
+                    <span class="text-3xl font-bold text-white drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">30</span>
                     <span class="text-white/40 text-2xl">×</span>
                     <span class="text-3xl font-bold text-white drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">7</span>
                     <span class="text-white/40 text-xl">=</span>
-                    <span class="text-5xl font-bold text-white drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">700</span>
+                    <span class="text-5xl font-bold text-white drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">210</span>
                     <span class="text-lg text-white/60 font-semibold">GEMS</span>
                 </div>
                 <div class="border-t border-white/10 mt-3 pt-3">
                     <p class="text-white/60 text-sm">Per week (daily login)</p>
-                    <span class="inline-block bg-yellow-accent/10 text-yellow-accent text-xs px-2 py-1 rounded mt-2 border border-yellow-accent/30">21.7% of total</span>
+                    <span class="inline-block bg-yellow-accent/10 text-yellow-accent text-xs px-2 py-1 rounded mt-2 border border-yellow-accent/30">6.5% of total</span>
                 </div>
                 <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
-                    100 gems × 7 days
+                    30 gems × 7 days
                 </div>
             </div>
     </main>
@@ -746,7 +746,7 @@
             setTimeout(() => feedback.remove(), 2000);
         }
 
-        let selectedModes = [];
+        let selectedModes = ['event', 'pvp', 'daily', 'code'];
 
         function filterCards(category, evt) {
             const cards = document.querySelectorAll('[data-category]');
@@ -786,13 +786,22 @@
         function calculateSelectedTotal() {
             let total = 0;
             if (selectedModes.includes('event')) total += 500;
-            if (selectedModes.includes('daily')) total += 1100;
+            if (selectedModes.includes('daily')) total += 610;
             if (selectedModes.includes('code')) total += 300;
             if (selectedModes.includes('pvp')) {
                 let pvpTotal = 0;
+                const defaults = { 1: { league: 'eliteI', rank: 50 }, 2: { league: 'eliteIII', rank: 50 }, 3: { league: 'eliteII', rank: 50 } };
                 for (let i = 1; i <= 3; i++) {
-                    const gemsText = document.getElementById(`pvp${i}-gems`).textContent;
-                    pvpTotal += parseInt(gemsText.replace(/,/g, '')) || 0;
+                    const leagueEl = document.getElementById(`pvp${i}-league`);
+                    const rankEl = document.getElementById(`pvp${i}-rank`);
+                    if (leagueEl && rankEl) {
+                        const league = leagueEl.value || defaults[i].league;
+                        const rank = parseInt(rankEl.value) || defaults[i].rank;
+                        const payout = getPvpPayout(league, rank);
+                        if (payout) {
+                            pvpTotal += payout.gems;
+                        }
+                    }
                 }
                 total += pvpTotal;
             }
@@ -804,36 +813,67 @@
         }
 
         function updateModeButtonStates() {
-            const buttons = document.querySelectorAll('.filter-btn');
-            const modeColors = {
-                'filter-all': { active: 'from-cyan-glow/30 border-cyan-glow/50 shadow-[0_0_20px_rgba(0,229,255,0.4)]', inactive: 'bg-cyan-glow/10 border-cyan-glow/30' },
-                'filter-event': { active: 'bg-orange-accent/30 border-orange-accent/50', inactive: 'bg-orange-accent/10 border-orange-accent/30' },
-                'filter-pvp': { active: 'bg-pink-glow/30 border-pink-glow/50', inactive: 'bg-pink-glow/10 border-pink-glow/30' },
-                'filter-daily': { active: 'bg-yellow-accent/30 border-yellow-accent/50', inactive: 'bg-yellow-accent/10 border-yellow-accent/30' },
-                'filter-code': { active: 'bg-green-accent/30 border-green-accent/50', inactive: 'bg-green-accent/10 border-green-accent/30' }
-            };
-            
             const isAllSelected = selectedModes.length === 4;
             
-            buttons.forEach(btn => {
-                btn.classList.remove('active');
-                Object.values(modeColors).forEach(c => {
-                    btn.classList.remove(c.active.split(' ')[0], c.active.split(' ')[1]);
-                    btn.classList.add(c.inactive.split(' ')[0], c.inactive.split(' ')[1]);
-                });
-                
-                if (btn.classList.contains('filter-all') && isAllSelected) {
-                    btn.classList.add('active', ...modeColors['filter-all'].active.split(' '));
-                } else if (btn.classList.contains('filter-event') && selectedModes.includes('event')) {
-                    btn.classList.add('active', ...modeColors['filter-event'].active.split(' '));
-                } else if (btn.classList.contains('filter-pvp') && selectedModes.includes('pvp')) {
-                    btn.classList.add('active', ...modeColors['filter-pvp'].active.split(' '));
-                } else if (btn.classList.contains('filter-daily') && selectedModes.includes('daily')) {
-                    btn.classList.add('active', ...modeColors['filter-daily'].active.split(' '));
-                } else if (btn.classList.contains('filter-code') && selectedModes.includes('code')) {
-                    btn.classList.add('active', ...modeColors['filter-code'].active.split(' '));
+            // All button
+            const allBtn = document.querySelector('.filter-all');
+            if (allBtn) {
+                allBtn.classList.remove('active', 'from-cyan-glow/30', 'border-cyan-glow/50', 'shadow-[0_0_20px_rgba(0,229,255,0.4)]');
+                allBtn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/30');
+                if (isAllSelected) {
+                    allBtn.classList.add('active', 'from-cyan-glow/30', 'border-cyan-glow/50', 'shadow-[0_0_20px_rgba(0,229,255,0.4)]');
+                } else {
+                    allBtn.classList.add('bg-cyan-glow/10', 'border-cyan-glow/30');
                 }
-            });
+            }
+            
+            // Event button
+            const eventBtn = document.querySelector('.filter-event');
+            if (eventBtn) {
+                eventBtn.classList.remove('active', 'bg-orange-accent/30', 'border-orange-accent/50');
+                eventBtn.classList.remove('bg-orange-accent/10', 'border-orange-accent/30');
+                if (selectedModes.includes('event')) {
+                    eventBtn.classList.add('active', 'bg-orange-accent/30', 'border-orange-accent/50');
+                } else {
+                    eventBtn.classList.add('bg-orange-accent/10', 'border-orange-accent/30');
+                }
+            }
+            
+            // PvP button
+            const pvpBtn = document.querySelector('.filter-pvp');
+            if (pvpBtn) {
+                pvpBtn.classList.remove('active', 'bg-pink-glow/30', 'border-pink-glow/50');
+                pvpBtn.classList.remove('bg-pink-glow/10', 'border-pink-glow/30');
+                if (selectedModes.includes('pvp')) {
+                    pvpBtn.classList.add('active', 'bg-pink-glow/30', 'border-pink-glow/50');
+                } else {
+                    pvpBtn.classList.add('bg-pink-glow/10', 'border-pink-glow/30');
+                }
+            }
+            
+            // Daily button
+            const dailyBtn = document.querySelector('.filter-daily');
+            if (dailyBtn) {
+                dailyBtn.classList.remove('active', 'bg-yellow-accent/30', 'border-yellow-accent/50');
+                dailyBtn.classList.remove('bg-yellow-accent/10', 'border-yellow-accent/30');
+                if (selectedModes.includes('daily')) {
+                    dailyBtn.classList.add('active', 'bg-yellow-accent/30', 'border-yellow-accent/50');
+                } else {
+                    dailyBtn.classList.add('bg-yellow-accent/10', 'border-yellow-accent/30');
+                }
+            }
+            
+            // Code button
+            const codeBtn = document.querySelector('.filter-code');
+            if (codeBtn) {
+                codeBtn.classList.remove('active', 'bg-green-accent/30', 'border-green-accent/50');
+                codeBtn.classList.remove('bg-green-accent/10', 'border-green-accent/30');
+                if (selectedModes.includes('code')) {
+                    codeBtn.classList.add('active', 'bg-green-accent/30', 'border-green-accent/50');
+                } else {
+                    codeBtn.classList.add('bg-green-accent/10', 'border-green-accent/30');
+                }
+            }
         }
 
         function updateChartsByCategory(category) {
@@ -920,7 +960,7 @@
                 icon: 'fa-calendar-day',
                 color: 'yellow-accent',
                 bgColor: 'bg-yellow-accent',
-                total: 1100,
+                total: 610,
                 rewards: [
                     { name: 'Weekly Reward', gems: 400, desc: 'Weekly login bonus', pct: '36.4%' },
                     { name: 'Daily Login', gems: 700, desc: '100 gems × 7 days per week', pct: '63.6%' }
@@ -1225,7 +1265,7 @@
                     season: 1820,
                     events: 500,
                     pvp: 750,
-                    daily: 1100,
+                    daily: 610,
                     code: 300
                 },
                 rewards: [
@@ -1425,8 +1465,8 @@
             data: {
                 labels: ['Season', 'Events', 'Warfare', 'Daily/Weekly', 'Code'],
                 datasets: [{
-                    data: [1820, 500, 750, 1100, 300],
-                    backgroundColor: ['#00e5ff', '#ff6b35', '#9b59b6', '#f39c12', '#2ecc71'],
+                    data: [0, 500, 750, 610, 300],
+                    backgroundColor: ['#333333', '#ff6b35', '#e91e8a', '#f39c12', '#2ecc71'],
                     borderWidth: 0,
                     hoverOffset: 8
                 }]
@@ -1451,7 +1491,7 @@
                 datasets: [{
                     label: 'Gems',
                     data: [810, 560, 450, 750, 300, 300, 400, 200, 700],
-                    backgroundColor: ['#00e5ff', '#00e5ff', '#00e5ff', '#9b59b6', '#ff6b35', '#2ecc71', '#f39c12', '#ff6b35', '#f39c12'],
+                    backgroundColor: ['#333333', '#333333', '#333333', '#e91e8a', '#ff6b35', '#2ecc71', '#f39c12', '#ff6b35', '#f39c12'],
                     borderRadius: 4,
                     borderSkipped: false
                 }]
@@ -1477,7 +1517,7 @@
                 labels: ['Season', 'Events', 'Warfare', 'Daily', 'Code'],
                 datasets: [{
                     label: 'Gems',
-                    data: [1820, 500, 750, 1100, 300],
+                    data: [0, 500, 750, 610, 300],
                     backgroundColor: 'rgba(0, 229, 255, 0.2)',
                     borderColor: '#00e5ff',
                     pointBackgroundColor: '#00e5ff',
@@ -1551,11 +1591,11 @@
 
         const chartFilterData = {
             all: {
-                distribution: [0, 500, 750, 1100, 300],
+                distribution: [0, 500, 750, 610, 300],
                 rewards: [810, 560, 450, 750, 300, 300, 400, 200, 700],
-                spider: [[1820, 500, 750, 1100, 300], [2000, 800, 1000, 1200, 500]],
-                colors: ['#00e5ff', '#ff6b35', '#9b59b6', '#f39c12', '#2ecc71'],
-                rewardColors: ['#00e5ff', '#00e5ff', '#00e5ff', '#9b59b6', '#ff6b35', '#2ecc71', '#f39c12', '#ff6b35', '#f39c12']
+                spider: [[0, 500, 750, 610, 300], [0, 800, 1000, 700, 500]],
+                colors: ['#333333', '#ff6b35', '#e91e8a', '#f39c12', '#2ecc71'],
+                rewardColors: ['#333333', '#333333', '#333333', '#e91e8a', '#ff6b35', '#2ecc71', '#f39c12', '#ff6b35', '#f39c12']
             },
             season: {
                 distribution: [1820, 0, 0, 0, 0],
@@ -1580,7 +1620,7 @@
             },
             daily: {
                 distribution: [0, 0, 0, 1100, 0],
-                rewards: [0, 0, 0, 0, 0, 0, 400, 0, 700],
+                rewards: [0, 0, 0, 0, 0, 0, 400, 0, 210],
                 spider: [[0, 0, 0, 1100, 0], [0, 0, 0, 1200, 0]],
                 colors: ['#333333', '#333333', '#333333', '#f39c12', '#333333'],
                 rewardColors: ['#333333', '#333333', '#333333', '#333333', '#333333', '#333333', '#f39c12', '#333333', '#f39c12']
@@ -1658,7 +1698,7 @@
         lineChart = Chart.getChart('lineChart');
 
         window.addEventListener('load', function() {
-            animateCounter();
+            updateTotalGems();
         });
 
         // PvP League Data
@@ -1751,10 +1791,8 @@
         }
 
         function updateTotalGems() {
-            if (selectedModes.length === 0 || (selectedModes.length === 4 && selectedModes.includes('event'))) {
-                const newTotal = calculateSelectedTotal();
-                animateValue('totalCounter', newTotal, 400);
-            }
+            const newTotal = calculateSelectedTotal();
+            document.getElementById('totalCounter').textContent = newTotal.toLocaleString();
             updateModeButtonTotals();
         }
 
@@ -1765,19 +1803,23 @@
                 pvpTotal += parseInt(gemsText.replace(/,/g, '')) || 0;
             }
             
-            // Update PvP button
+            // Update PvP button - target the paragraph with number, not the icon
             const pvpBtn = document.querySelector('.filter-pvp');
             if (pvpBtn) {
-                const totalEl = pvpBtn.querySelector('.text-3xl');
-                if (totalEl) totalEl.textContent = pvpTotal.toLocaleString();
+                const paras = pvpBtn.querySelectorAll('p.text-3xl');
+                if (paras.length > 1) {
+                    paras[0].textContent = pvpTotal.toLocaleString();
+                }
             }
             
             // Update All Modes button - sum of event + daily + code + current pvp value
             const allBtn = document.querySelector('.filter-all');
             if (allBtn) {
-                const allTotal = 500 + pvpTotal + 1100 + 300;
-                const allTotalEl = allBtn.querySelector('.text-3xl');
-                if (allTotalEl) allTotalEl.textContent = allTotal.toLocaleString();
+                const allTotal = 500 + pvpTotal + 610 + 300;
+                const paras = allBtn.querySelectorAll('p.text-3xl');
+                if (paras.length > 0) {
+                    paras[0].textContent = allTotal.toLocaleString();
+                }
             }
         }
 
@@ -1829,6 +1871,7 @@
         selectedModes = ['event', 'pvp', 'daily', 'code'];
         updateModeButtonStates();
         updateModeButtonTotals();
+        updateTotalGems();
     </script>
     </div>
 </body>
