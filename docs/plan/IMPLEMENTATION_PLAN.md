@@ -1617,17 +1617,17 @@ Shows cumulative gem accumulation over 8 weeks:
 new Chart(document.getElementById('spiderChart'), {
     type: 'radar',
     data: {
-        labels: ['Season', 'Events', 'Warfare', 'Daily', 'Code'],
+        labels: ['Events', 'PvP', 'Login', 'Code'],
         datasets: [{
             label: 'Gems',
-            data: [1820, 500, 750, 1100, 300],
+            data: [500, 750, 293, 300],
             backgroundColor: 'rgba(0, 229, 255, 0.2)',
             borderColor: '#00e5ff',
             pointBackgroundColor: '#00e5ff',
             borderWidth: 2
         }, {
             label: 'Target',
-            data: [2000, 800, 1000, 1200, 500],
+            data: [550, 1500, 360, 330],
             backgroundColor: 'rgba(233, 30, 138, 0.1)',
             borderColor: '#e91e8a',
             pointBackgroundColor: '#e91e8a',

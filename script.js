@@ -69,7 +69,7 @@ const GAME = {
   chart: {
     all: [0,500,750,180,300],
     rewards: [810,560,450,750,300,200,180],
-    spider: { a:[0,500,750,180,300], t:[0,800,1000,300,500] },
+    spider: { a:[500,750,293,300], t:[550,1500,360,330] },
     colors: { main:['#333','#ff6b35','#e91e8a','#f39c12','#2ecc71'], reward:['#333','#333','#333','#e91e8a','#ff6b35','#ff6b35','#f39c12','#2ecc71'] }
   }
 };
@@ -137,19 +137,19 @@ function buildModeData(mode, totals) {
     d[3] = GAME.ev.login[0][1] + GAME.ev.login[1][1] + Math.round(GAME.ev.login[2][1]/4);
     d[4] = GAME.ev.code[0][1];
     r[3] = d[1]; r[4] = GAME.ev.event[1][1]; r[5] = totals.pvp; r[6] = d[3];
-    sp[0] = d.slice(1); sp[1] = [800,1000,1200,500];
+    sp[0] = d.slice(1); sp[1] = [550,1500,360,330];
   } else if (mode === 'event') {
     d[1] = GAME.ev.event[0][1] + GAME.ev.event[1][1]; r[3] = GAME.ev.event[0][1]; r[4] = GAME.ev.event[1][1];
-    sp[0] = [d[1],0,0,0]; sp[1] = [800,0,0,0];
+    sp[0] = [d[1], 0, 0, 0]; sp[1] = [550, 0, 0, 0];
   } else if (mode === 'pvp') {
     d[2] = totals.pvp; r[5] = totals.pvp;
-    sp[0] = [0,d[2],0,0]; sp[1] = [0,1000,0,0];
+    sp[0] = [0, d[2], 0, 0]; sp[1] = [0, 1500, 0, 0];
   } else if (mode === 'login') {
     d[3] = GAME.ev.login[0][1] + GAME.ev.login[1][1] + Math.round(GAME.ev.login[2][1]/4); r[6] = d[3];
-    sp[0] = [0,0,d[3],0]; sp[1] = [0,0,300,0];
+    sp[0] = [0, 0, d[3], 0]; sp[1] = [0, 0, 360, 0];
   } else if (mode === 'code') {
     d[4] = GAME.ev.code[0][1]; r[3] = d[4];
-    sp[0] = [0,0,0,d[4]]; sp[1] = [0,0,0,500];
+    sp[0] = [0, 0, 0, d[4]]; sp[1] = [0, 0, 0, 330];
   }
   const cols = d.map((v,i) => v>0 ? (i===1?CM.event:i===2?CM.pvp:i===3?CM.login:CM.code) : DC);
   const rCols = r.map((v,i) => v>0 ? (i===3?CM.event:i===4?CM.event:i===5?CM.pvp:i===6?CM.login:CM.code) : DC);
@@ -487,7 +487,7 @@ function updateChartsByModes(modes) {
   rewardsChart.data.datasets[0].backgroundColor = combinedData.rewardColors;
   rewardsChart.update('active');
 
-  const spiderData = [combinedData.distribution.slice(1), [800, 1000, 1200, 500]];
+  const spiderData = [combinedData.distribution.slice(1), [550, 1500, 360, 330]];
   spiderChart.data.datasets[0].data = spiderData[0];
   spiderChart.data.datasets[1].data = spiderData[1];
   spiderChart.update('active');
@@ -1044,17 +1044,17 @@ document.addEventListener('DOMContentLoaded', function() {
   new Chart(document.getElementById('spiderChart'), {
     type: 'radar',
     data: {
-      labels: ['Season', 'Events', 'PvP', 'Login', 'Code'],
+      labels: ['Events', 'PvP', 'Login', 'Code'],
       datasets: [{
         label: 'Gems',
-        data: [0, 500, 750, 30, 60, 90, 300],
+        data: [500, 750, 293, 300],
         backgroundColor: 'rgba(0, 229, 255, 0.2)',
         borderColor: '#00e5ff',
         pointBackgroundColor: '#00e5ff',
         borderWidth: 2
       }, {
         label: 'Target',
-        data: [2000, 800, 1000, 50, 100, 150, 500],
+        data: [550, 1500, 360, 330],
         backgroundColor: 'rgba(233, 30, 138, 0.1)',
         borderColor: '#e91e8a',
         pointBackgroundColor: '#e91e8a',
