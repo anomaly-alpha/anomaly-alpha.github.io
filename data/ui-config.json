@@ -1,0 +1,33 @@
+{
+  "modeOrder": ["all", "code", "event", "pvp", "login"],
+  "modeButtonIcons": {
+    "all": "fa-th-large",
+    "code": "fa-gift",
+    "event": "fa-dragon",
+    "pvp": "fa-fist-raised",
+    "login": "fa-sign-in-alt"
+  },
+  "cardGrid": {
+    "columns": {
+      "mobile": 1,
+      "tablet": 2,
+      "desktop": 3
+    },
+    "gap": "1.25rem"
+  },
+  "chartGrid": {
+    "columns": {
+      "mobile": 2,
+      "desktop": 3
+    },
+    "gap": "1rem"
+  },
+  "animationDelays": {
+    "cards": [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    "charts": [0, 100, 200]
+  },
+  "defaults": {
+    "selectedModes": ["event", "pvp", "login", "code"],
+    "chartsVisible": true
+  }
+}

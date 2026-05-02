@@ -1,0 +1,60 @@
+{
+  "dark": {
+    "colors": {
+      "event": "#ff6b35",
+      "pvp": "#e91e8a",
+      "login": "#f39c12",
+      "code": "#2ecc71",
+      "cyan": "#00e5ff",
+      "purple": "#9b59b6",
+      "pink": "#e91e8a",
+      "orange": "#ff6b35"
+    },
+    "background": {
+      "dark": "#050a14",
+      "mid": "#0a1628",
+      "light": "#0d1f3c"
+    },
+    "cardBackground": {
+      "event": "rgba(255, 107, 53, 0.08)",
+      "pvp": "rgba(233, 30, 138, 0.08)",
+      "login": "rgba(243, 156, 18, 0.08)",
+      "code": "rgba(46, 204, 113, 0.08)",
+      "cyan": "rgba(0, 229, 255, 0.08)",
+      "purple": "rgba(155, 89, 182, 0.08)"
+    },
+    "border": {
+      "subtle": "rgba(255, 255, 255, 0.10)",
+      "medium": "rgba(255, 255, 255, 0.30)",
+      "accent": "rgba(0, 229, 255, 0.30)"
+    },
+    "text": {
+      "primary": "#ffffff",
+      "secondary": "rgba(255, 255, 255, 0.60)",
+      "muted": "rgba(255, 255, 255, 0.40)",
+      "80": "rgba(255, 255, 255, 0.80)"
+    }
+  },
+  "light": {
+    "background": {
+      "dark": "#f0f4f8",
+      "mid": "#e2e8f0",
+      "light": "#cbd5e1"
+    },
+    "text": {
+      "primary": "#1a202c",
+      "secondary": "rgba(26, 32, 44, 0.70)",
+      "muted": "rgba(26, 32, 44, 0.50)"
+    },
+    "border": {
+      "subtle": "rgba(26, 32, 44, 0.10)",
+      "medium": "rgba(26, 32, 44, 0.30)"
+    },
+    "cardBackground": {
+      "event": "rgba(0, 229, 255, 0.15)",
+      "pvp": "rgba(0, 229, 255, 0.15)",
+      "login": "rgba(0, 229, 255, 0.15)",
+      "code": "rgba(0, 229, 255, 0.15)"
+    }
+  }
+}

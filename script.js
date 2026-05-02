@@ -2,125 +2,33 @@
   Gem Infographic - JavaScript
   ============================
   All interactive functionality extracted from gem_infographic.html
+  Data loaded from embedded JSON configurations
 */
 
-// ===== DATA CONSTANTS =====
+// ===== CONFIG LOADING =====
 
-const categoryData = {
-  season: {
-    title: 'Season Rewards',
-    icon: 'fa-trophy',
-    color: 'cyan-glow',
-    bgColor: 'bg-cyan-glow',
-    total: 1820,
-    rewards: [
-      { name: 'Elite League I', gems: 810, desc: 'Highest tier season finish', pct: '44.5%' },
-      { name: 'Invincible League', gems: 560, desc: 'Rank 38 leaderboard', pct: '30.8%' },
-      { name: 'Elite League II', gems: 450, desc: 'Rank 86 leaderboard', pct: '24.7%' }
-    ]
-  },
-  event: {
-    title: 'Event Rewards',
-    icon: 'fa-dragon',
-    color: 'orange-accent',
-    bgColor: 'bg-orange-accent',
-    total: 500,
-    rewards: [
-      { name: 'The Long Haul', gems: 300, desc: 'Top 5% event ranking', pct: '60%' },
-      { name: "Earth's Defenders", gems: 200, desc: 'Top 10% event ranking', pct: '40%' }
-    ]
-  },
-  login: {
-    title: 'Login Rewards',
-    icon: 'fa-sign-in-alt',
-    color: 'yellow-accent',
-    bgColor: 'bg-yellow-accent',
-    total: 180,
-    rewards: [
-      { name: 'Daily Payout', gems: 30, desc: 'Per day', pct: '16.7%' },
-      { name: 'Weekly Payout', gems: 60, desc: 'Per week', pct: '33.3%' },
-      { name: 'Monthly Payout', gems: 90, desc: 'Per month', pct: '50%' }
-    ]
-  },
-  code: {
-    title: 'Promo Code',
-    icon: 'fa-gift',
-    color: 'green-accent',
-    bgColor: 'bg-green-accent',
-    total: 300,
-    rewards: [
-      { name: 'Code: 30KGTG', gems: 300, desc: 'One-time redemption', pct: '100%' }
-    ]
-  }
-};
+function loadConfig(id) {
+  const el = document.getElementById(id);
+  return el ? JSON.parse(el.textContent) : {};
+}
 
-// GAME DATA (Consolidated JSON)
-const GAME = {
-  pvp: {
-    base: [[1,1,710,4,1000],[2,2,670,3,900],[3,3,640,2,800],[4,10,600,1,600],[11,30,560,1,600],[31,60,520,1,600],[61,120,490,1,500]],
-    mod: { eliteII:0.85, eliteI:0.70, invincible:1.25 },
-    def: { league: 'eliteII', rank: 13 }
-  },
-  ev: {
-    event: [['The Long Haul',300,14],["Earth's Defenders",200,7]],
-    login: [['Daily',210],['Weekly',60],['Monthly',90]],
-    code: [['Promo Code',300]]
-  },
-  chart: {
-    all: [0,500,750,180,300],
-    rewards: [810,560,450,750,300,200,180],
-    spider: { a:[500,750,293,300], t:[550,1500,360,330] },
-    colors: { main:['#333','#ff6b35','#e91e8a','#f39c12','#2ecc71'], reward:['#333','#333','#333','#e91e8a','#ff6b35','#ff6b35','#f39c12','#2ecc71'] }
-  }
-};
+let GAME, REWARDS, CHARTS, COUNTDOWN, UI, THEME;
 
-const pvpDefaults = { 1: GAME.pvp.def, 2: GAME.pvp.def, 3: GAME.pvp.def };
+function loadAllConfigs() {
+  GAME = loadConfig('game-config');
+  REWARDS = loadConfig('rewards-config');
+  CHARTS = loadConfig('chart-config');
+  COUNTDOWN = loadConfig('countdown-config');
+  UI = loadConfig('ui-config');
+  THEME = loadConfig('theme-config');
+}
 
-const eventsByMode = {
-  event: GAME.ev.event.map(e => ({ name: e[0], gems: e[1], seasonDays: e[2] })),
-  login: GAME.ev.login.map(e => ({ name: e[0], gems: e[1] })),
-  code: GAME.ev.code.map(e => ({ name: e[0], gems: e[1], active: true }))
-};
-
-// ===== TAILWIND CONFIG NOTE =====
-// Note: The original tailwind.config = {} block only works with Play CDN.
-// With standard CDN (cdn.tailwindcss.com), this config has no effect.
-// Custom color classes like bg-cyan-glow, text-pink-glow, etc. work via
-// Tailwind's arbitrary value syntax, not via config.
-// Design tokens are now defined in styles.css as CSS custom properties.
+// PvP Defaults - loaded from config in DOMContentLoaded
+let pvpDefaults;
 
 // ===== CHART CONFIGURATION =====
 
-const chartTooltipConfig = {
-  backgroundColor: 'rgba(10, 35, 60, 0.95)',
-  borderColor: 'rgba(0, 229, 255, 0.5)',
-  borderWidth: 1,
-  titleFont: { family: 'Rajdhani', size: 14, weight: 'bold' },
-  bodyFont: { family: 'Rajdhani', size: 13 },
-  padding: 12,
-  cornerRadius: 8,
-  displayColors: true,
-  boxPadding: 4,
-  callbacks: {
-    label: function(context) {
-      const value = context.raw;
-      const total = context.dataset.data.reduce((a, b) => a + b, 0);
-      const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-      const avg = total / context.dataset.data.length;
-      const vsAvg = value > avg ? '+' : '';
-      return [
-        `${value.toLocaleString()} Gems`,
-        `${pct}% of category`,
-        value > avg ? `${vsAvg}${(value - avg).toLocaleString()} vs avg` : ''
-      ];
-    }
-  }
-};
-
-const chartAnimationConfig = {
-  duration: 750,
-  easing: 'easeOutQuart'
-};
+// Config loaded from CHARTS in DOMContentLoaded
 
 // ===== CHART FILTER DATA =====
 
@@ -130,26 +38,32 @@ const CM = { event:'#ff6b35', pvp:'#e91e8a', login:'#f39c12', code:'#2ecc71' };
 const modeTotals = { event: 0, pvp: 0, login: 0, code: 0 };
 
 function buildModeData(mode, totals) {
+  if (!GAME || !REWARDS) return { distribution: [0,0,0,0,0], rewards: [0,0,0,0,0,0,0], spider: [[0,0,0,0],[0,0,0,0]], colors: [], rewardColors: [] };
+
+  const spiderTargets = GAME.spiderTargets || { events: 550, pvp: 1500, login: 360, code: 330 };
   const d = [0,0,0,0,0], r = [0,0,0,0,0,0,0], sp = [[0,0,0,0,0],[0,0,0,0,0]];
+  const CM = CHARTS ? CHARTS.colors : { event:'#ff6b35', pvp:'#e91e8a', login:'#f39c12', code:'#2ecc71' };
+  const DC = '#333';
+
   if (mode === 'all') {
-    d[1] = GAME.ev.event[0][1] + GAME.ev.event[1][1];
+    d[1] = REWARDS.categories.event.total;
     d[2] = totals.pvp;
-    d[3] = GAME.ev.login[0][1] + GAME.ev.login[1][1] + Math.round(GAME.ev.login[2][1]/4);
-    d[4] = GAME.ev.code[0][1];
-    r[3] = d[1]; r[4] = GAME.ev.event[1][1]; r[5] = totals.pvp; r[6] = d[3];
-    sp[0] = d.slice(1); sp[1] = [550,1500,360,330];
+    d[3] = REWARDS.categories.login.total;
+    d[4] = REWARDS.categories.code.total;
+    r[3] = d[1]; r[4] = REWARDS.cards[2].gems; r[5] = totals.pvp; r[6] = d[3];
+    sp[0] = d.slice(1); sp[1] = [spiderTargets.events, spiderTargets.pvp, spiderTargets.login, spiderTargets.code];
   } else if (mode === 'event') {
-    d[1] = GAME.ev.event[0][1] + GAME.ev.event[1][1]; r[3] = GAME.ev.event[0][1]; r[4] = GAME.ev.event[1][1];
-    sp[0] = [d[1], 0, 0, 0]; sp[1] = [550, 0, 0, 0];
+    d[1] = REWARDS.categories.event.total; r[3] = REWARDS.cards[1].gems; r[4] = REWARDS.cards[2].gems;
+    sp[0] = [d[1], 0, 0, 0]; sp[1] = [spiderTargets.events, 0, 0, 0];
   } else if (mode === 'pvp') {
     d[2] = totals.pvp; r[5] = totals.pvp;
-    sp[0] = [0, d[2], 0, 0]; sp[1] = [0, 1500, 0, 0];
+    sp[0] = [0, d[2], 0, 0]; sp[1] = [0, spiderTargets.pvp, 0, 0];
   } else if (mode === 'login') {
-    d[3] = GAME.ev.login[0][1] + GAME.ev.login[1][1] + Math.round(GAME.ev.login[2][1]/4); r[6] = d[3];
-    sp[0] = [0, 0, d[3], 0]; sp[1] = [0, 0, 360, 0];
+    d[3] = REWARDS.categories.login.total; r[6] = d[3];
+    sp[0] = [0, 0, d[3], 0]; sp[1] = [0, 0, spiderTargets.login, 0];
   } else if (mode === 'code') {
-    d[4] = GAME.ev.code[0][1]; r[3] = d[4];
-    sp[0] = [0, 0, 0, d[4]]; sp[1] = [0, 0, 0, 330];
+    d[4] = REWARDS.categories.code.total; r[3] = d[4];
+    sp[0] = [0, 0, 0, d[4]]; sp[1] = [0, 0, 0, spiderTargets.code];
   }
   const cols = d.map((v,i) => v>0 ? (i===1?CM.event:i===2?CM.pvp:i===3?CM.login:CM.code) : DC);
   const rCols = r.map((v,i) => v>0 ? (i===3?CM.event:i===4?CM.event:i===5?CM.pvp:i===6?CM.login:CM.code) : DC);
@@ -166,30 +80,40 @@ const chartFilterData = {
 
 // ===== COUNTDOWN TIMER CONFIGURATION =====
 
-const COUNTDOWN_TARGETS = {
-  weekly: getNextSunday(),
-  daily: getNextDailyReset(),
-  multiverseArena: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-  cecilNightmares: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
-};
+let COUNTDOWN_TARGETS = {};
 
-function getNextSunday() {
+function buildCountdownTargets() {
+  if (!COUNTDOWN) return;
+  const cfg = COUNTDOWN;
+  COUNTDOWN_TARGETS = {
+    weekly: getNextSunday(cfg.weekly),
+    daily: getNextDailyReset(cfg.daily),
+    multiverseArena: new Date(Date.now() + (cfg.events?.multiverseArena?.daysOffset || 30) * 24 * 60 * 60 * 1000),
+    cecilNightmares: new Date(Date.now() + (cfg.events?.cecilNightmares?.daysOffset || 3) * 24 * 60 * 60 * 1000)
+  };
+}
+
+function getNextSunday(config) {
   const now = new Date();
   const nextSunday = new Date(now);
-  nextSunday.setDate(now.getDate() + (7 - now.getDay()) % 7);
-  nextSunday.setHours(20, 0, 0, 0);
+  const day = config?.day || 'sunday';
+  const dayMap = {'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6};
+  const targetDay = dayMap[day] || 0;
+  nextSunday.setDate(now.getDate() + (7 - now.getDay() + targetDay) % 7);
+  nextSunday.setHours(config?.hour || 20, config?.minute || 0, 0, 0);
   if (nextSunday <= now) {
     nextSunday.setDate(nextSunday.getDate() + 7);
   }
   return nextSunday;
 }
 
-function getNextDailyReset() {
+function getNextDailyReset(config) {
   const now = new Date();
-  const targetHour = 20;
-  const targetMinute = 0;
+  const targetHour = config?.hour || 20;
+  const targetMinute = config?.minute || 0;
+  const offsetHours = config?.offsetHours || -4;
 
-  const estOffset = -4 * 60 * 60 * 1000;
+  const estOffset = offsetHours * 60 * 60 * 1000;
   const estNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000) + estOffset);
 
   const nextReset = new Date(now);
@@ -197,7 +121,6 @@ function getNextDailyReset() {
     nextReset.setDate(nextReset.getDate() + 1);
   }
   nextReset.setHours(targetHour - now.getTimezoneOffset() / 60, targetMinute, 0, 0);
-
   return nextReset;
 }
 
@@ -250,15 +173,26 @@ function revealCode(card) {
   }
 }
 
-function getPvpPayout(leagueKey, rank) {
-  const tiers = GAME.pvp.base;
-  const mod = GAME.pvp.mod[leagueKey] || 1;
-  const tier = tiers.find(t => rank >= t[0] && rank <= t[1]);
+function getPvpPayout(leagueId, rank) {
+  if (!GAME || !GAME.pvp) return { gems: 0, cards: 0, chips: 0, isDemotion: false };
+
+  const league = GAME.pvp.leagues.find(l => l.id === leagueId);
+  const multiplier = league ? league.multiplier : 1;
+  const tier = GAME.pvp.tiers.find(t => rank >= t.rankStart && rank <= t.rankEnd);
+
   if (!tier) return { gems: 0, cards: 0, chips: 0, isDemotion: false };
-  return { gems: Math.round(tier[2] * mod), cards: tier[3], chips: Math.round(tier[4] * mod), isDemotion: rank >= 86 };
+
+  return {
+    gems: Math.round(tier.gems * multiplier),
+    cards: tier.cards,
+    chips: Math.round(tier.chips * multiplier),
+    isDemotion: rank >= GAME.pvp.demotionThreshold
+  };
 }
 
 function getModeTotal(mode) {
+  if (!REWARDS) return 0;
+
   if (mode === 'pvp') {
     const l1 = document.getElementById('pvp1-league')?.value || 'eliteII';
     const r1 = parseInt(document.getElementById('pvp1-rank')?.value) || 13;
@@ -271,17 +205,24 @@ function getModeTotal(mode) {
     const p3 = getPvpPayout(l3, r3).gems;
     return p1 + p2 + p3 || 1428;
   }
-  const modeEvents = eventsByMode[mode];
-  if (!modeEvents) return 0;
 
   if (mode === 'login') {
-    const daily = modeEvents.find(e => e.name === 'Daily')?.gems || 0;
-    const weekly = modeEvents.find(e => e.name === 'Weekly')?.gems || 0;
-    const monthly = modeEvents.find(e => e.name === 'Monthly')?.gems || 0;
-    return daily + weekly + Math.round(monthly / 4);
+    if (!REWARDS.loginRewards) return 0;
+    const daily = REWARDS.loginRewards.find(e => e.name === 'Daily')?.weeklyTotal || 0;
+    const weekly = REWARDS.loginRewards.find(e => e.name === 'Weekly')?.weeklyTotal || 0;
+    const monthly = REWARDS.loginRewards.find(e => e.name === 'Monthly')?.weeklyTotal || 0;
+    return daily + weekly + monthly;
   }
 
-  return modeEvents.reduce((sum, event) => sum + (event.gems || 0), 0);
+  if (mode === 'event') {
+    return REWARDS.categories.event.total;
+  }
+
+  if (mode === 'code') {
+    return REWARDS.categories.code.total;
+  }
+
+  return 0;
 }
 
 function calculateSelectedTotal() {
@@ -327,7 +268,7 @@ function filterCards(category, evt) {
   const cards = document.querySelectorAll('[data-category]');
 
   if (category === 'all') {
-    selectedModes = ['event', 'pvp', 'login', 'code'];
+selectedModes = UI?.defaults?.selectedModes ? [...UI.defaults.selectedModes] : ['event', 'pvp', 'login', 'code'];
     updateAllButtons();
   } else {
     const modeIndex = selectedModes.indexOf(category);
@@ -573,6 +514,27 @@ function toggleTheme() {
   } else {
     icon.classList.remove('fa-sun');
     icon.classList.add('fa-moon');
+  }
+}
+
+// Charts Toggle
+function toggleCharts() {
+  const container = document.getElementById('chartsContainer');
+  const toggleBtn = document.querySelector('.gem-charts-toggle');
+  const label = document.querySelector('#chartsToggleLabel span:nth-child(2)');
+  const icon = document.getElementById('chartsToggleIcon');
+
+  container.classList.toggle('hidden');
+  toggleBtn.classList.toggle('collapsed');
+
+  if (container.classList.contains('hidden')) {
+    label.textContent = 'Show Charts';
+    icon.classList.remove('fa-chevron-up');
+    icon.classList.add('fa-chevron-down');
+  } else {
+    label.textContent = 'Hide Charts';
+    icon.classList.remove('fa-chevron-down');
+    icon.classList.add('fa-chevron-up');
   }
 }
 
@@ -999,29 +961,55 @@ function initializePvPCards() {
 // ===== INITIALIZATION =====
 
 document.addEventListener('DOMContentLoaded', function() {
+  loadAllConfigs();
+  buildCountdownTargets();
+
+  // Rebuild chartFilterData now that configs are loaded
+  modeTotals = { event: 0, pvp: 0, login: 0, code: 0 };
+  chartFilterData = {
+    all: buildModeData('all', modeTotals),
+    event: buildModeData('event', modeTotals),
+    pvp: buildModeData('pvp', modeTotals),
+    login: buildModeData('login', modeTotals),
+    code: buildModeData('code', modeTotals)
+  };
+
+  pvpDefaults = {
+    1: GAME.pvp.defaults,
+    2: GAME.pvp.defaults,
+    3: GAME.pvp.defaults
+  };
+
+  const chartAnimConfig = CHARTS.animation || { duration: 750, easing: 'easeOutQuart' };
+  const chartTtipConfig = CHARTS.tooltip || { backgroundColor: 'rgba(10, 35, 60, 0.95)', borderColor: 'rgba(0, 229, 255, 0.5)', borderWidth: 1, titleFont: { family: 'Rajdhani', size: 14, weight: 'bold' }, bodyFont: { family: 'Rajdhani', size: 13 }, padding: 12, cornerRadius: 8, displayColors: true, boxPadding: 4, callbacks: { label: function(context) { const value = context.raw; const total = context.dataset.data.reduce((a, b) => a + b, 0); const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0; const avg = total / context.dataset.data.length; const vsAvg = value > avg ? '+' : ''; return [ `${value.toLocaleString()} Gems`, `${pct}% of category`, value > avg ? `${vsAvg}${(value - avg).toLocaleString()} vs avg` : '' ]; } } };
+
+  const initDistribution = CHARTS.initialData?.distribution || [500, 750, 293, 300];
+  const initSpiderActual = CHARTS.initialData?.spiderActual || [500, 750, 293, 300];
+  const spiderTargets = GAME.spiderTargets ? [GAME.spiderTargets.events, GAME.spiderTargets.pvp, GAME.spiderTargets.login, GAME.spiderTargets.code] : [550, 1500, 360, 330];
+
   Chart.defaults.color = '#ffffff';
   Chart.defaults.borderColor = 'rgba(0, 229, 255, 0.2)';
 
   new Chart(document.getElementById('categoryChart'), {
     type: 'doughnut',
     data: {
-      labels: ['Events', 'PvP', 'Login', 'Code'],
+      labels: CHARTS.labels?.distribution || ['Events', 'PvP', 'Login', 'Code'],
       datasets: [{
-        data: [500, 750, 293, 300],
-        backgroundColor: ['#ff6b35', '#e91e8a', '#f39c12', '#2ecc71'],
+        data: initDistribution,
+        backgroundColor: [CHARTS.colors.event, CHARTS.colors.pvp, CHARTS.colors.login, CHARTS.colors.code],
         borderWidth: 0,
         hoverOffset: 8
       }]
     },
     options: {
       responsive: true,
-      animation: { ...chartAnimationConfig, delay: 0 },
+      animation: { duration: chartAnimConfig.duration, easing: chartAnimConfig.easing, delay: 0 },
       plugins: {
         legend: {
           position: 'bottom',
           labels: { padding: 20, font: { family: 'Rajdhani', size: 12 } }
         },
-        tooltip: chartTooltipConfig
+        tooltip: chartTtipConfig
       }
     }
   });
@@ -1042,14 +1030,14 @@ document.addEventListener('DOMContentLoaded', function() {
     options: {
       responsive: true,
       maintainAspectRatio: true,
-      animation: { ...chartAnimationConfig, delay: 100 },
+      animation: { duration: chartAnimConfig.duration, easing: chartAnimConfig.easing, delay: 100 },
       scales: {
         y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false }, max: Math.max(...rewardsInitData.data) || 100 },
         x: { grid: { display: false }, ticks: { display: false } }
       },
       plugins: {
         legend: { display: false },
-        tooltip: chartTooltipConfig
+        tooltip: chartTtipConfig
       }
     }
   });
@@ -1057,27 +1045,27 @@ document.addEventListener('DOMContentLoaded', function() {
   new Chart(document.getElementById('spiderChart'), {
     type: 'radar',
     data: {
-      labels: ['Events', 'PvP', 'Login', 'Code'],
+      labels: CHARTS.labels?.spider || ['Events', 'PvP', 'Login', 'Code'],
       datasets: [{
         label: 'Gems',
-        data: [500, 750, 293, 300],
+        data: initSpiderActual,
         backgroundColor: 'rgba(0, 229, 255, 0.2)',
-        borderColor: '#00e5ff',
-        pointBackgroundColor: '#00e5ff',
+        borderColor: CHARTS.colors.cyan,
+        pointBackgroundColor: CHARTS.colors.cyan,
         borderWidth: 2
       }, {
         label: 'Target',
-        data: [550, 1500, 360, 330],
+        data: spiderTargets,
         backgroundColor: 'rgba(233, 30, 138, 0.1)',
-        borderColor: '#e91e8a',
-        pointBackgroundColor: '#e91e8a',
+        borderColor: CHARTS.colors.pink,
+        pointBackgroundColor: CHARTS.colors.pink,
         borderWidth: 2
       }]
     },
     options: {
       responsive: true,
       maintainAspectRatio: true,
-      animation: { ...chartAnimationConfig, delay: 200 },
+      animation: { duration: chartAnimConfig.duration, easing: chartAnimConfig.easing, delay: 200 },
       scales: {
         r: {
           beginAtZero: true,
@@ -1088,7 +1076,7 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       plugins: {
         legend: { display: false },
-        tooltip: chartTooltipConfig
+        tooltip: chartTtipConfig
       }
     }
   });
