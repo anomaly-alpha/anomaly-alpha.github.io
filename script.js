@@ -348,58 +348,15 @@ function updateModeButtonStates() {
 
   const allBtn = document.querySelector('.gem-mode-btn--all');
   if (allBtn) {
-    allBtn.classList.remove('active', 'from-cyan-glow/30', 'border-cyan-glow/50', 'shadow-[0_0_20px_rgba(0,229,255,0.4)]');
-    allBtn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/30');
-    if (isAllSelected) {
-      allBtn.classList.add('active', 'from-cyan-glow/30', 'border-cyan-glow/50', 'shadow-[0_0_20px_rgba(0,229,255,0.4)]');
-    } else {
-      allBtn.classList.add('bg-cyan-glow/10', 'border-cyan-glow/30');
-    }
+    allBtn.classList.toggle('active', isAllSelected);
   }
 
-  const eventBtn = document.querySelector('.gem-mode-btn--event');
-  if (eventBtn) {
-    eventBtn.classList.remove('active', 'bg-orange-accent/30', 'border-orange-accent/50');
-    eventBtn.classList.remove('bg-orange-accent/10', 'border-orange-accent/30');
-    if (selectedModes.includes('event')) {
-      eventBtn.classList.add('active', 'bg-orange-accent/30', 'border-orange-accent/50');
-    } else {
-      eventBtn.classList.add('bg-orange-accent/10', 'border-orange-accent/30');
+  ['event', 'pvp', 'login', 'code'].forEach(mode => {
+    const btn = document.querySelector(`.gem-mode-btn--${mode}`);
+    if (btn) {
+      btn.classList.toggle('active', selectedModes.includes(mode));
     }
-  }
-
-  const pvpBtn = document.querySelector('.gem-mode-btn--pvp');
-  if (pvpBtn) {
-    pvpBtn.classList.remove('active', 'bg-pink-glow/30', 'border-pink-glow/50');
-    pvpBtn.classList.remove('bg-pink-glow/10', 'border-pink-glow/30');
-    if (selectedModes.includes('pvp')) {
-      pvpBtn.classList.add('active', 'bg-pink-glow/30', 'border-pink-glow/50');
-    } else {
-      pvpBtn.classList.add('bg-pink-glow/10', 'border-pink-glow/30');
-    }
-  }
-
-  const codeBtn = document.querySelector('.gem-mode-btn--code');
-  if (codeBtn) {
-    codeBtn.classList.remove('active', 'bg-green-accent/30', 'border-green-accent/50');
-    codeBtn.classList.remove('bg-green-accent/10', 'border-green-accent/30');
-    if (selectedModes.includes('code')) {
-      codeBtn.classList.add('active', 'bg-green-accent/30', 'border-green-accent/50');
-    } else {
-      codeBtn.classList.add('bg-green-accent/10', 'border-green-accent/30');
-    }
-  }
-
-  const loginBtn = document.querySelector('.gem-mode-btn--login');
-  if (loginBtn) {
-    loginBtn.classList.remove('active', 'bg-yellow-accent/30', 'border-yellow-accent/50');
-    loginBtn.classList.remove('bg-yellow-accent/10', 'border-yellow-accent/30');
-    if (selectedModes.includes('login')) {
-      loginBtn.classList.add('active', 'bg-yellow-accent/30', 'border-yellow-accent/50');
-    } else {
-      loginBtn.classList.add('bg-yellow-accent/10', 'border-yellow-accent/30');
-    }
-  }
+  });
 }
 
 function updateAllPageTotals() {
