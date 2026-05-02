@@ -139,6 +139,14 @@ CSS custom property design tokens with BEM naming convention:
 - ✅ Shrunk event cards 20% - reduced padding, gap, margins, font sizes
 - ✅ Enlarged mode selector timers - text-sm with font-mono for readability
 - ✅ Fixed getModeTotal('pvp') returning 0 - moved PvP check before eventsByMode lookup
+- ✅ **Spider chart fix** - 4 axes (Events, PvP, Login, Code), targets (550, 1500, 360, 330), login value corrected to 293
+- ✅ **Rewards bar chart** - Dynamic bars based on selected modes, mode colors, full height (y.max set dynamically)
+- ✅ **Mode button active states** - Added CSS `.active` rules, simplified JS to just toggle class
+- ✅ **Category chart** - Removed obsolete Season label, 4 axes matching spider chart
+- ✅ **Card body wrapper** - Wrapped content above gem-divider in `.gem-card__body` for consistent height
+- ✅ **Promo code reveal animation** - First tap reveals with 3D flip/glow animation, second tap copies
+- ✅ **Reordered cards** - Code now first (after All Modes), mode selector and card order aligned
+- ✅ **Verbose descriptions** - Non-PvP cards now have story-like descriptions below divider
 
 ## Contributors
 
