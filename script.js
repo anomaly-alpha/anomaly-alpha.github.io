@@ -239,14 +239,9 @@ function revealCode(card) {
   if (card.classList.contains('reveal-done')) {
     navigator.clipboard.writeText('30KGTG');
     reveal.classList.add('copied');
-    const feedback = document.createElement('div');
-    feedback.className = 'gem-toast gem-toast--success';
-    feedback.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Code copied!';
-    document.body.appendChild(feedback);
     setTimeout(() => {
-      feedback.remove();
       reveal.classList.remove('copied');
-    }, 2000);
+    }, 2500);
   } else {
     hint.style.display = 'none';
     reveal.classList.remove('hidden');
