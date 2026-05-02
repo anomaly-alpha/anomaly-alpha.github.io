@@ -30,7 +30,7 @@ script.js (hardcoded data)
 ### After (Target State)
 ```
 index.html
-├── <script type="application/json" id="game-config">...</script>
+├── <script type="application/json" id="game-config">...</script>  (inline, not fetched)
 ├── <script type="application/json" id="rewards-config">...</script>
 ├── <script type="application/json" id="chart-config">...</script>
 ├── <script type="application/json" id="countdown-config">...</script>
@@ -38,7 +38,7 @@ index.html
 └── <script type="application/json" id="theme-config">...</script>
 
 script.js (consumes JSON)
-├── loadConfig(id) → parsed object
+├── loadConfig(id) → parses inline <script> element textContent
 ├── loadAllConfigs() → all 6 configs loaded
 ├── GAME = game-config data
 ├── REWARDS = rewards-config data
@@ -47,6 +47,8 @@ script.js (consumes JSON)
 ├── UI = ui-config data
 └── THEME = theme-config data
 ```
+
+**Note:** JSON is embedded inline in HTML (not fetched via fetch()) to support opening the page directly from disk (`file://`) without CORS errors. Source files remain in `data/` for maintainability.
 
 ---
 
@@ -232,24 +234,23 @@ Change from 4 league options to 14:
 
 ```
 anomaly-alpha/
-├── index.html           (embedded JSON, 14 league selectors)
-├── script.js            (refactored to use JSON configs)
-├── styles.css           (unchanged)
-├── data/
+├── index.html           (827 lines, inline JSON configs in <head>)
+├── script.js            (1162 lines, loadConfig reads inline <script> elements)
+├── styles.css           (1183 lines)
+├── favicon.svg
+├── data/                (source JSON files, embedded in index.html)
 │   ├── game-config.json     (PvP, spider targets)
 │   ├── rewards-config.json  (cards, categories, login)
 │   ├── chart-config.json    (colors, animation, tooltip)
 │   ├── countdown-config.json (timer settings)
 │   ├── ui-config.json       (layout, mode order)
 │   └── theme-config.json    (design tokens)
-├── README.md            (unchanged)
 └── docs/
     ├── index.md
     └── plan/
         ├── IMPLEMENTATION_PLAN.md
         ├── JSON_EXTRACTION_PLAN.md  (this file)
-        ├── SPIDER_CHART_FIX.md
-        └── ... (other plan files)
+        └── ... (historical fix notes)
 ```
 
 ---
@@ -287,7 +288,7 @@ target = [GAME.spiderTargets.events, .pvp, .login, .code]
 To update PvP payouts, league multipliers, card values, etc.:
 1. Edit the appropriate JSON file in `data/`
 2. Update the embedded `<script type="application/json">` block in `index.html`
-3. OR update `data/` files and regenerate embed blocks
+3. Or update both at once — source files are for reference, embedded blocks are what the page actually uses
 
 ### Adding New Features
 

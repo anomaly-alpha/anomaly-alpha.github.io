@@ -2,80 +2,78 @@
 
 ## Overview
 
-Gem rewards infographic for Invincible Mobile Game featuring interactive charts and visualizations with a sci-fi aesthetic matching the game's UI.
+Gem rewards infographic for Invincible Mobile Game featuring interactive charts, mode filtering, hover interactions, and a sci-fi aesthetic matching the game's UI.
 
 ## Gem Data (Current)
 
 | Category | Gems | Description |
 |----------|-----|-------------|
-| PvP | ~1,428 (varies) | Restricted Arena + Open Arena + Multiverse Alliance War (Elite II, rank 13 defaults) |
-| Event Rewards | 500 | The Long Haul (300), Earth's Defenders (200) |
-| Daily/Weekly Rewards | 293 | Daily (210) + Weekly (60) + Monthly÷4 (23) |
+| Event Rewards | 500 | The Long Haul (300) + Earth's Defenders (200) |
+| PvP | ~750 (varies) | Restricted Arena + Open Arena + Multiverse Alliance War (Elite II, rank 13 defaults) |
+| Login Rewards | 293 | Daily (210) + Weekly (60) + Monthly (23) |
 | Promo Code | 300 | Code: 30KGTG |
 
-**Total: ~2,521 gems** (varies with PvP selections)
+**Total: ~1,843 gems/week** (varies with PvP selections)
 
 ## Features
 
 ### Interactive Elements
-- Animated counter that counts up on page load
-- Copy-to-clipboard for promo code (click the card)
-- Theme toggle (dark/light mode)
-- **Unified Mode Cards** - 5 large clickable cards (All, Event, PvP, Daily, Code) each showing:
-  - Total gems for that mode
-  - Countdown timer
-  - Click to filter, update charts, and animate main total
-- Card filter buttons (All, Event, PvP, Daily, Code) - now integrated into mode cards above
-- Charts update based on mode filter selection (no separate chart filters)
-- **Search/Find** - Expandable search bar with text highlighting
-- **Save/Share** - Save views, load saved, copy share link, export as PNG
-- Export data as JSON
-- **PvP Interactive Cards** - Three cards with:
-  - League selector (Elite I, Elite II, Elite III, Invincible)
-  - Rank selector (1-120)
-  - Dynamic gems based on tier + rank
-  - localStorage persistence
-  - Clear button to reset
+- **Animated counter** that counts up on value changes
+- **Promo code reveal** - tap to reveal with 3D flip animation, tap again to copy
+- **Theme toggle** (dark/light mode) - fixed icon button top-right
+- **Mode selector** (5 buttons: All, Code, Event, PvP, Login) - each showing gem total + countdown timer
+- **Multi-select mode filtering** - toggle Event, PvP, Login, Code independently
+- **Mode button hover** - hovering a mode button highlights all matching cards in that mode's color
+- **Individual card hover** - each card highlights in its own category color using `--card-color` CSS variable
+- **Charts toggle** - show/hide charts section
+- **Search/Find** - expandable search bar with text highlighting
+- **Save/Share menu** - Save views, load saved, copy share link, export as PNG
+- **Export data as JSON**
+- **Drill-down modal** - category detail view (Escape to close)
 
-### Data Drill-Down
-- Click on category summary cards to open detailed modal
-- Modal shows each reward in category with name, description, gem amount, percentage
+### PvP Interactive Cards (3 cards)
+- League selector (14 options: Intern through Invincible)
+- Rank selector (1-120)
+- Dynamic gems based on tier + league multiplier
+- Cards and Chips display
+- localStorage persistence per card
+- Clear button to reset to defaults
+- Demotion zone warning at rank 86+ (Multiverse Alliance War only)
 
-### Chart Interactions
-- **Hover tooltips** - Rich tooltips showing gems, percentage, vs average comparison
-- **Animated transitions** - Staggered entry animations, smooth data transitions on filter changes
-- **Chart filtering** - Mode selection updates all 4 charts simultaneously
+### Chart Interactions (3 charts)
+- **Distribution (doughnut)** - 4 category segments with mode colors
+- **Rewards (bar)** - 1-4 bars based on selected modes, dynamic y.max
+- **Performance (radar)** - Spider chart showing actual vs target (550, 1500, 360, 330)
+- Rich tooltips showing gems, percentage, vs average comparison
+- Animated transitions on filter changes
 
 ### Visual Effects
 - Floating particles in background
-- Scanning line animation
+- Scanning line animation on header
 - Rotating gradient on total section
 - Corner decorations on main container
 - Sparkle particles on cards
 - Glow hover effects on cards
 - Grid background overlay
-- Card fade-in animations (staggered)
-
-### Charts (3 in single row)
-- **Distribution** - Doughnut chart by category
-- **Rewards** - Bar chart for individual rewards
-- **Performance** - Spider/Radar chart (actual vs target)
-- Animated tooltips on cards
+- Card fade-in animations (staggered delays)
 
 ## Tech Stack
 
-- **Structure**: `index.html` (clean HTML), `styles.css` (design tokens + BEM), `script.js` (all JS)
+- **Structure**: `index.html` (827 lines), `styles.css` (1183 lines), `script.js` (1162 lines)
 - **Styling**: Tailwind CSS (via CDN) + custom CSS design token system
 - **Charts**: Chart.js (doughnut, bar, radar)
 - **Export**: html2canvas for PNG export
 - **Icons**: Font Awesome
 - **Typography**: Rajdhani font (Google Fonts)
+- **Data**: Inline JSON configs (6 configs embedded in `<head>`, source in `data/`)
 
 ## Design System
 
 CSS custom property design tokens with BEM naming:
-- Color tokens: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`
-- Component classes: `.gem-card--event`, `.gem-label--pvp`, `.gem-text--primary`
+- Color tokens: `--gem-event` (#ff6b35), `--gem-pvp` (#e91e8a), `--gem-login` (#f39c12), `--gem-code` (#2ecc71), `--gem-cyan` (#00e5ff)
+- Card modifiers: `.gem-card--event`, `.gem-card--pvp`, `.gem-card--login`, `.gem-card--code`
+- Label classes: `.gem-label--event`, `.gem-label--pvp`, etc.
+- Text classes: `.gem-text--event`, `.gem-text--pvp`, etc.
 - Shadow tokens: `--gem-shadow--card`, `--gem-shadow--glow-cyan`
 - Light mode: `:root.light-mode` with token overrides
 
@@ -88,63 +86,33 @@ CSS custom property design tokens with BEM naming:
 
 ## Recent Updates (May 2026)
 
-- ✅ **Extracted to separate files** - `index.html`, `styles.css`, `script.js` from `gem_infographic.html`
+### Core Architecture
+- ✅ **Inline JSON configs** - 6 JSON configs embedded in `<head>` as `<script type="application/json">` tags for file:// compatibility
 - ✅ **Design token system** - CSS custom properties for all colors, shadows, and design values
-- ✅ **BEM naming** - Semantic component classes (`.gem-card--event`, `.gem-label--pvp`, etc.)
-- ✅ **gem_infographic.html** - Now redirects to index.html
-- ✅ **Added gem icons** - Pink diamond icons beside mode selector totals
-- ✅ **Consistent pink styling** - All gem icons use same gradient and glow
-- ✅ **Removed 4th chart** - Now 3 charts (Distribution, Rewards, Performance) in full-width layout
-- ✅ Removed Season category entirely (replaced with PvP)
-- ✅ Merged Warfare into PvP (Multiverse Alliance War is now part of PvP cards)
-- ✅ Created unified mode cards at top with totals + timers
-- ✅ Charts now update based on mode selection (removed separate chart filters)
-- ✅ Removed legend, calculator, summary boxes
-- ✅ Added PvP cards with league/rank selectors and localStorage persistence
-- ✅ Added animated total counter updates when PvP values change
-- ✅ Added demotion zone warnings for PvP (rank 86+)
-- ✅ Total updated to 2,550 gems (varies with PvP selections)
-- ✅ Fixed HTML structure (PvP article tags, main container close, nav close)
-- ✅ Fixed JavaScript values (totalGems: 3217→2550, baseStatic: 2650→1900)
-- ✅ Fixed chartFilterData.all.distribution (removed 1820 season value)
-- ✅ Multi-select mode filtering - toggle Event, PvP, Daily, Code independently
-- ✅ Main total updates based on selected modes (PvP uses dynamic card values)
-- ✅ Mode button totals update when PvP cards change
-- ✅ Added countdown timers with seconds to each mode selector
-- ✅ Added subtle pulse animation on countdown second changes
-- ✅ Standardized PvP card colors to pink-glow to match PvP selector
-- ✅ Fixed mode button active class toggle functionality
-- ✅ Updated daily login from 100 to 30 gems per day (610 weekly total)
-- ✅ Updated chart colors to match mode colors
-- ✅ Fixed TypeError on demotionEl (null check added)
-- ✅ Fixed favicon error (inline SVG)
-- ✅ Fixed Chart.js source map error
-- ✅ Restructured card layout - gem icons + payout at top, title/selectors below
-- ✅ Fixed login rewards total (980→1843) - updated eventsByMode values
-- ✅ Updated Daily card to show "30×7=210", Monthly to show "90÷4=23"
-- ✅ Made mode selector totals dynamic - now calculated from eventsByMode
-- ✅ Fixed PvP percentage calculation to use dynamic total
-- ✅ Login mode total now = daily + weekly + (monthly÷4) = 293
-- ✅ Updated PvP defaults to Elite II rank 13 (user's settings)
-- ✅ Fixed PvP mode selector showing 0 issue
-- ✅ Unified event card tag styles - all login cards use yellow-accent
-- ✅ Reordered cards: Event → PvP → Login → Code
-- ✅ Moved League/Rank selectors to bottom of PvP cards
-- ✅ Moved Cards/Chips info to right below gems payout in PvP cards
-- ✅ Consolidated GAME data structure - compressed PvP tiers to compact arrays
-- ✅ Refactored chart data - buildModeData() derives from GAME + getModeTotal()
-- ✅ Shrunk mode selectors 50% - smaller padding, icons, text
-- ✅ Shrunk event cards 20% - reduced padding, gap, margins, font sizes
-- ✅ Enlarged mode selector timers - text-sm with font-mono for readability
-- ✅ Fixed getModeTotal('pvp') returning 0 - moved PvP check before eventsByMode lookup
-- ✅ **Spider chart fix** - 4 axes (Events, PvP, Login, Code), targets (550, 1500, 360, 330), login value corrected to 293
-- ✅ **Rewards bar chart** - Dynamic bars based on selected modes, mode colors, full height (y.max set dynamically)
-- ✅ **Mode button active states** - Added CSS `.active` rules, simplified JS to just toggle class
-- ✅ **Category chart** - Removed obsolete Season label, 4 axes matching spider chart
-- ✅ **Card body wrapper** - Wrapped content above gem-divider in `.gem-card__body` for consistent height
-- ✅ **Promo code reveal animation** - First tap reveals with 3D flip/glow animation, second tap copies
-- ✅ **Reordered cards** - Code now first (after All Modes), mode selector and card order aligned
-- ✅ **Verbose descriptions** - Non-PvP cards now have story-like descriptions below divider
+- ✅ **BEM naming** - Semantic component classes
+- ✅ **14 PvP leagues** - Intern through Invincible (updated selectors and config)
+- ✅ **7-tier rank system** - Ranks 1-120 with tier-based gems/cards/chips
+
+### UI/UX Enhancements
+- ✅ **Mode button hover highlight** - Cards highlight in their category color when hovering mode buttons
+- ✅ **Per-card hover color** - `--card-color` CSS variable dynamically set per card's data-category
+- ✅ **Login cards unified** - All 3 login cards now use `gem-card--login` (amber) instead of mixed purple/cyan
+- ✅ **Mode selector gem icon** - Flexbox layout for side-by-side gem icon + number
+- ✅ **Custom SVG favicon** - Cyan-to-pink gradient gem shape
+- ✅ **Charts toggle** - Show/hide charts section with animated chevron
+
+### Data & Calculations
+- ✅ **PvP defaults** - Elite II, rank 13 (user's actual settings)
+- ✅ **Login total** - 293/week (210+60+23)
+- ✅ **Spider chart targets** - (550, 1500, 360, 330)
+- ✅ **GAME.pvp structure** - 14 leagues with `rankStart`/`rankEnd` fields
+- ✅ **getPvpPayout** - Uses league multiplier + tier gems/cards/chips
+
+### Bug Fixes
+- ✅ **Card hover shadow** - Hardcoded values replacing undefined `var(--gem-shadow--card)`
+- ✅ **MODE.highlight specificity** - `body ` prefix + `!important` to override `.gem-card--hover:hover`
+- ✅ **modeTotals reassignment** - `Object.assign()` instead of `const` reassignment
+- ✅ **getRewardsChartData GAME.ev** - Replaced with `REWARDS.categories.event.total`
 
 ## Contributors
 
