@@ -10,7 +10,7 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 |----------|-----|-------------|
 | PvP | 750 (varies) | Restricted Arena + Open Arena + Multiverse Alliance War (interactive with rank/league selectors) |
 | Event Rewards | 500 | The Long Haul (300), Earth's Defenders (200) |
-| Daily/Weekly Rewards | 1,100 | Daily login (700) + Weekly bonus (400) |
+| Daily/Weekly Rewards | 610 | Daily login (210) + Weekly bonus (400) |
 | Promo Code | 300 | Code: 30KGTG |
 
 **Total: 2,550 gems** (varies with PvP selections)
@@ -101,6 +101,10 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - ✅ Fixed mode button active class toggle functionality
 - ✅ Updated daily login from 100 to 30 gems per day (610 weekly total)
 - ✅ Updated chart colors to match mode colors
+- ✅ Fixed TypeError on demotionEl (null check added)
+- ✅ Fixed favicon error (inline SVG)
+- ✅ Fixed Chart.js source map error
+- ✅ Restructured card layout - gem icons + payout at top, title/selectors below
 
 ## Contributors
 
