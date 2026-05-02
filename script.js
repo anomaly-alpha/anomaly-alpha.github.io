@@ -23,6 +23,144 @@ function loadAllConfigs() {
   THEME = loadConfig('theme-config');
 }
 
+// Card Modal Data — all 9 card modals triggered by info icon
+const CARD_MODAL_DATA = {
+    'the-long-haul': {
+        category: 'event',
+        title: 'The Long Haul',
+        gems: 300,
+        badge: '★ Top 5%',
+        hero: '"Endurance is everything."',
+        description: 'A multi-day endurance event that tests your consistency and strategic planning. Your cumulative score across the event duration determines your ranking — only the top 5% earn this reward. The challenge intensifies each day as scores accumulate and rankings shift. Alliance participation unlocks score multipliers and bonus point events.',
+        tips: [
+            'Play every day to maintain momentum and avoid losing rank position',
+            'Steady high scores beat sporadic burst pushes — consistency is king',
+            'Join an alliance for bonus score multipliers and coordinated event participation',
+            'Watch for 2x score amplifier windows and plan your biggest pushes then',
+            'Prioritize daily quests contributing to event score over general progression'
+        ]
+    },
+    'earths-defenders': {
+        category: 'event',
+        title: "Earth's Defenders",
+        gems: 200,
+        badge: '★ Top 10%',
+        hero: '"Defend Earth. Rise above the rest."',
+        description: 'An event centered around defending Earth from incoming threats. Your contribution score is calculated from enemies defeated, damage dealt, and objectives completed. The top 10% of contributors earn this reward. Coordination with alliance members amplifies your effectiveness and unlocks bonus score opportunities.',
+        tips: [
+            'Maximize daily contribution through quest completion and enemy defeats',
+            'Spend event currency efficiently — avoid wasteful upgrades during active windows',
+            'Coordinate with alliance for defense bonus multipliers and shared rewards',
+            'Watch for bonus score amplification events and target them specifically',
+            'Balance offensive and defensive tasks for optimal contribution ranking'
+        ]
+    },
+    'daily-login': {
+        category: 'login',
+        title: 'Daily Login',
+        gems: 210,
+        badge: '★ 30×7',
+        hero: '"7 days. 210 gems. Every week."',
+        description: 'The foundation of your weekly gem income. Log in once per day to claim 30 gems, with the streak running for the first 7 days of each week. The weekly reset happens every Monday at server reset. This is the most reliable gem source in the game — no skill required, just the habit of showing up.',
+        tips: [
+            'Set a daily reminder to log in at the same time each day for consistency',
+            'Never miss a day — broken streaks take weeks to fully recover value from',
+            'Use the Monday weekly reset as your weekly calendar anchor point',
+            'Stack with weekly (60) and monthly (23) login rewards for maximum income',
+            'Link your account to a device for convenience features like auto-login'
+        ]
+    },
+    'weekly-login': {
+        category: 'login',
+        title: 'Weekly Login',
+        gems: 60,
+        badge: '★ Weekly',
+        hero: '"Loyalty has its rewards."',
+        description: 'A bonus reward for players who return each week. Claim 60 gems just for logging in once during the weekly period. This stacks with daily login bonuses — together they total 270 gems per week before monthly rewards. The weekly period resets alongside the daily login streak on Monday.',
+        tips: [
+            'Just one login per week is sufficient — claim early to avoid forgetting',
+            'Combine with daily (210) + weekly (60) for a 270 gem/week base income',
+            'Use the Monday reset as your reminder to check all login rewards at once',
+            'No strategic planning needed — just the habit of checking in weekly'
+        ]
+    },
+    'monthly-login': {
+        category: 'login',
+        title: 'Monthly Login',
+        gems: 23,
+        badge: '★ 90÷4',
+        hero: '"Every 4 weeks, return stronger."',
+        description: 'The monthly hero bonus rewards long-term consistent players. 90 gems are divided into four weekly claiming periods, giving you approximately 23 gems per week effectively. This compounds with daily (210) and weekly (60) login rewards for a total of ~293 gems/week from login bonuses alone.',
+        tips: [
+            'Check in every 4 weeks to claim your divided portion of the monthly bonus',
+            'The monthly schedule aligns with major game content updates and events',
+            'Long-term consistent players accumulate significant gem advantages',
+            'Combine with daily (210) + weekly (60) for ~293 gems/week total login income',
+            'No special strategy — just the habit of returning monthly'
+        ]
+    },
+    'restricted-arena': {
+        category: 'pvp',
+        title: 'Restricted Arena',
+        gems: null,
+        badge: '★ Weekly',
+        hero: '"Enter the arena. Prove your rank."',
+        description: 'A weekly competitive PvP arena where your league and rank determine your baseline rewards. Higher leagues and ranks earn exponentially more gems, cards, and chips. Placement rewards are based on your ranking within your league at the end of the week.',
+        tips: [
+            'Climb to at least Elite II rank 13 for optimal gem-to-effort value',
+            'Higher league multipliers dramatically increase all gem and chip rewards',
+            'Cards earned are NOT multiplied by league — always awarded at base rate',
+            'Alliance participation can provide ranking protection and bonus rewards',
+            'Consistent weekly play prevents rank decay and maintains tier placement'
+        ]
+    },
+    'open-arena': {
+        category: 'pvp',
+        title: 'Open Arena',
+        gems: null,
+        badge: '★ Weekly',
+        hero: '"Open competition. Climb the ranks."',
+        description: 'An open weekly arena for all players regardless of league. Performance is based purely on match results and ranking within your skill tier. Unlike Restricted Arena, the payout structure varies dramatically with rank. Strategic matchmaking and meta team composition significantly impact final placement and rewards.',
+        tips: [
+            'Play consistently throughout the week rather than rushing last-day placements',
+            'Meta team compositions outperform individual skill at higher ranking tiers',
+            'Review match history for patterns and adjust your approach accordingly',
+            'Higher ranks in open arena grant exponentially better gem multipliers',
+            'Coordinate with alliance members for duo and trio queue advantages'
+        ]
+    },
+    'multiverse-war': {
+        category: 'pvp',
+        title: 'Multiverse Alliance War',
+        gems: null,
+        badge: '★ 5 Matches / 2 Weeks',
+        hero: '"Alliance versus alliance. Global war."',
+        description: "The ultimate PvP experience — a 5-match series over two weeks between alliances. Your individual performance contributes to your alliance's overall war score. The stakes are high: demotion becomes a real risk if your personal ranking drops below rank 86. Victory requires coordinated effort, strategic matchups, and consistent high-performance play.",
+        tips: [
+            'Coordinate with alliance for optimal team compositions every match',
+            'Spread your 5 matches evenly across the 2-week period for consistent scores',
+            'Individual performance directly affects alliance war ranking — bring your best',
+            'After war ends, reassess your league/rank strategy for the next cycle',
+            'Rank 86+ triggers demotion zone — monitor your rank throughout the war'
+        ]
+    },
+    'promo-code': {
+        category: 'code',
+        title: 'Promo Code',
+        gems: 300,
+        badge: '★ Tap to Reveal',
+        hero: '"A secret code whispered among allies."',
+        description: 'A promotional code that rewards 300 gems when redeemed. The code is shared through official Invincible game channels, community events, and special promotions. Tap the card to reveal the code, then tap again to copy it to your clipboard for redemption in the in-game store.',
+        tips: [
+            'Tap the card to reveal the code — a 3D flip animation reveals the characters',
+            'Tap the revealed code to copy it instantly to your clipboard',
+            'Codes have expiration dates — redeem them promptly when discovered',
+            'Follow official Invincible social media for new codes as they release',
+            "Some codes are one-time use — don't share claimed codes"
+        ]
+    }
+};
+
 // PvP Defaults - loaded from config in DOMContentLoaded
 let pvpDefaults;
 
@@ -188,6 +326,13 @@ function getPvpPayout(leagueId, rank) {
     chips: Math.round(tier.chips * multiplier),
     isDemotion: rank >= GAME.pvp.demotionThreshold
   };
+}
+
+function hexToRgb(hex) {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+        ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+        : '0, 229, 255';
 }
 
 function getModeTotal(mode) {
@@ -731,48 +876,105 @@ function showToast(message, type) {
   setTimeout(() => toast.remove(), 2500);
 }
 
-// Drill-Down Modal
-function showCategoryDrillDown(category) {
-  const data = categoryData[category];
-  const modal = document.getElementById('drilldownModal');
-  const iconEl = document.getElementById('drilldownIcon');
-  const titleEl = document.getElementById('drilldownTitle');
-  const totalEl = document.getElementById('drilldownTotal');
-  const contentEl = document.getElementById('drilldownContent');
+// Card Modal
+function showCardModal(cardId) {
+    const data = CARD_MODAL_DATA[cardId];
+    if (!data) return;
 
-  iconEl.className = `gem-modal__icon-box ${data.bgColor}/20`;
-  iconEl.innerHTML = `<i class="fas ${data.icon} text-${data.color} text-xl"></i>`;
-  titleEl.textContent = data.title;
-  titleEl.className = `gem-modal__title text-${data.color}`;
-  totalEl.textContent = data.total.toLocaleString() + ' Gems';
+    const icon = document.getElementById('cardModalIcon');
+    const title = document.getElementById('cardModalTitle');
+    const badge = document.getElementById('cardModalBadge');
+    const total = document.getElementById('cardModalTotal');
+    const content = document.getElementById('cardModalContent');
 
-  contentEl.innerHTML = data.rewards.map(r => `
-    <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
-      <div>
-        <p class="text-white font-bold">${r.name}</p>
-        <p class="text-white/50 text-sm">${r.desc}</p>
-      </div>
-      <div class="text-right">
-        <p class="text-${data.color} font-bold text-lg">${r.gems.toLocaleString()}</p>
-        <p class="text-white/40 text-xs">${r.pct}</p>
-      </div>
-    </div>
-  `).join('');
+    const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
+    const color = colorMap[data.category] || '#00e5ff';
+    const rgb = hexToRgb(color);
 
-  modal.classList.remove('hidden');
-  modal.classList.add('gem-modal--visible');
-  document.body.style.overflow = 'hidden';
+    icon.style.background = `rgba(${rgb}, 0.15)`;
+    icon.style.border = `1px solid rgba(${rgb}, 0.4)`;
+    icon.innerHTML = `<i class="fas fa-info-circle" style="color: ${color}; font-size: 1.25rem;"></i>`;
+
+    title.textContent = data.title.toUpperCase();
+    title.style.color = color;
+
+    if (data.badge) {
+        badge.textContent = data.badge;
+        badge.className = 'gem-modal__badge gem-modal__badge--star';
+        badge.style.display = 'inline-flex';
+    } else {
+        badge.style.display = 'none';
+    }
+
+    let gemsDisplay = '';
+    if (data.gems !== null) {
+        gemsDisplay = `${data.gems.toLocaleString()} Gems`;
+    } else {
+        if (cardId === 'restricted-arena') {
+            const league = document.getElementById('pvp1-league')?.value || 'eliteII';
+            const rank = parseInt(document.getElementById('pvp1-rank')?.value) || 13;
+            const payout = getPvpPayout(league, rank);
+            gemsDisplay = `${payout.gems.toLocaleString()} Gems · ${payout.cards} Cards · ${payout.chips.toLocaleString()} Chips`;
+        } else if (cardId === 'open-arena') {
+            const league = document.getElementById('pvp2-league')?.value || 'eliteII';
+            const rank = parseInt(document.getElementById('pvp2-rank')?.value) || 13;
+            const payout = getPvpPayout(league, rank);
+            gemsDisplay = `${payout.gems.toLocaleString()} Gems · ${payout.cards} Cards · ${payout.chips.toLocaleString()} Chips`;
+        } else if (cardId === 'multiverse-war') {
+            const league = document.getElementById('pvp3-league')?.value || 'eliteII';
+            const rank = parseInt(document.getElementById('pvp3-rank')?.value) || 13;
+            const payout = getPvpPayout(league, rank);
+            gemsDisplay = `${payout.gems.toLocaleString()} Gems · ${payout.cards} Cards · ${payout.chips.toLocaleString()} Chips`;
+        }
+    }
+    total.textContent = gemsDisplay;
+    total.style.color = color;
+
+    let html = '';
+    if (data.hero) html += `<p class="gem-modal__hero">${data.hero}</p>`;
+    if (data.description) html += `<p class="gem-modal__body-text">${data.description}</p>`;
+
+    if (cardId === 'multiverse-war') {
+        const rank = parseInt(document.getElementById('pvp3-rank')?.value) || 13;
+        const threshold = GAME?.pvp?.demotionThreshold || 86;
+        const isDanger = rank >= threshold;
+        const warningClass = isDanger ? '' : 'gem-modal__demotion-warning--safe';
+        const iconClass = isDanger ? 'fa-exclamation-triangle' : 'fa-shield-check';
+        const warnText = isDanger
+            ? `Demotion Zone — Rank ${rank} is at or above threshold ${threshold}. Win matches to avoid demotion.`
+            : `Safe Zone — Rank ${rank} is below threshold ${threshold}. Keep climbing.`;
+        html += `<div class="gem-modal__demotion-warning ${warningClass}">
+            <i class="fas ${iconClass}"></i>
+            <span>${warnText}</span>
+        </div>`;
+    }
+
+    if (data.tips?.length) {
+        html += `
+        <div class="gem-modal__tips">
+            <div class="gem-modal__tips-header"><i class="fas fa-lightbulb"></i> Tips &amp; Strategy</div>
+            <ul>${data.tips.map(t => `<li>${t}</li>`).join('')}</ul>
+        </div>`;
+    }
+    content.innerHTML = html;
+
+    const modal = document.getElementById('cardModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('gem-modal--visible');
+    document.body.style.overflow = 'hidden';
 }
 
-function closeDrillDown() {
-  const modal = document.getElementById('drilldownModal');
-  modal.classList.add('hidden');
-  modal.classList.remove('gem-modal--visible');
-  document.body.style.overflow = '';
+function closeCardModal() {
+    const modal = document.getElementById('cardModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('gem-modal--visible');
+    document.body.style.overflow = '';
 }
+
+const closeDrillDown = closeCardModal;
 
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeDrillDown();
+    if (e.key === 'Escape') closeCardModal();
 });
 
 // Export Functions
