@@ -415,6 +415,64 @@ function animateValue(elementId, newValue, duration = 400) {
   requestAnimationFrame(step);
 }
 
+function savePageState() {
+  const container = document.getElementById('chartsContainer');
+  localStorage.setItem('gem_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+  localStorage.setItem('gem_modes', JSON.stringify(selectedModes));
+  localStorage.setItem('gem_chartFilter', currentChartFilter);
+  localStorage.setItem('gem_chartsVisible', container ? String(!container.classList.contains('hidden')) : 'true');
+}
+
+function loadPageState() {
+  const theme = localStorage.getItem('gem_theme');
+  const modesRaw = localStorage.getItem('gem_modes');
+  const chartFilter = localStorage.getItem('gem_chartFilter');
+  const chartsVisible = localStorage.getItem('gem_chartsVisible');
+
+  try {
+    if (theme === 'light') {
+      document.body.classList.add('light-mode');
+      const icon = document.getElementById('themeIcon');
+      if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
+    }
+
+    let hidden = false;
+    if (chartsVisible === 'false') {
+      hidden = true;
+      const container = document.getElementById('chartsContainer');
+      const toggleBtn = document.querySelector('.gem-charts-toggle');
+      const label = document.querySelector('#chartsToggleLabel span:nth-child(2)');
+      const icon = document.getElementById('chartsToggleIcon');
+      if (container) container.classList.add('hidden');
+      if (toggleBtn) toggleBtn.classList.add('collapsed');
+      if (label) label.textContent = 'Show Charts';
+      if (icon) { icon.classList.remove('fa-chevron-up'); icon.classList.add('fa-chevron-down'); }
+    }
+
+    if (modesRaw) {
+      const savedModes = JSON.parse(modesRaw);
+      const validModes = ['event', 'pvp', 'login', 'code'];
+      if (savedModes.length > 0) {
+        selectedModes = savedModes.filter(m => validModes.includes(m));
+        if (selectedModes.length === 0) selectedModes = validModes;
+      }
+    }
+    updateModeButtonStates();
+    updateAllPageTotals(true);
+    if (!hidden) updateChartsByModes(selectedModes);
+    document.querySelectorAll('[data-category]').forEach(card => {
+      const cat = card.dataset.category;
+      card.style.display = selectedModes.includes(cat) ? 'block' : 'none';
+    });
+
+    if (chartFilter && chartFilter !== 'all') {
+      filterChart(chartFilter);
+    }
+  } catch (e) {
+    // Ignore corrupt state
+  }
+}
+
 // ===== FILTER & MODE FUNCTIONS =====
 
 let selectedModes = ['event', 'pvp', 'login', 'code'];
@@ -452,6 +510,7 @@ function filterCards(category, evt) {
   updateCountdowns();
 
   currentMode = selectedModes.length === 4 ? 'all' : selectedModes.join(',');
+  savePageState();
 }
 
 function updateAllButtons() {
@@ -474,10 +533,16 @@ function updateModeButtonStates() {
   });
 }
 
-function updateAllPageTotals() {
+function updateAllPageTotals(skipAnimation) {
   const mainTotal = selectedModes.reduce((sum, mode) => sum + getModeTotal(mode), 0);
   const mainCounter = document.getElementById('totalCounter');
-  if (mainCounter) animateValue('totalCounter', mainTotal, 400);
+  if (mainCounter) {
+    if (skipAnimation) {
+      mainCounter.textContent = mainTotal.toLocaleString();
+    } else {
+      animateValue('totalCounter', mainTotal, 400);
+    }
+  }
 
   ['event', 'pvp', 'login', 'code'].forEach(mode => {
     const btn = document.querySelector(`.gem-mode-btn--${mode}`);
@@ -485,8 +550,12 @@ function updateAllPageTotals() {
     if (btn) {
       const totalEl = btn.querySelector('.gem-mode-btn__count');
       if (totalEl) {
-        totalEl.textContent = total;
-        animateValue(totalEl, total, 400);
+        if (skipAnimation) {
+          totalEl.textContent = total.toLocaleString();
+        } else {
+          totalEl.textContent = total;
+          animateValue(totalEl, total, 400);
+        }
       }
     }
     modeTotals[mode] = total;
@@ -495,7 +564,13 @@ function updateAllPageTotals() {
   const allBtn = document.querySelector('.gem-mode-btn--all');
   if (allBtn) {
     const allTotalEl = allBtn.querySelector('.gem-mode-btn__count');
-    if (allTotalEl) animateValue(allTotalEl, mainTotal, 400);
+    if (allTotalEl) {
+      if (skipAnimation) {
+        allTotalEl.textContent = mainTotal.toLocaleString();
+      } else {
+        animateValue(allTotalEl, mainTotal, 400);
+      }
+    }
   }
 
   chartFilterData.all = buildModeData('all', modeTotals);
@@ -659,6 +734,7 @@ function filterChart(filter) {
   spiderChart.data.datasets[0].data = data.spider[0];
   spiderChart.data.datasets[1].data = data.spider[1];
   spiderChart.update('none');
+  savePageState();
 }
 
 // ===== UI COMPONENTS =====
@@ -674,6 +750,7 @@ function toggleTheme() {
     icon.classList.remove('fa-sun');
     icon.classList.add('fa-moon');
   }
+  savePageState();
 }
 
 // Charts Toggle
@@ -695,6 +772,7 @@ function toggleCharts() {
     icon.classList.remove('fa-chevron-down');
     icon.classList.add('fa-chevron-up');
   }
+  savePageState();
 }
 
 // Save/Share Menu
@@ -1190,17 +1268,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   initializePvPCards();
 
-  [1, 2, 3].forEach(i => {
-    localStorage.removeItem(`pvp${i}_league`);
-    localStorage.removeItem(`pvp${i}_rank`);
-    document.getElementById(`pvp${i}-league`).value = pvpDefaults[i].league;
-    document.getElementById(`pvp${i}-rank`).value = pvpDefaults[i].rank;
-    updatePvpCard(i);
-  });
-
-  selectedModes = ['event', 'pvp', 'login', 'code'];
-  updateModeButtonStates();
-  updateAllPageTotals();
+  loadPageState();
 
   const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71', cyan: '#00e5ff', purple: '#9b59b6' };
   document.querySelectorAll('.gem-card').forEach(card => {
