@@ -371,7 +371,7 @@
                 </div>
             </div>
 
-            <div class="gem-card gem-card--code gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-8" data-category="code" onclick="copyCode()">
+            <div class="gem-card gem-card--code gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-8" data-category="code" onclick="revealCode(this)">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-accent to-transparent opacity-50"></div>
                 <div class="gem-sparkle" style="top: 1.5rem; right: 2.5rem; animation-delay: 0.5s;"></div>
                 <div class="gem-card__body">
@@ -384,10 +384,10 @@
                     </div>
                 </div>
                 <div class="gem-divider">
-                    <p class="text-white/60 text-sm">A secret code whispered among allies—tap to reveal and claim your reward</p>
-                </div>
-                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
-                    Click to copy code
+                    <p class="text-white/60 text-sm gem-code__hint">A secret code whispered among allies—tap to reveal</p>
+                    <div class="gem-code__reveal hidden">
+                        <span class="gem-code__value">30KGTG</span>
+                    </div>
                 </div>
             </div>
         </main>

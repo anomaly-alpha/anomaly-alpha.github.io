@@ -232,6 +232,29 @@ function copyCode() {
   setTimeout(() => feedback.remove(), 2000);
 }
 
+function revealCode(card) {
+  const hint = card.querySelector('.gem-code__hint');
+  const reveal = card.querySelector('.gem-code__reveal');
+
+  if (card.classList.contains('reveal-done')) {
+    navigator.clipboard.writeText('30KGTG');
+    reveal.classList.add('copied');
+    const feedback = document.createElement('div');
+    feedback.className = 'gem-toast gem-toast--success';
+    feedback.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Code copied!';
+    document.body.appendChild(feedback);
+    setTimeout(() => {
+      feedback.remove();
+      reveal.classList.remove('copied');
+    }, 2000);
+  } else {
+    hint.style.display = 'none';
+    reveal.classList.remove('hidden');
+    reveal.classList.add('revealed');
+    card.classList.add('reveal-done');
+  }
+}
+
 function getPvpPayout(leagueKey, rank) {
   const tiers = GAME.pvp.base;
   const mod = GAME.pvp.mod[leagueKey] || 1;

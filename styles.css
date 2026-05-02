@@ -165,6 +165,78 @@ body {
   min-height: 160px;
 }
 
+.gem-code__hint {
+  transition: opacity 0.3s ease;
+}
+
+.gem-code__reveal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.gem-code__value {
+  font-family: 'Rajdhani', monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--gem-code);
+  text-shadow: 0 0 20px rgba(46, 204, 113, 0.8), 0 0 40px rgba(46, 204, 113, 0.4);
+  animation: gem-code--reveal 0.6s ease-out forwards;
+}
+
+@keyframes gem-code--reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(10px);
+    filter: blur(10px);
+  }
+  50% {
+    opacity: 0.7;
+    filter: blur(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+.gem-code__reveal.revealed .gem-code__value {
+  animation: gem-code--pulse 2s ease-in-out infinite;
+}
+
+@keyframes gem-code--pulse {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(46, 204, 113, 0.8), 0 0 40px rgba(46, 204, 113, 0.4);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(46, 204, 113, 1), 0 0 60px rgba(46, 204, 113, 0.6);
+  }
+}
+
+.gem-code__reveal.copied::after {
+  content: '✓ COPIED';
+  margin-left: 1rem;
+  font-size: 0.875rem;
+  color: var(--gem-code);
+  animation: gem-code--fade-in 0.3s ease-out;
+}
+
+@keyframes gem-code--fade-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.gem-card--code.reveal-done .gem-code__hint {
+  opacity: 0.5;
+}
+
+.gem-card--code.reveal-done .gem-code__reveal {
+  cursor: pointer;
+}
+
 .gem-card--event {
   background-color: var(--gem-card-bg--event);
   border-color: var(--gem-card-border--event);
