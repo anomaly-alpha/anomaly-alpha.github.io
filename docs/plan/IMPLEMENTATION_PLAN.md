@@ -26,11 +26,12 @@ Interactive infographic displaying gem reward sources from the Invincible mobile
 
 ```
 anomaly-alpha/
-├── index.html       (678 lines) - Main infographic + embedded JSON configs
-├── script.js        (1137 lines) - All JavaScript, loads JSON configs
-├── styles.css       (1182 lines) - Design tokens + BEM classes
+├── index.html       (486 lines) - Main infographic
+├── script.js        (1162 lines) - All JavaScript, fetches JSON configs from data/
+├── styles.css       (1156 lines) - Design tokens + BEM classes
+├── favicon.svg      - Custom gem SVG favicon
 ├── README.md        - Project overview
-├── data/            - JSON config files (for maintainability)
+├── data/            - JSON config files (loaded via fetch at runtime)
 │   ├── game-config.json      (PvP leagues, tiers, spider targets)
 │   ├── rewards-config.json   (card definitions, categories, login rewards)
 │   ├── chart-config.json     (colors, labels, animation, tooltip)
