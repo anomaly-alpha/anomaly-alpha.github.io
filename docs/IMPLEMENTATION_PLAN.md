@@ -4,11 +4,78 @@
 
 This document provides a comprehensive implementation plan for the Invincible mobile game Gem Rewards Infographic. The infographic displays gem income sources from screenshots, organized into interactive cards with a sci-fi aesthetic matching the game's UI.
 
-**Total Gems Tracked:** 4,470 gems  
-**Last Updated:** April 29, 2026  
-**Implementation Status:** Complete (HTML/Tailwind CSS version - Dynamic Gem Counts)
+**Total Gems Tracked:** 2,550 gems (varies with PvP selections)
+**Last Updated:** May 1, 2026
+**Implementation Status:** Complete (HTML/Tailwind CSS version)
 
-**Recent Updates:**
+## May 2026 Major Changes (Addendum)
+
+> ⚠️ **IMPORTANT**: This addendum documents major changes made on May 1, 2026. Many sections below reference the OLD structure and are kept for historical reference only.
+
+### Category Structure Changes
+- **REMOVED**: Season category entirely (was 1,820 gems)
+- **REMOVED**: Warfare category (merged into PvP)
+- **UPDATED**: Total now 2,550 gems (All = Event + PvP + Daily + Code)
+
+### Current Categories
+| Category | Total | Notes |
+|----------|-------|-------|
+| All | 2,550 | All modes combined |
+| Event | 500 | The Long Haul (300) + Earth's Defenders (200) |
+| PvP | 750 | 3 interactive cards with rank selectors |
+| Daily | 1,100 | Weekly Reward (400) + Daily Login (700) |
+| Code | 300 | Promo code 30KGTG |
+
+### Removed Features
+- ❌ Season filter and cards (replaced by PvP)
+- ❌ Gem Calculator section
+- ❌ Warfare as separate category
+- ❌ Chart filter buttons below charts (now unified with mode filter)
+- ❌ Legend section
+- ❌ Summary info box (WARFARE CYCLE / DAILY LOGIN / TOTAL)
+
+### New Features
+- ✅ Unified Mode Cards at top (5 large clickable cards with totals + timers)
+- ✅ PvP cards with league/rank selectors and localStorage persistence
+- ✅ Charts update based on mode filter selection
+- ✅ Animated total counter updates when PvP values change
+
+### PvP Cards Feature
+Three interactive PvP cards:
+- **Restricted Arena** (Weekly) - Elite I/II/III/Invincible leagues
+- **Open Arena** (Weekly) - Elite I/II/III/Invincible leagues  
+- **Multiverse Alliance War** (5 matches/2 weeks) - Elite I/II/III/Invincible leagues
+
+Each with:
+- Rank selector: 1-120
+- League selector: Elite I (70%), Elite II (85%), Elite III (100%), Invincible (125%)
+- Dynamic gem calculation based on tier + rank
+- localStorage persistence
+- Clear button to reset defaults
+- Demotion zone warning at rank 86+
+
+### HTML Structure Fixes (May 1, 2026)
+Several structural issues were fixed after initial implementation:
+- Fixed PvP card closing tags (`</div>` → `</article>`)
+- Added missing `</main>` closing tag
+- Removed premature `</div>` closing main container early
+- Fixed nav closing tag (`</div>` → `</nav>`)
+- Added main container closing tag at end of file
+- Fixed JavaScript values (totalGems: 3217→2550, baseStatic: 2650→1900)
+- Fixed chartFilterData.all.distribution ([1820,500,750,1100,300] → [0,500,750,1100,300])
+
+**Final HTML Structure:**
+- Main container opens line 323, closes line 1722
+- All sections (cards, charts, search, contributors) inside main container
+- Tag matching verified: article(3/3), main(1/1), nav(1/1)
+
+---
+
+**Below sections contain the original implementation details (April 2026) - kept for reference only.**
+
+---
+
+## Previous Updates (April 2026)
 - ✅ Updated total from 3,920 to 4,470 gems
 - ✅ Cards now display dynamic gem quantities showing the multiplication formula
 - ✅ Warfare Won: Shows "150 × 5 = 750 GEMS"

@@ -4,17 +4,12 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 
 ## Gem Summary
 
-- **Total Gems**: 4,470 (one-time + recurring)
-- **One-Time**: 2,620 gems
-- **Recurring/mo**: 1,850 gems
-
-### By Category
-
-- **Season Rewards**: 1,820 gems (Elite League I & II, Invincible League rankings)
-- **Event Rewards**: 500 gems (The Long Haul, Earth's Defenders)
-- **Warfare Rewards**: 750 gems (bi-weekly: 150 × 5 battles)
-- **Daily/Weekly Rewards**: 1,100 gems (daily: 100 × 7 + weekly bonus)
-- **Promo Codes**: 300 gems (code: 30KGTG)
+- **Total Gems**: 2,550 (one-time + recurring, varies with PvP selections)
+- **By Category**:
+  - **PvP**: 750 gems (varies with rank/league selections - Restricted Arena, Open Arena, Multiverse Alliance War)
+  - **Daily/Weekly**: 1,100 gems (daily: 100 × 7 + weekly bonus)
+  - **Event**: 500 gems (The Long Haul, Earth's Defenders)
+  - **Promo Codes**: 300 gems (code: 30KGTG)
 
 ## Features
 
@@ -22,14 +17,15 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Animated counter that counts up on page load
 - Copy-to-clipboard for promo code (click the card)
 - Theme toggle (dark/light mode)
-- **Unified Modes + Countdowns card** - Combined filter buttons and countdown timers
-- Card filter buttons: All, Season, Event, Warfare, Daily, Code
-- Chart filter buttons: Filters all 4 charts simultaneously
+- **Unified Mode Cards** - 5 large clickable cards (All, Event, PvP, Daily, Code) showing:
+  - Total gems for each mode
+  - Countdown timer relevant to that mode
+  - Click to filter cards, update charts, and animate main total
+- Card filter buttons: All, Event, PvP, Daily, Code
+- Charts update based on mode selection
 - **Search** - Find rewards by name/description with text highlighting
-- **Gem Calculator** - Project future gems based on rank, warfare %, days
 - **Save/Share** - Save views, load saved, copy link, export as PNG
 - Export data as JSON
-- **Countdown timers** - Daily, Weekly, Warfare, Multiverse, Nightmares
 - **Data Drill-Down** - Click category cards for detailed modal view
 
 ### Visual Effects
@@ -50,6 +46,21 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Rich hover tooltips with gems, %, vs average
 - Smooth animated transitions on filter changes
 
+## PvP Interactive Feature
+
+Three PvP cards with league and rank selectors:
+- **Restricted Arena** - Weekly PvP
+- **Open Arena** - Weekly PvP
+- **Multiverse Alliance War** - 5 matches / 2 weeks
+
+Each card has:
+- League selector: Elite I (70%), Elite II (85%), Elite III (100%), Invincible (125%)
+- Rank selector: 1-120
+- Dynamic gems, cards, chips based on selection
+- Demotion zone warning at rank 86+
+- localStorage persistence
+- Clear button to reset to defaults
+
 ## Files
 
 - `gem_infographic.html` - Interactive infographic
@@ -67,16 +78,19 @@ Open `gem_infographic.html` in a browser to view the infographic.
 - Font Awesome icons
 - Rajdhani font (Google Fonts)
 
-## Recent Updates (April 2026)
+## Recent Updates (May 2026)
 
-- Added chart filtering (All/Season/Event/Warfare/Daily/Code)
-- Added rich hover tooltips with comparison data
-- Added staggered chart animations + transitions
-- Added data drill-down modal (click categories)
-- Added personalized projections calculator
-- Added search with highlighting
-- Added save/load/share/export features
-- Total updated to 4,470 gems
+- ✅ Removed Season category and cards (replaced with PvP)
+- ✅ Merged Warfare into PvP (Multiverse Alliance War)
+- ✅ Created unified mode cards at top with totals and timers
+- ✅ Unified filter buttons + countdowns into single section
+- ✅ Charts now update based on mode filter selection
+- ✅ Removed legend, calculator, summary boxes
+- ✅ Added localStorage persistence for PvP selections
+- ✅ Added animated total counter updates
+- ✅ Added demotion zone warnings for PvP
+- ✅ Fixed HTML structure (article tags, main close, nav close)
+- ✅ Fixed JavaScript values (totalGems, baseStatic, chartFilterData)
 
 ## Contributors
 

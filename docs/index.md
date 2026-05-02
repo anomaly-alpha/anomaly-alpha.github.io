@@ -4,17 +4,16 @@
 
 Gem rewards infographic for Invincible Mobile Game featuring interactive charts and visualizations with a sci-fi aesthetic matching the game's UI.
 
-## Gem Data
+## Gem Data (Current)
 
 | Category | Gems | Description |
 |----------|-----|-------------|
-| Season Rewards | 1,820 | Elite League I (810), Invincible League (560), Elite League II (450) |
+| PvP | 750 (varies) | Restricted Arena + Open Arena + Multiverse Alliance War (interactive with rank/league selectors) |
 | Event Rewards | 500 | The Long Haul (300), Earth's Defenders (200) |
-| Warfare Rewards | 750 | 5 battles per 2 weeks (150 × 5) |
 | Daily/Weekly Rewards | 1,100 | Daily login (700) + Weekly bonus (400) |
 | Promo Code | 300 | Code: 30KGTG |
 
-**Total: 4,470 gems** (one-time + recurring)
+**Total: 2,550 gems** (varies with PvP selections)
 
 ## Features
 
@@ -22,14 +21,21 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Animated counter that counts up on page load
 - Copy-to-clipboard for promo code (click the card)
 - Theme toggle (dark/light mode)
-- Card filter buttons (All, Season, Event, Warfare, Daily, Code)
-- Chart filter buttons (All/Season/Event/Warfare/Daily/Code) - filters all 4 charts
+- **Unified Mode Cards** - 5 large clickable cards (All, Event, PvP, Daily, Code) each showing:
+  - Total gems for that mode
+  - Countdown timer
+  - Click to filter, update charts, and animate main total
+- Card filter buttons (All, Event, PvP, Daily, Code) - now integrated into mode cards above
+- Charts update based on mode filter selection (no separate chart filters)
 - **Search/Find** - Expandable search bar with text highlighting
-- **Gem Calculator** - Personalized projections with rank, warfare %, days inputs
 - **Save/Share** - Save views, load saved, copy share link, export as PNG
 - Export data as JSON
-- **Unified Modes & Countdowns card** - Combined filter buttons and countdown timers in single panel
-- **Countdown timers** - Real-time countdowns for Daily, Weekly, Warfare, Multiverse, Nightmares
+- **PvP Interactive Cards** - Three cards with:
+  - League selector (Elite I, Elite II, Elite III, Invincible)
+  - Rank selector (1-120)
+  - Dynamic gems based on tier + rank
+  - localStorage persistence
+  - Clear button to reset
 
 ### Data Drill-Down
 - Click on category summary cards to open detailed modal
@@ -38,7 +44,7 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 ### Chart Interactions
 - **Hover tooltips** - Rich tooltips showing gems, percentage, vs average comparison
 - **Animated transitions** - Staggered entry animations, smooth data transitions on filter changes
-- **Chart filtering** - Filter buttons update all 4 charts simultaneously
+- **Chart filtering** - Mode selection updates all 4 charts simultaneously
 
 ### Visual Effects
 - Floating particles in background
@@ -56,7 +62,6 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - **Performance** - Spider/Radar chart comparing actual vs target across categories
 - **Progress** - Line chart showing cumulative gems over 8 weeks + daily average
 - Animated tooltips on cards
-- Legend with color coding
 
 ## Tech Stack
 
@@ -73,20 +78,20 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Sufficient color contrast
 - Escape key closes modal
 
-## Recent Updates (April 2026)
+## Recent Updates (May 2026)
 
-- Added interactive chart filtering (filters all 4 charts)
-- Added rich hover tooltips with gems, %, vs avg
-- Added staggered chart entry animations + smooth transitions
-- Added data drill-down modal (click category cards)
-- Added personalized projections calculator
-- Added search/find with text highlighting
-- Added save/load views, share link, export PNG
-- Fixed JavaScript bugs (duplicate functions, undefined variables)
-- Combined Modes + Countdowns into unified card
-- Added Spider/Radar and Line charts (4 total)
-- Added Code filter button
-- Total updated to 4,470 gems
+- ✅ Removed Season category entirely (replaced with PvP)
+- ✅ Merged Warfare into PvP (Multiverse Alliance War is now part of PvP cards)
+- ✅ Created unified mode cards at top with totals + timers
+- ✅ Charts now update based on mode selection (removed separate chart filters)
+- ✅ Removed legend, calculator, summary boxes
+- ✅ Added PvP cards with league/rank selectors and localStorage persistence
+- ✅ Added animated total counter updates when PvP values change
+- ✅ Added demotion zone warnings for PvP (rank 86+)
+- ✅ Total updated to 2,550 gems (varies with PvP selections)
+- ✅ Fixed HTML structure (PvP article tags, main container close, nav close)
+- ✅ Fixed JavaScript values (totalGems: 3217→2550, baseStatic: 2650→1900)
+- ✅ Fixed chartFilterData.all.distribution (removed 1820 season value)
 
 ## Contributors
 
