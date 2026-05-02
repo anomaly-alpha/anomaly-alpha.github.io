@@ -509,7 +509,7 @@ function getRewardsChartData(modes) {
   if (!modes || modes.length === 0) return { labels: [], data: [], colors: [] };
   const order = ['code', 'event', 'pvp', 'login'];
   const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
-  const filtered = modes.filter(m => order.includes(m));
+  const filtered = order.filter(m => modes.includes(m));
   return {
     labels: filtered.map(m => m.charAt(0).toUpperCase() + m.slice(1)),
     data: filtered.map(m => getModeTotal(m)),
