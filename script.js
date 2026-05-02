@@ -1099,6 +1099,22 @@ document.addEventListener('DOMContentLoaded', function() {
   updateModeButtonStates();
   updateAllPageTotals();
 
+  ['all', 'code', 'event', 'pvp', 'login'].forEach(mode => {
+    const btn = document.querySelector(`.gem-mode-btn--${mode}`);
+    if (!btn) return;
+    btn.addEventListener('mouseenter', () => {
+      const cards = mode === 'all'
+        ? document.querySelectorAll('.gem-card')
+        : document.querySelectorAll(`.gem-card[data-category="${mode}"]`);
+      cards.forEach(card => card.classList.add('gem-card--mode-highlight'));
+    });
+    btn.addEventListener('mouseleave', () => {
+      document.querySelectorAll('.gem-card--mode-highlight').forEach(card => {
+        card.classList.remove('gem-card--mode-highlight');
+      });
+    });
+  });
+
   setInterval(updateCountdowns, 1000);
   updateCountdowns();
 
