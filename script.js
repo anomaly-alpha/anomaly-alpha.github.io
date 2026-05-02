@@ -58,15 +58,15 @@ const CARD_MODAL_DATA = {
     'daily-login': {
         category: 'login',
         title: 'Daily Login',
-        gems: 210,
-        badge: '★ 30×7',
-        hero: '"7 days. 210 gems. Every week."',
-        description: 'The foundation of your weekly gem income. Log in once per day to claim 30 gems, with the streak running for the first 7 days of each week. The weekly reset happens every Monday at server reset. This is the most reliable gem source in the game — no skill required, just the habit of showing up.',
+        gems: 910,
+        badge: '★ 130×7',
+        hero: '"7 days. 910 gems. Every week."',
+        description: 'The foundation of your weekly gem income. Log in once per day to claim 130 gems, with the streak running for the first 7 days of each week. The weekly reset happens every Monday at server reset. This is the most reliable gem source in the game — no skill required, just the habit of showing up.',
         tips: [
             'Set a daily reminder to log in at the same time each day for consistency',
             'Never miss a day — broken streaks take weeks to fully recover value from',
             'Use the Monday weekly reset as your weekly calendar anchor point',
-            'Stack with weekly (60) and monthly (23) login rewards for maximum income',
+            'Stack with daily (910), weekly (60), and monthly (23) login rewards for maximum income',
             'Link your account to a device for convenience features like auto-login'
         ]
     },

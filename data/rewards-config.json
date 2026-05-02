@@ -86,10 +86,10 @@
       "id": "daily-login",
       "category": "login",
       "title": "Daily Login",
-      "gems": 210,
-      "formula": {"base": 30, "operator": "×", "frequency": 7, "display": "30×7=210"},
-      "description": "Check in daily to build your streak—30 gems for the first 7 days of the week",
-      "tooltip": "30 gems per day × 7 days = 210",
+      "gems": 910,
+      "formula": {"base": 130, "operator": "×", "frequency": 7, "display": "130×7=910"},
+      "description": "Check in daily to build your streak—130 gems for the first 7 days of the week",
+      "tooltip": "130 gems per day × 7 days = 910",
       "delay": 5
     },
     {
@@ -114,7 +114,7 @@
     }
   ],
   "loginRewards": [
-    {"name": "Daily", "baseGems": 30, "frequency": 7, "weeklyTotal": 210},
+    {"name": "Daily", "baseGems": 130, "frequency": 7, "weeklyTotal": 910},
     {"name": "Weekly", "baseGems": 60, "frequency": 1, "weeklyTotal": 60},
     {"name": "Monthly", "baseGems": 90, "frequency": 4, "weeklyTotal": 23}
   ],

@@ -8,10 +8,10 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts,
 |----------|------|-------|
 | Event | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~750 | Varies with league/rank — Restricted Arena, Open Arena, Multiverse Alliance War |
-| Login | 293 | Daily (210) + Weekly (60) + Monthly (23) |
+| Login | 993 | Daily (910) + Weekly (60) + Monthly (23) |
 | Code | 300 | Promo code 30KGTG (tap to reveal, click to copy) |
 
-**Total: ~1,843 gems/week** (varies with PvP selections)
+**Total: ~2,543 gems/week** (varies with PvP selections)
 
 ## Features
 
