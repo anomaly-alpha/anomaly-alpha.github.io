@@ -703,54 +703,58 @@ body {
 }
 
 .gem-mode-btn--all {
-  background: linear-gradient(to-br, rgba(0, 229, 255, 0.20), rgba(0, 229, 255, 0.05));
-  border-color: rgba(0, 229, 255, 0.40);
-  box-shadow: 0 0 20px rgba(0, 229, 255, 0.20);
+  background: linear-gradient(to-br, rgba(0, 229, 255, 0.15), rgba(0, 229, 255, 0.03));
+  border-color: rgba(0, 229, 255, 0.30);
 }
 .gem-mode-btn--all.active {
-  background: linear-gradient(to-br, rgba(0, 229, 255, 0.40), rgba(0, 229, 255, 0.15));
-  border-color: rgba(0, 229, 255, 0.70);
-  box-shadow: 0 0 30px rgba(0, 229, 255, 0.50);
+  background: linear-gradient(to-br, rgba(0, 229, 255, 0.45), rgba(0, 229, 255, 0.12));
+  border-color: rgba(0, 229, 255, 0.80);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.50), inset 0 0 15px rgba(0, 229, 255, 0.15);
+  transform: scale(1.03);
 }
 
 .gem-mode-btn--event {
-  background-color: rgba(255, 107, 53, 0.30);
-  border-color: rgba(255, 107, 53, 0.50);
+  background-color: rgba(255, 107, 53, 0.12);
+  border-color: rgba(255, 107, 53, 0.30);
 }
 .gem-mode-btn--event.active {
-  background-color: rgba(255, 107, 53, 0.55);
-  border-color: rgba(255, 107, 53, 0.80);
-  box-shadow: 0 0 20px rgba(255, 107, 53, 0.4);
+  background-color: rgba(255, 107, 53, 0.50);
+  border-color: rgba(255, 107, 53, 0.90);
+  box-shadow: 0 0 25px rgba(255, 107, 53, 0.50), inset 0 0 15px rgba(255, 107, 53, 0.15);
+  transform: scale(1.03);
 }
 
 .gem-mode-btn--pvp {
-  background-color: rgba(233, 30, 138, 0.30);
-  border-color: rgba(233, 30, 138, 0.50);
+  background-color: rgba(233, 30, 138, 0.12);
+  border-color: rgba(233, 30, 138, 0.30);
 }
 .gem-mode-btn--pvp.active {
-  background-color: rgba(233, 30, 138, 0.55);
-  border-color: rgba(233, 30, 138, 0.80);
-  box-shadow: 0 0 20px rgba(233, 30, 138, 0.4);
+  background-color: rgba(233, 30, 138, 0.50);
+  border-color: rgba(233, 30, 138, 0.90);
+  box-shadow: 0 0 25px rgba(233, 30, 138, 0.50), inset 0 0 15px rgba(233, 30, 138, 0.15);
+  transform: scale(1.03);
 }
 
 .gem-mode-btn--login {
-  background-color: rgba(243, 156, 18, 0.30);
-  border-color: rgba(243, 156, 18, 0.50);
+  background-color: rgba(243, 156, 18, 0.12);
+  border-color: rgba(243, 156, 18, 0.30);
 }
 .gem-mode-btn--login.active {
-  background-color: rgba(243, 156, 18, 0.55);
-  border-color: rgba(243, 156, 18, 0.80);
-  box-shadow: 0 0 20px rgba(243, 156, 18, 0.4);
+  background-color: rgba(243, 156, 18, 0.50);
+  border-color: rgba(243, 156, 18, 0.90);
+  box-shadow: 0 0 25px rgba(243, 156, 18, 0.50), inset 0 0 15px rgba(243, 156, 18, 0.15);
+  transform: scale(1.03);
 }
 
 .gem-mode-btn--code {
-  background-color: rgba(46, 204, 113, 0.30);
-  border-color: rgba(46, 204, 113, 0.50);
+  background-color: rgba(46, 204, 113, 0.12);
+  border-color: rgba(46, 204, 113, 0.30);
 }
 .gem-mode-btn--code.active {
-  background-color: rgba(46, 204, 113, 0.55);
-  border-color: rgba(46, 204, 113, 0.80);
-  box-shadow: 0 0 20px rgba(46, 204, 113, 0.4);
+  background-color: rgba(46, 204, 113, 0.50);
+  border-color: rgba(46, 204, 113, 0.90);
+  box-shadow: 0 0 25px rgba(46, 204, 113, 0.50), inset 0 0 15px rgba(46, 204, 113, 0.15);
+  transform: scale(1.03);
 }
 
 .gem-mode-btn__icon {
