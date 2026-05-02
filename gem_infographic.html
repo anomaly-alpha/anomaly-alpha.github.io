@@ -371,34 +371,34 @@
 
         <!-- Unified Mode Cards with Totals & Timers -->
         <!-- MODE_SELECTOR_START -->
-<nav class="mode-selector grid grid-cols-5 gap-2 my-4">
-            <button onclick="filterCards('all', event)" class="filter-btn filter-all active relative bg-gradient-to-br from-cyan-glow/20 to-cyan-glow/5 border-2 border-cyan-glow/40 rounded-lg p-2 text-center hover:scale-105 transition-all shadow-[0_0_20px_rgba(0,229,255,0.2)]">
-                <i class="fas fa-th-large text-xl text-cyan-glow mb-1"></i>
-                <p class="text-[10px] text-cyan-glow uppercase tracking-wider mt-0.5">All Modes</p>
+<nav class="mode-selector grid grid-cols-5 gap-3 my-4">
+            <button onclick="filterCards('all', event)" class="filter-btn filter-all active relative bg-gradient-to-br from-cyan-glow/20 to-cyan-glow/5 border-2 border-cyan-glow/40 rounded-xl p-3 text-center hover:scale-105 transition-all shadow-[0_0_20px_rgba(0,229,255,0.2)]">
+                <i class="fas fa-th-large text-2xl text-cyan-glow mb-1"></i>
+                <p class="text-xs text-cyan-glow uppercase tracking-wider">All Modes</p>
             </button>
-            <button onclick="filterCards('event', event)" class="filter-btn filter-event active relative bg-orange-accent/30 border border-orange-accent/50 rounded-lg p-2 text-center hover:scale-105 transition-all">
-                <i class="fas fa-dragon text-xl text-orange-accent mb-1"></i>
-                <p class="text-xl font-bold text-white">500</p>
-                <p class="text-[10px] text-orange-accent uppercase tracking-wider mt-0.5">Event</p>
-                <span id="countdown-event" class="text-orange-accent text-[10px] font-bold mt-0.5 block">--:--:--</span>
+            <button onclick="filterCards('event', event)" class="filter-btn filter-event active relative bg-orange-accent/30 border border-orange-accent/50 rounded-xl p-3 text-center hover:scale-105 transition-all">
+                <i class="fas fa-dragon text-2xl text-orange-accent mb-1"></i>
+                <p class="text-2xl font-bold text-white">500</p>
+                <p class="text-xs text-orange-accent uppercase tracking-wider">Event</p>
+                <span id="countdown-event" class="text-orange-accent text-sm font-bold font-mono mt-1 block">--:--:--</span>
             </button>
-            <button onclick="filterCards('pvp', event)" class="filter-btn filter-pvp active relative bg-pink-glow/30 border border-pink-glow/50 rounded-lg p-2 text-center hover:scale-105 transition-all">
-                <i class="fas fa-fist-raised text-xl text-pink-glow mb-1"></i>
-                <p class="text-xl font-bold text-white">750</p>
-                <p class="text-[10px] text-pink-glow uppercase tracking-wider mt-0.5">PvP</p>
-                <span id="countdown-pvp" class="text-pink-glow text-[10px] font-bold mt-0.5 block">--:--:--</span>
+            <button onclick="filterCards('pvp', event)" class="filter-btn filter-pvp active relative bg-pink-glow/30 border border-pink-glow/50 rounded-xl p-3 text-center hover:scale-105 transition-all">
+                <i class="fas fa-fist-raised text-2xl text-pink-glow mb-1"></i>
+                <p class="text-2xl font-bold text-white">750</p>
+                <p class="text-xs text-pink-glow uppercase tracking-wider">PvP</p>
+                <span id="countdown-pvp" class="text-pink-glow text-sm font-bold font-mono mt-1 block">--:--:--</span>
             </button>
-            <button onclick="filterCards('login', event)" class="filter-btn filter-login active relative bg-yellow-accent/30 border border-yellow-accent/50 rounded-lg p-2 text-center hover:scale-105 transition-all">
-                <i class="fas fa-sign-in-alt text-xl text-yellow-accent mb-1"></i>
-                <p class="text-xl font-bold text-white">293</p>
-                <p class="text-[10px] text-yellow-accent uppercase tracking-wider mt-0.5">Login</p>
-                <span id="countdown-login" class="text-yellow-accent text-[10px] font-bold mt-0.5 block">--:--:--</span>
+            <button onclick="filterCards('login', event)" class="filter-btn filter-login active relative bg-yellow-accent/30 border border-yellow-accent/50 rounded-xl p-3 text-center hover:scale-105 transition-all">
+                <i class="fas fa-sign-in-alt text-2xl text-yellow-accent mb-1"></i>
+                <p class="text-2xl font-bold text-white">293</p>
+                <p class="text-xs text-yellow-accent uppercase tracking-wider">Login</p>
+                <span id="countdown-login" class="text-yellow-accent text-sm font-bold font-mono mt-1 block">--:--:--</span>
             </button>
-            <button onclick="filterCards('code', event)" class="filter-btn filter-code active relative bg-green-accent/30 border border-green-accent/50 rounded-lg p-2 text-center hover:scale-105 transition-all">
-                <i class="fas fa-gift text-xl text-green-accent mb-1"></i>
-                <p class="text-xl font-bold text-white">300</p>
-                <p class="text-[10px] text-green-accent uppercase tracking-wider mt-0.5">Code</p>
-                <span id="countdown-code" class="text-green-accent text-[10px] font-bold mt-0.5 block">--:--:--</span>
+            <button onclick="filterCards('code', event)" class="filter-btn filter-code active relative bg-green-accent/30 border border-green-accent/50 rounded-xl p-3 text-center hover:scale-105 transition-all">
+                <i class="fas fa-gift text-2xl text-green-accent mb-1"></i>
+                <p class="text-2xl font-bold text-white">300</p>
+                <p class="text-xs text-green-accent uppercase tracking-wider">Code</p>
+                <span id="countdown-code" class="text-green-accent text-sm font-bold font-mono mt-1 block">--:--:--</span>
             </button>
     </nav>
 
@@ -733,7 +733,24 @@
             setTimeout(() => feedback.remove(), 2000);
         }
 
-        let selectedModes = ['event', 'pvp', 'login', 'code'];
+let selectedModes = ['event', 'pvp', 'login', 'code'];
+        window.debugPvp = () => {
+            const l1 = document.getElementById('pvp1-league').value;
+            const r1 = parseInt(document.getElementById('pvp1-rank').value);
+            alert('l1=' + l1 + ' r1=' + r1 + '\np1=' + getPvpPayout(l1, r1).gems);
+        };
+        window.debugMode = () => {
+            const l1 = document.getElementById('pvp1-league').value;
+            const r1 = parseInt(document.getElementById('pvp1-rank').value);
+            const l2 = document.getElementById('pvp2-league').value;
+            const r2 = parseInt(document.getElementById('pvp2-rank').value);
+            const l3 = document.getElementById('pvp3-league').value;
+            const r3 = parseInt(document.getElementById('pvp3-rank').value);
+            const p1 = getPvpPayout(l1, r1).gems;
+            const p2 = getPvpPayout(l2, r2).gems;
+            const p3 = getPvpPayout(l3, r3).gems;
+            alert('p1=' + p1 + ' p2=' + p2 + ' p3=' + p3 + '\nSum=' + (p1+p2+p3));
+        };
 
         function filterCards(category, evt) {
             const cards = document.querySelectorAll('[data-category]');
@@ -1697,29 +1714,20 @@
         };
 
         function getModeTotal(mode) {
+            if (mode === 'pvp') {
+                const l1 = document.getElementById('pvp1-league')?.value || 'eliteII';
+                const r1 = parseInt(document.getElementById('pvp1-rank')?.value) || 13;
+                const l2 = document.getElementById('pvp2-league')?.value || 'eliteII';
+                const r2 = parseInt(document.getElementById('pvp2-rank')?.value) || 13;
+                const l3 = document.getElementById('pvp3-league')?.value || 'eliteII';
+                const r3 = parseInt(document.getElementById('pvp3-rank')?.value) || 13;
+                const p1 = getPvpPayout(l1, r1).gems;
+                const p2 = getPvpPayout(l2, r2).gems;
+                const p3 = getPvpPayout(l3, r3).gems;
+                return p1 + p2 + p3 || 1428;
+            }
             const modeEvents = eventsByMode[mode];
             if (!modeEvents) return 0;
-
-            if (mode === 'pvp') {
-                let total = 0;
-                for (let i = 1; i <= 3; i++) {
-                    const leagueEl = document.getElementById(`pvp${i}-league`);
-                    const rankEl = document.getElementById(`pvp${i}-rank`);
-                    if (leagueEl && rankEl) {
-                        const league = leagueEl.value || pvpDefaults[i].league;
-                        const rank = parseInt(rankEl.value) || pvpDefaults[i].rank;
-                        const payout = getPvpPayout(league, rank);
-                        if (payout) total += payout.gems;
-                    }
-                }
-                // Fallback: if PvP not initialized, use defaults
-                if (total === 0) {
-                    total = getPvpPayout(pvpDefaults[1].league, pvpDefaults[1].rank).gems +
-                            getPvpPayout(pvpDefaults[2].league, pvpDefaults[2].rank).gems +
-                            getPvpPayout(pvpDefaults[3].league, pvpDefaults[3].rank).gems;
-                }
-                return total;
-            }
 
             if (mode === 'login') {
                 const daily = modeEvents.find(e => e.name === 'Daily')?.gems || 0;
@@ -1738,20 +1746,20 @@
 
             ['event', 'pvp', 'login', 'code'].forEach(mode => {
                 const btn = document.querySelector(`.filter-${mode}`);
+                const total = mode === 'pvp' ? getModeTotal('pvp') : Math.round(getModeTotal(mode));
                 if (btn) {
-                    const totalEl = btn.querySelector('p.text-xl.font-bold');
+                    const totalEl = btn.querySelector('p.text-2xl.font-bold');
                     if (totalEl) {
-                        const total = Math.round(getModeTotal(mode));
                         totalEl.textContent = total;
-                        modeTotals[mode] = total;
                         animateValue(totalEl, total, 400);
                     }
                 }
+                modeTotals[mode] = total;
             });
 
             const allBtn = document.querySelector('.filter-all');
             if (allBtn) {
-                const allTotalEl = allBtn.querySelector('p.text-xl.font-bold');
+                const allTotalEl = allBtn.querySelector('p.text-2xl.font-bold');
                 if (allTotalEl) animateValue(allTotalEl, mainTotal, 400);
             }
 
@@ -1771,14 +1779,6 @@
                 option.textContent = i;
                 select.appendChild(option);
             }
-        }
-
-        function getPvpPayout(leagueKey, rank) {
-            const mod = (leagueKey === 'eliteIII') ? 1 : GAME.pvp.mod[leagueKey];
-            const tiers = GAME.pvp.base;
-            const tier = tiers.find(t => rank >= t[0] && rank <= t[1]);
-            if (!tier) return { gems: 0, cards: 0, chips: 0, isDemotion: false };
-            return { gems: Math.round(tier[2] * mod), cards: tier[3], chips: Math.round(tier[4] * mod), isDemotion: rank >= 86 };
         }
 
         function animateValue(elementId, newValue, duration = 400) {

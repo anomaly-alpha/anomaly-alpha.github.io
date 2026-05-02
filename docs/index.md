@@ -116,6 +116,12 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - ✅ Reordered cards: Event → PvP → Login → Code
 - ✅ Moved League/Rank selectors to bottom of PvP cards
 - ✅ Moved Cards/Chips info to right below gems payout in PvP cards
+- ✅ Consolidated GAME data structure - compressed PvP tiers to compact arrays
+- ✅ Refactored chart data - buildModeData() derives from GAME + getModeTotal()
+- ✅ Shrunk mode selectors 50% - smaller padding, icons, text
+- ✅ Shrunk event cards 20% - reduced padding, gap, margins, font sizes
+- ✅ Enlarged mode selector timers - text-sm with font-mono for readability
+- ✅ Fixed getModeTotal('pvp') returning 0 - moved PvP check before eventsByMode lookup
 
 ## Contributors
 
