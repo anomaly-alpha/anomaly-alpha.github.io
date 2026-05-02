@@ -1106,11 +1106,11 @@ document.addEventListener('DOMContentLoaded', function() {
       const cards = mode === 'all'
         ? document.querySelectorAll('.gem-card')
         : document.querySelectorAll(`.gem-card[data-category="${mode}"]`);
-      cards.forEach(card => card.classList.add('gem-card--mode-highlight'));
+      cards.forEach(card => card.classList.add(`gem-card--mode-highlight--${mode}`));
     });
     btn.addEventListener('mouseleave', () => {
-      document.querySelectorAll('.gem-card--mode-highlight').forEach(card => {
-        card.classList.remove('gem-card--mode-highlight');
+      document.querySelectorAll('[class*="gem-card--mode-highlight--"]').forEach(card => {
+        card.className = card.className.replace(/gem-card--mode-highlight--\w+/g, '');
       });
     });
   });
