@@ -433,6 +433,24 @@ function updateAllPageTotals() {
   chartFilterData.code = buildModeData('code', modeTotals);
 }
 
+function getRewardsChartData(modes) {
+  if (!modes || modes.length === 0) return { labels: [], data: [], colors: [] };
+  const order = ['event', 'pvp', 'login', 'code'];
+  const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
+  const valueMap = {
+    event: GAME.ev.event[0][1] + GAME.ev.event[1][1],
+    pvp: getModeTotal('pvp'),
+    login: getModeTotal('login'),
+    code: GAME.ev.code[0][1]
+  };
+  const filtered = modes.filter(m => order.includes(m));
+  return {
+    labels: filtered.map(m => m.charAt(0).toUpperCase() + m.slice(1)),
+    data: filtered.map(m => valueMap[m] || 0),
+    colors: filtered.map(m => colorMap[m] || '#333333')
+  };
+}
+
 // ===== CHART FUNCTIONS =====
 
 let categoryChart, rewardsChart, spiderChart;
@@ -1008,24 +1026,6 @@ function initializePvPCards() {
 document.addEventListener('DOMContentLoaded', function() {
   Chart.defaults.color = '#ffffff';
   Chart.defaults.borderColor = 'rgba(0, 229, 255, 0.2)';
-
-  function getRewardsChartData(modes) {
-    if (!modes || modes.length === 0) return { labels: [], data: [], colors: [] };
-    const order = ['event', 'pvp', 'login', 'code'];
-    const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
-    const valueMap = {
-      event: GAME.ev.event[0][1] + GAME.ev.event[1][1],
-      pvp: getModeTotal('pvp'),
-      login: getModeTotal('login'),
-      code: GAME.ev.code[0][1]
-    };
-    const filtered = modes.filter(m => order.includes(m));
-    return {
-      labels: filtered.map(m => m.charAt(0).toUpperCase() + m.slice(1)),
-      data: filtered.map(m => valueMap[m] || 0),
-      colors: filtered.map(m => colorMap[m] || '#333333')
-    };
-  }
 
   new Chart(document.getElementById('categoryChart'), {
     type: 'doughnut',
