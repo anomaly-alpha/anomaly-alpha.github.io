@@ -49,7 +49,7 @@ anomaly-alpha/
 
 ### 2.1 JSON Config System
 
-Six JSON config files are maintained in `data/` directory and embedded in `<head>` via `<script type="application/json">` tags for zero network overhead. A `loadConfig(id)` function retrieves them, and `loadAllConfigs()` is called at startup.
+Six JSON config files are maintained in `data/` directory and fetched at runtime via `fetch('data/{id}.json')`. An `async loadConfig(id)` function handles the fetch with error handling, and `loadAllConfigs()` uses `Promise.all` for parallel loading. All configs are loaded asynchronously before chart initialization.
 
 **Global config objects (script.js):**
 - `GAME` - PvP leagues (14), rank tiers (7), spider targets, event definitions
@@ -370,21 +370,22 @@ Example: `index.html?theme=dark&mode=pvp&chart=event`
 
 ## 11. Implementation Notes
 
-### 11.1 JSON Config Embedding
+### 11.1 JSON Config Loading
 
-JSON configs are embedded in `index.html` `<head>` as `<script type="application/json" id="config-{name}">`. The `loadConfig(id)` function retrieves element content and parses it, then assigns to the corresponding global variable (GAME, REWARDS, CHARTS, COUNTDOWN, UI, THEME).
+JSON configs are fetched from `data/` directory at runtime. `async function loadConfig(id)` does `fetch('data/${id}.json')` with try/catch error handling, returning `{}` on failure. `async function loadAllConfigs()` uses `Promise.all` to load all 6 configs in parallel, assigning to globals (GAME, REWARDS, CHARTS, COUNTDOWN, UI, THEME).
 
-Separate JSON files in `data/` directory allow periodic updates without touching HTML. The embed is updated by a build step (not automated in this version).
+Separate JSON files in `data/` directory allow periodic game data updates without touching HTML or JS.
 
 ### 11.2 Chart.js Initialization Order
 
-1. `loadAllConfigs()` + `buildCountdownTargets()`
-2. Rebuild `chartFilterData` with config values
-3. Set Chart.defaults (color, borderColor)
-4. Create charts with initial data from config
-5. Initialize PvP cards (rank options from GAME.pvp.tiers)
-6. Reset PvP to defaults from GAME.pvp.defaults
-7. `updateModeButtonStates()` + `updateAllPageTotals()`
+1. `await loadAllConfigs()` (async, parallel fetch)
+2. `buildCountdownTargets()`
+3. Rebuild `chartFilterData` with config values
+4. Set Chart.defaults (color, borderColor)
+5. Create charts with initial data from config
+6. Initialize PvP cards (rank options from GAME.pvp.tiers)
+7. Reset PvP to defaults from GAME.pvp.defaults
+8. `updateModeButtonStates()` + `updateAllPageTotals()`
 8. Start countdown interval
 
 ### 11.3 Spider Chart Data Flow
