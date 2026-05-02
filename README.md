@@ -91,6 +91,12 @@ Open `gem_infographic.html` in a browser to view the infographic.
 - ✅ Added demotion zone warnings for PvP
 - ✅ Fixed HTML structure (article tags, main close, nav close)
 - ✅ Fixed JavaScript values (totalGems, baseStatic, chartFilterData)
+- ✅ Multi-select mode filtering - toggle Event, PvP, Daily, Code independently
+- ✅ Main total updates based on selected modes (PvP uses dynamic value)
+- ✅ Mode button totals update when PvP cards change
+- ✅ Added countdown timers to each mode selector with seconds display
+- ✅ Added subtle pulse animation on countdown second changes
+- ✅ Standardized PvP card colors to pink-glow to match PvP selector
 
 ## Contributors
 

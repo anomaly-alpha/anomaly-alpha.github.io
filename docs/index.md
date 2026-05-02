@@ -92,6 +92,12 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - ✅ Fixed HTML structure (PvP article tags, main container close, nav close)
 - ✅ Fixed JavaScript values (totalGems: 3217→2550, baseStatic: 2650→1900)
 - ✅ Fixed chartFilterData.all.distribution (removed 1820 season value)
+- ✅ Multi-select mode filtering - toggle Event, PvP, Daily, Code independently
+- ✅ Main total updates based on selected modes (PvP uses dynamic card values)
+- ✅ Mode button totals update when PvP cards change
+- ✅ Added countdown timers with seconds to each mode selector
+- ✅ Added subtle pulse animation on countdown second changes
+- ✅ Standardized PvP card colors to pink-glow to match PvP selector
 
 ## Contributors
 
