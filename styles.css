@@ -703,8 +703,8 @@ body {
 }
 
 .gem-mode-btn--all {
-  background: linear-gradient(to-br, rgba(0, 229, 255, 0.15), rgba(0, 229, 255, 0.03));
-  border-color: rgba(0, 229, 255, 0.30);
+  background: linear-gradient(to-br, rgba(0, 229, 255, 0.25), rgba(0, 229, 255, 0.08));
+  border-color: rgba(0, 229, 255, 0.40);
 }
 .gem-mode-btn--all.active {
   background: linear-gradient(to-br, rgba(0, 229, 255, 0.45), rgba(0, 229, 255, 0.12));
