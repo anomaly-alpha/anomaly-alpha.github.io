@@ -371,49 +371,49 @@
 
         <!-- Unified Mode Cards with Totals & Timers -->
         <!-- MODE_SELECTOR_START -->
-<nav class="mode-selector grid grid-cols-2 md:grid-cols-5 gap-4 my-8">
-            <button onclick="filterCards('all', event)" class="filter-btn filter-all active relative bg-gradient-to-br from-cyan-glow/20 to-cyan-glow/5 border-2 border-cyan-glow/40 rounded-xl p-4 text-center hover:scale-105 transition-all shadow-[0_0_20px_rgba(0,229,255,0.2)]">
-                <i class="fas fa-th-large text-3xl text-cyan-glow mb-2"></i>
-                <p class="text-xs text-cyan-glow uppercase tracking-wider mt-1">All Modes</p>
+<nav class="mode-selector grid grid-cols-5 gap-2 my-4">
+            <button onclick="filterCards('all', event)" class="filter-btn filter-all active relative bg-gradient-to-br from-cyan-glow/20 to-cyan-glow/5 border-2 border-cyan-glow/40 rounded-lg p-2 text-center hover:scale-105 transition-all shadow-[0_0_20px_rgba(0,229,255,0.2)]">
+                <i class="fas fa-th-large text-xl text-cyan-glow mb-1"></i>
+                <p class="text-[10px] text-cyan-glow uppercase tracking-wider mt-0.5">All Modes</p>
             </button>
-            <button onclick="filterCards('event', event)" class="filter-btn filter-event active relative bg-orange-accent/30 border border-orange-accent/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
-                <i class="fas fa-dragon text-3xl text-orange-accent mb-2"></i>
-                <p class="text-3xl font-bold text-white">500</p>
-                <p class="text-xs text-orange-accent uppercase tracking-wider mt-1">Event</p>
-                <span id="countdown-event" class="text-orange-accent text-xs font-bold mt-1 block">--:--:--</span>
+            <button onclick="filterCards('event', event)" class="filter-btn filter-event active relative bg-orange-accent/30 border border-orange-accent/50 rounded-lg p-2 text-center hover:scale-105 transition-all">
+                <i class="fas fa-dragon text-xl text-orange-accent mb-1"></i>
+                <p class="text-xl font-bold text-white">500</p>
+                <p class="text-[10px] text-orange-accent uppercase tracking-wider mt-0.5">Event</p>
+                <span id="countdown-event" class="text-orange-accent text-[10px] font-bold mt-0.5 block">--:--:--</span>
             </button>
-            <button onclick="filterCards('pvp', event)" class="filter-btn filter-pvp active relative bg-pink-glow/30 border border-pink-glow/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
-                <i class="fas fa-fist-raised text-3xl text-pink-glow mb-2"></i>
-                <p class="text-3xl font-bold text-white">750</p>
-                <p class="text-xs text-pink-glow uppercase tracking-wider mt-1">PvP</p>
-                <span id="countdown-pvp" class="text-pink-glow text-xs font-bold mt-1 block">--:--:--</span>
+            <button onclick="filterCards('pvp', event)" class="filter-btn filter-pvp active relative bg-pink-glow/30 border border-pink-glow/50 rounded-lg p-2 text-center hover:scale-105 transition-all">
+                <i class="fas fa-fist-raised text-xl text-pink-glow mb-1"></i>
+                <p class="text-xl font-bold text-white">750</p>
+                <p class="text-[10px] text-pink-glow uppercase tracking-wider mt-0.5">PvP</p>
+                <span id="countdown-pvp" class="text-pink-glow text-[10px] font-bold mt-0.5 block">--:--:--</span>
             </button>
-            <button onclick="filterCards('login', event)" class="filter-btn filter-login active relative bg-yellow-accent/30 border border-yellow-accent/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
-                <i class="fas fa-sign-in-alt text-3xl text-yellow-accent mb-2"></i>
-                <p class="text-3xl font-bold text-white">293</p>
-                <p class="text-xs text-yellow-accent uppercase tracking-wider mt-1">Login</p>
-                <span id="countdown-login" class="text-yellow-accent text-xs font-bold mt-1 block">--:--:--</span>
+            <button onclick="filterCards('login', event)" class="filter-btn filter-login active relative bg-yellow-accent/30 border border-yellow-accent/50 rounded-lg p-2 text-center hover:scale-105 transition-all">
+                <i class="fas fa-sign-in-alt text-xl text-yellow-accent mb-1"></i>
+                <p class="text-xl font-bold text-white">293</p>
+                <p class="text-[10px] text-yellow-accent uppercase tracking-wider mt-0.5">Login</p>
+                <span id="countdown-login" class="text-yellow-accent text-[10px] font-bold mt-0.5 block">--:--:--</span>
             </button>
-            <button onclick="filterCards('code', event)" class="filter-btn filter-code active relative bg-green-accent/30 border border-green-accent/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
-                <i class="fas fa-gift text-3xl text-green-accent mb-2"></i>
-                <p class="text-3xl font-bold text-white">300</p>
-                <p class="text-xs text-green-accent uppercase tracking-wider mt-1">Code</p>
-                <span id="countdown-code" class="text-green-accent text-xs font-bold mt-1 block">--:--:--</span>
+            <button onclick="filterCards('code', event)" class="filter-btn filter-code active relative bg-green-accent/30 border border-green-accent/50 rounded-lg p-2 text-center hover:scale-105 transition-all">
+                <i class="fas fa-gift text-xl text-green-accent mb-1"></i>
+                <p class="text-xl font-bold text-white">300</p>
+                <p class="text-[10px] text-green-accent uppercase tracking-wider mt-0.5">Code</p>
+                <span id="countdown-code" class="text-green-accent text-[10px] font-bold mt-0.5 block">--:--:--</span>
             </button>
     </nav>
 
         <!-- Cards Grid -->
         <!-- CARDS_GRID_START -->
-<main class="cards-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-10">
+<main class="cards-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-8">
 
             <!-- The Long Haul -->
-            <div class="card-hover relative bg-orange-accent/8 p-6 rounded-xl border border-orange-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0s;" data-category="event">
+            <div class="card-hover relative bg-orange-accent/8 p-5 rounded-lg border border-orange-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0s;" data-category="event">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
                 <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.1s;"></div>
                 <!-- GEM_ICON_EVENT_LONG_HAUL -->
-                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
                     <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>300</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">The Long Haul</h3>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">The Long Haul</h3>
                 <div class="inline-flex items-center gap-2 bg-orange-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-orange-accent border border-orange-accent/30 mb-4">
                     <span>Event Reward</span>
                     <span class="bg-yellow-500/20 border border-yellow-500/40 px-2 py-0.5 rounded-full text-[10px]">★ Top 5%</span>
@@ -427,13 +427,13 @@
             </div>
 
             <!-- Earth's Defenders -->
-            <div class="card-hover relative bg-orange-accent/8 p-6 rounded-xl border border-orange-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.1s;" data-category="event">
+            <div class="card-hover relative bg-orange-accent/8 p-5 rounded-lg border border-orange-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.1s;" data-category="event">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
                 <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.2s;"></div>
                 <!-- GEM_ICON_EVENT_EARTHS_DEFENDERS -->
-                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
                     <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>200</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Earth's Defenders</h3>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Earth's Defenders</h3>
                 <div class="inline-flex items-center gap-2 bg-orange-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-orange-accent border border-orange-accent/30 mb-4">
                     <span>Event Reward</span>
                     <span class="bg-yellow-500/20 border border-yellow-500/40 px-2 py-0.5 rounded-full text-[10px]">★ Top 10%</span>
@@ -448,7 +448,7 @@
             </div>
 
             <!-- PvP Card 1: Restricted Arena -->
-            <article class="pvp-card card-1 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.2s;" data-category="pvp" data-league="eliteI" data-rank="50">
+            <article class="pvp-card card-1 card-hover relative bg-pink-glow/8 p-5 rounded-lg border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.2s;" data-category="pvp" data-league="eliteI" data-rank="50">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-50"></div>
                 <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0s;"></div>
                 <div class="absolute top-5 right-10 w-1 h-1 bg-purple-accent rounded-full sparkle" style="animation-delay: 0.3s;"></div>
@@ -462,7 +462,7 @@
                     <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp1-chips">0</span> Chips</span>
                 </div>
 
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Restricted Arena</h3>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Restricted Arena</h3>
                 <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
                     <span>Player vs Player</span>
                 </div>
@@ -507,7 +507,7 @@
                     <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp2-chips">0</span> Chips</span>
                 </div>
 
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Open Arena</h3>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Open Arena</h3>
                 <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
                     <span>Player vs Player</span>
                 </div>
@@ -552,7 +552,7 @@
                     <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp3-chips">0</span> Chips</span>
                 </div>
 
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Multiverse Alliance War</h3>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Multiverse Alliance War</h3>
                 <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
                     <span>Player vs Player</span>
                 </div>
@@ -589,13 +589,13 @@
             </article>
 
             <!-- Daily Login -->
-            <div class="card-hover relative bg-yellow-accent/8 p-6 rounded-xl border border-yellow-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.5s;" data-category="login">
+            <div class="card-hover relative bg-yellow-accent/8 p-5 rounded-lg border border-yellow-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.5s;" data-category="login">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
                 <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.3s;"></div>
                 <!-- GEM_ICON_LOGIN_DAILY -->
-                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
                     <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>30×7=210</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Daily Login</h3>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Daily Login</h3>
                 <div class="inline-flex items-center gap-2 bg-yellow-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-yellow-accent border border-yellow-accent/30 mb-4">
                     <span>Daily Reward</span>
                 </div>
@@ -613,9 +613,9 @@
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-50"></div>
                 <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.4s;"></div>
                 <!-- GEM_ICON_LOGIN_WEEKLY -->
-                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
                     <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>60</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Weekly Login</h3>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Weekly Login</h3>
                 <div class="inline-flex items-center gap-2 bg-yellow-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-yellow-accent border border-yellow-accent/30 mb-4">
                     <span>Weekly Reward</span>
                 </div>
@@ -633,9 +633,9 @@
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-50"></div>
                 <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.5s;"></div>
                 
-                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
                     <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>90÷4=23</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Monthly Login</h3>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Monthly Login</h3>
                 <div class="inline-flex items-center gap-2 bg-yellow-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-yellow-accent border border-yellow-accent/30 mb-4">
                     <span>Monthly Reward</span>
                 </div>
@@ -649,13 +649,13 @@
             </div>
 
             <!-- Promo Code -->
-            <div class="card-hover relative bg-green-accent/8 p-6 rounded-xl border border-green-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.8s;" data-category="code" onclick="copyCode()">
+            <div class="card-hover relative bg-green-accent/8 p-5 rounded-lg border border-green-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.8s;" data-category="code" onclick="copyCode()">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-accent to-transparent opacity-50"></div>
                 <div class="absolute top-6 right-10 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.5s;"></div>
                 
-                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
                     <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>300</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Promo Code</h3>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Promo Code</h3>
                 <div class="inline-flex items-center gap-2 bg-green-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-green-accent border border-green-accent/30 mb-4">
                     <span>Code Redemption</span>
                 </div>
@@ -1556,51 +1556,6 @@
             }
         });
 
-        const chartFilterData = {
-            all: {
-                distribution: [0, 500, 750, 180, 300],
-                rewards: [810, 560, 450, 750, 300, 200, 180],
-                spider: [[0, 500, 750, 180, 300], [0, 800, 1000, 300, 500]],
-                colors: ['#333333', '#ff6b35', '#e91e8a', '#f39c12', '#2ecc71'],
-                rewardColors: ['#333333', '#333333', '#333333', '#e91e8a', '#ff6b35', '#ff6b35', '#f39c12', '#2ecc71']
-            },
-            season: {
-                distribution: [1820, 0, 0, 0, 0],
-                rewards: [810, 560, 450, 0, 0],
-                spider: [[1820, 0, 0, 0, 0], [2000, 0, 0, 0, 0]],
-                colors: ['#00e5ff', '#333333', '#333333', '#333333', '#333333'],
-                rewardColors: ['#00e5ff', '#00e5ff', '#00e5ff', '#333333', '#333333', '#333333', '#333333']
-            },
-            event: {
-                distribution: [0, 500, 0, 0, 0],
-                rewards: [0, 0, 0, 300, 200],
-                spider: [[0, 500, 0, 0, 0], [0, 800, 0, 0, 0]],
-                colors: ['#333333', '#ff6b35', '#333333', '#333333', '#333333'],
-                rewardColors: ['#333333', '#333333', '#333333', '#ff6b35', '#ff6b35', '#333333', '#333333']
-            },
-            pvp: {
-                distribution: [0, 0, 750, 0, 0],
-                rewards: [0, 0, 0, 0, 750],
-                spider: [[0, 0, 750, 0, 0], [0, 0, 1000, 0, 0]],
-                colors: ['#333333', '#333333', '#e91e63', '#333333', '#333333'],
-                rewardColors: ['#333333', '#333333', '#333333', '#e91e63', '#333333', '#333333', '#333333']
-            },
-            login: {
-                distribution: [0, 0, 0, 180, 0],
-                rewards: [0, 0, 0, 180, 0],
-                spider: [[0, 0, 0, 180, 0], [0, 0, 0, 300, 0]],
-                colors: ['#333333', '#333333', '#333333', '#f39c12', '#333333'],
-                rewardColors: ['#333333', '#333333', '#333333', '#f39c12', '#333333', '#333333', '#f39c12']
-            },
-            code: {
-                distribution: [0, 0, 0, 0, 300],
-                rewards: [0, 0, 0, 0, 300],
-                spider: [[0, 0, 0, 0, 300], [0, 0, 0, 0, 500]],
-                colors: ['#333333', '#333333', '#333333', '#333333', '#2ecc71'],
-                rewardColors: ['#333333', '#333333', '#333333', '#2ecc71', '#333333', '#333333', '#333333']
-            }
-        };
-
         let categoryChart, rewardsChart, spiderChart, lineChart;
 
         function filterChart(filter) {
@@ -1664,43 +1619,81 @@
         spiderChart = Chart.getChart('spiderChart');
         lineChart = Chart.getChart('lineChart');
 
-        // PvP League Data
-        const pvpLeagueData = {
-            eliteIII: {
-                tiers: [
-                    { min: 1, max: 1, gems: 710, cards: 4, chips: 1000 },
-                    { min: 2, max: 2, gems: 670, cards: 3, chips: 900 },
-                    { min: 3, max: 3, gems: 640, cards: 2, chips: 800 },
-                    { min: 4, max: 10, gems: 600, cards: 1, chips: 600 },
-                    { min: 11, max: 30, gems: 560, cards: 1, chips: 600 },
-                    { min: 31, max: 60, gems: 520, cards: 1, chips: 600 },
-                    { min: 61, max: 120, gems: 490, cards: 1, chips: 500 }
-                ]
+        // GAME DATA (Consolidated JSON)
+        const GAME = {
+            // PvP Tiers: [min, max, gems, cards, chips]
+            pvp: {
+                base: [[1,1,710,4,1000],[2,2,670,3,900],[3,3,640,2,800],[4,10,600,1,600],[11,30,560,1,600],[31,60,520,1,600],[61,120,490,1,500]],
+                mod: { eliteII:0.85, eliteI:0.70, invincible:1.25 },
+                def: { league: 'eliteII', rank: 13 }
             },
-            eliteII: { modifier: 0.85, baseTiers: 'eliteIII' },
-            eliteI: { modifier: 0.70, baseTiers: 'eliteIII' },
-            invincible: { modifier: 1.25, baseTiers: 'eliteIII' }
+            // Events: [name, gems, days]
+            ev: {
+                event: [['The Long Haul',300,14],["Earth's Defenders",200,7]],
+                login: [['Daily',210],['Weekly',60],['Monthly',90]],
+                code: [['Promo Code',300]]
+            },
+            // Chart Data: index = [season,event,pvp,login,code]
+            chart: {
+                all: [0,500,750,180,300],
+                rewards: [810,560,450,750,300,200,180],
+                spider: { a:[0,500,750,180,300], t:[0,800,1000,300,500] },
+                colors: { main:['#333','#ff6b35','#e91e8a','#f39c12','#2ecc71'], reward:['#333','#333','#333','#e91e8a','#ff6b35','#ff6b35','#f39c12','#2ecc71'] }
+            }
         };
 
-        const pvpDefaults = {
-            1: { league: 'eliteII', rank: 13 },
-            2: { league: 'eliteII', rank: 13 },
-            3: { league: 'eliteII', rank: 13 }
-        };
+        function getPvpPayout(leagueKey, rank) {
+            const tiers = GAME.pvp.base;
+            const mod = GAME.pvp.mod[leagueKey] || 1;
+            const tier = tiers.find(t => rank >= t[0] && rank <= t[1]);
+            if (!tier) return { gems: 0, cards: 0, chips: 0, isDemotion: false };
+            return { gems: Math.round(tier[2] * mod), cards: tier[3], chips: Math.round(tier[4] * mod), isDemotion: rank >= 86 };
+        }
 
         const eventsByMode = {
-            event: [
-                { name: 'The Long Haul', gems: 300, seasonDays: 14 },
-                { name: "Earth's Defenders", gems: 200, seasonDays: 7 }
-            ],
-            login: [
-                { name: 'Daily', gems: 210 },
-                { name: 'Weekly', gems: 60 },
-                { name: 'Monthly', gems: 90 }
-            ],
-            code: [
-                { name: 'Promo Code', gems: 300, active: true }
-            ]
+            event: GAME.ev.event.map(e => ({ name: e[0], gems: e[1], seasonDays: e[2] })),
+            login: GAME.ev.login.map(e => ({ name: e[0], gems: e[1] })),
+            code: GAME.ev.code.map(e => ({ name: e[0], gems: e[1], active: true }))
+        };
+
+        const pvpDefaults = { 1: GAME.pvp.def, 2: GAME.pvp.def, 3: GAME.pvp.def };
+        const pvpLeagueData = { eliteIII: { tiers: GAME.pvp.base.map(t => ({ min: t[0], max: t[1], gems: t[2], cards: t[3], chips: t[4] })) }, eliteII: { modifier: 0.85 }, eliteI: { modifier: 0.70 }, invincible: { modifier: 1.25 } };
+
+        // Chart Filter Data (derived from GAME + getModeTotal)
+        const DC = '#333', CM = { event:'#ff6b35', pvp:'#e91e8a', login:'#f39c12', code:'#2ecc71' };
+        function buildModeData(mode, totals) {
+            const d = [0,0,0,0,0], r = [0,0,0,0,0,0,0], sp = [[0,0,0,0,0],[0,0,0,0,0]];
+            if (mode === 'all') {
+                d[1] = GAME.ev.event[0][1] + GAME.ev.event[1][1]; // 500
+                d[2] = totals.pvp;
+                d[3] = GAME.ev.login[0][1] + GAME.ev.login[1][1] + Math.round(GAME.ev.login[2][1]/4); // 293
+                d[4] = GAME.ev.code[0][1]; // 300
+                r[3] = d[1]; r[4] = GAME.ev.event[1][1]; r[5] = totals.pvp; r[6] = d[3]; // [PvP,Long Haul,Defenders,Login]
+                sp[0] = d.slice(1); sp[1] = [800,1000,1200,500];
+            } else if (mode === 'event') {
+                d[1] = GAME.ev.event[0][1] + GAME.ev.event[1][1]; r[3] = GAME.ev.event[0][1]; r[4] = GAME.ev.event[1][1];
+                sp[0] = [d[1],0,0,0]; sp[1] = [800,0,0,0];
+            } else if (mode === 'pvp') {
+                d[2] = totals.pvp; r[5] = totals.pvp;
+                sp[0] = [0,d[2],0,0]; sp[1] = [0,1000,0,0];
+            } else if (mode === 'login') {
+                d[3] = GAME.ev.login[0][1] + GAME.ev.login[1][1] + Math.round(GAME.ev.login[2][1]/4); r[6] = d[3];
+                sp[0] = [0,0,d[3],0]; sp[1] = [0,0,300,0];
+            } else if (mode === 'code') {
+                d[4] = GAME.ev.code[0][1]; r[3] = d[4]; // 'Promo Code' goes to Long Haul index
+                sp[0] = [0,0,0,d[4]]; sp[1] = [0,0,0,500];
+            }
+            const cols = d.map((v,i) => v>0 ? (i===1?CM.event:i===2?CM.pvp:i===3?CM.login:CM.code) : DC);
+            const rCols = r.map((v,i) => v>0 ? (i===3?CM.event:i===4?CM.event:i===5?CM.pvp:i===6?CM.login:CM.code) : DC);
+            return { distribution: d, rewards: r, spider: sp, colors: cols, rewardColors: rCols };
+        }
+        const modeTotals = { event: 0, pvp: 0, login: 0, code: 0 }; // filled by updateAllPageTotals
+        const chartFilterData = {
+            all: buildModeData('all', modeTotals),
+            event: buildModeData('event', modeTotals),
+            pvp: buildModeData('pvp', modeTotals),
+            login: buildModeData('login', modeTotals),
+            code: buildModeData('code', modeTotals)
         };
 
         function getModeTotal(mode) {
@@ -1746,10 +1739,11 @@
             ['event', 'pvp', 'login', 'code'].forEach(mode => {
                 const btn = document.querySelector(`.filter-${mode}`);
                 if (btn) {
-                    const totalEl = btn.querySelector('p.text-3xl.font-bold');
+                    const totalEl = btn.querySelector('p.text-xl.font-bold');
                     if (totalEl) {
                         const total = Math.round(getModeTotal(mode));
                         totalEl.textContent = total;
+                        modeTotals[mode] = total;
                         animateValue(totalEl, total, 400);
                     }
                 }
@@ -1757,9 +1751,16 @@
 
             const allBtn = document.querySelector('.filter-all');
             if (allBtn) {
-                const allTotalEl = allBtn.querySelector('p.text-3xl.font-bold');
+                const allTotalEl = allBtn.querySelector('p.text-xl.font-bold');
                 if (allTotalEl) animateValue(allTotalEl, mainTotal, 400);
             }
+
+            // Rebuild chartFilterData with actual totals
+            chartFilterData.all = buildModeData('all', modeTotals);
+            chartFilterData.event = buildModeData('event', modeTotals);
+            chartFilterData.pvp = buildModeData('pvp', modeTotals);
+            chartFilterData.login = buildModeData('login', modeTotals);
+            chartFilterData.code = buildModeData('code', modeTotals);
         }
 
         function generateRankOptions(selectId) {
@@ -1773,22 +1774,11 @@
         }
 
         function getPvpPayout(leagueKey, rank) {
-            const league = pvpLeagueData[leagueKey];
-            const baseKey = league.baseTiers || leagueKey;
-            const tiers = pvpLeagueData[baseKey].tiers;
-            const tier = tiers.find(t => rank >= t.min && rank <= t.max);
-
-            if (!tier) {
-                return { gems: 0, cards: 0, chips: 0, isDemotion: false };
-            }
-
-            const modifier = league.modifier || 1;
-            return {
-                gems: Math.round(tier.gems * modifier),
-                cards: tier.cards,
-                chips: Math.round(tier.chips * modifier),
-                isDemotion: rank >= 86
-            };
+            const mod = (leagueKey === 'eliteIII') ? 1 : GAME.pvp.mod[leagueKey];
+            const tiers = GAME.pvp.base;
+            const tier = tiers.find(t => rank >= t[0] && rank <= t[1]);
+            if (!tier) return { gems: 0, cards: 0, chips: 0, isDemotion: false };
+            return { gems: Math.round(tier[2] * mod), cards: tier[3], chips: Math.round(tier[4] * mod), isDemotion: rank >= 86 };
         }
 
         function animateValue(elementId, newValue, duration = 400) {
