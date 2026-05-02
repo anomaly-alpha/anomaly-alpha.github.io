@@ -106,6 +106,9 @@ Open `gem_infographic.html` in a browser to view the infographic.
 - ✅ Restructured card layout - gem icons + payout at top, title/selectors below
 - ✅ Fixed login rewards total (980→1843) - updated eventsByMode values
 - ✅ Updated Daily card to show "30×7=210", Monthly to show "90÷4=23"
+- ✅ Made mode selector totals dynamic - now calculated from eventsByMode
+- ✅ Fixed PvP percentage calculation to use dynamic total
+- ✅ Login mode total now = daily + weekly + (monthly÷4) = 293
 
 ## Contributors
 

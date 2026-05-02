@@ -1702,7 +1702,7 @@
             ],
             login: [
                 { name: 'Daily', gems: 210 },
-                { name: 'Weekly', gems: 293 },
+                { name: 'Weekly', gems: 60 },
                 { name: 'Monthly', gems: 90 }
             ],
             code: [
@@ -1733,6 +1733,13 @@
                             getPvpPayout(pvpDefaults[3].league, pvpDefaults[3].rank).gems;
                 }
                 return total;
+            }
+
+            if (mode === 'login') {
+                const daily = modeEvents.find(e => e.name === 'Daily')?.gems || 0;
+                const weekly = modeEvents.find(e => e.name === 'Weekly')?.gems || 0;
+                const monthly = modeEvents.find(e => e.name === 'Monthly')?.gems || 0;
+                return daily + weekly + Math.round(monthly / 4);
             }
 
             return modeEvents.reduce((sum, event) => sum + (event.gems || 0), 0);
@@ -1815,7 +1822,7 @@
             animateValue(`pvp${cardId}-gems`, payout.gems);
             animateValue(`pvp${cardId}-cards`, payout.cards);
             animateValue(`pvp${cardId}-chips`, payout.chips);
-            const totalGems = 2550;
+            const totalGems = getModeTotal('event') + getModeTotal('pvp') + getModeTotal('login') + getModeTotal('code');
             const percent = ((payout.gems / totalGems) * 100).toFixed(1);
             document.getElementById(`pvp${cardId}-percent`).textContent = percent + '%';
             const demotionEl = document.getElementById(`pvp${cardId}-demotion`);
@@ -1870,6 +1877,7 @@
             loadPvpSelection(1);
             loadPvpSelection(2);
             loadPvpSelection(3);
+            updateAllPageTotals();
         }
 
         initializePvPCards();
