@@ -135,9 +135,11 @@ All 9 cards have an info icon button (`.gem-card__info-btn`) in the top-right co
 | Axis | Actual | Target |
 |------|--------|--------|
 | Events | 500 | 550 |
-| PvP | ~750 (live) | 1500 |
+| PvP | ~750 (live) | 2664 |
 | Login | 293 | 360 |
 | Code | 300 | 330 |
+
+**PvP target (2664)** = max combined gems from all 3 PvP cards at best possible (Invincible league, rank 1): `Math.round(710 × 1.25) × 3 = 888 × 3 = 2664`. This represents the theoretical maximum weekly PvP income.
 
 **Live updates:** Spider actual values recompute from live PvP form selectors via `getModeTotal('pvp')` in `buildModeData`. `updatePvPCard` calls `updateChartsByModes(selectedModes)` so spider (and all 3 charts) update immediately on any PvP selector change. Target dataset always shows all 4 targets as reference lines regardless of mode filter state.
 
