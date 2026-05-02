@@ -24,7 +24,6 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts,
 - **Mode button hover** — hovering a mode button highlights all matching cards in that mode's color
 - **Individual card hover** — cards highlight in their own category color (orange/pink/amber/green)
 - **Charts toggle** — show/hide charts section with animated chevron
-- **Search** — expandable search bar with text highlighting and match count
 - **Save/Share menu** — Save views (localStorage), load saved, copy link, export as PNG
 - **Export data as JSON**
 - **Card modals** — 9 cards each trigger an info modal via icon button (Escape to close)
@@ -73,16 +72,16 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 - **Rewards** — Bar chart, 1–4 bars based on selected modes, dynamic y.max
 - **Performance** — Radar/spider chart, actual vs target (550, 1500, 360, 330)
 - Rich hover tooltips with gems, %, vs average comparison
-- Smooth animated transitions on filter changes
+- Instant chart updates on filter changes (no animation overhead)
 - Toggle show/hide via button
 
 ## File Structure
 
 ```
 anomaly-alpha/
-├── index.html           (847 lines) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (1377 lines) — All JS: charts, filters, PvP, modals, countdowns, search
-├── styles.css           (1239 lines) — CSS custom properties + BEM component classes
+├── index.html           (838 lines) — Main HTML + inline JSON configs (6 in <head>)
+├── script.js            (1285 lines) — All JS: charts, filters, PvP, modals, countdowns
+├── styles.css           (1202 lines) — CSS custom properties + BEM component classes
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
 ├── PLAN_card_modals.md  — Card modal feature plan and implementation notes
 ├── README.md            — This file
@@ -161,6 +160,13 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Removed 3 unused animation utility classes** — `gem-animate--glow-pulse`, `gem-animate--float`, `gem-animate--pulse-slow` and their `@keyframes` deleted
 - ✅ **Removed visibilitychange animation restarter** — Dead code after sparkle removal
 - **Net result:** 37 → 10 continuous animations (9 particles + 1 scanline)
+
+### Performance Improvements (Round 2)
+- ✅ **Removed search entirely** — Eliminated most expensive JS operation (`querySelectorAll` per keystroke): removed from HTML, CSS, and JS
+- ✅ **Disabled chart animations** — Changed all 9 `chart.update('active')` calls to `'none'` for instant non-animated canvas redraws
+- ✅ **GPU-optimized particles** — Added `will-change: transform` + `translate3d()` to particle CSS; avoids layout thrashing per frame
+- ✅ **Inlined header icon pulse** — Added `@keyframes pulse` to CSS so header icon pulse no longer depends on Tailwind CDN
+- ✅ **Reduced countdown interval** — Changed from 1000ms to 5000ms, cutting DOM writes 5×
 
 ### Bug Fixes
 - ✅ **Card hover shadow** — Hardcoded cyan values replacing undefined `var(--gem-shadow--card)`

@@ -770,50 +770,6 @@ body .gem-card--mode-highlight--all {
   background-color: var(--gem-alert--info-bg);
 }
 
-/* Search component */
-.gem-search {
-  display: flex;
-  align-items: center;
-}
-
-.gem-search__input {
-  background-color: var(--gem-btn-bg);
-  border: 1px solid var(--gem-btn-border);
-  border-radius: 9999px;
-  color: var(--gem-text--primary);
-  font-size: 0.875rem;
-  outline: none;
-  transition: all 0.3s ease;
-}
-
-.gem-search__input::placeholder {
-  color: var(--gem-text--muted);
-}
-
-.gem-search__input--hidden {
-  width: 0;
-  padding: 0;
-  opacity: 0;
-}
-
-.gem-search__input--visible {
-  width: 12rem;
-  padding: 0.25rem 0.75rem;
-  opacity: 1;
-}
-
-.gem-search--empty {
-  text-align: center;
-  padding: 2rem;
-  color: var(--gem-text--secondary);
-}
-
-.gem-search__highlight {
-  background-color: rgba(243, 156, 18, 0.40);
-  padding: 0 2px;
-  border-radius: 2px;
-}
-
 /* Chart component */
 .gem-chart {
   background-color: rgba(10, 35, 60, 0.50);
@@ -1060,6 +1016,7 @@ body .gem-card--mode-highlight--all {
   border-radius: 50%;
   animation: gem-float-particle 15s infinite linear;
   pointer-events: none;
+  will-change: transform;
 }
 
 .gem-particle--1 {
@@ -1186,7 +1143,7 @@ body .gem-card--mode-highlight--all {
 
 @keyframes gem-float-particle {
   0% {
-    transform: translateY(100vh) rotate(0deg);
+    transform: translate3d(0, 100vh, 0) rotate(0deg);
     opacity: 0;
   }
   10% {
@@ -1196,9 +1153,14 @@ body .gem-card--mode-highlight--all {
     opacity: 1;
   }
   100% {
-    transform: translateY(-100vh) rotate(720deg);
+    transform: translate3d(0, -100vh, 0) rotate(720deg);
     opacity: 0;
   }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
 @keyframes gem-countdown-pulse {

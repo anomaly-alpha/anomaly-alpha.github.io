@@ -260,16 +260,6 @@ The design system uses CSS custom properties (design tokens) for all visual valu
 | `.gem-toast--error` | Modifier | Error variant |
 | `.gem-toast--info` | Modifier | Info variant |
 
-### Search Component
-
-| Class | Type | Description |
-|-------|------|-------------|
-| `.gem-search` | Block | Search container |
-| `.gem-search__input` | Element | Input field |
-| `.gem-search__input--hidden` | Modifier | Collapsed state |
-| `.gem-search__input--visible` | Modifier | Expanded state |
-| `.gem-search__highlight` | Element | Match highlighting |
-
 ### Chart Component
 
 | Class | Type | Description |
@@ -416,7 +406,8 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 | `gem-code--fade-in` | 0.5s | ease-out | Copy hint appear |
 | `gem-code--copied` | 0.4s | ease-out | Copied flash |
 | `gem-scanline` | 3s | ease-in-out | Header scan line (infinite) |
-| `gem-float-particle` | 15s | linear | Background particles (infinite) |
+| `gem-float-particle` | 15s | linear | Background particles (infinite, GPU-composited via `translate3d`) |
+| `pulse` | 3s | cubic-bezier(0.4, 0, 0.6, 1) | Header icon pulse (infinite) |
 | `gem-countdown-pulse` | 1s | ease-out infinite | Countdown second tick (CSS-only) |
 | `gem-modal--pop-in` | 0.3s | cubic-bezier(0.34, 1.56, 0.64, 1) | Modal entry |
 
@@ -426,9 +417,9 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 
 ```
 anomaly-alpha/
-├── styles.css       (1239 lines) — Design tokens + BEM classes + animations
-├── index.html       (847 lines)  — HTML with inline JSON configs
-├── script.js        (1377 lines) — JavaScript with token-aware logic
+├── styles.css       (1202 lines) — Design tokens + BEM classes + animations
+├── index.html       (838 lines)  — HTML with inline JSON configs
+├── script.js        (1285 lines) — JavaScript with token-aware logic
 └── docs/
     └── DESIGN_SYSTEM.md          — This file
 ```

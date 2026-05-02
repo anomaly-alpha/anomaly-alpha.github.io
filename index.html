@@ -364,17 +364,7 @@
         <i class="fas fa-download gem-btn__icon gem-btn--icon-glow"></i>
     </button>
 
-    <div class="gem-search fixed top-4 right-28 z-50">
-        <button onclick="toggleSearch()" id="searchToggleBtn" class="gem-btn--icon" title="Search rewards">
-            <i class="fas fa-search gem-btn__icon gem-btn--icon-glow"></i>
-        </button>
-        <input type="text" id="searchInput" placeholder="Search..." class="gem-search__input gem-search__input--hidden" oninput="searchRewards(this.value)" onkeydown="handleSearchKeydown(event)">
-        <button onclick="clearSearch()" id="searchClearBtn" class="gem-btn--icon hidden" title="Clear search">
-            <i class="fas fa-times gem-btn__icon gem-btn--icon-glow text-xs"></i>
-        </button>
-    </div>
-
-    <div class="fixed top-4 right-40 z-50 flex items-center gap-1">
+    <div class="fixed top-4 right-28 z-50 flex items-center gap-1">
         <button onclick="toggleSaveMenu()" class="gem-btn--icon" title="Save & Share">
             <i class="fas fa-save gem-btn__icon gem-btn--icon-glow"></i>
         </button>

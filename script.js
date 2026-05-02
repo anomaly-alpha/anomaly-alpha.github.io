@@ -415,10 +415,6 @@ function animateValue(elementId, newValue, duration = 400) {
   requestAnimationFrame(step);
 }
 
-function escapeRegex(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 // ===== FILTER & MODE FUNCTIONS =====
 
 let selectedModes = ['event', 'pvp', 'login', 'code'];
@@ -530,7 +526,7 @@ function updateChartsByCategory(category) {
   const data = chartFilterData[category] || chartFilterData['all'];
   categoryChart.data.datasets[0].data = data.distribution.slice(1);
   categoryChart.data.datasets[0].backgroundColor = data.colors.slice(1);
-  categoryChart.update('active');
+  categoryChart.update('none');
 
   const catRewardsData = category === 'all'
     ? getRewardsChartData(selectedModes)
@@ -541,11 +537,11 @@ function updateChartsByCategory(category) {
   if (catRewardsData.data.length > 0) {
     rewardsChart.options.scales.y.max = Math.max(...catRewardsData.data);
   }
-  rewardsChart.update('active');
+  rewardsChart.update('none');
 
   spiderChart.data.datasets[0].data = data.spider[0];
   spiderChart.data.datasets[1].data = data.spider[1];
-  spiderChart.update('active');
+  spiderChart.update('none');
 }
 
 function updateChartsByModes(modes) {
@@ -581,7 +577,7 @@ function updateChartsByModes(modes) {
 
   categoryChart.data.datasets[0].data = combinedData.distribution.slice(1);
   categoryChart.data.datasets[0].backgroundColor = combinedData.colors.slice(1);
-  categoryChart.update('active');
+  categoryChart.update('none');
 
   const rewardsData = getRewardsChartData(modes);
   rewardsChart.data.labels = rewardsData.labels;
@@ -590,7 +586,7 @@ function updateChartsByModes(modes) {
   if (rewardsData.data.length > 0) {
     rewardsChart.options.scales.y.max = Math.max(...rewardsData.data);
   }
-  rewardsChart.update('active');
+  rewardsChart.update('none');
 
   const spiderActual = [0, 0, 0, 0];
   const spiderTarget = spiderChart.data.datasets[1].data;
@@ -606,7 +602,7 @@ function updateChartsByModes(modes) {
 
   spiderChart.data.datasets[0].data = spiderActual;
   spiderChart.data.datasets[1].data = spiderTarget;
-  spiderChart.update('active');
+  spiderChart.update('none');
 }
 
 function filterChart(filter) {
@@ -647,7 +643,7 @@ function filterChart(filter) {
 
   categoryChart.data.datasets[0].data = data.distribution.slice(1);
   categoryChart.data.datasets[0].backgroundColor = data.colors.slice(1);
-  categoryChart.update('active');
+  categoryChart.update('none');
 
   const filterRewardsData = filter === 'all'
     ? getRewardsChartData(selectedModes)
@@ -658,11 +654,11 @@ function filterChart(filter) {
   if (filterRewardsData.data.length > 0) {
     rewardsChart.options.scales.y.max = Math.max(...filterRewardsData.data);
   }
-  rewardsChart.update('active');
+  rewardsChart.update('none');
 
   spiderChart.data.datasets[0].data = data.spider[0];
   spiderChart.data.datasets[1].data = data.spider[1];
-  spiderChart.update('active');
+  spiderChart.update('none');
 }
 
 // ===== UI COMPONENTS =====
@@ -698,113 +694,6 @@ function toggleCharts() {
     label.textContent = 'Hide Charts';
     icon.classList.remove('fa-chevron-down');
     icon.classList.add('fa-chevron-up');
-  }
-}
-
-// Search
-let searchExpanded = false;
-
-function toggleSearch() {
-  const btn = document.getElementById('searchToggleBtn');
-  const input = document.getElementById('searchInput');
-  const clearBtn = document.getElementById('searchClearBtn');
-
-  if (!searchExpanded) {
-    btn.classList.add('hidden');
-    input.classList.remove('hidden');
-    input.classList.remove('w-0', 'px-0');
-    input.classList.add('w-48', 'px-3');
-    input.focus();
-    clearBtn.classList.remove('hidden');
-    searchExpanded = true;
-  }
-}
-
-function clearSearch() {
-  const input = document.getElementById('searchInput');
-  const clearBtn = document.getElementById('searchClearBtn');
-  const btn = document.getElementById('searchToggleBtn');
-
-  input.value = '';
-  input.classList.add('w-0', 'px-0');
-  input.classList.remove('w-48', 'px-3');
-  setTimeout(() => {
-    input.classList.add('hidden');
-    btn.classList.remove('hidden');
-  }, 300);
-  clearBtn.classList.add('hidden');
-  searchExpanded = false;
-
-  document.querySelectorAll('[data-category]').forEach(card => {
-    card.style.display = 'block';
-    card.classList.remove('opacity-30');
-    const title = card.querySelector('h3');
-    if (title) title.innerHTML = title.textContent;
-  });
-
-  const noResults = document.getElementById('noSearchResults');
-  if (noResults) noResults.remove();
-}
-
-function searchRewards(query) {
-  const cards = document.querySelectorAll('[data-category]');
-  const clearBtn = document.getElementById('searchClearBtn');
-
-  if (query.length === 0) {
-    clearSearch();
-    return;
-  }
-
-  clearBtn.classList.remove('hidden');
-
-  const noResults = document.getElementById('noSearchResults');
-  if (noResults) noResults.remove();
-
-  let matchCount = 0;
-  const lowerQuery = query.toLowerCase();
-
-  cards.forEach(card => {
-    const title = card.querySelector('h3');
-    const desc = card.querySelector('.text-white\\/60');
-    const category = card.dataset.category;
-    const gemsText = card.querySelector('.text-5xl')?.textContent || '';
-
-    const searchableText = (
-      (title ? title.textContent : '') + ' ' +
-      (desc ? desc.textContent : '') + ' ' +
-      category + ' ' +
-      gemsText
-    ).toLowerCase();
-
-    if (searchableText.includes(lowerQuery)) {
-      card.style.display = 'block';
-      card.classList.remove('opacity-30');
-      matchCount++;
-
-      if (title) {
-        const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
-        title.innerHTML = title.textContent.replace(regex, '<span class="gem-search__highlight">$1</span>');
-      }
-    } else {
-      card.style.display = 'none';
-    }
-  });
-
-  if (matchCount === 0) {
-    const grid = document.querySelector('.gem-grid--cards');
-    if (grid) {
-      const msg = document.createElement('div');
-      msg.id = 'noSearchResults';
-      msg.className = 'gem-search--empty col-span-full';
-      msg.innerHTML = `<i class="fas fa-search text-white/30 mb-2"></i>No rewards found for "${query}"<p class="text-xs text-white/40 mt-2">Try: login, pvp, event, code</p>`;
-      grid.appendChild(msg);
-    }
-  }
-}
-
-function handleSearchKeydown(e) {
-  if (e.key === 'Escape') {
-    clearSearch();
   }
 }
 
@@ -1337,7 +1226,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  setInterval(updateCountdowns, 1000);
+  setInterval(updateCountdowns, 5000);
   updateCountdowns();
 
   const urlParams = new URLSearchParams(window.location.search);

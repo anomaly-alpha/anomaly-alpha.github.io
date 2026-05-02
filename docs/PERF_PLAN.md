@@ -131,3 +131,153 @@ document.addEventListener('visibilitychange', function() {
 | Total `@keyframes` modified | 1 | `gem-countdown-pulse` (add `infinite`) |
 | Continuous animations before | 37 | |
 | Continuous animations after | 10 | (9 particles + 1 scanline) |
+
+---
+
+# Round 2 — Further Performance Optimization
+
+## Problem
+Search function runs DOM queries on every keystroke. Chart.js redraws animate unnecessarily. Particles trigger layout per frame. Header icon pulse depends on Tailwind CDN. Countdown updates DOM every second.
+
+## Decisions
+
+| Change | Action |
+|--------|--------|
+| Search | Remove entirely (HTML + CSS + JS) |
+| `chart.update('active')` | Change to `'none'` (9 locations) |
+| Particles | Add `will-change: transform`, use `translate3d` |
+| Header icon pulse | Inline `@keyframes pulse` (remove Tailwind dependency) |
+| Countdown interval | 1000ms → 5000ms |
+
+---
+
+## Change 1 — Remove Search Entirely
+
+### HTML (`index.html`)
+Delete the search div block (lines 367-375):
+```html
+<div class="gem-search fixed top-4 right-28 z-50">
+    <button onclick="toggleSearch()" id="searchToggleBtn" class="gem-btn--icon" title="Search rewards">
+        <i class="fas fa-search gem-btn__icon gem-btn--icon-glow"></i>
+    </button>
+    <input type="text" id="searchInput" placeholder="Search..." class="gem-search__input gem-search__input--hidden" oninput="searchRewards(this.value)" onkeydown="handleSearchKeydown(event)">
+    <button onclick="clearSearch()" id="searchClearBtn" class="gem-btn--icon hidden" title="Clear search">
+        <i class="fas fa-times gem-btn__icon gem-btn--icon-glow text-xs"></i>
+    </button>
+</div>
+```
+Also change save menu right positioning: `right-40` → `right-28` (closes gap left by search).
+
+### CSS (`styles.css`)
+Delete the entire Search component block (lines 773-815):
+- `.gem-search { ... }`
+- `.gem-search__input { ... }`
+- `.gem-search__input::placeholder { ... }`
+- `.gem-search__input--hidden { ... }`
+- `.gem-search__input--visible { ... }`
+- `.gem-search--empty { ... }`
+- `.gem-search__highlight { ... }`
+
+### JS (`script.js`)
+Delete these variables and functions:
+- `let searchExpanded = false;` (line 705)
+- `toggleSearch()` (lines 707-721)
+- `clearSearch()` (lines 723-747)
+- `searchRewards(query)` (lines 749-803)
+- `handleSearchKeydown(e)` (lines 805-809)
+- `escapeRegex(string)` (lines 418-420) — only used by `searchRewards`
+
+---
+
+## Change 2 — `chart.update('active')` → `'none'` (9 locations)
+
+| File | Line | Function | Chart |
+|------|------|----------|-------|
+| `script.js` | 533 | `updateChartsByCategory` | `categoryChart` |
+| `script.js` | 544 | `updateChartsByCategory` | `rewardsChart` |
+| `script.js` | 548 | `updateChartsByCategory` | `spiderChart` |
+| `script.js` | 584 | `updateChartsByModes` | `categoryChart` |
+| `script.js` | 593 | `updateChartsByModes` | `rewardsChart` |
+| `script.js` | 609 | `updateChartsByModes` | `spiderChart` |
+| `script.js` | 650 | `filterChart` | `categoryChart` |
+| `script.js` | 661 | `filterChart` | `rewardsChart` |
+| `script.js` | 665 | `filterChart` | `spiderChart` |
+
+All 9: replace `update('active')` → `update('none')`.
+
+---
+
+## Change 3 — GPU-optimize Particles
+
+### CSS (`styles.css`)
+Add `will-change: transform` to `.gem-particle` rule:
+```css
+.gem-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  animation: gem-float-particle 15s infinite linear;
+  pointer-events: none;
+  will-change: transform;
+}
+```
+
+Change `@keyframes gem-float-particle` from `translateY` to `translate3d`:
+```css
+@keyframes gem-float-particle {
+  0% {
+    transform: translate3d(0, 100vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, -100vh, 0) rotate(720deg);
+    opacity: 0;
+  }
+}
+```
+
+---
+
+## Change 4 — Fix Header Icon Pulse (remove Tailwind dependency)
+
+### CSS (`styles.css`)
+Add Tailwind's standard `pulse` keyframe to the animations section:
+```css
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+```
+The `.gem-header-icon` rule already references `animation: pulse 3s ...` — no change needed there.
+
+---
+
+## Change 5 — Reduce Countdown Interval
+
+### JS (`script.js`)
+Line 1340: change `setInterval(updateCountdowns, 1000)` → `setInterval(updateCountdowns, 5000)`.
+
+Cuts DOM updates from every second to every 5 seconds (fine since seconds aren't displayed).
+
+---
+
+## Summary
+
+| Change | Files | Est. Lines |
+|--------|-------|-----------|
+| Remove search (HTML) | `index.html` | -9 |
+| Remove search (CSS) | `styles.css` | -43 |
+| Remove search (JS) | `script.js` | -90 |
+| Shift save menu | `index.html` | 1 edit |
+| chart.update 'active' → 'none' | `script.js` | 9 edits |
+| GPU particles | `styles.css` | ~15 edits |
+| Inline pulse keyframe | `styles.css` | +5 |
+| 5000ms interval | `script.js` | 1 edit |
+| Update docs | `README.md`, `DESIGN_SYSTEM.md` | ~15 edits |
