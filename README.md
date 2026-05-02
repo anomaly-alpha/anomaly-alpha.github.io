@@ -94,9 +94,12 @@ Open `gem_infographic.html` in a browser to view the infographic.
 - ✅ Multi-select mode filtering - toggle Event, PvP, Daily, Code independently
 - ✅ Main total updates based on selected modes (PvP uses dynamic value)
 - ✅ Mode button totals update when PvP cards change
-- ✅ Added countdown timers to each mode selector with seconds display
+- ✅ Added countdown timers with seconds to each mode selector
 - ✅ Added subtle pulse animation on countdown second changes
 - ✅ Standardized PvP card colors to pink-glow to match PvP selector
+- ✅ Fixed mode button active class toggle functionality
+- ✅ Updated daily login from 100 to 30 gems per day (610 weekly total)
+- ✅ Updated chart colors to match mode colors
 
 ## Contributors
 

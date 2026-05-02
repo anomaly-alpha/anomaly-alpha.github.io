@@ -98,6 +98,9 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - ✅ Added countdown timers with seconds to each mode selector
 - ✅ Added subtle pulse animation on countdown second changes
 - ✅ Standardized PvP card colors to pink-glow to match PvP selector
+- ✅ Fixed mode button active class toggle functionality
+- ✅ Updated daily login from 100 to 30 gems per day (610 weekly total)
+- ✅ Updated chart colors to match mode colors
 
 ## Contributors
 
