@@ -1754,7 +1754,11 @@
                 const btn = document.querySelector(`.filter-${mode}`);
                 if (btn) {
                     const totalEl = btn.querySelector('p.text-3xl.font-bold');
-                    if (totalEl) animateValue(totalEl, getModeTotal(mode), 400);
+                    if (totalEl) {
+                        const total = Math.round(getModeTotal(mode));
+                        totalEl.textContent = total;
+                        animateValue(totalEl, total, 400);
+                    }
                 }
             });
 
@@ -1795,7 +1799,12 @@
         }
 
         function animateValue(elementId, newValue, duration = 400) {
-            const el = document.getElementById(elementId);
+            let el;
+            if (typeof elementId === 'string') {
+                el = document.getElementById(elementId);
+            } else if (elementId instanceof Element) {
+                el = elementId;
+            }
             if (!el) return;
             const current = parseInt(el.textContent.replace(/,/g, '')) || 0;
             const diff = newValue - current;
