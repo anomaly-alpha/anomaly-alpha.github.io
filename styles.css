@@ -161,6 +161,10 @@ body {
   min-height: 200px;
 }
 
+.gem-card__body {
+  min-height: 140px;
+}
+
 .gem-card--event {
   background-color: var(--gem-card-bg--event);
   border-color: var(--gem-card-border--event);
