@@ -185,16 +185,16 @@ function buildModeData(mode, totals) {
 
   if (mode === 'all') {
     d[1] = REWARDS.categories.event.total;
-    d[2] = totals.pvp;
+    d[2] = getModeTotal('pvp');
     d[3] = REWARDS.categories.login.total;
     d[4] = REWARDS.categories.code.total;
-    r[3] = d[1]; r[4] = REWARDS.cards[2].gems; r[5] = totals.pvp; r[6] = d[3];
-    sp[0] = d.slice(1); sp[1] = [spiderTargets.events, spiderTargets.pvp, spiderTargets.login, spiderTargets.code];
+    r[3] = d[1]; r[4] = REWARDS.cards[2].gems; r[5] = d[2]; r[6] = d[3];
+    sp[0] = [d[1], d[2], d[3], d[4]]; sp[1] = [spiderTargets.events, spiderTargets.pvp, spiderTargets.login, spiderTargets.code];
   } else if (mode === 'event') {
     d[1] = REWARDS.categories.event.total; r[3] = REWARDS.cards[1].gems; r[4] = REWARDS.cards[2].gems;
     sp[0] = [d[1], 0, 0, 0]; sp[1] = [spiderTargets.events, 0, 0, 0];
   } else if (mode === 'pvp') {
-    d[2] = totals.pvp; r[5] = totals.pvp;
+    d[2] = getModeTotal('pvp'); r[5] = d[2];
     sp[0] = [0, d[2], 0, 0]; sp[1] = [0, spiderTargets.pvp, 0, 0];
   } else if (mode === 'login') {
     d[3] = REWARDS.categories.login.total; r[6] = d[3];
@@ -578,9 +578,21 @@ function updateChartsByModes(modes) {
   }
   rewardsChart.update('active');
 
-  const spiderData = [combinedData.distribution.slice(1), [550, 1500, 360, 330]];
-  spiderChart.data.datasets[0].data = spiderData[0];
-  spiderChart.data.datasets[1].data = spiderData[1];
+  const spiderActual = [0, 0, 0, 0];
+  const spiderTarget = spiderChart.data.datasets[1].data;
+
+  modes.forEach(mode => {
+    const data = chartFilterData[mode];
+    if (data) {
+      spiderActual[0] += data.spider[0][0];
+      spiderActual[1] += data.spider[0][1];
+      spiderActual[2] += data.spider[0][2];
+      spiderActual[3] += data.spider[0][3];
+    }
+  });
+
+  spiderChart.data.datasets[0].data = spiderActual;
+  spiderChart.data.datasets[1].data = spiderTarget;
   spiderChart.update('active');
 }
 
@@ -1115,6 +1127,7 @@ function updatePvpCard(cardId) {
   }
   savePvpSelection(cardId);
   updateAllPageTotals();
+  updateChartsByModes(selectedModes);
 }
 
 function savePvpSelection(cardId) {

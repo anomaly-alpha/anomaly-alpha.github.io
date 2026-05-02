@@ -125,6 +125,7 @@ CSS custom property design tokens with BEM naming:
 - ✅ **Charts toggle** — Show/hide charts section with animated chevron
 - ✅ **Card modals (9 cards)** — All cards trigger modal via info icon (`.gem-card__info-btn`); modal has hero tagline, description, tips, live PvP data, demotion warning; star badge in header; entry animation (pop-in)
 - ✅ **Toned active mode buttons** — Active mode selector uses more transparent colors (30% bg, 65% border, subtle glow)
+- ✅ **Sparkle clusters around info button** — All 9 cards have 3-sparkle clusters around the info icon (top-right corner area) with staggered animation delays
 
 ### Data & Calculations
 - ✅ **PvP defaults** — Elite II, rank 13 (user's actual settings)
@@ -132,12 +133,14 @@ CSS custom property design tokens with BEM naming:
 - ✅ **Spider chart targets** — (550, 1500, 360, 330)
 - ✅ **GAME.pvp structure** — 14 leagues with `rankStart`/`rankEnd` fields
 - ✅ **getPvpPayout** — Uses league multiplier + tier gems/cards/chips
+- ✅ **Spider chart live updates** — Spider actuals recompute from live PvP form values via `getModeTotal('pvp')`; `updatePvPCard` calls `updateChartsByModes(selectedModes)` so all 3 charts update on every PvP selector change
 
 ### Bug Fixes
 - ✅ **Card hover shadow** — Hardcoded values replacing undefined `var(--gem-shadow--card)`
 - ✅ **Mode-highlight specificity** — `body ` prefix + `!important` to override `.gem-card--hover:hover`
 - ✅ **modeTotals reassignment** — `Object.assign()` instead of `const` reassignment
 - ✅ **getRewardsChartData GAME.ev** — Replaced with `REWARDS.categories.event.total`
+- ✅ **Spider chart frozen actuals** — `buildModeData` now uses `getModeTotal('pvp')` live instead of `totals.pvp` snapshot; `updatePvPCard` triggers chart update so spider reflects current PvP selections immediately
 
 ## Contributors
 

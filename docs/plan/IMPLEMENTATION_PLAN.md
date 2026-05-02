@@ -135,9 +135,11 @@ All 9 cards have an info icon button (`.gem-card__info-btn`) in the top-right co
 | Axis | Actual | Target |
 |------|--------|--------|
 | Events | 500 | 550 |
-| PvP | ~750 | 1500 |
+| PvP | ~750 (live) | 1500 |
 | Login | 293 | 360 |
 | Code | 300 | 330 |
+
+**Live updates:** Spider actual values recompute from live PvP form selectors via `getModeTotal('pvp')` in `buildModeData`. `updatePvPCard` calls `updateChartsByModes(selectedModes)` so spider (and all 3 charts) update immediately on any PvP selector change. Target dataset always shows all 4 targets as reference lines regardless of mode filter state.
 
 ---
 
@@ -368,6 +370,10 @@ Key tokens:
 - **Distribution (doughnut):** 4 segments (Events, PvP, Login, Code) with mode colors
 - **Rewards (bar):** 1-4 bars based on selected modes, mode colors, dynamic y.max
 - **Performance (radar):** Actual vs Target spider chart with cyan/pink colors
+  - Actual values recompute live from `getModeTotal('pvp')` (not cached snapshots)
+  - Updates immediately on PvP selector change (via `updatePvPCard` → `updateChartsByModes`)
+  - Targets always show all 4 reference lines regardless of mode filter
+  - Combined actuals from `chartFilterData[mode].spider[0]` per active mode when toggling modes
 - Toggle show/hide via button
 
 ### 6.6 Promo Code Reveal
