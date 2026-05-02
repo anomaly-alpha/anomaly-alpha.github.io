@@ -435,7 +435,7 @@ function updateAllPageTotals() {
 
 // ===== CHART FUNCTIONS =====
 
-let categoryChart, rewardsChart, spiderChart, lineChart;
+let categoryChart, rewardsChart, spiderChart;
 let currentChartFilter = 'all';
 
 function updateChartsByCategory(category) {
@@ -1080,49 +1080,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  new Chart(document.getElementById('lineChart'), {
-    type: 'line',
-    data: {
-      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'],
-      datasets: [{
-        label: 'Cumulative Gems',
-        data: [450, 950, 1450, 1950, 2450, 2950, 3450, 4470],
-        borderColor: '#00e5ff',
-        backgroundColor: 'rgba(0, 229, 255, 0.1)',
-        fill: true,
-        tension: 0.4,
-        pointRadius: 4,
-        pointBackgroundColor: '#00e5ff'
-      }, {
-        label: 'Daily Average',
-        data: [450, 475, 483, 488, 490, 492, 493, 559],
-        borderColor: '#f39c12',
-        backgroundColor: 'transparent',
-        borderDash: [5, 5],
-        tension: 0.4,
-        pointRadius: 3,
-        pointBackgroundColor: '#f39c12'
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      animation: { ...chartAnimationConfig, delay: 300 },
-      scales: {
-        y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false } },
-        x: { grid: { display: false }, ticks: { display: false } }
-      },
-      plugins: {
-        legend: { display: false },
-        tooltip: chartTooltipConfig
-      }
-    }
-  });
-
   categoryChart = Chart.getChart('categoryChart');
   rewardsChart = Chart.getChart('rewardsChart');
   spiderChart = Chart.getChart('spiderChart');
-  lineChart = Chart.getChart('lineChart');
 
   initializePvPCards();
 

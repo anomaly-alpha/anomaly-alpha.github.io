@@ -56,18 +56,17 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Grid background overlay
 - Card fade-in animations (staggered)
 
-### Charts (4 in single row)
-- **Distribution** - Doughnut chart for gem distribution by category
+### Charts (3 in single row)
+- **Distribution** - Doughnut chart by category
 - **Rewards** - Bar chart for individual rewards
-- **Performance** - Spider/Radar chart comparing actual vs target across categories
-- **Progress** - Line chart showing cumulative gems over 8 weeks + daily average
+- **Performance** - Spider/Radar chart (actual vs target)
 - Animated tooltips on cards
 
 ## Tech Stack
 
 - **Structure**: `index.html` (clean HTML), `styles.css` (design tokens + BEM), `script.js` (all JS)
 - **Styling**: Tailwind CSS (via CDN) + custom CSS design token system
-- **Charts**: Chart.js (doughnut, bar, radar, line)
+- **Charts**: Chart.js (doughnut, bar, radar)
 - **Export**: html2canvas for PNG export
 - **Icons**: Font Awesome
 - **Typography**: Rajdhani font (Google Fonts)
@@ -92,6 +91,10 @@ CSS custom property design tokens with BEM naming:
 - ✅ **Extracted to separate files** - `index.html`, `styles.css`, `script.js` from `gem_infographic.html`
 - ✅ **Design token system** - CSS custom properties for all colors, shadows, and design values
 - ✅ **BEM naming** - Semantic component classes (`.gem-card--event`, `.gem-label--pvp`, etc.)
+- ✅ **gem_infographic.html** - Now redirects to index.html
+- ✅ **Added gem icons** - Pink diamond icons beside mode selector totals
+- ✅ **Consistent pink styling** - All gem icons use same gradient and glow
+- ✅ **Removed 4th chart** - Now 3 charts (Distribution, Rewards, Performance) in full-width layout
 - ✅ Removed Season category entirely (replaced with PvP)
 - ✅ Merged Warfare into PvP (Multiverse Alliance War is now part of PvP cards)
 - ✅ Created unified mode cards at top with totals + timers

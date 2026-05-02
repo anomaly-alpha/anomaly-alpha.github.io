@@ -38,11 +38,10 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - Grid background overlay
 - Card fade-in animations
 
-### Charts (4 in single row)
+### Charts (3 in single row)
 - **Distribution** - Doughnut chart by category
 - **Rewards** - Bar chart for individual rewards
 - **Performance** - Spider/Radar chart (actual vs target)
-- **Progress** - Line chart (cumulative gems over 8 weeks)
 - Rich hover tooltips with gems, %, vs average
 - Smooth animated transitions on filter changes
 
@@ -66,11 +65,13 @@ Each card has:
 - `index.html` - Main HTML structure (clean, no inline styles/scripts)
 - `styles.css` - Design system: CSS custom properties + BEM component classes
 - `script.js` - All interactive functionality: charts, filters, PvP, countdown timers
-- `gem_infographic.html` - Original monolithic file (archived)
+- `gem_infographic.html` - Redirects to index.html (archived)
+- `gem_infographic.png` - Static infographic image
+- `EXTRACTION_PLAN.md` - Design decision documentation
 
 ## Usage
 
-Open `index.html` in a browser to view the infographic.
+Open `index.html` in a browser to view the infographic. The old `gem_infographic.html` redirects automatically.
 
 ## Design System
 
@@ -93,6 +94,10 @@ CSS custom property design tokens with BEM naming convention:
 - ✅ **Extracted to separate files** - `index.html`, `styles.css`, `script.js` from `gem_infographic.html`
 - ✅ **Design token system** - CSS custom properties for all colors, shadows, and design values
 - ✅ **BEM naming** - Semantic component classes (`.gem-card--event`, `.gem-label--pvp`, etc.)
+- ✅ **gem_infographic.html** - Now redirects to index.html
+- ✅ **Added gem icons** - Pink diamond icons beside mode selector totals
+- ✅ **Consistent pink styling** - All gem icons use same gradient and glow
+- ✅ **Removed 4th chart** - Now 3 charts (Distribution, Rewards, Performance) in full-width layout
 - ✅ Removed Season category and cards (replaced with PvP)
 - ✅ Merged Warfare into PvP (Multiverse Alliance War)
 - ✅ Created unified mode cards at top with totals and timers

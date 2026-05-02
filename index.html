@@ -75,7 +75,7 @@
 
         <div class="text-center mb-10 relative">
             <div class="gem-header-icon">
-                <div class="gem-header-icon__inner gem-icon--gem"></div>
+                <div class="gem-header-icon__inner"></div>
             </div>
             <h1 class="gem-title--hero">
                 GEM REWARDS
@@ -97,30 +97,30 @@
         <nav class="gem-grid--modes my-4">
             <button onclick="filterCards('all', event)" class="gem-mode-btn gem-mode-btn--all active">
                 <i class="fas fa-th-large gem-mode-btn__icon gem-text--cyan"></i>
-                <p class="gem-mode-btn__count text-cyan-glow">1843</p>
+                <p class="gem-mode-btn__count text-cyan-glow"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>1843</p>
                 <p class="gem-mode-btn__label text-cyan-glow">All Modes</p>
             </button>
             <button onclick="filterCards('event', event)" class="gem-mode-btn gem-mode-btn--event active">
                 <i class="fas fa-dragon gem-mode-btn__icon gem-text--event"></i>
-                <p class="gem-mode-btn__count">500</p>
+                <p class="gem-mode-btn__count"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>500</p>
                 <p class="gem-mode-btn__label gem-text--event">Event</p>
                 <span id="countdown-event" class="gem-mode-btn__countdown gem-text--event gem-countdown">--:--:--</span>
             </button>
             <button onclick="filterCards('pvp', event)" class="gem-mode-btn gem-mode-btn--pvp active">
                 <i class="fas fa-fist-raised gem-mode-btn__icon gem-text--pvp"></i>
-                <p class="gem-mode-btn__count">750</p>
+                <p class="gem-mode-btn__count"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>750</p>
                 <p class="gem-mode-btn__label gem-text--pvp">PvP</p>
                 <span id="countdown-pvp" class="gem-mode-btn__countdown gem-text--pvp gem-countdown">--:--:--</span>
             </button>
             <button onclick="filterCards('login', event)" class="gem-mode-btn gem-mode-btn--login active">
                 <i class="fas fa-sign-in-alt gem-mode-btn__icon gem-text--login"></i>
-                <p class="gem-mode-btn__count">293</p>
+                <p class="gem-mode-btn__count"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>293</p>
                 <p class="gem-mode-btn__label gem-text--login">Login</p>
                 <span id="countdown-login" class="gem-mode-btn__countdown gem-text--login gem-countdown">--:--:--</span>
             </button>
             <button onclick="filterCards('code', event)" class="gem-mode-btn gem-mode-btn--code active">
                 <i class="fas fa-gift gem-mode-btn__icon gem-text--code"></i>
-                <p class="gem-mode-btn__count">300</p>
+                <p class="gem-mode-btn__count"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>300</p>
                 <p class="gem-mode-btn__label gem-text--code">Code</p>
                 <span id="countdown-code" class="gem-mode-btn__countdown gem-text--code gem-countdown">--:--:--</span>
             </button>
@@ -390,10 +390,6 @@
                 <div class="gem-chart">
                     <h4 class="gem-chart__title">Performance</h4>
                     <canvas id="spiderChart"></canvas>
-                </div>
-                <div class="gem-chart">
-                    <h4 class="gem-chart__title">Progress</h4>
-                    <canvas id="lineChart"></canvas>
                 </div>
             </div>
         </section>
