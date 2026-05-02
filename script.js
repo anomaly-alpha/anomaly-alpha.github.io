@@ -1063,7 +1063,7 @@ function generateRankOptions(selectId) {
   }
 }
 
-function updatePvpCard(cardId) {
+function updatePvpCard(cardId, skipTotals) {
   const league = document.getElementById(`pvp${cardId}-league`).value;
   const rank = parseInt(document.getElementById(`pvp${cardId}-rank`).value);
   const payout = getPvpPayout(league, rank);
@@ -1079,8 +1079,10 @@ function updatePvpCard(cardId) {
     }
   }
   savePvpSelection(cardId);
-  updateAllPageTotals();
-  updateChartsByModes(selectedModes);
+  if (!skipTotals) {
+  updateAllPageTotals(true);
+    updateChartsByModes(selectedModes);
+  }
 }
 
 function savePvpSelection(cardId) {
@@ -1094,7 +1096,7 @@ function loadPvpSelection(cardId) {
   const defaults = pvpDefaults[cardId];
   document.getElementById(`pvp${cardId}-league`).value = localStorage.getItem(`pvp${cardId}_league`) || defaults.league;
   document.getElementById(`pvp${cardId}-rank`).value = localStorage.getItem(`pvp${cardId}_rank`) || defaults.rank;
-  updatePvpCard(cardId);
+  updatePvpCard(cardId, true);
 }
 
 function clearPvpSelection(cardId) {
