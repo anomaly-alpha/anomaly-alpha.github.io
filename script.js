@@ -1099,6 +1099,13 @@ document.addEventListener('DOMContentLoaded', function() {
   updateModeButtonStates();
   updateAllPageTotals();
 
+  const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71', cyan: '#00e5ff', purple: '#9b59b6' };
+  document.querySelectorAll('.gem-card').forEach(card => {
+    const cat = card.dataset.category;
+    const color = colorMap[cat] || colorMap.cyan;
+    card.style.setProperty('--card-color', color);
+  });
+
   ['all', 'code', 'event', 'pvp', 'login'].forEach(mode => {
     const btn = document.querySelector(`.gem-mode-btn--${mode}`);
     if (!btn) return;
