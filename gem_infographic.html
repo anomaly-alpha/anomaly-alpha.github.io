@@ -1690,9 +1690,9 @@
         };
 
         const pvpDefaults = {
-            1: { league: 'eliteI', rank: 50 },
-            2: { league: 'eliteIII', rank: 50 },
-            3: { league: 'eliteII', rank: 50 }
+            1: { league: 'eliteII', rank: 13 },
+            2: { league: 'eliteII', rank: 13 },
+            3: { league: 'eliteII', rank: 13 }
         };
 
         const eventsByMode = {
@@ -1903,14 +1903,7 @@
         // Initialize multi-select mode state
         selectedModes = ['event', 'pvp', 'login', 'code'];
         updateModeButtonStates();
-
-        if (document.readyState === 'complete') {
-            updateAllPageTotals();
-        } else {
-            window.addEventListener('load', function() {
-                updateAllPageTotals();
-            });
-        }
+        updateAllPageTotals();
     </script>
     </div>
 </body>

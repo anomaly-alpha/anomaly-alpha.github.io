@@ -4,9 +4,9 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 
 ## Gem Summary
 
-- **Total Gems**: 1,843 (one-time + recurring, varies with PvP selections)
+- **Total Gems**: ~2,521 (one-time + recurring, varies with PvP selections)
 - **By Category**:
-  - **PvP**: 750 gems (varies with rank/league selections - Restricted Arena, Open Arena, Multiverse Alliance War)
+  - **PvP**: ~1,428 gems (varies with rank/league selections - Restricted Arena, Open Arena, Multiverse Alliance War)
   - **Daily/Weekly**: 293 gems (daily: 30×7=210 + weekly: 60 + monthly÷4=23)
   - **Event**: 500 gems (The Long Haul, Earth's Defenders)
   - **Promo Codes**: 300 gems (code: 30KGTG)
