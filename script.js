@@ -415,8 +415,8 @@ let currentChartFilter = 'all';
 
 function updateChartsByCategory(category) {
   const data = chartFilterData[category] || chartFilterData['all'];
-  categoryChart.data.datasets[0].data = data.distribution;
-  categoryChart.data.datasets[0].backgroundColor = data.colors;
+  categoryChart.data.datasets[0].data = data.distribution.slice(1);
+  categoryChart.data.datasets[0].backgroundColor = data.colors.slice(1);
   categoryChart.update('active');
 
   const catRewardsData = category === 'all'
@@ -461,8 +461,8 @@ function updateChartsByModes(modes) {
     combinedData.rewardColors[i] = v > 0 ? '#00e5ff' : '#333333';
   });
 
-  categoryChart.data.datasets[0].data = combinedData.distribution;
-  categoryChart.data.datasets[0].backgroundColor = combinedData.colors;
+  categoryChart.data.datasets[0].data = combinedData.distribution.slice(1);
+  categoryChart.data.datasets[0].backgroundColor = combinedData.colors.slice(1);
   categoryChart.update('active');
 
   const rewardsData = getRewardsChartData(modes);
@@ -523,8 +523,8 @@ function filterChart(filter) {
     }
   });
 
-  categoryChart.data.datasets[0].data = data.distribution;
-  categoryChart.data.datasets[0].backgroundColor = data.colors;
+  categoryChart.data.datasets[0].data = data.distribution.slice(1);
+  categoryChart.data.datasets[0].backgroundColor = data.colors.slice(1);
   categoryChart.update('active');
 
   const filterRewardsData = filter === 'all'
@@ -987,10 +987,10 @@ document.addEventListener('DOMContentLoaded', function() {
   new Chart(document.getElementById('categoryChart'), {
     type: 'doughnut',
     data: {
-      labels: ['Season', 'Events', 'PvP', 'Login', 'Code'],
+      labels: ['Events', 'PvP', 'Login', 'Code'],
       datasets: [{
-        data: [0, 500, 750, 610, 300],
-        backgroundColor: ['#333333', '#ff6b35', '#e91e8a', '#f39c12', '#2ecc71'],
+        data: [500, 750, 293, 300],
+        backgroundColor: ['#ff6b35', '#e91e8a', '#f39c12', '#2ecc71'],
         borderWidth: 0,
         hoverOffset: 8
       }]
