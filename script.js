@@ -444,8 +444,15 @@ function updateChartsByCategory(category) {
   categoryChart.data.datasets[0].backgroundColor = data.colors;
   categoryChart.update('active');
 
-  rewardsChart.data.datasets[0].data = data.rewards;
-  rewardsChart.data.datasets[0].backgroundColor = data.rewardColors;
+  const catRewardsData = category === 'all'
+    ? getRewardsChartData(selectedModes)
+    : getRewardsChartData([category]);
+  rewardsChart.data.labels = catRewardsData.labels;
+  rewardsChart.data.datasets[0].data = catRewardsData.data;
+  rewardsChart.data.datasets[0].backgroundColor = catRewardsData.colors;
+  if (catRewardsData.data.length > 0) {
+    rewardsChart.options.scales.y.max = Math.max(...catRewardsData.data);
+  }
   rewardsChart.update('active');
 
   spiderChart.data.datasets[0].data = data.spider[0];
@@ -483,8 +490,13 @@ function updateChartsByModes(modes) {
   categoryChart.data.datasets[0].backgroundColor = combinedData.colors;
   categoryChart.update('active');
 
-  rewardsChart.data.datasets[0].data = combinedData.rewards;
-  rewardsChart.data.datasets[0].backgroundColor = combinedData.rewardColors;
+  const rewardsData = getRewardsChartData(modes);
+  rewardsChart.data.labels = rewardsData.labels;
+  rewardsChart.data.datasets[0].data = rewardsData.data;
+  rewardsChart.data.datasets[0].backgroundColor = rewardsData.colors;
+  if (rewardsData.data.length > 0) {
+    rewardsChart.options.scales.y.max = Math.max(...rewardsData.data);
+  }
   rewardsChart.update('active');
 
   const spiderData = [combinedData.distribution.slice(1), [550, 1500, 360, 330]];
@@ -540,8 +552,15 @@ function filterChart(filter) {
   categoryChart.data.datasets[0].backgroundColor = data.colors;
   categoryChart.update('active');
 
-  rewardsChart.data.datasets[0].data = data.rewards;
-  rewardsChart.data.datasets[0].backgroundColor = data.rewardColors;
+  const filterRewardsData = filter === 'all'
+    ? getRewardsChartData(selectedModes)
+    : getRewardsChartData([filter]);
+  rewardsChart.data.labels = filterRewardsData.labels;
+  rewardsChart.data.datasets[0].data = filterRewardsData.data;
+  rewardsChart.data.datasets[0].backgroundColor = filterRewardsData.colors;
+  if (filterRewardsData.data.length > 0) {
+    rewardsChart.options.scales.y.max = Math.max(...filterRewardsData.data);
+  }
   rewardsChart.update('active');
 
   spiderChart.data.datasets[0].data = data.spider[0];
@@ -990,6 +1009,24 @@ document.addEventListener('DOMContentLoaded', function() {
   Chart.defaults.color = '#ffffff';
   Chart.defaults.borderColor = 'rgba(0, 229, 255, 0.2)';
 
+  function getRewardsChartData(modes) {
+    if (!modes || modes.length === 0) return { labels: [], data: [], colors: [] };
+    const order = ['event', 'pvp', 'login', 'code'];
+    const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
+    const valueMap = {
+      event: GAME.ev.event[0][1] + GAME.ev.event[1][1],
+      pvp: getModeTotal('pvp'),
+      login: getModeTotal('login'),
+      code: GAME.ev.code[0][1]
+    };
+    const filtered = modes.filter(m => order.includes(m));
+    return {
+      labels: filtered.map(m => m.charAt(0).toUpperCase() + m.slice(1)),
+      data: filtered.map(m => valueMap[m] || 0),
+      colors: filtered.map(m => colorMap[m] || '#333333')
+    };
+  }
+
   new Chart(document.getElementById('categoryChart'), {
     type: 'doughnut',
     data: {
@@ -1014,14 +1051,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+  const rewardsInitData = getRewardsChartData(['event', 'pvp', 'login', 'code']);
   new Chart(document.getElementById('rewardsChart'), {
     type: 'bar',
     data: {
-      labels: ['Elite I', 'Invincible', 'Elite II', 'PvP', 'Long Haul', 'Defenders', 'Login'],
+      labels: rewardsInitData.labels,
       datasets: [{
         label: 'Gems',
-        data: [810, 560, 450, 750, 300, 200, 180],
-        backgroundColor: ['#333333', '#333333', '#333333', '#e91e8a', '#ff6b35', '#ff6b35', '#f39c12'],
+        data: rewardsInitData.data,
+        backgroundColor: rewardsInitData.colors,
         borderRadius: 4,
         borderSkipped: false
       }]
@@ -1031,7 +1069,7 @@ document.addEventListener('DOMContentLoaded', function() {
       maintainAspectRatio: true,
       animation: { ...chartAnimationConfig, delay: 100 },
       scales: {
-        y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false } },
+        y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false }, max: Math.max(...rewardsInitData.data) || 100 },
         x: { grid: { display: false }, ticks: { display: false } }
       },
       plugins: {
