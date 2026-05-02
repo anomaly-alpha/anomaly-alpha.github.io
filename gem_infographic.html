@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
     <title>Invincible - Gem Rewards Infographic</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -58,7 +59,7 @@
         }
         
         /* Countdown Animation */
-        #countdown-event, #countdown-pvp, #countdown-daily, #countdown-code {
+        #countdown-event, #countdown-pvp, #countdown-login, #countdown-code {
             transition: text-shadow 0.3s ease;
         }
         .countdown-pulse {
@@ -353,7 +354,7 @@
                 GEM REWARDS
             </h1>
             <p class="text-orange-accent text-xl tracking-[0.5em] uppercase font-semibold drop-shadow-[0_0_10px_rgba(255,107,53,0.5)]">
-                INVINCIBLE MOBILE GAME
+                INVINCIBLE GUARDING THE GLOBE
             </p>
         </div>
 
@@ -373,9 +374,7 @@
 <nav class="mode-selector grid grid-cols-2 md:grid-cols-5 gap-4 my-8">
             <button onclick="filterCards('all', event)" class="filter-btn filter-all active relative bg-gradient-to-br from-cyan-glow/20 to-cyan-glow/5 border-2 border-cyan-glow/40 rounded-xl p-4 text-center hover:scale-105 transition-all shadow-[0_0_20px_rgba(0,229,255,0.2)]">
                 <i class="fas fa-th-large text-3xl text-cyan-glow mb-2"></i>
-                <p class="text-3xl font-bold text-white">2,550</p>
                 <p class="text-xs text-cyan-glow uppercase tracking-wider mt-1">All Modes</p>
-                
             </button>
             <button onclick="filterCards('event', event)" class="filter-btn filter-event active relative bg-orange-accent/30 border border-orange-accent/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
                 <i class="fas fa-dragon text-3xl text-orange-accent mb-2"></i>
@@ -389,11 +388,11 @@
                 <p class="text-xs text-pink-glow uppercase tracking-wider mt-1">PvP</p>
                 <span id="countdown-pvp" class="text-pink-glow text-xs font-bold mt-1 block">--:--:--</span>
             </button>
-            <button onclick="filterCards('daily', event)" class="filter-btn filter-daily active relative bg-yellow-accent/30 border border-yellow-accent/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
-                <i class="fas fa-calendar-day text-3xl text-yellow-accent mb-2"></i>
-                <p class="text-3xl font-bold text-white">610</p>
-                <p class="text-xs text-yellow-accent uppercase tracking-wider mt-1">Daily</p>
-                <span id="countdown-daily" class="text-yellow-accent text-xs font-bold mt-1 block">--:--:--</span>
+            <button onclick="filterCards('login', event)" class="filter-btn filter-login active relative bg-yellow-accent/30 border border-yellow-accent/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
+                <i class="fas fa-sign-in-alt text-3xl text-yellow-accent mb-2"></i>
+                <p class="text-3xl font-bold text-white">180</p>
+                <p class="text-xs text-yellow-accent uppercase tracking-wider mt-1">Login</p>
+                <span id="countdown-login" class="text-yellow-accent text-xs font-bold mt-1 block">--:--:--</span>
             </button>
             <button onclick="filterCards('code', event)" class="filter-btn filter-code active relative bg-green-accent/30 border border-green-accent/50 rounded-xl p-4 text-center hover:scale-105 transition-all">
                 <i class="fas fa-gift text-3xl text-green-accent mb-2"></i>
@@ -406,21 +405,120 @@
         <!-- Cards Grid -->
         <!-- CARDS_GRID_START -->
 <main class="cards-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-10">
-            
+
+            <!-- The Long Haul -->
+            <div class="card-hover relative bg-orange-accent/8 p-6 rounded-xl border border-orange-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0s;" data-category="event">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
+                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.1s;"></div>
+                <!-- GEM_ICON_EVENT_LONG_HAUL -->
+                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>300</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">The Long Haul</h3>
+                <div class="inline-flex items-center gap-2 bg-orange-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-orange-accent border border-orange-accent/30 mb-4">
+                    <span>Event Reward</span>
+                    <span class="bg-yellow-500/20 border border-yellow-500/40 px-2 py-0.5 rounded-full text-[10px]">★ Top 5%</span>
+                </div>
+                <div class="border-t border-white/10 mt-3 pt-3">
+                    <p class="text-white/60 text-sm">Elite event ranking</p>
+                    <span class="inline-block bg-orange-accent/10 text-orange-accent text-xs px-2 py-1 rounded mt-2 border border-orange-accent/30">9.3% of total</span>
+                </div>
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
+                    Top 5% event ranking
+                </div>
+            </div>
+
+            <!-- Earth's Defenders -->
+            <div class="card-hover relative bg-orange-accent/8 p-6 rounded-xl border border-orange-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.1s;" data-category="event">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
+                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.2s;"></div>
+                <!-- GEM_ICON_EVENT_EARTHS_DEFENDERS -->
+                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>200</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Earth's Defenders</h3>
+                <div class="inline-flex items-center gap-2 bg-orange-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-orange-accent border border-orange-accent/30 mb-4">
+                    <span>Event Reward</span>
+                    <span class="bg-yellow-500/20 border border-yellow-500/40 px-2 py-0.5 rounded-full text-[10px]">★ Top 10%</span>
+                </div>
+                <div class="border-t border-white/10 mt-3 pt-3">
+                    <p class="text-white/60 text-sm">Elite event ranking</p>
+                    <span class="inline-block bg-orange-accent/10 text-orange-accent text-xs px-2 py-1 rounded mt-2 border border-orange-accent/30">6.2% of total</span>
+                </div>
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
+                    Top 10% event ranking
+                </div>
+            </div>
+
+            <!-- Daily Login -->
+            <div class="card-hover relative bg-yellow-accent/8 p-6 rounded-xl border border-yellow-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.2s;" data-category="login">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
+                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.3s;"></div>
+                <!-- GEM_ICON_LOGIN_DAILY -->
+                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>30</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Daily Login</h3>
+                <div class="inline-flex items-center gap-2 bg-yellow-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-yellow-accent border border-yellow-accent/30 mb-4">
+                    <span>Daily Reward</span>
+                </div>
+                <div class="border-t border-white/10 mt-3 pt-3">
+                    <p class="text-white/60 text-sm">Per day</p>
+                    <span class="inline-block bg-yellow-accent/10 text-yellow-accent text-xs px-2 py-1 rounded mt-2 border border-yellow-accent/30">0.9% of total</span>
+                </div>
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
+                    30 gems per day
+                </div>
+            </div>
+
+            <!-- Weekly Login -->
+            <div class="card-hover relative bg-purple-accent/8 p-6 rounded-xl border border-purple-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.3s;" data-category="login">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-50"></div>
+                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.4s;"></div>
+                <!-- GEM_ICON_LOGIN_WEEKLY -->
+                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>60</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Weekly Login</h3>
+                <div class="inline-flex items-center gap-2 bg-purple-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-purple-accent border border-purple-accent/30 mb-4">
+                    <span>Weekly Reward</span>
+                </div>
+                <div class="border-t border-white/10 mt-3 pt-3">
+                    <p class="text-white/60 text-sm">Per week</p>
+                    <span class="inline-block bg-purple-accent/10 text-purple-accent text-xs px-2 py-1 rounded mt-2 border border-purple-accent/30">1.9% of total</span>
+                </div>
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
+                    60 gems per week
+                </div>
+            </div>
+
+            <!-- Monthly Login -->
+            <div class="card-hover relative bg-cyan-glow/8 p-6 rounded-xl border border-cyan-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.4s;" data-category="login">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-50"></div>
+                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.5s;"></div>
+                
+                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>90</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Monthly Login</h3>
+                <div class="inline-flex items-center gap-2 bg-cyan-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-cyan-glow border border-cyan-glow/30 mb-4">
+                    <span>Monthly Reward</span>
+                </div>
+                <div class="border-t border-white/10 mt-3 pt-3">
+                    <p class="text-white/60 text-sm">Per month</p>
+                    <span class="inline-block bg-cyan-glow/10 text-cyan-glow text-xs px-2 py-1 rounded mt-2 border border-cyan-glow/30">2.8% of total</span>
+                </div>
+                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
+                    90 gems per month
+                </div>
+            </div>
+
             <!-- PVP_CARD_1_RESTRICTED_ARENA_START -->
-            <article class="pvp-card card-1 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0s;" data-category="pvp" data-league="eliteI" data-rank="50">
+            <article class="pvp-card card-1 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.5s;" data-category="pvp" data-league="eliteI" data-rank="50">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-50"></div>
                 <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0s;"></div>
                 <div class="absolute top-5 right-10 w-1 h-1 bg-purple-accent rounded-full sparkle" style="animation-delay: 0.3s;"></div>
-                <div class="w-[50px] h-[50px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 mb-4 relative shadow-[0_0_20px_rgba(233,30,138,0.5)]">
-                    <div class="gem-icon absolute inset-0"></div>
-                </div>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2">Restricted Arena</h3>
-                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
-                    <span>Player vs Player</span>
-                </div>
+                <!-- GEM_ICON_PVP_RESTRICTED_ARENA -->
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span><span id="pvp1-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
                 
-                <div class="flex items-center gap-2 mb-3">
+                <div class="flex items-center gap-2 mb-3 mt-3">
                     <label class="text-white/60 text-xs">League:</label>
                     <select id="pvp1-league" onchange="updatePvpCard(1)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm cursor-pointer">
                         <option value="eliteI">Elite I</option>
@@ -439,15 +537,14 @@
                     </button>
                 </div>
                 
-                <div class="border-t border-white/10 my-3"></div>
-                
-                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
-                    <span id="pvp1-gems">0</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
-                </p>
-                
                 <div class="flex gap-4 text-sm text-white/60 mb-2">
                     <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp1-cards">0</span> Cards</span>
                     <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp1-chips">0</span> Chips</span>
+                </div>
+
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Restricted Arena</h3>
+                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
+                    <span>Player vs Player</span>
                 </div>
                 
 <div class="inline-flex items-center gap-1 bg-pink-glow/15 px-3 py-1 rounded-full text-xs text-pink-glow border border-pink-glow/30 mb-3">
@@ -460,18 +557,15 @@
             </article>
 
             <!-- PvP Card 2: Open Arena -->
-            <article class="pvp-card card-2 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.1s;" data-category="pvp" data-league="eliteIII" data-rank="50">
+            <article class="pvp-card card-2 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.6s;" data-category="pvp" data-league="eliteIII" data-rank="50">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-50"></div>
                 <div class="absolute top-6 right-10 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.2s;"></div>
-                <div class="w-[50px] h-[50px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 mb-4 relative shadow-[0_0_20px_rgba(233,30,138,0.5)]">
-                    <div class="gem-icon absolute inset-0"></div>
-                </div>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2">Open Arena</h3>
-                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
-                    <span>Player vs Player</span>
-                </div>
+                <!-- GEM_ICON_PVP_OPEN_ARENA -->
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span><span id="pvp2-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
                 
-                <div class="flex items-center gap-2 mb-3">
+                <div class="flex items-center gap-2 mb-3 mt-3">
                     <label class="text-white/60 text-xs">League:</label>
                     <select id="pvp2-league" onchange="updatePvpCard(2)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm cursor-pointer">
                         <option value="eliteI">Elite I</option>
@@ -490,15 +584,14 @@
                     </button>
                 </div>
                 
-                <div class="border-t border-white/10 my-3"></div>
-                
-                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
-                    <span id="pvp2-gems">0</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
-                </p>
-                
                 <div class="flex gap-4 text-sm text-white/60 mb-2">
                     <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp2-cards">0</span> Cards</span>
                     <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp2-chips">0</span> Chips</span>
+                </div>
+
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Open Arena</h3>
+                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
+                    <span>Player vs Player</span>
                 </div>
                 
 <div class="inline-flex items-center gap-1 bg-pink-glow/15 px-3 py-1 rounded-full text-xs text-pink-glow border border-pink-glow/30 mb-3">
@@ -511,18 +604,15 @@
             </article>
 
             <!-- PvP Card 3: Multiverse Alliance War -->
-            <article class="pvp-card card-3 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.2s;" data-category="pvp" data-league="eliteII" data-rank="50">
+            <article class="pvp-card card-3 card-hover relative bg-pink-glow/8 p-6 rounded-xl border border-pink-glow/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.7s;" data-category="pvp" data-league="eliteII" data-rank="50">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-glow to-transparent opacity-50"></div>
                 <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.4s;"></div>
-                <div class="w-[50px] h-[50px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 mb-4 relative shadow-[0_0_20px_rgba(233,30,138,0.5)]">
-                    <div class="gem-icon absolute inset-0"></div>
-                </div>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2">Multiverse Alliance War</h3>
-                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
-                    <span>Player vs Player</span>
-                </div>
                 
-                <div class="flex items-center gap-2 mb-3">
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span><span id="pvp3-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+                
+                <div class="flex items-center gap-2 mb-3 mt-3">
                     <label class="text-white/60 text-xs">League:</label>
                     <select id="pvp3-league" onchange="updatePvpCard(3)" class="bg-white/10 border border-pink-glow/30 rounded px-2 py-1 text-white text-sm cursor-pointer">
                         <option value="eliteI">Elite I</option>
@@ -541,15 +631,14 @@
                     </button>
                 </div>
                 
-                <div class="border-t border-white/10 my-3"></div>
-                
-                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
-                    <span id="pvp3-gems">0</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
-                </p>
-                
                 <div class="flex gap-4 text-sm text-white/60 mb-2">
                     <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp3-cards">0</span> Cards</span>
                     <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp3-chips">0</span> Chips</span>
+                </div>
+
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Multiverse Alliance War</h3>
+                <div class="inline-flex items-center gap-2 bg-pink-glow/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-pink-glow border border-pink-glow/30 mb-4">
+                    <span>Player vs Player</span>
                 </div>
                 
                 <div class="inline-flex items-center gap-1 bg-pink-glow/15 px-3 py-1 rounded-full text-xs text-pink-glow border border-pink-glow/30 mb-3">
@@ -566,40 +655,17 @@
                 </span>
             </article>
 
-            <!-- The Long Haul -->
-            <div class="card-hover relative bg-orange-accent/8 p-6 rounded-xl border border-orange-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.4s;" data-category="event">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
-                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.5s;"></div>
-                <div class="w-[50px] h-[50px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 mb-4 relative shadow-[0_0_20px_rgba(233,30,138,0.5)]">
-                    <div class="gem-icon absolute inset-0"></div>
-                </div>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2">The Long Haul</h3>
-                <div class="inline-flex items-center gap-2 bg-orange-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-orange-accent border border-orange-accent/30 mb-4">
-                    <span>Event Reward</span>
-                    <span class="bg-yellow-500/20 border border-yellow-500/40 px-2 py-0.5 rounded-full text-[10px]">★ Top 5%</span>
-                </div>
-                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">300 <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
-                <div class="border-t border-white/10 mt-3 pt-3">
-                    <p class="text-white/60 text-sm">Elite event ranking</p>
-                    <span class="inline-block bg-orange-accent/10 text-orange-accent text-xs px-2 py-1 rounded mt-2 border border-orange-accent/30">9.3% of total</span>
-                </div>
-                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
-                    Top 5% event ranking
-                </div>
-            </div>
-
             <!-- Promo Code -->
-            <div class="card-hover relative bg-green-accent/8 p-6 rounded-xl border border-green-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.5s;" data-category="code" onclick="copyCode()">
+            <div class="card-hover relative bg-green-accent/8 p-6 rounded-xl border border-green-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.8s;" data-category="code" onclick="copyCode()">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-accent to-transparent opacity-50"></div>
                 <div class="absolute top-6 right-10 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.5s;"></div>
-                <div class="w-[50px] h-[50px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 mb-4 relative shadow-[0_0_20px_rgba(233,30,138,0.5)]">
-                    <div class="gem-icon absolute inset-0"></div>
-                </div>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2">Promo Code</h3>
+                
+                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="w-[20px] h-[20px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 relative shadow-[0_0_10px_rgba(233,30,138,0.5)]"><span class="gem-icon absolute inset-0"></span></span>300</span> <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
+                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2 mt-4">Promo Code</h3>
                 <div class="inline-flex items-center gap-2 bg-green-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-green-accent border border-green-accent/30 mb-4">
                     <span>Code Redemption</span>
                 </div>
-                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">300 <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
                 <div class="border-t border-white/10 mt-3 pt-3">
                     <p class="text-white/60 text-sm">Code: 30KGTG</p>
                     <span class="inline-block bg-green-accent/10 text-green-accent text-xs px-2 py-1 rounded mt-2 border border-green-accent/30">9.3% of total</span>
@@ -607,79 +673,7 @@
                 <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
                     Click to copy code
                 </div>
-            </div>
-
-            <!-- Weekly Reward -->
-            <div class="card-hover relative bg-yellow-accent/8 p-6 rounded-xl border border-yellow-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.6s;" data-category="daily">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
-                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.6s;"></div>
-                <div class="w-[50px] h-[50px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 mb-4 relative shadow-[0_0_20px_rgba(233,30,138,0.5)]">
-                    <div class="gem-icon absolute inset-0"></div>
-                </div>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2">Weekly Reward</h3>
-                <div class="inline-flex items-center gap-2 bg-yellow-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-yellow-accent border border-yellow-accent/30 mb-4">
-                    <span>Weekly Bonus</span>
-                </div>
-                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">400 <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
-                <div class="border-t border-white/10 mt-3 pt-3">
-                    <p class="text-white/60 text-sm">Weekly login bonus</p>
-                    <span class="inline-block bg-yellow-accent/10 text-yellow-accent text-xs px-2 py-1 rounded mt-2 border border-yellow-accent/30">10.2% of total</span>
-                </div>
-                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
-                    Received weekly
-                </div>
-            </div>
-
-            <!-- Earth's Defenders -->
-            <div class="card-hover relative bg-orange-accent/8 p-6 rounded-xl border border-orange-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.7s;" data-category="event">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
-                <div class="absolute top-6 right-10 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.4s;"></div>
-                <div class="w-[50px] h-[50px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 mb-4 relative shadow-[0_0_20px_rgba(233,30,138,0.5)]">
-                    <div class="gem-icon absolute inset-0"></div>
-                </div>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2">Earth's Defenders</h3>
-                <div class="inline-flex items-center gap-2 bg-orange-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-orange-accent border border-orange-accent/30 mb-4">
-                    <span>Event Reward</span>
-                    <span class="bg-yellow-500/20 border border-yellow-500/40 px-2 py-0.5 rounded-full text-[10px]">★ Top 10%</span>
-                </div>
-                <p class="text-5xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">200 <span class="text-lg text-white/60 font-semibold">GEMS</span></p>
-                <div class="border-t border-white/10 mt-3 pt-3">
-                    <p class="text-white/60 text-sm">Event ranking reward</p>
-                    <span class="inline-block bg-orange-accent/10 text-orange-accent text-xs px-2 py-1 rounded mt-2 border border-orange-accent/30">6.2% of total</span>
-                </div>
-                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
-                    Top 10% event ranking
-                </div>
-            </div>
-
-            <!-- Daily Login -->
-            <div class="card-hover relative bg-yellow-accent/8 p-6 rounded-xl border border-yellow-accent/20 overflow-hidden cursor-pointer group card-fade-in tooltip-trigger" style="animation-delay: 0.8s;" data-category="daily">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
-                <div class="absolute top-5 right-8 w-1 h-1 bg-white rounded-full sparkle" style="animation-delay: 0.7s;"></div>
-                <div class="w-[50px] h-[50px] bg-gradient-to-br from-pink-glow to-pink-glow rotate-45 mb-4 relative shadow-[0_0_20px_rgba(233,30,138,0.5)]">
-                    <div class="gem-icon absolute inset-0"></div>
-                </div>
-                <h3 class="text-white text-2xl font-bold uppercase tracking-wider mb-2">Daily Login</h3>
-                <div class="inline-flex items-center gap-2 bg-yellow-accent/15 px-4 py-1 rounded-full text-xs uppercase tracking-wider text-yellow-accent border border-yellow-accent/30 mb-4">
-                    <span>Daily Reward</span>
-                    <span class="bg-yellow-accent/20 border border-yellow-accent/40 px-2 py-0.5 rounded-full text-[10px]">7x / week</span>
-                </div>
-                <div class="flex items-baseline gap-2 mb-1">
-                    <span class="text-3xl font-bold text-white drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">30</span>
-                    <span class="text-white/40 text-2xl">×</span>
-                    <span class="text-3xl font-bold text-white drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">7</span>
-                    <span class="text-white/40 text-xl">=</span>
-                    <span class="text-5xl font-bold text-white drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">210</span>
-                    <span class="text-lg text-white/60 font-semibold">GEMS</span>
-                </div>
-                <div class="border-t border-white/10 mt-3 pt-3">
-                    <p class="text-white/60 text-sm">Per week (daily login)</p>
-                    <span class="inline-block bg-yellow-accent/10 text-yellow-accent text-xs px-2 py-1 rounded mt-2 border border-yellow-accent/30">6.5% of total</span>
-                </div>
-                <div class="tooltip -top-12 left-1/2 -translate-x-1/2">
-                    30 gems × 7 days
-                </div>
-            </div>
+</div>
     </main>
 
         <!-- Charts Section -->
@@ -746,13 +740,13 @@
             setTimeout(() => feedback.remove(), 2000);
         }
 
-        let selectedModes = ['event', 'pvp', 'daily', 'code'];
+        let selectedModes = ['event', 'pvp', 'login', 'code'];
 
         function filterCards(category, evt) {
             const cards = document.querySelectorAll('[data-category]');
             
             if (category === 'all') {
-                selectedModes = ['event', 'pvp', 'daily', 'code'];
+                selectedModes = ['event', 'pvp', 'login', 'code'];
                 updateAllButtons();
             } else {
                 const modeIndex = selectedModes.indexOf(category);
@@ -761,12 +755,11 @@
                 } else {
                     selectedModes.push(category);
                 }
-                if (selectedModes.length === 0) selectedModes = ['event', 'pvp', 'daily', 'code'];
+                if (selectedModes.length === 0) selectedModes = ['event', 'pvp', 'login', 'code'];
             }
             
             updateModeButtonStates();
-            const total = calculateSelectedTotal();
-            animateValue('totalCounter', total, 400);
+            updateAllPageTotals();
             
             cards.forEach(card => {
                 const cardCategory = card.dataset.category;
@@ -784,32 +777,11 @@
         }
 
         function calculateSelectedTotal() {
-            let total = 0;
-            if (selectedModes.includes('event')) total += 500;
-            if (selectedModes.includes('daily')) total += 610;
-            if (selectedModes.includes('code')) total += 300;
-            if (selectedModes.includes('pvp')) {
-                let pvpTotal = 0;
-                const defaults = { 1: { league: 'eliteI', rank: 50 }, 2: { league: 'eliteIII', rank: 50 }, 3: { league: 'eliteII', rank: 50 } };
-                for (let i = 1; i <= 3; i++) {
-                    const leagueEl = document.getElementById(`pvp${i}-league`);
-                    const rankEl = document.getElementById(`pvp${i}-rank`);
-                    if (leagueEl && rankEl) {
-                        const league = leagueEl.value || defaults[i].league;
-                        const rank = parseInt(rankEl.value) || defaults[i].rank;
-                        const payout = getPvpPayout(league, rank);
-                        if (payout) {
-                            pvpTotal += payout.gems;
-                        }
-                    }
-                }
-                total += pvpTotal;
-            }
-            return total;
+            return selectedModes.reduce((sum, mode) => sum + getModeTotal(mode), 0);
         }
 
         function updateAllButtons() {
-            selectedModes = ['event', 'pvp', 'daily', 'code'];
+            selectedModes = ['event', 'pvp', 'login', 'code'];
         }
 
         function updateModeButtonStates() {
@@ -850,19 +822,7 @@
                     pvpBtn.classList.add('bg-pink-glow/10', 'border-pink-glow/30');
                 }
             }
-            
-            // Daily button
-            const dailyBtn = document.querySelector('.filter-daily');
-            if (dailyBtn) {
-                dailyBtn.classList.remove('active', 'bg-yellow-accent/30', 'border-yellow-accent/50');
-                dailyBtn.classList.remove('bg-yellow-accent/10', 'border-yellow-accent/30');
-                if (selectedModes.includes('daily')) {
-                    dailyBtn.classList.add('active', 'bg-yellow-accent/30', 'border-yellow-accent/50');
-                } else {
-                    dailyBtn.classList.add('bg-yellow-accent/10', 'border-yellow-accent/30');
-                }
-            }
-            
+
             // Code button
             const codeBtn = document.querySelector('.filter-code');
             if (codeBtn) {
@@ -872,6 +832,18 @@
                     codeBtn.classList.add('active', 'bg-green-accent/30', 'border-green-accent/50');
                 } else {
                     codeBtn.classList.add('bg-green-accent/10', 'border-green-accent/30');
+                }
+            }
+
+            // Login button
+            const loginBtn = document.querySelector('.filter-login');
+            if (loginBtn) {
+                loginBtn.classList.remove('active', 'bg-yellow-accent/30', 'border-yellow-accent/50');
+                loginBtn.classList.remove('bg-yellow-accent/10', 'border-yellow-accent/30');
+                if (selectedModes.includes('login')) {
+                    loginBtn.classList.add('active', 'bg-yellow-accent/30', 'border-yellow-accent/50');
+                } else {
+                    loginBtn.classList.add('bg-yellow-accent/10', 'border-yellow-accent/30');
                 }
             }
         }
@@ -894,18 +866,18 @@
         function updateChartsByModes(modes) {
             const combinedData = {
                 distribution: [0, 0, 0, 0, 0],
-                rewards: new Array(9).fill(0),
+                rewards: new Array(7).fill(0),
                 colors: ['#333333', '#333333', '#333333', '#333333', '#333333'],
-                rewardColors: new Array(9).fill('#333333')
+                rewardColors: new Array(7).fill('#333333')
             };
-            
-            const colorMap = { event: '#ff6b35', pvp: '#e91e8a', daily: '#f39c12', code: '#2ecc71' };
-            
+
+            const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
+
             modes.forEach(mode => {
                 const data = chartFilterData[mode];
                 if (data) {
-                    combinedData.distribution = combinedData.distribution.map((v, i) => v + data.distribution[i]);
-                    combinedData.rewards = combinedData.rewards.map((v, i) => v + data.rewards[i]);
+                    combinedData.distribution = combinedData.distribution.map((v, i) => v + (data.distribution[i] || 0));
+                    combinedData.rewards = combinedData.rewards.map((v, i) => v + (data.rewards[i] || 0));
                 }
             });
             
@@ -955,15 +927,16 @@
                     { name: "Earth's Defenders", gems: 200, desc: 'Top 10% event ranking', pct: '40%' }
                 ]
             },
-            daily: {
-                title: 'Daily/Weekly Rewards',
-                icon: 'fa-calendar-day',
+            login: {
+                title: 'Login Rewards',
+                icon: 'fa-sign-in-alt',
                 color: 'yellow-accent',
                 bgColor: 'bg-yellow-accent',
-                total: 610,
+                total: 180,
                 rewards: [
-                    { name: 'Weekly Reward', gems: 400, desc: 'Weekly login bonus', pct: '36.4%' },
-                    { name: 'Daily Login', gems: 700, desc: '100 gems × 7 days per week', pct: '63.6%' }
+                    { name: 'Daily Payout', gems: 30, desc: 'Per day', pct: '16.7%' },
+                    { name: 'Weekly Payout', gems: 60, desc: 'Per week', pct: '33.3%' },
+                    { name: 'Monthly Payout', gems: 90, desc: 'Per month', pct: '50%' }
                 ]
             },
             code: {
@@ -1123,7 +1096,7 @@
                     const msg = document.createElement('div');
                     msg.id = 'noSearchResults';
                     msg.className = 'search-no-results col-span-full';
-                    msg.innerHTML = `<i class="fas fa-search text-white/30 mb-2"></i>No rewards found for "${query}"<p class="text-xs text-white/40 mt-2">Try: daily, pvp, event, code</p>`;
+                    msg.innerHTML = `<i class="fas fa-search text-white/30 mb-2"></i>No rewards found for "${query}"<p class="text-xs text-white/40 mt-2">Try: login, pvp, event, code</p>`;
                     grid.appendChild(msg);
                 }
             }
@@ -1260,13 +1233,13 @@
 
         function exportData() {
             const data = {
-                totalGems: 4470,
+                totalGems: getModeTotal('event') + getModeTotal('pvp') + getModeTotal('login') + getModeTotal('code'),
                 categories: {
                     season: 1820,
-                    events: 500,
-                    pvp: 750,
-                    daily: 610,
-                    code: 300
+                    event: getModeTotal('event'),
+                    pvp: getModeTotal('pvp'),
+                    login: getModeTotal('login'),
+                    code: getModeTotal('code')
                 },
                 rewards: [
                     { name: 'Elite League I', gems: 810, category: 'season' },
@@ -1274,10 +1247,11 @@
                     { name: 'Elite League II', gems: 450, category: 'season' },
                     { name: 'Multiverse Alliance War', gems: 750, category: 'pvp' },
                     { name: 'The Long Haul', gems: 300, category: 'event' },
+                    { name: "Earth's Defenders", gems: 200, category: 'event' },
                     { name: 'Promo Code', gems: 300, category: 'code' },
-                    { name: 'Weekly Reward', gems: 400, category: 'daily' },
-                    { name: 'Earth\'s Defenders', gems: 200, category: 'event' },
-                    { name: 'Daily Login', gems: 700, category: 'daily' }
+                    { name: 'Daily Payout', gems: 30, category: 'login' },
+                    { name: 'Weekly Payout', gems: 60, category: 'login' },
+                    { name: 'Monthly Payout', gems: 90, category: 'login' }
                 ]
             };
             
@@ -1385,13 +1359,13 @@
             
             const eventEl = document.getElementById('countdown-event');
             const pvpEl = document.getElementById('countdown-pvp');
-            const dailyEl = document.getElementById('countdown-daily');
+            const loginEl = document.getElementById('countdown-login');
             const codeEl = document.getElementById('countdown-code');
-            
+
             // Show countdown if that mode is selected
             const showEvent = selectedModes.includes('event');
             const showPvp = selectedModes.includes('pvp');
-            const showDaily = selectedModes.includes('daily');
+            const showLogin = selectedModes.includes('login');
             const showCode = selectedModes.includes('code');
             
             if (showEvent) {
@@ -1408,16 +1382,16 @@
                 pvpEl.textContent = '--:--:--';
             }
             
-            if (showDaily) {
+            if (showLogin) {
                 const dailyMs = COUNTDOWN_TARGETS.daily.getTime() - now.getTime();
-                dailyEl.textContent = formatCountdown(dailyMs);
+                loginEl.textContent = formatCountdown(dailyMs);
             } else {
-                dailyEl.textContent = '--:--:--';
+                loginEl.textContent = '--:--:--';
             }
             
             if (showCode) {
-                const weeklyMs = COUNTDOWN_TARGETS.weekly.getTime() - now.getTime();
-                codeEl.textContent = formatCountdown(weeklyMs);
+                const dailyMs = COUNTDOWN_TARGETS.daily.getTime() - now.getTime();
+                codeEl.textContent = formatCountdown(dailyMs);
             } else {
                 codeEl.textContent = '--:--:--';
             }
@@ -1463,7 +1437,7 @@
         new Chart(document.getElementById('categoryChart'), {
             type: 'doughnut',
             data: {
-                labels: ['Season', 'Events', 'Warfare', 'Daily/Weekly', 'Code'],
+                labels: ['Season', 'Events', 'PvP', 'Login', 'Code'],
                 datasets: [{
                     data: [0, 500, 750, 610, 300],
                     backgroundColor: ['#333333', '#ff6b35', '#e91e8a', '#f39c12', '#2ecc71'],
@@ -1487,11 +1461,11 @@
         new Chart(document.getElementById('rewardsChart'), {
             type: 'bar',
             data: {
-                labels: ['Elite I', 'Invincible', 'Elite II', 'Warfare', 'Long Haul', 'Code', 'Weekly', 'Defenders', 'Daily'],
+                labels: ['Elite I', 'Invincible', 'Elite II', 'PvP', 'Long Haul', 'Defenders', 'Login'],
                 datasets: [{
                     label: 'Gems',
-                    data: [810, 560, 450, 750, 300, 300, 400, 200, 700],
-                    backgroundColor: ['#333333', '#333333', '#333333', '#e91e8a', '#ff6b35', '#2ecc71', '#f39c12', '#ff6b35', '#f39c12'],
+                    data: [810, 560, 450, 750, 300, 200, 180],
+                    backgroundColor: ['#333333', '#333333', '#333333', '#e91e8a', '#ff6b35', '#ff6b35', '#f39c12'],
                     borderRadius: 4,
                     borderSkipped: false
                 }]
@@ -1514,17 +1488,17 @@
         new Chart(document.getElementById('spiderChart'), {
             type: 'radar',
             data: {
-                labels: ['Season', 'Events', 'Warfare', 'Daily', 'Code'],
+                labels: ['Season', 'Events', 'PvP', 'Login', 'Code'],
                 datasets: [{
                     label: 'Gems',
-                    data: [0, 500, 750, 610, 300],
+                    data: [0, 500, 750, 30, 60, 90, 300],
                     backgroundColor: 'rgba(0, 229, 255, 0.2)',
                     borderColor: '#00e5ff',
                     pointBackgroundColor: '#00e5ff',
                     borderWidth: 2
                 }, {
                     label: 'Target',
-                    data: [2000, 800, 1000, 1200, 500],
+                    data: [2000, 800, 1000, 50, 100, 150, 500],
                     backgroundColor: 'rgba(233, 30, 138, 0.1)',
                     borderColor: '#e91e8a',
                     pointBackgroundColor: '#e91e8a',
@@ -1591,46 +1565,46 @@
 
         const chartFilterData = {
             all: {
-                distribution: [0, 500, 750, 610, 300],
-                rewards: [810, 560, 450, 750, 300, 300, 400, 200, 700],
-                spider: [[0, 500, 750, 610, 300], [0, 800, 1000, 700, 500]],
+                distribution: [0, 500, 750, 180, 300],
+                rewards: [810, 560, 450, 750, 300, 200, 180],
+                spider: [[0, 500, 750, 180, 300], [0, 800, 1000, 300, 500]],
                 colors: ['#333333', '#ff6b35', '#e91e8a', '#f39c12', '#2ecc71'],
-                rewardColors: ['#333333', '#333333', '#333333', '#e91e8a', '#ff6b35', '#2ecc71', '#f39c12', '#ff6b35', '#f39c12']
+                rewardColors: ['#333333', '#333333', '#333333', '#e91e8a', '#ff6b35', '#ff6b35', '#f39c12', '#2ecc71']
             },
             season: {
                 distribution: [1820, 0, 0, 0, 0],
-                rewards: [810, 560, 450, 0, 0, 0, 0, 0, 0],
+                rewards: [810, 560, 450, 0, 0],
                 spider: [[1820, 0, 0, 0, 0], [2000, 0, 0, 0, 0]],
                 colors: ['#00e5ff', '#333333', '#333333', '#333333', '#333333'],
-                rewardColors: ['#00e5ff', '#00e5ff', '#00e5ff', '#333333', '#333333', '#333333', '#333333', '#333333', '#333333']
+                rewardColors: ['#00e5ff', '#00e5ff', '#00e5ff', '#333333', '#333333', '#333333', '#333333']
             },
             event: {
                 distribution: [0, 500, 0, 0, 0],
-                rewards: [0, 0, 0, 0, 300, 0, 0, 0, 200],
+                rewards: [0, 0, 0, 300, 200],
                 spider: [[0, 500, 0, 0, 0], [0, 800, 0, 0, 0]],
                 colors: ['#333333', '#ff6b35', '#333333', '#333333', '#333333'],
-                rewardColors: ['#333333', '#333333', '#333333', '#333333', '#ff6b35', '#333333', '#333333', '#333333', '#ff6b35']
+                rewardColors: ['#333333', '#333333', '#333333', '#ff6b35', '#ff6b35', '#333333', '#333333']
             },
             pvp: {
                 distribution: [0, 0, 750, 0, 0],
-                rewards: [0, 0, 0, 0, 0, 0, 0, 0, 750],
+                rewards: [0, 0, 0, 0, 750],
                 spider: [[0, 0, 750, 0, 0], [0, 0, 1000, 0, 0]],
                 colors: ['#333333', '#333333', '#e91e63', '#333333', '#333333'],
-                rewardColors: ['#333333', '#333333', '#333333', '#333333', '#333333', '#333333', '#333333', '#333333', '#e91e63']
+                rewardColors: ['#333333', '#333333', '#333333', '#e91e63', '#333333', '#333333', '#333333']
             },
-            daily: {
-                distribution: [0, 0, 0, 1100, 0],
-                rewards: [0, 0, 0, 0, 0, 0, 400, 0, 210],
-                spider: [[0, 0, 0, 1100, 0], [0, 0, 0, 1200, 0]],
+            login: {
+                distribution: [0, 0, 0, 180, 0],
+                rewards: [0, 0, 0, 180, 0],
+                spider: [[0, 0, 0, 180, 0], [0, 0, 0, 300, 0]],
                 colors: ['#333333', '#333333', '#333333', '#f39c12', '#333333'],
-                rewardColors: ['#333333', '#333333', '#333333', '#333333', '#333333', '#333333', '#f39c12', '#333333', '#f39c12']
+                rewardColors: ['#333333', '#333333', '#333333', '#f39c12', '#333333', '#333333', '#f39c12']
             },
             code: {
                 distribution: [0, 0, 0, 0, 300],
-                rewards: [0, 0, 0, 0, 0, 300, 0, 0, 0],
+                rewards: [0, 0, 0, 0, 300],
                 spider: [[0, 0, 0, 0, 300], [0, 0, 0, 0, 500]],
                 colors: ['#333333', '#333333', '#333333', '#333333', '#2ecc71'],
-                rewardColors: ['#333333', '#333333', '#333333', '#333333', '#333333', '#2ecc71', '#333333', '#333333', '#333333']
+                rewardColors: ['#333333', '#333333', '#333333', '#2ecc71', '#333333', '#333333', '#333333']
             }
         };
 
@@ -1655,10 +1629,10 @@
                         btn.classList.add('bg-orange-accent/20', 'border-orange-accent/30');
                         btn.classList.remove('bg-orange-accent/10', 'border-orange-accent/20');
                     }
-                } else if (btn.textContent.toLowerCase() === 'daily') {
+                } else if (btn.textContent.toLowerCase() === 'login') {
                     btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
                     btn.classList.add('bg-yellow-accent/10', 'border-yellow-accent/20');
-                    if (filter === 'daily') {
+                    if (filter === 'login') {
                         btn.classList.add('bg-yellow-accent/20', 'border-yellow-accent/30');
                         btn.classList.remove('bg-yellow-accent/10', 'border-yellow-accent/20');
                     }
@@ -1697,10 +1671,6 @@
         spiderChart = Chart.getChart('spiderChart');
         lineChart = Chart.getChart('lineChart');
 
-        window.addEventListener('load', function() {
-            updateTotalGems();
-        });
-
         // PvP League Data
         const pvpLeagueData = {
             eliteIII: {
@@ -1725,6 +1695,69 @@
             3: { league: 'eliteII', rank: 50 }
         };
 
+        const eventsByMode = {
+            event: [
+                { name: 'The Long Haul', gems: 300, seasonDays: 14 },
+                { name: "Earth's Defenders", gems: 200, seasonDays: 7 }
+            ],
+            login: [
+                { name: 'Daily', gems: 30 },
+                { name: 'Weekly', gems: 60 },
+                { name: 'Monthly', gems: 90 }
+            ],
+            code: [
+                { name: 'Promo Code', gems: 300, active: true }
+            ]
+        };
+
+        function getModeTotal(mode) {
+            const modeEvents = eventsByMode[mode];
+            if (!modeEvents) return 0;
+
+            if (mode === 'pvp') {
+                let total = 0;
+                for (let i = 1; i <= 3; i++) {
+                    const leagueEl = document.getElementById(`pvp${i}-league`);
+                    const rankEl = document.getElementById(`pvp${i}-rank`);
+                    if (leagueEl && rankEl) {
+                        const league = leagueEl.value || pvpDefaults[i].league;
+                        const rank = parseInt(rankEl.value) || pvpDefaults[i].rank;
+                        const payout = getPvpPayout(league, rank);
+                        if (payout) total += payout.gems;
+                    }
+                }
+                // Fallback: if PvP not initialized, use defaults
+                if (total === 0) {
+                    total = getPvpPayout(pvpDefaults[1].league, pvpDefaults[1].rank).gems +
+                            getPvpPayout(pvpDefaults[2].league, pvpDefaults[2].rank).gems +
+                            getPvpPayout(pvpDefaults[3].league, pvpDefaults[3].rank).gems;
+                }
+                return total;
+            }
+
+            return modeEvents.reduce((sum, event) => sum + (event.gems || 0), 0);
+        }
+
+        function updateAllPageTotals() {
+            const mainTotal = selectedModes.reduce((sum, mode) => sum + getModeTotal(mode), 0);
+            const mainCounter = document.getElementById('totalCounter');
+            if (mainCounter) animateValue('totalCounter', mainTotal, 400);
+
+            ['event', 'pvp', 'login', 'code'].forEach(mode => {
+                const btn = document.querySelector(`.filter-${mode}`);
+                if (btn) {
+                    const totalEl = btn.querySelector('p.text-3xl.font-bold');
+                    if (totalEl) animateValue(totalEl, getModeTotal(mode), 400);
+                }
+            });
+
+            const allBtn = document.querySelector('.filter-all');
+            if (allBtn) {
+                const allTotalEl = allBtn.querySelector('p.text-3xl.font-bold');
+                if (allTotalEl) animateValue(allTotalEl, mainTotal, 400);
+            }
+        }
+
         function generateRankOptions(selectId) {
             const select = document.getElementById(selectId);
             for (let i = 1; i <= 120; i++) {
@@ -1740,6 +1773,11 @@
             const baseKey = league.baseTiers || leagueKey;
             const tiers = pvpLeagueData[baseKey].tiers;
             const tier = tiers.find(t => rank >= t.min && rank <= t.max);
+
+            if (!tier) {
+                return { gems: 0, cards: 0, chips: 0, isDemotion: false };
+            }
+
             const modifier = league.modifier || 1;
             return {
                 gems: Math.round(tier.gems * modifier),
@@ -1781,46 +1819,15 @@
             const percent = ((payout.gems / totalGems) * 100).toFixed(1);
             document.getElementById(`pvp${cardId}-percent`).textContent = percent + '%';
             const demotionEl = document.getElementById(`pvp${cardId}-demotion`);
-            if (payout.isDemotion) {
-                demotionEl.classList.remove('hidden');
-            } else {
-                demotionEl.classList.add('hidden');
+            if (demotionEl) {
+                if (payout.isDemotion) {
+                    demotionEl.classList.remove('hidden');
+                } else {
+                    demotionEl.classList.add('hidden');
+                }
             }
             savePvpSelection(cardId);
-            updateTotalGems();
-        }
-
-        function updateTotalGems() {
-            const newTotal = calculateSelectedTotal();
-            document.getElementById('totalCounter').textContent = newTotal.toLocaleString();
-            updateModeButtonTotals();
-        }
-
-        function updateModeButtonTotals() {
-            let pvpTotal = 0;
-            for (let i = 1; i <= 3; i++) {
-                const gemsText = document.getElementById(`pvp${i}-gems`).textContent;
-                pvpTotal += parseInt(gemsText.replace(/,/g, '')) || 0;
-            }
-            
-            // Update PvP button - target the paragraph with number, not the icon
-            const pvpBtn = document.querySelector('.filter-pvp');
-            if (pvpBtn) {
-                const paras = pvpBtn.querySelectorAll('p.text-3xl');
-                if (paras.length > 1) {
-                    paras[0].textContent = pvpTotal.toLocaleString();
-                }
-            }
-            
-            // Update All Modes button - sum of event + daily + code + current pvp value
-            const allBtn = document.querySelector('.filter-all');
-            if (allBtn) {
-                const allTotal = 500 + pvpTotal + 610 + 300;
-                const paras = allBtn.querySelectorAll('p.text-3xl');
-                if (paras.length > 0) {
-                    paras[0].textContent = allTotal.toLocaleString();
-                }
-            }
+            updateAllPageTotals();
         }
 
         function savePvpSelection(cardId) {
@@ -1867,11 +1874,26 @@
 
         initializePvPCards();
         
+        // Force default rank values (50) regardless of localStorage
+        [1, 2, 3].forEach(i => {
+            localStorage.removeItem(`pvp${i}_league`);
+            localStorage.removeItem(`pvp${i}_rank`);
+            document.getElementById(`pvp${i}-league`).value = pvpDefaults[i].league;
+            document.getElementById(`pvp${i}-rank`).value = pvpDefaults[i].rank;
+            updatePvpCard(i);
+        });
+        
         // Initialize multi-select mode state
-        selectedModes = ['event', 'pvp', 'daily', 'code'];
+        selectedModes = ['event', 'pvp', 'login', 'code'];
         updateModeButtonStates();
-        updateModeButtonTotals();
-        updateTotalGems();
+
+        if (document.readyState === 'complete') {
+            updateAllPageTotals();
+        } else {
+            window.addEventListener('load', function() {
+                updateAllPageTotals();
+            });
+        }
     </script>
     </div>
 </body>
