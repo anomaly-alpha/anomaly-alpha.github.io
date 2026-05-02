@@ -9,7 +9,7 @@
 ## 1. Project Overview
 
 ### 1.1 Purpose
-Interactive infographic displaying gem reward sources from the Invincible mobile game with interactive filtering, dynamic charts, mode hover interactions, and a sci-fi aesthetic matching the game's UI.
+Interactive infographic displaying gem reward sources from the Invincible mobile game with interactive filtering, dynamic charts, mode hover interactions, card modal system, and a sci-fi aesthetic matching the game's UI.
 
 ### 1.2 Technology Stack
 
@@ -26,10 +26,11 @@ Interactive infographic displaying gem reward sources from the Invincible mobile
 
 ```
 anomaly-alpha/
-├── index.html       (827 lines) - Main infographic + inline JSON configs
-├── script.js        (1162 lines) - All JavaScript, loads inline JSON configs
-├── styles.css       (1183 lines) - Design tokens + BEM classes
+├── index.html       (857 lines) - Main infographic + inline JSON configs
+├── script.js        (1363 lines) - All JavaScript, loads inline JSON configs
+├── styles.css       (1298 lines) - Design tokens + BEM classes
 ├── favicon.svg      - Custom gem SVG favicon
+├── PLAN_card_modals.md - Card modal feature plan and notes
 ├── README.md        - Project overview
 ├── data/            - JSON source files (for maintenance, embedded in HTML)
 │   ├── game-config.json
@@ -115,17 +116,19 @@ function loadAllConfigs() {
 
 ### 2.4 Reward Cards (9 cards)
 
-| # | Name | Category | Gems | Notes |
-|---|------|----------|------|-------|
-| 1 | Promo Code | Code | 300 | Tap-to-reveal with 3D flip animation, click to copy |
-| 2 | The Long Haul | Event | 300 | Top 5% ranking |
-| 3 | Earth's Defenders | Event | 200 | Top 10% ranking |
-| 4 | Restricted Arena | PvP | dynamic | League + rank selector (14 leagues) |
-| 5 | Open Arena | PvP | dynamic | League + rank selector |
-| 6 | Multiverse Alliance War | PvP | dynamic | 5 matches/2 weeks, demotion warning |
-| 7 | Daily Login | Login | 210 | 30×7=210 |
-| 8 | Weekly Login | Login | 60 | Fixed |
-| 9 | Monthly Login | Login | 23 | 90÷4=23 |
+All 9 cards have an info icon button (`.gem-card__info-btn`) in the top-right corner that opens a card modal via `showCardModal(cardId)`.
+
+| # | Name | Category | Gems | Modal badge | Notes |
+|---|------|----------|------|-------------|-------|
+| 1 | Promo Code | Code | 300 | ★ Tap to Reveal | Tap-to-reveal with 3D flip animation, click to copy; info icon always active |
+| 2 | The Long Haul | Event | 300 | ★ Top 5% | Info icon opens modal |
+| 3 | Earth's Defenders | Event | 200 | ★ Top 10% | Info icon opens modal |
+| 4 | Restricted Arena | PvP | dynamic | ★ Weekly | Info icon opens modal; live gems/cards/chips from pvp1-league/rank |
+| 5 | Open Arena | PvP | dynamic | ★ Weekly | Info icon opens modal; live gems/cards/chips from pvp2-league/rank |
+| 6 | Multiverse Alliance War | PvP | dynamic | ★ 5 Matches / 2 Weeks | Info icon opens modal; live gems/cards/chips from pvp3-league/rank; demotion warning |
+| 7 | Daily Login | Login | 210 | ★ 30×7 | Info icon opens modal |
+| 8 | Weekly Login | Login | 60 | ★ Weekly | Info icon opens modal |
+| 9 | Monthly Login | Login | 23 | ★ 90÷4 | Info icon opens modal |
 
 ### 2.5 Spider Chart Targets
 
@@ -140,21 +143,15 @@ function loadAllConfigs() {
 
 ## 3. UI Structure
 
-### 3.1 Mode Selector (index.html lines ~439-469)
+### 3.1 Mode Selector (index.html)
 
 **5 buttons:** All → Code → Event → PvP → Login — each showing gem total and countdown timer.
 
-```html
-<nav class="gem-grid--modes my-4">
-    <button onclick="filterCards('all', event)" class="gem-mode-btn gem-mode-btn--all active">...</button>
-    <button onclick="filterCards('code', event)" class="gem-mode-btn gem-mode-btn--code active">...</button>
-    ...
-</nav>
-```
-
 **Hover interaction:** Hovering over a mode button highlights all matching cards with a colored glow in that mode's color. Implemented via mouseenter/mouseleave handlers adding `gem-card--mode-highlight--{mode}` class.
 
-### 3.2 Card Grid (index.html lines ~471-767)
+**Active state styling:** Active mode buttons use toned-down opacity (30% bg, 65% border, subtle 15px glow, scale 1.02) to avoid overwhelming solid colors.
+
+### 3.2 Card Grid (index.html)
 
 **Layout:** 1 column (mobile) → 2 columns (md) → 3 columns (lg)
 
@@ -166,7 +163,22 @@ function loadAllConfigs() {
 
 **Card order (left to right, top to bottom):** Code, Event×2, PvP×3, Login×3
 
-### 3.3 Charts Section (index.html lines ~769-791)
+**Info icon:** Every card has `.gem-card__info-btn` — a circular button with `position: absolute; top: 0.75rem; right: 0.75rem;` inside the card body. Triggers `showCardModal(cardId)`.
+
+### 3.3 Card Modal (index.html)
+
+Single shared `cardModal` with dynamic content. Structure:
+- `#cardModal` (replaces former `drilldownModal`)
+- `#cardModalIcon` — colored box with fa-info-circle
+- `#cardModalTitle` — uppercase title in category color
+- `#cardModalBadge` — star badge (`.gem-modal__badge--star`, yellow)
+- `#cardModalTotal` — gems line
+- `#cardModalContent` — hero + description + demotion warning + tips
+- Close via overlay click, × button, or Escape key
+
+Modal width: 38rem. Content grows to fit (no max-height on body). Entry animation: pop-in (scale 0.9→1, 0.3s cubic-bezier).
+
+### 3.4 Charts Section (index.html)
 
 **3-column grid:** Distribution → Rewards → Performance
 
@@ -176,23 +188,45 @@ Toggle show/hide via "Hide Charts" button.
 
 ## 4. JavaScript Architecture
 
-### 4.1 Initialization (script.js lines 963-1142)
+### 4.1 CARD_MODAL_DATA
 
-All initialization inside `DOMContentLoaded`:
-1. `loadAllConfigs()` — load all 6 JSON configs from inline script tags
-2. `buildCountdownTargets()` — populate COUNTDOWN_TARGETS from COUNTDOWN config
-3. Rebuild `chartFilterData` now that configs are loaded
+All 9 card modal contents stored in a single `CARD_MODAL_DATA` object keyed by card ID. Each entry has: `category`, `title`, `gems` (null for dynamic PvP), `badge`, `hero`, `description`, `tips[]`.
+
+### 4.2 showCardModal(cardId)
+
+Reads from `CARD_MODAL_DATA[cardId]`:
+- Sets icon box background/border color from category hex using `hexToRgb()`
+- Sets title (uppercase) and badge (star style)
+- For static cards: shows gem count
+- For PvP cards: calls `getPvpPayout()` with current league/rank from form fields to show live gems/cards/chips
+- For multiverse-war: adds demotion warning based on `pvp3-rank` vs `GAME.pvp.demotionThreshold`
+- Renders hero tagline, description, tips section
+- Shows modal with `.gem-modal--visible` class
+
+### 4.3 closeCardModal()
+
+Hides modal, restores body overflow. `closeDrillDown` is an alias for backward compatibility.
+
+### 4.4 hexToRgb(hex)
+
+Converts hex color to `r, g, b` string for use in `rgba()` CSS values.
+
+### 4.5 Initialization (DOMContentLoaded)
+
+1. `loadAllConfigs()` — load all 6 JSON configs
+2. `buildCountdownTargets()` — populate COUNTDOWN_TARGETS
+3. Rebuild `chartFilterData`
 4. Set `Chart.defaults` (color, borderColor)
-5. Create charts with initial data (categoryChart, rewardsChart, spiderChart)
+5. Create charts
 6. `initializePvPCards()` — rank option generation + localStorage load
-7. Reset PvP to defaults (clears localStorage)
-8. Set `--card-color` CSS variable on each card based on data-category
-9. Attach mode button hover handlers for card highlighting
+7. Reset PvP to defaults
+8. Set `--card-color` CSS variable on each card
+9. Attach mode button hover handlers
 10. `updateModeButtonStates()` + `updateAllPageTotals()`
 11. `setInterval(updateCountdowns, 1000)`
-12. URL parameter parsing for theme/mode/chart
+12. URL parameter parsing
 
-### 4.2 Mode Filtering
+### 4.6 Mode Filtering
 
 ```javascript
 let selectedModes = ['event', 'pvp', 'login', 'code'];
@@ -215,7 +249,7 @@ function filterCards(category, evt) {
 }
 ```
 
-### 4.3 Card Hover Highlight System
+### 4.7 Card Hover Highlight System
 
 Each card gets a `--card-color` CSS variable set dynamically from its `data-category`:
 
@@ -236,24 +270,15 @@ Hover effect uses `color-mix()` for dynamic color application:
 }
 ```
 
-Mode button hover adds `gem-card--mode-highlight--{mode}` class to matching cards, with CSS:
-- `--event`: orange glow
-- `--pvp`: pink glow
-- `--login`: amber glow
-- `--code`: green glow
-- `--all`: cyan glow
+Mode button hover adds `gem-card--mode-highlight--{mode}` class to matching cards.
 
-### 4.4 Chart Data Functions
+### 4.8 Chart Data Functions
 
-**buildModeData(mode, totals)** (line 40):
-- Returns `{ distribution, rewards, spider, colors, rewardColors }` for chartFilterData lookup
-- Uses `GAME.spiderTargets` and `CHARTS.colors`
+**buildModeData(mode, totals)** — returns `{ distribution, rewards, spider, colors, rewardColors }` for chartFilterData lookup.
 
-**getRewardsChartData(modes)** (line 352):
-- Returns `{ labels, data, colors }` for bar chart
-- Uses `REWARDS.categories` for event/code totals
+**getRewardsChartData(modes)** — returns `{ labels, data, colors }` for bar chart.
 
-### 4.5 PvP Payout Calculation
+### 4.9 PvP Payout Calculation
 
 ```javascript
 function getPvpPayout(leagueId, rank) {
@@ -270,7 +295,7 @@ function getPvpPayout(leagueId, rank) {
 }
 ```
 
-### 4.6 Countdown System
+### 4.10 Countdown System
 
 `COUNTDOWN_TARGETS` built at runtime via `buildCountdownTargets()` from COUNTDOWN config. Four timers: weekly (next Sunday 8pm EST), daily (8pm EST), cecilNightmares (3 days from now), multiverseArena (30 days from now).
 
@@ -299,12 +324,16 @@ Key tokens:
 
 | Component | Block | Elements | Modifiers |
 |-----------|-------|----------|-----------|
-| Card | `.gem-card` | `__body`, `__divider` | `--event`, `--pvp`, `--login`, `--code`, `--cyan`, `--purple`, `--hover`, `--fade-in`, `--delay-N` |
+| Card | `.gem-card` | `__body`, `__divider`, `__info-btn` | `--event`, `--pvp`, `--login`, `--code`, `--hover`, `--fade-in`, `--delay-N`, `--mode-highlight--*` |
 | Label | `.gem-label` | - | `--event`, `--pvp`, `--login`, `--code`, `--cyan` |
-| Mode Button | `.gem-mode-btn` | `__icon`, `__count`, `__label`, `__countdown` | `--all`, `--event`, `--pvp`, `--login`, `--code` |
+| Mode Button | `.gem-mode-btn` | `__icon`, `__count`, `__label`, `__countdown` | `--all`, `--event`, `--pvp`, `--login`, `--code` (active state uses toned opacity) |
 | Chart | `.gem-chart` | `__title` | - |
 | Toast | `.gem-toast` | - | `--success`, `--error`, `--info` |
-| Modal | `.gem-modal` | `__overlay`, `__content`, `__header`, `__body`, `__footer` | `--visible` |
+| Modal | `.gem-modal` | `__overlay`, `__content`, `__header`, `__body`, `__footer`, `__icon-box`, `__title`, `__total`, `__badge`, `__close` | `--visible` |
+| Modal badge | `.gem-modal__badge` | - | `--star` |
+| Modal content | `.gem-modal__hero`, `.gem-modal__body-text` | - | - |
+| Tips | `.gem-modal__tips` | `__header` | - |
+| Demotion | `.gem-modal__demotion-warning` | - | `--safe` |
 
 ### 5.3 Light Mode
 
@@ -329,7 +358,6 @@ Key tokens:
 ### 6.3 Individual Card Hover
 - Each card has `--card-color` CSS variable set from its category
 - Hover uses `color-mix()` to apply category color to border and box-shadow
-- Transform: translateY(-8px) scale(1.02)
 
 ### 6.4 Dynamic Total Counter
 - `animateValue(elementId, newValue, duration)` with ease-out quad easing
@@ -346,29 +374,35 @@ Key tokens:
 - First tap: 3D flip animation reveals "30KGTG" with pulsing glow
 - Second tap: copies to clipboard with scale-pop animation
 
-### 6.7 Search
+### 6.7 Card Modal System (9 cards)
+- Every card has `.gem-card__info-btn` (circular icon button, top-right)
+- Click opens `#cardModal` with dynamic content per card ID
+- Modal header: colored icon box + title (uppercase) + star badge
+- Body: hero tagline (italic) + description + tips section
+- PvP cards show live gems/cards/chips from current form selections
+- Multiverse War adds demotion zone warning (red if rank≥86, green if safe)
+- Close via overlay click, × button, or Escape key
+- Entry animation: pop-in scale effect
+
+### 6.8 Search
 - Expandable search bar with text highlighting
 - Searches card titles, descriptions, categories, gem amounts
 - "No results" message with suggestions
 
-### 6.8 Save/Share Menu
+### 6.9 Save/Share Menu
 - Save View (localStorage with name + timestamp)
 - Load View (prompt with numbered list)
 - Copy Link (URL params: mode, chart, theme)
 - Export PNG (html2canvas with 2x scale)
 
-### 6.9 Theme Toggle
+### 6.10 Theme Toggle
 - Dark/light mode switch via fixed icon button
 - Icon swaps between moon/sun
 - URL param `?theme=light` applies on load
 
-### 6.10 Charts Toggle
+### 6.11 Charts Toggle
 - Show/hide charts section via toggle button
 - Icon rotates (chevron up/down)
-
-### 6.11 Drill-Down Modal
-- Category drill-down modal (infrastructure exists, data-driven)
-- Escape key closes
 
 ### 6.12 Countdown Timers
 - 4 timers: weekly, daily, cecilNightmares, multiverseArena
@@ -419,6 +453,7 @@ Example: `index.html?theme=dark&mode=pvp&chart=event`
 | gem-rotate-bg | 20s | linear | Total section bg (infinite) |
 | gem-float-particle | 15s | linear | Background particles (infinite) |
 | gem-countdown-pulse | 1s | ease-out | Countdown second tick |
+| gem-modal--pop-in | 0.3s | cubic-bezier(0.34, 1.56, 0.64, 1) | Modal entry (when `.gem-modal--visible` applied to modal) |
 
 ---
 
@@ -434,6 +469,7 @@ The following were in older versions but are NOT in current implementation:
 - Legend section
 - Summary info box
 - External JSON file loading via fetch (reverted to inline due to file:// CORS)
+- Drill-down modal (replaced by cardModal system)
 
 ---
 
@@ -441,7 +477,7 @@ The following were in older versions but are NOT in current implementation:
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| index.html | 827 | HTML + inline JSON configs (6 in head) |
-| script.js | 1162 | All JS: charts, filtering, PvP, countdowns, search, save/share |
-| styles.css | 1183 | CSS custom properties, BEM components, animations |
+| index.html | 857 | HTML + inline JSON configs (6 in head) |
+| script.js | 1363 | All JS: charts, filtering, PvP, modals, countdowns, search, save/share |
+| styles.css | 1298 | CSS custom properties, BEM components, animations |
 | data/*.json | - | Source JSON files (embedded in index.html) |

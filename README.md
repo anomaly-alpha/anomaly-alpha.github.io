@@ -27,14 +27,36 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts,
 - **Search** — expandable search bar with text highlighting and match count
 - **Save/Share menu** — Save views (localStorage), load saved, copy link, export as PNG
 - **Export data as JSON**
-- **Drill-down modal** — category detail view (Escape to close)
+- **Card modals** — 9 cards each trigger an info modal via icon button (Escape to close)
 - **Charts update** based on mode selection
+
+### Card Modal System (9 cards, all icon-triggered)
+All cards have an info icon button (top-right corner) that opens a modal with:
+- Category-colored header with icon box
+- Star badge (e.g., ★ Top 5%, ★ Weekly, ★ 30×7)
+- Hero tagline (italic, large)
+- Description paragraph
+- Tips & Strategy section (yellow-tinted box with 5 tips)
+- PvP cards show live gems/cards/chips from current league+rank selections
+- Multiverse War modal includes demotion zone warning (reads from `pvp3-rank`)
+
+| Card | Icon Color | Badge |
+|------|-----------|-------|
+| Promo Code | green (code) | ★ Tap to Reveal |
+| The Long Haul | orange (event) | ★ Top 5% |
+| Earth's Defenders | orange (event) | ★ Top 10% |
+| Restricted Arena | pink (pvp) | ★ Weekly |
+| Open Arena | pink (pvp) | ★ Weekly |
+| Multiverse Alliance War | pink (pvp) | ★ 5 Matches / 2 Weeks |
+| Daily Login | amber (login) | ★ 30×7 |
+| Weekly Login | amber (login) | ★ Weekly |
+| Monthly Login | amber (login) | ★ 90÷4 |
 
 ### PvP Interactive Cards (3 cards)
 - **League selector**: 14 options — Intern, Junior I–III, Intermediate I–III, Senior I–III, Elite I–III, Invincible
 - **Rank selector**: 1–120
 - **Dynamic gems/cards/chips** based on tier + league multiplier
-- **Demotion zone warning** at rank 86+ (Multiverse Alliance War only)
+- **Demotion zone warning** at rank 86+ (Multiverse Alliance War card only)
 - **localStorage persistence** per card
 - **Clear button** to reset to defaults (Elite II, rank 13)
 
@@ -60,10 +82,11 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts,
 
 ```
 anomaly-alpha/
-├── index.html           (827 lines) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (1162 lines) — All JS: charts, filters, PvP, countdowns, search
-├── styles.css           (1183 lines) — CSS custom properties + BEM component classes
+├── index.html           (857 lines) — Main HTML + inline JSON configs (6 in <head>)
+├── script.js            (1363 lines) — All JS: charts, filters, PvP, modals, countdowns, search
+├── styles.css           (1298 lines) — CSS custom properties + BEM component classes
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
+├── PLAN_card_modals.md  — Card modal feature plan and implementation notes
 ├── README.md            — This file
 ├── data/                — Source JSON files (embedded in index.html)
 │   ├── game-config.json     (14 leagues, 7 tiers, spider targets)
@@ -76,7 +99,8 @@ anomaly-alpha/
     ├── index.md         — Feature documentation
     └── plan/
         ├── IMPLEMENTATION_PLAN.md    — Full technical specification
-        └── JSON_EXTRACTION_PLAN.md   — Data model definition
+        ├── JSON_EXTRACTION_PLAN.md   — Data model definition
+        └── [historical fix notes]
 ```
 
 ## Usage
@@ -92,6 +116,8 @@ CSS custom property design tokens with BEM naming convention:
 - **Text classes**: `.gem-text--event`, `.gem-text--pvp`, etc.
 - **Shadow tokens**: `--gem-shadow--card`, `--gem-shadow--glow-cyan`
 - **Hover highlight**: `--card-color` CSS variable per card for dynamic category-color hover effects
+- **Info icon**: `.gem-card__info-btn` — circular icon button on every card, triggers modal
+- **Modal badge**: `.gem-modal__badge--star` — yellow star badge in modal header
 - Light mode via `:root.light-mode` token overrides
 
 ## Tech Stack
@@ -117,6 +143,8 @@ CSS custom property design tokens with BEM naming convention:
 - ✅ **Custom SVG favicon** — Cyan-to-pink gradient gem shape
 - ✅ **Charts toggle** — Show/hide charts section with animated chevron
 - ✅ **Login total corrected** — 293/week (210+60+23)
+- ✅ **Card modals (9 cards)** — All cards trigger modal via info icon; modal has hero tagline, description, tips, live PvP data, demotion warning
+- ✅ **Active mode selector opacity** — Toned down active mode button solid colors to be more transparent
 
 ### Data & Calculations
 - ✅ **GAME.pvp structure** — 14 leagues with `rankStart`/`rankEnd` fields

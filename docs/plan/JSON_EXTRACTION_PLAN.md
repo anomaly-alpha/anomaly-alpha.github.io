@@ -234,10 +234,11 @@ Change from 4 league options to 14:
 
 ```
 anomaly-alpha/
-├── index.html           (827 lines, inline JSON configs in <head>)
-├── script.js            (1162 lines, loadConfig reads inline <script> elements)
-├── styles.css           (1183 lines)
+├── index.html           (857 lines, inline JSON configs in <head>)
+├── script.js            (1363 lines, loadConfig reads inline <script> elements)
+├── styles.css           (1298 lines)
 ├── favicon.svg
+├── PLAN_card_modals.md  - Card modal feature plan and notes
 ├── data/                (source JSON files, embedded in index.html)
 │   ├── game-config.json     (PvP, spider targets)
 │   ├── rewards-config.json  (cards, categories, login)
@@ -306,3 +307,4 @@ To update PvP payouts, league multipliers, card values, etc.:
 - Cards (reward count) do NOT get multiplied by league
 - Chips (currency) DO get multiplied by league
 - Demotion threshold (86) applies across all leagues
+- **Card modal system** — All 9 cards have info icon buttons that open a shared `cardModal` with dynamic content. `CARD_MODAL_DATA` object (inline in script.js) stores all modal content. PvP card modals read live from form selections. The former `drilldownModal` is replaced by `cardModal`.

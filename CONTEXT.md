@@ -1,0 +1,46 @@
+# Context — Gem Rewards Infographic
+
+## Project Type
+Single-page interactive infographic web app for the Invincible mobile game.
+
+## Purpose
+Display weekly gem reward sources with interactive filtering, dynamic charts, and a sci-fi game aesthetic.
+
+## Domain Model
+
+### Gem Categories
+- **Event** — Time-limited game events with ranking thresholds (top 5%, top 10%)
+- **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout
+- **Login** — Daily/weekly/monthly login rewards with streak mechanics
+- **Code** — Promotional codes distributed through official channels
+
+### Key Terms
+- **League** — 14-tier PvP ranking system (Intern → Invincible) with a multiplier applied to base payouts
+- **Rank** — Absolute rank 1-120 within a league; higher ranks earn more gems/chips
+- **Tier** — One of 7 rank ranges that define base gem/card/chip values before multiplier
+- **Demotion Threshold** — Rank 86: at or above this rank, Multiverse Alliance War players risk being demoted
+- **Spider Chart** — Radar chart comparing actual gem income vs target income across 4 categories
+
+### Card Modal System
+- Every reward card has an **info icon** (`.gem-card__info-btn`) that opens a **card modal**
+- The modal shows: hero tagline, description, tips, and for PvP cards — live gem/card/chip values from current form selections
+- A **star badge** (`★`) appears in the modal header for all cards
+- The **Multiverse Alliance War** modal includes a **demotion warning** based on current rank vs threshold
+
+## Architecture
+- Inline JSON configs in HTML `<head>` (no fetch, works from `file://`)
+- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME` — global config objects
+- `getPvpPayout(leagueId, rank)` — core PvP calculation function
+- `CARD_MODAL_DATA` — static object holding all 9 card modal contents
+- `showCardModal(cardId)` / `closeCardModal()` — modal lifecycle
+
+## Design Language
+- CSS custom properties as design tokens (`--gem-event`, `--gem-pvp`, etc.)
+- BEM naming for component classes
+- Rajdhani font for consistent sci-fi typography
+- Category colors: event=orange, pvp=pink, login=amber, code=green, all=cyan
+
+## Constraints
+- No build step — works directly from disk
+- No external fetch — all data inline in HTML
+- Supports dark and light modes via `:root.light-mode` token overrides
