@@ -110,6 +110,9 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 - ✅ Made mode selector totals dynamic - now calculated from eventsByMode
 - ✅ Fixed PvP percentage calculation to use dynamic total
 - ✅ Login mode total now = daily + weekly + (monthly÷4) = 293
+- ✅ Updated PvP defaults to Elite II rank 13 (user's settings)
+- ✅ Fixed PvP mode selector showing 0 issue
+- ✅ Unified event card tag styles - all login cards use yellow-accent
 
 ## Contributors
 
