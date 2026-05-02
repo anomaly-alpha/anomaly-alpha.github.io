@@ -61,14 +61,24 @@ Each card has:
 - localStorage persistence
 - Clear button to reset to defaults
 
-## Files
+## File Structure
 
-- `gem_infographic.html` - Interactive infographic
-- `gem_infographic.png` - Static infographic image
+- `index.html` - Main HTML structure (clean, no inline styles/scripts)
+- `styles.css` - Design system: CSS custom properties + BEM component classes
+- `script.js` - All interactive functionality: charts, filters, PvP, countdown timers
+- `gem_infographic.html` - Original monolithic file (archived)
 
 ## Usage
 
-Open `gem_infographic.html` in a browser to view the infographic.
+Open `index.html` in a browser to view the infographic.
+
+## Design System
+
+CSS custom property design tokens with BEM naming convention:
+- Color tokens: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, etc.
+- Component classes: `.gem-card--event`, `.gem-label--pvp`, `.gem-text--primary`, etc.
+- Shadow tokens: `--gem-shadow--card`, `--gem-shadow--glow-cyan`, etc.
+- Light mode support via `:root.light-mode` token overrides
 
 ## Tech Stack
 
@@ -80,6 +90,9 @@ Open `gem_infographic.html` in a browser to view the infographic.
 
 ## Recent Updates (May 2026)
 
+- ✅ **Extracted to separate files** - `index.html`, `styles.css`, `script.js` from `gem_infographic.html`
+- ✅ **Design token system** - CSS custom properties for all colors, shadows, and design values
+- ✅ **BEM naming** - Semantic component classes (`.gem-card--event`, `.gem-label--pvp`, etc.)
 - ✅ Removed Season category and cards (replaced with PvP)
 - ✅ Merged Warfare into PvP (Multiverse Alliance War)
 - ✅ Created unified mode cards at top with totals and timers

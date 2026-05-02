@@ -1,0 +1,1176 @@
+/*
+  Gem Infographic - JavaScript
+  ============================
+  All interactive functionality extracted from gem_infographic.html
+*/
+
+// ===== DATA CONSTANTS =====
+
+const categoryData = {
+  season: {
+    title: 'Season Rewards',
+    icon: 'fa-trophy',
+    color: 'cyan-glow',
+    bgColor: 'bg-cyan-glow',
+    total: 1820,
+    rewards: [
+      { name: 'Elite League I', gems: 810, desc: 'Highest tier season finish', pct: '44.5%' },
+      { name: 'Invincible League', gems: 560, desc: 'Rank 38 leaderboard', pct: '30.8%' },
+      { name: 'Elite League II', gems: 450, desc: 'Rank 86 leaderboard', pct: '24.7%' }
+    ]
+  },
+  event: {
+    title: 'Event Rewards',
+    icon: 'fa-dragon',
+    color: 'orange-accent',
+    bgColor: 'bg-orange-accent',
+    total: 500,
+    rewards: [
+      { name: 'The Long Haul', gems: 300, desc: 'Top 5% event ranking', pct: '60%' },
+      { name: "Earth's Defenders", gems: 200, desc: 'Top 10% event ranking', pct: '40%' }
+    ]
+  },
+  login: {
+    title: 'Login Rewards',
+    icon: 'fa-sign-in-alt',
+    color: 'yellow-accent',
+    bgColor: 'bg-yellow-accent',
+    total: 180,
+    rewards: [
+      { name: 'Daily Payout', gems: 30, desc: 'Per day', pct: '16.7%' },
+      { name: 'Weekly Payout', gems: 60, desc: 'Per week', pct: '33.3%' },
+      { name: 'Monthly Payout', gems: 90, desc: 'Per month', pct: '50%' }
+    ]
+  },
+  code: {
+    title: 'Promo Code',
+    icon: 'fa-gift',
+    color: 'green-accent',
+    bgColor: 'bg-green-accent',
+    total: 300,
+    rewards: [
+      { name: 'Code: 30KGTG', gems: 300, desc: 'One-time redemption', pct: '100%' }
+    ]
+  }
+};
+
+// GAME DATA (Consolidated JSON)
+const GAME = {
+  pvp: {
+    base: [[1,1,710,4,1000],[2,2,670,3,900],[3,3,640,2,800],[4,10,600,1,600],[11,30,560,1,600],[31,60,520,1,600],[61,120,490,1,500]],
+    mod: { eliteII:0.85, eliteI:0.70, invincible:1.25 },
+    def: { league: 'eliteII', rank: 13 }
+  },
+  ev: {
+    event: [['The Long Haul',300,14],["Earth's Defenders",200,7]],
+    login: [['Daily',210],['Weekly',60],['Monthly',90]],
+    code: [['Promo Code',300]]
+  },
+  chart: {
+    all: [0,500,750,180,300],
+    rewards: [810,560,450,750,300,200,180],
+    spider: { a:[0,500,750,180,300], t:[0,800,1000,300,500] },
+    colors: { main:['#333','#ff6b35','#e91e8a','#f39c12','#2ecc71'], reward:['#333','#333','#333','#e91e8a','#ff6b35','#ff6b35','#f39c12','#2ecc71'] }
+  }
+};
+
+const pvpDefaults = { 1: GAME.pvp.def, 2: GAME.pvp.def, 3: GAME.pvp.def };
+
+const eventsByMode = {
+  event: GAME.ev.event.map(e => ({ name: e[0], gems: e[1], seasonDays: e[2] })),
+  login: GAME.ev.login.map(e => ({ name: e[0], gems: e[1] })),
+  code: GAME.ev.code.map(e => ({ name: e[0], gems: e[1], active: true }))
+};
+
+// ===== TAILWIND CONFIG NOTE =====
+// Note: The original tailwind.config = {} block only works with Play CDN.
+// With standard CDN (cdn.tailwindcss.com), this config has no effect.
+// Custom color classes like bg-cyan-glow, text-pink-glow, etc. work via
+// Tailwind's arbitrary value syntax, not via config.
+// Design tokens are now defined in styles.css as CSS custom properties.
+
+// ===== CHART CONFIGURATION =====
+
+const chartTooltipConfig = {
+  backgroundColor: 'rgba(10, 35, 60, 0.95)',
+  borderColor: 'rgba(0, 229, 255, 0.5)',
+  borderWidth: 1,
+  titleFont: { family: 'Rajdhani', size: 14, weight: 'bold' },
+  bodyFont: { family: 'Rajdhani', size: 13 },
+  padding: 12,
+  cornerRadius: 8,
+  displayColors: true,
+  boxPadding: 4,
+  callbacks: {
+    label: function(context) {
+      const value = context.raw;
+      const total = context.dataset.data.reduce((a, b) => a + b, 0);
+      const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+      const avg = total / context.dataset.data.length;
+      const vsAvg = value > avg ? '+' : '';
+      return [
+        `${value.toLocaleString()} Gems`,
+        `${pct}% of category`,
+        value > avg ? `${vsAvg}${(value - avg).toLocaleString()} vs avg` : ''
+      ];
+    }
+  }
+};
+
+const chartAnimationConfig = {
+  duration: 750,
+  easing: 'easeOutQuart'
+};
+
+// ===== CHART FILTER DATA =====
+
+const DC = '#333';
+const CM = { event:'#ff6b35', pvp:'#e91e8a', login:'#f39c12', code:'#2ecc71' };
+
+const modeTotals = { event: 0, pvp: 0, login: 0, code: 0 };
+
+function buildModeData(mode, totals) {
+  const d = [0,0,0,0,0], r = [0,0,0,0,0,0,0], sp = [[0,0,0,0,0],[0,0,0,0,0]];
+  if (mode === 'all') {
+    d[1] = GAME.ev.event[0][1] + GAME.ev.event[1][1];
+    d[2] = totals.pvp;
+    d[3] = GAME.ev.login[0][1] + GAME.ev.login[1][1] + Math.round(GAME.ev.login[2][1]/4);
+    d[4] = GAME.ev.code[0][1];
+    r[3] = d[1]; r[4] = GAME.ev.event[1][1]; r[5] = totals.pvp; r[6] = d[3];
+    sp[0] = d.slice(1); sp[1] = [800,1000,1200,500];
+  } else if (mode === 'event') {
+    d[1] = GAME.ev.event[0][1] + GAME.ev.event[1][1]; r[3] = GAME.ev.event[0][1]; r[4] = GAME.ev.event[1][1];
+    sp[0] = [d[1],0,0,0]; sp[1] = [800,0,0,0];
+  } else if (mode === 'pvp') {
+    d[2] = totals.pvp; r[5] = totals.pvp;
+    sp[0] = [0,d[2],0,0]; sp[1] = [0,1000,0,0];
+  } else if (mode === 'login') {
+    d[3] = GAME.ev.login[0][1] + GAME.ev.login[1][1] + Math.round(GAME.ev.login[2][1]/4); r[6] = d[3];
+    sp[0] = [0,0,d[3],0]; sp[1] = [0,0,300,0];
+  } else if (mode === 'code') {
+    d[4] = GAME.ev.code[0][1]; r[3] = d[4];
+    sp[0] = [0,0,0,d[4]]; sp[1] = [0,0,0,500];
+  }
+  const cols = d.map((v,i) => v>0 ? (i===1?CM.event:i===2?CM.pvp:i===3?CM.login:CM.code) : DC);
+  const rCols = r.map((v,i) => v>0 ? (i===3?CM.event:i===4?CM.event:i===5?CM.pvp:i===6?CM.login:CM.code) : DC);
+  return { distribution: d, rewards: r, spider: sp, colors: cols, rewardColors: rCols };
+}
+
+const chartFilterData = {
+  all: buildModeData('all', modeTotals),
+  event: buildModeData('event', modeTotals),
+  pvp: buildModeData('pvp', modeTotals),
+  login: buildModeData('login', modeTotals),
+  code: buildModeData('code', modeTotals)
+};
+
+// ===== COUNTDOWN TIMER CONFIGURATION =====
+
+const COUNTDOWN_TARGETS = {
+  weekly: getNextSunday(),
+  daily: getNextDailyReset(),
+  multiverseArena: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  cecilNightmares: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+};
+
+function getNextSunday() {
+  const now = new Date();
+  const nextSunday = new Date(now);
+  nextSunday.setDate(now.getDate() + (7 - now.getDay()) % 7);
+  nextSunday.setHours(20, 0, 0, 0);
+  if (nextSunday <= now) {
+    nextSunday.setDate(nextSunday.getDate() + 7);
+  }
+  return nextSunday;
+}
+
+function getNextDailyReset() {
+  const now = new Date();
+  const targetHour = 20;
+  const targetMinute = 0;
+
+  const estOffset = -4 * 60 * 60 * 1000;
+  const estNow = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000) + estOffset);
+
+  const nextReset = new Date(now);
+  if (estNow.getHours() >= targetHour || (estNow.getHours() === targetHour && estNow.getMinutes() >= targetMinute)) {
+    nextReset.setDate(nextReset.getDate() + 1);
+  }
+  nextReset.setHours(targetHour - now.getTimezoneOffset() / 60, targetMinute, 0, 0);
+
+  return nextReset;
+}
+
+function formatCountdown(distance) {
+  if (distance < 0) return "NOW!";
+
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  const secs = seconds.toString().padStart(2, '0');
+  const mins = minutes.toString().padStart(2, '0');
+
+  if (days > 0) {
+    return `${days}d ${hours}h ${mins}:${secs}`;
+  } else if (hours > 0) {
+    return `${hours}h ${mins}:${secs}`;
+  } else {
+    return `${mins}:${secs}`;
+  }
+}
+
+// ===== UTILITY FUNCTIONS =====
+
+function copyCode() {
+  navigator.clipboard.writeText('30KGTG');
+  const feedback = document.createElement('div');
+  feedback.className = 'gem-toast gem-toast--success';
+  feedback.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Code copied!';
+  document.body.appendChild(feedback);
+  setTimeout(() => feedback.remove(), 2000);
+}
+
+function getPvpPayout(leagueKey, rank) {
+  const tiers = GAME.pvp.base;
+  const mod = GAME.pvp.mod[leagueKey] || 1;
+  const tier = tiers.find(t => rank >= t[0] && rank <= t[1]);
+  if (!tier) return { gems: 0, cards: 0, chips: 0, isDemotion: false };
+  return { gems: Math.round(tier[2] * mod), cards: tier[3], chips: Math.round(tier[4] * mod), isDemotion: rank >= 86 };
+}
+
+function getModeTotal(mode) {
+  if (mode === 'pvp') {
+    const l1 = document.getElementById('pvp1-league')?.value || 'eliteII';
+    const r1 = parseInt(document.getElementById('pvp1-rank')?.value) || 13;
+    const l2 = document.getElementById('pvp2-league')?.value || 'eliteII';
+    const r2 = parseInt(document.getElementById('pvp2-rank')?.value) || 13;
+    const l3 = document.getElementById('pvp3-league')?.value || 'eliteII';
+    const r3 = parseInt(document.getElementById('pvp3-rank')?.value) || 13;
+    const p1 = getPvpPayout(l1, r1).gems;
+    const p2 = getPvpPayout(l2, r2).gems;
+    const p3 = getPvpPayout(l3, r3).gems;
+    return p1 + p2 + p3 || 1428;
+  }
+  const modeEvents = eventsByMode[mode];
+  if (!modeEvents) return 0;
+
+  if (mode === 'login') {
+    const daily = modeEvents.find(e => e.name === 'Daily')?.gems || 0;
+    const weekly = modeEvents.find(e => e.name === 'Weekly')?.gems || 0;
+    const monthly = modeEvents.find(e => e.name === 'Monthly')?.gems || 0;
+    return daily + weekly + Math.round(monthly / 4);
+  }
+
+  return modeEvents.reduce((sum, event) => sum + (event.gems || 0), 0);
+}
+
+function calculateSelectedTotal() {
+  return selectedModes.reduce((sum, mode) => sum + getModeTotal(mode), 0);
+}
+
+function animateValue(elementId, newValue, duration = 400) {
+  let el;
+  if (typeof elementId === 'string') {
+    el = document.getElementById(elementId);
+  } else if (elementId instanceof Element) {
+    el = elementId;
+  }
+  if (!el) return;
+  const current = parseInt(el.textContent.replace(/,/g, '')) || 0;
+  const diff = newValue - current;
+  if (diff === 0) {
+    el.textContent = newValue.toLocaleString();
+    return;
+  }
+  const startTime = performance.now();
+  function step(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 2);
+    const value = Math.round(current + (diff * eased));
+    el.textContent = value.toLocaleString();
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function escapeRegex(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// ===== FILTER & MODE FUNCTIONS =====
+
+let selectedModes = ['event', 'pvp', 'login', 'code'];
+let currentMode = 'all';
+
+function filterCards(category, evt) {
+  const cards = document.querySelectorAll('[data-category]');
+
+  if (category === 'all') {
+    selectedModes = ['event', 'pvp', 'login', 'code'];
+    updateAllButtons();
+  } else {
+    const modeIndex = selectedModes.indexOf(category);
+    if (modeIndex > -1) {
+      selectedModes.splice(modeIndex, 1);
+    } else {
+      selectedModes.push(category);
+    }
+    if (selectedModes.length === 0) selectedModes = ['event', 'pvp', 'login', 'code'];
+  }
+
+  updateModeButtonStates();
+  updateAllPageTotals();
+
+  cards.forEach(card => {
+    const cardCategory = card.dataset.category;
+    if (selectedModes.includes(cardCategory)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  updateChartsByModes(selectedModes);
+  updateCountdowns();
+
+  currentMode = selectedModes.length === 4 ? 'all' : selectedModes.join(',');
+}
+
+function updateAllButtons() {
+  selectedModes = ['event', 'pvp', 'login', 'code'];
+}
+
+function updateModeButtonStates() {
+  const isAllSelected = selectedModes.length === 4;
+
+  const allBtn = document.querySelector('.gem-mode-btn--all');
+  if (allBtn) {
+    allBtn.classList.remove('active', 'from-cyan-glow/30', 'border-cyan-glow/50', 'shadow-[0_0_20px_rgba(0,229,255,0.4)]');
+    allBtn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/30');
+    if (isAllSelected) {
+      allBtn.classList.add('active', 'from-cyan-glow/30', 'border-cyan-glow/50', 'shadow-[0_0_20px_rgba(0,229,255,0.4)]');
+    } else {
+      allBtn.classList.add('bg-cyan-glow/10', 'border-cyan-glow/30');
+    }
+  }
+
+  const eventBtn = document.querySelector('.gem-mode-btn--event');
+  if (eventBtn) {
+    eventBtn.classList.remove('active', 'bg-orange-accent/30', 'border-orange-accent/50');
+    eventBtn.classList.remove('bg-orange-accent/10', 'border-orange-accent/30');
+    if (selectedModes.includes('event')) {
+      eventBtn.classList.add('active', 'bg-orange-accent/30', 'border-orange-accent/50');
+    } else {
+      eventBtn.classList.add('bg-orange-accent/10', 'border-orange-accent/30');
+    }
+  }
+
+  const pvpBtn = document.querySelector('.gem-mode-btn--pvp');
+  if (pvpBtn) {
+    pvpBtn.classList.remove('active', 'bg-pink-glow/30', 'border-pink-glow/50');
+    pvpBtn.classList.remove('bg-pink-glow/10', 'border-pink-glow/30');
+    if (selectedModes.includes('pvp')) {
+      pvpBtn.classList.add('active', 'bg-pink-glow/30', 'border-pink-glow/50');
+    } else {
+      pvpBtn.classList.add('bg-pink-glow/10', 'border-pink-glow/30');
+    }
+  }
+
+  const codeBtn = document.querySelector('.gem-mode-btn--code');
+  if (codeBtn) {
+    codeBtn.classList.remove('active', 'bg-green-accent/30', 'border-green-accent/50');
+    codeBtn.classList.remove('bg-green-accent/10', 'border-green-accent/30');
+    if (selectedModes.includes('code')) {
+      codeBtn.classList.add('active', 'bg-green-accent/30', 'border-green-accent/50');
+    } else {
+      codeBtn.classList.add('bg-green-accent/10', 'border-green-accent/30');
+    }
+  }
+
+  const loginBtn = document.querySelector('.gem-mode-btn--login');
+  if (loginBtn) {
+    loginBtn.classList.remove('active', 'bg-yellow-accent/30', 'border-yellow-accent/50');
+    loginBtn.classList.remove('bg-yellow-accent/10', 'border-yellow-accent/30');
+    if (selectedModes.includes('login')) {
+      loginBtn.classList.add('active', 'bg-yellow-accent/30', 'border-yellow-accent/50');
+    } else {
+      loginBtn.classList.add('bg-yellow-accent/10', 'border-yellow-accent/30');
+    }
+  }
+}
+
+function updateAllPageTotals() {
+  const mainTotal = selectedModes.reduce((sum, mode) => sum + getModeTotal(mode), 0);
+  const mainCounter = document.getElementById('totalCounter');
+  if (mainCounter) animateValue('totalCounter', mainTotal, 400);
+
+  ['event', 'pvp', 'login', 'code'].forEach(mode => {
+    const btn = document.querySelector(`.gem-mode-btn--${mode}`);
+    const total = mode === 'pvp' ? getModeTotal('pvp') : Math.round(getModeTotal(mode));
+    if (btn) {
+      const totalEl = btn.querySelector('.gem-mode-btn__count');
+      if (totalEl) {
+        totalEl.textContent = total;
+        animateValue(totalEl, total, 400);
+      }
+    }
+    modeTotals[mode] = total;
+  });
+
+  const allBtn = document.querySelector('.gem-mode-btn--all');
+  if (allBtn) {
+    const allTotalEl = allBtn.querySelector('.gem-mode-btn__count');
+    if (allTotalEl) animateValue(allTotalEl, mainTotal, 400);
+  }
+
+  chartFilterData.all = buildModeData('all', modeTotals);
+  chartFilterData.event = buildModeData('event', modeTotals);
+  chartFilterData.pvp = buildModeData('pvp', modeTotals);
+  chartFilterData.login = buildModeData('login', modeTotals);
+  chartFilterData.code = buildModeData('code', modeTotals);
+}
+
+// ===== CHART FUNCTIONS =====
+
+let categoryChart, rewardsChart, spiderChart, lineChart;
+let currentChartFilter = 'all';
+
+function updateChartsByCategory(category) {
+  const data = chartFilterData[category] || chartFilterData['all'];
+  categoryChart.data.datasets[0].data = data.distribution;
+  categoryChart.data.datasets[0].backgroundColor = data.colors;
+  categoryChart.update('active');
+
+  rewardsChart.data.datasets[0].data = data.rewards;
+  rewardsChart.data.datasets[0].backgroundColor = data.rewardColors;
+  rewardsChart.update('active');
+
+  spiderChart.data.datasets[0].data = data.spider[0];
+  spiderChart.data.datasets[1].data = data.spider[1];
+  spiderChart.update('active');
+}
+
+function updateChartsByModes(modes) {
+  const combinedData = {
+    distribution: [0, 0, 0, 0, 0],
+    rewards: new Array(7).fill(0),
+    colors: ['#333333', '#333333', '#333333', '#333333', '#333333'],
+    rewardColors: new Array(7).fill('#333333')
+  };
+
+  const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
+
+  modes.forEach(mode => {
+    const data = chartFilterData[mode];
+    if (data) {
+      combinedData.distribution = combinedData.distribution.map((v, i) => v + (data.distribution[i] || 0));
+      combinedData.rewards = combinedData.rewards.map((v, i) => v + (data.rewards[i] || 0));
+    }
+  });
+
+  combinedData.distribution.forEach((v, i) => {
+    combinedData.colors[i] = v > 0 ? (colorMap[modes.find(m => chartFilterData[m].distribution[i] > 0)] || '#00e5ff') : '#333333';
+  });
+
+  combinedData.rewards.forEach((v, i) => {
+    combinedData.rewardColors[i] = v > 0 ? '#00e5ff' : '#333333';
+  });
+
+  categoryChart.data.datasets[0].data = combinedData.distribution;
+  categoryChart.data.datasets[0].backgroundColor = combinedData.colors;
+  categoryChart.update('active');
+
+  rewardsChart.data.datasets[0].data = combinedData.rewards;
+  rewardsChart.data.datasets[0].backgroundColor = combinedData.rewardColors;
+  rewardsChart.update('active');
+
+  const spiderData = [combinedData.distribution.slice(1), [800, 1000, 1200, 500]];
+  spiderChart.data.datasets[0].data = spiderData[0];
+  spiderChart.data.datasets[1].data = spiderData[1];
+  spiderChart.update('active');
+}
+
+function filterChart(filter) {
+  currentChartFilter = filter;
+  const data = chartFilterData[filter];
+  const buttons = document.querySelectorAll('.chart-filter-btn');
+
+  buttons.forEach(btn => {
+    btn.classList.remove('bg-cyan-glow/20', 'border-cyan-glow/30', 'active');
+    btn.classList.add('bg-cyan-glow/10', 'border-cyan-glow/20');
+    if (btn.textContent.toLowerCase() === filter || (filter === 'all' && btn.textContent === 'All')) {
+      btn.classList.add('bg-cyan-glow/20', 'border-cyan-glow/30');
+      btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
+      btn.classList.add('active');
+    } else if (btn.textContent.toLowerCase() === 'event') {
+      btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
+      btn.classList.add('bg-orange-accent/10', 'border-orange-accent/20');
+      if (filter === 'event') {
+        btn.classList.add('bg-orange-accent/20', 'border-orange-accent/30');
+        btn.classList.remove('bg-orange-accent/10', 'border-orange-accent/20');
+      }
+    } else if (btn.textContent.toLowerCase() === 'login') {
+      btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
+      btn.classList.add('bg-yellow-accent/10', 'border-yellow-accent/20');
+      if (filter === 'login') {
+        btn.classList.add('bg-yellow-accent/20', 'border-yellow-accent/30');
+        btn.classList.remove('bg-yellow-accent/10', 'border-yellow-accent/20');
+      }
+    } else if (btn.textContent.toLowerCase() === 'code') {
+      btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
+      btn.classList.add('bg-green-accent/10', 'border-green-accent/20');
+      if (filter === 'code') {
+        btn.classList.add('bg-green-accent/20', 'border-green-accent/30');
+        btn.classList.remove('bg-green-accent/10', 'border-green-accent/20');
+      }
+    } else if (btn.textContent.toLowerCase() === 'pvp') {
+      btn.classList.remove('bg-cyan-glow/10', 'border-cyan-glow/20');
+      btn.classList.add('bg-pink-glow/10', 'border-pink-glow/20');
+      if (filter === 'pvp') {
+        btn.classList.add('bg-pink-glow/20', 'border-pink-glow/30');
+        btn.classList.remove('bg-pink-glow/10', 'border-pink-glow/20');
+      }
+    }
+  });
+
+  categoryChart.data.datasets[0].data = data.distribution;
+  categoryChart.data.datasets[0].backgroundColor = data.colors;
+  categoryChart.update('active');
+
+  rewardsChart.data.datasets[0].data = data.rewards;
+  rewardsChart.data.datasets[0].backgroundColor = data.rewardColors;
+  rewardsChart.update('active');
+
+  spiderChart.data.datasets[0].data = data.spider[0];
+  spiderChart.data.datasets[1].data = data.spider[1];
+  spiderChart.update('active');
+}
+
+// ===== UI COMPONENTS =====
+
+// Theme Toggle
+function toggleTheme() {
+  document.body.classList.toggle('light-mode');
+  const icon = document.getElementById('themeIcon');
+  if (document.body.classList.contains('light-mode')) {
+    icon.classList.remove('fa-moon');
+    icon.classList.add('fa-sun');
+  } else {
+    icon.classList.remove('fa-sun');
+    icon.classList.add('fa-moon');
+  }
+}
+
+// Search
+let searchExpanded = false;
+
+function toggleSearch() {
+  const btn = document.getElementById('searchToggleBtn');
+  const input = document.getElementById('searchInput');
+  const clearBtn = document.getElementById('searchClearBtn');
+
+  if (!searchExpanded) {
+    btn.classList.add('hidden');
+    input.classList.remove('hidden');
+    input.classList.remove('w-0', 'px-0');
+    input.classList.add('w-48', 'px-3');
+    input.focus();
+    clearBtn.classList.remove('hidden');
+    searchExpanded = true;
+  }
+}
+
+function clearSearch() {
+  const input = document.getElementById('searchInput');
+  const clearBtn = document.getElementById('searchClearBtn');
+  const btn = document.getElementById('searchToggleBtn');
+
+  input.value = '';
+  input.classList.add('w-0', 'px-0');
+  input.classList.remove('w-48', 'px-3');
+  setTimeout(() => {
+    input.classList.add('hidden');
+    btn.classList.remove('hidden');
+  }, 300);
+  clearBtn.classList.add('hidden');
+  searchExpanded = false;
+
+  document.querySelectorAll('[data-category]').forEach(card => {
+    card.style.display = 'block';
+    card.classList.remove('opacity-30');
+    const title = card.querySelector('h3');
+    if (title) title.innerHTML = title.textContent;
+  });
+
+  const noResults = document.getElementById('noSearchResults');
+  if (noResults) noResults.remove();
+}
+
+function searchRewards(query) {
+  const cards = document.querySelectorAll('[data-category]');
+  const clearBtn = document.getElementById('searchClearBtn');
+
+  if (query.length === 0) {
+    clearSearch();
+    return;
+  }
+
+  clearBtn.classList.remove('hidden');
+
+  const noResults = document.getElementById('noSearchResults');
+  if (noResults) noResults.remove();
+
+  let matchCount = 0;
+  const lowerQuery = query.toLowerCase();
+
+  cards.forEach(card => {
+    const title = card.querySelector('h3');
+    const desc = card.querySelector('.text-white\\/60');
+    const category = card.dataset.category;
+    const gemsText = card.querySelector('.text-5xl')?.textContent || '';
+
+    const searchableText = (
+      (title ? title.textContent : '') + ' ' +
+      (desc ? desc.textContent : '') + ' ' +
+      category + ' ' +
+      gemsText
+    ).toLowerCase();
+
+    if (searchableText.includes(lowerQuery)) {
+      card.style.display = 'block';
+      card.classList.remove('opacity-30');
+      matchCount++;
+
+      if (title) {
+        const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+        title.innerHTML = title.textContent.replace(regex, '<span class="gem-search__highlight">$1</span>');
+      }
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  if (matchCount === 0) {
+    const grid = document.querySelector('.gem-grid--cards');
+    if (grid) {
+      const msg = document.createElement('div');
+      msg.id = 'noSearchResults';
+      msg.className = 'gem-search--empty col-span-full';
+      msg.innerHTML = `<i class="fas fa-search text-white/30 mb-2"></i>No rewards found for "${query}"<p class="text-xs text-white/40 mt-2">Try: login, pvp, event, code</p>`;
+      grid.appendChild(msg);
+    }
+  }
+}
+
+function handleSearchKeydown(e) {
+  if (e.key === 'Escape') {
+    clearSearch();
+  }
+}
+
+// Save/Share Menu
+function toggleSaveMenu() {
+  const menu = document.getElementById('saveMenu');
+  menu.classList.toggle('hidden');
+}
+
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('saveMenu');
+  const btn = e.target.closest('[onclick="toggleSaveMenu()"]');
+  if (!btn && !menu?.contains(e.target)) {
+    menu?.classList.add('hidden');
+  }
+});
+
+function saveCurrentView() {
+  const name = prompt('Enter a name for this view:', 'My View');
+  if (!name) return;
+
+  const view = {
+    id: 'view_' + Date.now(),
+    name: name,
+    mode: currentMode,
+    chartFilter: currentChartFilter,
+    theme: document.body.classList.contains('light-mode') ? 'light' : 'dark',
+    createdAt: new Date().toISOString()
+  };
+
+  const saved = JSON.parse(localStorage.getItem('gemInfographicViews') || '[]');
+  saved.push(view);
+  localStorage.setItem('gemInfographicViews', JSON.stringify(saved));
+
+  showToast('View "' + name + '" saved!', 'success');
+  toggleSaveMenu();
+}
+
+function loadSavedView() {
+  const saved = JSON.parse(localStorage.getItem('gemInfographicViews') || '[]');
+  if (saved.length === 0) {
+    showToast('No saved views yet', 'info');
+    toggleSaveMenu();
+    return;
+  }
+
+  const options = saved.map((v, i) => v.name + (v.createdAt ? ' (' + new Date(v.createdAt).toLocaleDateString() + ')' : '')).join('\n');
+  const choice = prompt('Enter the number of the view to load:\n' + options.split('\n').map((v, i) => (i+1) + '. ' + v).join('\n'));
+
+  const index = parseInt(choice) - 1;
+  if (index >= 0 && index < saved.length) {
+    const view = saved[index];
+    if (view.theme === 'light') {
+      document.body.classList.add('light-mode');
+      document.getElementById('themeIcon').classList.remove('fa-moon');
+      document.getElementById('themeIcon').classList.add('fa-sun');
+    }
+    showToast('View "' + view.name + '" loaded!', 'success');
+  }
+  toggleSaveMenu();
+}
+
+function shareLink() {
+  const params = new URLSearchParams({
+    mode: currentMode,
+    chart: currentChartFilter,
+    theme: document.body.classList.contains('light-mode') ? 'light' : 'dark'
+  });
+  const url = window.location.origin + window.location.pathname + '?' + params.toString();
+  navigator.clipboard.writeText(url).then(() => {
+    showToast('Link copied to clipboard!', 'success');
+  });
+  toggleSaveMenu();
+}
+
+// Toast Notifications
+function showToast(message, type) {
+  const toast = document.createElement('div');
+  const colors = {
+    success: 'bg-green-accent',
+    error: 'bg-red-500',
+    info: 'bg-cyan-glow'
+  };
+  toast.className = `gem-toast gem-toast--${type}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2500);
+}
+
+// Drill-Down Modal
+function showCategoryDrillDown(category) {
+  const data = categoryData[category];
+  const modal = document.getElementById('drilldownModal');
+  const iconEl = document.getElementById('drilldownIcon');
+  const titleEl = document.getElementById('drilldownTitle');
+  const totalEl = document.getElementById('drilldownTotal');
+  const contentEl = document.getElementById('drilldownContent');
+
+  iconEl.className = `gem-modal__icon-box ${data.bgColor}/20`;
+  iconEl.innerHTML = `<i class="fas ${data.icon} text-${data.color} text-xl"></i>`;
+  titleEl.textContent = data.title;
+  titleEl.className = `gem-modal__title text-${data.color}`;
+  totalEl.textContent = data.total.toLocaleString() + ' Gems';
+
+  contentEl.innerHTML = data.rewards.map(r => `
+    <div class="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/10">
+      <div>
+        <p class="text-white font-bold">${r.name}</p>
+        <p class="text-white/50 text-sm">${r.desc}</p>
+      </div>
+      <div class="text-right">
+        <p class="text-${data.color} font-bold text-lg">${r.gems.toLocaleString()}</p>
+        <p class="text-white/40 text-xs">${r.pct}</p>
+      </div>
+    </div>
+  `).join('');
+
+  modal.classList.remove('hidden');
+  modal.classList.add('gem-modal--visible');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDrillDown() {
+  const modal = document.getElementById('drilldownModal');
+  modal.classList.add('hidden');
+  modal.classList.remove('gem-modal--visible');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeDrillDown();
+});
+
+// Export Functions
+async function exportAsImage() {
+  showToast('Generating image...', 'info');
+  const container = document.querySelector('.max-w-7xl');
+  try {
+    const canvas = await html2canvas(container, {
+      backgroundColor: '#050a14',
+      scale: 2
+    });
+    const link = document.createElement('a');
+    link.download = 'gem-rewards-' + Date.now() + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('Image exported!', 'success');
+  } catch (e) {
+    showToast('Export failed: ' + e.message, 'error');
+  }
+  toggleSaveMenu();
+}
+
+function exportData() {
+  const data = {
+    totalGems: getModeTotal('event') + getModeTotal('pvp') + getModeTotal('login') + getModeTotal('code'),
+    categories: {
+      season: 1820,
+      event: getModeTotal('event'),
+      pvp: getModeTotal('pvp'),
+      login: getModeTotal('login'),
+      code: getModeTotal('code')
+    },
+    rewards: [
+      { name: 'Elite League I', gems: 810, category: 'season' },
+      { name: 'Invincible League', gems: 560, category: 'season' },
+      { name: 'Elite League II', gems: 450, category: 'season' },
+      { name: 'Multiverse Alliance War', gems: 750, category: 'pvp' },
+      { name: 'The Long Haul', gems: 300, category: 'event' },
+      { name: "Earth's Defenders", gems: 200, category: 'event' },
+      { name: 'Promo Code', gems: 300, category: 'code' },
+      { name: 'Daily Payout', gems: 30, category: 'login' },
+      { name: 'Weekly Payout', gems: 60, category: 'login' },
+      { name: 'Monthly Payout', gems: 90, category: 'login' }
+    ]
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'gem-rewards-data.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ===== COUNTDOWN TIMERS =====
+
+let lastSecond = -1;
+
+function updateCountdowns() {
+  const now = new Date();
+  const currentSecond = now.getSeconds();
+
+  if (currentSecond !== lastSecond && lastSecond !== -1) {
+    document.querySelectorAll('[id^="countdown-"]').forEach(el => {
+      el.classList.remove('gem-animate--countdown-pulse');
+      void el.offsetWidth;
+      el.classList.add('gem-animate--countdown-pulse');
+    });
+  }
+  lastSecond = currentSecond;
+
+  const eventEl = document.getElementById('countdown-event');
+  const pvpEl = document.getElementById('countdown-pvp');
+  const loginEl = document.getElementById('countdown-login');
+  const codeEl = document.getElementById('countdown-code');
+
+  const showEvent = selectedModes.includes('event');
+  const showPvp = selectedModes.includes('pvp');
+  const showLogin = selectedModes.includes('login');
+  const showCode = selectedModes.includes('code');
+
+  if (showEvent) {
+    const nightmaresMs = COUNTDOWN_TARGETS.cecilNightmares.getTime() - now.getTime();
+    eventEl.textContent = formatCountdown(nightmaresMs);
+  } else {
+    eventEl.textContent = '--:--:--';
+  }
+
+  if (showPvp) {
+    const multiverseMs = COUNTDOWN_TARGETS.multiverseArena.getTime() - now.getTime();
+    pvpEl.textContent = formatCountdown(multiverseMs);
+  } else {
+    pvpEl.textContent = '--:--:--';
+  }
+
+  if (showLogin) {
+    const dailyMs = COUNTDOWN_TARGETS.daily.getTime() - now.getTime();
+    loginEl.textContent = formatCountdown(dailyMs);
+  } else {
+    loginEl.textContent = '--:--:--';
+  }
+
+  if (showCode) {
+    const dailyMs = COUNTDOWN_TARGETS.daily.getTime() - now.getTime();
+    codeEl.textContent = formatCountdown(dailyMs);
+  } else {
+    codeEl.textContent = '--:--:--';
+  }
+}
+
+// ===== PVP CARD FUNCTIONS =====
+
+function generateRankOptions(selectId) {
+  const select = document.getElementById(selectId);
+  for (let i = 1; i <= 120; i++) {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = i;
+    select.appendChild(option);
+  }
+}
+
+function updatePvpCard(cardId) {
+  const league = document.getElementById(`pvp${cardId}-league`).value;
+  const rank = parseInt(document.getElementById(`pvp${cardId}-rank`).value);
+  const payout = getPvpPayout(league, rank);
+  animateValue(`pvp${cardId}-gems`, payout.gems);
+  animateValue(`pvp${cardId}-cards`, payout.cards);
+  animateValue(`pvp${cardId}-chips`, payout.chips);
+  const demotionEl = document.getElementById(`pvp${cardId}-demotion`);
+  if (demotionEl) {
+    if (payout.isDemotion) {
+      demotionEl.classList.remove('hidden');
+    } else {
+      demotionEl.classList.add('hidden');
+    }
+  }
+  savePvpSelection(cardId);
+  updateAllPageTotals();
+}
+
+function savePvpSelection(cardId) {
+  const league = document.getElementById(`pvp${cardId}-league`).value;
+  const rank = document.getElementById(`pvp${cardId}-rank`).value;
+  localStorage.setItem(`pvp${cardId}_league`, league);
+  localStorage.setItem(`pvp${cardId}_rank`, rank);
+}
+
+function loadPvpSelection(cardId) {
+  const savedLeague = localStorage.getItem(`pvp${cardId}_league`);
+  const savedRank = localStorage.getItem(`pvp${cardId}_rank`);
+  const defaults = pvpDefaults[cardId];
+  if (savedLeague) {
+    document.getElementById(`pvp${cardId}-league`).value = savedLeague;
+  } else {
+    document.getElementById(`pvp${cardId}-league`).value = defaults.league;
+  }
+  if (savedRank) {
+    document.getElementById(`pvp${cardId}-rank`).value = savedRank;
+  } else {
+    document.getElementById(`pvp${cardId}-rank`).value = defaults.rank;
+  }
+  updatePvpCard(cardId);
+}
+
+function clearPvpSelection(cardId) {
+  const defaults = pvpDefaults[cardId];
+  document.getElementById(`pvp${cardId}-league`).value = defaults.league;
+  document.getElementById(`pvp${cardId}-rank`).value = defaults.rank;
+  localStorage.removeItem(`pvp${cardId}_league`);
+  localStorage.removeItem(`pvp${cardId}_rank`);
+  updatePvpCard(cardId);
+}
+
+function initializePvPCards() {
+  generateRankOptions('pvp1-rank');
+  generateRankOptions('pvp2-rank');
+  generateRankOptions('pvp3-rank');
+  loadPvpSelection(1);
+  loadPvpSelection(2);
+  loadPvpSelection(3);
+  updateAllPageTotals();
+}
+
+// ===== INITIALIZATION =====
+
+document.addEventListener('DOMContentLoaded', function() {
+  Chart.defaults.color = '#ffffff';
+  Chart.defaults.borderColor = 'rgba(0, 229, 255, 0.2)';
+
+  new Chart(document.getElementById('categoryChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Season', 'Events', 'PvP', 'Login', 'Code'],
+      datasets: [{
+        data: [0, 500, 750, 610, 300],
+        backgroundColor: ['#333333', '#ff6b35', '#e91e8a', '#f39c12', '#2ecc71'],
+        borderWidth: 0,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: { ...chartAnimationConfig, delay: 0 },
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { padding: 20, font: { family: 'Rajdhani', size: 12 } }
+        },
+        tooltip: chartTooltipConfig
+      }
+    }
+  });
+
+  new Chart(document.getElementById('rewardsChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Elite I', 'Invincible', 'Elite II', 'PvP', 'Long Haul', 'Defenders', 'Login'],
+      datasets: [{
+        label: 'Gems',
+        data: [810, 560, 450, 750, 300, 200, 180],
+        backgroundColor: ['#333333', '#333333', '#333333', '#e91e8a', '#ff6b35', '#ff6b35', '#f39c12'],
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      animation: { ...chartAnimationConfig, delay: 100 },
+      scales: {
+        y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false } },
+        x: { grid: { display: false }, ticks: { display: false } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: chartTooltipConfig
+      }
+    }
+  });
+
+  new Chart(document.getElementById('spiderChart'), {
+    type: 'radar',
+    data: {
+      labels: ['Season', 'Events', 'PvP', 'Login', 'Code'],
+      datasets: [{
+        label: 'Gems',
+        data: [0, 500, 750, 30, 60, 90, 300],
+        backgroundColor: 'rgba(0, 229, 255, 0.2)',
+        borderColor: '#00e5ff',
+        pointBackgroundColor: '#00e5ff',
+        borderWidth: 2
+      }, {
+        label: 'Target',
+        data: [2000, 800, 1000, 50, 100, 150, 500],
+        backgroundColor: 'rgba(233, 30, 138, 0.1)',
+        borderColor: '#e91e8a',
+        pointBackgroundColor: '#e91e8a',
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      animation: { ...chartAnimationConfig, delay: 200 },
+      scales: {
+        r: {
+          beginAtZero: true,
+          grid: { color: 'rgba(0,229,255,0.2)' },
+          pointLabels: { color: '#fff', font: { size: 10 } },
+          ticks: { display: false }
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: chartTooltipConfig
+      }
+    }
+  });
+
+  new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'],
+      datasets: [{
+        label: 'Cumulative Gems',
+        data: [450, 950, 1450, 1950, 2450, 2950, 3450, 4470],
+        borderColor: '#00e5ff',
+        backgroundColor: 'rgba(0, 229, 255, 0.1)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointBackgroundColor: '#00e5ff'
+      }, {
+        label: 'Daily Average',
+        data: [450, 475, 483, 488, 490, 492, 493, 559],
+        borderColor: '#f39c12',
+        backgroundColor: 'transparent',
+        borderDash: [5, 5],
+        tension: 0.4,
+        pointRadius: 3,
+        pointBackgroundColor: '#f39c12'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      animation: { ...chartAnimationConfig, delay: 300 },
+      scales: {
+        y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false } },
+        x: { grid: { display: false }, ticks: { display: false } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: chartTooltipConfig
+      }
+    }
+  });
+
+  categoryChart = Chart.getChart('categoryChart');
+  rewardsChart = Chart.getChart('rewardsChart');
+  spiderChart = Chart.getChart('spiderChart');
+  lineChart = Chart.getChart('lineChart');
+
+  initializePvPCards();
+
+  [1, 2, 3].forEach(i => {
+    localStorage.removeItem(`pvp${i}_league`);
+    localStorage.removeItem(`pvp${i}_rank`);
+    document.getElementById(`pvp${i}-league`).value = pvpDefaults[i].league;
+    document.getElementById(`pvp${i}-rank`).value = pvpDefaults[i].rank;
+    updatePvpCard(i);
+  });
+
+  selectedModes = ['event', 'pvp', 'login', 'code'];
+  updateModeButtonStates();
+  updateAllPageTotals();
+
+  setInterval(updateCountdowns, 1000);
+  updateCountdowns();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('theme') === 'light') {
+    document.body.classList.add('light-mode');
+    document.getElementById('themeIcon').classList.remove('fa-moon');
+    document.getElementById('themeIcon').classList.add('fa-sun');
+  }
+  if (urlParams.get('mode')) {
+    filterCards(urlParams.get('mode'), { currentTarget: document.querySelector('.gem-mode-btn--' + urlParams.get('mode')) || document.querySelector('.gem-mode-btn--all') });
+  }
+  if (urlParams.get('chart')) {
+    filterChart(urlParams.get('chart'));
+  }
+});
+
+// Debug helpers
+window.debugPvp = () => {
+  const l1 = document.getElementById('pvp1-league').value;
+  const r1 = parseInt(document.getElementById('pvp1-rank').value);
+  alert('l1=' + l1 + ' r1=' + r1 + '\np1=' + getPvpPayout(l1, r1).gems);
+};
+
+window.debugMode = () => {
+  const l1 = document.getElementById('pvp1-league').value;
+  const r1 = parseInt(document.getElementById('pvp1-rank').value);
+  const l2 = document.getElementById('pvp2-league').value;
+  const r2 = parseInt(document.getElementById('pvp2-rank').value);
+  const l3 = document.getElementById('pvp3-league').value;
+  const r3 = parseInt(document.getElementById('pvp3-rank').value);
+  const p1 = getPvpPayout(l1, r1).gems;
+  const p2 = getPvpPayout(l2, r2).gems;
+  const p3 = getPvpPayout(l3, r3).gems;
+  alert('p1=' + p1 + ' p2=' + p2 + ' p3=' + p3 + '\nSum=' + (p1+p2+p3));
+};

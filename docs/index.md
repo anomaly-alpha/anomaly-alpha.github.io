@@ -65,11 +65,20 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 
 ## Tech Stack
 
-- Tailwind CSS for styling (via CDN)
-- Chart.js for interactive charts (doughnut, bar, radar, line)
-- html2canvas for PNG export
-- Font Awesome for icons
-- Rajdhani font for typography
+- **Structure**: `index.html` (clean HTML), `styles.css` (design tokens + BEM), `script.js` (all JS)
+- **Styling**: Tailwind CSS (via CDN) + custom CSS design token system
+- **Charts**: Chart.js (doughnut, bar, radar, line)
+- **Export**: html2canvas for PNG export
+- **Icons**: Font Awesome
+- **Typography**: Rajdhani font (Google Fonts)
+
+## Design System
+
+CSS custom property design tokens with BEM naming:
+- Color tokens: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`
+- Component classes: `.gem-card--event`, `.gem-label--pvp`, `.gem-text--primary`
+- Shadow tokens: `--gem-shadow--card`, `--gem-shadow--glow-cyan`
+- Light mode: `:root.light-mode` with token overrides
 
 ## Accessibility
 
@@ -80,6 +89,9 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts 
 
 ## Recent Updates (May 2026)
 
+- ✅ **Extracted to separate files** - `index.html`, `styles.css`, `script.js` from `gem_infographic.html`
+- ✅ **Design token system** - CSS custom properties for all colors, shadows, and design values
+- ✅ **BEM naming** - Semantic component classes (`.gem-card--event`, `.gem-label--pvp`, etc.)
 - ✅ Removed Season category entirely (replaced with PvP)
 - ✅ Merged Warfare into PvP (Multiverse Alliance War is now part of PvP cards)
 - ✅ Created unified mode cards at top with totals + timers

@@ -1,0 +1,998 @@
+/*
+  Gem Infographic - Design System
+  ===============================
+  Custom properties and BEM component classes.
+  Tailwind CDN is used for utilities; this file provides
+  design tokens and semantic BEM layer.
+*/
+
+/* ===== DESIGN TOKENS ===== */
+:root {
+  /* Category colors */
+  --gem-event: #ff6b35;
+  --gem-pvp: #e91e8a;
+  --gem-login: #f39c12;
+  --gem-code: #2ecc71;
+  --gem-cyan: #00e5ff;
+  --gem-purple: #9b59b6;
+  --gem-pink: #e91e8a;
+  --gem-orange: #ff6b35;
+
+  /* Background colors */
+  --gem-bg-dark: #050a14;
+  --gem-bg-mid: #0a1628;
+  --gem-bg-light: #0d1f3c;
+
+  /* Card backgrounds */
+  --gem-card-bg--event: rgba(255, 107, 53, 0.08);
+  --gem-card-bg--pvp: rgba(233, 30, 138, 0.08);
+  --gem-card-bg--login: rgba(243, 156, 18, 0.08);
+  --gem-card-bg--code: rgba(46, 204, 113, 0.08);
+  --gem-card-bg--cyan: rgba(0, 229, 255, 0.08);
+  --gem-card-bg--purple: rgba(155, 89, 182, 0.08);
+
+  /* Card borders */
+  --gem-card-border--event: rgba(255, 107, 53, 0.20);
+  --gem-card-border--pvp: rgba(233, 30, 138, 0.20);
+  --gem-card-border--login: rgba(243, 156, 18, 0.20);
+  --gem-card-border--code: rgba(46, 204, 113, 0.20);
+  --gem-card-border--cyan: rgba(0, 229, 255, 0.20);
+  --gem-card-border--purple: rgba(155, 89, 182, 0.20);
+  --gem-border--subtle: rgba(255, 255, 255, 0.10);
+  --gem-border--medium: rgba(255, 255, 255, 0.30);
+  --gem-border--accent: rgba(0, 229, 255, 0.30);
+
+  /* Text colors */
+  --gem-text--primary: #ffffff;
+  --gem-text--secondary: rgba(255, 255, 255, 0.60);
+  --gem-text--muted: rgba(255, 255, 255, 0.40);
+  --gem-text--80: rgba(255, 255, 255, 0.80);
+
+  /* Label/badge colors */
+  --gem-label-bg--event: rgba(255, 107, 53, 0.15);
+  --gem-label-bg--pvp: rgba(233, 30, 138, 0.15);
+  --gem-label-bg--login: rgba(243, 156, 18, 0.15);
+  --gem-label-bg--code: rgba(46, 204, 113, 0.15);
+  --gem-label-bg--cyan: rgba(0, 229, 255, 0.15);
+  --gem-label-border--event: rgba(255, 107, 53, 0.30);
+  --gem-label-border--pvp: rgba(233, 30, 138, 0.30);
+  --gem-label-border--login: rgba(243, 156, 18, 0.30);
+  --gem-label-border--code: rgba(46, 204, 113, 0.30);
+  --gem-label-border--cyan: rgba(0, 229, 255, 0.30);
+
+  /* Alert colors */
+  --gem-alert--danger-bg: rgba(239, 68, 68, 0.20);
+  --gem-alert--danger-border: rgba(239, 68, 68, 0.50);
+  --gem-alert--danger-text: #ef4444;
+  --gem-alert--success-bg: rgba(46, 204, 113, 0.20);
+  --gem-alert--success-text: #2ecc71;
+  --gem-alert--info-bg: rgba(0, 229, 255, 0.20);
+  --gem-alert--info-text: #00e5ff;
+
+  /* Shadows */
+  --gem-shadow--card: 0 15px 40px rgba(0, 229, 255, 0.3), 0 0 60px rgba(0, 229, 255, 0.1);
+  --gem-shadow--glow-cyan: 0 0 20px rgba(0, 229, 255, 0.5);
+  --gem-shadow--glow-pink: 0 0 20px rgba(233, 30, 138, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.3);
+  --gem-shadow--main: 0 0 60px rgba(0, 229, 255, 0.2), inset 0 0 80px rgba(0, 229, 255, 0.05);
+  --gem-shadow--gem: 0 0 30px rgba(233, 30, 138, 0.6);
+
+  /* Button tokens */
+  --gem-btn-bg: rgba(255, 255, 255, 0.10);
+  --gem-btn-border: rgba(0, 229, 255, 0.30);
+  --gem-btn-hover: rgba(255, 255, 255, 0.20);
+
+  /* Modal/Overlay tokens */
+  --gem-modal-overlay: rgba(0, 0, 0, 0.70);
+  --gem-modal-bg: rgba(10, 35, 60, 0.98);
+  --gem-modal-border: rgba(0, 229, 255, 0.40);
+
+  /* Tooltip tokens */
+  --gem-tooltip-bg: rgba(5, 10, 20, 0.95);
+  --gem-tooltip-border: rgba(0, 229, 255, 0.30);
+
+  /* Font */
+  --gem-font: 'Rajdhani', sans-serif;
+}
+
+/* ===== LIGHT MODE TOKENS ===== */
+:root.light-mode {
+  --gem-bg-dark: #f0f4f8;
+  --gem-bg-mid: #e2e8f0;
+  --gem-bg-light: #cbd5e1;
+  --gem-text--primary: #1a202c;
+  --gem-text--secondary: rgba(26, 32, 44, 0.70);
+  --gem-text--muted: rgba(26, 32, 44, 0.50);
+  --gem-border--subtle: rgba(26, 32, 44, 0.10);
+  --gem-border--medium: rgba(26, 32, 44, 0.30);
+  --gem-card-bg--event: rgba(0, 229, 255, 0.15);
+  --gem-card-bg--pvp: rgba(0, 229, 255, 0.15);
+  --gem-card-bg--login: rgba(0, 229, 255, 0.15);
+  --gem-card-bg--code: rgba(0, 229, 255, 0.15);
+  --gem-label-bg--event: rgba(0, 229, 255, 0.20);
+  --gem-label-bg--pvp: rgba(0, 229, 255, 0.20);
+  --gem-label-bg--login: rgba(0, 229, 255, 0.20);
+  --gem-label-bg--code: rgba(0, 229, 255, 0.20);
+  --gem-tooltip-bg: rgba(240, 244, 248, 0.98);
+  --gem-tooltip-border: rgba(0, 229, 255, 0.50);
+  --gem-modal-bg: rgba(240, 244, 248, 0.98);
+  --gem-modal-border: rgba(0, 229, 255, 0.50);
+}
+
+/* ===== BASE ELEMENTS ===== */
+body {
+  font-family: var(--gem-font);
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(0, 229, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 50%, rgba(233, 30, 138, 0.1) 100%, transparent 50%),
+    linear-gradient(135deg, var(--gem-bg-dark) 0%, var(--gem-bg-mid) 50%, var(--gem-bg-light) 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+:root.light-mode body {
+  background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #cbd5e1 100%);
+}
+
+/* Grid background pattern */
+.gem-grid-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 229, 255, 0.03) 2px, rgba(0, 229, 255, 0.03) 4px),
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 229, 255, 0.03) 2px, rgba(0, 229, 255, 0.03) 4px);
+  pointer-events: none;
+}
+
+/* ===== BEM COMPONENT CLASSES ===== */
+
+/* Card component */
+.gem-card {
+  position: relative;
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--gem-border--subtle);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.gem-card--event {
+  background-color: var(--gem-card-bg--event);
+  border-color: var(--gem-card-border--event);
+}
+
+.gem-card--pvp {
+  background-color: var(--gem-card-bg--pvp);
+  border-color: var(--gem-card-border--pvp);
+}
+
+.gem-card--login {
+  background-color: var(--gem-card-bg--login);
+  border-color: var(--gem-card-border--login);
+}
+
+.gem-card--code {
+  background-color: var(--gem-card-bg--code);
+  border-color: var(--gem-card-border--code);
+}
+
+.gem-card--cyan {
+  background-color: var(--gem-card-bg--cyan);
+  border-color: var(--gem-card-border--cyan);
+}
+
+.gem-card--purple {
+  background-color: var(--gem-card-bg--purple);
+  border-color: var(--gem-card-border--purple);
+}
+
+.gem-card--hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--gem-shadow--card);
+}
+
+.gem-card--interactive {
+  cursor: pointer;
+}
+
+.gem-card--fade-in {
+  animation: gem-fade-in 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+/* Category label/badge */
+.gem-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 1px solid;
+}
+
+.gem-label--event {
+  background-color: var(--gem-label-bg--event);
+  color: var(--gem-event);
+  border-color: var(--gem-label-border--event);
+}
+
+.gem-label--pvp {
+  background-color: var(--gem-label-bg--pvp);
+  color: var(--gem-pvp);
+  border-color: var(--gem-label-border--pvp);
+}
+
+.gem-label--login {
+  background-color: var(--gem-label-bg--login);
+  color: var(--gem-login);
+  border-color: var(--gem-label-border--login);
+}
+
+.gem-label--code {
+  background-color: var(--gem-label-bg--code);
+  color: var(--gem-code);
+  border-color: var(--gem-label-border--code);
+}
+
+.gem-label--cyan {
+  background-color: var(--gem-label-bg--cyan);
+  color: var(--gem-cyan);
+  border-color: var(--gem-label-border--cyan);
+}
+
+/* Text utilities */
+.gem-text--primary { color: var(--gem-text--primary); }
+.gem-text--secondary { color: var(--gem-text--secondary); }
+.gem-text--muted { color: var(--gem-text--muted); }
+.gem-text--80 { color: var(--gem-text--80); }
+
+.gem-text--event { color: var(--gem-event); }
+.gem-text--pvp { color: var(--gem-pvp); }
+.gem-text--login { color: var(--gem-login); }
+.gem-text--code { color: var(--gem-code); }
+.gem-text--cyan { color: var(--gem-cyan); }
+.gem-text--orange { color: var(--gem-orange); }
+.gem-text--purple { color: var(--gem-purple); }
+.gem-text--pink { color: var(--gem-pink); }
+
+/* Border utilities */
+.gem-border--subtle { border-color: var(--gem-border--subtle); }
+.gem-border--medium { border-color: var(--gem-border--medium); }
+.gem-border--accent { border-color: var(--gem-border--accent); }
+.gem-border--event { border-color: var(--gem-card-border--event); }
+.gem-border--pvp { border-color: var(--gem-card-border--pvp); }
+
+/* Button component */
+.gem-btn--icon {
+  padding: 0.75rem;
+  border-radius: 9999px;
+  background-color: var(--gem-btn-bg);
+  border: 1px solid var(--gem-btn-border);
+  transition: background-color 0.2s ease;
+}
+
+.gem-btn--icon:hover {
+  background-color: var(--gem-btn-hover);
+}
+
+.gem-btn--icon-glow {
+  color: var(--gem-cyan);
+}
+
+.gem-btn__icon {
+  display: inline-block;
+}
+
+.gem-btn--clear {
+  color: var(--gem-text--muted);
+  padding: 0.25rem;
+}
+
+.gem-btn--clear:hover {
+  color: var(--gem-text--secondary);
+}
+
+/* Form elements */
+.gem-select {
+  background-color: var(--gem-btn-bg);
+  border: 1px solid var(--gem-card-border--pvp);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  color: var(--gem-text--primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.gem-select--league {
+  border-color: var(--gem-card-border--pvp);
+}
+
+/* Alert component */
+.gem-alert--demotion {
+  background-color: var(--gem-alert--danger-bg);
+  border: 1px solid var(--gem-alert--danger-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.gem-alert__icon--danger {
+  color: var(--gem-alert--danger-text);
+}
+
+.gem-alert__text--danger {
+  color: var(--gem-alert--danger-text);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Tooltip component */
+.gem-tooltip {
+  position: absolute;
+  background: var(--gem-tooltip-bg);
+  border: 1px solid var(--gem-tooltip-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  color: var(--gem-text--primary);
+  white-space: nowrap;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+}
+
+.gem-tooltip--trigger:hover .gem-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Modal component */
+.gem-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: none;
+}
+
+.gem-modal--visible {
+  display: block;
+}
+
+.gem-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--gem-modal-overlay);
+  backdrop-filter: blur(4px);
+}
+
+.gem-modal__content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 32rem;
+  background: var(--gem-modal-bg);
+  border: 2px solid var(--gem-modal-border);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  box-shadow: var(--gem-shadow--card);
+}
+
+.gem-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.gem-modal__icon-box {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gem-modal__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.gem-modal__total {
+  color: var(--gem-cyan);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.gem-modal__close {
+  color: var(--gem-text--secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.gem-modal__close:hover {
+  color: var(--gem-text--primary);
+}
+
+.gem-modal__body {
+  max-height: 16rem;
+  overflow-y: auto;
+}
+
+.gem-modal__footer {
+  margin-top: 1rem;
+}
+
+.gem-modal__footer-btn {
+  width: 100%;
+  padding: 0.5rem;
+  background-color: rgba(0, 229, 255, 0.20);
+  border: 1px solid var(--gem-modal-border);
+  color: var(--gem-cyan);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.gem-modal__footer-btn:hover {
+  background-color: rgba(0, 229, 255, 0.30);
+}
+
+/* Toast component */
+.gem-toast {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  color: var(--gem-text--primary);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  animation: gem-fade-in 0.6s ease-out forwards;
+}
+
+.gem-toast--success {
+  background-color: var(--gem-alert--success-bg);
+}
+
+.gem-toast--error {
+  background-color: var(--gem-alert--danger-bg);
+}
+
+.gem-toast--info {
+  background-color: var(--gem-alert--info-bg);
+}
+
+/* Search component */
+.gem-search {
+  display: flex;
+  align-items: center;
+}
+
+.gem-search__input {
+  background-color: var(--gem-btn-bg);
+  border: 1px solid var(--gem-btn-border);
+  border-radius: 9999px;
+  color: var(--gem-text--primary);
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.gem-search__input::placeholder {
+  color: var(--gem-text--muted);
+}
+
+.gem-search__input--hidden {
+  width: 0;
+  padding: 0;
+  opacity: 0;
+}
+
+.gem-search__input--visible {
+  width: 12rem;
+  padding: 0.25rem 0.75rem;
+  opacity: 1;
+}
+
+.gem-search--empty {
+  text-align: center;
+  padding: 2rem;
+  color: var(--gem-text--secondary);
+}
+
+.gem-search__highlight {
+  background-color: rgba(243, 156, 18, 0.40);
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* Chart component */
+.gem-chart {
+  background-color: rgba(10, 35, 60, 0.50);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+
+.gem-chart__title {
+  color: var(--gem-text--primary);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Icon components */
+.gem-icon--gem {
+  width: 1.25rem;
+  height: 1.25rem;
+  background: linear-gradient(135deg, var(--gem-pink) to rgba(233, 30, 138, 0.80));
+  transform: rotate(45deg);
+  position: relative;
+  box-shadow: var(--gem-shadow--glow-pink);
+}
+
+.gem-icon--gem::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+  border-radius: 4px;
+}
+
+.gem-icon--star {
+  background-color: rgba(255, 235, 59, 0.20);
+  border: 1px solid rgba(255, 235, 59, 0.40);
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.625rem;
+}
+
+/* Header gem icon */
+.gem-header-icon {
+  width: 3.75rem;
+  height: 3.75rem;
+  background: linear-gradient(135deg, var(--gem-pink) to rgba(233, 30, 138, 0.80));
+  transform: rotate(45deg);
+  margin: 0 auto 1rem;
+  position: relative;
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  box-shadow: var(--gem-shadow--gem);
+}
+
+.gem-header-icon__inner {
+  position: absolute;
+  inset: 0;
+}
+
+.gem-header-icon__inner::before {
+  content: '';
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  background: linear-gradient(135deg, rgba(255,255,255,0.3), transparent);
+  border-radius: 4px;
+}
+
+/* Main container */
+.gem-container {
+  position: relative;
+  background: linear-gradient(to-br, rgba(10, 35, 60, 0.98), rgba(5, 15, 30, 0.99));
+  border: 2px solid var(--gem-border--accent);
+  border-radius: 1.5rem;
+  padding: 2rem;
+}
+
+:root.light-mode .gem-container {
+  background: linear-gradient(135deg, rgba(240, 244, 248, 0.98), rgba(226, 232, 240, 0.99));
+  border-color: rgba(0, 229, 255, 0.50);
+}
+
+.gem-container__shadow {
+  box-shadow: var(--gem-shadow--main);
+}
+
+/* Corner decorations */
+.gem-corner {
+  position: absolute;
+  width: 4rem;
+  height: 4rem;
+  border: 2px solid rgba(0, 229, 255, 0.20);
+  border-radius: 0.5rem;
+  pointer-events: none;
+}
+
+.gem-corner--tl { top: 1rem; left: 1rem; border-right: 0; border-bottom: 0; }
+.gem-corner--tr { top: 1rem; right: 1rem; border-left: 0; border-bottom: 0; }
+.gem-corner--bl { bottom: 1rem; left: 1rem; border-right: 0; border-top: 0; }
+.gem-corner--br { bottom: 1rem; right: 1rem; border-left: 0; border-top: 0; }
+
+/* Scanning line */
+.gem-scanline {
+  position: absolute;
+  top: -2px;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gem-cyan), transparent);
+  animation: gem-scanline 3s ease-in-out infinite;
+}
+
+/* Section backgrounds */
+.gem-section--total {
+  position: relative;
+  background: linear-gradient(to-br, var(--gem-card-bg--pvp), var(--gem-card-bg--event));
+  border: 2px solid var(--gem-card-border--pvp);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  overflow: hidden;
+}
+
+.gem-section__rotating-bg {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(233,30,138,0.15) 0%, transparent 70%);
+  animation: gem-rotate-bg 20s linear infinite;
+  pointer-events: none;
+}
+
+/* Mode selector */
+.gem-mode-btn {
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  border: 2px solid;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.gem-mode-btn:hover {
+  transform: scale(1.05);
+}
+
+.gem-mode-btn--all {
+  background: linear-gradient(to-br, rgba(0, 229, 255, 0.20), rgba(0, 229, 255, 0.05));
+  border-color: rgba(0, 229, 255, 0.40);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.20);
+}
+
+.gem-mode-btn--event {
+  background-color: rgba(255, 107, 53, 0.30);
+  border-color: rgba(255, 107, 53, 0.50);
+}
+
+.gem-mode-btn--pvp {
+  background-color: rgba(233, 30, 138, 0.30);
+  border-color: rgba(233, 30, 138, 0.50);
+}
+
+.gem-mode-btn--login {
+  background-color: rgba(243, 156, 18, 0.30);
+  border-color: rgba(243, 156, 18, 0.50);
+}
+
+.gem-mode-btn--code {
+  background-color: rgba(46, 204, 113, 0.30);
+  border-color: rgba(46, 204, 113, 0.50);
+}
+
+.gem-mode-btn__icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.gem-mode-btn__count {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gem-text--primary);
+}
+
+.gem-mode-btn__label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gem-mode-btn__countdown {
+  font-size: 0.875rem;
+  font-weight: 700;
+  font-family: monospace;
+  margin-top: 0.25rem;
+}
+
+/* Particles */
+.gem-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  animation: gem-float-particle 15s infinite linear;
+  pointer-events: none;
+}
+
+.gem-particle--1 {
+  background: rgba(0, 229, 255, 0.60);
+}
+
+.gem-particle--2 {
+  background: rgba(233, 30, 138, 0.60);
+}
+
+.gem-particle--3 {
+  background: rgba(255, 107, 53, 0.60);
+}
+
+/* Sparkle */
+.gem-sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: white;
+  border-radius: 50%;
+  animation: gem-sparkle 1.5s ease-in-out infinite;
+}
+
+/* Divider */
+.gem-divider {
+  border-top: 1px solid var(--gem-border--subtle);
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+}
+
+/* Counter display */
+.gem-counter {
+  display: inline-block;
+}
+
+/* Title styles */
+.gem-title--hero {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--gem-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 20px rgba(0, 229, 255, 0.80);
+}
+
+.gem-subtitle--hero {
+  color: var(--gem-orange);
+  font-size: 1.25rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-shadow: 0 0 10px rgba(255, 107, 53, 0.50);
+}
+
+/* Contributors */
+.gem-contributors {
+  border-top: 1px solid var(--gem-border--subtle);
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.gem-contributors__label {
+  color: var(--gem-text--secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+.gem-contributors__list {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.gem-contributor {
+  color: var(--gem-text--secondary);
+  font-size: 0.875rem;
+}
+
+/* Grid layouts */
+.gem-grid--cards {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .gem-grid--cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .gem-grid--cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.gem-grid--charts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .gem-grid--charts {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.gem-grid--modes {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+}
+
+/* Staggered animation delays for cards */
+.gem-card--delay-0 { animation-delay: 0s; }
+.gem-card--delay-1 { animation-delay: 0.1s; }
+.gem-card--delay-2 { animation-delay: 0.2s; }
+.gem-card--delay-3 { animation-delay: 0.3s; }
+.gem-card--delay-4 { animation-delay: 0.4s; }
+.gem-card--delay-5 { animation-delay: 0.5s; }
+.gem-card--delay-6 { animation-delay: 0.6s; }
+.gem-card--delay-7 { animation-delay: 0.7s; }
+.gem-card--delay-8 { animation-delay: 0.8s; }
+
+/* ===== ANIMATIONS ===== */
+@keyframes gem-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes gem-glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 3px rgba(0, 229, 255, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 6px rgba(0, 229, 255, 0.25);
+  }
+}
+
+@keyframes gem-float-gem {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(5deg);
+  }
+}
+
+@keyframes gem-rotate-bg {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gem-scanline {
+  0%, 100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(400%);
+    opacity: 0;
+  }
+}
+
+@keyframes gem-sparkle {
+  0%, 100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes gem-float-particle {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes gem-countdown-pulse {
+  0% {
+    text-shadow: 0 0 8px currentColor;
+  }
+  50% {
+    text-shadow: 0 0 18px currentColor, 0 0 28px currentColor;
+  }
+  100% {
+    text-shadow: 0 0 4px currentColor;
+  }
+}
+
+/* Animation utility classes */
+.gem-animate--pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.gem-animate--glow-pulse {
+  animation: gem-glow-pulse 2s ease-in-out infinite;
+}
+
+.gem-animate--fade-in {
+  animation: gem-fade-in 0.6s ease-out forwards;
+}
+
+.gem-animate--float {
+  animation: gem-float-gem 3s ease-in-out infinite;
+}
+
+.gem-animate--sparkle {
+  animation: gem-sparkle 1.5s ease-in-out infinite;
+}
+
+.gem-animate--countdown-pulse {
+  animation: gem-countdown-pulse 1s ease-out;
+}
+
+/* Countdown transition */
+.gem-countdown {
+  transition: text-shadow 0.3s ease;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

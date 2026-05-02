@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💎</text></svg>">
+    <title>Invincible - Gem Rewards Infographic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="relative min-h-screen flex items-center justify-center p-5 md:p-10 gem-grid-bg">
+
+    <button onclick="toggleTheme()" class="fixed top-4 right-4 z-50 gem-btn--icon" title="Toggle theme">
+        <i class="fas fa-moon gem-btn__icon gem-btn--icon-glow" id="themeIcon"></i>
+    </button>
+
+    <button onclick="exportData()" class="fixed top-4 right-16 z-50 gem-btn--icon" title="Export data">
+        <i class="fas fa-download gem-btn__icon gem-btn--icon-glow"></i>
+    </button>
+
+    <div class="gem-search fixed top-4 right-28 z-50">
+        <button onclick="toggleSearch()" id="searchToggleBtn" class="gem-btn--icon" title="Search rewards">
+            <i class="fas fa-search gem-btn__icon gem-btn--icon-glow"></i>
+        </button>
+        <input type="text" id="searchInput" placeholder="Search..." class="gem-search__input gem-search__input--hidden" oninput="searchRewards(this.value)" onkeydown="handleSearchKeydown(event)">
+        <button onclick="clearSearch()" id="searchClearBtn" class="gem-btn--icon hidden" title="Clear search">
+            <i class="fas fa-times gem-btn__icon gem-btn--icon-glow text-xs"></i>
+        </button>
+    </div>
+
+    <div class="fixed top-4 right-40 z-50 flex items-center gap-1">
+        <button onclick="toggleSaveMenu()" class="gem-btn--icon" title="Save & Share">
+            <i class="fas fa-save gem-btn__icon gem-btn--icon-glow"></i>
+        </button>
+        <div id="saveMenu" class="hidden absolute top-12 right-0 bg-[rgba(10,35,60,0.98)] border border-cyan-glow/30 rounded-lg p-2 min-w-[160px] shadow-lg z-50">
+            <button onclick="saveCurrentView()" class="block w-full text-left px-3 py-2 text-white/80 hover:bg-cyan-glow/20 rounded text-sm">
+                <i class="fas fa-bookmark mr-2 text-cyan-glow"></i>Save View
+            </button>
+            <button onclick="loadSavedView()" class="block w-full text-left px-3 py-2 text-white/80 hover:bg-cyan-glow/20 rounded text-sm">
+                <i class="fas fa-folder-open mr-2 text-cyan-glow"></i>Load View
+            </button>
+            <button onclick="shareLink()" class="block w-full text-left px-3 py-2 text-white/80 hover:bg-cyan-glow/20 rounded text-sm">
+                <i class="fas fa-link mr-2 text-cyan-glow"></i>Copy Link
+            </button>
+            <button onclick="exportAsImage()" class="block w-full text-left px-3 py-2 text-white/80 hover:bg-cyan-glow/20 rounded text-sm">
+                <i class="fas fa-image mr-2 text-cyan-glow"></i>Export PNG
+            </button>
+        </div>
+    </div>
+
+    <div class="particles">
+        <div class="gem-particle gem-particle--1" style="left: 10%; animation-duration: 12s; animation-delay: 0s;"></div>
+        <div class="gem-particle gem-particle--2" style="left: 20%; animation-duration: 18s; animation-delay: 2s;"></div>
+        <div class="gem-particle gem-particle--3" style="left: 30%; animation-duration: 14s; animation-delay: 4s;"></div>
+        <div class="gem-particle gem-particle--1" style="left: 40%; animation-duration: 16s; animation-delay: 1s;"></div>
+        <div class="gem-particle gem-particle--2" style="left: 50%; animation-duration: 20s; animation-delay: 3s;"></div>
+        <div class="gem-particle gem-particle--3" style="left: 60%; animation-duration: 15s; animation-delay: 5s;"></div>
+        <div class="gem-particle gem-particle--1" style="left: 70%; animation-duration: 17s; animation-delay: 2s;"></div>
+        <div class="gem-particle gem-particle--2" style="left: 80%; animation-duration: 13s; animation-delay: 4s;"></div>
+        <div class="gem-particle gem-particle--3" style="left: 90%; animation-duration: 19s; animation-delay: 1s;"></div>
+    </div>
+
+    <div class="relative gem-container gem-container__shadow max-w-7xl">
+
+        <div class="gem-corner gem-corner--tl"></div>
+        <div class="gem-corner gem-corner--tr"></div>
+        <div class="gem-corner gem-corner--bl"></div>
+        <div class="gem-corner gem-corner--br"></div>
+
+        <div class="gem-scanline"></div>
+
+        <div class="text-center mb-10 relative">
+            <div class="gem-header-icon">
+                <div class="gem-header-icon__inner gem-icon--gem"></div>
+            </div>
+            <h1 class="gem-title--hero">
+                GEM REWARDS
+            </h1>
+            <p class="gem-subtitle--hero">
+                INVINCIBLE GUARDING THE GLOBE
+            </p>
+        </div>
+
+        <section class="gem-section--total my-8">
+            <div class="gem-section__rotating-bg"></div>
+            <p class="text-white/80 text-lg tracking-[0.2em] uppercase relative z-10"><i class="fas fa-gem mr-2"></i>Total Gems Obtained</p>
+            <p class="text-6xl md:text-7xl font-bold text-white relative z-10 drop-shadow-[0_0_30px_rgba(233,30,138,0.8)] tracking-[0.2em] gem-counter">
+                <span id="totalCounter">0</span>
+            </p>
+            <p class="text-white/60 text-xs tracking-wider mt-2 relative z-10"><i class="fas fa-clock mr-1"></i>ONE-TIME + RECURRING REWARDS</p>
+        </section>
+
+        <nav class="gem-grid--modes my-4">
+            <button onclick="filterCards('all', event)" class="gem-mode-btn gem-mode-btn--all active">
+                <i class="fas fa-th-large gem-mode-btn__icon gem-text--cyan"></i>
+                <p class="gem-mode-btn__count text-cyan-glow">1843</p>
+                <p class="gem-mode-btn__label text-cyan-glow">All Modes</p>
+            </button>
+            <button onclick="filterCards('event', event)" class="gem-mode-btn gem-mode-btn--event active">
+                <i class="fas fa-dragon gem-mode-btn__icon gem-text--event"></i>
+                <p class="gem-mode-btn__count">500</p>
+                <p class="gem-mode-btn__label gem-text--event">Event</p>
+                <span id="countdown-event" class="gem-mode-btn__countdown gem-text--event gem-countdown">--:--:--</span>
+            </button>
+            <button onclick="filterCards('pvp', event)" class="gem-mode-btn gem-mode-btn--pvp active">
+                <i class="fas fa-fist-raised gem-mode-btn__icon gem-text--pvp"></i>
+                <p class="gem-mode-btn__count">750</p>
+                <p class="gem-mode-btn__label gem-text--pvp">PvP</p>
+                <span id="countdown-pvp" class="gem-mode-btn__countdown gem-text--pvp gem-countdown">--:--:--</span>
+            </button>
+            <button onclick="filterCards('login', event)" class="gem-mode-btn gem-mode-btn--login active">
+                <i class="fas fa-sign-in-alt gem-mode-btn__icon gem-text--login"></i>
+                <p class="gem-mode-btn__count">293</p>
+                <p class="gem-mode-btn__label gem-text--login">Login</p>
+                <span id="countdown-login" class="gem-mode-btn__countdown gem-text--login gem-countdown">--:--:--</span>
+            </button>
+            <button onclick="filterCards('code', event)" class="gem-mode-btn gem-mode-btn--code active">
+                <i class="fas fa-gift gem-mode-btn__icon gem-text--code"></i>
+                <p class="gem-mode-btn__count">300</p>
+                <p class="gem-mode-btn__label gem-text--code">Code</p>
+                <span id="countdown-code" class="gem-mode-btn__countdown gem-text--code gem-countdown">--:--:--</span>
+            </button>
+        </nav>
+
+        <main class="gem-grid--cards my-8">
+
+            <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-0" data-category="event">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
+                <div class="gem-sparkle" style="top: 1.25rem; right: 2rem; animation-delay: 0.1s;"></div>
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>300</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">The Long Haul</h3>
+                <div class="gem-label gem-label--event mb-4">
+                    <span>Event Reward</span>
+                    <span class="gem-icon--star">★ Top 5%</span>
+                </div>
+                <div class="gem-divider">
+                    <p class="text-white/60 text-sm">Elite event ranking</p>
+                </div>
+                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
+                    Top 5% event ranking
+                </div>
+            </div>
+
+            <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-1" data-category="event">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-50"></div>
+                <div class="gem-sparkle" style="top: 1.25rem; right: 2rem; animation-delay: 0.2s;"></div>
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>200</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Earth's Defenders</h3>
+                <div class="gem-label gem-label--event mb-4">
+                    <span>Event Reward</span>
+                    <span class="gem-icon--star">★ Top 10%</span>
+                </div>
+                <div class="gem-divider">
+                    <p class="text-white/60 text-sm">Elite event ranking</p>
+                </div>
+                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
+                    Top 10% event ranking
+                </div>
+            </div>
+
+            <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-2" data-category="pvp" data-league="eliteI" data-rank="50">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-50"></div>
+                <div class="gem-sparkle" style="top: 1.25rem; right: 2rem; animation-delay: 0s;"></div>
+                <div class="gem-sparkle" style="top: 1.25rem; right: 2.5rem; animation-delay: 0.3s;"></div>
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp1-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+
+                <div class="flex gap-4 text-sm text-white/60 mb-3">
+                    <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp1-cards">0</span> Cards</span>
+                    <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp1-chips">0</span> Chips</span>
+                </div>
+
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Restricted Arena</h3>
+                <div class="gem-label gem-label--pvp mb-4">
+                    <span>Player vs Player</span>
+                </div>
+
+                <div class="gem-label gem-label--pvp mb-3">
+                    <i class="fas fa-clock"></i> Weekly
+                </div>
+
+                <div class="gem-divider pt-3">
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">League:</label>
+                        <select id="pvp1-league" onchange="updatePvpCard(1)" class="gem-select gem-select--league">
+                            <option value="eliteI">Elite I</option>
+                            <option value="eliteII">Elite II</option>
+                            <option value="eliteIII">Elite III</option>
+                            <option value="invincible">Invincible</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">Rank:</label>
+                        <select id="pvp1-rank" onchange="updatePvpCard(1)" class="gem-select w-20">
+                        </select>
+                        <button onclick="clearPvpSelection(1)" class="gem-btn--clear" title="Reset to default">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="pvp" data-league="eliteIII" data-rank="50">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-50"></div>
+                <div class="gem-sparkle" style="top: 1.5rem; right: 2.5rem; animation-delay: 0.2s;"></div>
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp2-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+
+                <div class="flex gap-4 text-sm text-white/60 mb-3">
+                    <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp2-cards">0</span> Cards</span>
+                    <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp2-chips">0</span> Chips</span>
+                </div>
+
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Open Arena</h3>
+                <div class="gem-label gem-label--pvp mb-4">
+                    <span>Player vs Player</span>
+                </div>
+
+                <div class="gem-label gem-label--pvp mb-3">
+                    <i class="fas fa-clock"></i> Weekly
+                </div>
+
+                <div class="gem-divider pt-3">
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">League:</label>
+                        <select id="pvp2-league" onchange="updatePvpCard(2)" class="gem-select gem-select--league">
+                            <option value="eliteI">Elite I</option>
+                            <option value="eliteII">Elite II</option>
+                            <option value="eliteIII">Elite III</option>
+                            <option value="invincible">Invincible</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">Rank:</label>
+                        <select id="pvp2-rank" onchange="updatePvpCard(2)" class="gem-select w-20">
+                        </select>
+                        <button onclick="clearPvpSelection(2)" class="gem-btn--clear" title="Reset to default">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="pvp" data-league="eliteII" data-rank="50">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-glow to-transparent opacity-50"></div>
+                <div class="gem-sparkle" style="top: 1.25rem; right: 2rem; animation-delay: 0.4s;"></div>
+
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp3-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+
+                <div class="flex gap-4 text-sm text-white/60 mb-3">
+                    <span><i class="fas fa-layer-group text-purple-accent"></i> <span id="pvp3-cards">0</span> Cards</span>
+                    <span><i class="fas fa-coins text-yellow-accent"></i> <span id="pvp3-chips">0</span> Chips</span>
+                </div>
+
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Multiverse Alliance War</h3>
+                <div class="gem-label gem-label--pvp mb-4">
+                    <span>Player vs Player</span>
+                </div>
+
+                <div class="gem-label gem-label--pvp mb-3">
+                    <i class="fas fa-globe"></i> 5 matches / 2 weeks
+                </div>
+
+                <div id="pvp3-demotion" class="hidden gem-alert--demotion">
+                    <i class="fas fa-exclamation-triangle gem-alert__icon--danger mr-1"></i>
+                    <span class="gem-alert__text--danger">DEMOTION ZONE</span>
+                </div>
+
+                <div class="gem-divider pt-3">
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">League:</label>
+                        <select id="pvp3-league" onchange="updatePvpCard(3)" class="gem-select gem-select--league">
+                            <option value="eliteI">Elite I</option>
+                            <option value="eliteII">Elite II</option>
+                            <option value="eliteIII">Elite III</option>
+                            <option value="invincible">Invincible</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-2">
+                        <label class="text-white/60 text-xs">Rank:</label>
+                        <select id="pvp3-rank" onchange="updatePvpCard(3)" class="gem-select w-20">
+                        </select>
+                        <button onclick="clearPvpSelection(3)" class="gem-btn--clear" title="Reset to default">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-5" data-category="login">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
+                <div class="gem-sparkle" style="top: 1.25rem; right: 2rem; animation-delay: 0.3s;"></div>
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>30×7=210</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Daily Login</h3>
+                <div class="gem-label gem-label--login mb-4">
+                    <span>Daily Reward</span>
+                </div>
+                <div class="gem-divider">
+                    <p class="text-white/60 text-sm">30 gems/day × 7 days</p>
+                </div>
+                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
+                    30 gems per day × 7 days = 210
+                </div>
+            </div>
+
+            <div class="gem-card gem-card--purple gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="login">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-50"></div>
+                <div class="gem-sparkle" style="top: 1.25rem; right: 2rem; animation-delay: 0.4s;"></div>
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>60</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Weekly Login</h3>
+                <div class="gem-label gem-label--login mb-4">
+                    <span>Weekly Reward</span>
+                </div>
+                <div class="gem-divider">
+                    <p class="text-white/60 text-sm">Per week</p>
+                </div>
+                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
+                    60 gems per week
+                </div>
+            </div>
+
+            <div class="gem-card gem-card--cyan gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="login">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-50"></div>
+                <div class="gem-sparkle" style="top: 1.25rem; right: 2rem; animation-delay: 0.5s;"></div>
+
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>90÷4=23</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Monthly Login</h3>
+                <div class="gem-label gem-label--login mb-4">
+                    <span>Monthly Reward</span>
+                </div>
+                <div class="gem-divider">
+                    <p class="text-white/60 text-sm">90 gems/month ÷ 4 weeks</p>
+                </div>
+                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
+                    90 gems per month ÷ 4 = 23/week
+                </div>
+            </div>
+
+            <div class="gem-card gem-card--code gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-8" data-category="code" onclick="copyCode()">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-accent to-transparent opacity-50"></div>
+                <div class="gem-sparkle" style="top: 1.5rem; right: 2.5rem; animation-delay: 0.5s;"></div>
+
+                <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>300</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                </p>
+                <h3 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Promo Code</h3>
+                <div class="gem-label gem-label--code mb-4">
+                    <span>Code Redemption</span>
+                </div>
+                <div class="gem-divider">
+                    <p class="text-white/60 text-sm">Code: 30KGTG</p>
+                </div>
+                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
+                    Click to copy code
+                </div>
+            </div>
+        </main>
+
+        <section>
+            <div class="gem-grid--charts mt-6">
+                <div class="gem-chart">
+                    <h4 class="gem-chart__title">Distribution</h4>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+                <div class="gem-chart">
+                    <h4 class="gem-chart__title">Rewards</h4>
+                    <canvas id="rewardsChart"></canvas>
+                </div>
+                <div class="gem-chart">
+                    <h4 class="gem-chart__title">Performance</h4>
+                    <canvas id="spiderChart"></canvas>
+                </div>
+                <div class="gem-chart">
+                    <h4 class="gem-chart__title">Progress</h4>
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <div id="drilldownModal" class="gem-modal">
+            <div class="gem-modal__overlay" onclick="closeDrillDown()"></div>
+            <div class="gem-modal__content">
+                <div class="gem-modal__header">
+                    <div class="flex items-center gap-3">
+                        <div id="drilldownIcon" class="gem-modal__icon-box"></div>
+                        <div>
+                            <h3 id="drilldownTitle" class="gem-modal__title"></h3>
+                            <p id="drilldownTotal" class="gem-modal__total"></p>
+                        </div>
+                    </div>
+                    <button onclick="closeDrillDown()" class="gem-modal__close">&times;</button>
+                </div>
+                <div id="drilldownContent" class="gem-modal__body space-y-3"></div>
+                <div class="gem-modal__footer">
+                    <button onclick="closeDrillDown()" class="gem-modal__footer-btn">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <footer class="gem-contributors">
+            <p class="gem-contributors__label">Contributors</p>
+            <div class="gem-contributors__list">
+                <span class="gem-contributor gem-text--cyan"><i class="fas fa-user mr-1"></i>Anomaly</span>
+                <span class="gem-contributor gem-text--pvp"><i class="fas fa-user mr-1"></i>TheOneTruePanda</span>
+                <span class="gem-contributor gem-text--event"><i class="fas fa-user mr-1"></i>dbp loves allen</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
