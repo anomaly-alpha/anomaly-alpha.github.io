@@ -186,23 +186,23 @@ function buildModeData(mode, totals) {
   const DC = '#333';
 
   if (mode === 'all') {
-    d[1] = REWARDS.categories.event.total;
+    d[1] = getModeTotal('event');
     d[2] = getModeTotal('pvp');
-    d[3] = REWARDS.categories.login.total;
-    d[4] = REWARDS.categories.code.total;
+    d[3] = getModeTotal('login');
+    d[4] = getModeTotal('code');
     r[3] = d[1]; r[4] = REWARDS.cards[2].gems; r[5] = d[2]; r[6] = d[3];
     sp[0] = [d[1], d[2], d[3], d[4]]; sp[1] = [spiderTargets.events, spiderTargets.pvp, spiderTargets.login, spiderTargets.code];
   } else if (mode === 'event') {
-    d[1] = REWARDS.categories.event.total; r[3] = REWARDS.cards[1].gems; r[4] = REWARDS.cards[2].gems;
+    d[1] = getModeTotal('event'); r[3] = REWARDS.cards[1].gems; r[4] = REWARDS.cards[2].gems;
     sp[0] = [d[1], 0, 0, 0]; sp[1] = [spiderTargets.events, 0, 0, 0];
   } else if (mode === 'pvp') {
     d[2] = getModeTotal('pvp'); r[5] = d[2];
     sp[0] = [0, d[2], 0, 0]; sp[1] = [0, spiderTargets.pvp, 0, 0];
   } else if (mode === 'login') {
-    d[3] = REWARDS.categories.login.total; r[6] = d[3];
+    d[3] = getModeTotal('login'); r[6] = d[3];
     sp[0] = [0, 0, d[3], 0]; sp[1] = [0, 0, spiderTargets.login, 0];
   } else if (mode === 'code') {
-    d[4] = REWARDS.categories.code.total; r[3] = d[4];
+    d[4] = getModeTotal('code'); r[3] = d[4];
     sp[0] = [0, 0, 0, d[4]]; sp[1] = [0, 0, 0, spiderTargets.code];
   }
 
