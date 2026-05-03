@@ -19,7 +19,6 @@ Open `index.html` in a browser. No build step, no npm, works from `file://`.
 | `data/arena_payouts.txt` | Open + Restricted arena payout tables |
 | `data/multiverse_war_payouts.txt` | Multiverse War payout tables |
 | `CONTEXT.md` | Domain model, architecture summary |
-| `.github/copilot/copilot-instructions.md` | Full coding patterns reference |
 
 ## Architecture rules
 
@@ -86,5 +85,4 @@ None. No lint, test, typecheck, build, or codegen commands exist.
 ## Reference docs
 
 - `CONTEXT.md` — domain model (categories, leagues, tiers, tokens)
-- `.github/copilot/copilot-instructions.md` — full code generation patterns
 - `docs/DESIGN_SYSTEM.md` — complete CSS token reference
