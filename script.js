@@ -993,15 +993,6 @@ function loadPvpSelection(cardId) {
   updatePvpCard(cardId, true);
 }
 
-function clearPvpSelection(cardId) {
-  const defaults = pvpDefaults[cardId];
-  document.getElementById(`pvp${cardId}-league`).value = defaults.league;
-  document.getElementById(`pvp${cardId}-rank`).value = defaults.rank;
-  localStorage.removeItem(`pvp${cardId}_league`);
-  localStorage.removeItem(`pvp${cardId}_rank`);
-  updatePvpCard(cardId);
-}
-
 function initializePvPCards() {
   generateRankOptions('pvp1-rank');
   generateRankOptions('pvp2-rank');

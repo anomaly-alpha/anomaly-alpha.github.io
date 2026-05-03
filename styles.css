@@ -529,10 +529,6 @@ body .gem-card--mode-highlight--all {
   display: inline-block;
 }
 
-.gem-btn--clear {
-  color: var(--gem-text--muted);
-  padding: 0.25rem;
-}
 
 .gem-btn--clear:hover {
   color: var(--gem-text--secondary);
