@@ -169,7 +169,13 @@ body {
 }
 
 .gem-card__body {
+  display: flex;
+  flex-direction: column;
   min-height: 160px;
+}
+
+.gem-card__body > .gem-label:last-of-type {
+  margin-top: auto;
 }
 
 .gem-card__glow {
