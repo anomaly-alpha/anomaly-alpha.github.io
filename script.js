@@ -66,22 +66,23 @@ const CARD_MODAL_DATA = {
             'Complete all daily operations to unlock the full 130 gems (30 free + 100 from chests)',
             'Set a daily reminder to log in at the same time each day for consistency',
             'Never miss a day — broken streaks take weeks to fully recover value from',
-            'Stack with daily (910), weekly (60), and monthly (23) login rewards for maximum income',
+            'Stack with daily (910), weekly (460), and monthly (23) login rewards for maximum income',
             'Link your account to a device for convenience features like auto-login'
         ]
     },
     'weekly-login': {
         category: 'login',
         title: 'Weekly Login',
-        gems: 60,
+        gems: 460,
         badge: '★ Weekly',
         hero: '"Loyalty has its rewards."',
-        description: 'A bonus reward for players who return each week. Claim 60 gems just for logging in once during the weekly period. This stacks with daily login bonuses — together they total 970 gems per week before monthly rewards. The weekly period resets alongside the daily login streak on Monday.',
+        description: 'A bonus reward for players who return each week. Claim 60 free gems plus 400 from chest rewards (requires completing daily operations) for a total of 460 gems per week. This stacks with daily login bonuses — together they total 1,370 gems per week before monthly rewards. The weekly period resets alongside the daily login streak on Monday.',
         tips: [
+            'Complete daily operations to unlock the full 400-gem chest reward each week',
             'Just one login per week is sufficient — claim early to avoid forgetting',
-            'Combine with daily (910) + weekly (60) for a 970 gem/week base income',
+            'Combine with daily (910) + weekly (460) for a 1,370 gem/week base income',
             'Use the Monday reset as your reminder to check all login rewards at once',
-            'No strategic planning needed — just the habit of checking in weekly'
+            'No special strategy needed — just the habit of checking in weekly'
         ]
     },
     'monthly-login': {
@@ -90,12 +91,12 @@ const CARD_MODAL_DATA = {
         gems: 23,
         badge: '★ 90÷4',
         hero: '"Every 4 weeks, return stronger."',
-        description: 'The monthly hero bonus rewards long-term consistent players. 90 gems are divided into four weekly claiming periods, giving you approximately 23 gems per week effectively. This compounds with daily (910) and weekly (60) login rewards for a total of ~993 gems/week from login bonuses alone.',
+        description: 'The monthly hero bonus rewards long-term consistent players. 90 gems are divided into four weekly claiming periods, giving you approximately 23 gems per week effectively. This compounds with daily (910) and weekly (460) login rewards for a total of ~1,393 gems/week from login bonuses alone.',
         tips: [
             'Check in every 4 weeks to claim your divided portion of the monthly bonus',
             'The monthly schedule aligns with major game content updates and events',
             'Long-term consistent players accumulate significant gem advantages',
-            'Combine with daily (910) + weekly (60) for ~993 gems/week total login income',
+            'Combine with daily (910) + weekly (460) for ~1,393 gems/week total login income',
             'No special strategy — just the habit of returning monthly'
         ]
     },

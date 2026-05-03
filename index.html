@@ -392,7 +392,7 @@
       "title": "Login Rewards",
       "icon": "fa-sign-in-alt",
       "color": "#f39c12",
-      "total": 993
+      "total": 1393
     },
     "code": {
       "title": "Promo Code",
@@ -472,10 +472,10 @@
       "id": "weekly-login",
       "category": "login",
       "title": "Weekly Login",
-      "gems": 60,
-      "formula": null,
-      "description": "Return each week to claim your loyal defender's bonus—60 gems await",
-      "tooltip": "60 gems per week",
+      "gems": 460,
+      "formula": {"base": 460, "operator": null, "frequency": 1, "display": "60+400=460"},
+      "description": "Return each week to claim your loyal defender's bonus—60 free gems plus 400 from chest rewards (requires completing daily operations)",
+      "tooltip": "60 free + 400 from chests = 460",
       "delay": 3
     },
     {
@@ -491,7 +491,7 @@
   ],
   "loginRewards": [
     {"name": "Daily", "baseGems": 130, "frequency": 7, "weeklyTotal": 910},
-    {"name": "Weekly", "baseGems": 60, "frequency": 1, "weeklyTotal": 60},
+    {"name": "Weekly", "baseGems": 460, "frequency": 1, "weeklyTotal": 460},
     {"name": "Monthly", "baseGems": 90, "frequency": 4, "weeklyTotal": 23}
   ],
   "promoCode": "30KGTG"
@@ -778,7 +778,7 @@
             <div class="gem-section__rotating-bg"></div>
             <p class="text-white/80 text-lg tracking-[0.2em] uppercase relative z-10"><i class="fas fa-gem mr-2"></i>Total Gems Obtained</p>
             <p class="text-6xl md:text-7xl font-bold text-white relative z-10 drop-shadow-[0_0_30px_rgba(233,30,138,0.8)] tracking-[0.2em] gem-counter">
-                <span id="totalCounter">3643</span>
+                <span id="totalCounter">4043</span>
             </p>
             <p class="text-white/60 text-xs tracking-wider mt-2 relative z-10"><i class="fas fa-clock mr-1"></i>WEEKLY CALCULATION</p>
         </section>
@@ -786,7 +786,7 @@
         <nav class="gem-grid--modes my-4">
             <button onclick="filterCards('all', event)" class="gem-mode-btn gem-mode-btn--all active">
                 <i class="fas fa-th-large gem-mode-btn__icon gem-text--cyan"></i>
-                <p class="gem-mode-btn__count gem-text--cyan"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>3643</p>
+                <p class="gem-mode-btn__count gem-text--cyan"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>4043</p>
                 <p class="gem-mode-btn__label gem-text--cyan">All Modes</p>
             </button>
             <button onclick="filterCards('code', event)" class="gem-mode-btn gem-mode-btn--code active">
@@ -1114,7 +1114,7 @@
                 </button>
                 <div class="gem-card__body">
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>60</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>60+400=460</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
                     <h2 class="gem-card__title gem-card__title--login">Weekly Login</h2>
                     <div class="gem-label gem-label--login mb-4">
@@ -1122,11 +1122,11 @@
                     </div>
                 </div>
                 <div class="gem-divider">
-                    <p class="gem-card__desc">Return each week to claim your loyal defender's bonus—60 gems await</p>
+                    <p class="gem-card__desc">Return each week to claim your loyal defender's bonus—60 free gems plus 400 from chest rewards (requires completing daily operations)</p>
                     <a href="guide/login/" class="block text-center mt-2 text-xs gem-text--login hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
                 <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
-                    60 gems per week
+                    60 free + 400 from chests = 460
                 </div>
             </div>
 
