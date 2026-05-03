@@ -1067,7 +1067,8 @@ body .gem-card--mode-highlight--all {
 .gem-mode-btn__label {
   font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  font-family: 'Orbitron', sans-serif;
 }
 
 .gem-mode-btn__countdown {
