@@ -456,7 +456,7 @@ function loadPageState() {
       if (toggleBtn) toggleBtn.classList.add('collapsed');
       if (label) label.textContent = 'Show Charts';
       if (icon) { icon.classList.remove('fa-chevron-up'); icon.classList.add('fa-chevron-down'); }
-    } else if (chartsVisible === 'true') {
+    } else {
       hidden = false;
       const container = document.getElementById('chartsContainer');
       const toggleBtn = document.querySelector('.gem-charts-toggle');
