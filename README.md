@@ -7,11 +7,11 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 | Category | Gems | Notes |
 |----------|------|-------|
 | Event | 500 | The Long Haul (300) + Earth's Defenders (200) |
-| PvP | ~1,428 | Varies with league/rank — Restricted Arena, Open Arena, Multiverse Alliance War (Elite II, rank 13 default) |
+| PvP | ~1,850 | Varies with league/rank — Restricted Arena, Open Arena, Multiverse Alliance War (Elite II, rank 13 default) |
 | Login | 993 | Daily (910) + Weekly (60) + Monthly (23) |
 | Code | 300 | Promo code 30KGTG (tap to reveal, click to copy) |
 
-**Total: ~3,221 gems/week** (varies with PvP selections)
+**Total: ~3,643 gems/week** (varies with PvP selections)
 
 > **Note:** The "Login" card shows 910×7=910 in Daily (130/day × 7), plus 60 weekly and ~23 monthly (90÷4), totaling 993/week.
 
@@ -35,7 +35,7 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 - Hero tagline (italic, large)
 - Description paragraph
 - Tips & Strategy section (yellow-tinted box with 5 tips)
-- PvP cards show live gems/cards/chips from current league+rank selections
+- PvP cards show live gems, PvP Currency, Hero Shop Tickets, Totem Frags, and Modules from current league+rank selections
 - Multiverse War modal includes demotion zone warning (reads from `pvp3-rank`)
 
 | Card | Icon Color | Badge |
@@ -52,8 +52,11 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ### PvP Interactive Cards (3 cards)
 - **League selector**: 14 options — Intern, Junior I–III, Intermediate I–III, Senior I–III, Elite I–III, Invincible
-- **Rank selector**: 1–120
-- **Dynamic gems/cards/chips** based on tier + league multiplier
+- **Rank selector**: 1–120 (per-league player counts in data)
+- **Dynamic gems, PvP Currency, Tickets, Totem Frags, Modules** based on per-league payout tables
+- **Restricted Arena**: gems + PvP Currency + Hero Shop Tickets
+- **Open Arena**: gems + PvP Currency + Hero Shop Tickets
+- **Multiverse Alliance War**: gems + Totem Fragments + Modules (6 league groups)
 - **Demotion zone warning** at rank 86+ (Multiverse Alliance War card only)
 - **localStorage persistence** per card
 - **Clear button** to reset to defaults (Elite II, rank 13)
@@ -77,33 +80,30 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (900 lines) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (1185 lines) — All JS: charts, filters, PvP, modals, countdowns
+├── index.html           (1214 lines) — Main HTML + inline JSON configs (6 in <head>)
+├── script.js            (1216 lines) — All JS: charts, filters, PvP, modals, countdowns
 ├── styles.css           (1266 lines) — CSS custom properties + BEM component classes
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
 ├── og-image.svg         — 1200×630 social sharing preview card
 ├── robots.txt           — Allows all crawlers, references sitemap
-├── sitemap.xml          — 5 URLs (main + 4 guide pages)
+├── sitemap.xml          — 7 URLs (main + 6 guide pages)
 ├── AGENTS.md            — Agent instructions for this repo
 ├── README.md            — This file
+├── googleeb60e8e5ee55440e.html — Google Search Console verification
 ├── guide/               — Topical cluster guide pages
 │   ├── code/index.html  — Promo code guide (current code, redemption steps)
 │   ├── event/index.html — Event rewards guide (The Long Haul, Earth's Defenders)
-│   ├── pvp/index.html   — PvP guide (14 leagues, 7 tiers, 3 arena modes)
-│   └── login/index.html — Login rewards guide (daily, weekly, monthly breakdown)
-├── data/                — Source JSON files (embedded in index.html)
-│   ├── game-config.json     (14 leagues, 7 tiers, spider targets)
-│   ├── rewards-config.json  (cards, categories, login rewards)
-│   ├── chart-config.json    (colors, animation, tooltip)
-│   ├── countdown-config.json (timer settings)
-│   ├── ui-config.json       (layout, mode order)
-│   └── theme-config.json    (design tokens)
+│   ├── pvp/index.html   — PvP guide (14 leagues, payout tables, 3 arena modes)
+│   ├── login/index.html — Login rewards guide (daily, weekly, monthly breakdown)
+│   ├── faq/index.html   — Gem rewards FAQ
+│   └── beginners/index.html — New player guide
+├── data/                — Source data files
+│   ├── arena_payouts.txt     — Open + Restricted arena payout data
+│   └── multiverse_war_payouts.txt — Multiverse War payout data
 ├── docs/
 │   ├── DESIGN_SYSTEM.md  — CSS token reference
 │   ├── index.md          — Feature documentation
 │   └── plan/             — Historical plans and fix notes
-└── .github/copilot/
-    └── copilot-instructions.md  — Code generation patterns
 ```
 
 ## Usage
@@ -151,8 +151,13 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Active mode selector opacity** — Toned down active mode button solid colors to be more transparent
 
 ### Data & Calculations
-- ✅ **GAME.pvp structure** — 14 leagues with `rankStart`/`rankEnd` fields
-- ✅ **getPvpPayout** — Uses league multiplier + tier gems/cards/chips
+- ✅ **GAME.pvp structure** — 14 leagues with player counts, 3 arena payout tables (restricted, open, multiverse)
+- ✅ **getPvpPayout(arena, leagueId, rank)** — Per-league payout table lookup instead of multiplier system
+- ✅ **Real arena payout data** — Parsed from `data/arena_payouts.txt` with accurate per-league brackets
+- ✅ **Real multiverse war data** — Parsed from `data/multiverse_war_payouts.txt` with 6 league groups
+- ✅ **Restricted Arena**: 14 leagues with gems, PvP Currency, Hero Shop Tickets
+- ✅ **Open Arena**: 14 leagues with gems, PvP Currency, Hero Shop Tickets  
+- ✅ **Multiverse War**: 6 grouped leagues with gems, Totem Fragments, Modules
 - ✅ **Spider chart targets** — (550, 2664, 360, 330)
 - ✅ **PvP defaults** — Elite II, rank 13
 - ✅ **Spider chart live updates** — Spider actuals recompute from live PvP form values via `getModeTotal('pvp')`; spider updates on PvP selector changes and mode toggles (matches distribution + rewards behavior)
@@ -178,13 +183,13 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 ### SEO & Content
 - ✅ **Open Graph & Twitter tags** — 10 meta tags for rich social sharing previews
 - ✅ **Canonical URL** — Self-referencing canonical on every page
-- ✅ **Structured data** — WebPage + FAQPage schema with 4 Q&A pairs
-- ✅ **robots.txt & sitemap.xml** — Crawl directives and all 5 URLs submitted
+- ✅ **Structured data** — WebPage + FAQPage + Person schema on main page; Guide + BreadcrumbList on detail pages
+- ✅ **robots.txt & sitemap.xml** — Crawl directives and all 7 URLs submitted
 - ✅ **og-image.svg** — 1200×630 social preview matching the gem theme
-- ✅ **4 guide detail pages** — Code, event, PvP, and login guides forming a topical cluster
+- ✅ **6 guide detail pages** — Code, event, PvP, login, FAQ, and beginners guides forming a topical cluster
 - ✅ **Full internal linking** — 9 card guide links + bidirectional nav between all pages
-- ✅ **Pre-filled PvP defaults** — Non-JS crawlers see 476 gems, 1 card, 510 chips (was 0)
-- ✅ **Improved title & H1** — "Invincible Guarding the Globe — Weekly Gem Rewards & PvP Calculator"
+- ✅ **Pre-filled PvP defaults** — Non-JS crawlers see real values (520 gems, 590 currency, 1 ticket for arenas; 810 gems, 26 frags, 2 modules for war)
+- ✅ **Improved title & H1** — "Invincible Guarding the Globe — Gem Rewards & PvP Guide"
 - ✅ **H1 game context** — Screen-reader-only prefix for keyword coverage
 
 ## Contributors

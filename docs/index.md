@@ -9,11 +9,11 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 | Category | Gems | Description |
 |----------|-----|-------------|
 | Event Rewards | 500 | The Long Haul (300) + Earth's Defenders (200) |
-| PvP | ~1,428 (varies) | Restricted Arena + Open Arena + Multiverse Alliance War (Elite II, rank 13 defaults) |
+| PvP | ~1,850 (varies) | Restricted Arena + Open Arena + Multiverse Alliance War (Elite II, rank 13 defaults) |
 | Login Rewards | 993 | Daily (910) + Weekly (60) + Monthly (23) |
 | Promo Code | 300 | Code: 30KGTG |
 
-**Total: ~3,221 gems/week** (varies with PvP selections)
+**Total: ~3,643 gems/week** (varies with PvP selections)
 
 ## Features
 
@@ -34,7 +34,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 - **Hero tagline** — large italic text
 - **Description** — paragraph explaining the reward/event
 - **Tips & Strategy** — yellow-tinted box with 5 bulleted tips
-- **Live PvP data** — gems, cards, chips read from current form selections
+- **Live PvP data** — gems, PvP Currency, Tickets, Totem Frags, Modules read from current form selections
 - **Demotion warning** — Multiverse War modal shows safe/danger status based on pvp3-rank vs threshold 86
 
 | Card | Category | Badge | Gems in modal |
@@ -52,7 +52,9 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 ### PvP Interactive Cards (3 cards)
 - League selector (14 options: Intern through Invincible), default: Elite II
 - Rank selector (1-120), default: rank 13
-- Dynamic gems/cards/chips based on tier + league multiplier
+- Dynamic gems, PvP Currency, Hero Shop Tickets, Totem Frags, Modules per per-league payout tables
+- Restricted Arena + Open Arena: 14 leagues with gems, PvP Currency, Tickets
+- Multiverse War: 6 grouped leagues with gems, Totem Fragments, Modules
 - localStorage persistence per card
 - Clear button to reset to defaults
 - Demotion zone warning at rank 86+ (Multiverse Alliance War card only)
@@ -67,9 +69,11 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 ### Guide Pages (Topical Cluster)
 - `/guide/code/` — Promo code guide: current code 30KGTG, redemption steps, 5 tips
 - `/guide/event/` — Event rewards guide: The Long Haul + Earth's Defenders with full strategies
-- `/guide/pvp/` — PvP guide: 14 leagues table, 7 payout tiers table, 3 arena modes with demotion zone
+- `/guide/pvp/` — PvP guide: 14 leagues table, real payout tables, 3 arena modes with demotion zone
 - `/guide/login/` — Login rewards guide: daily (910), weekly (60), monthly (23) with income summary table
-- Each guide links to all 3 other guides + back to main page for topical relevance
+- `/guide/faq/` — Gem rewards FAQ with FAQPage schema
+- `/guide/beginners/` — New player guide with priority checklist and gem spending tips
+- Each guide links to all 5 other guides + back to main page for topical relevance
 
 ### Visual Effects
 - Floating particles in background (9 particles)
@@ -80,7 +84,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 
 ## Tech Stack
 
-- **Structure**: `index.html` (900 lines), `styles.css` (1266 lines), `script.js` (1185 lines), 4 guide pages
+- **Structure**: `index.html` (1214 lines), `styles.css` (1266 lines), `script.js` (1216 lines), 6 guide pages
 - **Styling**: Tailwind CSS (via CDN) + custom CSS design token system
 - **Charts**: Chart.js (doughnut, bar, radar)
 - **Icons**: Font Awesome
@@ -143,8 +147,9 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **PvP defaults** — Elite II, rank 13 (user's actual settings)
 - ✅ **Login total** — 993/week (910+60+23)
 - ✅ **Spider chart targets** — (550, 2664, 360, 330)
-- ✅ **GAME.pvp structure** — 14 leagues with `rankStart`/`rankEnd` fields
-- ✅ **getPvpPayout** — Uses league multiplier + tier gems/cards/chips
+- ✅ **Real arena payout data** — 14 per-league tables with gems + PvP Currency + Tickets (Restricted + Open)
+- ✅ **Real multiverse war data** — 6 grouped leagues with gems + Totem Fragments + Modules
+- ✅ **getPvpPayout(arena, leagueId, rank)** — Core function, reads per-league tables from `GAME.pvp.arenas` and `GAME.pvp.multiverse`
 - ✅ **Spider chart live updates** — Spider actuals recompute from live PvP form values via `getModeTotal('pvp')`; `updatePvPCard` calls `updateChartsByModes(selectedModes)` so all 3 charts update on every PvP selector change
 
 ### Bug Fixes
@@ -157,13 +162,13 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 ### SEO & Content
 - ✅ **Open Graph & Twitter tags** — 10 meta tags for rich social sharing previews
 - ✅ **Canonical URL** — Self-referencing canonical on every page
-- ✅ **Structured data** — WebPage + FAQPage schema with 4 Q&A pairs
-- ✅ **robots.txt & sitemap.xml** — Crawl directives and all 5 URLs submitted
+- ✅ **Structured data** — WebPage + FAQPage + Person schema on main page; Guide + BreadcrumbList on detail pages
+- ✅ **robots.txt & sitemap.xml** — Crawl directives and all 7 URLs submitted
 - ✅ **og-image.svg** — 1200×630 social preview matching the gem theme
-- ✅ **4 guide detail pages** — Code, event, PvP, and login guides forming a topical cluster
+- ✅ **6 guide detail pages** — Code, event, PvP, login, FAQ, and beginners guides forming a topical cluster
 - ✅ **Full internal linking** — 9 card guide links + bidirectional nav between all pages
-- ✅ **Pre-filled PvP defaults** — Non-JS crawlers see 476 gems, 1 card, 510 chips (was 0)
-- ✅ **Improved title & H1** — "Invincible Guarding the Globe — Weekly Gem Rewards & PvP Calculator"
+- ✅ **Pre-filled PvP defaults** — Non-JS crawlers see 520 gems, 590 currency, 1 ticket (arenas); 810 gems, 26 frags, 2 modules (war)
+- ✅ **Improved title & H1** — "Invincible Guarding the Globe — Gem Rewards & PvP Guide"
 - ✅ **H1 game context** — Screen-reader-only prefix for keyword coverage
 
 ## Contributors

@@ -12,9 +12,12 @@ Open `index.html` in a browser. No build step, no npm, works from `file://`.
 | `script.js` | All JS (global scope, no imports/exports) |
 | `styles.css` | CSS custom property tokens + BEM classes |
 | `robots.txt` | Crawl directives, sitemap reference |
-| `sitemap.xml` | All 5 URLs (main + 4 guides) |
+| `sitemap.xml` | All 7 URLs (main + 6 guides) |
 | `og-image.svg` | 1200×630 social sharing preview |
-| `guide/*/index.html` | Detail guides for code, event, pvp, login |
+| `googleeb60e8e5ee55440e.html` | Google Search Console verification |
+| `guide/*/index.html` | Detail guides for code, event, pvp, login, faq, beginners |
+| `data/arena_payouts.txt` | Open + Restricted arena payout tables |
+| `data/multiverse_war_payouts.txt` | Multiverse War payout tables |
 | `CONTEXT.md` | Domain model, architecture summary |
 | `.github/copilot/copilot-instructions.md` | Full coding patterns reference |
 
@@ -40,8 +43,10 @@ None. No lint, test, typecheck, build, or codegen commands exist.
 
 ## PvP system
 
-- `getPvpPayout(leagueId, rank)` — core function, reads 14 leagues + 7 tiers from `GAME.pvp`
+- `getPvpPayout(arena, leagueId, rank)` — core function, reads per-league payout tables from `GAME.pvp.arenas` (restricted/open) and `GAME.pvp.multiverse` (6 grouped leagues)
 - 3 PvP cards with league/rank `<select>` elements, initialized via `initializePvPCards()`
+- Restricted + Open Arena: 14 leagues with gems, PvP Currency, Hero Shop Tickets
+- Multiverse War: 6 league groups (intern/junior/intermediate/senior/elite/invincible) with gems, Totem Fragments, Modules
 - Demotion threshold: rank 86 (`GAME.pvp.demotionThreshold`)
 - On any PvP change: call `updatePvpCard(id)` → `updateAllPageTotals()` → `updateChartsByModes(selectedModes)`
 
@@ -76,7 +81,7 @@ None. No lint, test, typecheck, build, or codegen commands exist.
 - **Canonical** — self-referencing canonical on every page
 - **Structured data** — WebPage + FAQPage schema on main page; Guide schema on detail pages
 - **Internal linking** — bidirectional nav between main page and all guide pages, guide pages link to each other
-- **Guide page structure** — Each guide links to all 3 other guides + back to main page
+- **Guide page structure** — Each guide links to all 5 other guides + back to main page
 
 ## Reference docs
 
