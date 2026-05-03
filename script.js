@@ -326,20 +326,20 @@ function revealCode(card) {
   }
 }
 
-function getPvpPayout(leagueId, rank) {
-  if (!GAME || !GAME.pvp) return { gems: 0, cards: 0, chips: 0, isDemotion: false };
-
-  const league = GAME.pvp.leagues.find(l => l.id === leagueId);
-  const multiplier = league ? league.multiplier : 1;
-  const tier = GAME.pvp.tiers.find(t => rank >= t.rankStart && rank <= t.rankEnd);
-
-  if (!tier) return { gems: 0, cards: 0, chips: 0, isDemotion: false };
-
+function getPvpPayout(arena, leagueId, rank) {
+  if (!GAME || !GAME.pvp || arena === 'multiverse') {
+    return { gems: 0, currency: 0, isDemotion: rank >= 86 };
+  }
+  const payouts = GAME.pvp.arenas[arena];
+  if (!payouts) return { gems: 0, currency: 0, isDemotion: false };
+  const tiers = payouts[leagueId];
+  if (!tiers) return { gems: 0, currency: 0, isDemotion: false };
+  const tier = tiers.find(t => rank >= t.rankStart && rank <= t.rankEnd);
+  if (!tier) return { gems: 0, currency: 0, isDemotion: false };
   return {
-    gems: Math.round(tier.gems * multiplier),
-    cards: tier.cards,
-    chips: Math.round(tier.chips * multiplier),
-    isDemotion: rank >= GAME.pvp.demotionThreshold
+    gems: tier.gems,
+    currency: tier.currency,
+    isDemotion: rank >= (GAME.pvp.demotionThreshold || 86)
   };
 }
 
@@ -360,10 +360,10 @@ function getModeTotal(mode) {
     const r2 = parseInt(document.getElementById('pvp2-rank')?.value) || 13;
     const l3 = document.getElementById('pvp3-league')?.value || 'eliteII';
     const r3 = parseInt(document.getElementById('pvp3-rank')?.value) || 13;
-    const p1 = getPvpPayout(l1, r1).gems;
-    const p2 = getPvpPayout(l2, r2).gems;
-    const p3 = getPvpPayout(l3, r3).gems;
-    return p1 + p2 + p3 || 1428;
+    const p1 = getPvpPayout('restricted', l1, r1).gems;
+    const p2 = getPvpPayout('open', l2, r2).gems;
+    const p3 = getPvpPayout('multiverse', l3, r3).gems;
+    return p1 + p2 + p3 || 1040;
   }
 
   if (mode === 'login') {
@@ -910,7 +910,11 @@ function updateCountdowns() {
 
 function generateRankOptions(selectId) {
   const select = document.getElementById(selectId);
-  for (let i = 1; i <= 120; i++) {
+  const cardId = selectId.replace('pvp', '').replace('-rank', '');
+  const cardEl = document.querySelector(`[data-category="pvp"][id$="-${selectId.replace('pvp','').replace('-rank','')}"]`) ||
+    document.querySelectorAll('[data-category="pvp"]')[parseInt(cardId) - 1];
+  const maxRank = GAME && GAME.pvp && GAME.pvp.leagues ? 120 : 120;
+  for (let i = 1; i <= maxRank; i++) {
     const option = document.createElement('option');
     option.value = i;
     option.textContent = i;
@@ -921,10 +925,14 @@ function generateRankOptions(selectId) {
 function updatePvpCard(cardId, skipTotals) {
   const league = document.getElementById(`pvp${cardId}-league`).value;
   const rank = parseInt(document.getElementById(`pvp${cardId}-rank`).value);
-  const payout = getPvpPayout(league, rank);
+  const arenas = ['restricted', 'open', 'multiverse'];
+  const arena = arenas[cardId - 1] || 'multiverse';
+  const payout = getPvpPayout(arena, league, rank);
   animateValue(`pvp${cardId}-gems`, payout.gems);
-  animateValue(`pvp${cardId}-cards`, payout.cards);
-  animateValue(`pvp${cardId}-chips`, payout.chips);
+  const currencyEl = document.getElementById(`pvp${cardId}-currency`);
+  if (currencyEl) {
+    animateValue(`pvp${cardId}-currency`, payout.currency);
+  }
   const demotionEl = document.getElementById(`pvp${cardId}-demotion`);
   if (demotionEl) {
     if (payout.isDemotion) {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Plan your weekly gem income in Invincible Guarding the Globe — interactive PvP payout calculator with all 14 leagues and 120 ranks, event reward tracker, login streak guide, and promo codes. ~3,221 gems/week from all sources.">
+    <meta name="description" content="Plan your weekly gem income in Invincible Guarding the Globe — interactive PvP payout calculator with all 14 leagues and 120 ranks, event reward tracker, login streak guide, and promo codes. ~2,833 gems/week from all sources.">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="canonical" href="https://anomaly-alpha.github.io/">
     <meta property="og:title" content="Invincible Guarding the Globe — Gem Rewards &amp; PvP Guide">
@@ -28,33 +28,285 @@
 {
   "pvp": {
     "leagues": [
-      {"id": "intern", "name": "Intern", "multiplier": 0.30, "rankStart": 1, "rankEnd": 9},
-      {"id": "junior1", "name": "Junior I", "multiplier": 0.40, "rankStart": 10, "rankEnd": 18},
-      {"id": "junior2", "name": "Junior II", "multiplier": 0.45, "rankStart": 19, "rankEnd": 27},
-      {"id": "junior3", "name": "Junior III", "multiplier": 0.50, "rankStart": 28, "rankEnd": 36},
-      {"id": "intermediate1", "name": "Intermediate I", "multiplier": 0.55, "rankStart": 37, "rankEnd": 45},
-      {"id": "intermediate2", "name": "Intermediate II", "multiplier": 0.60, "rankStart": 46, "rankEnd": 54},
-      {"id": "intermediate3", "name": "Intermediate III", "multiplier": 0.65, "rankStart": 55, "rankEnd": 63},
-      {"id": "senior1", "name": "Senior I", "multiplier": 0.70, "rankStart": 64, "rankEnd": 72},
-      {"id": "senior2", "name": "Senior II", "multiplier": 0.75, "rankStart": 73, "rankEnd": 81},
-      {"id": "senior3", "name": "Senior III", "multiplier": 0.80, "rankStart": 82, "rankEnd": 90},
-      {"id": "eliteI", "name": "Elite I", "multiplier": 0.70, "rankStart": 91, "rankEnd": 100},
-      {"id": "eliteII", "name": "Elite II", "multiplier": 0.85, "rankStart": 101, "rankEnd": 105},
-      {"id": "eliteIII", "name": "Elite III", "multiplier": 1.00, "rankStart": 106, "rankEnd": 115},
-      {"id": "invincible", "name": "Invincible", "multiplier": 1.25, "rankStart": 116, "rankEnd": 120}
+      {"id": "intern", "name": "Intern", "playerCount": 500},
+      {"id": "junior1", "name": "Junior I", "playerCount": 300},
+      {"id": "junior2", "name": "Junior II", "playerCount": 285},
+      {"id": "junior3", "name": "Junior III", "playerCount": 260},
+      {"id": "intermediate1", "name": "Intermediate I", "playerCount": 235},
+      {"id": "intermediate2", "name": "Intermediate II", "playerCount": 215},
+      {"id": "intermediate3", "name": "Intermediate III", "playerCount": 195},
+      {"id": "senior1", "name": "Senior I", "playerCount": 175},
+      {"id": "senior2", "name": "Senior II", "playerCount": 160},
+      {"id": "senior3", "name": "Senior III", "playerCount": 145},
+      {"id": "eliteI", "name": "Elite I", "playerCount": 130},
+      {"id": "eliteII", "name": "Elite II", "playerCount": 120},
+      {"id": "eliteIII", "name": "Elite III", "playerCount": 110},
+      {"id": "invincible", "name": "Invincible", "playerCount": 100}
     ],
-    "tiers": [
-      {"rankStart": 1, "rankEnd": 1, "gems": 710, "cards": 4, "chips": 1000},
-      {"rankStart": 2, "rankEnd": 2, "gems": 670, "cards": 3, "chips": 900},
-      {"rankStart": 3, "rankEnd": 3, "gems": 640, "cards": 2, "chips": 800},
-      {"rankStart": 4, "rankEnd": 10, "gems": 600, "cards": 1, "chips": 600},
-      {"rankStart": 11, "rankEnd": 30, "gems": 560, "cards": 1, "chips": 600},
-      {"rankStart": 31, "rankEnd": 60, "gems": 520, "cards": 1, "chips": 1600},
-      {"rankStart": 61, "rankEnd": 120, "gems": 490, "cards": 1, "chips": 1500}
-    ],
+    "arenas": {
+      "restricted": {
+        "intern": [
+          {"rankStart":1,"rankEnd":1,"gems":230,"currency":1450},
+          {"rankStart":2,"rankEnd":2,"gems":190,"currency":1220},
+          {"rankStart":3,"rankEnd":3,"gems":160,"currency":1150},
+          {"rankStart":4,"rankEnd":10,"gems":120,"currency":1070},
+          {"rankStart":11,"rankEnd":130,"gems":80,"currency":920},
+          {"rankStart":131,"rankEnd":250,"gems":40,"currency":850},
+          {"rankStart":251,"rankEnd":500,"gems":10,"currency":850}
+        ],
+        "junior1": [
+          {"rankStart":1,"rankEnd":1,"gems":270,"currency":1450},
+          {"rankStart":2,"rankEnd":2,"gems":230,"currency":1230},
+          {"rankStart":3,"rankEnd":3,"gems":200,"currency":1150},
+          {"rankStart":4,"rankEnd":10,"gems":160,"currency":1080},
+          {"rankStart":11,"rankEnd":80,"gems":120,"currency":930},
+          {"rankStart":81,"rankEnd":150,"gems":80,"currency":850},
+          {"rankStart":151,"rankEnd":300,"gems":50,"currency":850}
+        ],
+        "junior2": [
+          {"rankStart":1,"rankEnd":1,"gems":310,"currency":1460},
+          {"rankStart":2,"rankEnd":2,"gems":270,"currency":1230},
+          {"rankStart":3,"rankEnd":3,"gems":240,"currency":1160},
+          {"rankStart":4,"rankEnd":10,"gems":200,"currency":1080},
+          {"rankStart":11,"rankEnd":80,"gems":160,"currency":930},
+          {"rankStart":81,"rankEnd":150,"gems":120,"currency":860},
+          {"rankStart":151,"rankEnd":285,"gems":90,"currency":860}
+        ],
+        "junior3": [
+          {"rankStart":1,"rankEnd":1,"gems":350,"currency":1460},
+          {"rankStart":2,"rankEnd":2,"gems":310,"currency":1240},
+          {"rankStart":3,"rankEnd":3,"gems":280,"currency":1160},
+          {"rankStart":4,"rankEnd":10,"gems":240,"currency":1090},
+          {"rankStart":11,"rankEnd":70,"gems":200,"currency":940},
+          {"rankStart":71,"rankEnd":130,"gems":160,"currency":860},
+          {"rankStart":131,"rankEnd":260,"gems":130,"currency":860}
+        ],
+        "intermediate1": [
+          {"rankStart":1,"rankEnd":1,"gems":390,"currency":1460},
+          {"rankStart":2,"rankEnd":2,"gems":350,"currency":1240},
+          {"rankStart":3,"rankEnd":3,"gems":320,"currency":1160},
+          {"rankStart":4,"rankEnd":10,"gems":280,"currency":1090},
+          {"rankStart":11,"rankEnd":60,"gems":240,"currency":940},
+          {"rankStart":61,"rankEnd":120,"gems":200,"currency":860},
+          {"rankStart":121,"rankEnd":235,"gems":170,"currency":860}
+        ],
+        "intermediate2": [
+          {"rankStart":1,"rankEnd":1,"gems":430,"currency":1470},
+          {"rankStart":2,"rankEnd":2,"gems":390,"currency":1240},
+          {"rankStart":3,"rankEnd":3,"gems":360,"currency":1170},
+          {"rankStart":4,"rankEnd":10,"gems":320,"currency":1090},
+          {"rankStart":11,"rankEnd":60,"gems":280,"currency":940},
+          {"rankStart":61,"rankEnd":110,"gems":240,"currency":870},
+          {"rankStart":111,"rankEnd":215,"gems":210,"currency":870}
+        ],
+        "intermediate3": [
+          {"rankStart":1,"rankEnd":1,"gems":470,"currency":1470},
+          {"rankStart":2,"rankEnd":2,"gems":430,"currency":1250},
+          {"rankStart":3,"rankEnd":3,"gems":400,"currency":1170},
+          {"rankStart":4,"rankEnd":10,"gems":360,"currency":1100},
+          {"rankStart":11,"rankEnd":50,"gems":320,"currency":950},
+          {"rankStart":51,"rankEnd":100,"gems":280,"currency":870},
+          {"rankStart":101,"rankEnd":195,"gems":250,"currency":870}
+        ],
+        "senior1": [
+          {"rankStart":1,"rankEnd":1,"gems":510,"currency":1480},
+          {"rankStart":2,"rankEnd":2,"gems":470,"currency":1250},
+          {"rankStart":3,"rankEnd":3,"gems":440,"currency":1180},
+          {"rankStart":4,"rankEnd":10,"gems":400,"currency":1100},
+          {"rankStart":11,"rankEnd":50,"gems":360,"currency":950},
+          {"rankStart":51,"rankEnd":90,"gems":320,"currency":880},
+          {"rankStart":91,"rankEnd":175,"gems":290,"currency":880}
+        ],
+        "senior2": [
+          {"rankStart":1,"rankEnd":1,"gems":550,"currency":1480},
+          {"rankStart":2,"rankEnd":2,"gems":510,"currency":1260},
+          {"rankStart":3,"rankEnd":3,"gems":480,"currency":1180},
+          {"rankStart":4,"rankEnd":10,"gems":440,"currency":1110},
+          {"rankStart":11,"rankEnd":40,"gems":400,"currency":960},
+          {"rankStart":41,"rankEnd":80,"gems":360,"currency":880},
+          {"rankStart":81,"rankEnd":160,"gems":330,"currency":880}
+        ],
+        "senior3": [
+          {"rankStart":1,"rankEnd":1,"gems":590,"currency":1480},
+          {"rankStart":2,"rankEnd":2,"gems":550,"currency":1260},
+          {"rankStart":3,"rankEnd":3,"gems":520,"currency":1180},
+          {"rankStart":4,"rankEnd":10,"gems":480,"currency":1110},
+          {"rankStart":11,"rankEnd":40,"gems":440,"currency":960},
+          {"rankStart":41,"rankEnd":80,"gems":400,"currency":880},
+          {"rankStart":81,"rankEnd":145,"gems":370,"currency":880}
+        ],
+        "eliteI": [
+          {"rankStart":1,"rankEnd":1,"gems":630,"currency":1490},
+          {"rankStart":2,"rankEnd":2,"gems":590,"currency":1260},
+          {"rankStart":3,"rankEnd":3,"gems":560,"currency":1190},
+          {"rankStart":4,"rankEnd":10,"gems":520,"currency":1110},
+          {"rankStart":11,"rankEnd":40,"gems":480,"currency":960},
+          {"rankStart":41,"rankEnd":70,"gems":440,"currency":890},
+          {"rankStart":71,"rankEnd":130,"gems":410,"currency":890}
+        ],
+        "eliteII": [
+          {"rankStart":1,"rankEnd":1,"gems":670,"currency":1490},
+          {"rankStart":2,"rankEnd":2,"gems":630,"currency":1270},
+          {"rankStart":3,"rankEnd":3,"gems":600,"currency":1190},
+          {"rankStart":4,"rankEnd":10,"gems":560,"currency":1120},
+          {"rankStart":11,"rankEnd":30,"gems":520,"currency":970},
+          {"rankStart":31,"rankEnd":60,"gems":480,"currency":890},
+          {"rankStart":61,"rankEnd":120,"gems":450,"currency":890}
+        ],
+        "eliteIII": [
+          {"rankStart":1,"rankEnd":1,"gems":710,"currency":1500},
+          {"rankStart":2,"rankEnd":2,"gems":670,"currency":1270},
+          {"rankStart":3,"rankEnd":3,"gems":640,"currency":1200},
+          {"rankStart":4,"rankEnd":10,"gems":600,"currency":1120},
+          {"rankStart":11,"rankEnd":30,"gems":560,"currency":970},
+          {"rankStart":31,"rankEnd":60,"gems":520,"currency":900},
+          {"rankStart":61,"rankEnd":110,"gems":490,"currency":900}
+        ],
+        "invincible": [
+          {"rankStart":1,"rankEnd":1,"gems":750,"currency":1500},
+          {"rankStart":2,"rankEnd":2,"gems":710,"currency":1280},
+          {"rankStart":3,"rankEnd":3,"gems":680,"currency":1200},
+          {"rankStart":4,"rankEnd":10,"gems":640,"currency":1130},
+          {"rankStart":11,"rankEnd":30,"gems":600,"currency":980},
+          {"rankStart":31,"rankEnd":50,"gems":560,"currency":900},
+          {"rankStart":51,"rankEnd":100,"gems":530,"currency":900}
+        ]
+      },
+      "open": {
+        "intern": [
+          {"rankStart":1,"rankEnd":1,"gems":230,"currency":950,"shards":"Lucan x1"},
+          {"rankStart":2,"rankEnd":2,"gems":190,"currency":850,"shards":"Lucan x1"},
+          {"rankStart":3,"rankEnd":3,"gems":160,"currency":750,"shards":"Lucan x1"},
+          {"rankStart":4,"rankEnd":10,"gems":120,"currency":550},
+          {"rankStart":11,"rankEnd":130,"gems":80,"currency":550},
+          {"rankStart":131,"rankEnd":250,"gems":40,"currency":550},
+          {"rankStart":251,"rankEnd":500,"gems":10,"currency":450}
+        ],
+        "junior1": [
+          {"rankStart":1,"rankEnd":1,"gems":270,"currency":950,"shards":"Iguana x1","tickets":1},
+          {"rankStart":2,"rankEnd":2,"gems":230,"currency":850,"shards":"Iguana x1","tickets":1},
+          {"rankStart":3,"rankEnd":3,"gems":200,"currency":750,"shards":"Iguana x1","tickets":1},
+          {"rankStart":4,"rankEnd":10,"gems":160,"currency":550},
+          {"rankStart":11,"rankEnd":80,"gems":120,"currency":550},
+          {"rankStart":81,"rankEnd":150,"gems":80,"currency":550},
+          {"rankStart":151,"rankEnd":300,"gems":50,"currency":450}
+        ],
+        "junior2": [
+          {"rankStart":1,"rankEnd":1,"gems":310,"currency":960,"shards":"Iguana x1","tickets":1},
+          {"rankStart":2,"rankEnd":2,"gems":270,"currency":860,"shards":"Iguana x1","tickets":1},
+          {"rankStart":3,"rankEnd":3,"gems":240,"currency":760,"shards":"Iguana x1","tickets":1},
+          {"rankStart":4,"rankEnd":10,"gems":200,"currency":560},
+          {"rankStart":11,"rankEnd":80,"gems":160,"currency":560},
+          {"rankStart":81,"rankEnd":150,"gems":120,"currency":560},
+          {"rankStart":151,"rankEnd":285,"gems":90,"currency":460}
+        ],
+        "junior3": [
+          {"rankStart":1,"rankEnd":1,"gems":350,"currency":960,"shards":"Iguana x1","tickets":1},
+          {"rankStart":2,"rankEnd":2,"gems":310,"currency":860,"shards":"Iguana x1","tickets":1},
+          {"rankStart":3,"rankEnd":3,"gems":280,"currency":760,"shards":"Iguana x1","tickets":1},
+          {"rankStart":4,"rankEnd":10,"gems":240,"currency":560},
+          {"rankStart":11,"rankEnd":70,"gems":200,"currency":560},
+          {"rankStart":71,"rankEnd":130,"gems":160,"currency":560},
+          {"rankStart":131,"rankEnd":260,"gems":130,"currency":460}
+        ],
+        "intermediate1": [
+          {"rankStart":1,"rankEnd":1,"gems":390,"currency":960,"shards":"Agent Spider x1","tickets":2},
+          {"rankStart":2,"rankEnd":2,"gems":350,"currency":860,"shards":"Agent Spider x1","tickets":1},
+          {"rankStart":3,"rankEnd":3,"gems":320,"currency":760,"shards":"Agent Spider x1","tickets":1},
+          {"rankStart":4,"rankEnd":10,"gems":280,"currency":560,"tickets":1},
+          {"rankStart":11,"rankEnd":60,"gems":240,"currency":560,"tickets":1},
+          {"rankStart":61,"rankEnd":120,"gems":200,"currency":560},
+          {"rankStart":121,"rankEnd":235,"gems":170,"currency":460}
+        ],
+        "intermediate2": [
+          {"rankStart":1,"rankEnd":1,"gems":430,"currency":970,"shards":"Agent Spider x1","tickets":2},
+          {"rankStart":2,"rankEnd":2,"gems":390,"currency":870,"shards":"Agent Spider x1","tickets":1},
+          {"rankStart":3,"rankEnd":3,"gems":360,"currency":770,"shards":"Agent Spider x1","tickets":1},
+          {"rankStart":4,"rankEnd":10,"gems":320,"currency":570,"tickets":1},
+          {"rankStart":11,"rankEnd":60,"gems":280,"currency":570,"tickets":1},
+          {"rankStart":61,"rankEnd":110,"gems":240,"currency":570},
+          {"rankStart":111,"rankEnd":215,"gems":210,"currency":470}
+        ],
+        "intermediate3": [
+          {"rankStart":1,"rankEnd":1,"gems":470,"currency":970,"shards":"Agent Spider x1","tickets":3},
+          {"rankStart":2,"rankEnd":2,"gems":430,"currency":870,"shards":"Agent Spider x1","tickets":2},
+          {"rankStart":3,"rankEnd":3,"gems":400,"currency":770,"shards":"Agent Spider x1","tickets":1},
+          {"rankStart":4,"rankEnd":10,"gems":360,"currency":570,"tickets":1},
+          {"rankStart":11,"rankEnd":50,"gems":320,"currency":570,"tickets":1},
+          {"rankStart":51,"rankEnd":100,"gems":280,"currency":570},
+          {"rankStart":101,"rankEnd":195,"gems":250,"currency":470}
+        ],
+        "senior1": [
+          {"rankStart":1,"rankEnd":1,"gems":510,"currency":980,"shards":"Shapesmith x1","tickets":3},
+          {"rankStart":2,"rankEnd":2,"gems":470,"currency":880,"shards":"Shapesmith x1","tickets":2},
+          {"rankStart":3,"rankEnd":3,"gems":440,"currency":780,"shards":"Shapesmith x1","tickets":1},
+          {"rankStart":4,"rankEnd":10,"gems":400,"currency":580,"tickets":1},
+          {"rankStart":11,"rankEnd":50,"gems":360,"currency":580,"tickets":1},
+          {"rankStart":51,"rankEnd":90,"gems":320,"currency":580,"tickets":1},
+          {"rankStart":91,"rankEnd":175,"gems":290,"currency":480}
+        ],
+        "senior2": [
+          {"rankStart":1,"rankEnd":1,"gems":550,"currency":980,"shards":"Shapesmith x1","tickets":3},
+          {"rankStart":2,"rankEnd":2,"gems":510,"currency":880,"shards":"Shapesmith x1","tickets":2},
+          {"rankStart":3,"rankEnd":3,"gems":480,"currency":780,"shards":"Shapesmith x1","tickets":1},
+          {"rankStart":4,"rankEnd":10,"gems":440,"currency":580,"tickets":1},
+          {"rankStart":11,"rankEnd":40,"gems":400,"currency":580,"tickets":1},
+          {"rankStart":41,"rankEnd":80,"gems":360,"currency":580,"tickets":1},
+          {"rankStart":81,"rankEnd":160,"gems":330,"currency":480}
+        ],
+        "senior3": [
+          {"rankStart":1,"rankEnd":1,"gems":590,"currency":980,"shards":"Shapesmith x1","tickets":3},
+          {"rankStart":2,"rankEnd":2,"gems":550,"currency":880,"shards":"Shapesmith x1","tickets":2},
+          {"rankStart":3,"rankEnd":3,"gems":520,"currency":780,"shards":"Shapesmith x1","tickets":1},
+          {"rankStart":4,"rankEnd":10,"gems":480,"currency":580,"tickets":1},
+          {"rankStart":11,"rankEnd":40,"gems":440,"currency":580,"tickets":1},
+          {"rankStart":41,"rankEnd":80,"gems":400,"currency":580,"tickets":1},
+          {"rankStart":81,"rankEnd":145,"gems":370,"currency":480}
+        ],
+        "eliteI": [
+          {"rankStart":1,"rankEnd":1,"gems":630,"currency":990,"shards":"Cecil x1","tickets":4},
+          {"rankStart":2,"rankEnd":2,"gems":590,"currency":890,"shards":"Cecil x1","tickets":3},
+          {"rankStart":3,"rankEnd":3,"gems":560,"currency":790,"shards":"Cecil x1","tickets":2},
+          {"rankStart":4,"rankEnd":10,"gems":520,"currency":590,"tickets":1},
+          {"rankStart":11,"rankEnd":40,"gems":480,"currency":590,"tickets":1},
+          {"rankStart":41,"rankEnd":70,"gems":440,"currency":590,"tickets":1},
+          {"rankStart":71,"rankEnd":130,"gems":410,"currency":490}
+        ],
+        "eliteII": [
+          {"rankStart":1,"rankEnd":1,"gems":670,"currency":990,"shards":"Cecil x1","tickets":4},
+          {"rankStart":2,"rankEnd":2,"gems":630,"currency":890,"shards":"Cecil x1","tickets":3},
+          {"rankStart":3,"rankEnd":3,"gems":600,"currency":790,"shards":"Cecil x1","tickets":2},
+          {"rankStart":4,"rankEnd":10,"gems":560,"currency":590,"tickets":1},
+          {"rankStart":11,"rankEnd":30,"gems":520,"currency":590,"tickets":1},
+          {"rankStart":31,"rankEnd":60,"gems":480,"currency":590,"tickets":1},
+          {"rankStart":61,"rankEnd":120,"gems":450,"currency":490}
+        ],
+        "eliteIII": [
+          {"rankStart":1,"rankEnd":1,"gems":710,"currency":1000,"shards":"Cecil x1","tickets":4},
+          {"rankStart":2,"rankEnd":2,"gems":670,"currency":900,"shards":"Cecil x1","tickets":3},
+          {"rankStart":3,"rankEnd":3,"gems":640,"currency":800,"shards":"Cecil x1","tickets":2},
+          {"rankStart":4,"rankEnd":10,"gems":600,"currency":600,"tickets":1},
+          {"rankStart":11,"rankEnd":30,"gems":560,"currency":600,"tickets":1},
+          {"rankStart":31,"rankEnd":60,"gems":520,"currency":600,"tickets":1},
+          {"rankStart":61,"rankEnd":110,"gems":490,"currency":500,"tickets":1}
+        ],
+        "invincible": [
+          {"rankStart":1,"rankEnd":1,"gems":750,"currency":1000,"shards":"Cecil x1","tickets":5},
+          {"rankStart":2,"rankEnd":2,"gems":710,"currency":900,"shards":"Cecil x1","tickets":4},
+          {"rankStart":3,"rankEnd":3,"gems":680,"currency":800,"shards":"Cecil x1","tickets":3},
+          {"rankStart":4,"rankEnd":10,"gems":640,"currency":600,"tickets":2},
+          {"rankStart":11,"rankEnd":30,"gems":600,"currency":600,"tickets":2},
+          {"rankStart":31,"rankEnd":50,"gems":560,"currency":600,"tickets":2},
+          {"rankStart":51,"rankEnd":100,"gems":530,"currency":500,"tickets":1}
+        ]
+      }
+    },
+    "perBattle": {
+      "open": {"win": 60, "loss": 20, "entryToken": "PvP Entry Token"},
+      "restricted": {"win": 30, "loss": 0, "entryToken": "Hardcore PvP Entry Token", "unlockCost": 100}
+    },
     "demotionThreshold": 86,
-    "defaults": {"league": "eliteII", "rank": 13},
-    "totalRanks": 120
+    "defaults": {"league": "eliteII", "rank": 13}
   },
   "spiderTargets": {
     "events": 550,
@@ -400,7 +652,7 @@
               "name": "How many gems can I earn per week in Invincible Guarding the Globe?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Players can earn approximately 3,221 gems per week from all sources: events (500), PvP (varies by league and rank, ~1,428 with default settings), login rewards (993), and promo codes (300)."
+                "text": "Players can earn approximately 2,833 gems per week from all sources: events (500), PvP (varies by league and rank, ~1,040 with default settings), login rewards (993), and promo codes (300)."
               }
             },
             {
@@ -470,7 +722,7 @@
             <div class="gem-section__rotating-bg"></div>
             <p class="text-white/80 text-lg tracking-[0.2em] uppercase relative z-10"><i class="fas fa-gem mr-2"></i>Total Gems Obtained</p>
             <p class="text-6xl md:text-7xl font-bold text-white relative z-10 drop-shadow-[0_0_30px_rgba(233,30,138,0.8)] tracking-[0.2em] gem-counter">
-                <span id="totalCounter">3221</span>
+                <span id="totalCounter">2833</span>
             </p>
             <p class="text-white/60 text-xs tracking-wider mt-2 relative z-10"><i class="fas fa-clock mr-1"></i>WEEKLY CALCULATION</p>
         </section>
@@ -478,7 +730,7 @@
         <nav class="gem-grid--modes my-4">
             <button onclick="filterCards('all', event)" class="gem-mode-btn gem-mode-btn--all active">
                 <i class="fas fa-th-large gem-mode-btn__icon gem-text--cyan"></i>
-                <p class="gem-mode-btn__count gem-text--cyan"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>3221</p>
+                <p class="gem-mode-btn__count gem-text--cyan"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>2833</p>
                 <p class="gem-mode-btn__label gem-text--cyan">All Modes</p>
             </button>
             <button onclick="filterCards('code', event)" class="gem-mode-btn gem-mode-btn--code active">
@@ -495,7 +747,7 @@
             </button>
             <button onclick="filterCards('pvp', event)" class="gem-mode-btn gem-mode-btn--pvp active">
                 <i class="fas fa-fist-raised gem-mode-btn__icon gem-text--pvp"></i>
-                <p class="gem-mode-btn__count gem-text--pvp"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>1428</p>
+                <p class="gem-mode-btn__count gem-text--pvp"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>1040</p>
                 <p class="gem-mode-btn__label gem-text--pvp">PvP</p>
                 <span id="countdown-pvp" class="gem-mode-btn__countdown gem-text--pvp gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
@@ -595,12 +847,11 @@
                 </button>
                 <div class="gem-card__body">
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp1-gems">476</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp1-gems">520</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
 
                     <div class="flex gap-4 text-sm text-white/60 mb-3">
-                        <span><i class="fas fa-layer-group gem-text--purple"></i> <span id="pvp1-cards">1</span> Cards</span>
-                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp1-chips">510</span> Chips</span>
+                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp1-currency">970</span> PvP Currency</span>
                     </div>
 
                     <h2 class="gem-card__title gem-card__title--pvp">Restricted Arena</h2>
@@ -654,12 +905,11 @@
                 </button>
                 <div class="gem-card__body">
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp2-gems">476</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp2-gems">520</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
 
                     <div class="flex gap-4 text-sm text-white/60 mb-3">
-                        <span><i class="fas fa-layer-group gem-text--purple"></i> <span id="pvp2-cards">1</span> Cards</span>
-                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp2-chips">510</span> Chips</span>
+                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp2-currency">590</span> PvP Currency</span>
                     </div>
 
                     <h2 class="gem-card__title gem-card__title--pvp">Open Arena</h2>
@@ -713,12 +963,11 @@
                 </button>
                 <div class="gem-card__body">
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp3-gems">476</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp3-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
 
                     <div class="flex gap-4 text-sm text-white/60 mb-3">
-                        <span><i class="fas fa-layer-group gem-text--purple"></i> <span id="pvp3-cards">1</span> Cards</span>
-                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp3-chips">510</span> Chips</span>
+                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp3-currency">0</span> PvP Currency</span>
                     </div>
 
                     <h2 class="gem-card__title gem-card__title--pvp">Multiverse Alliance War</h2>
