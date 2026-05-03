@@ -1,14 +1,24 @@
 # Performance Plan — Execution Checklist
 
-Status: **Ready to execute** (decisions locked 2026-05-03)
+Status: **Complete** (executed 2026-05-03)
+
+| Metric | Before | After |
+|--------|--------|-------|
+| CDN dependencies | 5 (FA, Chart.js, Tailwind CDN ×2, Google Fonts) | 0 |
+| Third-party JS | ~360 KB (FA + Chart.js CDN) | ~200 KB (Chart.js self-hosted) |
+| Third-party origins | 5 | 0 |
+| Icons library | Font Awesome 6.5.1 (~300 KB) | Inline SVGs (32 icons, ~30 KB) |
+| Fonts | Google Fonts CDN (render-blocking) | Self-hosted in `fonts/` (48 KB) |
+| Render-blocking CSS | Google Fonts CSS + tailwind.css + styles.css | tailwind.css + styles.css only |
 
 ---
 
 ## Phase 1 — Replace Tailwind Play CDN on guide pages
 
 **Files:** `guide/*/index.html` ×6
-**Gain:** Remove ~283 KB blocking script per page → 18 KB renderable stylesheet
+**Gain:** Remove ~283 KB blocking script per page
 **Risk:** None (build already generates `tailwind.css` with needed classes)
+**Status: ✅ Complete**
 
 **Change 1.1 — Each guide page:**
 ```diff
@@ -22,6 +32,7 @@ Status: **Ready to execute** (decisions locked 2026-05-03)
 **Gain:** Remove ~300 KB library, eliminate CDN round-trip
 **Risk:** None
 **Pattern:** Inline SVGs in HTML. No sprite, no `<use>`.
+**Status: ✅ Complete**
 
 ### 2.1 Static icons (in HTML)
 Replace each `<i class="fas fa-{name}">` with inline `<svg>` directly in the HTML markup.
@@ -58,6 +69,7 @@ calendar-alt, calendar-day, calendar-week, chart-pie, check-circle, chevron-down
 **Files:** `index.html`, `vendor/chart.umd.js` (new), `package.json`
 **Gain:** Eliminate DNS + TLS round-trip to jsdelivr
 **Risk:** None
+**Status: ✅ Complete**
 
 ### 3.1 Download
 Update `npm run update-assets`:
@@ -78,9 +90,10 @@ Run: `npm run update-assets`
 
 ## Phase 4 — Self-host Google Fonts
 
-**Files:** `fonts/` (5 new .woff2 files), `styles.css`, all 7 HTML files
+**Files:** `fonts/` (4 .woff2 files), `styles.css`, all 7 HTML files
 **Gain:** Eliminate 1 render-blocking CSS request + 1 third-party origin
-**Risk:** Low (need correct font-weight mapping)
+**Risk:** Low
+**Status: ✅ Complete**
 
 ### 4.1 Download font files
 Download 5 `.woff2` files from Google Fonts:

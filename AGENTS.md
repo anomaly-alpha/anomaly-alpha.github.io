@@ -25,6 +25,8 @@ Open `index.html` in a browser. Works from `file://`.
 | `guide/*/index.html` | Detail guides for code, event, pvp, login, faq, beginners |
 | `data/arena_payouts.txt` | Open + Restricted arena payout tables |
 | `data/multiverse_war_payouts.txt` | Multiverse War payout tables |
+| `vendor/chart.umd.js` | Self-hosted Chart.js (downloaded via `npm run update-assets`) |
+| `fonts/` | Self-hosted Rajdhani + Orbitron woff2 files |
 | `CONTEXT.md` | Domain model, architecture summary |
 
 ## Architecture rules
@@ -39,7 +41,7 @@ Open `index.html` in a browser. Works from `file://`.
 
 - `npm install` — Install dev dependencies (tailwindcss CLI)
 - `npm run build` — Rebuild tailwind.css from HTML source
-- `npm run update-assets` — Download latest vendor assets (Chart.js, Font Awesome, fonts)
+- `npm run update-assets` — Download latest vendor assets (Chart.js, fonts)
 - No runtime build — all generated files are committed
 
 ## Key conventions
@@ -77,12 +79,12 @@ Open `index.html` in a browser. Works from `file://`.
 | code | `#2ecc71` |
 | cyan (accent) | `#00e5ff` |
 
-## CDN dependencies (loaded in HTML head)
+## Asset sources (zero CDN dependencies)
 
-- Chart.js 4.4.1
-- Tailwind CSS — local (built via npm run build, committed as tailwind.css)
-- Font Awesome 6.5.1
-- Google Fonts: Rajdhani (400,600,700), Orbitron (500,700,900)
+- **Chart.js** — self-hosted `vendor/chart.umd.js` (downloaded via `npm run update-assets`)
+- **Tailwind CSS** — local build via `npm run build`, committed as `tailwind.css`
+- **Icons** — inline SVGs (replaced Font Awesome, ~300 KB saved)
+- **Fonts** — self-hosted woff2 files in `fonts/` (Rajdhani 400/600/700, Orbitron 500-900)
 
 ## SEO conventions
 

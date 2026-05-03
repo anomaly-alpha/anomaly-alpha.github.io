@@ -64,5 +64,6 @@ Full token reference: `docs/DESIGN_SYSTEM.md`
 ## Constraints
 - Build step (npm run build) generates local Tailwind CSS. Output is committed. Works from file:// after build.
 - No external fetch — all data inline in HTML
+- Zero CDN dependencies — all assets self-hosted (fonts, Chart.js, SVGs)
 - Supports dark and light modes via `:root.light-mode` token overrides
 - Guide pages share the same CSS and design system as the main page

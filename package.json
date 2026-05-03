@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "tailwindcss -i src/tailwind-input.css -o tailwind.css",
-    "update-assets": "echo 'Manual: download Chart.js 4.4.1 → vendor/chart.umd.js, Font Awesome 6.5.1 → vendor/fontawesome/'"
+    "update-assets": "curl -Lo vendor/chart.umd.js https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17"

@@ -23,6 +23,16 @@ function loadAllConfigs() {
   THEME = loadConfig('theme-config');
 }
 
+// ===== SVG ICON CONSTANTS =====
+
+const SVG_CHEVRON_UP = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/></svg>';
+const SVG_CHEVRON_DOWN = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>';
+const SVG_CHECK_CIRCLE = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>';
+const SVG_INFO_CIRCLE = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336l24 0 0-64-24 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0c13.3 0 24 10.7 24 24l0 88 8 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>';
+const SVG_EXCLAMATION_TRIANGLE = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480L40 480c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24 24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>';
+const SVG_SHIELD_CHECK = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0z"/></svg>';
+const SVG_LIGHTBULB = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M272 384c9.6-31.9 29.5-59.1 49.2-86.2c0 0 0 0 0 0c5.2-7.1 10.4-14.2 15.4-21.4c19.8-28.5 31.4-63 31.4-100.3C368 78.8 289.2 0 192 0S16 78.8 16 176c0 37.3 11.6 71.9 31.4 100.3c5 7.2 10.2 14.3 15.4 21.4c0 0 0 0 0 0c19.8 27.1 39.7 54.4 49.2 86.2l160 0zM192 512c44.2 0 80-35.8 80-80l0-16-160 0 0 16c0 44.2 35.8 80 80 80zM112 176c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-61.9 50.1-112 112-112c8.8 0 16 7.2 16 16s-7.2 16-16 16c-44.2 0-80 35.8-80 80z"/></svg>';
+
 // Card Modal Data — all 9 card modals triggered by info icon
 const CARD_MODAL_DATA = {
     'the-long-haul': {
@@ -304,7 +314,7 @@ function copyCode() {
   navigator.clipboard.writeText('30KGTG');
   const feedback = document.createElement('div');
   feedback.className = 'gem-toast gem-toast--success';
-  feedback.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Code copied!';
+  feedback.innerHTML = SVG_CHECK_CIRCLE + ' Code copied!';
   document.body.appendChild(feedback);
   setTimeout(() => feedback.remove(), 2000);
 }
@@ -450,18 +460,24 @@ function loadPageState() {
     if (chartsVisible === 'false') {
       const container = document.getElementById('chartsContainer');
       const label = document.querySelector('#chartsToggleLabel span:nth-child(2)');
-      const icon = document.getElementById('chartsToggleIcon');
+      const iconContainer = document.getElementById('chartsToggleIcon');
       if (container) container.classList.add('hidden');
       if (label) label.textContent = 'Show Charts';
-      if (icon) { icon.classList.remove('fa-chevron-up'); icon.classList.add('fa-chevron-down'); }
+      if (iconContainer) {
+        iconContainer.querySelector('.chevron-up-icon')?.classList.add('hidden');
+        iconContainer.querySelector('.chevron-down-icon')?.classList.remove('hidden');
+      }
     } else {
       hidden = false;
       const container = document.getElementById('chartsContainer');
       const label = document.querySelector('#chartsToggleLabel span:nth-child(2)');
-      const icon = document.getElementById('chartsToggleIcon');
+      const iconContainer = document.getElementById('chartsToggleIcon');
       if (container) container.classList.remove('hidden');
       if (label) label.textContent = 'Hide Charts';
-      if (icon) { icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-chevron-up'); }
+      if (iconContainer) {
+        iconContainer.querySelector('.chevron-down-icon')?.classList.add('hidden');
+        iconContainer.querySelector('.chevron-up-icon')?.classList.remove('hidden');
+      }
     }
 
     if (modesRaw) {
@@ -758,18 +774,20 @@ function filterChart(filter) {
 function toggleCharts() {
   const container = document.getElementById('chartsContainer');
   const label = document.querySelector('#chartsToggleLabel span:nth-child(2)');
-  const icon = document.getElementById('chartsToggleIcon');
+  const iconContainer = document.getElementById('chartsToggleIcon');
+  const chevronUp = iconContainer?.querySelector('.chevron-up-icon');
+  const chevronDown = iconContainer?.querySelector('.chevron-down-icon');
 
   container.classList.toggle('hidden');
 
   if (container.classList.contains('hidden')) {
     label.textContent = 'Show Charts';
-    icon.classList.remove('fa-chevron-up');
-    icon.classList.add('fa-chevron-down');
+    chevronUp?.classList.add('hidden');
+    chevronDown?.classList.remove('hidden');
   } else {
     label.textContent = 'Hide Charts';
-    icon.classList.remove('fa-chevron-down');
-    icon.classList.add('fa-chevron-up');
+    chevronDown?.classList.add('hidden');
+    chevronUp?.classList.remove('hidden');
     [categoryChart, rewardsChart, spiderChart].forEach(c => { if (c) c.resize(); });
   }
   savePageState();
@@ -793,7 +811,7 @@ function showCardModal(cardId) {
 
     icon.style.background = `rgba(${rgb}, 0.15)`;
     icon.style.border = `1px solid rgba(${rgb}, 0.4)`;
-    icon.innerHTML = `<i class="fas fa-info-circle" style="color: ${color}; font-size: 1.25rem;"></i>`;
+    icon.innerHTML = SVG_INFO_CIRCLE;
 
     title.textContent = data.title.toUpperCase();
     title.style.color = color;
@@ -837,12 +855,12 @@ function showCardModal(cardId) {
         const threshold = GAME?.pvp?.demotionThreshold || 86;
         const isDanger = rank >= threshold;
         const warningClass = isDanger ? '' : 'gem-modal__demotion-warning--safe';
-        const iconClass = isDanger ? 'fa-exclamation-triangle' : 'fa-shield-check';
+        const warnIcon = isDanger ? SVG_EXCLAMATION_TRIANGLE : SVG_SHIELD_CHECK;
         const warnText = isDanger
             ? `Demotion Zone — Rank ${rank} is at or above threshold ${threshold}. Win matches to avoid demotion.`
             : `Safe Zone — Rank ${rank} is below threshold ${threshold}. Keep climbing.`;
         html += `<div class="gem-modal__demotion-warning ${warningClass}">
-            <i class="fas ${iconClass}"></i>
+            ${warnIcon}
             <span>${warnText}</span>
         </div>`;
     }
@@ -850,7 +868,7 @@ function showCardModal(cardId) {
     if (data.tips?.length) {
         html += `
         <div class="gem-modal__tips">
-            <div class="gem-modal__tips-header"><i class="fas fa-lightbulb"></i> Tips &amp; Strategy</div>
+            <div class="gem-modal__tips-header">${SVG_LIGHTBULB} Tips &amp; Strategy</div>
             <ul>${data.tips.map(t => `<li>${t}</li>`).join('')}</ul>
         </div>`;
     }
