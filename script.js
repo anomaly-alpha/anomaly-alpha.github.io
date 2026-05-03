@@ -1143,14 +1143,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const chartAnimConfig = CHARTS.animation || { duration: 750, easing: 'easeOutQuart' };
 
   function tooltipLabelCallback(context) {
-    const value = context.raw;
-    const data = context.dataset.data;
-    const total = data.reduce((a, b) => a + b, 0);
-    const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-    const avg = total / data.length;
-    const vsAvg = value > avg ? '+' : '';
-    const thirdLine = value > avg ? `${vsAvg}${(value - avg).toLocaleString()} vs avg` : '';
-    return [`${value.toLocaleString()} Gems`, `${pct}% of category`, thirdLine];
+    return `${context.raw.toLocaleString()} Gems`;
   }
 
   const chartTtipConfig = CHARTS.tooltip || {
@@ -1180,13 +1173,13 @@ document.addEventListener('DOMContentLoaded', function() {
       datasets: [{
         data: initDistribution,
         backgroundColor: [CHARTS.colors.event, CHARTS.colors.pvp, CHARTS.colors.login, CHARTS.colors.code],
-        borderWidth: 0,
-        hoverOffset: 8
+        borderWidth: 0
       }]
     },
     options: {
-      responsive: true,
-      animation: { duration: chartAnimConfig.duration, easing: chartAnimConfig.easing, delay: 0 },
+      responsive: false,
+      animation: { duration: 0 },
+      interaction: { mode: undefined },
       plugins: {
         legend: {
           position: 'bottom',
@@ -1211,9 +1204,9 @@ document.addEventListener('DOMContentLoaded', function() {
       }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      animation: { duration: chartAnimConfig.duration, easing: chartAnimConfig.easing, delay: 100 },
+      responsive: false,
+      animation: { duration: 0 },
+      interaction: { mode: undefined },
       scales: {
         y: { beginAtZero: true, grid: { color: 'rgba(0,229,255,0.1)' }, ticks: { display: false }, max: Math.max(...rewardsInitData.data) || 100 },
         x: { grid: { display: false }, ticks: { display: false } }
@@ -1246,9 +1239,9 @@ document.addEventListener('DOMContentLoaded', function() {
       }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      animation: { duration: chartAnimConfig.duration, easing: chartAnimConfig.easing, delay: 200 },
+      responsive: false,
+      animation: { duration: 0 },
+      interaction: { mode: undefined },
       scales: {
         r: {
           beginAtZero: true,
