@@ -815,12 +815,18 @@ function showCardModal(cardId) {
         gemsDisplay = `${data.gems.toLocaleString()} Gems`;
     } else {
         const pvpCardMap = { 'restricted-arena': 1, 'open-arena': 2, 'multiverse-war': 3 };
+        const arenaMap = { 'restricted-arena': 'restricted', 'open-arena': 'open', 'multiverse-war': 'multiverse' };
         const cardNum = pvpCardMap[cardId];
         if (cardNum) {
+            const arena = arenaMap[cardId];
             const league = document.getElementById(`pvp${cardNum}-league`)?.value || 'eliteII';
             const rank = parseInt(document.getElementById(`pvp${cardNum}-rank`)?.value) || 13;
-            const payout = getPvpPayout(league, rank);
-            gemsDisplay = `${payout.gems.toLocaleString()} Gems · ${payout.cards} Cards · ${payout.chips.toLocaleString()} Chips`;
+            const payout = getPvpPayout(arena, league, rank);
+            if (arena === 'multiverse') {
+                gemsDisplay = `${payout.gems.toLocaleString()} Gems · ${payout.frags} Frags · ${payout.modules} Modules`;
+            } else {
+                gemsDisplay = `${payout.gems.toLocaleString()} Gems · ${payout.currency} Currency · ${payout.tickets} Tickets`;
+            }
         }
     }
     total.textContent = gemsDisplay;
