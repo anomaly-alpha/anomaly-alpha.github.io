@@ -953,16 +953,6 @@ body .gem-card--mode-highlight--all {
 .gem-corner--bl { bottom: 1rem; left: 1rem; border-right: 0; border-top: 0; }
 .gem-corner--br { bottom: 1rem; right: 1rem; border-left: 0; border-top: 0; }
 
-/* Scanning line */
-.gem-scanline {
-  position: absolute;
-  top: -2px;
-  left: 20%;
-  right: 20%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gem-cyan), transparent);
-  animation: gem-scanline 3s ease-in-out infinite;
-}
 
 /* Section backgrounds */
 .gem-section--total {
@@ -1211,19 +1201,6 @@ body .gem-card--mode-highlight--all {
   }
 }
 
-@keyframes gem-scanline {
-  0%, 100% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(400%);
-    opacity: 0;
-  }
-}
 
 
 

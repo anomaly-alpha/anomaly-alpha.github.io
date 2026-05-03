@@ -417,7 +417,6 @@ function animateValue(elementId, newValue, duration = 400) {
 
 function savePageState() {
   const container = document.getElementById('chartsContainer');
-  localStorage.setItem('gem_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
   localStorage.setItem('gem_modes', JSON.stringify(selectedModes));
   localStorage.setItem('gem_chartFilter', currentChartFilter);
   localStorage.setItem('gem_chartsVisible', container ? String(!container.classList.contains('hidden')) : 'true');
@@ -432,8 +431,6 @@ function loadPageState() {
   try {
     if (theme === 'light') {
       document.body.classList.add('light-mode');
-      const icon = document.getElementById('themeIcon');
-      if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
     }
 
     let hidden = true;
@@ -748,20 +745,6 @@ function filterChart(filter) {
 
 // ===== UI COMPONENTS =====
 
-// Theme Toggle
-function toggleTheme() {
-  document.body.classList.toggle('light-mode');
-  const icon = document.getElementById('themeIcon');
-  if (document.body.classList.contains('light-mode')) {
-    icon.classList.remove('fa-moon');
-    icon.classList.add('fa-sun');
-  } else {
-    icon.classList.remove('fa-sun');
-    icon.classList.add('fa-moon');
-  }
-  savePageState();
-}
-
 // Charts Toggle
 function toggleCharts() {
   const container = document.getElementById('chartsContainer');
@@ -784,91 +767,6 @@ function toggleCharts() {
   savePageState();
 }
 
-// Save/Share Menu
-function toggleSaveMenu() {
-  const menu = document.getElementById('saveMenu');
-  menu.classList.toggle('hidden');
-}
-
-document.addEventListener('click', function(e) {
-  const menu = document.getElementById('saveMenu');
-  const btn = e.target.closest('[onclick="toggleSaveMenu()"]');
-  if (!btn && !menu?.contains(e.target)) {
-    menu?.classList.add('hidden');
-  }
-});
-
-function saveCurrentView() {
-  const name = prompt('Enter a name for this view:', 'My View');
-  if (!name) return;
-
-  const view = {
-    id: 'view_' + Date.now(),
-    name: name,
-    mode: currentMode,
-    chartFilter: currentChartFilter,
-    theme: document.body.classList.contains('light-mode') ? 'light' : 'dark',
-    createdAt: new Date().toISOString()
-  };
-
-  const saved = JSON.parse(localStorage.getItem('gemInfographicViews') || '[]');
-  saved.push(view);
-  localStorage.setItem('gemInfographicViews', JSON.stringify(saved));
-
-  showToast('View "' + name + '" saved!', 'success');
-  toggleSaveMenu();
-}
-
-function loadSavedView() {
-  const saved = JSON.parse(localStorage.getItem('gemInfographicViews') || '[]');
-  if (saved.length === 0) {
-    showToast('No saved views yet', 'info');
-    toggleSaveMenu();
-    return;
-  }
-
-  const options = saved.map((v, i) => v.name + (v.createdAt ? ' (' + new Date(v.createdAt).toLocaleDateString() + ')' : '')).join('\n');
-  const choice = prompt('Enter the number of the view to load:\n' + options.split('\n').map((v, i) => (i+1) + '. ' + v).join('\n'));
-
-  const index = parseInt(choice) - 1;
-  if (index >= 0 && index < saved.length) {
-    const view = saved[index];
-    if (view.theme === 'light') {
-      document.body.classList.add('light-mode');
-      document.getElementById('themeIcon').classList.remove('fa-moon');
-      document.getElementById('themeIcon').classList.add('fa-sun');
-    }
-    showToast('View "' + view.name + '" loaded!', 'success');
-  }
-  toggleSaveMenu();
-}
-
-function shareLink() {
-  const params = new URLSearchParams({
-    mode: currentMode,
-    chart: currentChartFilter,
-    theme: document.body.classList.contains('light-mode') ? 'light' : 'dark'
-  });
-  const url = window.location.origin + window.location.pathname + '?' + params.toString();
-  navigator.clipboard.writeText(url).then(() => {
-    showToast('Link copied to clipboard!', 'success');
-  });
-  toggleSaveMenu();
-}
-
-// Toast Notifications
-function showToast(message, type) {
-  const toast = document.createElement('div');
-  const colors = {
-    success: 'bg-green-accent',
-    error: 'bg-red-500',
-    info: 'bg-cyan-glow'
-  };
-  toast.className = `gem-toast gem-toast--${type}`;
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(() => toast.remove(), 2500);
-}
 
 // Card Modal
 function showCardModal(cardId) {
@@ -957,73 +855,12 @@ function closeCardModal() {
     document.body.style.overflow = '';
 }
 
-const closeDrillDown = closeCardModal;
+
 
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeCardModal();
 });
 
-// Export Functions
-async function exportAsImage() {
-  showToast('Generating image...', 'info');
-  const container = document.querySelector('.max-w-7xl');
-  try {
-    if (typeof html2canvas === 'undefined') {
-      await new Promise((resolve, reject) => {
-        const s = document.createElement('script');
-        s.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
-        s.onload = resolve;
-        s.onerror = reject;
-        document.head.appendChild(s);
-      });
-    }
-    const canvas = await html2canvas(container, {
-      backgroundColor: '#050a14',
-      scale: 2
-    });
-    const link = document.createElement('a');
-    link.download = 'gem-rewards-' + Date.now() + '.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    showToast('Image exported!', 'success');
-  } catch (e) {
-    showToast('Export failed: ' + e.message, 'error');
-  }
-  toggleSaveMenu();
-}
-
-function exportData() {
-  const data = {
-    totalGems: getModeTotal('event') + getModeTotal('pvp') + getModeTotal('login') + getModeTotal('code'),
-    categories: {
-      season: 1820,
-      event: getModeTotal('event'),
-      pvp: getModeTotal('pvp'),
-      login: getModeTotal('login'),
-      code: getModeTotal('code')
-    },
-    rewards: [
-      { name: 'Elite League I', gems: 810, category: 'season' },
-      { name: 'Invincible League', gems: 560, category: 'season' },
-      { name: 'Elite League II', gems: 450, category: 'season' },
-      { name: 'Multiverse Alliance War', gems: 750, category: 'pvp' },
-      { name: 'The Long Haul', gems: 300, category: 'event' },
-      { name: "Earth's Defenders", gems: 200, category: 'event' },
-      { name: 'Promo Code', gems: 300, category: 'code' },
-      { name: 'Daily Payout', gems: 30, category: 'login' },
-      { name: 'Weekly Payout', gems: 60, category: 'login' },
-      { name: 'Monthly Payout', gems: 90, category: 'login' }
-    ]
-  };
-
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'gem-rewards-data.json';
-  a.click();
-  URL.revokeObjectURL(url);
-}
 
 // ===== COUNTDOWN TIMERS =====
 
@@ -1316,8 +1153,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('theme') === 'light') {
     document.body.classList.add('light-mode');
-    document.getElementById('themeIcon').classList.remove('fa-moon');
-    document.getElementById('themeIcon').classList.add('fa-sun');
   }
   if (urlParams.get('mode')) {
     filterCards(urlParams.get('mode'), { currentTarget: document.querySelector('.gem-mode-btn--' + urlParams.get('mode')) || document.querySelector('.gem-mode-btn--all') });

@@ -10,25 +10,21 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts,
 |----------|-----|-------------|
 | Event Rewards | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~750 (varies) | Restricted Arena + Open Arena + Multiverse Alliance War (Elite II, rank 13 defaults) |
-| Login Rewards | 293 | Daily (210) + Weekly (60) + Monthly (23) |
+| Login Rewards | 993 | Daily (910) + Weekly (60) + Monthly (23) |
 | Promo Code | 300 | Code: 30KGTG |
 
-**Total: ~1,843 gems/week** (varies with PvP selections)
+**Total: ~2,543 gems/week** (varies with PvP selections)
 
 ## Features
 
 ### Interactive Elements
 - **Animated counter** that counts up on value changes
 - **Promo code reveal** — tap to reveal with 3D flip animation, tap again to copy
-- **Theme toggle** (dark/light mode) — fixed icon button top-right
 - **Mode selector** (5 buttons: All, Code, Event, PvP, Login) — each showing gem total + countdown timer
 - **Multi-select mode filtering** — toggle Event, PvP, Login, Code independently
 - **Mode button hover** — hovering a mode button highlights all matching cards in that mode's color
 - **Individual card hover** — each card highlights in its own category color using `--card-color` CSS variable
 - **Charts toggle** — show/hide charts section
-- **Search/Find** — expandable search bar with text highlighting
-- **Save/Share menu** — Save views, load saved, copy share link, export as PNG
-- **Export data as JSON**
 - **Card modals** — 9 cards each open an info modal via icon button; modal shows hero tagline, description, tips, live PvP data (Escape to close)
 
 ### Card Modal System (9 cards)
@@ -49,7 +45,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 | Restricted Arena | PvP | ★ Weekly | live from pvp1-league/rank |
 | Open Arena | PvP | ★ Weekly | live from pvp2-league/rank |
 | Multiverse Alliance War | PvP | ★ 5 Matches / 2 Weeks | live from pvp3-league/rank + demotion warning |
-| Daily Login | Login | ★ 30×7 | 210 (static) |
+| Daily Login | Login | ★ 30×7 | 910 (static) |
 | Weekly Login | Login | ★ Weekly | 60 (static) |
 | Monthly Login | Login | ★ 90÷4 | 23 (static) |
 
@@ -64,26 +60,22 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 ### Chart Interactions (3 charts)
 - **Distribution (doughnut)** — 4 category segments with mode colors
 - **Rewards (bar)** — 1-4 bars based on selected modes, dynamic y.max
-- **Performance (radar)** — Spider chart showing actual vs target (550, 1500, 360, 330)
+- **Performance (radar)** — Spider chart showing actual vs target (550, 2664, 360, 330)
 - Rich tooltips showing gems, percentage, vs average comparison
-- Animated transitions on filter changes
+- Instant chart updates on filter changes (no animation overhead)
 
 ### Visual Effects
 - Floating particles in background (9 particles)
-- Scanning line animation on header
-- Rotating gradient on total section
 - Corner decorations on main container
-- Sparkle particles on cards
 - Glow hover effects on cards
 - Grid background overlay
 - Card fade-in animations (staggered delays)
 
 ## Tech Stack
 
-- **Structure**: `index.html` (857 lines), `styles.css` (1298 lines), `script.js` (1363 lines)
+- **Structure**: `index.html` (818 lines), `styles.css` (1266 lines), `script.js` (1184 lines)
 - **Styling**: Tailwind CSS (via CDN) + custom CSS design token system
 - **Charts**: Chart.js (doughnut, bar, radar)
-- **Export**: html2canvas for PNG export
 - **Icons**: Font Awesome
 - **Typography**: Rajdhani font (Google Fonts)
 - **Data**: Inline JSON configs (6 configs embedded in `<head>`, source in `data/`)
@@ -128,12 +120,22 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **Charts toggle** — Show/hide charts section with animated chevron
 - ✅ **Card modals (9 cards)** — All cards trigger modal via info icon (`.gem-card__info-btn`); modal has hero tagline, description, tips, live PvP data, demotion warning; star badge in header; entry animation (pop-in)
 - ✅ **Toned active mode buttons** — Active mode selector uses more transparent colors (30% bg, 65% border, subtle glow)
-- ✅ **Sparkle clusters around info button** — All 9 cards have 3-sparkle clusters around the info icon (top-right corner area) with staggered animation delays
+
+### Performance Improvements
+- ✅ **Removed search feature** — Eliminated most expensive JS operation (querySelectorAll per keystroke); removed from HTML, CSS, and JS
+- ✅ **Disabled chart animations** — All `chart.update('active')` changed to `'none'` for instant non-animated redraws (9 locations)
+- ✅ **CSS-driven countdown pulse** — Replaced JS class-toggle every 1s with pure CSS `infinite` animation
+- ✅ **Reduced countdown interval** — 1000ms → 5000ms
+- ✅ **GPU-optimized particles** — `will-change: transform` + `translate3d()` avoids layout thrashing
+- ✅ **Removed continuous animations** — 27 sparkle elements, rotating background gradient, scanline, 3 dead utility classes deleted; 37→9 continuous animations (9 particles)
+- ✅ **Inlined `@keyframes pulse`** — Header icon pulse no longer depends on Tailwind CDN
+- ✅ **PvP state persists** — Removed localStorage wipe block; `savePageState()`/`loadPageState()` preserve modes, chart filter, and charts visibility
+- ✅ **Removed floating controls** — Theme toggle, save/share menu, and export data buttons removed along with their JS functions
 
 ### Data & Calculations
 - ✅ **PvP defaults** — Elite II, rank 13 (user's actual settings)
-- ✅ **Login total** — 293/week (210+60+23)
-- ✅ **Spider chart targets** — (550, 1500, 360, 330)
+- ✅ **Login total** — 993/week (910+60+23)
+- ✅ **Spider chart targets** — (550, 2664, 360, 330)
 - ✅ **GAME.pvp structure** — 14 leagues with `rankStart`/`rankEnd` fields
 - ✅ **getPvpPayout** — Uses league multiplier + tier gems/cards/chips
 - ✅ **Spider chart live updates** — Spider actuals recompute from live PvP form values via `getModeTotal('pvp')`; `updatePvPCard` calls `updateChartsByModes(selectedModes)` so all 3 charts update on every PvP selector change

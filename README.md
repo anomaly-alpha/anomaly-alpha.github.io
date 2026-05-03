@@ -13,19 +13,18 @@ Gem rewards infographic for Invincible Mobile Game featuring interactive charts,
 
 **Total: ~2,543 gems/week** (varies with PvP selections)
 
+> **Note:** The "Login" card shows 910×7=910 in Daily (130/day × 7), plus 60 weekly and ~23 monthly (90÷4), totaling 993/week.
+
 ## Features
 
 ### Interactive Elements
 - **Animated counter** that counts up on value changes (PvP selections, mode filtering)
 - **Promo code reveal** — tap to reveal "30KGTG" with 3D flip animation, tap again to copy
-- **Theme toggle** — dark/light mode via fixed icon button (top-right)
 - **Mode selector** — 5 buttons (All, Code, Event, PvP, Login) each showing gem total + countdown timer
 - **Multi-select mode filtering** — toggle Event, PvP, Login, Code independently
 - **Mode button hover** — hovering a mode button highlights all matching cards in that mode's color
 - **Individual card hover** — cards highlight in their own category color (orange/pink/amber/green)
 - **Charts toggle** — show/hide charts section with animated chevron
-- **Save/Share menu** — Save views (localStorage), load saved, copy link, export as PNG
-- **Export data as JSON**
 - **Card modals** — 9 cards each trigger an info modal via icon button (Escape to close)
 - **Charts update** based on mode selection
 
@@ -61,7 +60,6 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ### Visual Effects
 - Floating particles in background (9 particles, varied sizes/speeds)
-- Scanning line animation on header (signature sci-fi effect)
 - Corner decorations on main container
 - Glow hover effects with category colors
 - Grid background overlay
@@ -70,7 +68,7 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 ### Charts (3 in single row)
 - **Distribution** — Doughnut chart, 4 category segments with mode colors
 - **Rewards** — Bar chart, 1–4 bars based on selected modes, dynamic y.max
-- **Performance** — Radar/spider chart, actual vs target (550, 1500, 360, 330)
+- **Performance** — Radar/spider chart, actual vs target (550, 2664, 360, 330)
 - Rich hover tooltips with gems, %, vs average comparison
 - Instant chart updates on filter changes (no animation overhead)
 - Toggle show/hide via button
@@ -79,11 +77,11 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (838 lines) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (1285 lines) — All JS: charts, filters, PvP, modals, countdowns
-├── styles.css           (1202 lines) — CSS custom properties + BEM component classes
+├── index.html           (818 lines) — Main HTML + inline JSON configs (6 in <head>)
+├── script.js            (1184 lines) — All JS: charts, filters, PvP, modals, countdowns
+├── styles.css           (1266 lines) — CSS custom properties + BEM component classes
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
-├── PLAN_card_modals.md  — Card modal feature plan and implementation notes
+├── AGENTS.md            — Agent instructions for this repo
 ├── README.md            — This file
 ├── data/                — Source JSON files (embedded in index.html)
 │   ├── game-config.json     (14 leagues, 7 tiers, spider targets)
@@ -92,12 +90,12 @@ anomaly-alpha/
 │   ├── countdown-config.json (timer settings)
 │   ├── ui-config.json       (layout, mode order)
 │   └── theme-config.json    (design tokens)
-└── docs/
-    ├── index.md         — Feature documentation
-    └── plan/
-        ├── IMPLEMENTATION_PLAN.md    — Full technical specification
-        ├── JSON_EXTRACTION_PLAN.md   — Data model definition
-        └── [historical fix notes]
+├── docs/
+│   ├── DESIGN_SYSTEM.md  — CSS token reference
+│   ├── index.md          — Feature documentation
+│   └── plan/             — Historical plans and fix notes
+└── .github/copilot/
+    └── copilot-instructions.md  — Code generation patterns
 ```
 
 ## Usage
@@ -123,8 +121,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 ## Tech Stack
 
 - **Tailwind CSS** (via CDN) — utility-first styling
-- **Chart.js** 4.4.1 (doughnut, bar, radar charts)
-- **html2canvas** 1.4.1 — PNG export
+- **Chart.js** 4.4.1 (doughnut, bar, radar charts) — updated via `chart.update('none')`, animations disabled
 - **Font Awesome** 6.5.1 — icons
 - **Rajdhani** font (Google Fonts) — consistent typography
 
@@ -142,31 +139,26 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Mode selector gem icon** — Flexbox layout, gem icon + number side-by-side
 - ✅ **Custom SVG favicon** — Cyan-to-pink gradient gem shape
 - ✅ **Charts toggle** — Show/hide charts section with animated chevron
-- ✅ **Login total corrected** — 293/week (210+60+23)
 - ✅ **Card modals (9 cards)** — All cards trigger modal via info icon; modal has hero tagline, description, tips, live PvP data, demotion warning
 - ✅ **Active mode selector opacity** — Toned down active mode button solid colors to be more transparent
 
 ### Data & Calculations
 - ✅ **GAME.pvp structure** — 14 leagues with `rankStart`/`rankEnd` fields
 - ✅ **getPvpPayout** — Uses league multiplier + tier gems/cards/chips
-- ✅ **Spider chart targets** — (550, 1500, 360, 330)
+- ✅ **Spider chart targets** — (550, 2664, 360, 330)
 - ✅ **PvP defaults** — Elite II, rank 13
 - ✅ **Spider chart live updates** — Spider actuals recompute from live PvP form values via `getModeTotal('pvp')`; spider updates on PvP selector changes and mode toggles (matches distribution + rewards behavior)
 
 ### Performance Improvements
-- ✅ **Removed 27 sparkle elements** — All `.gem-sparkle` divs removed from 9 cards (3 per card), eliminating continuous scale/opacity animation overhead
-- ✅ **Removed rotating background animation** — `.gem-section__rotating-bg` kept as static element, removed continuous 20s rotation of large 200%×200% gradient
-- ✅ **Countdown pulse optimized** — Changed JS-driven class toggle (every 1s, forced reflow) to pure CSS infinite animation on `gem-countdown-pulse`
-- ✅ **Removed 3 unused animation utility classes** — `gem-animate--glow-pulse`, `gem-animate--float`, `gem-animate--pulse-slow` and their `@keyframes` deleted
-- ✅ **Removed visibilitychange animation restarter** — Dead code after sparkle removal
-- **Net result:** 37 → 10 continuous animations (9 particles + 1 scanline)
-
-### Performance Improvements (Round 2)
-- ✅ **Removed search entirely** — Eliminated most expensive JS operation (`querySelectorAll` per keystroke): removed from HTML, CSS, and JS
-- ✅ **Disabled chart animations** — Changed all 9 `chart.update('active')` calls to `'none'` for instant non-animated canvas redraws
-- ✅ **GPU-optimized particles** — Added `will-change: transform` + `translate3d()` to particle CSS; avoids layout thrashing per frame
-- ✅ **Inlined header icon pulse** — Added `@keyframes pulse` to CSS so header icon pulse no longer depends on Tailwind CDN
-- ✅ **Reduced countdown interval** — Changed from 1000ms to 5000ms, cutting DOM writes 5×
+- ✅ **Removed search feature** — Eliminated most expensive JS operation (querySelectorAll per keystroke); removed HTML, CSS, and JS
+- ✅ **Disabled chart animations** — All `chart.update('active')` changed to `'none'` for instant non-animated canvas redraws
+- ✅ **CSS-driven countdown pulse** — Replaced JS class-toggle every 1s with pure CSS `infinite` animation
+- ✅ **Reduced countdown interval** — 1000ms → 5000ms, cutting DOM writes 5×
+- ✅ **GPU-optimized particles** — Added `will-change: transform` + `translate3d()` to particle CSS
+- ✅ **Fixed PvP state persistence** — Removed wipe block; `savePageState()`/`loadPageState()` persist theme, modes, chart filter, visibility across reloads
+- ✅ **Removed continuous animations** — 27 sparkle elements, rotating background, scanline, and 3 dead utility classes deleted; 37 → 9 continuous animations (9 particles only)
+- ✅ **Inlined `@keyframes pulse`** — Header icon pulse no longer depends on Tailwind CDN
+- ✅ **Removed floating controls** — Theme toggle, save/share menu, and export data buttons removed along with their JS functions
 
 ### Bug Fixes
 - ✅ **Card hover shadow** — Hardcoded cyan values replacing undefined `var(--gem-shadow--card)`

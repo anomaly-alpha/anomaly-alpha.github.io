@@ -405,7 +405,6 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 | `gem-code--glow` | 2s | ease-in-out | Code glow pulse (infinite) |
 | `gem-code--fade-in` | 0.5s | ease-out | Copy hint appear |
 | `gem-code--copied` | 0.4s | ease-out | Copied flash |
-| `gem-scanline` | 3s | ease-in-out | Header scan line (infinite) |
 | `gem-float-particle` | 15s | linear | Background particles (infinite, GPU-composited via `translate3d`) |
 | `pulse` | 3s | cubic-bezier(0.4, 0, 0.6, 1) | Header icon pulse (infinite) |
 | `gem-countdown-pulse` | 1s | ease-out infinite | Countdown second tick (CSS-only) |

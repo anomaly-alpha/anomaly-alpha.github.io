@@ -1,7 +1,7 @@
 # Invincible Gem Rewards Infographic - Implementation Plan
 
 **Document Status:** Current (May 2, 2026)
-**Total Gems:** ~1,843 (weekly calculation, varies with PvP)
+**Total Gems:** ~2,543 (weekly calculation, varies with PvP)
 **Implementation Status:** Complete
 
 ---
@@ -18,7 +18,6 @@ Interactive infographic displaying gem reward sources from the Invincible mobile
 | HTML5 | Semantic structure | - |
 | Tailwind CSS | Utility-first styling | cdn.tailwindcss.com |
 | Chart.js | Interactive charts | 4.4.1 (jsdelivr) |
-| html2canvas | PNG export | 1.4.1 (hertzen) |
 | Font Awesome | Icons | 6.5.1 (cdnjs) |
 | Google Fonts | Rajdhani font | - |
 
@@ -26,11 +25,11 @@ Interactive infographic displaying gem reward sources from the Invincible mobile
 
 ```
 anomaly-alpha/
-├── index.html       (857 lines) - Main infographic + inline JSON configs
-├── script.js        (1363 lines) - All JavaScript, loads inline JSON configs
-├── styles.css       (1298 lines) - Design tokens + BEM classes
+├── index.html       (818 lines) - Main infographic + inline JSON configs
+├── script.js        (1184 lines) - All JavaScript, loads inline JSON configs
+├── styles.css       (1266 lines) - Design tokens + BEM classes
 ├── favicon.svg      - Custom gem SVG favicon
-├── PLAN_card_modals.md - Card modal feature plan and notes
+├── AGENTS.md        - Agent instructions for this repo
 ├── README.md        - Project overview
 ├── data/            - JSON source files (for maintenance, embedded in HTML)
 │   ├── game-config.json
@@ -39,12 +38,14 @@ anomaly-alpha/
 │   ├── countdown-config.json
 │   ├── ui-config.json
 │   └── theme-config.json
-└── docs/
-    ├── index.md     - Documentation index
-    └── plan/
-        ├── IMPLEMENTATION_PLAN.md - This file
-        ├── JSON_EXTRACTION_PLAN.md - Data model definition
-        └── ... (historical fix notes)
+├── docs/
+│   ├── DESIGN_SYSTEM.md - CSS token reference
+│   ├── index.md     - Documentation index
+│   └── plan/
+│       ├── IMPLEMENTATION_PLAN.md - This file
+│       └── ... (historical fix notes)
+└── .github/copilot/
+    └── copilot-instructions.md - Code generation patterns
 ```
 
 ---
@@ -88,10 +89,10 @@ function loadAllConfigs() {
 |------|------|-------|-------|-------------|
 | **Event** | fa-dragon | #ff6b35 | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | **PvP** | fa-fist-raised | #e91e8a | ~750 | 3 interactive cards (varies with rank/league) |
-| **Login** | fa-sign-in-alt | #f39c12 | 293 | Daily (210) + Weekly (60) + Monthly (23) |
+| **Login** | fa-sign-in-alt | #f39c12 | 993 | Daily (910) + Weekly (60) + Monthly (23) |
 | **Code** | fa-gift | #2ecc71 | 300 | Promo code 30KGTG |
 
-**Total: ~1,843 gems/week**
+**Total: ~2,543 gems/week**
 
 ### 2.3 PvP League System (14 Leagues)
 
@@ -126,7 +127,7 @@ All 9 cards have an info icon button (`.gem-card__info-btn`) in the top-right co
 | 4 | Restricted Arena | PvP | dynamic | ★ Weekly | Info icon opens modal; live gems/cards/chips from pvp1-league/rank |
 | 5 | Open Arena | PvP | dynamic | ★ Weekly | Info icon opens modal; live gems/cards/chips from pvp2-league/rank |
 | 6 | Multiverse Alliance War | PvP | dynamic | ★ 5 Matches / 2 Weeks | Info icon opens modal; live gems/cards/chips from pvp3-league/rank; demotion warning |
-| 7 | Daily Login | Login | 210 | ★ 30×7 | Info icon opens modal |
+| 7 | Daily Login | Login | 910 | ★ 30×7 | Info icon opens modal |
 | 8 | Weekly Login | Login | 60 | ★ Weekly | Info icon opens modal |
 | 9 | Monthly Login | Login | 23 | ★ 90÷4 | Info icon opens modal |
 
@@ -136,7 +137,7 @@ All 9 cards have an info icon button (`.gem-card__info-btn`) in the top-right co
 |------|--------|--------|
 | Events | 500 | 550 |
 | PvP | ~750 (live) | 2664 |
-| Login | 293 | 360 |
+| Login | 993 | 360 |
 | Code | 300 | 330 |
 
 **PvP target (2664)** = max combined gems from all 3 PvP cards at best possible (Invincible league, rank 1): `Math.round(710 × 1.25) × 3 = 888 × 3 = 2664`. This represents the theoretical maximum weekly PvP income.
@@ -209,7 +210,7 @@ Reads from `CARD_MODAL_DATA[cardId]`:
 
 ### 4.3 closeCardModal()
 
-Hides modal, restores body overflow. `closeDrillDown` is an alias for backward compatibility.
+Hides modal, restores body overflow.
 
 ### 4.4 hexToRgb(hex)
 
@@ -221,14 +222,15 @@ Converts hex color to `r, g, b` string for use in `rgba()` CSS values.
 2. `buildCountdownTargets()` — populate COUNTDOWN_TARGETS
 3. Rebuild `chartFilterData`
 4. Set `Chart.defaults` (color, borderColor)
-5. Create charts
+5. Create charts (3: doughnut, bar, radar)
 6. `initializePvPCards()` — rank option generation + localStorage load
-7. Reset PvP to defaults
-8. Set `--card-color` CSS variable on each card
-9. Attach mode button hover handlers
-10. `updateModeButtonStates()` + `updateAllPageTotals()`
-11. `setInterval(updateCountdowns, 1000)`
-12. URL parameter parsing
+7. Set `--card-color` CSS variable on each card
+8. Attach mode button hover handlers
+9. `loadPageState()` — restore theme, modes, chart filter, charts visibility from localStorage
+10. `updateModeButtonStates()` + `updateAllPageTotals(true)` (skip animation on init)
+11. `setInterval(updateCountdowns, 5000)`
+12. `updateCountdowns()` — initial display
+13. URL parameter parsing (overrides localStorage state)
 
 ### 4.6 Mode Filtering
 
@@ -428,32 +430,16 @@ Key light mode differences:
 - Close via overlay click, × button, or Escape key
 - Entry animation: pop-in scale effect
 
-### 6.8 Search
-- Expandable search bar with text highlighting
-- Searches card titles, descriptions, categories, gem amounts
-- "No results" message with suggestions
-
-### 6.9 Save/Share Menu
-- Save View (localStorage with name + timestamp)
-- Load View (prompt with numbered list)
-- Copy Link (URL params: mode, chart, theme)
-- Export PNG (html2canvas with 2x scale)
-
-### 6.10 Theme Toggle
-- Dark/light mode switch via fixed icon button
-- Icon swaps between moon/sun
-- URL param `?theme=light` applies on load
-
-### 6.11 Charts Toggle
+### 6.8 Charts Toggle
 - Show/hide charts section via toggle button
 - Icon rotates (chevron up/down)
 
-### 6.12 Countdown Timers
+### 6.9 Countdown Timers
 - 4 timers: weekly, daily, cecilNightmares, multiverseArena
 - Per-mode display (only show countdown for active modes)
 - Pulse animation on second change
 
-### 6.13 PvP Cards (3 cards)
+### 6.10 PvP Cards (3 cards)
 - League selector: 14 options (Intern through Invincible), default: Elite II
 - Rank selector: 1-120 (dynamically generated options)
 - Clear button to reset to defaults
@@ -480,7 +466,6 @@ Example: `index.html?theme=dark&mode=pvp&chart=event`
 |-----|--------|---------|
 | `pvp{N}_league` | intern, junior1, ..., invincible | PvP card N league |
 | `pvp{N}_rank` | 1-120 | PvP card N rank |
-| `gemInfographicViews` | JSON array | Saved views |
 
 ---
 
@@ -492,12 +477,9 @@ Example: `index.html?theme=dark&mode=pvp&chart=event`
 | gem-code--reveal | 0.8s | cubic-bezier(0.34, 1.56, 0.64, 1) | Code reveal |
 | gem-code--glow | 2s | ease-in-out | Code glow pulse (infinite) |
 | gem-code--fade-in | 0.5s | ease-out | Copy hint appear |
-| gem-scanline | 3s | ease-in-out | Header scan line (infinite) |
-| gem-sparkle | 1.5s | ease-in-out | Card sparkle (infinite) |
-| gem-rotate-bg | 20s | linear | Total section bg (infinite) |
 | gem-float-particle | 15s | linear | Background particles (infinite) |
-| gem-countdown-pulse | 1s | ease-out | Countdown second tick |
-| gem-modal--pop-in | 0.3s | cubic-bezier(0.34, 1.56, 0.64, 1) | Modal entry (when `.gem-modal--visible` applied to modal) |
+| gem-countdown-pulse | 1s | ease-out infinite | Countdown second tick (CSS-only) |
+| gem-modal--pop-in | 0.3s | cubic-bezier(0.34, 1.56, 0.64, 1) | Modal entry |
 
 ---
 
@@ -514,6 +496,12 @@ The following were in older versions but are NOT in current implementation:
 - Summary info box
 - External JSON file loading via fetch (reverted to inline due to file:// CORS)
 - Drill-down modal (replaced by cardModal system)
+- Search feature (removed for performance)
+- 27 sparkle particle elements on cards (removed for performance)
+- Rotating background gradient animation on total section (removed for performance)
+- Scanline animation (removed)
+- Theme toggle floating button (removed)
+- Save/share menu and export data buttons (removed)
 
 ---
 
@@ -521,7 +509,7 @@ The following were in older versions but are NOT in current implementation:
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| index.html | 857 | HTML + inline JSON configs (6 in head) |
-| script.js | 1363 | All JS: charts, filtering, PvP, modals, countdowns, search, save/share |
-| styles.css | 1298 | CSS custom properties, BEM components, animations |
+| index.html | 818 | HTML + inline JSON configs (6 in head) |
+| script.js | 1184 | All JS: charts, filtering, PvP, modals, countdowns |
+| styles.css | 1266 | CSS custom properties, BEM components, animations |
 | data/*.json | - | Source JSON files (embedded in index.html) |
