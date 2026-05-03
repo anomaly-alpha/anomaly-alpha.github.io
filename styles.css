@@ -171,6 +171,7 @@ body {
 .gem-card__body {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   min-height: 160px;
 }
 
