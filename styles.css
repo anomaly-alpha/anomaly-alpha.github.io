@@ -1165,13 +1165,16 @@ body .gem-card--mode-highlight--all {
 
 @keyframes gem-countdown-pulse {
   0% {
-    text-shadow: 0 0 8px currentColor;
+    opacity: 1;
+    transform: scale(1);
   }
   50% {
-    text-shadow: 0 0 18px currentColor, 0 0 28px currentColor;
+    opacity: 0.4;
+    transform: scale(1.08);
   }
   100% {
-    text-shadow: 0 0 4px currentColor;
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
@@ -1186,7 +1189,7 @@ body .gem-card--mode-highlight--all {
 
 /* Countdown transition */
 .gem-countdown {
-  transition: text-shadow 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
 /* Reduced motion */

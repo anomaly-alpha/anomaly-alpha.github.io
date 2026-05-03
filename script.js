@@ -959,6 +959,15 @@ async function exportAsImage() {
   showToast('Generating image...', 'info');
   const container = document.querySelector('.max-w-7xl');
   try {
+    if (typeof html2canvas === 'undefined') {
+      await new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
     const canvas = await html2canvas(container, {
       backgroundColor: '#050a14',
       scale: 2
@@ -1272,19 +1281,22 @@ document.addEventListener('DOMContentLoaded', function() {
     card.style.setProperty('--card-color', color);
   });
 
+  const cardsByCategory = { code: [], event: [], pvp: [], login: [] };
+  document.querySelectorAll('.gem-card[data-category]').forEach(card => {
+    const cat = card.dataset.category;
+    if (cardsByCategory[cat]) cardsByCategory[cat].push(card);
+  });
+
   ['all', 'code', 'event', 'pvp', 'login'].forEach(mode => {
     const btn = document.querySelector(`.gem-mode-btn--${mode}`);
     if (!btn) return;
     btn.addEventListener('mouseenter', () => {
       if (mode === 'all') return;
-      const cards = document.querySelectorAll(`.gem-card[data-category="${mode}"]`);
-      cards.forEach(card => card.classList.add(`gem-card--mode-highlight--${mode}`));
+      cardsByCategory[mode].forEach(card => card.classList.add(`gem-card--mode-highlight--${mode}`));
     });
     btn.addEventListener('mouseleave', () => {
       ['event', 'pvp', 'login', 'code', 'all'].forEach(m => {
-        document.querySelectorAll(`.gem-card--mode-highlight--${m}`).forEach(card => {
-          card.classList.remove(`gem-card--mode-highlight--${m}`);
-        });
+        cardsByCategory[m]?.forEach(card => card.classList.remove(`gem-card--mode-highlight--${m}`));
       });
     });
   });
