@@ -363,7 +363,6 @@ function loadPageState() {
     // Ignore corrupt state
   }
 }
-}
 
 // ===== FILTER & MODE FUNCTIONS =====
 
