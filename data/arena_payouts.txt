@@ -1,0 +1,297 @@
+====================================================================
+ARENA END-OF-SEASON REWARDS
+====================================================================
+Rewards: HC (Hard Currency/Gems), PvP Shop Currency, Hero Shards, Hero Shop Tickets
+Position -1 = everyone else (below last named bracket)
+
+====================================================================
+OPEN ARENA (Normal)
+====================================================================
+
+--- INVINCIBLE LEAGUE (Top league, 100 players) ---
+#1:       750 HC | 1000 PvP Currency | Cecil x1 | 5 Hero Shop Tickets
+#2:       710 HC |  900 PvP Currency | Cecil x1 | 4 Hero Shop Tickets
+#3:       680 HC |  800 PvP Currency | Cecil x1 | 3 Hero Shop Tickets
+#4-10:    640 HC |  600 PvP Currency | 2 Hero Shop Tickets
+#11-30:   600 HC |  600 PvP Currency | 2 Hero Shop Tickets
+#31-50:   560 HC |  600 PvP Currency | 2 Hero Shop Tickets
+#51+:     530 HC |  500 PvP Currency | 1 Hero Shop Ticket
+
+--- ELITE 3 (110 players) ---
+#1:       710 HC | 1000 PvP Currency | Cecil x1 | 4 Hero Shop Tickets
+#2:       670 HC |  900 PvP Currency | Cecil x1 | 3 Hero Shop Tickets
+#3:       640 HC |  800 PvP Currency | Cecil x1 | 2 Hero Shop Tickets
+#4-10:    600 HC |  600 PvP Currency | 1 Hero Shop Ticket
+#11-30:   560 HC |  600 PvP Currency | 1 Hero Shop Ticket
+#31-60:   520 HC |  600 PvP Currency | 1 Hero Shop Ticket
+#61+:     490 HC |  500 PvP Currency | 1 Hero Shop Ticket
+
+--- ELITE 2 (120 players) ---
+#1:       670 HC |  990 PvP Currency | Cecil x1 | 4 Hero Shop Tickets
+#2:       630 HC |  890 PvP Currency | Cecil x1 | 3 Hero Shop Tickets
+#3:       600 HC |  790 PvP Currency | Cecil x1 | 2 Hero Shop Tickets
+#4-10:    560 HC |  590 PvP Currency | 1 Hero Shop Ticket
+#11-30:   520 HC |  590 PvP Currency | 1 Hero Shop Ticket
+#31-60:   480 HC |  590 PvP Currency | 1 Hero Shop Ticket
+#61+:     450 HC |  490 PvP Currency | 1 Hero Shop Ticket
+
+--- ELITE 1 (130 players) ---
+#1:       630 HC |  990 PvP Currency | Cecil x1 | 4 Hero Shop Tickets
+#2:       590 HC |  890 PvP Currency | Cecil x1 | 3 Hero Shop Tickets
+#3:       560 HC |  790 PvP Currency | Cecil x1 | 2 Hero Shop Tickets
+#4-10:    520 HC |  590 PvP Currency | 1 Hero Shop Ticket
+#11-40:   480 HC |  590 PvP Currency | 1 Hero Shop Ticket
+#41-70:   440 HC |  590 PvP Currency | 1 Hero Shop Ticket
+#71+:     410 HC |  490 PvP Currency | 1 Hero Shop Ticket
+
+--- SENIOR 3 (145 players) ---
+#1:       590 HC |  980 PvP Currency | Shapesmith x1 | 3 Hero Shop Tickets
+#2:       550 HC |  880 PvP Currency | Shapesmith x1 | 2 Hero Shop Tickets
+#3:       520 HC |  780 PvP Currency | Shapesmith x1 | 1 Hero Shop Ticket
+#4-10:    480 HC |  580 PvP Currency | 1 Hero Shop Ticket
+#11-40:   440 HC |  580 PvP Currency | 1 Hero Shop Ticket
+#41-80:   400 HC |  580 PvP Currency | 1 Hero Shop Ticket
+#81+:     370 HC |  480 PvP Currency
+
+--- SENIOR 2 (160 players) ---
+#1:       550 HC |  980 PvP Currency | Shapesmith x1 | 3 Hero Shop Tickets
+#2:       510 HC |  880 PvP Currency | Shapesmith x1 | 2 Hero Shop Tickets
+#3:       480 HC |  780 PvP Currency | Shapesmith x1 | 1 Hero Shop Ticket
+#4-10:    440 HC |  580 PvP Currency | 1 Hero Shop Ticket
+#11-40:   400 HC |  580 PvP Currency | 1 Hero Shop Ticket
+#41-80:   360 HC |  580 PvP Currency | 1 Hero Shop Ticket
+#81+:     330 HC |  480 PvP Currency
+
+--- SENIOR 1 (175 players) ---
+#1:       510 HC |  980 PvP Currency | Shapesmith x1 | 3 Hero Shop Tickets
+#2:       470 HC |  880 PvP Currency | Shapesmith x1 | 2 Hero Shop Tickets
+#3:       440 HC |  780 PvP Currency | Shapesmith x1 | 1 Hero Shop Ticket
+#4-10:    400 HC |  580 PvP Currency | 1 Hero Shop Ticket
+#11-50:   360 HC |  580 PvP Currency | 1 Hero Shop Ticket
+#51-90:   320 HC |  580 PvP Currency | 1 Hero Shop Ticket
+#91+:     290 HC |  480 PvP Currency
+
+--- INTERMEDIATE 3 (195 players) ---
+#1:       470 HC |  970 PvP Currency | Agent Spider x1 | 3 Hero Shop Tickets
+#2:       430 HC |  870 PvP Currency | Agent Spider x1 | 2 Hero Shop Tickets
+#3:       400 HC |  770 PvP Currency | Agent Spider x1 | 1 Hero Shop Ticket
+#4-10:    360 HC |  570 PvP Currency | 1 Hero Shop Ticket
+#11-50:   320 HC |  570 PvP Currency | 1 Hero Shop Ticket
+#51-100:  280 HC |  570 PvP Currency
+#101+:    250 HC |  470 PvP Currency
+
+--- INTERMEDIATE 2 (215 players) ---
+#1:       430 HC |  970 PvP Currency | Agent Spider x1 | 2 Hero Shop Tickets
+#2:       390 HC |  870 PvP Currency | Agent Spider x1 | 1 Hero Shop Ticket
+#3:       360 HC |  770 PvP Currency | Agent Spider x1 | 1 Hero Shop Ticket
+#4-10:    320 HC |  570 PvP Currency | 1 Hero Shop Ticket
+#11-60:   280 HC |  570 PvP Currency | 1 Hero Shop Ticket
+#61-110:  240 HC |  570 PvP Currency
+#111+:    210 HC |  470 PvP Currency
+
+--- INTERMEDIATE 1 (235 players) ---
+#1:       390 HC |  960 PvP Currency | Agent Spider x1 | 2 Hero Shop Tickets
+#2:       350 HC |  860 PvP Currency | Agent Spider x1 | 1 Hero Shop Ticket
+#3:       320 HC |  760 PvP Currency | Agent Spider x1 | 1 Hero Shop Ticket
+#4-10:    280 HC |  560 PvP Currency | 1 Hero Shop Ticket
+#11-60:   240 HC |  560 PvP Currency | 1 Hero Shop Ticket
+#61-120:  200 HC |  560 PvP Currency
+#121+:    170 HC |  460 PvP Currency
+
+--- JUNIOR 3 (260 players) ---
+#1:       350 HC |  960 PvP Currency | Iguana x1 | 1 Hero Shop Ticket
+#2:       310 HC |  860 PvP Currency | Iguana x1 | 1 Hero Shop Ticket
+#3:       280 HC |  760 PvP Currency | Iguana x1 | 1 Hero Shop Ticket
+#4-10:    240 HC |  560 PvP Currency
+#11-70:   200 HC |  560 PvP Currency
+#71-130:  160 HC |  560 PvP Currency
+#131+:    130 HC |  460 PvP Currency
+
+--- JUNIOR 2 (285 players) ---
+#1:       310 HC |  960 PvP Currency | Iguana x1 | 1 Hero Shop Ticket
+#2:       270 HC |  860 PvP Currency | Iguana x1 | 1 Hero Shop Ticket
+#3:       240 HC |  760 PvP Currency | Iguana x1 | 1 Hero Shop Ticket
+#4-10:    200 HC |  560 PvP Currency
+#11-80:   160 HC |  560 PvP Currency
+#81-150:  120 HC |  560 PvP Currency
+#151+:     90 HC |  460 PvP Currency
+
+--- JUNIOR 1 (300 players) ---
+#1:       270 HC |  950 PvP Currency | Iguana x1 | 1 Hero Shop Ticket
+#2:       230 HC |  850 PvP Currency | Iguana x1 | 1 Hero Shop Ticket
+#3:       200 HC |  750 PvP Currency | Iguana x1 | 1 Hero Shop Ticket
+#4-10:    160 HC |  550 PvP Currency
+#11-80:   120 HC |  550 PvP Currency
+#81-150:   80 HC |  550 PvP Currency
+#151+:     50 HC |  450 PvP Currency
+
+--- INTERN (500 players, starting league) ---
+#1:       230 HC |  950 PvP Currency | Lucan x1
+#2:       190 HC |  850 PvP Currency | Lucan x1
+#3:       160 HC |  750 PvP Currency | Lucan x1
+#4-10:    120 HC |  550 PvP Currency
+#11-130:   80 HC |  550 PvP Currency
+#131-250:  40 HC |  550 PvP Currency
+#251+:     10 HC |  450 PvP Currency
+
+
+====================================================================
+HARDCORE / RESTRICTED ARENA
+====================================================================
+Note: No hero shards or hero shop tickets — only HC + PvP Currency
+      PvP Currency payouts are significantly higher than Open Arena
+
+--- INVINCIBLE LEAGUE (100 players) ---
+#1:       750 HC | 1500 PvP Currency
+#2:       710 HC | 1280 PvP Currency
+#3:       680 HC | 1200 PvP Currency
+#4-10:    640 HC | 1130 PvP Currency
+#11-30:   600 HC |  980 PvP Currency
+#31-50:   560 HC |  900 PvP Currency
+#51+:     530 HC |  900 PvP Currency
+
+--- ELITE 3 (110 players) ---
+#1:       710 HC | 1500 PvP Currency
+#2:       670 HC | 1270 PvP Currency
+#3:       640 HC | 1200 PvP Currency
+#4-10:    600 HC | 1120 PvP Currency
+#11-30:   560 HC |  970 PvP Currency
+#31-60:   520 HC |  900 PvP Currency
+#61+:     490 HC |  900 PvP Currency
+
+--- ELITE 2 (120 players) ---
+#1:       670 HC | 1490 PvP Currency
+#2:       630 HC | 1270 PvP Currency
+#3:       600 HC | 1190 PvP Currency
+#4-10:    560 HC | 1120 PvP Currency
+#11-30:   520 HC |  970 PvP Currency
+#31-60:   480 HC |  890 PvP Currency
+#61+:     450 HC |  890 PvP Currency
+
+--- ELITE 1 (130 players) ---
+#1:       630 HC | 1490 PvP Currency
+#2:       590 HC | 1260 PvP Currency
+#3:       560 HC | 1190 PvP Currency
+#4-10:    520 HC | 1110 PvP Currency
+#11-40:   480 HC |  960 PvP Currency
+#41-70:   440 HC |  890 PvP Currency
+#71+:     410 HC |  890 PvP Currency
+
+--- SENIOR 3 (145 players) ---
+#1:       590 HC | 1480 PvP Currency
+#2:       550 HC | 1260 PvP Currency
+#3:       520 HC | 1180 PvP Currency
+#4-10:    480 HC | 1110 PvP Currency
+#11-40:   440 HC |  960 PvP Currency
+#41-80:   400 HC |  880 PvP Currency
+#81+:     370 HC |  880 PvP Currency
+
+--- SENIOR 2 (160 players) ---
+#1:       550 HC | 1480 PvP Currency
+#2:       510 HC | 1260 PvP Currency
+#3:       480 HC | 1180 PvP Currency
+#4-10:    440 HC | 1110 PvP Currency
+#11-40:   400 HC |  960 PvP Currency
+#41-80:   360 HC |  880 PvP Currency
+#81+:     330 HC |  880 PvP Currency
+
+--- SENIOR 1 (175 players) ---
+#1:       510 HC | 1480 PvP Currency
+#2:       470 HC | 1250 PvP Currency
+#3:       440 HC | 1180 PvP Currency
+#4-10:    400 HC | 1100 PvP Currency
+#11-50:   360 HC |  950 PvP Currency
+#51-90:   320 HC |  880 PvP Currency
+#91+:     290 HC |  880 PvP Currency
+
+--- INTERMEDIATE 3 (195 players) ---
+#1:       470 HC | 1470 PvP Currency
+#2:       430 HC | 1250 PvP Currency
+#3:       400 HC | 1170 PvP Currency
+#4-10:    360 HC | 1100 PvP Currency
+#11-50:   320 HC |  950 PvP Currency
+#51-100:  280 HC |  870 PvP Currency
+#101+:    250 HC |  870 PvP Currency
+
+--- INTERMEDIATE 2 (215 players) ---
+#1:       430 HC | 1470 PvP Currency
+#2:       390 HC | 1240 PvP Currency
+#3:       360 HC | 1170 PvP Currency
+#4-10:    320 HC | 1090 PvP Currency
+#11-60:   280 HC |  940 PvP Currency
+#61-110:  240 HC |  870 PvP Currency
+#111+:    210 HC |  870 PvP Currency
+
+--- INTERMEDIATE 1 (235 players) ---
+#1:       390 HC | 1460 PvP Currency
+#2:       350 HC | 1240 PvP Currency
+#3:       320 HC | 1160 PvP Currency
+#4-10:    280 HC | 1090 PvP Currency
+#11-60:   240 HC |  940 PvP Currency
+#61-120:  200 HC |  860 PvP Currency
+#121+:    170 HC |  860 PvP Currency
+
+--- JUNIOR 3 (260 players) ---
+#1:       350 HC | 1460 PvP Currency
+#2:       310 HC | 1240 PvP Currency
+#3:       280 HC | 1160 PvP Currency
+#4-10:    240 HC | 1090 PvP Currency
+#11-70:   200 HC |  940 PvP Currency
+#71-130:  160 HC |  860 PvP Currency
+#131+:    130 HC |  860 PvP Currency
+
+--- JUNIOR 2 (285 players) ---
+#1:       310 HC | 1460 PvP Currency
+#2:       270 HC | 1230 PvP Currency
+#3:       240 HC | 1160 PvP Currency
+#4-10:    200 HC | 1080 PvP Currency
+#11-80:   160 HC |  930 PvP Currency
+#81-150:  120 HC |  860 PvP Currency
+#151+:     90 HC |  860 PvP Currency
+
+--- JUNIOR 1 (300 players) ---
+#1:       270 HC | 1450 PvP Currency
+#2:       230 HC | 1230 PvP Currency
+#3:       200 HC | 1150 PvP Currency
+#4-10:    160 HC | 1080 PvP Currency
+#11-80:   120 HC |  930 PvP Currency
+#81-150:   80 HC |  850 PvP Currency
+#151+:     50 HC |  850 PvP Currency
+
+--- INTERN (500 players) ---
+#1:       230 HC | 1450 PvP Currency
+#2:       190 HC | 1220 PvP Currency
+#3:       160 HC | 1150 PvP Currency
+#4-10:    120 HC | 1070 PvP Currency
+#11-130:   80 HC |  920 PvP Currency
+#131-250:  40 HC |  850 PvP Currency
+#251+:     10 HC |  850 PvP Currency
+
+
+====================================================================
+PER-BATTLE REWARDS (from pvpSetting)
+====================================================================
+
+OPEN ARENA:
+  Victory: 60 PvP Shop Currency
+  Defeat:  20 PvP Shop Currency
+  Entry cost: 1 PvP Entry token
+  Season duration: 7 days
+
+HARDCORE ARENA:
+  Victory: 30 PvP Shop Currency
+  Defeat:  (none listed)
+  Entry cost: 1 Hardcore PvP Entry token
+  Unlock cost: 100 PvP Shop Currency
+  Season duration: 7 days
+
+
+====================================================================
+LEAGUE STRUCTURE NOTES
+====================================================================
+- Leagues share the same tier names across both arenas
+- Higher leagues = fewer players per bracket = more competitive
+- Promotion/demotion thresholds vary by league level
+- Intern league has no demotion (starting league, 500 players)
+- Open Arena gives hero shards (Cecil/Shapesmith/Agent Spider/Iguana/Lucan)
+- Hardcore Arena gives NO hero shards but ~50% more PvP Currency

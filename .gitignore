@@ -63,4 +63,3 @@ nunit-*.xml
 .obsidian/
 
 # Info
-data/*payouts.txt
