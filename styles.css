@@ -159,6 +159,14 @@
   font-display: swap;
 }
 
+/* ===== INLINE SVG ICONS (FA replacements) ===== */
+
+svg[width="1em"][height="1em"] {
+  display: inline-block;
+  vertical-align: -0.125em;
+  line-height: 1;
+}
+
 /* ===== BASE ELEMENTS ===== */
 body {
   font-family: var(--gem-font);
@@ -1073,14 +1081,9 @@ body .gem-card--mode-highlight--all {
 }
 
 .gem-mode-btn__icon {
-  font-size: 1.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
   margin-bottom: 0.25rem;
-}
-
-@media (min-width: 768px) {
-  .gem-mode-btn__icon {
-    font-size: 1.5rem;
-  }
 }
 
 .gem-mode-btn__count {
