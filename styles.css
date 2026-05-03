@@ -199,13 +199,18 @@ body {
 .gem-card__gems {
   font-size: 2.25rem;
   font-weight: 700;
-  color: var(--gem-event);
+  color: #fff;
   margin-bottom: 0.25rem;
-  filter: drop-shadow(0 0 15px rgba(255, 107, 53, 0.35));
+  filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.25));
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
+.gem-card--pvp .gem-card__gems { color: var(--gem-pvp); filter: drop-shadow(0 0 15px rgba(233, 30, 138, 0.35)); }
+.gem-card--login .gem-card__gems { color: var(--gem-login); filter: drop-shadow(0 0 15px rgba(243, 156, 18, 0.35)); }
+.gem-card--code .gem-card__gems { color: var(--gem-code); filter: drop-shadow(0 0 15px rgba(46, 204, 113, 0.35)); }
+.gem-card--event .gem-card__gems,
+.gem-card--event .gem-card__gems * { color: #fff; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.25)); }
 
 .gem-card__title {
   font-size: 1.25rem;
@@ -216,11 +221,8 @@ body {
   margin-top: 0.75rem;
 }
 .gem-card__title--event {
-  background: linear-gradient(135deg, var(--gem-event), #ff9a5e);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 0 12px rgba(255, 107, 53, 0.4));
+  color: #fff;
+  text-shadow: 0 0 12px rgba(255, 107, 53, 0.4);
 }
 .gem-card__title--pvp {
   background: linear-gradient(135deg, var(--gem-pvp), #f06ab0);
