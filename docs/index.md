@@ -85,7 +85,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 ## Tech Stack
 
 - **Structure**: `index.html` (1284 lines), `styles.css` (1342 lines), `script.js` (1207 lines), 6 guide pages (1175 total)
-- **Styling**: Tailwind CSS (via CDN) + custom CSS design token system
+- **Styling**: Tailwind CSS (local build via npm) + custom CSS design token system
 - **Charts**: Chart.js (doughnut, bar, radar)
 - **Icons**: Font Awesome
 - **Typography**: Rajdhani font (Google Fonts)

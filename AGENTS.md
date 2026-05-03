@@ -2,7 +2,10 @@
 
 ## Quick start
 
-Open `index.html` in a browser. No build step, no npm, works from `file://`.
+```bash
+npm install && npm run build    # One-time setup (or after HTML changes)
+```
+Open `index.html` in a browser. Works from `file://`.
 
 ## File ownership
 
@@ -11,6 +14,10 @@ Open `index.html` in a browser. No build step, no npm, works from `file://`.
 | `index.html` | HTML + 6 inline `<script type="application/json">` configs in `<head>` + OG/Twitter/canonical tags + structured data |
 | `script.js` | All JS (global scope, no imports/exports) |
 | `styles.css` | CSS custom property tokens + BEM classes |
+| `tailwind.css` | Generated Tailwind utility classes (from `npm run build`) |
+| `package.json` | Dev dependencies config (Tailwind CLI) |
+| `tailwind.config.js` | Tailwind content paths configuration |
+| `src/tailwind-input.css` | Tailwind source with `@tailwind` directives |
 | `robots.txt` | Crawl directives, sitemap reference |
 | `sitemap.xml` | All 7 URLs (main + 6 guides) |
 | `og-image.svg` | 1200×630 social sharing preview |
@@ -25,11 +32,15 @@ Open `index.html` in a browser. No build step, no npm, works from `file://`.
 - **Never use `fetch()`** — all data comes from inline JSON configs loaded via `loadConfig(id)`
 - **Never recreate charts** — create once in `DOMContentLoaded`, update via `chart.update('none')`
 - **Never use JSDoc** — minimal inline comments, section headers (`// ===== NAME =====`) only
-- **Never add tests, build tools, or module systems** — not used in this project
+- **Build tools (npm scripts) generate local Tailwind CSS** — output is committed, no runtime build needed
+- **Prefer local assets over CDN dependencies** when practical for performance
 
 ## Commands
 
-None. No lint, test, typecheck, build, or codegen commands exist.
+- `npm install` — Install dev dependencies (tailwindcss CLI)
+- `npm run build` — Rebuild tailwind.css from HTML source
+- `npm run update-assets` — Download latest vendor assets (Chart.js, Font Awesome, fonts)
+- No runtime build — all generated files are committed
 
 ## Key conventions
 
@@ -69,7 +80,7 @@ None. No lint, test, typecheck, build, or codegen commands exist.
 ## CDN dependencies (loaded in HTML head)
 
 - Chart.js 4.4.1
-- Tailwind CSS (latest)
+- Tailwind CSS — local (built via npm run build, committed as tailwind.css)
 - Font Awesome 6.5.1
 - Google Fonts: Rajdhani (400,600,700), Orbitron (500,700,900)
 

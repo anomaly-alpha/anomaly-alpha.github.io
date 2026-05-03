@@ -83,6 +83,11 @@ anomaly-alpha/
 ├── index.html           (1284 lines) — Main HTML + inline JSON configs (6 in <head>)
 ├── script.js            (1207 lines) — All JS: charts, filters, PvP, modals, countdowns
 ├── styles.css           (1342 lines) — CSS custom properties + BEM component classes
+├── tailwind.css         — Generated Tailwind utility classes (from npm run build)
+├── package.json         — Dev dependencies config
+├── tailwind.config.js   — Tailwind content paths config
+├── src/
+│   └── tailwind-input.css — Tailwind source with @tailwind directives
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
 ├── og-image.svg         — 1200×630 social sharing preview card
 ├── robots.txt           — Allows all crawlers, references sitemap
@@ -108,7 +113,7 @@ anomaly-alpha/
 
 ## Usage
 
-Open `index.html` in any browser — no build step required. The page loads inline JSON configs embedded in the HTML, so it works directly from disk (`file://`) as well as via a local server.
+Run `npm install && npm run build` (one-time setup). Then open `index.html` in any browser — the page loads inline JSON configs embedded in the HTML, so it works directly from disk (`file://`) as well as via a local server.
 
 ## Design System
 
@@ -128,7 +133,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 
 ## Tech Stack
 
-- **Tailwind CSS** (via CDN) — utility-first styling
+- **Tailwind CSS** (local build via `npm run build`) — utility-first styling
 - **Chart.js** 4.4.1 (doughnut, bar, radar charts) — updated via `chart.update('none')`, animations disabled
 - **Font Awesome** 6.5.1 — icons
 - **Rajdhani** font (Google Fonts) — consistent typography

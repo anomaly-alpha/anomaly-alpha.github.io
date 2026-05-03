@@ -62,7 +62,7 @@ All visual values are defined as CSS custom properties in `:root` with full dark
 Full token reference: `docs/DESIGN_SYSTEM.md`
 
 ## Constraints
-- No build step — works directly from disk
+- Build step (npm run build) generates local Tailwind CSS. Output is committed. Works from file:// after build.
 - No external fetch — all data inline in HTML
 - Supports dark and light modes via `:root.light-mode` token overrides
 - Guide pages share the same CSS and design system as the main page

@@ -1,0 +1,11 @@
+{
+  "name": "anomaly-alpha.github.io",
+  "private": true,
+  "scripts": {
+    "build": "tailwindcss -i src/tailwind-input.css -o tailwind.css",
+    "update-assets": "echo 'Manual: download Chart.js 4.4.1 → vendor/chart.umd.js, Font Awesome 6.5.1 → vendor/fontawesome/'"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

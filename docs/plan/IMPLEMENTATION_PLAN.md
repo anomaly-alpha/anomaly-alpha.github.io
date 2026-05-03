@@ -16,7 +16,7 @@ Interactive infographic displaying gem reward sources from Invincible Guarding t
 | Technology | Purpose | Version/CDN |
 |------------|---------|-------------|
 | HTML5 | Semantic structure | - |
-| Tailwind CSS | Utility-first styling | cdn.tailwindcss.com |
+| Tailwind CSS | Utility-first styling | local (npm run build) |
 | Chart.js | Interactive charts | 4.4.1 (jsdelivr) |
 | Font Awesome | Icons | 6.5.1 (cdnjs) |
 | Google Fonts | Rajdhani + Orbitron | - |
@@ -28,6 +28,11 @@ anomaly-alpha/
 ├── index.html       (1284 lines) — Main infographic + inline JSON configs + SEO tags
 ├── script.js        (1207 lines) — All JavaScript, loads inline JSON configs
 ├── styles.css       (1342 lines) — Design tokens + BEM classes + animations
+├── tailwind.css         — Generated Tailwind utility classes (from npm run build)
+├── package.json         — Dev dependencies config
+├── tailwind.config.js   — Tailwind content paths config
+├── src/
+│   └── tailwind-input.css — Tailwind source with @tailwind directives
 ├── favicon.svg      — Custom gem SVG favicon
 ├── og-image.svg     — 1200×630 social sharing preview
 ├── robots.txt       — Crawl directives, sitemap reference
@@ -49,7 +54,10 @@ anomaly-alpha/
 ├── docs/
 │   ├── DESIGN_SYSTEM.md   — CSS token reference (461 lines)
 │   ├── index.md           — Documentation index (178 lines)
-│   └── plan/              — Historical plans and fix notes
+│   ├── plan/              — Historical plans and fix notes
+│   │   ├── CONSISTENCY_PLAN.md
+│   │   ├── PERF_OPTIMIZATION_PLAN.md
+│   │   └── ...
 ├── journal/               — Development journal entries
 │   ├── 2026-05-01.md      — Initial PvP cards, UI consolidation
 │   ├── 2026-05-02.md      — Codebase cleanup, removed floating controls
@@ -540,6 +548,10 @@ The following were in older versions but are NOT in current implementation:
 | index.html | 1284 | HTML + inline JSON configs (6 in head) + SEO tags + structured data |
 | script.js | 1207 | All JS: charts, filters, PvP, modals, countdowns |
 | styles.css | 1342 | CSS custom properties, BEM components, animations |
+| tailwind.css | - | Generated Tailwind utility classes (from npm run build) |
+| package.json | - | Dev dependencies (tailwindcss CLI) |
+| tailwind.config.js | - | Tailwind content paths configuration |
+| src/tailwind-input.css | - | Tailwind source with @tailwind directives |
 | guide/code/index.html | 176 | Promo code guide page |
 | guide/event/index.html | 195 | Event rewards guide page |
 | guide/pvp/index.html | 245 | PvP guide page with payout tables |
