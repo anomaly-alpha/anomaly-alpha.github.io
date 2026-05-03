@@ -449,21 +449,17 @@ function loadPageState() {
     let hidden = true;
     if (chartsVisible === 'false') {
       const container = document.getElementById('chartsContainer');
-      const toggleBtn = document.querySelector('.gem-charts-toggle');
       const label = document.querySelector('#chartsToggleLabel span:nth-child(2)');
       const icon = document.getElementById('chartsToggleIcon');
       if (container) container.classList.add('hidden');
-      if (toggleBtn) toggleBtn.classList.add('collapsed');
       if (label) label.textContent = 'Show Charts';
       if (icon) { icon.classList.remove('fa-chevron-up'); icon.classList.add('fa-chevron-down'); }
     } else {
       hidden = false;
       const container = document.getElementById('chartsContainer');
-      const toggleBtn = document.querySelector('.gem-charts-toggle');
       const label = document.querySelector('#chartsToggleLabel span:nth-child(2)');
       const icon = document.getElementById('chartsToggleIcon');
       if (container) container.classList.remove('hidden');
-      if (toggleBtn) toggleBtn.classList.remove('collapsed');
       if (label) label.textContent = 'Hide Charts';
       if (icon) { icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-chevron-up'); }
     }
@@ -761,12 +757,10 @@ function filterChart(filter) {
 // Charts Toggle
 function toggleCharts() {
   const container = document.getElementById('chartsContainer');
-  const toggleBtn = document.querySelector('.gem-charts-toggle');
   const label = document.querySelector('#chartsToggleLabel span:nth-child(2)');
   const icon = document.getElementById('chartsToggleIcon');
 
   container.classList.toggle('hidden');
-  toggleBtn.classList.toggle('collapsed');
 
   if (container.classList.contains('hidden')) {
     label.textContent = 'Show Charts';
@@ -776,6 +770,7 @@ function toggleCharts() {
     label.textContent = 'Hide Charts';
     icon.classList.remove('fa-chevron-down');
     icon.classList.add('fa-chevron-up');
+    [categoryChart, rewardsChart, spiderChart].forEach(c => { if (c) c.resize(); });
   }
   savePageState();
 }

@@ -1208,6 +1208,10 @@ body .gem-card--mode-highlight--all {
   }
 }
 
+#chartsContainer.hidden {
+  display: none;
+}
+
 .gem-grid--modes {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
