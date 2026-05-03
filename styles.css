@@ -173,7 +173,7 @@ body {
   flex-direction: column;
   align-items: flex-start;
   min-height: 160px;
-  gap: 0.5rem;
+  gap: 0.125rem;
 }
 
 .gem-card__body > :last-child {
@@ -230,7 +230,6 @@ body {
   font-size: 2.25rem;
   font-weight: 700;
   color: #fff;
-  margin-bottom: 0.25rem;
   filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.25));
   display: flex;
   align-items: center;
@@ -242,8 +241,6 @@ body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 0.5rem;
-  margin-top: 0.75rem;
   font-family: 'Orbitron', sans-serif;
 }
 .gem-card__title--event {
