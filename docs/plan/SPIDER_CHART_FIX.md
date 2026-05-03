@@ -1,5 +1,7 @@
 # Spider Chart Fix Plan
 
+> **Note:** Values in this document reflect the bug state at time of fix. Current correct values: login=1,393/week, spider targets=[550,2664,360,330], PvP actual ~1,850 (live).
+
 ## Problem
 Spider chart has 5 labels with 7 data values, and login value doesn't match page totals.
 

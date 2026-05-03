@@ -1,5 +1,7 @@
 # PvP Total Fix Plan
 
+> **Note:** Values in this document reflect the bug state at time of fix. Current correct values: login=1,393/week, total=4,043/week.
+
 ## Issue
 TOTAL GEMS OBTAINED shows 0 on page load - PvP total not included
 

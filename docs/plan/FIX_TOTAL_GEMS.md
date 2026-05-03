@@ -1,5 +1,7 @@
 # Fix Total Gems & Login Display
 
+> **Note:** Values in this document reflect the bug state at time of fix. Current correct values: login=1,393/week, weekly login=460, total=4,043/week.
+
 ## Root Cause
 
 The `eventsByMode` object in `gem_infographic.html` has incorrect values for login rewards, causing total to show 980 instead of expected ~1843.

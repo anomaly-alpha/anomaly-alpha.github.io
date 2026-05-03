@@ -1,5 +1,7 @@
 # Rewards Chart Fix Plan
 
+> **Note:** Values in this document reflect the bug state at time of fix. Current correct values: login=1,393/week, total=4,043/week.
+
 ## Problem
 Rewards bar chart has 7 static bars with hardcoded values, doesn't respond to selected modes, bars don't fill container height.
 

@@ -1,5 +1,7 @@
 # PvP League Rewards Card Implementation Plan
 
+> **Note:** The current system uses per-league payout tables (see `data/arena_payouts.txt` and `data/multiverse_war_payouts.txt`) instead of a multiplier system. Each league has its own bracket-based rewards — no multipliers applied to a base tier.
+
 ## Status: ✅ IMPLEMENTED
 
 **Date Completed:** May 1, 2026

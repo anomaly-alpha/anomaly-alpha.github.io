@@ -52,7 +52,7 @@ function savePageState() {
 }
 ```
 
-Saves all 4 state values to a single `gemInfographicState` key in localStorage.
+Saves all 4 state values to individual localStorage keys (`gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `gem_theme`).
 
 ---
 

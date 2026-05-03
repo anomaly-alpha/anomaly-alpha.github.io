@@ -1,5 +1,7 @@
 # JSON Data Extraction Plan - Gem Rewards Infographic
 
+> **Note:** This document describes the old data model. Current correct values: daily login=130/day (910/week), weekly login=460, login total=1,393/week, total=4,043/week.
+
 **Document Status:** Implementation Guide
 **Created:** May 2, 2026
 **Last Updated:** May 2, 2026

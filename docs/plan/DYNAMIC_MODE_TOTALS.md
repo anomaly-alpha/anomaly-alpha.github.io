@@ -1,5 +1,7 @@
 # Dynamic Mode Totals Plan
 
+> **Note:** Values in this document reflect the bug state at time of fix. Current correct values: weekly login=460, login total=1,393/week.
+
 ## Issues Found
 
 1. **Mode Selector Totals are HARDCODED** - HTML shows static values (Login: 180) instead of calculated from eventsByMode

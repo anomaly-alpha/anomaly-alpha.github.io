@@ -70,7 +70,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 - `/guide/code/` — Promo code guide: current code 30KGTG, redemption steps, 5 tips
 - `/guide/event/` — Event rewards guide: The Long Haul + Earth's Defenders with full strategies
 - `/guide/pvp/` — PvP guide: 14 leagues table, real payout tables, 3 arena modes with demotion zone
-- `/guide/login/` — Login rewards guide: daily (910), weekly (60), monthly (23) with income summary table
+- `/guide/login/` — Login rewards guide: daily (910), weekly (460), monthly (23) with income summary table
 - `/guide/faq/` — Gem rewards FAQ with FAQPage schema
 - `/guide/beginners/` — New player guide with priority checklist and gem spending tips
 - Each guide links to all 5 other guides + back to main page for topical relevance
@@ -84,7 +84,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 
 ## Tech Stack
 
-- **Structure**: `index.html` (1294 lines), `styles.css` (1331 lines), `script.js` (1223 lines), 6 guide pages (1175 total)
+- **Structure**: `index.html` (1284 lines), `styles.css` (1342 lines), `script.js` (1207 lines), 6 guide pages (1175 total)
 - **Styling**: Tailwind CSS (via CDN) + custom CSS design token system
 - **Charts**: Chart.js (doughnut, bar, radar)
 - **Icons**: Font Awesome

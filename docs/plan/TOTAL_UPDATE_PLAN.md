@@ -1,5 +1,7 @@
 # Unified Total Calculation Plan
 
+> **Note:** This document reflects an old data model. Current correct values: daily login=130/day (910/week), weekly login=460, login total=1,393/week, total=4,043/week.
+
 ## Goal
 Unify all calculations of totals on the page. Each event has a payout, events belong to modes with a total for each mode, modes are able to be toggled on and off, all numbers on the page should reflect the total of the active modes.
 
