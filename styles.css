@@ -1124,6 +1124,7 @@ body .gem-card--mode-highlight--all {
   letter-spacing: 0.3em;
   margin-bottom: 0.5rem;
   text-shadow: 0 0 20px rgba(0, 229, 255, 0.80);
+  font-family: 'Orbitron', sans-serif;
 }
 
 .gem-subtitle--hero {
@@ -1133,6 +1134,14 @@ body .gem-card--mode-highlight--all {
   text-transform: uppercase;
   font-weight: 600;
   text-shadow: 0 0 10px rgba(255, 107, 53, 0.50);
+  font-family: 'Orbitron', sans-serif;
+}
+
+.gem-section--total p {
+  font-family: 'Orbitron', sans-serif;
+}
+.gem-section--total .gem-counter {
+  font-family: 'Rajdhani', sans-serif;
 }
 
 /* Grid layouts */
