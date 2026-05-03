@@ -346,8 +346,11 @@ function loadPageState() {
       const validModes = ['event', 'pvp', 'login', 'code'];
       if (savedModes.length > 0) {
         selectedModes = savedModes.filter(m => validModes.includes(m));
-        if (selectedModes.length === 0) selectedModes = validModes;
+      } else {
+        selectedModes = validModes;
       }
+    } else {
+      selectedModes = ['event', 'pvp', 'login', 'code'];
     }
     updateModeButtonStates();
     updateAllPageTotals(true);
