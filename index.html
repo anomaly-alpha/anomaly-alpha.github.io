@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Plan your weekly gem income in Invincible Guarding the Globe — interactive PvP payout calculator with all 14 leagues and 120 ranks, event reward tracker, login streak guide, and promo codes. ~2,833 gems/week from all sources.">
+    <meta name="description" content="Plan your weekly gem income in Invincible Guarding the Globe — interactive PvP payout calculator with all 14 leagues and 120 ranks, event reward tracker, login streak guide, and promo codes. ~3,643 gems/week from all sources.">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="canonical" href="https://anomaly-alpha.github.io/">
     <meta property="og:title" content="Invincible Guarding the Globe — Gem Rewards &amp; PvP Guide">
@@ -300,6 +300,62 @@
           {"rankStart":51,"rankEnd":100,"gems":530,"currency":500,"tickets":1}
         ]
       }
+    },
+    "multiverse": {
+      "intern": [
+        {"rankStart":1,"rankEnd":1,"gems":800,"frags":30,"modules":0},
+        {"rankStart":2,"rankEnd":2,"gems":750,"frags":26,"modules":0},
+        {"rankStart":3,"rankEnd":3,"gems":700,"frags":22,"modules":0},
+        {"rankStart":4,"rankEnd":10,"gems":650,"frags":20,"modules":0},
+        {"rankStart":11,"rankEnd":130,"gems":650,"frags":18,"modules":0},
+        {"rankStart":131,"rankEnd":250,"gems":650,"frags":18,"modules":0},
+        {"rankStart":251,"rankEnd":500,"gems":650,"frags":14,"modules":0}
+      ],
+      "junior": [
+        {"rankStart":1,"rankEnd":1,"gems":840,"frags":32,"modules":1},
+        {"rankStart":2,"rankEnd":2,"gems":790,"frags":28,"modules":1},
+        {"rankStart":3,"rankEnd":3,"gems":740,"frags":24,"modules":1},
+        {"rankStart":4,"rankEnd":10,"gems":690,"frags":22,"modules":1},
+        {"rankStart":11,"rankEnd":70,"gems":690,"frags":20,"modules":1},
+        {"rankStart":71,"rankEnd":130,"gems":690,"frags":20,"modules":1},
+        {"rankStart":131,"rankEnd":300,"gems":690,"frags":16,"modules":1}
+      ],
+      "intermediate": [
+        {"rankStart":1,"rankEnd":1,"gems":880,"frags":34,"modules":1},
+        {"rankStart":2,"rankEnd":2,"gems":830,"frags":30,"modules":1},
+        {"rankStart":3,"rankEnd":3,"gems":780,"frags":26,"modules":1},
+        {"rankStart":4,"rankEnd":10,"gems":730,"frags":24,"modules":1},
+        {"rankStart":11,"rankEnd":50,"gems":730,"frags":22,"modules":1},
+        {"rankStart":51,"rankEnd":100,"gems":730,"frags":22,"modules":1},
+        {"rankStart":101,"rankEnd":235,"gems":730,"frags":18,"modules":1}
+      ],
+      "senior": [
+        {"rankStart":1,"rankEnd":1,"gems":920,"frags":36,"modules":2},
+        {"rankStart":2,"rankEnd":2,"gems":870,"frags":32,"modules":2},
+        {"rankStart":3,"rankEnd":3,"gems":820,"frags":28,"modules":2},
+        {"rankStart":4,"rankEnd":10,"gems":770,"frags":26,"modules":2},
+        {"rankStart":11,"rankEnd":40,"gems":770,"frags":24,"modules":2},
+        {"rankStart":41,"rankEnd":80,"gems":770,"frags":24,"modules":2},
+        {"rankStart":81,"rankEnd":175,"gems":770,"frags":20,"modules":2}
+      ],
+      "elite": [
+        {"rankStart":1,"rankEnd":1,"gems":960,"frags":38,"modules":2},
+        {"rankStart":2,"rankEnd":2,"gems":910,"frags":34,"modules":2},
+        {"rankStart":3,"rankEnd":3,"gems":860,"frags":30,"modules":2},
+        {"rankStart":4,"rankEnd":10,"gems":810,"frags":28,"modules":2},
+        {"rankStart":11,"rankEnd":30,"gems":810,"frags":26,"modules":2},
+        {"rankStart":31,"rankEnd":60,"gems":810,"frags":26,"modules":2},
+        {"rankStart":61,"rankEnd":130,"gems":810,"frags":22,"modules":2}
+      ],
+      "invincible": [
+        {"rankStart":1,"rankEnd":1,"gems":1000,"frags":40,"modules":3},
+        {"rankStart":2,"rankEnd":2,"gems":950,"frags":36,"modules":3},
+        {"rankStart":3,"rankEnd":3,"gems":900,"frags":32,"modules":3},
+        {"rankStart":4,"rankEnd":10,"gems":850,"frags":30,"modules":3},
+        {"rankStart":11,"rankEnd":30,"gems":850,"frags":28,"modules":3},
+        {"rankStart":31,"rankEnd":50,"gems":850,"frags":28,"modules":3},
+        {"rankStart":51,"rankEnd":100,"gems":850,"frags":24,"modules":3}
+      ]
     },
     "perBattle": {
       "open": {"win": 60, "loss": 20, "entryToken": "PvP Entry Token"},
@@ -652,7 +708,7 @@
               "name": "How many gems can I earn per week in Invincible Guarding the Globe?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Players can earn approximately 2,833 gems per week from all sources: events (500), PvP (varies by league and rank, ~1,040 with default settings), login rewards (993), and promo codes (300)."
+                "text": "Players can earn approximately 3,643 gems per week from all sources: events (500), PvP (varies by league and rank, ~1,850 with default Elite II rank 13 settings), login rewards (993), and promo codes (300)."
               }
             },
             {
@@ -722,7 +778,7 @@
             <div class="gem-section__rotating-bg"></div>
             <p class="text-white/80 text-lg tracking-[0.2em] uppercase relative z-10"><i class="fas fa-gem mr-2"></i>Total Gems Obtained</p>
             <p class="text-6xl md:text-7xl font-bold text-white relative z-10 drop-shadow-[0_0_30px_rgba(233,30,138,0.8)] tracking-[0.2em] gem-counter">
-                <span id="totalCounter">2833</span>
+                <span id="totalCounter">3643</span>
             </p>
             <p class="text-white/60 text-xs tracking-wider mt-2 relative z-10"><i class="fas fa-clock mr-1"></i>WEEKLY CALCULATION</p>
         </section>
@@ -730,7 +786,7 @@
         <nav class="gem-grid--modes my-4">
             <button onclick="filterCards('all', event)" class="gem-mode-btn gem-mode-btn--all active">
                 <i class="fas fa-th-large gem-mode-btn__icon gem-text--cyan"></i>
-                <p class="gem-mode-btn__count gem-text--cyan"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>2833</p>
+                <p class="gem-mode-btn__count gem-text--cyan"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>3643</p>
                 <p class="gem-mode-btn__label gem-text--cyan">All Modes</p>
             </button>
             <button onclick="filterCards('code', event)" class="gem-mode-btn gem-mode-btn--code active">
@@ -747,7 +803,7 @@
             </button>
             <button onclick="filterCards('pvp', event)" class="gem-mode-btn gem-mode-btn--pvp active">
                 <i class="fas fa-fist-raised gem-mode-btn__icon gem-text--pvp"></i>
-                <p class="gem-mode-btn__count gem-text--pvp"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>1040</p>
+                <p class="gem-mode-btn__count gem-text--pvp"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>1850</p>
                 <p class="gem-mode-btn__label gem-text--pvp">PvP</p>
                 <span id="countdown-pvp" class="gem-mode-btn__countdown gem-text--pvp gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
@@ -965,11 +1021,12 @@
                 </button>
                 <div class="gem-card__body">
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp3-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp3-gems">810</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
 
                     <div class="flex gap-4 text-sm text-white/60 mb-3">
-                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp3-currency">0</span> PvP Currency</span>
+                        <span><i class="fas fa-cube gem-text--purple"></i> <span id="pvp3-frags">26</span> Totem Frags</span>
+                        <span><i class="fas fa-microchip gem-text--cyan"></i> <span id="pvp3-modules">2</span> Modules</span>
                     </div>
 
                     <h2 class="gem-card__title gem-card__title--pvp">Multiverse Alliance War</h2>

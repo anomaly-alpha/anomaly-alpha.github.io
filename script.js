@@ -327,19 +327,30 @@ function revealCode(card) {
 }
 
 function getPvpPayout(arena, leagueId, rank) {
-  if (!GAME || !GAME.pvp || arena === 'multiverse') {
-    return { gems: 0, currency: 0, tickets: 0, isDemotion: rank >= 86 };
+  if (!GAME || !GAME.pvp) return { gems: 0, currency: 0, tickets: 0, frags: 0, modules: 0, isDemotion: false };
+
+  if (arena === 'multiverse') {
+    const groupMap = { intern:'intern', junior1:'junior', junior2:'junior', junior3:'junior', intermediate1:'intermediate', intermediate2:'intermediate', intermediate3:'intermediate', senior1:'senior', senior2:'senior', senior3:'senior', eliteI:'elite', eliteII:'elite', eliteIII:'elite', invincible:'invincible' };
+    const group = groupMap[leagueId] || 'intern';
+    const tiers = GAME.pvp.multiverse[group];
+    if (!tiers) return { gems: 0, currency: 0, tickets: 0, frags: 0, modules: 0, isDemotion: false };
+    const tier = tiers.find(t => rank >= t.rankStart && rank <= t.rankEnd);
+    if (!tier) return { gems: 0, currency: 0, tickets: 0, frags: 0, modules: 0, isDemotion: false };
+    return { gems: tier.gems, currency: 0, tickets: 0, frags: tier.frags, modules: tier.modules, isDemotion: rank >= (GAME.pvp.demotionThreshold || 86) };
   }
+
   const payouts = GAME.pvp.arenas[arena];
-  if (!payouts) return { gems: 0, currency: 0, tickets: 0, isDemotion: false };
+  if (!payouts) return { gems: 0, currency: 0, tickets: 0, frags: 0, modules: 0, isDemotion: false };
   const tiers = payouts[leagueId];
-  if (!tiers) return { gems: 0, currency: 0, tickets: 0, isDemotion: false };
+  if (!tiers) return { gems: 0, currency: 0, tickets: 0, frags: 0, modules: 0, isDemotion: false };
   const tier = tiers.find(t => rank >= t.rankStart && rank <= t.rankEnd);
-  if (!tier) return { gems: 0, currency: 0, tickets: 0, isDemotion: false };
+  if (!tier) return { gems: 0, currency: 0, tickets: 0, frags: 0, modules: 0, isDemotion: false };
   return {
     gems: tier.gems,
     currency: tier.currency,
     tickets: tier.tickets || 0,
+    frags: 0,
+    modules: 0,
     isDemotion: rank >= (GAME.pvp.demotionThreshold || 86)
   };
 }
@@ -937,6 +948,14 @@ function updatePvpCard(cardId, skipTotals) {
   const ticketsEl = document.getElementById(`pvp${cardId}-tickets`);
   if (ticketsEl) {
     animateValue(`pvp${cardId}-tickets`, payout.tickets);
+  }
+  const fragsEl = document.getElementById(`pvp${cardId}-frags`);
+  if (fragsEl) {
+    animateValue(`pvp${cardId}-frags`, payout.frags);
+  }
+  const modulesEl = document.getElementById(`pvp${cardId}-modules`);
+  if (modulesEl) {
+    animateValue(`pvp${cardId}-modules`, payout.modules);
   }
   const demotionEl = document.getElementById(`pvp${cardId}-demotion`);
   if (demotionEl) {
