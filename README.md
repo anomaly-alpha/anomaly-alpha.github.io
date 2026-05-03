@@ -80,9 +80,9 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (1306 lines) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (1224 lines) — All JS: charts, filters, PvP, modals, countdowns
-├── styles.css           (1326 lines) — CSS custom properties + BEM component classes
+├── index.html           (1294 lines) — Main HTML + inline JSON configs (6 in <head>)
+├── script.js            (1223 lines) — All JS: charts, filters, PvP, modals, countdowns
+├── styles.css           (1331 lines) — CSS custom properties + BEM component classes
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
 ├── og-image.svg         — 1200×630 social sharing preview card
 ├── robots.txt           — Allows all crawlers, references sitemap

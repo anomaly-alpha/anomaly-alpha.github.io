@@ -1034,7 +1034,7 @@ document.addEventListener('DOMContentLoaded', function() {
     3: { league: 'elite', rank: 13 }
   };
 
-  const chartAnimConfig = CHARTS.animation || { duration: 750, easing: 'easeOutQuart' };
+
 
   function tooltipLabelCallback(context) {
     return `${context.raw.toLocaleString()} Gems`;
@@ -1053,8 +1053,8 @@ document.addEventListener('DOMContentLoaded', function() {
     callbacks: { label: tooltipLabelCallback }
   };
 
-  const initDistribution = CHARTS.initialData?.distribution || [500, 750, 293, 300];
-  const initSpiderActual = CHARTS.initialData?.spiderActual || [500, 750, 293, 300];
+  const initDistribution = CHARTS.initialData?.distribution || [500, 750, 1393, 300];
+  const initSpiderActual = CHARTS.initialData?.spiderActual || [500, 750, 1393, 300];
   const spiderTargets = GAME.spiderTargets ? [GAME.spiderTargets.events, GAME.spiderTargets.pvp, GAME.spiderTargets.login, GAME.spiderTargets.code] : [550, 1500, 360, 330];
 
   Chart.defaults.color = '#ffffff';

@@ -25,9 +25,9 @@ Interactive infographic displaying gem reward sources from Invincible Guarding t
 
 ```
 anomaly-alpha/
-├── index.html       (1306 lines) — Main infographic + inline JSON configs + SEO tags
-├── script.js        (1224 lines) — All JavaScript, loads inline JSON configs
-├── styles.css       (1326 lines) — Design tokens + BEM classes + animations
+├── index.html       (1294 lines) — Main infographic + inline JSON configs + SEO tags
+├── script.js        (1223 lines) — All JavaScript, loads inline JSON configs
+├── styles.css       (1331 lines) — Design tokens + BEM classes + animations
 ├── favicon.svg      — Custom gem SVG favicon
 ├── og-image.svg     — 1200×630 social sharing preview
 ├── robots.txt       — Crawl directives, sitemap reference
@@ -537,9 +537,9 @@ The following were in older versions but are NOT in current implementation:
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| index.html | 1306 | HTML + inline JSON configs (6 in head) + SEO tags + structured data |
-| script.js | 1224 | All JS: charts, filters, PvP, modals, countdowns |
-| styles.css | 1326 | CSS custom properties, BEM components, animations |
+| index.html | 1294 | HTML + inline JSON configs (6 in head) + SEO tags + structured data |
+| script.js | 1223 | All JS: charts, filters, PvP, modals, countdowns |
+| styles.css | 1331 | CSS custom properties, BEM components, animations |
 | guide/code/index.html | 176 | Promo code guide page |
 | guide/event/index.html | 195 | Event rewards guide page |
 | guide/pvp/index.html | 245 | PvP guide page with payout tables |

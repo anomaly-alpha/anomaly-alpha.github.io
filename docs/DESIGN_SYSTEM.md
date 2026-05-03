@@ -416,7 +416,7 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 
 ```
 anomaly-alpha/
-├── styles.css       (1326 lines) — Design tokens + BEM classes + animations
+├── styles.css       (1331 lines) — Design tokens + BEM classes + animations
 ├── index.html       (1306 lines) — HTML with inline JSON configs
 ├── script.js        (1224 lines) — JavaScript with token-aware logic
 ├── journal/         — Development journal entries
