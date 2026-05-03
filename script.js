@@ -436,9 +436,8 @@ function loadPageState() {
       if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
     }
 
-    let hidden = false;
+    let hidden = true;
     if (chartsVisible === 'false') {
-      hidden = true;
       const container = document.getElementById('chartsContainer');
       const toggleBtn = document.querySelector('.gem-charts-toggle');
       const label = document.querySelector('#chartsToggleLabel span:nth-child(2)');
@@ -447,6 +446,16 @@ function loadPageState() {
       if (toggleBtn) toggleBtn.classList.add('collapsed');
       if (label) label.textContent = 'Show Charts';
       if (icon) { icon.classList.remove('fa-chevron-up'); icon.classList.add('fa-chevron-down'); }
+    } else if (chartsVisible === 'true') {
+      hidden = false;
+      const container = document.getElementById('chartsContainer');
+      const toggleBtn = document.querySelector('.gem-charts-toggle');
+      const label = document.querySelector('#chartsToggleLabel span:nth-child(2)');
+      const icon = document.getElementById('chartsToggleIcon');
+      if (container) container.classList.remove('hidden');
+      if (toggleBtn) toggleBtn.classList.remove('collapsed');
+      if (label) label.textContent = 'Hide Charts';
+      if (icon) { icon.classList.remove('fa-chevron-down'); icon.classList.add('fa-chevron-up'); }
     }
 
     if (modesRaw) {

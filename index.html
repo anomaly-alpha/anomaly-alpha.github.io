@@ -789,11 +789,11 @@
             <button onclick="toggleCharts()" class="w-full gem-charts-toggle mb-4">
                 <span id="chartsToggleLabel" class="flex items-center justify-center gap-2 text-white/60 hover:text-white transition-colors">
                     <i class="fas fa-chart-pie"></i>
-                    <span>Hide Charts</span>
-                    <i class="fas fa-chevron-up transition-transform" id="chartsToggleIcon"></i>
+                    <span>Show Charts</span>
+                    <i class="fas fa-chevron-down transition-transform" id="chartsToggleIcon"></i>
                 </span>
             </button>
-            <div id="chartsContainer" class="gem-grid--charts mt-6">
+            <div id="chartsContainer" class="gem-grid--charts mt-6 hidden">
                 <div class="gem-chart">
                     <h3 class="gem-chart__title">Distribution</h3>
                     <canvas id="categoryChart"></canvas>
