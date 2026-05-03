@@ -328,17 +328,18 @@ function revealCode(card) {
 
 function getPvpPayout(arena, leagueId, rank) {
   if (!GAME || !GAME.pvp || arena === 'multiverse') {
-    return { gems: 0, currency: 0, isDemotion: rank >= 86 };
+    return { gems: 0, currency: 0, tickets: 0, isDemotion: rank >= 86 };
   }
   const payouts = GAME.pvp.arenas[arena];
-  if (!payouts) return { gems: 0, currency: 0, isDemotion: false };
+  if (!payouts) return { gems: 0, currency: 0, tickets: 0, isDemotion: false };
   const tiers = payouts[leagueId];
-  if (!tiers) return { gems: 0, currency: 0, isDemotion: false };
+  if (!tiers) return { gems: 0, currency: 0, tickets: 0, isDemotion: false };
   const tier = tiers.find(t => rank >= t.rankStart && rank <= t.rankEnd);
-  if (!tier) return { gems: 0, currency: 0, isDemotion: false };
+  if (!tier) return { gems: 0, currency: 0, tickets: 0, isDemotion: false };
   return {
     gems: tier.gems,
     currency: tier.currency,
+    tickets: tier.tickets || 0,
     isDemotion: rank >= (GAME.pvp.demotionThreshold || 86)
   };
 }
@@ -932,6 +933,10 @@ function updatePvpCard(cardId, skipTotals) {
   const currencyEl = document.getElementById(`pvp${cardId}-currency`);
   if (currencyEl) {
     animateValue(`pvp${cardId}-currency`, payout.currency);
+  }
+  const ticketsEl = document.getElementById(`pvp${cardId}-tickets`);
+  if (ticketsEl) {
+    animateValue(`pvp${cardId}-tickets`, payout.tickets);
   }
   const demotionEl = document.getElementById(`pvp${cardId}-demotion`);
   if (demotionEl) {
