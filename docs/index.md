@@ -2,7 +2,7 @@
 
 ## Overview
 
-Gem rewards infographic for Invincible Mobile Game featuring interactive charts, mode filtering, card modals, hover interactions, and a sci-fi aesthetic matching the game's UI.
+Gem rewards infographic for Invincible Guarding the Globe featuring interactive charts, mode filtering, card modals, hover interactions, and a sci-fi aesthetic matching the game's UI.
 
 ## Gem Data (Current)
 
@@ -163,7 +163,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **4 guide detail pages** — Code, event, PvP, and login guides forming a topical cluster
 - ✅ **Full internal linking** — 9 card guide links + bidirectional nav between all pages
 - ✅ **Pre-filled PvP defaults** — Non-JS crawlers see 476 gems, 1 card, 510 chips (was 0)
-- ✅ **Improved title & H1** — "Invincible Mobile Game — Weekly Gem Rewards & PvP Calculator"
+- ✅ **Improved title & H1** — "Invincible Guarding the Globe — Weekly Gem Rewards & PvP Calculator"
 - ✅ **H1 game context** — Screen-reader-only prefix for keyword coverage
 
 ## Contributors
