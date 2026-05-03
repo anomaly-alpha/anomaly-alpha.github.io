@@ -359,18 +359,16 @@ function loadPageState() {
       const cat = card.dataset.category;
       card.style.display = selectedModes.includes(cat) ? 'block' : 'none';
     });
-
-    if (chartFilter && chartFilter !== 'all') {
-      filterChart(chartFilter);
-    }
   } catch (e) {
     // Ignore corrupt state
   }
+}
 }
 
 // ===== FILTER & MODE FUNCTIONS =====
 
 let selectedModes = ['event', 'pvp', 'login', 'code'];
+let hidden = false;
 let currentMode = 'all';
 
 function filterCards(category, evt) {
