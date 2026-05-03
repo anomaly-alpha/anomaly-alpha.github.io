@@ -1061,6 +1061,12 @@ body .gem-card--mode-highlight--all {
   color: var(--gem-text--primary);
 }
 
+.gem-mode-btn:not(.active):not(.gem-mode-btn--all) .gem-mode-btn__count {
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  opacity: 0.4;
+}
+
 .gem-mode-btn__label {
   font-size: 0.75rem;
   text-transform: uppercase;
