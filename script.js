@@ -464,8 +464,10 @@ function loadPageState() {
       if (container) container.classList.add('hidden');
       if (label) label.textContent = 'Show Charts';
       if (iconContainer) {
-        iconContainer.querySelector('.chevron-up-icon')?.classList.add('hidden');
-        iconContainer.querySelector('.chevron-down-icon')?.classList.remove('hidden');
+        const up = iconContainer.querySelector('.chevron-up-icon');
+        const down = iconContainer.querySelector('.chevron-down-icon');
+        if (up) up.style.display = 'none';
+        if (down) down.style.display = '';
       }
     } else {
       hidden = false;
@@ -475,8 +477,10 @@ function loadPageState() {
       if (container) container.classList.remove('hidden');
       if (label) label.textContent = 'Hide Charts';
       if (iconContainer) {
-        iconContainer.querySelector('.chevron-down-icon')?.classList.add('hidden');
-        iconContainer.querySelector('.chevron-up-icon')?.classList.remove('hidden');
+        const down = iconContainer.querySelector('.chevron-down-icon');
+        const up = iconContainer.querySelector('.chevron-up-icon');
+        if (down) down.style.display = 'none';
+        if (up) up.style.display = '';
       }
     }
 
@@ -782,12 +786,12 @@ function toggleCharts() {
 
   if (container.classList.contains('hidden')) {
     label.textContent = 'Show Charts';
-    chevronUp?.classList.add('hidden');
-    chevronDown?.classList.remove('hidden');
+    if (chevronUp) chevronUp.style.display = 'none';
+    if (chevronDown) chevronDown.style.display = '';
   } else {
     label.textContent = 'Hide Charts';
-    chevronDown?.classList.add('hidden');
-    chevronUp?.classList.remove('hidden');
+    if (chevronDown) chevronDown.style.display = 'none';
+    if (chevronUp) chevronUp.style.display = '';
     [categoryChart, rewardsChart, spiderChart].forEach(c => { if (c) c.resize(); });
   }
   savePageState();
