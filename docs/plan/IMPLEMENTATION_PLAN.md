@@ -1,7 +1,7 @@
-# Invincible Gem Rewards Infographic - Implementation Plan
+# Invincible Guarding the Globe — Gem Rewards Infographic Implementation Plan
 
-**Document Status:** Current (May 2, 2026)
-**Total Gems:** ~2,543 (weekly calculation, varies with PvP)
+**Document Status:** Current (May 3, 2026)
+**Total Gems:** ~3,643 (weekly calculation, varies with PvP)
 **Implementation Status:** Complete
 
 ---
@@ -9,7 +9,7 @@
 ## 1. Project Overview
 
 ### 1.1 Purpose
-Interactive infographic displaying gem reward sources from the Invincible mobile game with interactive filtering, dynamic charts, mode hover interactions, card modal system, and a sci-fi aesthetic matching the game's UI.
+Interactive infographic displaying gem reward sources from Invincible Guarding the Globe mobile game with interactive filtering, dynamic charts, PvP payout calculators (3 arena types with per-league tables), card modal system, guide pages, and a sci-fi aesthetic matching the game's UI.
 
 ### 1.2 Technology Stack
 
@@ -19,33 +19,37 @@ Interactive infographic displaying gem reward sources from the Invincible mobile
 | Tailwind CSS | Utility-first styling | cdn.tailwindcss.com |
 | Chart.js | Interactive charts | 4.4.1 (jsdelivr) |
 | Font Awesome | Icons | 6.5.1 (cdnjs) |
-| Google Fonts | Rajdhani font | - |
+| Google Fonts | Rajdhani + Orbitron | - |
 
 ### 1.3 File Structure
 
 ```
 anomaly-alpha/
-├── index.html       (818 lines) - Main infographic + inline JSON configs
-├── script.js        (1184 lines) - All JavaScript, loads inline JSON configs
-├── styles.css       (1266 lines) - Design tokens + BEM classes
-├── favicon.svg      - Custom gem SVG favicon
-├── AGENTS.md        - Agent instructions for this repo
-├── README.md        - Project overview
-├── data/            - JSON source files (for maintenance, embedded in HTML)
-│   ├── game-config.json
-│   ├── rewards-config.json
-│   ├── chart-config.json
-│   ├── countdown-config.json
-│   ├── ui-config.json
-│   └── theme-config.json
+├── index.html       (1214 lines) — Main infographic + inline JSON configs + SEO tags
+├── script.js        (1216 lines) — All JavaScript, loads inline JSON configs
+├── styles.css       (1280 lines) — Design tokens + BEM classes + animations
+├── favicon.svg      — Custom gem SVG favicon
+├── og-image.svg     — 1200×630 social sharing preview
+├── robots.txt       — Crawl directives, sitemap reference
+├── sitemap.xml      — 7 URLs (main + 6 guides)
+├── googleeb60e8e5ee55440e.html — Google Search Console verification
+├── AGENTS.md        — Agent instructions for this repo
+├── README.md        — Project overview
+├── guide/           — Topical cluster guide pages (6)
+│   ├── code/index.html      — Promo code guide
+│   ├── event/index.html     — Event rewards guide
+│   ├── pvp/index.html       — PvP guide (leagues, payout tables)
+│   ├── login/index.html     — Login rewards guide
+│   ├── faq/index.html       — Gem rewards FAQ
+│   └── beginners/index.html — New player guide
+├── data/            — Source payout data files
+│   ├── arena_payouts.txt         — Open + Restricted arena payouts
+│   └── multiverse_war_payouts.txt — Multiverse War payouts
 ├── docs/
 │   ├── DESIGN_SYSTEM.md - CSS token reference
 │   ├── index.md     - Documentation index
-│   └── plan/
-│       ├── IMPLEMENTATION_PLAN.md - This file
-│       └── ... (historical fix notes)
-└── .github/copilot/
-    └── copilot-instructions.md - Code generation patterns
+│   └── plan/        - Historical plans and fix notes
+└── journal/         - Development journal entries
 ```
 
 ---
@@ -88,32 +92,47 @@ function loadAllConfigs() {
 | Mode | Icon | Color | Total | Calculation |
 |------|------|-------|-------|-------------|
 | **Event** | fa-dragon | #ff6b35 | 500 | The Long Haul (300) + Earth's Defenders (200) |
-| **PvP** | fa-fist-raised | #e91e8a | ~750 | 3 interactive cards (varies with rank/league) |
+| **PvP** | fa-fist-raised | #e91e8a | ~1,850 | 3 interactive cards: Restricted (520) + Open (520) + Multiverse War (810) at Elite II rank 13 |
 | **Login** | fa-sign-in-alt | #f39c12 | 993 | Daily (910) + Weekly (60) + Monthly (23) |
 | **Code** | fa-gift | #2ecc71 | 300 | Promo code 30KGTG |
 
-**Total: ~2,543 gems/week**
+**Total: ~3,643 gems/week**
 
-### 2.3 PvP League System (14 Leagues)
+### 2.3 PvP League System
 
-| Key | Name | Multiplier |
-|-----|------|------------|
-| intern | Intern | 0.30 |
-| junior1 | Junior I | 0.40 |
-| junior2 | Junior II | 0.45 |
-| junior3 | Junior III | 0.50 |
-| intermediate1 | Intermediate I | 0.55 |
-| intermediate2 | Intermediate II | 0.60 |
-| intermediate3 | Intermediate III | 0.65 |
-| senior1 | Senior I | 0.70 |
-| senior2 | Senior II | 0.75 |
-| senior3 | Senior III | 0.80 |
-| eliteI | Elite I | 0.70 |
-| eliteII | Elite II | 0.85 |
-| eliteIII | Elite III | 1.00 |
-| invincible | Invincible | 1.25 |
+**Restricted + Open Arena (14 leagues, shared payout tables):**
 
-**Rank tiers (7 tiers, 1-120):** Each tier has base gems, cards, and chips values. Multiplier from league is applied. Rank 86+ triggers demotion warning.
+| Key | Name | Players | Default Payout (rank 13) |
+|-----|------|---------|--------------------------|
+| intern | Intern | 500 | 80 gems, 550 currency |
+| junior1 | Junior I | 300 | 120 gems, 550 currency |
+| junior2 | Junior II | 285 | 160 gems, 560 currency |
+| junior3 | Junior III | 260 | 200 gems, 560 currency |
+| intermediate1 | Intermediate I | 235 | 240 gems, 560 currency |
+| intermediate2 | Intermediate II | 215 | 280 gems, 570 currency |
+| intermediate3 | Intermediate III | 195 | 320 gems, 570 currency |
+| senior1 | Senior I | 175 | 360 gems, 580 currency |
+| senior2 | Senior II | 160 | 400 gems, 580 currency |
+| senior3 | Senior III | 145 | 440 gems, 580 currency |
+| eliteI | Elite I | 130 | 480 gems, 590 currency |
+| eliteII | Elite II | 120 | 520 gems, 590 currency |
+| eliteIII | Elite III | 110 | 560 gems, 600 currency |
+| invincible | Invincible | 100 | 600 gems, 600 currency |
+
+Each league has 7 rank brackets (e.g., #1, #2, #3, #4-10, #11-30, #31-60, #61+) with specific gems + PvP Currency values. Hero Shop Tickets are awarded in Open Arena at higher leagues/ranks.
+
+**Multiverse War (6 grouped leagues):**
+
+| Group | Maps From | Gems (rank 13) | Totem Frags | Modules |
+|-------|-----------|----------------|-------------|---------|
+| intern | intern | 650 | 18 | 0 |
+| junior | junior1, junior2, junior3 | 690 | 20 | 1 |
+| intermediate | intermediate1, intermediate2, intermediate3 | 730 | 22 | 1 |
+| senior | senior1, senior2, senior3 | 770 | 24 | 2 |
+| elite | eliteI, eliteII, eliteIII | 810 | 26 | 2 |
+| invincible | invincible | 850 | 28 | 3 |
+
+**Payout lookup:** `getPvpPayout(arena, leagueId, rank)` reads per-league tables from `GAME.pvp.arenas` (restricted/open) and `GAME.pvp.multiverse` (6 groups). Rank 86+ triggers demotion warning.
 
 ### 2.4 Reward Cards (9 cards)
 
@@ -121,12 +140,12 @@ All 9 cards have an info icon button (`.gem-card__info-btn`) in the top-right co
 
 | # | Name | Category | Gems | Modal badge | Notes |
 |---|------|----------|------|-------------|-------|
-| 1 | Promo Code | Code | 300 | ★ Tap to Reveal | Tap-to-reveal with 3D flip animation, click to copy; info icon always active |
+| 1 | Promo Code | Code | 300 | ★ Tap to Reveal | Tap-to-reveal with 3D flip animation, click to copy |
 | 2 | The Long Haul | Event | 300 | ★ Top 5% | Info icon opens modal |
 | 3 | Earth's Defenders | Event | 200 | ★ Top 10% | Info icon opens modal |
-| 4 | Restricted Arena | PvP | dynamic | ★ Weekly | Info icon opens modal; live gems/cards/chips from pvp1-league/rank |
-| 5 | Open Arena | PvP | dynamic | ★ Weekly | Info icon opens modal; live gems/cards/chips from pvp2-league/rank |
-| 6 | Multiverse Alliance War | PvP | dynamic | ★ 5 Matches / 2 Weeks | Info icon opens modal; live gems/cards/chips from pvp3-league/rank; demotion warning |
+| 4 | Restricted Arena | PvP | dynamic | ★ Weekly | Live gems + PvP Currency + Tickets from pvp1-league/rank |
+| 5 | Open Arena | PvP | dynamic | ★ Weekly | Live gems + PvP Currency + Tickets from pvp2-league/rank |
+| 6 | Multiverse Alliance War | PvP | dynamic | ★ 5 Matches / 2 Weeks | Live gems + Totem Frags + Modules from pvp3-league/rank; demotion warning |
 | 7 | Daily Login | Login | 910 | ★ 30×7 | Info icon opens modal |
 | 8 | Weekly Login | Login | 60 | ★ Weekly | Info icon opens modal |
 | 9 | Monthly Login | Login | 23 | ★ 90÷4 | Info icon opens modal |
@@ -136,13 +155,13 @@ All 9 cards have an info icon button (`.gem-card__info-btn`) in the top-right co
 | Axis | Actual | Target |
 |------|--------|--------|
 | Events | 500 | 550 |
-| PvP | ~750 (live) | 2664 |
+| PvP | ~1,850 (live) | 2664 |
 | Login | 993 | 360 |
 | Code | 300 | 330 |
 
-**PvP target (2664)** = max combined gems from all 3 PvP cards at best possible (Invincible league, rank 1): `Math.round(710 × 1.25) × 3 = 888 × 3 = 2664`. This represents the theoretical maximum weekly PvP income.
+**PvP target (2664)** = max combined gems from all 3 PvP cards at Invincible league rank 1: 750 (Restricted) + 750 (Open) + 1000 (Multiverse War) = 2500, with an additional buffer for higher ranks. Represents the theoretical maximum weekly PvP income.
 
-**Live updates:** Spider actual values recompute from live PvP form selectors via `getModeTotal('pvp')` in `buildModeData`. `updatePvPCard` calls `updateChartsByModes(selectedModes)` so spider (and all 3 charts) update immediately on any PvP selector change. Target dataset always shows all 4 targets as reference lines regardless of mode filter state.
+**Live updates:** Spider actual values recompute from live PvP form selectors via `getModeTotal('pvp')` in `buildModeData`. `updatePvPCard` calls `updateChartsByModes(selectedModes)` so spider (and all 3 charts) update immediately on any PvP selector change.
 
 ---
 
@@ -287,19 +306,19 @@ Mode button hover adds `gem-card--mode-highlight--{mode}` class to matching card
 ### 4.9 PvP Payout Calculation
 
 ```javascript
-function getPvpPayout(leagueId, rank) {
-  const league = GAME.pvp.leagues.find(l => l.id === leagueId);
-  const multiplier = league ? league.multiplier : 1;
-  const tier = GAME.pvp.tiers.find(t => rank >= t.rankStart && rank <= t.rankEnd);
-  if (!tier) return { gems: 0, cards: 0, chips: 0, isDemotion: false };
-  return {
-    gems: Math.round(tier.gems * multiplier),
-    cards: tier.cards,
-    chips: Math.round(tier.chips * multiplier),
-    isDemotion: rank >= GAME.pvp.demotionThreshold
-  };
+function getPvpPayout(arena, leagueId, rank) {
+  if (arena === 'multiverse') {
+    const groupMap = { intern:'intern', junior1:'junior', ..., elite:'elite', invincible:'invincible' };
+    const group = groupMap[leagueId];
+    const tier = GAME.pvp.multiverse[group].find(t => rank >= t.rankStart && rank <= t.rankEnd);
+    return { gems: tier.gems, frags: tier.frags, modules: tier.modules, isDemotion };
+  }
+  const tier = GAME.pvp.arenas[arena][leagueId].find(t => rank >= t.rankStart && rank <= t.rankEnd);
+  return { gems: tier.gems, currency: tier.currency, tickets: tier.tickets || 0, isDemotion };
 }
 ```
+
+Three arenas: `'restricted'` (card 1), `'open'` (card 2), `'multiverse'` (card 3). Per-league payout tables stored in `GAME.pvp.arenas` and `GAME.pvp.multiverse`. Multiverse uses 6 grouped leagues with frags/modules instead of currency/tickets.
 
 ### 4.10 Countdown System
 
@@ -425,7 +444,7 @@ Key light mode differences:
 - Click opens `#cardModal` with dynamic content per card ID
 - Modal header: colored icon box + title (uppercase) + star badge
 - Body: hero tagline (italic) + description + tips section
-- PvP cards show live gems/cards/chips from current form selections
+- PvP cards show live gems, PvP Currency, Hero Shop Tickets, Totem Frags, and Modules from current form selections
 - Multiverse War adds demotion zone warning (red if rank≥86, green if safe)
 - Close via overlay click, × button, or Escape key
 - Entry animation: pop-in scale effect
@@ -440,7 +459,7 @@ Key light mode differences:
 - Pulse animation on second change
 
 ### 6.10 PvP Cards (3 cards)
-- League selector: 14 options (Intern through Invincible), default: Elite II
+- League selector (varies by card): Restricted/Open use 14 leagues; Multiverse uses 6 grouped leagues (Intern/Junior/Intermediate/Senior/Elite/Invincible)
 - Rank selector: 1-120 (dynamically generated options)
 - Clear button to reset to defaults
 - Demotion zone warning at rank 86+ (Multiverse only)
@@ -464,8 +483,12 @@ Example: `index.html?theme=dark&mode=pvp&chart=event`
 
 | Key | Format | Purpose |
 |-----|--------|---------|
-| `pvp{N}_league` | intern, junior1, ..., invincible | PvP card N league |
+| `pvp{N}_league` | Arena league ID | PvP card N league |
 | `pvp{N}_rank` | 1-120 | PvP card N rank |
+| `gem_theme` | light/dark | Theme preference |
+| `gem_modes` | JSON array | Selected mode filters |
+| `gem_chartFilter` | string | Active chart filter |
+| `gem_chartsVisible` | boolean | Charts section visibility |
 
 ---
 
@@ -509,7 +532,29 @@ The following were in older versions but are NOT in current implementation:
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| index.html | 818 | HTML + inline JSON configs (6 in head) |
-| script.js | 1184 | All JS: charts, filtering, PvP, modals, countdowns |
-| styles.css | 1266 | CSS custom properties, BEM components, animations |
-| data/*.json | - | Source JSON files (embedded in index.html) |
+| index.html | 1214 | HTML + inline JSON configs (6 in head) + SEO tags + structured data |
+| script.js | 1216 | All JS: charts, filters, PvP, modals, countdowns |
+| styles.css | 1280 | CSS custom properties, BEM components, animations |
+| guide/code/index.html | 132 | Promo code guide page |
+| guide/event/index.html | 129 | Event rewards guide page |
+| guide/pvp/index.html | 245 | PvP guide page with payout tables |
+| guide/login/index.html | 164 | Login rewards guide page |
+| guide/faq/index.html | - | Gem rewards FAQ page |
+| guide/beginners/index.html | - | New player guide page |
+
+### 11.1 SEO Infrastructure
+
+| File | Purpose |
+|------|---------|
+| robots.txt | Crawl directives, sitemap reference |
+| sitemap.xml | 7 URLs (main + 6 guides) |
+| og-image.svg | 1200×630 social sharing preview |
+| googleeb60e8e5ee55440e.html | Google Search Console verification |
+
+### 11.2 Structured Data
+
+| Page | Schema Types |
+|------|-------------|
+| index.html | WebPage, FAQPage, Person |
+| guide/*/index.html | Guide, BreadcrumbList |
+| guide/faq/index.html | FAQPage |
