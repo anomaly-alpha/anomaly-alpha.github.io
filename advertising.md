@@ -109,7 +109,7 @@
 > • Current promo code redemption
 > • Visual charts for income distribution
 >
-> Built with vanilla HTML, CSS, and JS — no frameworks, no build step, no tracking.
+> Built with vanilla HTML, CSS, and JS — no frameworks, no runtime dependencies, no tracking.
 >
 > Open to feedback and contributions:
 > https://anomaly-alpha.github.io

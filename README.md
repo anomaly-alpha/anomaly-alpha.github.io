@@ -80,14 +80,17 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (1284 lines) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (1207 lines) — All JS: charts, filters, PvP, modals, countdowns
-├── styles.css           (1342 lines) — CSS custom properties + BEM component classes
-├── tailwind.css         — Generated Tailwind utility classes (657 lines, from npm run build)
+├── index.html           (1282 lines) — Main HTML + inline JSON configs (6 in <head>)
+├── script.js            (1224 lines) — All JS: charts, filters, PvP, modals, countdowns
+├── styles.css           (1392 lines) — CSS custom properties + BEM component classes
+├── tailwind.css         — Generated Tailwind utility classes (1105 lines, from npm run build)
 ├── package.json         — Dev dependencies config
 ├── tailwind.config.js   — Tailwind content paths config
 ├── src/
 │   └── tailwind-input.css — Tailwind source with @tailwind directives
+├── vendor/
+│   └── chart.umd.js     — Self-hosted Chart.js 4.4.1
+├── fonts/               — Self-hosted woff2 files (Rajdhani + Orbitron)
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
 ├── og-image.svg         — 1200×630 social sharing preview card
 ├── robots.txt           — Allows all crawlers, references sitemap
@@ -134,9 +137,9 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 ## Tech Stack
 
 - **Tailwind CSS** (local build via `npm run build`) — utility-first styling
-- **Chart.js** 4.4.1 (doughnut, bar, radar charts) — updated via `chart.update('none')`, animations disabled
-- **Font Awesome** 6.5.1 — icons
-- **Rajdhani** font (Google Fonts) — consistent typography
+- **Chart.js** 4.4.1 (doughnut, bar, radar charts) — self-hosted in `vendor/chart.umd.js`, animations disabled
+- **Icons** — inline SVGs (32 icons, replaced Font Awesome)
+- **Fonts** — self-hosted Rajdhani + Orbitron woff2 files
 
 ## Recent Updates (May 2026)
 
@@ -177,6 +180,11 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Removed continuous animations** — 27 sparkle elements, rotating background, scanline, and 3 dead utility classes deleted; 37 → 9 continuous animations (9 particles only)
 - ✅ **Inlined `@keyframes pulse`** — Header icon pulse no longer depends on Tailwind CDN
 - ✅ **Removed floating controls** — Theme toggle, save/share menu, and export data buttons removed along with their JS functions
+- ✅ **Zero CDN dependencies** — Eliminated all 5 external origins (fonts.googleapis, gstatic, jsdelivr, cdnjs, cdn.tailwindcss.com)
+- ✅ **Font Awesome replaced** — 32 icons converted to inline SVGs, ~300 KB library removed
+- ✅ **Google Fonts self-hosted** — Rajdhani + Orbitron woff2 files in `fonts/` (48 KB total)
+- ✅ **Chart.js self-hosted** — Downloaded to `vendor/chart.umd.js`, no more CDN round-trip
+- ✅ **Tailwind CDN removed from guide pages** — All 6 guide pages now use local `tailwind.css` instead of Play CDN (283 KB blocking script per page)
 
 ### Bug Fixes
 - ✅ **Card hover shadow** — Hardcoded cyan values replacing undefined `var(--gem-shadow--card)`

@@ -416,14 +416,17 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 
 ```
 anomaly-alpha/
-├── styles.css       (1342 lines) — Design tokens + BEM classes + animations
-├── index.html       (1284 lines) — HTML with inline JSON configs
-├── script.js        (1207 lines) — JavaScript with token-aware logic
-├── tailwind.css         — Generated Tailwind utility classes (657 lines)
+├── styles.css       (1392 lines) — Design tokens + BEM classes + animations
+├── index.html       (1282 lines) — HTML with inline JSON configs
+├── script.js        (1224 lines) — JavaScript with token-aware logic
+├── tailwind.css         — Generated Tailwind utility classes (1105 lines)
 ├── package.json         — Dev dependencies (Tailwind CLI)
 ├── tailwind.config.js   — Tailwind content paths config
 ├── src/
 │   └── tailwind-input.css — Tailwind source directives
+├── vendor/
+│   └── chart.umd.js     — Self-hosted Chart.js 4.4.1
+├── fonts/               — Self-hosted Rajdhani + Orbitron woff2 files
 ├── journal/         — Development journal entries
 └── docs/
     └── DESIGN_SYSTEM.md          — This file

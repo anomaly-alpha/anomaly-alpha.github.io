@@ -84,11 +84,11 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 
 ## Tech Stack
 
-- **Structure**: `index.html` (1284 lines), `styles.css` (1342 lines), `script.js` (1207 lines), 6 guide pages (1175 total)
+- **Structure**: `index.html` (1282 lines), `styles.css` (1392 lines), `script.js` (1224 lines), 6 guide pages (1175 total)
 - **Styling**: Tailwind CSS (local build via npm) + custom CSS design token system
-- **Charts**: Chart.js (doughnut, bar, radar)
-- **Icons**: Font Awesome
-- **Typography**: Rajdhani font (Google Fonts)
+- **Charts**: Chart.js (doughnut, bar, radar) — self-hosted in `vendor/chart.umd.js`
+- **Icons**: Inline SVGs (32 icons, replaced Font Awesome)
+- **Typography**: Rajdhani + Orbitron — self-hosted woff2 files in `fonts/`
 - **Data**: Inline JSON configs (6 configs embedded in `<head>`, source in `data/`)
 
 ## Design System
@@ -142,6 +142,11 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **Inlined `@keyframes pulse`** — Header icon pulse no longer depends on Tailwind CDN
 - ✅ **PvP state persists** — Removed localStorage wipe block; `savePageState()`/`loadPageState()` preserve modes, chart filter, and charts visibility
 - ✅ **Removed floating controls** — Theme toggle, save/share menu, and export data buttons removed along with their JS functions
+- ✅ **Zero CDN dependencies** — Eliminated all 5 external origins (fonts.googleapis, gstatic, jsdelivr, cdnjs, cdn.tailwindcss.com)
+- ✅ **Font Awesome replaced** — 32 icons converted to inline SVGs, ~300 KB library removed
+- ✅ **Google Fonts self-hosted** — Rajdhani + Orbitron woff2 files in `fonts/` (48 KB)
+- ✅ **Chart.js self-hosted** — Downloaded to `vendor/chart.umd.js`, no CDN round-trip
+- ✅ **Tailwind Play CDN removed** — All 6 guide pages use local `tailwind.css` instead of ~283 KB blocking script
 
 ### Data & Calculations
 - ✅ **PvP defaults** — Elite II, rank 13 (user's actual settings)
