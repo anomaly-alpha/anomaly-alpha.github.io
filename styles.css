@@ -186,6 +186,15 @@ body {
 .gem-card__glow--event {
   background: var(--gem-event);
 }
+.gem-card__glow--pvp {
+  background: var(--gem-pvp);
+}
+.gem-card__glow--login {
+  background: var(--gem-login);
+}
+.gem-card__glow--code {
+  background: var(--gem-code);
+}
 
 .gem-card__gems {
   font-size: 2.25rem;
@@ -212,6 +221,27 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   filter: drop-shadow(0 0 12px rgba(255, 107, 53, 0.4));
+}
+.gem-card__title--pvp {
+  background: linear-gradient(135deg, var(--gem-pvp), #f06ab0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 12px rgba(233, 30, 138, 0.4));
+}
+.gem-card__title--login {
+  background: linear-gradient(135deg, var(--gem-login), #f5b342);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 12px rgba(243, 156, 18, 0.4));
+}
+.gem-card__title--code {
+  background: linear-gradient(135deg, var(--gem-code), #5ddb8a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 12px rgba(46, 204, 113, 0.4));
 }
 
 .gem-card__desc {

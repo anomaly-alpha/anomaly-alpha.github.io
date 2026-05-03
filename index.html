@@ -461,18 +461,31 @@
         <main class="gem-grid--cards my-8">
 
             <div class="gem-card gem-card--code gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-0" data-category="code" onclick="revealCode(this)">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-accent to-transparent opacity-50"></div>
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-accent to-transparent opacity-80"></div>
+                <div class="gem-card__glow gem-card__glow--code"></div>
                 <button onclick="showCardModal('promo-code')" class="gem-card__info-btn" title="About this reward">
                     <i class="fas fa-info-circle gem-text--code"></i>
                 </button>
                 <div class="gem-card__body">
-                    <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <p class="gem-card__gems">
                         <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>300</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
-                    <h2 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Promo Code</h2>
+                    <h2 class="gem-card__title gem-card__title--code">Promo Code</h2>
                     <div class="gem-label gem-label--code mb-4">
                         <span>Code Redemption</span>
                     </div>
+                </div>
+                <div class="gem-divider">
+                    <p class="gem-card__desc">A secret code whispered among allies—tap to reveal</p>
+                    <div class="gem-code__reveal hidden">
+                        <span class="gem-code__value">30KGTG</span>
+                        <span class="gem-code__copy-hint">click to copy</span>
+                    </div>
+                </div>
+                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
+                    Code reward
+                </div>
+            </div>
                 </div>
                 <div class="gem-divider">
                     <p class="text-white/60 text-sm gem-code__hint">A secret code whispered among allies—tap to reveal</p>
@@ -532,12 +545,13 @@
             </div>
 
             <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-2" data-category="pvp" data-league="eliteI" data-rank="50">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-50"></div>
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-80"></div>
+                <div class="gem-card__glow gem-card__glow--pvp"></div>
                 <button onclick="showCardModal('restricted-arena')" class="gem-card__info-btn" title="About this event">
                     <i class="fas fa-info-circle gem-text--pvp"></i>
                 </button>
                 <div class="gem-card__body">
-                    <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <p class="gem-card__gems">
                         <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp1-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
 
@@ -546,7 +560,7 @@
                         <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp1-chips">0</span> Chips</span>
                     </div>
 
-                    <h2 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Restricted Arena</h2>
+                    <h2 class="gem-card__title gem-card__title--pvp">Restricted Arena</h2>
                     <div class="gem-label gem-label--pvp mb-4">
                         <span>Player vs Player</span>
                     </div>
@@ -589,12 +603,13 @@
             </article>
 
             <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="pvp" data-league="eliteIII" data-rank="50">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-50"></div>
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-80"></div>
+                <div class="gem-card__glow gem-card__glow--pvp"></div>
                 <button onclick="showCardModal('open-arena')" class="gem-card__info-btn" title="About this event">
                     <i class="fas fa-info-circle gem-text--pvp"></i>
                 </button>
                 <div class="gem-card__body">
-                    <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <p class="gem-card__gems">
                         <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp2-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
 
@@ -603,7 +618,7 @@
                         <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp2-chips">0</span> Chips</span>
                     </div>
 
-                    <h2 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Open Arena</h2>
+                    <h2 class="gem-card__title gem-card__title--pvp">Open Arena</h2>
                     <div class="gem-label gem-label--pvp mb-4">
                         <span>Player vs Player</span>
                     </div>
@@ -646,12 +661,13 @@
             </article>
 
             <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="pvp" data-league="eliteII" data-rank="50">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-glow to-transparent opacity-50"></div>
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-glow to-transparent opacity-80"></div>
+                <div class="gem-card__glow gem-card__glow--pvp"></div>
                 <button onclick="showCardModal('multiverse-war')" class="gem-card__info-btn" title="About this event">
                     <i class="fas fa-info-circle gem-text--pvp"></i>
                 </button>
                 <div class="gem-card__body">
-                    <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <p class="gem-card__gems">
                         <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp3-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
 
@@ -660,7 +676,7 @@
                         <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp3-chips">0</span> Chips</span>
                     </div>
 
-                    <h2 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Multiverse Alliance War</h2>
+                    <h2 class="gem-card__title gem-card__title--pvp">Multiverse Alliance War</h2>
                     <div class="gem-label gem-label--pvp mb-4">
                         <span>Player vs Player</span>
                     </div>
@@ -708,21 +724,22 @@
             </article>
 
             <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-5" data-category="login">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-80"></div>
+                <div class="gem-card__glow gem-card__glow--login"></div>
                 <button onclick="showCardModal('daily-login')" class="gem-card__info-btn" title="About this reward">
                     <i class="fas fa-info-circle gem-text--login"></i>
                 </button>
                 <div class="gem-card__body">
-                    <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <p class="gem-card__gems">
                         <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>130×7=910</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
-                    <h2 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Daily Login</h2>
+                    <h2 class="gem-card__title gem-card__title--login">Daily Login</h2>
                     <div class="gem-label gem-label--login mb-4">
                         <span>Daily Reward</span>
                     </div>
                 </div>
                 <div class="gem-divider">
-                    <p class="text-white/60 text-sm">Check in daily to build your streak—30 free gems plus 100 from chest rewards (requires completing daily operations) for the first 7 days of the week</p>
+                    <p class="gem-card__desc">Check in daily to build your streak—30 free gems plus 100 from chest rewards (requires completing daily operations) for the first 7 days of the week</p>
                 </div>
                 <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
                     (30 free + 100 from chests) × 7 days = 910
@@ -730,21 +747,22 @@
             </div>
 
             <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="login">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-80"></div>
+                <div class="gem-card__glow gem-card__glow--login"></div>
                 <button onclick="showCardModal('weekly-login')" class="gem-card__info-btn" title="About this reward">
                     <i class="fas fa-info-circle gem-text--login"></i>
                 </button>
                 <div class="gem-card__body">
-                    <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <p class="gem-card__gems">
                         <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>60</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
-                    <h2 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Weekly Login</h2>
+                    <h2 class="gem-card__title gem-card__title--login">Weekly Login</h2>
                     <div class="gem-label gem-label--login mb-4">
                         <span>Weekly Reward</span>
                     </div>
                 </div>
                 <div class="gem-divider">
-                    <p class="text-white/60 text-sm">Return each week to claim your loyal defender's bonus—60 gems await</p>
+                    <p class="gem-card__desc">Return each week to claim your loyal defender's bonus—60 gems await</p>
                 </div>
                 <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
                     60 gems per week
@@ -752,21 +770,22 @@
             </div>
 
             <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="login">
-                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-50"></div>
+                <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-80"></div>
+                <div class="gem-card__glow gem-card__glow--login"></div>
                 <button onclick="showCardModal('monthly-login')" class="gem-card__info-btn" title="About this reward">
                     <i class="fas fa-info-circle gem-text--login"></i>
                 </button>
                 <div class="gem-card__body">
-                    <p class="text-4xl font-bold text-white mb-1 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]">
+                    <p class="gem-card__gems">
                         <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>90÷4=23</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
-                    <h2 class="text-white text-xl font-bold uppercase tracking-wider mb-2 mt-3">Monthly Login</h2>
+                    <h2 class="gem-card__title gem-card__title--login">Monthly Login</h2>
                     <div class="gem-label gem-label--login mb-4">
                         <span>Monthly Reward</span>
                     </div>
                 </div>
                 <div class="gem-divider">
-                    <p class="text-white/60 text-sm">The monthly hero returns every 4 weeks—90 gems divided into weekly glory</p>
+                    <p class="gem-card__desc">The monthly hero returns every 4 weeks—90 gems divided into weekly glory</p>
                 </div>
                 <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
                     90 gems per month ÷ 4 = 23/week
