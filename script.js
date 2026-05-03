@@ -330,7 +330,7 @@ function getPvpPayout(arena, leagueId, rank) {
   if (!GAME || !GAME.pvp) return { gems: 0, currency: 0, tickets: 0, frags: 0, modules: 0, isDemotion: false };
 
   if (arena === 'multiverse') {
-    const groupMap = { intern:'intern', junior1:'junior', junior2:'junior', junior3:'junior', intermediate1:'intermediate', intermediate2:'intermediate', intermediate3:'intermediate', senior1:'senior', senior2:'senior', senior3:'senior', eliteI:'elite', eliteII:'elite', eliteIII:'elite', invincible:'invincible' };
+    const groupMap = { intern:'intern', junior1:'junior', junior2:'junior', junior3:'junior', junior:'junior', intermediate1:'intermediate', intermediate2:'intermediate', intermediate3:'intermediate', intermediate:'intermediate', senior1:'senior', senior2:'senior', senior3:'senior', senior:'senior', eliteI:'elite', eliteII:'elite', eliteIII:'elite', elite:'elite', invincible:'invincible' };
     const group = groupMap[leagueId] || 'intern';
     const tiers = GAME.pvp.multiverse[group];
     if (!tiers) return { gems: 0, currency: 0, tickets: 0, frags: 0, modules: 0, isDemotion: false };
@@ -1024,7 +1024,7 @@ document.addEventListener('DOMContentLoaded', function() {
   pvpDefaults = {
     1: GAME.pvp.defaults,
     2: GAME.pvp.defaults,
-    3: GAME.pvp.defaults
+    3: { league: 'elite', rank: 13 }
   };
 
   const chartAnimConfig = CHARTS.animation || { duration: 750, easing: 'easeOutQuart' };
