@@ -8,9 +8,13 @@ Open `index.html` in a browser. No build step, no npm, works from `file://`.
 
 | File | Role |
 |------|------|
-| `index.html` | HTML + 6 inline `<script type="application/json">` configs in `<head>` |
+| `index.html` | HTML + 6 inline `<script type="application/json">` configs in `<head>` + OG/Twitter/canonical tags + structured data |
 | `script.js` | All JS (global scope, no imports/exports) |
 | `styles.css` | CSS custom property tokens + BEM classes |
+| `robots.txt` | Crawl directives, sitemap reference |
+| `sitemap.xml` | All 5 URLs (main + 4 guides) |
+| `og-image.svg` | 1200×630 social sharing preview |
+| `guide/*/index.html` | Detail guides for code, event, pvp, login |
 | `CONTEXT.md` | Domain model, architecture summary |
 | `.github/copilot/copilot-instructions.md` | Full coding patterns reference |
 
@@ -65,6 +69,14 @@ None. No lint, test, typecheck, build, or codegen commands exist.
 - Font Awesome 6.5.1
 - html2canvas (dynamically loaded in `exportAsImage()`)
 - Google Fonts: Rajdhani (400,600,700), Orbitron (500,700,900)
+
+## SEO conventions
+
+- **OG/Twitter tags** — every page needs `og:title`, `og:description`, `og:url`, `og:type`, `og:image`, `twitter:card`
+- **Canonical** — self-referencing canonical on every page
+- **Structured data** — WebPage + FAQPage schema on main page; Guide schema on detail pages
+- **Internal linking** — bidirectional nav between main page and all guide pages, guide pages link to each other
+- **Guide page structure** — Each guide links to all 3 other guides + back to main page
 
 ## Reference docs
 
