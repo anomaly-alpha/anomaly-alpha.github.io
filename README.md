@@ -8,12 +8,12 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 |----------|------|-------|
 | Event | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~1,850 | Varies with league/rank — Restricted Arena, Open Arena, Multiverse Alliance War (Elite II, rank 13 default) |
-| Login | 993 | Daily (910) + Weekly (60) + Monthly (23) |
+| Login | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
 | Code | 300 | Promo code 30KGTG (tap to reveal, click to copy) |
 
-**Total: ~3,643 gems/week** (varies with PvP selections)
+**Total: ~4,043 gems/week** (varies with PvP selections)
 
-> **Note:** The "Login" card shows 910×7=910 in Daily (130/day × 7), plus 60 weekly and ~23 monthly (90÷4), totaling 993/week.
+> **Note:** Login breaks down as Daily 130×7=910, Weekly 60+400=460, Monthly 90÷4=23, totaling 1,393/week.
 
 ## Features
 
@@ -47,8 +47,8 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 | Open Arena | pink (pvp) | ★ Weekly |
 | Multiverse Alliance War | pink (pvp) | ★ 5 Matches / 2 Weeks |
 | Daily Login | amber (login) | ★ 30×7 |
-| Weekly Login | amber (login) | ★ Weekly |
-| Monthly Login | amber (login) | ★ 90÷4 |
+| Weekly Login | amber (login) | ★ 60+400=460 |
+| Monthly Login | amber (login) | ★ 90÷4=23 |
 
 ### PvP Interactive Cards (3 cards)
 - **League selector**: 14 options — Intern, Junior I–III, Intermediate I–III, Senior I–III, Elite I–III, Invincible
@@ -80,9 +80,9 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (1214 lines) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (1216 lines) — All JS: charts, filters, PvP, modals, countdowns
-├── styles.css           (1266 lines) — CSS custom properties + BEM component classes
+├── index.html           (1306 lines) — Main HTML + inline JSON configs (6 in <head>)
+├── script.js            (1224 lines) — All JS: charts, filters, PvP, modals, countdowns
+├── styles.css           (1326 lines) — CSS custom properties + BEM component classes
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
 ├── og-image.svg         — 1200×630 social sharing preview card
 ├── robots.txt           — Allows all crawlers, references sitemap
@@ -179,6 +179,8 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **modeTotals reassignment** — `Object.assign()` instead of trying to reassign `const`
 - ✅ **getRewardsChartData GAME.ev** — Replaced with `REWARDS.categories.event.total`
 - ✅ **Spider chart frozen actuals** — Replaced `totals.pvp` snapshot with `getModeTotal('pvp')` live call in `buildModeData`; `updatePvPCard` now calls `updateChartsByModes(selectedModes)` to propagate PvP changes to all 3 charts immediately
+- ✅ **PvP card modal crash** — Fixed missing `arena` arg in `getPvpPayout()` + undefined `chips`/`cards` properties in `showCardModal` (May 3)
+- ✅ **Weekly login payout** — Updated 60 → 460 gems (60 free + 400 from chests); propagated through config, cards, FAQ schema, and total counter (4043) (May 3)
 
 ### SEO & Content
 - ✅ **Open Graph & Twitter tags** — 10 meta tags for rich social sharing previews

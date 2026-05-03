@@ -1,7 +1,7 @@
 # Invincible Guarding the Globe — Gem Rewards Infographic Implementation Plan
 
 **Document Status:** Current (May 3, 2026)
-**Total Gems:** ~3,643 (weekly calculation, varies with PvP)
+**Total Gems:** ~4,043 (weekly calculation, varies with PvP)
 **Implementation Status:** Complete
 
 ---
@@ -25,31 +25,36 @@ Interactive infographic displaying gem reward sources from Invincible Guarding t
 
 ```
 anomaly-alpha/
-├── index.html       (1214 lines) — Main infographic + inline JSON configs + SEO tags
-├── script.js        (1216 lines) — All JavaScript, loads inline JSON configs
-├── styles.css       (1280 lines) — Design tokens + BEM classes + animations
+├── index.html       (1306 lines) — Main infographic + inline JSON configs + SEO tags
+├── script.js        (1224 lines) — All JavaScript, loads inline JSON configs
+├── styles.css       (1326 lines) — Design tokens + BEM classes + animations
 ├── favicon.svg      — Custom gem SVG favicon
 ├── og-image.svg     — 1200×630 social sharing preview
 ├── robots.txt       — Crawl directives, sitemap reference
 ├── sitemap.xml      — 7 URLs (main + 6 guides)
 ├── googleeb60e8e5ee55440e.html — Google Search Console verification
 ├── AGENTS.md        — Agent instructions for this repo
+├── CONTEXT.md       — Domain model, architecture summary
 ├── README.md        — Project overview
 ├── guide/           — Topical cluster guide pages (6)
-│   ├── code/index.html      — Promo code guide
-│   ├── event/index.html     — Event rewards guide
-│   ├── pvp/index.html       — PvP guide (leagues, payout tables)
-│   ├── login/index.html     — Login rewards guide
-│   ├── faq/index.html       — Gem rewards FAQ
-│   └── beginners/index.html — New player guide
+│   ├── code/index.html      (176 lines) — Promo code guide
+│   ├── event/index.html     (195 lines) — Event rewards guide
+│   ├── pvp/index.html       (245 lines) — PvP guide (leagues, payout tables)
+│   ├── login/index.html     (208 lines) — Login rewards guide
+│   ├── faq/index.html       (170 lines) — Gem rewards FAQ
+│   └── beginners/index.html (181 lines) — New player guide
 ├── data/            — Source payout data files
 │   ├── arena_payouts.txt         — Open + Restricted arena payouts
 │   └── multiverse_war_payouts.txt — Multiverse War payouts
 ├── docs/
-│   ├── DESIGN_SYSTEM.md - CSS token reference
-│   ├── index.md     - Documentation index
-│   └── plan/        - Historical plans and fix notes
-└── journal/         - Development journal entries
+│   ├── DESIGN_SYSTEM.md   — CSS token reference (461 lines)
+│   ├── index.md           — Documentation index (178 lines)
+│   └── plan/              — Historical plans and fix notes
+├── journal/               — Development journal entries
+│   ├── 2026-05-01.md      — Initial PvP cards, UI consolidation
+│   ├── 2026-05-02.md      — Codebase cleanup, removed floating controls
+│   └── 2026-05-03.md      — PvP modal fix, weekly login 60→460
+└── advertising.md         — Ad placements documentation
 ```
 
 ---
@@ -93,10 +98,10 @@ function loadAllConfigs() {
 |------|------|-------|-------|-------------|
 | **Event** | fa-dragon | #ff6b35 | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | **PvP** | fa-fist-raised | #e91e8a | ~1,850 | 3 interactive cards: Restricted (520) + Open (520) + Multiverse War (810) at Elite II rank 13 |
-| **Login** | fa-sign-in-alt | #f39c12 | 993 | Daily (910) + Weekly (60) + Monthly (23) |
+| **Login** | fa-sign-in-alt | #f39c12 | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
 | **Code** | fa-gift | #2ecc71 | 300 | Promo code 30KGTG |
 
-**Total: ~3,643 gems/week**
+**Total: ~4,043 gems/week**
 
 ### 2.3 PvP League System
 
@@ -147,8 +152,8 @@ All 9 cards have an info icon button (`.gem-card__info-btn`) in the top-right co
 | 5 | Open Arena | PvP | dynamic | ★ Weekly | Live gems + PvP Currency + Tickets from pvp2-league/rank |
 | 6 | Multiverse Alliance War | PvP | dynamic | ★ 5 Matches / 2 Weeks | Live gems + Totem Frags + Modules from pvp3-league/rank; demotion warning |
 | 7 | Daily Login | Login | 910 | ★ 30×7 | Info icon opens modal |
-| 8 | Weekly Login | Login | 60 | ★ Weekly | Info icon opens modal |
-| 9 | Monthly Login | Login | 23 | ★ 90÷4 | Info icon opens modal |
+| 8 | Weekly Login | Login | 460 | ★ 60+400=460 | Info icon opens modal |
+| 9 | Monthly Login | Login | 23 | ★ 90÷4=23 | Info icon opens modal |
 
 ### 2.5 Spider Chart Targets
 
@@ -156,7 +161,7 @@ All 9 cards have an info icon button (`.gem-card__info-btn`) in the top-right co
 |------|--------|--------|
 | Events | 500 | 550 |
 | PvP | ~1,850 (live) | 2664 |
-| Login | 993 | 360 |
+| Login | 1,393 | 360 |
 | Code | 300 | 330 |
 
 **PvP target (2664)** = max combined gems from all 3 PvP cards at Invincible league rank 1: 750 (Restricted) + 750 (Open) + 1000 (Multiverse War) = 2500, with an additional buffer for higher ranks. Represents the theoretical maximum weekly PvP income.
@@ -532,13 +537,15 @@ The following were in older versions but are NOT in current implementation:
 
 | File | Lines | Purpose |
 |------|-------|---------|
-| index.html | 1214 | HTML + inline JSON configs (6 in head) + SEO tags + structured data |
-| script.js | 1216 | All JS: charts, filters, PvP, modals, countdowns |
-| styles.css | 1280 | CSS custom properties, BEM components, animations |
-| guide/code/index.html | 132 | Promo code guide page |
-| guide/event/index.html | 129 | Event rewards guide page |
+| index.html | 1306 | HTML + inline JSON configs (6 in head) + SEO tags + structured data |
+| script.js | 1224 | All JS: charts, filters, PvP, modals, countdowns |
+| styles.css | 1326 | CSS custom properties, BEM components, animations |
+| guide/code/index.html | 176 | Promo code guide page |
+| guide/event/index.html | 195 | Event rewards guide page |
 | guide/pvp/index.html | 245 | PvP guide page with payout tables |
-| guide/login/index.html | 164 | Login rewards guide page |
+| guide/login/index.html | 208 | Login rewards guide page |
+| guide/faq/index.html | 170 | Gem rewards FAQ page |
+| guide/beginners/index.html | 181 | New player guide page |
 | guide/faq/index.html | - | Gem rewards FAQ page |
 | guide/beginners/index.html | - | New player guide page |
 
@@ -558,3 +565,60 @@ The following were in older versions but are NOT in current implementation:
 | index.html | WebPage, FAQPage, Person |
 | guide/*/index.html | Guide, BreadcrumbList |
 | guide/faq/index.html | FAQPage |
+
+---
+
+## 12. Development Journal
+
+### 2026-05-03 — PvP Modal Fix & Weekly Login Update
+
+**Tasks:** Fix PvP card modal not opening (TypeError), update weekly login 60→460.
+
+**Changes:**
+- **PvP Modal Fix:** `getPvpPayout(league, rank)` missing `arena` arg + `payout.chips.toLocaleString()` threw TypeError (no `chips`/`cards` on payout object). Added `arenaMap` from cardId, fixed to `getPvpPayout(arena, league, rank)`, display correct per-arena properties (`currency`/`tickets` for arenas, `frags`/`modules` for multiverse).
+- **Weekly Login:** Updated `rewards-config` JSON (`gems: 460`, `formula`, `description`, `tooltip`), `loginRewards` array, `categories.login.total: 1393`. Propagated to card display, main counter (3743→4043), all-mode total. Updated `CARD_MODAL_DATA`.
+
+**Files:** `index.html`, `script.js` — 2 commits.
+
+---
+
+### 2026-05-02 — Codebase Cleanup
+
+**Tasks:** Remove scanline animation, remove floating controls (theme toggle, export data, save/share menu), update documentation.
+
+**Changes:**
+- **Removed scanline:** `.gem-scanline` div from HTML, CSS rule and `@keyframes gem-scanline` from styles.css. Continuous animations: 10→9.
+- **Removed floating controls:** Theme toggle (`fa-moon`/`fa-sun`), export data (`fa-download`), save/share menu (`fa-save` dropdown). Removed 8 JS functions: `toggleTheme`, `toggleSaveMenu`, `saveCurrentView`, `loadSavedView`, `shareLink`, `showToast`, `exportAsImage`, `exportData`, `closeDrillDown`. Removed `#themeIcon` refs from `loadPageState` and URL param handler. Removed `gem_theme` save from `savePageState`.
+- **Updated docs:** README, docs/index, IMPLEMENTATION_PLAN, DESIGN_SYSTEM.
+
+**Line counts after:** index.html=818, script.js=1184, styles.css=1266 (approximately — grown since).
+
+---
+
+### 2026-05-01 — PvP Cards & UI Consolidation (Multiple Sessions)
+
+**Sessions:** ~9 sessions over 8 hours.
+
+**Phase 1 — PvP Cards:**
+- Replaced 3 static season cards with interactive PvP cards (Restricted Arena, Open Arena, Multiverse Alliance War)
+- Added `getPvpPayout()`, `generateRankOptions()`, `animateValue()`, `updatePvpCard()`, `savePvpSelection()`/`loadPvpSelection()`, `clearPvpSelection()`, `initializePvPCards()`
+- Rank 1-120 selectors, league selectors (14 leagues for arenas, 6 groups for multiverse), demotion zone at rank 86+
+
+**Phase 2 — UI Consolidation:**
+- Removed Gem Calculator, Season filter, Warfare category (merged into PvP)
+- Removed chart filter buttons, legend, summary info box
+- Unified mode selector buttons (5: All, Code, Event, PvP, Login) with gem totals + countdowns
+
+**Phase 3 — Refinements:**
+- Multi-select mode filtering with `selectedModes` array
+- PvP default values to Elite II, rank 13
+- Card reordering (Event→PvP→Login→Code)
+- Consolidated GAME data structure
+- Daily login 100→30 gems, color standardization to mode colors
+- Fixed `getModeTotal('pvp')` returning 0 (eventsByMode lacked 'pvp' key)
+- Card layout restructure (gem payout at top, selectors at bottom)
+- Removed duplicate PvP card, percent badges
+- Login rewards total fix (980→1843)
+- Dynamic mode totals from eventsByMode
+
+**Files modified:** `gem_infographic.html` (later → `index.html`), README, docs.

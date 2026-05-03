@@ -9,10 +9,10 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 ## Domain Model
 
 ### Gem Categories
-- **Event** — Time-limited game events with ranking thresholds (top 5%, top 10%)
-- **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout
-- **Login** — Daily/weekly/monthly login rewards with streak mechanics
-- **Code** — Promotional codes distributed through official channels
+- **Event** — Time-limited game events with ranking thresholds (500 gems: The Long Haul 300 top 5%, Earth's Defenders 200 top 10%)
+- **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout (3 cards: Restricted Arena + Open Arena + Multiverse Alliance War; ~1,850 at Elite II rank 13 defaults)
+- **Login** — Daily/weekly/monthly login rewards with streak mechanics (1,393/week: 910 daily + 460 weekly + 23 monthly)
+- **Code** — Promotional codes distributed through official channels (current: 30KGTG, 300 gems)
 
 ### Key Terms
 - **League** — 14-tier PvP ranking system (Intern → Invincible) with per-league payout tables for Restricted/Open arenas; 6-group system for Multiverse War

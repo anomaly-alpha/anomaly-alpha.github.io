@@ -37,7 +37,7 @@ None. No lint, test, typecheck, build, or codegen commands exist.
 - **CSS**: BEM (`.gem-block__element--modifier`), custom property tokens (`--gem-*`), category suffixes (`--event`, `--pvp`, `--login`, `--code`)
 - **Config**: inline JSON in HTML, always use `loadConfig(id)` to parse
 - **State**: `selectedModes` array + `currentChartFilter` string, persisted via `savePageState()`/`loadPageState()`
-- **localStorage keys**: `gem_theme`, `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`, `gemInfographicViews`
+- **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`
 - **URL params**: `?theme=light&mode=<name>&chart=<name>` restored on page load
 
 ## PvP system
@@ -71,7 +71,6 @@ None. No lint, test, typecheck, build, or codegen commands exist.
 - Chart.js 4.4.1
 - Tailwind CSS (latest)
 - Font Awesome 6.5.1
-- html2canvas (dynamically loaded in `exportAsImage()`)
 - Google Fonts: Rajdhani (400,600,700), Orbitron (500,700,900)
 
 ## SEO conventions

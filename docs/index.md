@@ -10,10 +10,10 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 |----------|-----|-------------|
 | Event Rewards | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~1,850 (varies) | Restricted Arena + Open Arena + Multiverse Alliance War (Elite II, rank 13 defaults) |
-| Login Rewards | 993 | Daily (910) + Weekly (60) + Monthly (23) |
+| Login Rewards | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
 | Promo Code | 300 | Code: 30KGTG |
 
-**Total: ~3,643 gems/week** (varies with PvP selections)
+**Total: ~4,043 gems/week** (varies with PvP selections)
 
 ## Features
 
@@ -46,8 +46,8 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 | Open Arena | PvP | ★ Weekly | live from pvp2-league/rank |
 | Multiverse Alliance War | PvP | ★ 5 Matches / 2 Weeks | live from pvp3-league/rank + demotion warning |
 | Daily Login | Login | ★ 30×7 | 910 (static) |
-| Weekly Login | Login | ★ Weekly | 60 (static) |
-| Monthly Login | Login | ★ 90÷4 | 23 (static) |
+| Weekly Login | Login | ★ 60+400=460 | 460 (static) |
+| Monthly Login | Login | ★ 90÷4=23 | 23 (static) |
 
 ### PvP Interactive Cards (3 cards)
 - League selector (14 options: Intern through Invincible), default: Elite II
@@ -84,7 +84,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 
 ## Tech Stack
 
-- **Structure**: `index.html` (1214 lines), `styles.css` (1266 lines), `script.js` (1216 lines), 6 guide pages
+- **Structure**: `index.html` (1306 lines), `styles.css` (1326 lines), `script.js` (1224 lines), 6 guide pages (1175 total)
 - **Styling**: Tailwind CSS (via CDN) + custom CSS design token system
 - **Charts**: Chart.js (doughnut, bar, radar)
 - **Icons**: Font Awesome
@@ -145,7 +145,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 
 ### Data & Calculations
 - ✅ **PvP defaults** — Elite II, rank 13 (user's actual settings)
-- ✅ **Login total** — 993/week (910+60+23)
+- ✅ **Login total** — 1,393/week (910+460+23)
 - ✅ **Spider chart targets** — (550, 2664, 360, 330)
 - ✅ **Real arena payout data** — 14 per-league tables with gems + PvP Currency + Tickets (Restricted + Open)
 - ✅ **Real multiverse war data** — 6 grouped leagues with gems + Totem Fragments + Modules
@@ -158,6 +158,8 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **modeTotals reassignment** — `Object.assign()` instead of `const` reassignment
 - ✅ **getRewardsChartData GAME.ev** — Replaced with `REWARDS.categories.event.total`
 - ✅ **Spider chart frozen actuals** — `buildModeData` now uses `getModeTotal('pvp')` live instead of `totals.pvp` snapshot; `updatePvPCard` triggers chart update so spider reflects current PvP selections immediately
+- ✅ **PvP card modal crash** — Fixed missing `arena` arg in `getPvpPayout()` + undefined `chips`/`cards` properties
+- ✅ **Weekly login payout** — Updated 60 → 460 gems; propagated to config, cards, FAQ schema, total counter (4043); login total now 1,393
 
 ### SEO & Content
 - ✅ **Open Graph & Twitter tags** — 10 meta tags for rich social sharing previews

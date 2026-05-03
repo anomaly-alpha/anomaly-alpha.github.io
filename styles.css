@@ -1092,6 +1092,12 @@ body .gem-card--mode-highlight--all {
   background: rgba(255, 107, 53, 0.60);
 }
 
+@media (max-width: 767px) {
+  .particles {
+    display: none;
+  }
+}
+
 
 
 /* Divider */
