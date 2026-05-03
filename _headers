@@ -1,0 +1,17 @@
+# Rarely-changed assets: 1 year
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# CSS/JS: 1 week (lets users pick up deploys within a week)
+*.css
+  Cache-Control: public, max-age=604800
+*.js
+  Cache-Control: public, max-age=604800
+
+# HTML entry points: 1 hour
+*.html
+  Cache-Control: public, max-age=3600
+/
+  Cache-Control: public, max-age=3600
