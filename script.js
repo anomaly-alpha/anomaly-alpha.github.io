@@ -811,6 +811,7 @@ function showCardModal(cardId) {
 
     icon.style.background = `rgba(${rgb}, 0.15)`;
     icon.style.border = `1px solid rgba(${rgb}, 0.4)`;
+    icon.style.color = color;
     icon.innerHTML = SVG_INFO_CIRCLE;
 
     title.textContent = data.title.toUpperCase();
