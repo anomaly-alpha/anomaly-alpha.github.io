@@ -743,6 +743,7 @@
 </head>
 <body class="relative min-h-screen flex items-center justify-center p-5 md:p-10 gem-grid-bg">
 
+    <!-- ===== BACKGROUND: Floating particles ===== -->
     <div class="particles">
         <div class="gem-particle gem-particle--1" style="left: 10%; animation-duration: 12s; animation-delay: 0s;"></div>
         <div class="gem-particle gem-particle--2" style="left: 20%; animation-duration: 18s; animation-delay: 2s;"></div>
@@ -754,26 +755,35 @@
         <div class="gem-particle gem-particle--2" style="left: 80%; animation-duration: 13s; animation-delay: 4s;"></div>
         <div class="gem-particle gem-particle--3" style="left: 90%; animation-duration: 19s; animation-delay: 1s;"></div>
     </div>
+    <!-- ===== END BACKGROUND: Floating particles ===== -->
 
+    <!-- ===== MAIN CONTAINER: Card with border and glow ===== -->
     <div class="relative gem-container gem-container__shadow max-w-7xl">
 
+        <!-- ===== DECORATION: Corner accents ===== -->
         <div class="gem-corner gem-corner--tl"></div>
         <div class="gem-corner gem-corner--tr"></div>
         <div class="gem-corner gem-corner--bl"></div>
         <div class="gem-corner gem-corner--br"></div>
+        <!-- ===== END DECORATION: Corner accents ===== -->
 
+        <!-- ===== HEADER: Title and subtitle ===== -->
         <div class="text-center mb-10 relative">
             <div class="gem-header-icon">
                 <div class="gem-header-icon__inner"></div>
             </div>
+            <!-- HEADER: Main heading -->
             <h1 class="gem-title--hero">
                 <span class="sr-only">Invincible Guarding the Globe — </span>GEM REWARDS
             </h1>
+            <!-- HEADER: Subheading -->
             <p class="gem-subtitle--hero">
                 INVINCIBLE GUARDING THE GLOBE
             </p>
         </div>
+        <!-- ===== END HEADER: Title and subtitle ===== -->
 
+        <!-- ===== TOTAL SECTION: Gem counter display ===== -->
         <section class="gem-section--total my-8">
             <div class="gem-section__rotating-bg"></div>
             <p class="text-white/80 text-lg tracking-[0.2em] uppercase relative z-10"><i class="fas fa-gem mr-2"></i>Total Gems Obtained</p>
@@ -782,31 +792,38 @@
             </p>
             <p class="text-white/60 text-xs tracking-wider mt-2 relative z-10"><i class="fas fa-clock mr-1"></i>WEEKLY CALCULATION</p>
         </section>
+        <!-- ===== END TOTAL SECTION: Gem counter display ===== -->
 
+        <!-- ===== MODE FILTER NAV: Category filter buttons ===== -->
         <nav class="gem-grid--modes my-4">
+            <!-- MODE FILTER: All modes button -->
             <button onclick="filterCards('all', event)" class="gem-mode-btn gem-mode-btn--all active">
                 <i class="fas fa-th-large gem-mode-btn__icon gem-text--cyan"></i>
                 <p class="gem-mode-btn__count gem-text--cyan"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>4043</p>
                 <p class="gem-mode-btn__label gem-text--cyan">All Modes</p>
             </button>
+            <!-- MODE FILTER: Code button -->
             <button onclick="filterCards('code', event)" class="gem-mode-btn gem-mode-btn--code active">
                 <i class="fas fa-gift gem-mode-btn__icon gem-text--code"></i>
                 <p class="gem-mode-btn__count gem-text--code"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>300</p>
                 <p class="gem-mode-btn__label gem-text--code">Code</p>
                 <span id="countdown-code" class="gem-mode-btn__countdown gem-text--code gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
+            <!-- MODE FILTER: Event button -->
             <button onclick="filterCards('event', event)" class="gem-mode-btn gem-mode-btn--event active">
                 <i class="fas fa-dragon gem-mode-btn__icon gem-text--event"></i>
                 <p class="gem-mode-btn__count gem-text--event"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>500</p>
                 <p class="gem-mode-btn__label gem-text--event">Event</p>
                 <span id="countdown-event" class="gem-mode-btn__countdown gem-text--event gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
+            <!-- MODE FILTER: PvP button -->
             <button onclick="filterCards('pvp', event)" class="gem-mode-btn gem-mode-btn--pvp active">
                 <i class="fas fa-fist-raised gem-mode-btn__icon gem-text--pvp"></i>
                 <p class="gem-mode-btn__count gem-text--pvp"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>1850</p>
                 <p class="gem-mode-btn__label gem-text--pvp">PvP</p>
                 <span id="countdown-pvp" class="gem-mode-btn__countdown gem-text--pvp gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
+            <!-- MODE FILTER: Login button -->
             <button onclick="filterCards('login', event)" class="gem-mode-btn gem-mode-btn--login active">
                 <i class="fas fa-sign-in-alt gem-mode-btn__icon gem-text--login"></i>
                 <p class="gem-mode-btn__count gem-text--login"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>993</p>
@@ -814,10 +831,12 @@
                 <span id="countdown-login" class="gem-mode-btn__countdown gem-text--login gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
         </nav>
+        <!-- ===== END MODE FILTER NAV: Category filter buttons ===== -->
 
+        <!-- ===== CARDS GRID: Reward cards main section ===== -->
         <main class="gem-grid--cards my-8">
 
-            <div class="gem-card gem-card--code gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-0" data-category="code" onclick="revealCode(this)">
+            <!-- ===== CARD: Promo Code (Code category) ===== -->
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--code"></div>
                 <button onclick="showCardModal('promo-code')" class="gem-card__info-btn" title="About this reward">
@@ -847,7 +866,9 @@
                     Code reward
                 </div>
             </div>
+            <!-- ===== END CARD: Promo Code ===== -->
 
+            <!-- ===== CARD: The Long Haul (Event category) ===== -->
             <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-1" data-category="event">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--event"></div>
@@ -879,7 +900,9 @@
                     Top 5% event ranking
                 </div>
             </div>
+            <!-- ===== END CARD: The Long Haul ===== -->
 
+            <!-- ===== CARD: Earth's Defenders (Event category) ===== -->
             <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-2" data-category="event">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--event"></div>
@@ -911,7 +934,9 @@
                     Top 10% event ranking
                 </div>
             </div>
+            <!-- ===== END CARD: Earth's Defenders ===== -->
 
+            <!-- ===== CARD: Restricted Arena (PvP category) ===== -->
             <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-2" data-category="pvp" data-league="eliteI" data-rank="50">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--pvp"></div>
@@ -973,7 +998,9 @@
                     <a href="guide/pvp/" class="block text-center mt-2 text-xs gem-text--pvp hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
             </article>
+            <!-- ===== END CARD: Restricted Arena ===== -->
 
+            <!-- ===== CARD: Open Arena (PvP category) ===== -->
             <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="pvp" data-league="eliteIII" data-rank="50">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--pvp"></div>
@@ -1035,7 +1062,9 @@
                     <a href="guide/pvp/" class="block text-center mt-2 text-xs gem-text--pvp hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
             </article>
+            <!-- ===== END CARD: Open Arena ===== -->
 
+            <!-- ===== CARD: Multiverse Alliance War (PvP category) ===== -->
             <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="pvp" data-league="eliteII" data-rank="50">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-glow to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--pvp"></div>
@@ -1096,7 +1125,9 @@
                     <a href="guide/pvp/" class="block text-center mt-2 text-xs gem-text--pvp hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
             </article>
+            <!-- ===== END CARD: Multiverse Alliance War ===== -->
 
+            <!-- ===== CARD: Daily Login (Login category) ===== -->
             <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-5" data-category="login">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--login"></div>
@@ -1123,7 +1154,9 @@
                     (30 free + 100 from chests) × 7 days = 910
                 </div>
             </div>
+            <!-- ===== END CARD: Daily Login ===== -->
 
+            <!-- ===== CARD: Weekly Login (Login category) ===== -->
             <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="login">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--login"></div>
@@ -1150,7 +1183,9 @@
                     60 free + 400 from chests = 460
                 </div>
             </div>
+            <!-- ===== END CARD: Weekly Login ===== -->
 
+            <!-- ===== CARD: Monthly Login (Login category) ===== -->
             <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="login">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--login"></div>
@@ -1177,10 +1212,14 @@
                     90 gems per month ÷ 4 = 23/week
                 </div>
             </div>
+            <!-- ===== END CARD: Monthly Login ===== -->
 
             </main>
+            <!-- ===== END CARDS GRID: Reward cards main section ===== -->
 
+        <!-- ===== CHARTS SECTION: Toggle and chart canvases ===== -->
         <section>
+            <!-- CHARTS: Toggle button -->
             <button onclick="toggleCharts()" class="w-full gem-charts-toggle mb-4">
                 <span id="chartsToggleLabel" class="flex items-center justify-center gap-2 text-white/60 hover:text-white transition-colors">
                     <i class="fas fa-chart-pie"></i>
@@ -1188,39 +1227,56 @@
                     <i class="fas fa-chevron-down transition-transform" id="chartsToggleIcon"></i>
                 </span>
             </button>
+            <!-- CHARTS: Container with 3 chart canvases -->
             <div id="chartsContainer" class="gem-grid--charts mt-6 hidden">
+                <!-- CHART: Distribution doughnut -->
                 <div class="gem-chart">
                     <h3 class="gem-chart__title">Distribution</h3>
                     <canvas id="categoryChart"></canvas>
                 </div>
+                <!-- CHART: Rewards bar -->
                 <div class="gem-chart">
                     <h3 class="gem-chart__title">Rewards</h3>
                     <canvas id="rewardsChart"></canvas>
                 </div>
+                <!-- CHART: Performance radar -->
                 <div class="gem-chart">
                     <h3 class="gem-chart__title">Performance</h3>
                     <canvas id="spiderChart"></canvas>
                 </div>
             </div>
+            <!-- ===== END CHARTS: Container with 3 chart canvases ===== -->
+            <!-- ===== END CHARTS SECTION: Toggle and chart canvases ===== -->
         </section>
 
+        <!-- ===== CARD MODAL: Info popup for reward details ===== -->
         <div id="cardModal" class="gem-modal">
+            <!-- MODAL: Overlay backdrop -->
             <div class="gem-modal__overlay" onclick="closeCardModal()"></div>
+            <!-- MODAL: Content container -->
             <div class="gem-modal__content">
+                <!-- MODAL: Header with icon, title, badge, close -->
                 <div class="gem-modal__header">
                     <div class="flex items-center gap-3">
+                        <!-- MODAL: Category icon box -->
                         <div id="cardModalIcon" class="gem-modal__icon-box"></div>
                         <div>
                             <div class="flex items-center gap-2">
+                                <!-- MODAL: Title text -->
                                 <h3 id="cardModalTitle" class="gem-modal__title"></h3>
+                                <!-- MODAL: Badge (e.g. ★ Top 5%) -->
                                 <span id="cardModalBadge" class="gem-modal__badge"></span>
                             </div>
+                            <!-- MODAL: Total gems display -->
                             <p id="cardModalTotal" class="gem-modal__total"></p>
                         </div>
                     </div>
+                    <!-- MODAL: Close button -->
                     <button onclick="closeCardModal()" class="gem-modal__close">&times;</button>
                 </div>
+                <!-- MODAL: Body content (description, tips, demotion warning) -->
                 <div id="cardModalContent" class="gem-modal__body"></div>
+                <!-- MODAL: Footer with close button -->
                 <div class="gem-modal__footer">
                     <button onclick="closeCardModal()" class="gem-modal__footer-btn">
                         Close
@@ -1228,7 +1284,9 @@
                 </div>
             </div>
         </div>
+        <!-- ===== END CARD MODAL: Info popup for reward details ===== -->
 
+        <!-- ===== FOOTER: Contributor credits ===== -->
         <footer class="gem-contributors">
             <p class="gem-contributors__label">Contributors</p>
             <div class="gem-contributors__list">
@@ -1237,8 +1295,12 @@
                 <span class="gem-contributor gem-text--event"><i class="fas fa-user mr-1"></i>dbp loves allen</span>
             </div>
         </footer>
-    </div>
+        <!-- ===== END FOOTER: Contributor credits ===== -->
 
+    </div>
+    <!-- ===== END MAIN CONTAINER: Card with border and glow ===== -->
+
+    <!-- ===== SCRIPT: Application logic ===== -->
     <script src="script.js" defer></script>
 </body>
 </html>
