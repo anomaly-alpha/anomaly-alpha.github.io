@@ -1,0 +1,235 @@
+{
+  "main": {
+    "id": "36dc3f6651edac3b",
+    "type": "split",
+    "children": [
+      {
+        "id": "0cca3ec146e62f13",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "fdde6cfca8d7e466",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "advertising.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "advertising"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "e467d49fd19dfea9",
+    "type": "split",
+    "children": [
+      {
+        "id": "e64b2a4a2ebea699",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0b7b066570993357",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "09f09ddb26a1c825",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "e88fe1bc0b79399d",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "b8e877208d67ddaa",
+    "type": "split",
+    "children": [
+      {
+        "id": "6a8174cfb477e0d1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3f7e0eb00c51da6c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "CONTEXT.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for CONTEXT"
+            }
+          },
+          {
+            "id": "1ee498f7b3a63743",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "CONTEXT.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from CONTEXT"
+            }
+          },
+          {
+            "id": "73e284ba9e6bda16",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "e06c04071bd74f27",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "6ae43444ee1d2255",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "CONTEXT.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of CONTEXT"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "fdde6cfca8d7e466",
+  "lastOpenFiles": [
+    "untitled.html",
+    "CONTEXT.md",
+    "gem_infographic3.png",
+    "gem_infographic2pvp.png",
+    "advertising.md",
+    "journal/2026-05-03.md",
+    "favicon.svg",
+    "gem_infographic.png",
+    "og-image.svg",
+    "README.md",
+    "docs/index.md",
+    "docs/DESIGN_SYSTEM.md",
+    "docs/plan/PLAN_card_modals.md",
+    "docs/plan/PLAN_state_persistence.md",
+    "docs/plan/PLAN_chart_optimization.md",
+    "docs/plan/PERF_PLAN.md",
+    "untitled file",
+    "data/multiverse_war_payouts.txt",
+    "data/multiverse-war-payout.txt",
+    "multiverse-war-payout.txt",
+    "data/arena_payouts.txt",
+    "guide/beginners/index.html",
+    "guide/faq/index.html",
+    "guide/beginners",
+    "guide/faq",
+    "googleeb60e8e5ee55440e.html",
+    "gem_infographic2login.png",
+    "journal/2026-05-02.md",
+    "AGENTS.md",
+    "gem_infographic2modes copy.png",
+    "gem_infographic4modal.png",
+    "gem_infographic3pvp.png",
+    "docs/plan/PVP_TOTAL_FIX.md",
+    "docs/plan/JSON_EXTRACTION_PLAN.md",
+    "gem_infographic2modes.png",
+    "docs/plan/PVP_IMPLEMENTATION_PLAN.md",
+    "docs/plan/IMPLEMENTATION_PLAN.md",
+    "docs/plan/FIX_TOTAL_GEMS.md",
+    "docs/plan/EXTRACTION_PLAN.md",
+    "docs/plan/DYNAMIC_MODE_TOTALS.md",
+    "TOTAL_UPDATE_PLAN.md",
+    "docs/plan/REWARDS_CHART_FIX.md",
+    "docs/plan/SPIDER_CHART_FIX.md",
+    "docs/plan/TOTAL_UPDATE_PLAN.md",
+    "EXTRACTION_PLAN.md",
+    "PVP_TOTAL_FIX.md"
+  ]
+}

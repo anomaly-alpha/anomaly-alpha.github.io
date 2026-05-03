@@ -419,7 +419,7 @@ anomaly-alpha/
 ├── styles.css       (1342 lines) — Design tokens + BEM classes + animations
 ├── index.html       (1284 lines) — HTML with inline JSON configs
 ├── script.js        (1207 lines) — JavaScript with token-aware logic
-├── tailwind.css         — Generated Tailwind utility classes
+├── tailwind.css         — Generated Tailwind utility classes (657 lines)
 ├── package.json         — Dev dependencies (Tailwind CLI)
 ├── tailwind.config.js   — Tailwind content paths config
 ├── src/

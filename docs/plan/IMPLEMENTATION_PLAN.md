@@ -28,7 +28,7 @@ anomaly-alpha/
 ├── index.html       (1284 lines) — Main infographic + inline JSON configs + SEO tags
 ├── script.js        (1207 lines) — All JavaScript, loads inline JSON configs
 ├── styles.css       (1342 lines) — Design tokens + BEM classes + animations
-├── tailwind.css         — Generated Tailwind utility classes (from npm run build)
+├── tailwind.css         — Generated Tailwind utility classes (657 lines, from npm run build)
 ├── package.json         — Dev dependencies config
 ├── tailwind.config.js   — Tailwind content paths config
 ├── src/
@@ -548,7 +548,7 @@ The following were in older versions but are NOT in current implementation:
 | index.html | 1284 | HTML + inline JSON configs (6 in head) + SEO tags + structured data |
 | script.js | 1207 | All JS: charts, filters, PvP, modals, countdowns |
 | styles.css | 1342 | CSS custom properties, BEM components, animations |
-| tailwind.css | - | Generated Tailwind utility classes (from npm run build) |
+| tailwind.css | 657 | Generated Tailwind utility classes (from npm run build) |
 | package.json | - | Dev dependencies (tailwindcss CLI) |
 | tailwind.config.js | - | Tailwind content paths configuration |
 | src/tailwind-input.css | - | Tailwind source with @tailwind directives |

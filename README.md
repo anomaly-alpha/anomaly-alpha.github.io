@@ -83,7 +83,7 @@ anomaly-alpha/
 ├── index.html           (1284 lines) — Main HTML + inline JSON configs (6 in <head>)
 ├── script.js            (1207 lines) — All JS: charts, filters, PvP, modals, countdowns
 ├── styles.css           (1342 lines) — CSS custom properties + BEM component classes
-├── tailwind.css         — Generated Tailwind utility classes (from npm run build)
+├── tailwind.css         — Generated Tailwind utility classes (657 lines, from npm run build)
 ├── package.json         — Dev dependencies config
 ├── tailwind.config.js   — Tailwind content paths config
 ├── src/
