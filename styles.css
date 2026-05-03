@@ -838,6 +838,11 @@ body .gem-card--mode-highlight--all {
   border-radius: 0.75rem;
   padding: 0.75rem;
 }
+.gem-chart canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 250px;
+}
 
 .gem-chart__title {
   color: var(--gem-text--primary);

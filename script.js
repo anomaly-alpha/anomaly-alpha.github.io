@@ -1062,7 +1062,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }]
     },
     options: {
-      responsive: false,
+      responsive: true,
+      maintainAspectRatio: false,
       animation: { duration: 0 },
       interaction: { mode: undefined },
       plugins: {
@@ -1089,7 +1090,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }]
     },
     options: {
-      responsive: false,
+      responsive: true,
+      maintainAspectRatio: false,
       animation: { duration: 0 },
       interaction: { mode: undefined },
       scales: {
@@ -1124,7 +1126,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }]
     },
     options: {
-      responsive: false,
+      responsive: true,
+      maintainAspectRatio: false,
       animation: { duration: 0 },
       interaction: { mode: undefined },
       scales: {
