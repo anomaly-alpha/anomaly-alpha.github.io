@@ -59,6 +59,7 @@ All visual values are defined as CSS custom properties in `:root` with full dark
 - **Category tokens**: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, `--gem-purple`
 - **Semantic tokens**: `--gem-star` (badges/tips), `--gem-gem` (gem icon glow)
 - **Background tokens**: `--gem-bg-dark`, `--gem-bg-mid`, `--gem-bg-light`
+- **Orb tokens**: `--gem-orb-cyan`, `--gem-orb-pvp` (gradient orbs)
 - **Alert tokens**: complete set with bg/border/text for danger/success/info
 - **Shadow tokens**: `--gem-shadow--card`, `--gem-shadow--glow-cyan`, `--gem-shadow--glow-pink`, `--gem-shadow--main`, `--gem-shadow--gem`
 - **Light mode**: `:root.light-mode` overrides all tokens needing different values

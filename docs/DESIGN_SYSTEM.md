@@ -106,6 +106,13 @@ The design system uses CSS custom properties (design tokens) for all visual valu
 | `--gem-shadow--main` | `0 0 60px rgba(0,229,255,0.2), inset 0 0 80px rgba(0,229,255,0.05)` | Main container |
 | `--gem-shadow--gem` | `0 0 30px rgba(233,30,138,0.6)` | Gem icon glow |
 
+### Orb Gradients
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--gem-orb-cyan` | `var(--gem-cyan)` | Cyan gradient orb |
+| `--gem-orb-pvp` | `var(--gem-pvp)` | Pink gradient orb |
+
 ### Button Tokens
 
 | Token | Dark Mode | Light Mode |
@@ -274,6 +281,14 @@ The design system uses CSS custom properties (design tokens) for all visual valu
 | `.gem-icon--gem` | Block | Small gem icon (12×12) |
 | `.gem-icon--star` | Block | Star badge |
 
+### Orb Component
+
+| Class | Type | Description |
+|-------|------|-------------|
+| `.gem-orb` | Block | Gradient orb base |
+| `.gem-orb--1` | Modifier | Cyan orb (larger) |
+| `.gem-orb--2` | Modifier | Pink orb (smaller) |
+
 ### Code Reveal Component
 
 | Class | Type | Description |
@@ -401,6 +416,7 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 | Animation | Duration | Easing | Usage |
 |-----------|----------|--------|-------|
 | `gem-fade-in` | 0.6s | ease-out | Card entrance |
+| `gem-fade-in` stagger | 0.075s increments | ease-out | Card stagger (0s, 0.075s...0.6s) |
 | `gem-code--reveal` | 0.8s | cubic-bezier(0.34, 1.56, 0.64, 1) | Code reveal (3D flip) |
 | `gem-code--glow` | 2s | ease-in-out | Code glow pulse (infinite) |
 | `gem-code--fade-in` | 0.5s | ease-out | Copy hint appear |
@@ -413,7 +429,23 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 ---
 
 ## File Structure
-
+```
+anomaly-alpha/
+├── styles.css       (1453 lines) — Design tokens + BEM classes + animations
+├── index.html       (1385 lines) — HTML with inline JSON configs + gradient orbs
+├── script.js        — JavaScript with token-aware logic
+├── tailwind.css         — Generated Tailwind utility classes
+├── package.json         — Dev dependencies (Tailwind CLI)
+├── tailwind.config.js   — Tailwind content paths config
+├── src/
+│   └── tailwind-input.css — Tailwind source directives
+├── vendor/
+│   └── chart.umd.js     — Self-hosted Chart.js 4.4.1
+├── fonts/               — Self-hosted Rajdhani + Orbitron woff2 files
+├── journal/         — Development journal entries
+├── PLAN-aesthetic-enhancement.md — This plan
+└── docs/
+    └── DESIGN_SYSTEM.md          — This file
 ```
 anomaly-alpha/
 ├── styles.css       (1392 lines) — Design tokens + BEM classes + animations

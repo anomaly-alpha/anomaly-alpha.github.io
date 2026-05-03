@@ -95,6 +95,10 @@
 
   /* Font */
   --gem-font: 'Rajdhani', sans-serif;
+
+  /* Orb gradients */
+  --gem-orb-cyan: var(--gem-cyan);
+  --gem-orb-pvp: var(--gem-pvp);
 }
 
 /* ===== LIGHT MODE TOKENS ===== */
@@ -991,6 +995,29 @@ body .gem-card--mode-highlight--all {
 .gem-corner--bl { bottom: 1rem; left: 1rem; border-right: 0; border-top: 0; }
 .gem-corner--br { bottom: 1rem; right: 1rem; border-left: 0; border-top: 0; }
 
+/* Gradient orbs (ambient) */
+.gem-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.08;
+  z-index: 0;
+}
+.gem-orb--1 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, var(--gem-orb-cyan), transparent 70%);
+  top: 20%;
+  left: 10%;
+}
+.gem-orb--2 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--gem-orb-pvp), transparent 70%);
+  top: 50%;
+  right: 15%;
+}
+
 
 /* Section backgrounds */
 .gem-section--total {
@@ -1019,7 +1046,7 @@ body .gem-card--mode-highlight--all {
   border-radius: 0.75rem;
   border: 2px solid;
   text-align: center;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .gem-mode-btn:hover {
@@ -1033,8 +1060,8 @@ body .gem-card--mode-highlight--all {
 .gem-mode-btn--all.active {
   background: linear-gradient(to-br, rgba(0, 229, 255, 0.30), rgba(0, 229, 255, 0.08));
   border-color: rgba(0, 229, 255, 0.60);
-  box-shadow: 0 0 15px rgba(0, 229, 255, 0.25), inset 0 0 10px rgba(0, 229, 255, 0.08);
-  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.35), 0 8px 32px rgba(0, 0, 0, 0.25);
+  transform: scale(1.05);
 }
 
 .gem-mode-btn--event {
@@ -1044,8 +1071,8 @@ body .gem-card--mode-highlight--all {
 .gem-mode-btn--event.active {
   background-color: rgba(255, 107, 53, 0.30);
   border-color: rgba(255, 107, 53, 0.65);
-  box-shadow: 0 0 15px rgba(255, 107, 53, 0.25), inset 0 0 10px rgba(255, 107, 53, 0.08);
-  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(255, 107, 53, 0.35), 0 8px 32px rgba(0, 0, 0, 0.25);
+  transform: scale(1.05);
 }
 
 .gem-mode-btn--pvp {
@@ -1055,8 +1082,8 @@ body .gem-card--mode-highlight--all {
 .gem-mode-btn--pvp.active {
   background-color: rgba(233, 30, 138, 0.30);
   border-color: rgba(233, 30, 138, 0.65);
-  box-shadow: 0 0 15px rgba(233, 30, 138, 0.25), inset 0 0 10px rgba(233, 30, 138, 0.08);
-  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(233, 30, 138, 0.35), 0 8px 32px rgba(0, 0, 0, 0.25);
+  transform: scale(1.05);
 }
 
 .gem-mode-btn--login {
@@ -1066,8 +1093,8 @@ body .gem-card--mode-highlight--all {
 .gem-mode-btn--login.active {
   background-color: rgba(243, 156, 18, 0.30);
   border-color: rgba(243, 156, 18, 0.65);
-  box-shadow: 0 0 15px rgba(243, 156, 18, 0.25), inset 0 0 10px rgba(243, 156, 18, 0.08);
-  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(243, 156, 18, 0.35), 0 8px 32px rgba(0, 0, 0, 0.25);
+  transform: scale(1.05);
 }
 .gem-mode-btn--login:hover {
   background-color: rgba(243, 156, 18, 0.18);
@@ -1080,8 +1107,8 @@ body .gem-card--mode-highlight--all {
 .gem-mode-btn--code.active {
   background-color: rgba(46, 204, 113, 0.30);
   border-color: rgba(46, 204, 113, 0.65);
-  box-shadow: 0 0 15px rgba(46, 204, 113, 0.25), inset 0 0 10px rgba(46, 204, 113, 0.08);
-  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(46, 204, 113, 0.35), 0 8px 32px rgba(0, 0, 0, 0.25);
+  transform: scale(1.05);
 }
 
 .gem-mode-btn__icon {
@@ -1095,14 +1122,14 @@ body .gem-card--mode-highlight--all {
   align-items: center;
   justify-content: center;
   gap: 0.375rem;
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: var(--gem-text--primary);
 }
 
 @media (min-width: 768px) {
   .gem-mode-btn__count {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
 }
 
@@ -1167,6 +1194,17 @@ body .gem-card--mode-highlight--all {
 /* Counter display */
 .gem-counter {
   display: inline-block;
+  font-size: 4.5rem;
+  text-shadow: 
+    0 0 30px rgba(233, 30, 138, 0.8),
+    0 0 60px rgba(233, 30, 138, 0.5),
+    0 0 20px rgba(0, 229, 255, 0.4);
+}
+
+@media (min-width: 768px) {
+  .gem-counter {
+    font-size: 6rem;
+  }
 }
 
 /* Title styles */
@@ -1217,6 +1255,12 @@ body .gem-card--mode-highlight--all {
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 1.25rem;
+}
+
+@media (min-width: 1024px) {
+  .gem-grid--cards {
+    gap: 1rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -1291,29 +1335,33 @@ body .gem-card--mode-highlight--all {
 }
 
 .gem-card__title {
-  font-size: 0.9rem;
+  font-size: 1.25rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-family: 'Orbitron', sans-serif;
+  line-height: 1.2;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+  max-width: 100%;
+  overflow-wrap: break-word;
 }
 
 @media (min-width: 768px) {
   .gem-card__title {
-    font-size: 1.1rem;
+    font-size: 1.375rem;
   }
 }
 
 /* Staggered animation delays for cards */
 .gem-card--delay-0 { animation-delay: 0s; }
-.gem-card--delay-1 { animation-delay: 0.1s; }
-.gem-card--delay-2 { animation-delay: 0.2s; }
-.gem-card--delay-3 { animation-delay: 0.3s; }
-.gem-card--delay-4 { animation-delay: 0.4s; }
-.gem-card--delay-5 { animation-delay: 0.5s; }
-.gem-card--delay-6 { animation-delay: 0.6s; }
-.gem-card--delay-7 { animation-delay: 0.7s; }
-.gem-card--delay-8 { animation-delay: 0.8s; }
+.gem-card--delay-1 { animation-delay: 0.075s; }
+.gem-card--delay-2 { animation-delay: 0.15s; }
+.gem-card--delay-3 { animation-delay: 0.225s; }
+.gem-card--delay-4 { animation-delay: 0.3s; }
+.gem-card--delay-5 { animation-delay: 0.375s; }
+.gem-card--delay-6 { animation-delay: 0.45s; }
+.gem-card--delay-7 { animation-delay: 0.525s; }
+.gem-card--delay-8 { animation-delay: 0.6s; }
 
 /* ===== ANIMATIONS ===== */
 @keyframes gem-fade-in {
@@ -1390,4 +1438,17 @@ body .gem-card--mode-highlight--all {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ===== AMBIENT ENHANCEMENTS ===== */
+
+/* Grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 1;
 }
