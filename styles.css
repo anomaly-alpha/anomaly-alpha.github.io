@@ -292,6 +292,13 @@ body {
   background-color: var(--gem-card-bg--event);
   border-color: var(--gem-card-border--event);
 }
+.gem-card--event h2 {
+  background: linear-gradient(135deg, var(--gem-event), #ff9a5e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 12px rgba(255, 107, 53, 0.4));
+}
 
 .gem-card--pvp {
   background-color: var(--gem-card-bg--pvp);
