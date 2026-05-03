@@ -407,6 +407,10 @@ function filterCards(category, evt) {
 
 function updateAllButtons() {
   selectedModes = ['event', 'pvp', 'login', 'code'];
+  updateModeButtonStates();
+  document.querySelectorAll('[data-category]').forEach(card => {
+    card.style.display = 'block';
+  });
 }
 
 function updateModeButtonStates() {
