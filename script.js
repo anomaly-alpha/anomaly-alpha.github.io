@@ -312,8 +312,9 @@ function loadPageState() {
       document.body.classList.add('light-mode');
     }
 
-    let hidden = true;
-    if (chartsVisible === 'false') {
+    const defaultVisible = UI && UI.defaults ? UI.defaults.chartsVisible : true;
+    const shouldHide = chartsVisible === null ? !defaultVisible : chartsVisible === 'false';
+    if (shouldHide) {
       const container = document.getElementById('chartsContainer');
       const label = document.querySelector('#chartsToggleLabel span:nth-child(2)');
       const iconContainer = document.getElementById('chartsToggleIcon');
