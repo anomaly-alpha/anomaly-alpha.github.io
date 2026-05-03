@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Complete guide to Invincible Guarding the Globe PvP rewards — all 14 leagues from Intern to Invincible, 7 payout tiers, Restricted Arena, Open Arena, and Multiverse Alliance War payouts explained.">
+    <meta name="description" content="Complete guide to Invincible Guarding the Globe PvP rewards — all 14 leagues from Intern to Invincible, 7 payout tiers, Restricted Arena, Open Arena, and Multiverse Alliance War payouts explained. Learn how league multipliers and rank tiers determine your gem income.">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
     <link rel="canonical" href="https://anomaly-alpha.github.io/guide/pvp/">
     <meta property="og:title" content="Invincible PvP Rewards Guide — Leagues, Tiers & Arena Payouts">
@@ -21,11 +21,22 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Guide",
-      "name": "Invincible PvP Rewards Guide — Leagues, Tiers & Arena Payouts",
-      "description": "Complete guide to PvP rewards in Invincible Guarding the Globe covering all 14 leagues, 7 payout tiers, and 3 arena modes.",
-      "url": "https://anomaly-alpha.github.io/guide/pvp/",
-      "about": { "@type": "VideoGame", "name": "Invincible Guarding the Globe" }
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Gem Rewards Infographic", "item": "https://anomaly-alpha.github.io/" },
+            { "@type": "ListItem", "position": 2, "name": "PvP Rewards Guide", "item": "https://anomaly-alpha.github.io/guide/pvp/" }
+          ]
+        },
+        {
+          "@type": "Guide",
+          "name": "Invincible PvP Rewards Guide — Leagues, Tiers & Arena Payouts",
+          "description": "Complete guide to PvP rewards in Invincible Guarding the Globe covering all 14 leagues, 7 payout tiers, and 3 arena modes.",
+          "url": "https://anomaly-alpha.github.io/guide/pvp/",
+          "about": { "@type": "VideoGame", "name": "Invincible Guarding the Globe" }
+        }
+      ]
     }
     </script>
 </head>
@@ -43,6 +54,8 @@
             <a href="../event/" class="hover:text-white transition-colors gem-text--event">Events</a>
             <span class="text-white/80 font-semibold">PvP Guide</span>
             <a href="../login/" class="hover:text-white transition-colors gem-text--login">Login</a>
+            <a href="../faq/" class="hover:text-white transition-colors gem-text--cyan">FAQ</a>
+            <a href="../beginners/" class="hover:text-white transition-colors gem-text--cyan">New Players</a>
         </nav>
 
         <div class="text-center mb-10 relative">
@@ -60,11 +73,12 @@
                 <h2 class="text-2xl font-bold text-white">PvP Income Overview</h2>
                 <span class="gem-label gem-label--pvp text-lg px-4 py-1">~1,428 GEMS / WEEK</span>
             </div>
-            <p class="text-white/60">PvP is the largest variable gem source. Your league and rank determine baseline rewards. Three arena modes — Restricted, Open, and Multiverse Alliance War — each contribute to your weekly total.</p>
+            <p class="text-white/60">PvP is the largest variable gem source in Invincible Guarding the Globe. Your league and rank determine baseline rewards across three arena modes — Restricted, Open, and Multiverse Alliance War — each contributing to your weekly total. Unlike login rewards which are fixed, PvP income scales directly with your performance and league progression.</p>
         </section>
 
         <section class="mx-4 mb-8">
             <h2 class="text-xl font-bold text-white mb-4 tracking-wider flex items-center gap-2"><i class="fas fa-layer-group gem-text--pvp"></i> All 14 Leagues</h2>
+            <p class="text-white/60 text-sm mb-4">Your league determines the multiplier applied to base payout values. Higher leagues mean exponentially better rewards. The default starting point is Elite II (×0.85) at rank 13, but climbing to higher leagues dramatically increases your gem income.</p>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                 <div class="gem-card gem-card--pvp p-3 text-center"><span class="block text-white font-bold">Intern</span><span class="text-white/60 text-xs">×0.30</span><span class="block text-white/40 text-xs">Ranks 1-9</span></div>
                 <div class="gem-card gem-card--pvp p-3 text-center"><span class="block text-white font-bold">Junior I</span><span class="text-white/60 text-xs">×0.40</span><span class="block text-white/40 text-xs">Ranks 10-18</span></div>
@@ -85,6 +99,7 @@
 
         <section class="mx-4 mb-8">
             <h2 class="text-xl font-bold text-white mb-4 tracking-wider flex items-center gap-2"><i class="fas fa-coins gem-text--login"></i> 7 Payout Tiers</h2>
+            <p class="text-white/60 text-sm mb-4">Base payout values before your league multiplier is applied. The formula is: <code class="gem-text--pvp">Final Gems = base tier gems × league multiplier</code>. Cards are always awarded at the base rate — they are not multiplied by your league.</p>
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
@@ -106,7 +121,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="text-white/40 text-xs mt-2">Base values before league multiplier applied. Formula: <code class="gem-text--pvp">Gems = base × multiplier</code></p>
+            <p class="text-white/40 text-xs mt-2">Base values before league multiplier applied. Formula: <code class="gem-text--pvp">Gems = base × multiplier</code>. Cards are flat rate (not multiplied).</p>
         </section>
 
         <section class="mx-4 mb-8">
@@ -118,12 +133,12 @@
                     <h3 class="text-lg font-bold text-white">Restricted Arena</h3>
                     <span class="ml-auto gem-label gem-label--pvp text-xs"><i class="fas fa-clock"></i> Weekly</span>
                 </div>
-                <p class="text-white/80 leading-relaxed mb-3">A weekly competitive PvP arena where your league and rank determine your baseline rewards. Higher leagues and ranks earn exponentially more gems, cards, and chips. Placement rewards are based on your ranking within your league at the end of the week.</p>
+                <p class="text-white/80 leading-relaxed mb-3">A weekly competitive PvP arena where your league and rank determine your baseline rewards. Higher leagues and ranks earn exponentially more gems, cards, and chips. Placement rewards are based on your ranking within your league at the end of the week. This is the most consistent PvP income source for players who maintain their league standing.</p>
                 <h4 class="text-white font-semibold mb-2 text-sm tracking-wider">Strategy</h4>
                 <ul class="space-y-1 text-white/70 text-sm">
                     <li>▸ Climb to at least Elite II rank 13 for optimal gem-to-effort value</li>
                     <li>▸ Higher league multipliers dramatically increase all gem and chip rewards</li>
-                    <li>▸ Cards earned are NOT multiplied by league — always awarded at base rate</li>
+                    <li>▸ Cards earned are NOT multiplied by league — always awarded at the base tier rate</li>
                     <li>▸ Alliance participation can provide ranking protection and bonus rewards</li>
                     <li>▸ Consistent weekly play prevents rank decay and maintains tier placement</li>
                 </ul>
@@ -135,13 +150,13 @@
                     <h3 class="text-lg font-bold text-white">Open Arena</h3>
                     <span class="ml-auto gem-label gem-label--pvp text-xs"><i class="fas fa-clock"></i> Weekly</span>
                 </div>
-                <p class="text-white/80 leading-relaxed mb-3">An open weekly arena for all players regardless of league. Performance is based purely on match results and ranking within your skill tier. Unlike Restricted Arena, the payout structure varies dramatically with rank. Strategic matchmaking and meta team composition significantly impact final placement and rewards.</p>
+                <p class="text-white/80 leading-relaxed mb-3">An open weekly arena for all players regardless of league. Performance is based purely on match results and ranking within your skill tier. Unlike Restricted Arena, the payout structure varies dramatically with rank. Strategic matchmaking and meta team composition significantly impact final placement and rewards. Open Arena rewards players who adapt to the current meta and optimize their roster.</p>
                 <h4 class="text-white font-semibold mb-2 text-sm tracking-wider">Strategy</h4>
                 <ul class="space-y-1 text-white/70 text-sm">
                     <li>▸ Play consistently throughout the week rather than rushing last-day placements</li>
                     <li>▸ Meta team compositions outperform individual skill at higher ranking tiers</li>
                     <li>▸ Review match history for patterns and adjust your approach accordingly</li>
-                    <li>▸ Higher ranks in open arena grant exponentially better gem multipliers</li>
+                    <li>▸ Higher ranks in Open Arena grant exponentially better gem multipliers</li>
                     <li>▸ Coordinate with alliance members for duo and trio queue advantages</li>
                 </ul>
             </div>
@@ -153,7 +168,7 @@
                     <h3 class="text-lg font-bold text-white">Multiverse Alliance War</h3>
                     <span class="ml-auto gem-label gem-label--pvp text-xs"><i class="fas fa-globe"></i> 5 matches / 2 weeks</span>
                 </div>
-                <p class="text-white/80 leading-relaxed mb-3">The ultimate PvP experience — a 5-match series over two weeks between alliances. Your individual performance contributes to your alliance's overall war score. The stakes are high: demotion becomes a real risk if your personal ranking drops below rank 86. Victory requires coordinated effort, strategic matchups, and consistent high-performance play.</p>
+                <p class="text-white/80 leading-relaxed mb-3">The ultimate PvP experience — a 5-match series over two weeks between alliances. Your individual performance contributes to your alliance's overall war score. The stakes are high: demotion becomes a real risk if your personal ranking drops below rank 86. Victory requires coordinated effort, strategic matchups, and consistent high-performance play across all alliance members.</p>
                 <div class="gem-alert--demotion p-3 rounded mb-3">
                     <i class="fas fa-exclamation-triangle gem-alert__icon--danger mr-1"></i>
                     <span class="gem-alert__text--danger">DEMOTION ZONE: Rank 86+</span>
@@ -165,8 +180,43 @@
                     <li>▸ Spread your 5 matches evenly across the 2-week period for consistent scores</li>
                     <li>▸ Individual performance directly affects alliance war ranking</li>
                     <li>▸ After war ends, reassess your league and rank strategy for the next cycle</li>
-                    <li>▸ Monitor your rank throughout the war if near the demotion threshold</li>
+                    <li>▸ Monitor your rank throughout the war if near the demotion threshold (rank 86+)</li>
                 </ul>
+            </div>
+        </section>
+
+        <section class="mx-4 mb-8">
+            <h2 class="text-xl font-bold text-white mb-4 tracking-wider">Maximizing PvP Income</h2>
+            <div class="gem-card gem-card--pvp p-5">
+                <p class="text-white/80 leading-relaxed mb-3">Your PvP income depends on three factors: league multiplier, rank tier, and arena participation. Here's how to optimize each:</p>
+                <ul class="space-y-3 text-white/80">
+                    <li class="flex items-start gap-2"><span class="gem-text--pvp mt-1">▸</span> <strong class="text-white">Climb leagues strategically</strong> — Elite II (×0.85) is the recommended starting point. The jump from Senior III (×0.80) to elite leagues offers the best marginal return on effort</li>
+                    <li class="flex items-start gap-2"><span class="gem-text--pvp mt-1">▸</span> <strong class="text-white">Focus on rank within your tier</strong> — being rank 10 (top of tier 4-10) vs rank 30 (bottom of tier 11-30) changes your base gems from 600 to 560 before multiplier. Aim for the top of each tier range</li>
+                    <li class="flex items-start gap-2"><span class="gem-text--pvp mt-1">▸</span> <strong class="text-white">Play all three arenas</strong> — each arena contributes independently to your total. Missing one means losing ~1/3 of potential PvP income</li>
+                    <li class="flex items-start gap-2"><span class="gem-text--pvp mt-1">▸</span> <strong class="text-white">Watch the demotion zone</strong> — if you're at rank 86+, your Multiverse War income is at risk. Drop below the threshold before war concludes if possible</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="mx-4 mb-8">
+            <h2 class="text-xl font-bold text-white mb-4 tracking-wider">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="gem-card gem-card--pvp p-4">
+                    <h3 class="text-white font-bold mb-1">What's the best league for gem income?</h3>
+                    <p class="text-white/70 text-sm">Elite II (×0.85) at rank 13 offers the best balance of effort and reward. It's achievable through regular play and provides strong multipliers without the intense competition of higher leagues. For maximum income, Invincible league (×1.25) at rank 1 yields 887 gems per arena.</p>
+                </div>
+                <div class="gem-card gem-card--pvp p-4">
+                    <h3 class="text-white font-bold mb-1">How does demotion work in Multiverse War?</h3>
+                    <p class="text-white/70 text-sm">If your rank is 86 or higher when the war concludes, you risk being demoted to a lower league. The demotion resets your rank and reduces your league multiplier, which decreases your future gem income. Monitor your rank throughout the war period.</p>
+                </div>
+                <div class="gem-card gem-card--pvp p-4">
+                    <h3 class="text-white font-bold mb-1">Do cards get multiplied by league?</h3>
+                    <p class="text-white/70 text-sm">No. Cards are always awarded at the base tier rate regardless of your league multiplier. Only gems and chips are multiplied. This means focusing purely on card rewards isn't a reason to climb leagues — the benefit is in gem and chip income.</p>
+                </div>
+                <div class="gem-card gem-card--pvp p-4">
+                    <h3 class="text-white font-bold mb-1">How often do arena rankings reset?</h3>
+                    <p class="text-white/70 text-sm">Restricted Arena and Open Arena reset weekly. Multiverse Alliance War runs on a 2-week cycle with 5 matches per cycle. Weekly resets typically happen Monday at server reset time.</p>
+                </div>
             </div>
         </section>
 

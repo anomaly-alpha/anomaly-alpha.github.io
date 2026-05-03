@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Complete guide to Invincible Guarding the Globe event rewards — The Long Haul (300 gems, top 5%) and Earth's Defenders (200 gems, top 10%). Strategies, tips, and ranking thresholds.">
+    <meta name="description" content="Complete guide to Invincible Guarding the Globe event rewards — The Long Haul (300 gems, top 5%) and Earth's Defenders (200 gems, top 10%). Strategies, tips, ranking thresholds, and event rotation schedule.">
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
     <link rel="canonical" href="https://anomaly-alpha.github.io/guide/event/">
     <meta property="og:title" content="Invincible Event Rewards Guide — The Long Haul & Earth's Defenders">
@@ -21,11 +21,22 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Guide",
-      "name": "Invincible Event Rewards Guide — The Long Haul & Earth's Defenders",
-      "description": "Learn strategies for top 5% and top 10% rankings in Invincible events to earn up to 500 gems per week.",
-      "url": "https://anomaly-alpha.github.io/guide/event/",
-      "about": { "@type": "VideoGame", "name": "Invincible Guarding the Globe" }
+      "@graph": [
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Gem Rewards Infographic", "item": "https://anomaly-alpha.github.io/" },
+            { "@type": "ListItem", "position": 2, "name": "Event Rewards Guide", "item": "https://anomaly-alpha.github.io/guide/event/" }
+          ]
+        },
+        {
+          "@type": "Guide",
+          "name": "Invincible Event Rewards Guide — The Long Haul & Earth's Defenders",
+          "description": "Learn strategies for top 5% and top 10% rankings in Invincible events to earn up to 500 gems per week.",
+          "url": "https://anomaly-alpha.github.io/guide/event/",
+          "about": { "@type": "VideoGame", "name": "Invincible Guarding the Globe" }
+        }
+      ]
     }
     </script>
 </head>
@@ -43,6 +54,8 @@
             <span class="text-white/80 font-semibold">Event Guide</span>
             <a href="../pvp/" class="hover:text-white transition-colors gem-text--pvp">PvP</a>
             <a href="../login/" class="hover:text-white transition-colors gem-text--login">Login</a>
+            <a href="../faq/" class="hover:text-white transition-colors gem-text--cyan">FAQ</a>
+            <a href="../beginners/" class="hover:text-white transition-colors gem-text--cyan">New Players</a>
         </nav>
 
         <div class="text-center mb-10 relative">
@@ -60,7 +73,7 @@
                 <h2 class="text-2xl font-bold text-white">Total Event Income</h2>
                 <span class="gem-label gem-label--event text-lg px-4 py-1">500 GEMS / WEEK</span>
             </div>
-            <p class="text-white/60">Two recurring events reward competitive players with up to 500 gems weekly. Your ranking within each event determines your payout tier.</p>
+            <p class="text-white/60">Two recurring events reward competitive players with up to 500 gems weekly. Your ranking within each event determines your payout tier. Unlike login rewards which are guaranteed, event income requires active participation and competitive performance to earn the top rewards.</p>
         </section>
 
         <section class="mx-4 mb-8">
@@ -72,14 +85,14 @@
                     <span class="ml-auto gem-label gem-label--event"><span class="gem-icon--star">★ Top 5%</span></span>
                 </div>
                 <p class="text-white/60 mb-2"><span class="text-white font-semibold">300 GEMS</span> per event cycle</p>
-                <p class="text-white/80 leading-relaxed mb-4">A multi-day endurance event that tests your consistency and strategic planning. Your cumulative score across the event duration determines your ranking — only the top 5% earn this reward. The challenge intensifies each day as scores accumulate and rankings shift. Alliance participation unlocks score multipliers and bonus point events.</p>
+                <p class="text-white/80 leading-relaxed mb-4">A multi-day endurance event that tests your consistency and strategic planning. Your cumulative score across the event duration determines your ranking — only the top 5% earn this reward. The challenge intensifies each day as scores accumulate and rankings shift. Alliance participation unlocks score multipliers and bonus point events. This is the higher-tier event reward, requiring more effort but offering the larger gem payout.</p>
                 <h3 class="text-white font-bold mb-2 tracking-wider">Strategy Tips</h3>
                 <ul class="space-y-2">
-                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Play every day to maintain momentum and avoid losing rank position</li>
-                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Steady high scores beat sporadic burst pushes — consistency is king</li>
-                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Join an alliance for bonus score multipliers and coordinated event participation</li>
-                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Watch for 2x score amplifier windows and plan your biggest pushes then</li>
-                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Prioritize daily quests contributing to event score over general progression</li>
+                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Play every day to maintain momentum and avoid losing rank position — daily decay can undo weeks of progress</li>
+                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Steady high scores beat sporadic burst pushes — consistency is the single most important factor</li>
+                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Join an alliance for bonus score multipliers and coordinated event participation windows</li>
+                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Watch for 2x score amplifier windows and plan your biggest resource pushes around those periods</li>
+                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Prioritize daily quests that contribute to event score over general progression activities</li>
                 </ul>
             </div>
         </section>
@@ -93,15 +106,68 @@
                     <span class="ml-auto gem-label gem-label--event"><span class="gem-icon--star">★ Top 10%</span></span>
                 </div>
                 <p class="text-white/60 mb-2"><span class="text-white font-semibold">200 GEMS</span> per event cycle</p>
-                <p class="text-white/80 leading-relaxed mb-4">An event centered around defending Earth from incoming threats. Your contribution score is calculated from enemies defeated, damage dealt, and objectives completed. The top 10% of contributors earn this reward. Coordination with alliance members amplifies your effectiveness and unlocks bonus score opportunities.</p>
+                <p class="text-white/80 leading-relaxed mb-4">An event centered around defending Earth from incoming threats. Your contribution score is calculated from enemies defeated, damage dealt, and objectives completed. The top 10% of contributors earn this reward — making it more accessible than The Long Haul. Coordination with alliance members amplifies your effectiveness and unlocks bonus score opportunities. The lower rank threshold means more players can earn this reward.</p>
                 <h3 class="text-white font-bold mb-2 tracking-wider">Strategy Tips</h3>
                 <ul class="space-y-2">
-                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Maximize daily contribution through quest completion and enemy defeats</li>
-                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Spend event currency efficiently — avoid wasteful upgrades during active windows</li>
-                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Coordinate with alliance for defense bonus multipliers and shared rewards</li>
-                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Watch for bonus score amplification events and target them specifically</li>
-                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Balance offensive and defensive tasks for optimal contribution ranking</li>
+                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Maximize daily contribution through quest completion and efficient enemy defeat rotations</li>
+                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Spend event currency efficiently — avoid wasteful upgrades during active event windows</li>
+                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Coordinate with alliance members for defense bonus multipliers and shared reward boosts</li>
+                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Watch for bonus score amplification events and target your play sessions around those windows</li>
+                    <li class="flex items-start gap-2 text-white/80"><span class="gem-text--event mt-1">▸</span> Balance offensive and defensive tasks — overcommitting to one can hurt your overall contribution ranking</li>
                 </ul>
+            </div>
+        </section>
+
+        <section class="mx-4 mb-8">
+            <h2 class="text-xl font-bold text-white mb-4 tracking-wider">Event Comparison</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-white/10 text-white/60">
+                            <th class="text-left py-2 pr-4">Feature</th>
+                            <th class="text-left px-4">The Long Haul</th>
+                            <th class="text-left pl-4">Earth's Defenders</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-white/80">
+                        <tr class="border-b border-white/5"><td class="py-2 pr-4 font-semibold">Gem Reward</td><td class="px-4 gem-text--event">300</td><td class="pl-4 gem-text--event">200</td></tr>
+                        <tr class="border-b border-white/5"><td class="py-2 pr-4 font-semibold">Rank Threshold</td><td class="px-4">Top 5%</td><td class="pl-4">Top 10%</td></tr>
+                        <tr class="border-b border-white/5"><td class="py-2 pr-4 font-semibold">Difficulty</td><td class="px-4">Higher — requires daily consistency</td><td class="pl-4">Moderate — more forgiving threshold</td></tr>
+                        <tr class="border-b border-white/5"><td class="py-2 pr-4 font-semibold">Best For</td><td class="px-4">Dedicated daily players with alliance support</td><td class="pl-4">Regular players looking for reliable income</td></tr>
+                        <tr><td class="py-2 pr-4 font-semibold">Key Factor</td><td class="px-4">Cumulative endurance score</td><td class="pl-4">Contribution from defeats and objectives</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="mx-4 mb-8">
+            <h2 class="text-xl font-bold text-white mb-4 tracking-wider">Maximizing Your Event Income</h2>
+            <div class="gem-card gem-card--event p-5">
+                <p class="text-white/80 leading-relaxed mb-3">Together, The Long Haul and Earth's Defenders provide up to 500 gems per week. To consistently earn the full amount, focus on these key areas:</p>
+                <ul class="space-y-2 text-white/80">
+                    <li class="flex items-start gap-2"><span class="gem-text--event mt-1">▸</span> <strong class="text-white">Alliance membership is essential</strong> — solo players will struggle to reach top rankings. An active alliance provides score multipliers, shared bonuses, and strategic coordination</li>
+                    <li class="flex items-start gap-2"><span class="gem-text--event mt-1">▸</span> <strong class="text-white">Track event schedules</strong> — knowing when events start and end lets you plan resource allocation and time investment</li>
+                    <li class="flex items-start gap-2"><span class="gem-text--event mt-1">▸</span> <strong class="text-white">Save resources between events</strong> — hoarding event currency and boosters between cycles gives you a day-one advantage</li>
+                    <li class="flex items-start gap-2"><span class="gem-text--event mt-1">▸</span> <strong class="text-white">Combine with login rewards</strong> — daily login gems (130/day) can fund refreshes and event entry costs</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="mx-4 mb-8">
+            <h2 class="text-xl font-bold text-white mb-4 tracking-wider">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="gem-card gem-card--event p-4">
+                    <h3 class="text-white font-bold mb-1">How often do events rotate?</h3>
+                    <p class="text-white/70 text-sm">Events typically run on a weekly cycle with occasional special events tied to game updates or holidays. The Long Haul and Earth's Defenders alternate or run concurrently, giving regular opportunities for gem income.</p>
+                </div>
+                <div class="gem-card gem-card--event p-4">
+                    <h3 class="text-white font-bold mb-1">Can I earn from both events in the same week?</h3>
+                    <p class="text-white/70 text-sm">Yes. When both events are active simultaneously, you can earn up to 500 gems by placing in the top 5% of The Long Haul (300) and top 10% of Earth's Defenders (200). This requires managing your time and resources across both events.</p>
+                </div>
+                <div class="gem-card gem-card--event p-4">
+                    <h3 class="text-white font-bold mb-1">What happens if I don't make the top threshold?</h3>
+                    <p class="text-white/70 text-sm">Only players within the required ranking thresholds earn gem rewards. If you don't reach top 5% or top 10%, you may still earn smaller consolation rewards like coins, XP, or other resources, but the gem payout requires competitive placement.</p>
+                </div>
             </div>
         </section>
 
