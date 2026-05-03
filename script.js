@@ -449,7 +449,6 @@ function updateAllPageTotals(skipAnimation) {
         if (skipAnimation) {
           totalEl.textContent = total.toLocaleString();
         } else {
-          totalEl.textContent = total;
           animateValue(totalEl, total, 400);
         }
       }
