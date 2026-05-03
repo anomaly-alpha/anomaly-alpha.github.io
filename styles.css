@@ -208,12 +208,13 @@ body {
 }
 
 .gem-card__title {
-  font-size: 1.25rem;
+  font-size: 1.55rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   margin-bottom: 0.5rem;
   margin-top: 0.75rem;
+  font-family: 'Orbitron', sans-serif;
 }
 .gem-card__title--event {
   color: #fff;
