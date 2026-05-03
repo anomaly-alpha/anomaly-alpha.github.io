@@ -1131,6 +1131,25 @@ body .gem-card--mode-highlight--all {
   box-shadow: 0 0 25px rgba(46, 204, 113, 0.35), 0 8px 32px rgba(0, 0, 0, 0.25);
   transform: scale(1.05);
 }
+.gem-mode-btn--code.active:hover {
+  background-color: rgba(46, 204, 113, 0.18);
+}
+
+.gem-mode-btn--login.active:hover {
+  background-color: rgba(243, 156, 18, 0.18);
+}
+
+.gem-mode-btn--event.active:hover {
+  background-color: rgba(255, 107, 53, 0.18);
+}
+
+.gem-mode-btn--pvp.active:hover {
+  background-color: rgba(233, 30, 138, 0.18);
+}
+
+.gem-mode-btn--all.active:hover {
+  background-color: rgba(0, 229, 255, 0.18);
+}
 
 .gem-mode-btn__icon {
   width: 1.5rem;
