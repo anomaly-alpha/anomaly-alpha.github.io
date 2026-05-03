@@ -11,8 +11,8 @@
 >
 > Drop your league + rank into the **Gem Rewards Calculator** and see exactly what you'll earn — Restricted Arena, Open Arena, Multiverse War, events, login streaks, and promo codes all in one place.
 >
-> 🔹 Live PvP payout tables (all 14 leagues, 120 ranks)
-> 🔹 Event & login reward tracker
+> 🔹 Live PvP payout tables (all 14 leagues, 120 ranks) → https://anomaly-alpha.github.io/guide/pvp/
+> 🔹 Event & login reward tracker → https://anomaly-alpha.github.io/guide/event/
 > 🔹 Weekly countdown timers
 > 🔹 Charts to visualise your income
 >
@@ -47,10 +47,10 @@
 >
 > I put together a little tool to help plan weekly gem income across all sources:
 >
-> - PvP payouts for Restricted Arena, Open Arena & Multiverse War (all 14 leagues, ranks 1–120)
-> - Event reward estimates (The Long Haul, Earth's Defenders)
-> - Login rewards (daily, weekly, monthly)
-> - Current promo codes
+> - PvP payouts for Restricted Arena, Open Arena & Multiverse War (all 14 leagues, ranks 1–120) → https://anomaly-alpha.github.io/guide/pvp/
+> - Event reward estimates (The Long Haul, Earth's Defenders) → https://anomaly-alpha.github.io/guide/event/
+> - Login rewards (daily, weekly, monthly) → https://anomaly-alpha.github.io/guide/login/
+> - Current promo codes → https://anomaly-alpha.github.io/guide/code/
 > - Charts to track your totals and targets
 >
 > No install, no login, no data collection. Just a static HTML page that works on mobile + desktop.
@@ -66,10 +66,10 @@
 >
 > Want to know exactly how many gems you'll earn this week? The Gem Rewards Calculator gives you:
 >
-> ✅ Live PvP payouts — all leagues, all ranks
-> ✅ Event reward tracker
-> ✅ Login streak breakdown
-> ✅ Current promo codes
+> ✅ Live PvP payouts — all leagues, all ranks → https://anomaly-alpha.github.io/guide/pvp/
+> ✅ Event reward tracker → https://anomaly-alpha.github.io/guide/event/
+> ✅ Login streak breakdown → https://anomaly-alpha.github.io/guide/login/
+> ✅ Current promo codes → https://anomaly-alpha.github.io/guide/code/
 > ✅ Charts to spot your best income sources
 >
 > Free, no signup, works in your browser:
@@ -103,10 +103,10 @@
 > As a side project, I created a static web tool that calculates weekly gem earnings across all PvP leagues, events, login rewards, and promo codes for Invincible: Guarding the Globe.
 >
 > The calculator handles:
-> • 14 PvP leagues with 120 rank tiers each (Restricted, Open, Multiverse)
-> • Event reward tier estimates
-> • Login streak totals (daily, weekly, monthly)
-> • Current promo code redemption
+> • 14 PvP leagues with 120 rank tiers each → https://anomaly-alpha.github.io/guide/pvp/
+> • Event reward tier estimates → https://anomaly-alpha.github.io/guide/event/
+> • Login streak totals (daily, weekly, monthly) → https://anomaly-alpha.github.io/guide/login/
+> • Current promo code redemption → https://anomaly-alpha.github.io/guide/code/
 > • Visual charts for income distribution
 >
 > Built with vanilla HTML, CSS, and JS — no frameworks, no runtime dependencies, no tracking.
@@ -177,10 +177,10 @@
 > 🔗 **Try it yourself:** https://anomaly-alpha.github.io
 >
 > **What's covered:**
-> 0:00 – Overview & PvP Payouts (Restricted, Open, Multiverse)
-> 1:30 – Event Rewards (The Long Haul, Earth's Defenders)
-> 2:15 – Login Streaks (daily, weekly, monthly)
-> 2:45 – Promo Codes
+> 0:00 – Overview & PvP Payouts → https://anomaly-alpha.github.io/guide/pvp/
+> 1:30 – Event Rewards → https://anomaly-alpha.github.io/guide/event/
+> 2:15 – Login Streaks → https://anomaly-alpha.github.io/guide/login/
+> 2:45 – Promo Codes → https://anomaly-alpha.github.io/guide/code/
 > 3:10 – Charts & Filters
 > 3:40 – PvP League/Rank Selectors
 >
