@@ -176,10 +176,6 @@ body {
   gap: 0.125rem;
 }
 
-.gem-card__body > :last-child {
-  margin-top: auto;
-}
-
 .gem-card__gems {
   font-size: 2.25rem;
   font-weight: 700;
@@ -196,10 +192,6 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-family: 'Orbitron', sans-serif;
-}
-
-.gem-card__body > :last-child {
-  margin-top: auto;
 }
 
 .gem-card__glow {
