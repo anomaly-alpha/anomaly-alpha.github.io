@@ -1254,7 +1254,7 @@ body .gem-card--mode-highlight--all {
 }
 
 .gem-animate--countdown-pulse {
-  animation: gem-countdown-pulse 1s ease-out infinite;
+  animation: gem-countdown-pulse 3s ease-in-out infinite;
 }
 
 /* Countdown transition */
