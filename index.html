@@ -3,9 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Interactive gem rewards infographic for Invincible mobile game — weekly reward sources with PvP calculators, event trackers, login streaks, and promo codes.">
+    <meta name="description" content="Plan your weekly gem income in Invincible mobile game — interactive PvP payout calculator with all 14 leagues and 120 ranks, event reward tracker, login streak guide, and promo codes. ~2,543 gems/week from all sources.">
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
-    <title>Invincible - Gem Rewards Infographic</title>
+    <link rel="canonical" href="https://anomaly-alpha.github.io/">
+    <meta property="og:title" content="Invincible Mobile Game — Weekly Gem Rewards &amp; PvP Calculator">
+    <meta property="og:description" content="Plan your weekly gem income in Invincible mobile game — interactive PvP payout calculator with all 14 leagues and 120 ranks, event tracker, login streaks, and promo codes.">
+    <meta property="og:url" content="https://anomaly-alpha.github.io/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://anomaly-alpha.github.io/og-image.svg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Invincible Mobile Game — Weekly Gem Rewards &amp; PvP Calculator">
+    <meta name="twitter:description" content="Plan your weekly gem income in Invincible mobile game — interactive PvP payout calculator, event tracker, login streaks, and promo codes.">
+    <title>Invincible Mobile Game — Weekly Gem Rewards &amp; PvP Calculator</title>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
@@ -353,6 +364,67 @@
   }
 }
     </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebPage",
+          "name": "Invincible Mobile Game — Weekly Gem Rewards &amp; PvP Calculator",
+          "description": "Plan your weekly gem income in Invincible mobile game with an interactive PvP payout calculator, event reward tracker, login streak guide, and promo codes.",
+          "url": "https://anomaly-alpha.github.io/",
+          "about": {
+            "@type": "VideoGame",
+            "name": "Invincible Mobile Game"
+          },
+          "relatedLink": [
+            "https://anomaly-alpha.github.io/guide/code/",
+            "https://anomaly-alpha.github.io/guide/event/",
+            "https://anomaly-alpha.github.io/guide/pvp/",
+            "https://anomaly-alpha.github.io/guide/login/"
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "How many gems can I earn per week in Invincible mobile game?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Players can earn approximately 2,543 gems per week from all sources: events (500), PvP (varies by league and rank, ~1,428 with default settings), login rewards (993), and promo codes (300)."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What are the PvP leagues in Invincible?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "There are 14 PvP leagues: Intern, Junior I through III, Intermediate I through III, Senior I through III, Elite I through III, and Invincible. Higher leagues provide better gem multipliers."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What is the current promo code for Invincible?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The current promo code is 30KGTG, worth 300 gems. Tap to reveal on the rewards infographic."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do login rewards work in Invincible?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Login rewards include daily (130 gems per day, 910 per week), weekly (60 gems), and monthly (90 gems per month, ~23 per week) rewards for a total of 993 gems per week."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
 </head>
 <body class="relative min-h-screen flex items-center justify-center p-5 md:p-10 gem-grid-bg">
 
@@ -380,7 +452,7 @@
                 <div class="gem-header-icon__inner"></div>
             </div>
             <h1 class="gem-title--hero">
-                GEM REWARDS
+                <span class="sr-only">Invincible Mobile Game — </span>GEM REWARDS
             </h1>
             <p class="gem-subtitle--hero">
                 INVINCIBLE GUARDING THE GLOBE
@@ -391,7 +463,7 @@
             <div class="gem-section__rotating-bg"></div>
             <p class="text-white/80 text-lg tracking-[0.2em] uppercase relative z-10"><i class="fas fa-gem mr-2"></i>Total Gems Obtained</p>
             <p class="text-6xl md:text-7xl font-bold text-white relative z-10 drop-shadow-[0_0_30px_rgba(233,30,138,0.8)] tracking-[0.2em] gem-counter">
-                <span id="totalCounter">0</span>
+                <span id="totalCounter">3221</span>
             </p>
             <p class="text-white/60 text-xs tracking-wider mt-2 relative z-10"><i class="fas fa-clock mr-1"></i>WEEKLY CALCULATION</p>
         </section>
@@ -399,7 +471,7 @@
         <nav class="gem-grid--modes my-4">
             <button onclick="filterCards('all', event)" class="gem-mode-btn gem-mode-btn--all active">
                 <i class="fas fa-th-large gem-mode-btn__icon gem-text--cyan"></i>
-                <p class="gem-mode-btn__count gem-text--cyan"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>1843</p>
+                <p class="gem-mode-btn__count gem-text--cyan"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>3221</p>
                 <p class="gem-mode-btn__label gem-text--cyan">All Modes</p>
             </button>
             <button onclick="filterCards('code', event)" class="gem-mode-btn gem-mode-btn--code active">
@@ -416,13 +488,13 @@
             </button>
             <button onclick="filterCards('pvp', event)" class="gem-mode-btn gem-mode-btn--pvp active">
                 <i class="fas fa-fist-raised gem-mode-btn__icon gem-text--pvp"></i>
-                <p class="gem-mode-btn__count gem-text--pvp"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>750</p>
+                <p class="gem-mode-btn__count gem-text--pvp"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>1428</p>
                 <p class="gem-mode-btn__label gem-text--pvp">PvP</p>
                 <span id="countdown-pvp" class="gem-mode-btn__countdown gem-text--pvp gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
             <button onclick="filterCards('login', event)" class="gem-mode-btn gem-mode-btn--login active">
                 <i class="fas fa-sign-in-alt gem-mode-btn__icon gem-text--login"></i>
-                <p class="gem-mode-btn__count gem-text--login"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>293</p>
+                <p class="gem-mode-btn__count gem-text--login"><span class="gem-icon--gem" style="width:12px;height:12px;"></span>993</p>
                 <p class="gem-mode-btn__label gem-text--login">Login</p>
                 <span id="countdown-login" class="gem-mode-btn__countdown gem-text--login gem-countdown gem-animate--countdown-pulse">--:--:--</span>
             </button>
@@ -451,6 +523,7 @@
                         <span class="gem-code__value">30KGTG</span>
                         <span class="gem-code__copy-hint">click to copy</span>
                     </div>
+                    <a href="guide/code/" class="block text-center mt-2 text-xs gem-text--code hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
                 <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
                     Code reward
@@ -475,6 +548,7 @@
                 </div>
                 <div class="gem-divider">
                     <p class="gem-card__desc">Complete the ultimate endurance challenge and claim your place among the top 5% survivors</p>
+                    <a href="guide/event/" class="block text-center mt-2 text-xs gem-text--event hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
                 <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
                     Top 5% event ranking
@@ -499,6 +573,7 @@
                 </div>
                 <div class="gem-divider">
                     <p class="gem-card__desc">Answer the call to defend Earth and rise through the elite top 10% rankings</p>
+                    <a href="guide/event/" class="block text-center mt-2 text-xs gem-text--event hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
                 <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
                     Top 10% event ranking
@@ -513,12 +588,12 @@
                 </button>
                 <div class="gem-card__body">
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp1-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp1-gems">476</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
 
                     <div class="flex gap-4 text-sm text-white/60 mb-3">
-                        <span><i class="fas fa-layer-group gem-text--purple"></i> <span id="pvp1-cards">0</span> Cards</span>
-                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp1-chips">0</span> Chips</span>
+                        <span><i class="fas fa-layer-group gem-text--purple"></i> <span id="pvp1-cards">1</span> Cards</span>
+                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp1-chips">510</span> Chips</span>
                     </div>
 
                     <h2 class="gem-card__title gem-card__title--pvp">Restricted Arena</h2>
@@ -560,6 +635,7 @@
                             <i class="fas fa-times-circle"></i>
                         </button>
                     </div>
+                    <a href="guide/pvp/" class="block text-center mt-2 text-xs gem-text--pvp hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
             </article>
 
@@ -571,12 +647,12 @@
                 </button>
                 <div class="gem-card__body">
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp2-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp2-gems">476</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
 
                     <div class="flex gap-4 text-sm text-white/60 mb-3">
-                        <span><i class="fas fa-layer-group gem-text--purple"></i> <span id="pvp2-cards">0</span> Cards</span>
-                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp2-chips">0</span> Chips</span>
+                        <span><i class="fas fa-layer-group gem-text--purple"></i> <span id="pvp2-cards">1</span> Cards</span>
+                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp2-chips">510</span> Chips</span>
                     </div>
 
                     <h2 class="gem-card__title gem-card__title--pvp">Open Arena</h2>
@@ -618,6 +694,7 @@
                             <i class="fas fa-times-circle"></i>
                         </button>
                     </div>
+                    <a href="guide/pvp/" class="block text-center mt-2 text-xs gem-text--pvp hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
             </article>
 
@@ -629,12 +706,12 @@
                 </button>
                 <div class="gem-card__body">
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp3-gems">0</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp3-gems">476</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
 
                     <div class="flex gap-4 text-sm text-white/60 mb-3">
-                        <span><i class="fas fa-layer-group gem-text--purple"></i> <span id="pvp3-cards">0</span> Cards</span>
-                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp3-chips">0</span> Chips</span>
+                        <span><i class="fas fa-layer-group gem-text--purple"></i> <span id="pvp3-cards">1</span> Cards</span>
+                        <span><i class="fas fa-coins gem-text--login"></i> <span id="pvp3-chips">510</span> Chips</span>
                     </div>
 
                     <h2 class="gem-card__title gem-card__title--pvp">Multiverse Alliance War</h2>
@@ -681,6 +758,7 @@
                             <i class="fas fa-times-circle"></i>
                         </button>
                     </div>
+                    <a href="guide/pvp/" class="block text-center mt-2 text-xs gem-text--pvp hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
             </article>
 
@@ -701,6 +779,7 @@
                 </div>
                 <div class="gem-divider">
                     <p class="gem-card__desc">Check in daily to build your streak—30 free gems plus 100 from chest rewards (requires completing daily operations) for the first 7 days of the week</p>
+                    <a href="guide/login/" class="block text-center mt-2 text-xs gem-text--login hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
                 <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
                     (30 free + 100 from chests) × 7 days = 910
@@ -724,6 +803,7 @@
                 </div>
                 <div class="gem-divider">
                     <p class="gem-card__desc">Return each week to claim your loyal defender's bonus—60 gems await</p>
+                    <a href="guide/login/" class="block text-center mt-2 text-xs gem-text--login hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
                 <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
                     60 gems per week
@@ -747,6 +827,7 @@
                 </div>
                 <div class="gem-divider">
                     <p class="gem-card__desc">The monthly hero returns every 4 weeks—90 gems divided into weekly glory</p>
+                    <a href="guide/login/" class="block text-center mt-2 text-xs gem-text--login hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
                 <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
                     90 gems per month ÷ 4 = 23/week
