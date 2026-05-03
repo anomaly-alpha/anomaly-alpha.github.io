@@ -37,10 +37,14 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 
 ## Architecture
 - Inline JSON configs in HTML `<head>` (no fetch, works from `file://`)
-- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME` — global config objects
+- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME`, `CONTRIBUTORS` — global config objects
 - `getPvpPayout(arena, leagueId, rank)` — core PvP calculation function, reads per-league payout tables from `GAME.pvp.arenas` (restricted/open) and `GAME.pvp.multiverse` (6 grouped leagues for Multiverse War)
-- `CARD_MODAL_DATA` — static object holding all 9 card modal contents
+- Modal data lives in `REWARDS.cards[].modal` — loaded via `findCardById(id)` helper
 - `showCardModal(cardId)` / `closeCardModal()` — modal lifecycle
+- Category colors centralized in `UI.categoryColors` (canonical source)
+- Chart filter CSS classes in `UI.chartFilterCssClasses`
+- Contributors stored in `CONTRIBUTORS.contributors` (hex colors, used for JSON-LD author sync)
+- PvP league select options generated from `GAME.pvp.leagues` (14) and `GAME.pvp.multiverseLeagues` (6)
 - Structured data: WebPage + FAQPage schema on main page, Guide schema on detail pages
 - OG/Twitter cards: 10 meta tags for rich social sharing
 

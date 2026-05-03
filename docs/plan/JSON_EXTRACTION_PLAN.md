@@ -1,6 +1,7 @@
 # JSON Data Extraction Plan - Gem Rewards Infographic
 
 > **Note:** This document describes the old data model. Current correct values: daily login=130/day (910/week), weekly login=460, login total=1,393/week, total=4,043/week.
+> **Additional changes:** CARD_MODAL_DATA moved into `rewards-config.cards[].modal`; `loginRewards` array removed (computed from cards); category colors centralized to `ui-config.categoryColors`; `contributors-config` added.
 
 **Document Status:** Implementation Guide
 **Created:** May 2, 2026

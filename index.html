@@ -360,7 +360,27 @@
       "restricted": {"win": 30, "loss": 0, "entryToken": "Hardcore PvP Entry Token", "unlockCost": 100}
     },
     "demotionThreshold": 86,
-    "defaults": {"league": "eliteII", "rank": 13}
+    "multiverseLeagueGroupMap": {
+      "intern": "intern",
+      "junior1": "junior", "junior2": "junior", "junior3": "junior",
+      "intermediate1": "intermediate", "intermediate2": "intermediate", "intermediate3": "intermediate",
+      "senior1": "senior", "senior2": "senior", "senior3": "senior",
+      "eliteI": "elite", "eliteII": "elite", "eliteIII": "elite",
+      "invincible": "invincible"
+    },
+    "multiverseLeagues": [
+      {"id": "intern", "name": "Intern"},
+      {"id": "junior", "name": "Junior"},
+      {"id": "intermediate", "name": "Intermediate"},
+      {"id": "senior", "name": "Senior"},
+      {"id": "elite", "name": "Elite"},
+      {"id": "invincible", "name": "Invincible"}
+    ],
+    "defaults": {
+      "league": "eliteII",
+      "rank": 13,
+      "multiverse": {"league": "elite", "rank": 13}
+    }
   },
   "spiderTargets": {
     "events": 550,
@@ -408,7 +428,21 @@
       "code": "30KGTG",
       "isRevealable": true,
       "description": "A secret code whispered among allies—tap to reveal",
-      "delay": 0
+      "tooltip": "Code reward",
+      "guideUrl": "guide/code/",
+      "delay": 0,
+      "modal": {
+        "hero": "\"A secret code whispered among allies.\"",
+        "description": "A promotional code that rewards 300 gems when redeemed. The code is shared through official Invincible game channels, community events, and special promotions. Tap the card to reveal the code, then tap again to copy it to your clipboard for redemption in the in-game store.",
+        "badge": "\u2605 Tap to Reveal",
+        "tips": [
+          "Tap the card to reveal the code — a 3D flip animation reveals the characters",
+          "Tap the revealed code to copy it instantly to your clipboard",
+          "Codes have expiration dates — redeem them promptly when discovered",
+          "Follow official Invincible social media for new codes as they release",
+          "Some codes are one-time use — don't share claimed codes"
+        ]
+      }
     },
     {
       "id": "the-long-haul",
@@ -417,7 +451,21 @@
       "gems": 300,
       "badge": "Top 5%",
       "description": "Complete the ultimate endurance challenge and claim your place among the top 5% survivors",
-      "delay": 1
+      "tooltip": "Top 5% event ranking",
+      "guideUrl": "guide/event/",
+      "delay": 1,
+      "modal": {
+        "hero": "\"Endurance is everything.\"",
+        "description": "A multi-day endurance event that tests your consistency and strategic planning. Your cumulative score across the event duration determines your ranking — only the top 5% earn this reward. The challenge intensifies each day as scores accumulate and rankings shift. Alliance participation unlocks score multipliers and bonus point events.",
+        "badge": "\u2605 Top 5%",
+        "tips": [
+          "Play every day to maintain momentum and avoid losing rank position",
+          "Steady high scores beat sporadic burst pushes — consistency is king",
+          "Join an alliance for bonus score multipliers and coordinated event participation",
+          "Watch for 2x score amplifier windows and plan your biggest pushes then",
+          "Prioritize daily quests contributing to event score over general progression"
+        ]
+      }
     },
     {
       "id": "earths-defenders",
@@ -426,7 +474,21 @@
       "gems": 200,
       "badge": "Top 10%",
       "description": "Answer the call to defend Earth and rise through the elite top 10% rankings",
-      "delay": 2
+      "tooltip": "Top 10% event ranking",
+      "guideUrl": "guide/event/",
+      "delay": 2,
+      "modal": {
+        "hero": "\"Defend Earth. Rise above the rest.\"",
+        "description": "An event centered around defending Earth from incoming threats. Your contribution score is calculated from enemies defeated, damage dealt, and objectives completed. The top 10% of contributors earn this reward. Coordination with alliance members amplifies your effectiveness and unlocks bonus score opportunities.",
+        "badge": "\u2605 Top 10%",
+        "tips": [
+          "Maximize daily contribution through quest completion and enemy defeats",
+          "Spend event currency efficiently — avoid wasteful upgrades during active windows",
+          "Coordinate with alliance for defense bonus multipliers and shared rewards",
+          "Watch for bonus score amplification events and target them specifically",
+          "Balance offensive and defensive tasks for optimal contribution ranking"
+        ]
+      }
     },
     {
       "id": "restricted-arena",
@@ -435,7 +497,21 @@
       "frequency": "Weekly",
       "icon": "fa-clock",
       "cardIndex": 2,
-      "delay": 3
+      "delay": 3,
+      "tooltip": "Weekly PvP arena",
+      "guideUrl": "guide/pvp/",
+      "modal": {
+        "hero": "\"Enter the arena. Prove your rank.\"",
+        "description": "A weekly competitive PvP arena where your league and rank determine your baseline rewards. Higher leagues and ranks earn exponentially more gems, cards, and chips. Placement rewards are based on your ranking within your league at the end of the week.",
+        "badge": "\u2605 Weekly",
+        "tips": [
+          "Climb to at least Elite II rank 13 for optimal gem-to-effort value",
+          "Higher league multipliers dramatically increase all gem and chip rewards",
+          "Cards earned are NOT multiplied by league — always awarded at base rate",
+          "Alliance participation can provide ranking protection and bonus rewards",
+          "Consistent weekly play prevents rank decay and maintains tier placement"
+        ]
+      }
     },
     {
       "id": "open-arena",
@@ -444,7 +520,21 @@
       "frequency": "Weekly",
       "icon": "fa-clock",
       "cardIndex": 1,
-      "delay": 2
+      "delay": 2,
+      "tooltip": "Weekly PvP arena",
+      "guideUrl": "guide/pvp/",
+      "modal": {
+        "hero": "\"Open competition. Climb the ranks.\"",
+        "description": "An open weekly arena for all players regardless of league. Performance is based purely on match results and ranking within your skill tier. Unlike Restricted Arena, the payout structure varies dramatically with rank. Strategic matchmaking and meta team composition significantly impact final placement and rewards.",
+        "badge": "\u2605 Weekly",
+        "tips": [
+          "Play consistently throughout the week rather than rushing last-day placements",
+          "Meta team compositions outperform individual skill at higher ranking tiers",
+          "Review match history for patterns and adjust your approach accordingly",
+          "Higher ranks in open arena grant exponentially better gem multipliers",
+          "Coordinate with alliance members for duo and trio queue advantages"
+        ]
+      }
     },
     {
       "id": "multiverse-war",
@@ -454,17 +544,44 @@
       "icon": "fa-globe",
       "hasDemotionWarning": true,
       "cardIndex": 3,
-      "delay": 4
+      "delay": 4,
+      "tooltip": "Global alliance warfare",
+      "guideUrl": "guide/pvp/",
+      "modal": {
+        "hero": "\"Alliance versus alliance. Global war.\"",
+        "description": "The ultimate PvP experience — a 5-match series over two weeks between alliances. Your individual performance contributes to your alliance's overall war score. The stakes are high: demotion becomes a real risk if your personal ranking drops below rank 86. Victory requires coordinated effort, strategic matchups, and consistent high-performance play.",
+        "badge": "\u2605 5 Matches / 2 Weeks",
+        "tips": [
+          "Coordinate with alliance for optimal team compositions every match",
+          "Spread your 5 matches evenly across the 2-week period for consistent scores",
+          "Individual performance directly affects alliance war ranking — bring your best",
+          "After war ends, reassess your league/rank strategy for the next cycle",
+          "Rank 86+ triggers demotion zone — monitor your rank throughout the war"
+        ]
+      }
     },
     {
       "id": "daily-login",
       "category": "login",
       "title": "Daily Login",
       "gems": 910,
-      "formula": {"base": 130, "operator": "×", "frequency": 7, "display": "130×7=910"},
-      "description": "Check in daily to build your streak—30 free gems plus 100 from chest rewards (requires completing daily operations) for the first 7 days of the week",
-      "tooltip": "(30 free + 100 from chests) × 7 days = 910",
-      "delay": 5
+      "formula": {"base": 130, "operator": "\u00d7", "frequency": 7, "display": "130\u00d77=910"},
+      "description": "Check in daily to build your streak\u201430 free gems plus 100 from chest rewards (requires completing daily operations) for the first 7 days of the week",
+      "tooltip": "(30 free + 100 from chests) \u00d7 7 days = 910",
+      "guideUrl": "guide/login/",
+      "delay": 5,
+      "modal": {
+        "hero": "\"7 days. 910 gems. Every week.\"",
+        "description": "The foundation of your weekly gem income. You get 30 free gems each day, plus an additional 100 gems from chest rewards that require completing daily operations. With the streak running for the first 7 days of each week, that's 910 gems total. The weekly reset happens every Monday at server reset.",
+        "badge": "\u2605 130\u00d77",
+        "tips": [
+          "Complete all daily operations to unlock the full 130 gems (30 free + 100 from chests)",
+          "Set a daily reminder to log in at the same time each day for consistency",
+          "Never miss a day \u2014 broken streaks take weeks to fully recover value from",
+          "Stack with daily (910), weekly (460), and monthly (23) login rewards for maximum income",
+          "Link your account to a device for convenience features like auto-login"
+        ]
+      }
     },
     {
       "id": "weekly-login",
@@ -472,37 +589,65 @@
       "title": "Weekly Login",
       "gems": 460,
       "formula": {"base": 460, "operator": null, "frequency": 1, "display": "60+400=460"},
-      "description": "Return each week to claim your loyal defender's bonus—60 free gems plus 400 from chest rewards (requires completing daily operations)",
+      "description": "Return each week to claim your loyal defender's bonus\u201460 free gems plus 400 from chest rewards (requires completing daily operations)",
       "tooltip": "60 free + 400 from chests = 460",
-      "delay": 3
+      "guideUrl": "guide/login/",
+      "delay": 3,
+      "modal": {
+        "hero": "\"Loyalty has its rewards.\"",
+        "description": "A bonus reward for players who return each week. Claim 60 free gems plus 400 from chest rewards (requires completing daily operations) for a total of 460 gems per week. This stacks with daily login bonuses \u2014 together they total 1,370 gems per week before monthly rewards. The weekly period resets alongside the daily login streak on Monday.",
+        "badge": "\u2605 Weekly",
+        "tips": [
+          "Complete daily operations to unlock the full 400-gem chest reward each week",
+          "Just one login per week is sufficient \u2014 claim early to avoid forgetting",
+          "Combine with daily (910) + weekly (460) for a 1,370 gem/week base income",
+          "Use the Monday reset as your reminder to check all login rewards at once",
+          "No special strategy needed \u2014 just the habit of checking in weekly"
+        ]
+      }
     },
     {
       "id": "monthly-login",
       "category": "login",
       "title": "Monthly Login",
       "gems": 23,
-      "formula": {"base": 90, "operator": "÷", "frequency": 4, "display": "90÷4=23"},
-      "description": "The monthly hero returns every 4 weeks—90 gems divided into weekly glory",
-      "tooltip": "90 gems per month ÷ 4 = 23/week",
-      "delay": 4
+      "formula": {"base": 90, "operator": "\u00f7", "frequency": 4, "display": "90\u00f74=23"},
+      "description": "The monthly hero returns every 4 weeks\u201490 gems divided into weekly glory",
+      "tooltip": "90 gems per month \u00f7 4 = 23/week",
+      "guideUrl": "guide/login/",
+      "delay": 4,
+      "modal": {
+        "hero": "\"Every 4 weeks, return stronger.\"",
+        "description": "The monthly hero bonus rewards long-term consistent players. 90 gems are divided into four weekly claiming periods, giving you approximately 23 gems per week effectively. This compounds with daily (910) and weekly (460) login rewards for a total of ~1,393 gems/week from login bonuses alone.",
+        "badge": "\u2605 90\u00f74",
+        "tips": [
+          "Check in every 4 weeks to claim your divided portion of the monthly bonus",
+          "The monthly schedule aligns with major game content updates and events",
+          "Long-term consistent players accumulate significant gem advantages",
+          "Combine with daily (910) + weekly (460) for ~1,393 gems/week total login income",
+          "No special strategy \u2014 just the habit of returning monthly"
+        ]
+      }
     }
   ],
-  "loginRewards": [
-    {"name": "Daily", "baseGems": 130, "frequency": 7, "weeklyTotal": 910},
-    {"name": "Weekly", "baseGems": 460, "frequency": 1, "weeklyTotal": 460},
-    {"name": "Monthly", "baseGems": 90, "frequency": 4, "weeklyTotal": 23}
-  ],
   "promoCode": "30KGTG"
+}
+    </script>
+
+    <script type="application/json" id="contributors-config">
+{
+  "contributors": [
+    {"name": "Anomaly", "color": "#00e5ff"},
+    {"name": "TheOneTruePanda", "color": "#e91e8a"},
+    {"name": "dbp loves allen", "color": "#ff6b35"},
+    {"name": "Sy", "color": "#facc15"}
+  ]
 }
     </script>
 
     <script type="application/json" id="chart-config">
 {
   "colors": {
-    "event": "#ff6b35",
-    "pvp": "#e91e8a",
-    "login": "#f39c12",
-    "code": "#2ecc71",
     "disabled": "#333333",
     "cyan": "#00e5ff",
     "pink": "#e91e8a",
@@ -512,7 +657,7 @@
     "distribution": ["Events", "PvP", "Login", "Code"],
     "spider": ["Events", "PvP", "Login", "Code"]
   },
-
+  "rewardsChartActiveColor": "#00e5ff",
   "tooltip": {
     "backgroundColor": "rgba(10, 35, 60, 0.95)",
     "borderColor": "rgba(0, 229, 255, 0.5)",
@@ -592,6 +737,18 @@
   "defaults": {
     "selectedModes": ["event", "pvp", "login", "code"],
     "chartsVisible": true
+  },
+  "categoryColors": {
+    "event": "#ff6b35",
+    "pvp": "#e91e8a",
+    "login": "#f39c12",
+    "code": "#2ecc71"
+  },
+  "chartFilterCssClasses": {
+    "event": "orange-accent",
+    "pvp": "pink-glow",
+    "login": "yellow-accent",
+    "code": "green-accent"
   }
 }
     </script>
@@ -778,7 +935,7 @@
             <div class="gem-section__rotating-bg"></div>
             <p class="text-white/80 text-lg tracking-[0.2em] uppercase relative z-10"><svg class="mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor"><path d="M116.7 33.8c4.5-6.1 11.7-9.8 19.3-9.8l240 0c7.6 0 14.8 3.6 19.3 9.8l112 152c6.8 9.2 6.1 21.9-1.5 30.4l-232 256c-4.5 5-11 7.9-17.8 7.9s-13.2-2.9-17.8-7.9l-232-256c-7.7-8.5-8.3-21.2-1.5-30.4l112-152zm38.5 39.8c-3.3 2.5-4.2 7-2.1 10.5l57.4 95.6L63.3 192c-4.1 .3-7.3 3.8-7.3 8s3.2 7.6 7.3 8l192 16c.4 0 .9 0 1.3 0l192-16c4.1-.3 7.3-3.8 7.3-8s-3.2-7.6-7.3-8L301.5 179.8l57.4-95.6c2.1-3.5 1.2-8.1-2.1-10.5s-7.9-2-10.7 1L256 172.2 165.9 74.6c-2.8-3-7.4-3.4-10.7-1z"/></svg>Total Gems Obtained</p>
             <p class="text-6xl md:text-7xl font-bold text-white relative z-10 drop-shadow-[0_0_30px_rgba(233,30,138,0.8)] tracking-[0.2em] gem-counter">
-                <span id="totalCounter">4043</span>
+                <span id="totalCounter"></span>
             </p>
             <p class="text-white/60 text-xs tracking-wider mt-2 relative z-10"><svg class="mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor"><path d="M256 0a256 256 0 1 1 0 512A256 256 0 1 1 256 0zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg>WEEKLY CALCULATION</p>
         </section>
@@ -827,7 +984,7 @@
         <main class="gem-grid--cards my-8">
 
             <!-- ===== CARD: Promo Code (Code category) ===== -->
-            <div class="gem-card gem-card--code gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-0" data-category="code" onclick="revealCode(this)">
+            <div class="gem-card gem-card--code gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-0" data-category="code" data-card-id="promo-code" onclick="revealCode(this)">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-green-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--code"></div>
                 <button onclick="showCardModal('promo-code')" class="gem-card__info-btn" title="About this reward">
@@ -851,16 +1008,12 @@
                         <span class="gem-code__value">30KGTG</span>
                         <span class="gem-code__copy-hint">click to copy</span>
                     </div>
-                    <a href="guide/code/" class="block text-center mt-2 text-xs gem-text--code hover:text-white transition-colors tracking-wider">Full Guide →</a>
-                </div>
-                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
-                    Code reward
                 </div>
             </div>
             <!-- ===== END CARD: Promo Code ===== -->
 
             <!-- ===== CARD: The Long Haul (Event category) ===== -->
-            <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-1" data-category="event">
+            <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-1" data-category="event" data-card-id="the-long-haul">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--event"></div>
                 <button onclick="showCardModal('the-long-haul')" class="gem-card__info-btn" title="About this event">
@@ -885,16 +1038,12 @@
                 </div>
                 <div class="gem-divider">
                     <p class="gem-card__desc">Complete the ultimate endurance challenge and claim your place among the top 5% survivors</p>
-                    <a href="guide/event/" class="block text-center mt-2 text-xs gem-text--event hover:text-white transition-colors tracking-wider">Full Guide →</a>
-                </div>
-                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
-                    Top 5% event ranking
                 </div>
             </div>
             <!-- ===== END CARD: The Long Haul ===== -->
 
             <!-- ===== CARD: Earth's Defenders (Event category) ===== -->
-            <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-2" data-category="event">
+            <div class="gem-card gem-card--event gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-2" data-category="event" data-card-id="earths-defenders">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--event"></div>
                 <button onclick="showCardModal('earths-defenders')" class="gem-card__info-btn" title="About this event">
@@ -919,16 +1068,12 @@
                 </div>
                 <div class="gem-divider">
                     <p class="gem-card__desc">Answer the call to defend Earth and rise through the elite top 10% rankings</p>
-                    <a href="guide/event/" class="block text-center mt-2 text-xs gem-text--event hover:text-white transition-colors tracking-wider">Full Guide →</a>
-                </div>
-                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
-                    Top 10% event ranking
                 </div>
             </div>
             <!-- ===== END CARD: Earth's Defenders ===== -->
 
             <!-- ===== CARD: Open Arena (PvP category) ===== -->
-            <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-2" data-category="pvp">
+            <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-2" data-category="pvp" data-card-id="open-arena">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-glow to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--pvp"></div>
                 <button onclick="showCardModal('open-arena')" class="gem-card__info-btn" title="About this event">
@@ -937,7 +1082,7 @@
                 <div class="gem-card__body">
                     <!-- gem payout -->
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp1-gems">520</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp1-gems"></span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
                     <!-- bonus payout -->
                     <div class="flex gap-4 text-sm text-white/60">
@@ -961,20 +1106,6 @@
                     <div class="flex items-center gap-2 mb-2">
                         <label for="pvp1-league" class="text-white/60 text-xs">League:</label>
                         <select id="pvp1-league" onchange="updatePvpCard(1)" class="gem-select gem-select--league">
-                            <option value="intern">Intern</option>
-                            <option value="junior1">Junior I</option>
-                            <option value="junior2">Junior II</option>
-                            <option value="junior3">Junior III</option>
-                            <option value="intermediate1">Intermediate I</option>
-                            <option value="intermediate2">Intermediate II</option>
-                            <option value="intermediate3">Intermediate III</option>
-                            <option value="senior1">Senior I</option>
-                            <option value="senior2">Senior II</option>
-                            <option value="senior3">Senior III</option>
-                            <option value="eliteI">Elite I</option>
-                            <option value="eliteII" selected>Elite II</option>
-                            <option value="eliteIII">Elite III</option>
-                            <option value="invincible">Invincible</option>
                         </select>
                     </div>
 
@@ -983,13 +1114,12 @@
                         <select id="pvp1-rank" onchange="updatePvpCard(1)" class="gem-select w-20">
                         </select>
                     </div>
-                    <a href="guide/pvp/" class="block text-center mt-2 text-xs gem-text--pvp hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
             </article>
             <!-- ===== END CARD: Open Arena ===== -->
 
             <!-- ===== CARD: Restricted Arena (PvP category) ===== -->
-            <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="pvp">
+            <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="pvp" data-card-id="restricted-arena">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-purple-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--pvp"></div>
                 <button onclick="showCardModal('restricted-arena')" class="gem-card__info-btn" title="About this event">
@@ -998,7 +1128,7 @@
                 <div class="gem-card__body">
                     <!-- gem payout -->
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp2-gems">520</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp2-gems"></span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
                     <!-- bonus payout -->
                     <div class="flex gap-4 text-sm text-white/60">
@@ -1022,20 +1152,6 @@
                     <div class="flex items-center gap-2 mb-2">
                         <label for="pvp2-league" class="text-white/60 text-xs">League:</label>
                         <select id="pvp2-league" onchange="updatePvpCard(2)" class="gem-select gem-select--league">
-                            <option value="intern">Intern</option>
-                            <option value="junior1">Junior I</option>
-                            <option value="junior2">Junior II</option>
-                            <option value="junior3">Junior III</option>
-                            <option value="intermediate1">Intermediate I</option>
-                            <option value="intermediate2">Intermediate II</option>
-                            <option value="intermediate3">Intermediate III</option>
-                            <option value="senior1">Senior I</option>
-                            <option value="senior2">Senior II</option>
-                            <option value="senior3">Senior III</option>
-                            <option value="eliteI">Elite I</option>
-                            <option value="eliteII" selected>Elite II</option>
-                            <option value="eliteIII">Elite III</option>
-                            <option value="invincible">Invincible</option>
                         </select>
                     </div>
 
@@ -1044,13 +1160,12 @@
                         <select id="pvp2-rank" onchange="updatePvpCard(2)" class="gem-select w-20">
                         </select>
                     </div>
-                    <a href="guide/pvp/" class="block text-center mt-2 text-xs gem-text--pvp hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
             </article>
             <!-- ===== END CARD: Restricted Arena ===== -->
 
             <!-- ===== CARD: Multiverse Alliance War (PvP category) ===== -->
-            <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="pvp">
+            <article class="gem-card gem-card--pvp gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="pvp" data-card-id="multiverse-war">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-pink-glow to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--pvp"></div>
                 <button onclick="showCardModal('multiverse-war')" class="gem-card__info-btn" title="About this event">
@@ -1059,7 +1174,7 @@
                 <div class="gem-card__body">
                     <!-- gem payout -->
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp3-gems">810</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="pvp3-gems"></span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
                     <!-- bonus payout -->
                     <div class="flex gap-4 text-sm text-white/60">
@@ -1088,12 +1203,6 @@
                     <div class="flex items-center gap-2 mb-2">
                         <label for="pvp3-league" class="text-white/60 text-xs">League:</label>
                         <select id="pvp3-league" onchange="updatePvpCard(3)" class="gem-select gem-select--league">
-                            <option value="intern">Intern</option>
-                            <option value="junior">Junior</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="senior">Senior</option>
-                            <option value="elite" selected>Elite</option>
-                            <option value="invincible">Invincible</option>
                         </select>
                     </div>
 
@@ -1102,13 +1211,12 @@
                         <select id="pvp3-rank" onchange="updatePvpCard(3)" class="gem-select w-20">
                         </select>
                     </div>
-                    <a href="guide/pvp/" class="block text-center mt-2 text-xs gem-text--pvp hover:text-white transition-colors tracking-wider">Full Guide →</a>
                 </div>
             </article>
             <!-- ===== END CARD: Multiverse Alliance War ===== -->
 
             <!-- ===== CARD: Daily Login (Login category) ===== -->
-            <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-5" data-category="login">
+            <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-5" data-category="login" data-card-id="daily-login">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--login"></div>
                 <button onclick="showCardModal('daily-login')" class="gem-card__info-btn" title="About this reward">
@@ -1117,7 +1225,7 @@
                 <div class="gem-card__body">
                     <!-- gem payout -->
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>130×7=910</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span class="gem-formula-display">130×7=910</span></span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
                     <!-- title -->
                     <h2 class="gem-card__title gem-card__title--login">Daily Login</h2>
@@ -1128,16 +1236,12 @@
                 </div>
                 <div class="gem-divider">
                     <p class="gem-card__desc">Check in daily to build your streak—30 free gems plus 100 from chest rewards (requires completing daily operations) for the first 7 days of the week</p>
-                    <a href="guide/login/" class="block text-center mt-2 text-xs gem-text--login hover:text-white transition-colors tracking-wider">Full Guide →</a>
-                </div>
-                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
-                    (30 free + 100 from chests) × 7 days = 910
                 </div>
             </div>
             <!-- ===== END CARD: Daily Login ===== -->
 
             <!-- ===== CARD: Weekly Login (Login category) ===== -->
-            <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="login">
+            <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-3" data-category="login" data-card-id="weekly-login">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--login"></div>
                 <button onclick="showCardModal('weekly-login')" class="gem-card__info-btn" title="About this reward">
@@ -1157,16 +1261,12 @@
                 </div>
                 <div class="gem-divider">
                     <p class="gem-card__desc">Return each week to claim your loyal defender's bonus—60 free gems plus 400 from chest rewards (requires completing daily operations)</p>
-                    <a href="guide/login/" class="block text-center mt-2 text-xs gem-text--login hover:text-white transition-colors tracking-wider">Full Guide →</a>
-                </div>
-                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
-                    60 free + 400 from chests = 460
                 </div>
             </div>
             <!-- ===== END CARD: Weekly Login ===== -->
 
             <!-- ===== CARD: Monthly Login (Login category) ===== -->
-            <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="login">
+            <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-4" data-category="login" data-card-id="monthly-login">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-yellow-accent to-transparent opacity-80"></div>
                 <div class="gem-card__glow gem-card__glow--login"></div>
                 <button onclick="showCardModal('monthly-login')" class="gem-card__info-btn" title="About this reward">
@@ -1186,10 +1286,6 @@
                 </div>
                 <div class="gem-divider">
                     <p class="gem-card__desc">The monthly hero returns every 4 weeks—90 gems divided into weekly glory</p>
-                    <a href="guide/login/" class="block text-center mt-2 text-xs gem-text--login hover:text-white transition-colors tracking-wider">Full Guide →</a>
-                </div>
-                <div class="gem-tooltip -top-12 left-1/2 -translate-x-1/2">
-                    90 gems per month ÷ 4 = 23/week
                 </div>
             </div>
             <!-- ===== END CARD: Monthly Login ===== -->

@@ -1,5 +1,8 @@
 # Gem Infographic Extraction Plan
 
+> **Status:** Historical reference — extraction complete. See `index.html` + `script.js` + `styles.css`.
+> **See also:** `PLAN_JSON_OPTIMIZATION.md` for latest JSON config changes (CARD_MODAL_DATA merged into rewards-config, category colors centralized in ui-config, contributors-config added).
+
 ## Goal
 Extract HTML, CSS, and JavaScript from `gem_infographic.html` into separate files with full design token system and BEM naming.
 

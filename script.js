@@ -33,156 +33,16 @@ const SVG_EXCLAMATION_TRIANGLE = '<svg xmlns="http://www.w3.org/2000/svg" viewBo
 const SVG_SHIELD_CHECK = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor"><path d="M256 0c4.6 0 9.2 1 13.4 2.9L457.7 82.8c22 9.3 38.4 31 38.3 57.2c-.5 99.2-41.3 280.7-213.6 363.2c-16.7 8-36.1 8-52.8 0C57.3 420.7 16.5 239.2 16 140c-.1-26.2 16.3-47.9 38.3-57.2L242.7 2.9C246.8 1 251.4 0 256 0z"/></svg>';
 const SVG_LIGHTBULB = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" fill="currentColor"><path d="M272 384c9.6-31.9 29.5-59.1 49.2-86.2c0 0 0 0 0 0c5.2-7.1 10.4-14.2 15.4-21.4c19.8-28.5 31.4-63 31.4-100.3C368 78.8 289.2 0 192 0S16 78.8 16 176c0 37.3 11.6 71.9 31.4 100.3c5 7.2 10.2 14.3 15.4 21.4c0 0 0 0 0 0c19.8 27.1 39.7 54.4 49.2 86.2l160 0zM192 512c44.2 0 80-35.8 80-80l0-16-160 0 0 16c0 44.2 35.8 80 80 80zM112 176c0 8.8-7.2 16-16 16s-16-7.2-16-16c0-61.9 50.1-112 112-112c8.8 0 16 7.2 16 16s-7.2 16-16 16c-44.2 0-80 35.8-80 80z"/></svg>';
 
-// Card Modal Data — all 9 card modals triggered by info icon
-const CARD_MODAL_DATA = {
-    'the-long-haul': {
-        category: 'event',
-        title: 'The Long Haul',
-        gems: 300,
-        badge: '★ Top 5%',
-        hero: '"Endurance is everything."',
-        description: 'A multi-day endurance event that tests your consistency and strategic planning. Your cumulative score across the event duration determines your ranking — only the top 5% earn this reward. The challenge intensifies each day as scores accumulate and rankings shift. Alliance participation unlocks score multipliers and bonus point events.',
-        tips: [
-            'Play every day to maintain momentum and avoid losing rank position',
-            'Steady high scores beat sporadic burst pushes — consistency is king',
-            'Join an alliance for bonus score multipliers and coordinated event participation',
-            'Watch for 2x score amplifier windows and plan your biggest pushes then',
-            'Prioritize daily quests contributing to event score over general progression'
-        ]
-    },
-    'earths-defenders': {
-        category: 'event',
-        title: "Earth's Defenders",
-        gems: 200,
-        badge: '★ Top 10%',
-        hero: '"Defend Earth. Rise above the rest."',
-        description: 'An event centered around defending Earth from incoming threats. Your contribution score is calculated from enemies defeated, damage dealt, and objectives completed. The top 10% of contributors earn this reward. Coordination with alliance members amplifies your effectiveness and unlocks bonus score opportunities.',
-        tips: [
-            'Maximize daily contribution through quest completion and enemy defeats',
-            'Spend event currency efficiently — avoid wasteful upgrades during active windows',
-            'Coordinate with alliance for defense bonus multipliers and shared rewards',
-            'Watch for bonus score amplification events and target them specifically',
-            'Balance offensive and defensive tasks for optimal contribution ranking'
-        ]
-    },
-    'daily-login': {
-        category: 'login',
-        title: 'Daily Login',
-        gems: 910,
-        badge: '★ 130×7',
-        hero: '"7 days. 910 gems. Every week."',
-        description: 'The foundation of your weekly gem income. You get 30 free gems each day, plus an additional 100 gems from chest rewards that require completing daily operations. With the streak running for the first 7 days of each week, that\'s 910 gems total. The weekly reset happens every Monday at server reset.',
-        tips: [
-            'Complete all daily operations to unlock the full 130 gems (30 free + 100 from chests)',
-            'Set a daily reminder to log in at the same time each day for consistency',
-            'Never miss a day — broken streaks take weeks to fully recover value from',
-            'Stack with daily (910), weekly (460), and monthly (23) login rewards for maximum income',
-            'Link your account to a device for convenience features like auto-login'
-        ]
-    },
-    'weekly-login': {
-        category: 'login',
-        title: 'Weekly Login',
-        gems: 460,
-        badge: '★ Weekly',
-        hero: '"Loyalty has its rewards."',
-        description: 'A bonus reward for players who return each week. Claim 60 free gems plus 400 from chest rewards (requires completing daily operations) for a total of 460 gems per week. This stacks with daily login bonuses — together they total 1,370 gems per week before monthly rewards. The weekly period resets alongside the daily login streak on Monday.',
-        tips: [
-            'Complete daily operations to unlock the full 400-gem chest reward each week',
-            'Just one login per week is sufficient — claim early to avoid forgetting',
-            'Combine with daily (910) + weekly (460) for a 1,370 gem/week base income',
-            'Use the Monday reset as your reminder to check all login rewards at once',
-            'No special strategy needed — just the habit of checking in weekly'
-        ]
-    },
-    'monthly-login': {
-        category: 'login',
-        title: 'Monthly Login',
-        gems: 23,
-        badge: '★ 90÷4',
-        hero: '"Every 4 weeks, return stronger."',
-        description: 'The monthly hero bonus rewards long-term consistent players. 90 gems are divided into four weekly claiming periods, giving you approximately 23 gems per week effectively. This compounds with daily (910) and weekly (460) login rewards for a total of ~1,393 gems/week from login bonuses alone.',
-        tips: [
-            'Check in every 4 weeks to claim your divided portion of the monthly bonus',
-            'The monthly schedule aligns with major game content updates and events',
-            'Long-term consistent players accumulate significant gem advantages',
-            'Combine with daily (910) + weekly (460) for ~1,393 gems/week total login income',
-            'No special strategy — just the habit of returning monthly'
-        ]
-    },
-    'restricted-arena': {
-        category: 'pvp',
-        title: 'Restricted Arena',
-        gems: null,
-        badge: '★ Weekly',
-        hero: '"Enter the arena. Prove your rank."',
-        description: 'A weekly competitive PvP arena where your league and rank determine your baseline rewards. Higher leagues and ranks earn exponentially more gems, cards, and chips. Placement rewards are based on your ranking within your league at the end of the week.',
-        tips: [
-            'Climb to at least Elite II rank 13 for optimal gem-to-effort value',
-            'Higher league multipliers dramatically increase all gem and chip rewards',
-            'Cards earned are NOT multiplied by league — always awarded at base rate',
-            'Alliance participation can provide ranking protection and bonus rewards',
-            'Consistent weekly play prevents rank decay and maintains tier placement'
-        ]
-    },
-    'open-arena': {
-        category: 'pvp',
-        title: 'Open Arena',
-        gems: null,
-        badge: '★ Weekly',
-        hero: '"Open competition. Climb the ranks."',
-        description: 'An open weekly arena for all players regardless of league. Performance is based purely on match results and ranking within your skill tier. Unlike Restricted Arena, the payout structure varies dramatically with rank. Strategic matchmaking and meta team composition significantly impact final placement and rewards.',
-        tips: [
-            'Play consistently throughout the week rather than rushing last-day placements',
-            'Meta team compositions outperform individual skill at higher ranking tiers',
-            'Review match history for patterns and adjust your approach accordingly',
-            'Higher ranks in open arena grant exponentially better gem multipliers',
-            'Coordinate with alliance members for duo and trio queue advantages'
-        ]
-    },
-    'multiverse-war': {
-        category: 'pvp',
-        title: 'Multiverse Alliance War',
-        gems: null,
-        badge: '★ 5 Matches / 2 Weeks',
-        hero: '"Alliance versus alliance. Global war."',
-        description: "The ultimate PvP experience — a 5-match series over two weeks between alliances. Your individual performance contributes to your alliance's overall war score. The stakes are high: demotion becomes a real risk if your personal ranking drops below rank 86. Victory requires coordinated effort, strategic matchups, and consistent high-performance play.",
-        tips: [
-            'Coordinate with alliance for optimal team compositions every match',
-            'Spread your 5 matches evenly across the 2-week period for consistent scores',
-            'Individual performance directly affects alliance war ranking — bring your best',
-            'After war ends, reassess your league/rank strategy for the next cycle',
-            'Rank 86+ triggers demotion zone — monitor your rank throughout the war'
-        ]
-    },
-    'promo-code': {
-        category: 'code',
-        title: 'Promo Code',
-        gems: 300,
-        badge: '★ Tap to Reveal',
-        hero: '"A secret code whispered among allies."',
-        description: 'A promotional code that rewards 300 gems when redeemed. The code is shared through official Invincible game channels, community events, and special promotions. Tap the card to reveal the code, then tap again to copy it to your clipboard for redemption in the in-game store.',
-        tips: [
-            'Tap the card to reveal the code — a 3D flip animation reveals the characters',
-            'Tap the revealed code to copy it instantly to your clipboard',
-            'Codes have expiration dates — redeem them promptly when discovered',
-            'Follow official Invincible social media for new codes as they release',
-            "Some codes are one-time use — don't share claimed codes"
-        ]
-    }
-};
-
 // PvP Defaults - loaded from config in DOMContentLoaded
 let pvpDefaults;
 
-// ===== CHART CONFIGURATION =====
-
-// Config loaded from CHARTS in DOMContentLoaded
-
 // ===== CHART FILTER DATA =====
 
+function findCardById(id) {
+  return REWARDS && REWARDS.cards ? REWARDS.cards.find(c => c.id === id) : null;
+}
+
 const DC = '#333';
-const CM = { event:'#ff6b35', pvp:'#e91e8a', login:'#f39c12', code:'#2ecc71' };
 
 const modeTotals = { event: 0, pvp: 0, login: 0, code: 0 };
 
@@ -193,8 +53,7 @@ function buildModeData(mode, totals) {
 
   const spiderTargets = GAME.spiderTargets || { events: 550, pvp: 1500, login: 360, code: 330 };
   const d = [0,0,0,0,0], r = [0,0,0,0,0,0,0], sp = [[0,0,0,0,0],[0,0,0,0,0]];
-  const CM = CHARTS ? CHARTS.colors : { event:'#ff6b35', pvp:'#e91e8a', login:'#f39c12', code:'#2ecc71' };
-  const DC = '#333';
+  const catColors = UI ? UI.categoryColors : { event:'#ff6b35', pvp:'#e91e8a', login:'#f39c12', code:'#2ecc71' };
 
   if (mode === 'all') {
     d[1] = getModeTotal('event');
@@ -219,17 +78,17 @@ function buildModeData(mode, totals) {
 
   const cols = d.map((v, i) => {
     if (v === 0) return DC;
-    if (i === 1) return CM.event;
-    if (i === 2) return CM.pvp;
-    if (i === 3) return CM.login;
-    return CM.code;
+    if (i === 1) return catColors.event;
+    if (i === 2) return catColors.pvp;
+    if (i === 3) return catColors.login;
+    return catColors.code;
   });
   const rCols = r.map((v, i) => {
     if (v === 0) return DC;
-    if (i === 3 || i === 4) return CM.event;
-    if (i === 5) return CM.pvp;
-    if (i === 6) return CM.login;
-    return CM.code;
+    if (i === 3 || i === 4) return catColors.event;
+    if (i === 5) return catColors.pvp;
+    if (i === 6) return catColors.login;
+    return catColors.code;
   });
   return { distribution: d, rewards: r, spider: sp, colors: cols, rewardColors: rCols };
 }
@@ -311,7 +170,7 @@ function formatCountdown(distance) {
 // ===== UTILITY FUNCTIONS =====
 
 function copyCode() {
-  navigator.clipboard.writeText('30KGTG');
+  navigator.clipboard.writeText(REWARDS ? REWARDS.promoCode : '30KGTG');
   const feedback = document.createElement('div');
   feedback.className = 'gem-toast gem-toast--success';
   feedback.innerHTML = SVG_CHECK_CIRCLE + ' Code copied!';
@@ -324,7 +183,7 @@ function revealCode(card) {
   const reveal = card.querySelector('.gem-code__reveal');
 
   if (card.classList.contains('reveal-done')) {
-    navigator.clipboard.writeText('30KGTG');
+    navigator.clipboard.writeText(REWARDS ? REWARDS.promoCode : '30KGTG');
     reveal.classList.add('copied');
     setTimeout(() => {
       reveal.classList.remove('copied');
@@ -341,7 +200,7 @@ function getPvpPayout(arena, leagueId, rank) {
   if (!GAME || !GAME.pvp) return { gems: 0, currency: 0, tickets: 0, frags: 0, modules: 0, isDemotion: false };
 
   if (arena === 'multiverse') {
-    const groupMap = { intern:'intern', junior1:'junior', junior2:'junior', junior3:'junior', junior:'junior', intermediate1:'intermediate', intermediate2:'intermediate', intermediate3:'intermediate', intermediate:'intermediate', senior1:'senior', senior2:'senior', senior3:'senior', senior:'senior', eliteI:'elite', eliteII:'elite', eliteIII:'elite', elite:'elite', invincible:'invincible' };
+    const groupMap = GAME.pvp.multiverseLeagueGroupMap || { intern:'intern', junior:'junior', intermediate:'intermediate', senior:'senior', elite:'elite', invincible:'invincible' };
     const group = groupMap[leagueId] || 'intern';
     const tiers = GAME.pvp.multiverse[group];
     if (!tiers) return { gems: 0, currency: 0, tickets: 0, frags: 0, modules: 0, isDemotion: false };
@@ -390,11 +249,8 @@ function getModeTotal(mode) {
   }
 
   if (mode === 'login') {
-    if (!REWARDS.loginRewards) return 0;
-    const daily = REWARDS.loginRewards.find(e => e.name === 'Daily')?.weeklyTotal || 0;
-    const weekly = REWARDS.loginRewards.find(e => e.name === 'Weekly')?.weeklyTotal || 0;
-    const monthly = REWARDS.loginRewards.find(e => e.name === 'Monthly')?.weeklyTotal || 0;
-    return daily + weekly + monthly;
+    if (!REWARDS || !REWARDS.cards) return 0;
+    return REWARDS.cards.filter(c => c.category === 'login').reduce((sum, c) => sum + c.gems, 0);
   }
 
   if (mode === 'event') {
@@ -618,12 +474,12 @@ function updateAllPageTotals(skipAnimation) {
 function getRewardsChartData(modes) {
   if (!modes || modes.length === 0) return { labels: [], data: [], colors: [] };
   const order = ['code', 'event', 'pvp', 'login'];
-  const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
+  const catColors = UI ? UI.categoryColors : { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
   const filtered = order.filter(m => modes.includes(m));
   return {
     labels: filtered.map(m => m.charAt(0).toUpperCase() + m.slice(1)),
     data: filtered.map(m => getModeTotal(m)),
-    colors: filtered.map(m => colorMap[m] || '#333333')
+    colors: filtered.map(m => catColors[m] || '#333333')
   };
 }
 
@@ -662,7 +518,8 @@ function updateChartsByModes(modes) {
     rewardColors: new Array(7).fill('#333333')
   };
 
-  const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
+  const catColors = UI ? UI.categoryColors : { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
+  const activeColor = CHARTS ? CHARTS.rewardsChartActiveColor : '#00e5ff';
 
   modes.forEach(mode => {
     const data = chartFilterData[mode];
@@ -675,14 +532,14 @@ function updateChartsByModes(modes) {
   combinedData.distribution.forEach((v, i) => {
     if (v > 0) {
       const activeMode = modes.find(m => chartFilterData[m].distribution[i] > 0);
-      combinedData.colors[i] = colorMap[activeMode] || '#00e5ff';
+      combinedData.colors[i] = catColors[activeMode] || activeColor;
     } else {
       combinedData.colors[i] = '#333333';
     }
   });
 
   combinedData.rewards.forEach((v, i) => {
-    combinedData.rewardColors[i] = v > 0 ? '#00e5ff' : '#333333';
+    combinedData.rewardColors[i] = v > 0 ? activeColor : '#333333';
   });
 
   categoryChart.data.datasets[0].data = combinedData.distribution.slice(1);
@@ -720,12 +577,8 @@ function filterChart(filter) {
   const data = chartFilterData[filter];
   const buttons = document.querySelectorAll('.chart-filter-btn');
 
-  const colorMap = {
-    event: { base: 'orange-accent' },
-    login: { base: 'yellow-accent' },
-    code: { base: 'green-accent' },
-    pvp: { base: 'pink-glow' }
-  };
+  const cssMap = UI ? UI.chartFilterCssClasses : { event: 'orange-accent', pvp: 'pink-glow', login: 'yellow-accent', code: 'green-accent' };
+  const colorMap = Object.fromEntries(Object.entries(cssMap).map(([k, v]) => [k, { base: v }]));
 
   buttons.forEach(btn => {
     const btnLower = btn.textContent.toLowerCase();
@@ -772,6 +625,38 @@ function filterChart(filter) {
   savePageState();
 }
 
+// ===== CARD RENDER =====
+
+function renderCardExtras() {
+  document.querySelectorAll('[data-card-id]').forEach(cardEl => {
+    const id = cardEl.dataset.cardId;
+    const card = findCardById(id);
+    if (!card) return;
+    const divider = cardEl.querySelector('.gem-divider');
+    if (!divider) return;
+
+    if (card.tooltip) {
+      const existing = cardEl.querySelector('.gem-tooltip');
+      if (existing) existing.textContent = card.tooltip;
+    }
+
+    if (card.guideUrl) {
+      const link = document.createElement('a');
+      link.href = card.guideUrl;
+      link.className = 'block text-center mt-2 text-xs tracking-wider hover:text-white transition-colors';
+      link.textContent = 'Full Guide →';
+      const catColor = UI && UI.categoryColors ? UI.categoryColors[card.category] : null;
+      if (catColor) link.style.color = catColor;
+      divider.appendChild(link);
+    }
+
+    if (card.formula && card.formula.display) {
+      const displayEl = cardEl.querySelector('.gem-formula-display');
+      if (displayEl) displayEl.textContent = card.formula.display;
+    }
+  });
+}
+
 // ===== UI COMPONENTS =====
 
 // Charts Toggle
@@ -800,8 +685,9 @@ function toggleCharts() {
 
 // Card Modal
 function showCardModal(cardId) {
-    const data = CARD_MODAL_DATA[cardId];
-    if (!data) return;
+    const card = findCardById(cardId);
+    if (!card) return;
+    const data = card.modal || card;
 
     const icon = document.getElementById('cardModalIcon');
     const title = document.getElementById('cardModalTitle');
@@ -809,8 +695,8 @@ function showCardModal(cardId) {
     const total = document.getElementById('cardModalTotal');
     const content = document.getElementById('cardModalContent');
 
-    const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
-    const color = colorMap[data.category] || '#00e5ff';
+    const catColors = UI ? UI.categoryColors : { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71' };
+    const color = catColors[card.category] || '#00e5ff';
     const rgb = hexToRgb(color);
 
     icon.style.background = `rgba(${rgb}, 0.15)`;
@@ -818,11 +704,12 @@ function showCardModal(cardId) {
     icon.style.color = color;
     icon.innerHTML = SVG_INFO_CIRCLE;
 
-    title.textContent = data.title.toUpperCase();
+    title.textContent = (data.title || card.title).toUpperCase();
     title.style.color = color;
 
-    if (data.badge) {
-        badge.textContent = data.badge;
+    const badgeText = data.badge || card.badge || '';
+    if (badgeText) {
+        badge.textContent = badgeText;
         badge.className = 'gem-modal__badge gem-modal__badge--star';
         badge.style.display = 'inline-flex';
     } else {
@@ -830,8 +717,8 @@ function showCardModal(cardId) {
     }
 
     let gemsDisplay = '';
-    if (data.gems !== null) {
-        gemsDisplay = `${data.gems.toLocaleString()} Gems`;
+    if (card.gems != null) {
+        gemsDisplay = `${card.gems.toLocaleString()} Gems`;
     } else {
         const pvpCardMap = { 'restricted-arena': 1, 'open-arena': 2, 'multiverse-war': 3 };
         const arenaMap = { 'restricted-arena': 'restricted', 'open-arena': 'open', 'multiverse-war': 'multiverse' };
@@ -1011,7 +898,23 @@ function loadPvpSelection(cardId) {
   updatePvpCard(cardId, true);
 }
 
+function generateLeagueOptions(selectId, leagues) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+  leagues.forEach(l => {
+    const option = document.createElement('option');
+    option.value = l.id;
+    option.textContent = l.name;
+    select.appendChild(option);
+  });
+}
+
 function initializePvPCards() {
+  const leagues14 = GAME.pvp.leagues;
+  const leagues6 = GAME.pvp.multiverseLeagues;
+  generateLeagueOptions('pvp1-league', leagues14);
+  generateLeagueOptions('pvp2-league', leagues14);
+  generateLeagueOptions('pvp3-league', leagues6);
   generateRankOptions('pvp1-rank');
   generateRankOptions('pvp2-rank');
   generateRankOptions('pvp3-rank');
@@ -1040,7 +943,7 @@ document.addEventListener('DOMContentLoaded', function() {
   pvpDefaults = {
     1: GAME.pvp.defaults,
     2: GAME.pvp.defaults,
-    3: { league: 'elite', rank: 13 }
+    3: GAME.pvp.defaults.multiverse || { league: 'elite', rank: 13 }
   };
 
 
@@ -1062,9 +965,10 @@ document.addEventListener('DOMContentLoaded', function() {
     callbacks: { label: tooltipLabelCallback }
   };
 
-  const initDistribution = CHARTS.initialData?.distribution || [500, 750, 1393, 300];
-  const initSpiderActual = CHARTS.initialData?.spiderActual || [500, 750, 1393, 300];
-  const spiderTargets = GAME.spiderTargets ? [GAME.spiderTargets.events, GAME.spiderTargets.pvp, GAME.spiderTargets.login, GAME.spiderTargets.code] : [550, 1500, 360, 330];
+  const catColors = UI.categoryColors || { event:'#ff6b35', pvp:'#e91e8a', login:'#f39c12', code:'#2ecc71' };
+  const initDistribution = [getModeTotal('event'), getModeTotal('pvp'), getModeTotal('login'), getModeTotal('code')];
+  const initSpiderActual = initDistribution.slice();
+  const spiderTargets = [GAME.spiderTargets.events, GAME.spiderTargets.pvp, GAME.spiderTargets.login, GAME.spiderTargets.code];
 
   Chart.defaults.color = '#ffffff';
   Chart.defaults.borderColor = 'rgba(0, 229, 255, 0.2)';
@@ -1075,7 +979,7 @@ document.addEventListener('DOMContentLoaded', function() {
       labels: CHARTS.labels?.distribution || ['Events', 'PvP', 'Login', 'Code'],
       datasets: [{
         data: initDistribution,
-        backgroundColor: [CHARTS.colors.event, CHARTS.colors.pvp, CHARTS.colors.login, CHARTS.colors.code],
+        backgroundColor: [catColors.event, catColors.pvp, catColors.login, catColors.code],
         borderWidth: 0
       }]
     },
@@ -1170,6 +1074,8 @@ document.addEventListener('DOMContentLoaded', function() {
   initializePvPCards();
 
   loadPageState();
+
+  renderCardExtras();
 
   const cardsByCategory = { code: [], event: [], pvp: [], login: [] };
   document.querySelectorAll('.gem-card[data-category]').forEach(card => {
