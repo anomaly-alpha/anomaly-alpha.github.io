@@ -1159,13 +1159,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   loadPageState();
 
-  const colorMap = { event: '#ff6b35', pvp: '#e91e8a', login: '#f39c12', code: '#2ecc71', cyan: '#00e5ff', purple: '#9b59b6' };
-  document.querySelectorAll('.gem-card').forEach(card => {
-    const cat = card.dataset.category;
-    const color = colorMap[cat] || colorMap.cyan;
-    card.style.setProperty('--card-color', color);
-  });
-
   const cardsByCategory = { code: [], event: [], pvp: [], login: [] };
   document.querySelectorAll('.gem-card[data-category]').forEach(card => {
     const cat = card.dataset.category;

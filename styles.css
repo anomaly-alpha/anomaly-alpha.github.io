@@ -389,10 +389,25 @@ body .gem-card--mode-highlight--all {
   box-shadow: 0 0 20px rgba(0, 229, 255, 0.5), 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.gem-card--hover:hover {
+.gem-card--event:hover {
   transform: translateY(-8px) scale(1.02);
-  border-color: var(--card-color) !important;
-  box-shadow: 0 0 20px color-mix(in srgb, var(--card-color) 40%, transparent), 0 8px 32px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 107, 53, 0.8) !important;
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.5), 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+.gem-card--pvp:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(233, 30, 138, 0.8) !important;
+  box-shadow: 0 0 20px rgba(233, 30, 138, 0.5), 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+.gem-card--login:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(243, 156, 18, 0.8) !important;
+  box-shadow: 0 0 20px rgba(243, 156, 18, 0.5), 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+.gem-card--code:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(46, 204, 113, 0.8) !important;
+  box-shadow: 0 0 20px rgba(46, 204, 113, 0.5), 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .gem-card--fade-in {
