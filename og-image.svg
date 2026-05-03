@@ -14,7 +14,7 @@
   <polygon points="600,80 750,200 750,430 600,550 450,430 450,200" fill="url(#gem)" opacity="0.3"/>
   <polygon points="600,120 710,220 710,410 600,510 490,410 490,220" fill="url(#gem)" opacity="0.6"/>
   <text x="600" y="280" text-anchor="middle" font-family="Orbitron, sans-serif" font-weight="900" font-size="72" fill="#ffffff" letter-spacing="8">GEM REWARDS</text>
-  <text x="600" y="350" text-anchor="middle" font-family="Rajdhani, sans-serif" font-weight="700" font-size="36" fill="#00e5ff" letter-spacing="6">INVINCIBLE MOBILE GAME</text>
-  <text x="600" y="420" text-anchor="middle" font-family="Rajdhani, sans-serif" font-weight="400" font-size="24" fill="rgba(255,255,255,0.6)" letter-spacing="4">Weekly Gem Rewards &amp; PvP Calculator</text>
-  <text x="600" y="500" text-anchor="middle" font-family="Rajdhani, sans-serif" font-weight="600" font-size="64" fill="#e91e8a" letter-spacing="4">~2,543 GEMS/WEEK</text>
+  <text x="600" y="350" text-anchor="middle" font-family="Rajdhani, sans-serif" font-weight="700" font-size="36" fill="#00e5ff" letter-spacing="6">INVINCIBLE GUARDING THE GLOBE</text>
+  <text x="600" y="420" text-anchor="middle" font-family="Rajdhani, sans-serif" font-weight="400" font-size="24" fill="rgba(255,255,255,0.6)" letter-spacing="4">Gem Rewards &amp; PvP Guide</text>
+  <text x="600" y="500" text-anchor="middle" font-family="Rajdhani, sans-serif" font-weight="600" font-size="64" fill="#e91e8a" letter-spacing="4">~3,221 GEMS/WEEK</text>
 </svg>
