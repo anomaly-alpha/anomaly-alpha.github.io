@@ -391,7 +391,7 @@ body .gem-card--mode-highlight--all {
 
 .gem-card--hover:hover {
   transform: translateY(-8px) scale(1.02);
-  border-color: color-mix(in srgb, var(--card-color) 60%, transparent) !important;
+  border-color: var(--card-color) !important;
   box-shadow: 0 0 20px color-mix(in srgb, var(--card-color) 40%, transparent), 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
