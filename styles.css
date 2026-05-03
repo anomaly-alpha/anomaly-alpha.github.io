@@ -471,6 +471,7 @@ body .gem-card--mode-highlight--all {
 .gem-contributor {
   color: var(--gem-text--secondary);
   font-size: 0.875rem;
+  font-family: 'Orbitron', sans-serif;
 }
 
 .gem-contributors {
@@ -486,6 +487,7 @@ body .gem-card--mode-highlight--all {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   margin-bottom: 0.75rem;
+  font-family: 'Orbitron', sans-serif;
 }
 
 .gem-contributors__list {
@@ -837,6 +839,10 @@ body .gem-card--mode-highlight--all {
 
 .gem-toast--info {
   background-color: var(--gem-alert--info-bg);
+}
+
+.gem-charts-toggle {
+  font-family: 'Orbitron', sans-serif;
 }
 
 /* Chart component */
