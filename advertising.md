@@ -9,7 +9,7 @@
 
 > **@everyone** Tired of guessing your weekly gem income in Invincible: Guarding the Globe? 🫙
 >
-> Drop your league + rank into the **Gem Rewards Calculator** and see exactly what you'll earn — Restricted Arena, Open Arena, Multiverse War, events, login streaks, and promo codes all in one place.
+> Drop your league + rank into the **Gem Rewards Calculator** and see exactly what you'll earn — Restricted Arena, Open Arena, Alliance War, events, login streaks, and promo codes all in one place.
 >
 > 🔹 Live PvP payout tables (all 14 leagues, 120 ranks) → https://anomaly-alpha.github.io/guide/pvp/
 > 🔹 Event & login reward tracker → https://anomaly-alpha.github.io/guide/event/
@@ -47,7 +47,7 @@
 >
 > I put together a little tool to help plan weekly gem income across all sources:
 >
-> - PvP payouts for Restricted Arena, Open Arena & Multiverse War (all 14 leagues, ranks 1–120) → https://anomaly-alpha.github.io/guide/pvp/
+> - PvP payouts for Restricted Arena, Open Arena & Alliance War (all 14 leagues, ranks 1–120) → https://anomaly-alpha.github.io/guide/pvp/
 > - Event reward estimates (The Long Haul, Earth's Defenders) → https://anomaly-alpha.github.io/guide/event/
 > - Login rewards (daily, weekly, monthly) → https://anomaly-alpha.github.io/guide/login/
 > - Current promo codes → https://anomaly-alpha.github.io/guide/code/
@@ -145,7 +145,7 @@
 >
 > Tired of doing mental math on PvP payouts every week?
 >
-> The **Gem Rewards Calculator** lets you select your league and rank — then instantly see your full weekly gem income across Restricted Arena, Open Arena, Multiverse War, events, login streaks, and promo codes.
+> The **Gem Rewards Calculator** lets you select your league and rank — then instantly see your full weekly gem income across Restricted Arena, Open Arena, Alliance War, events, login streaks, and promo codes.
 >
 > **What you get:**
 > • All 14 leagues, ranks 1–120

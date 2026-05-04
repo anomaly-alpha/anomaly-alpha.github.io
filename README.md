@@ -36,7 +36,7 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 - Description paragraph
 - Tips & Strategy section (yellow-tinted box with 5 tips)
 - PvP cards show live gems, PvP Currency, Hero Shop Tickets, Totem Frags, and Modules from current league+rank selections
-- Multiverse War modal includes demotion zone warning (reads from `pvp3-rank`)
+- Alliance War modal includes demotion zone warning (reads from `pvp3-rank`)
 
 | Card | Icon Color | Badge |
 |------|-----------|-------|
@@ -81,9 +81,9 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 ```
 anomaly-alpha/
 ├── index.html           (1392 lines) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (1144 lines) — All JS: charts, filters, PvP, modals, countdowns
-├── styles.css           (1500 lines) — CSS custom properties + BEM component classes
-├── tailwind.css         — Generated Tailwind utility classes (1105 lines, from npm run build)
+├── script.js            (1145 lines) — All JS: charts, filters, PvP, modals, countdowns
+├── styles.css           (1565 lines) — CSS custom properties + BEM component classes
+├── tailwind.css         — Generated Tailwind utility classes (1129 lines, from npm run build)
 ├── package.json         — Dev dependencies config
 ├── tailwind.config.js   — Tailwind content paths config
 ├── src/
@@ -169,10 +169,12 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Real multiverse war data** — Parsed from `data/multiverse_war_payouts.txt` with 6 league groups
 - ✅ **Restricted Arena**: 14 leagues with gems, PvP Currency, Hero Shop Tickets
 - ✅ **Open Arena**: 14 leagues with gems, PvP Currency, Hero Shop Tickets  
-- ✅ **Multiverse War**: 6 grouped leagues with gems, Totem Fragments, Modules
+- ✅ **Alliance War**: 6 grouped leagues with gems, Totem Fragments, Modules
 - ✅ **Spider chart targets** — (550, 2664, 360, 330)
 - ✅ **PvP defaults** — Elite II, rank 13
 - ✅ **Spider chart live updates** — Spider actuals recompute from live PvP form values via `getModeTotal('pvp')`; spider updates on PvP selector changes and mode toggles (matches distribution + rewards behavior)
+- ✅ **Select dropdown design system** — Category-colored custom `<select>` elements with `appearance: none`, custom chevron arrows, hover/focus states, and per-category background/border/arrow colors (PvP pink, login amber, event orange, code green)
+- ✅ **Config-driven selectedModes** — Default modes read from UI config, fixing drift between config and runtime
 
 ### Performance Improvements
 - ✅ **Removed search feature** — Eliminated most expensive JS operation (querySelectorAll per keystroke); removed HTML, CSS, and JS
@@ -189,6 +191,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Google Fonts self-hosted** — Rajdhani + Orbitron woff2 files in `fonts/` (48 KB total)
 - ✅ **Chart.js self-hosted** — Downloaded to `vendor/chart.umd.js`, no more CDN round-trip
 - ✅ **Tailwind CDN removed from guide pages** — All 6 guide pages now use local `tailwind.css` instead of Play CDN (283 KB blocking script per page)
+- ✅ **Guard chart updates when hidden** — Added no-op guard in `updateChartsByModes()` so charts don't execute update logic on initial load (hidden by default)
 
 ### Bug Fixes
 - ✅ **Card hover shadow** — Hardcoded cyan values replacing undefined `var(--gem-shadow--card)`

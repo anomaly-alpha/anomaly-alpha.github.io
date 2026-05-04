@@ -1,6 +1,6 @@
 # Design System — Gem Rewards Infographic
 
-**Status:** Current (May 2, 2026)
+**Status:** Current (May 4, 2026)
 **Version:** 1.0
 
 ---
@@ -120,6 +120,15 @@ The design system uses CSS custom properties (design tokens) for all visual valu
 | `--gem-btn-bg` | `rgba(255,255,255,0.10)` | `rgba(0,0,0,0.05)` |
 | `--gem-btn-border` | `rgba(0,229,255,0.30)` | `rgba(0,229,255,0.40)` |
 | `--gem-btn-hover` | `rgba(255,255,255,0.20)` | `rgba(0,0,0,0.10)` |
+
+### Select Tokens
+
+| Token | Dark Mode | Light Mode |
+|-------|-----------|------------|
+| `--gem-select-bg--pvp` | `rgba(233,30,138,0.15)` | `rgba(233,30,138,0.10)` |
+| `--gem-select-bg--login` | `rgba(243,156,18,0.15)` | `rgba(243,156,18,0.10)` |
+| `--gem-select-bg--event` | `rgba(255,107,53,0.15)` | `rgba(255,107,53,0.10)` |
+| `--gem-select-bg--code` | `rgba(46,204,113,0.15)` | `rgba(46,204,113,0.10)` |
 
 ### Modal/Overlay Tokens
 
@@ -455,10 +464,10 @@ anomaly-alpha/
     │   └── DESIGN_SYSTEM.md          — This file
 ```
 anomaly-alpha/
-├── styles.css       (1392 lines) — Design tokens + BEM classes + animations
-├── index.html       (1282 lines) — HTML with inline JSON configs
-├── script.js        (1224 lines) — JavaScript with token-aware logic
-├── tailwind.css         — Generated Tailwind utility classes (1105 lines)
+├── styles.css       (1565 lines) — Design tokens + BEM classes + animations
+├── index.html       (1392 lines) — HTML with inline JSON configs
+├── script.js        (1145 lines) — JavaScript with token-aware logic
+├── tailwind.css         — Generated Tailwind utility classes (1129 lines)
 ├── package.json         — Dev dependencies (Tailwind CLI)
 ├── tailwind.config.js   — Tailwind content paths config
 ├── src/

@@ -15,7 +15,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Code** — Promotional codes distributed through official channels (current: 30KGTG, 300 gems)
 
 ### Key Terms
-- **League** — 14-tier PvP ranking system (Intern → Invincible) with per-league payout tables for Restricted/Open arenas; 6-group system for Multiverse War
+- **League** — 14-tier PvP ranking system (Intern → Invincible) with per-league payout tables for Restricted/Open arenas; 6-group system for Alliance War
 - **Rank** — Position 1-120 within a league; higher ranks earn more gems, PvP Currency, Hero Shop Tickets, Totem Fragments, and Modules
 - **Tier** — Rank bracket within a league's payout table that defines reward values
 - **Demotion Threshold** — Rank 86: at or above this rank, Alliance War players risk being demoted
@@ -38,7 +38,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 ## Architecture
 - Inline JSON configs in HTML `<head>` (no fetch, works from `file://`)
 - `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME`, `CONTRIBUTORS` — global config objects
-- `getPvpPayout(arena, leagueId, rank)` — core PvP calculation function, reads per-league payout tables from `GAME.pvp.arenas` (restricted/open) and `GAME.pvp.multiverse` (6 grouped leagues for Multiverse War)
+- `getPvpPayout(arena, leagueId, rank)` — core PvP calculation function, reads per-league payout tables from `GAME.pvp.arenas` (restricted/open) and `GAME.pvp.multiverse` (6 grouped leagues for Alliance War)
 - Modal data lives in `REWARDS.cards[].modal` — loaded via `findCardById(id)` helper
 - `showCardModal(cardId)` / `closeCardModal()` — modal lifecycle
 - Category colors centralized in `UI.categoryColors` (canonical source)

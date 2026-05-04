@@ -60,7 +60,7 @@ Open `index.html` in a browser. Works from `file://`.
 - `getPvpPayout(arena, leagueId, rank)` — core function, reads per-league payout tables from `GAME.pvp.arenas` (restricted/open) and `GAME.pvp.multiverse` (6 grouped leagues)
 - 3 PvP cards with league/rank `<select>` elements, initialized via `initializePvPCards()`
 - Restricted + Open Arena: 14 leagues with gems, PvP Currency, Hero Shop Tickets
-- Multiverse War: 6 league groups (intern/junior/intermediate/senior/elite/invincible) with gems, Totem Fragments, Modules
+- Alliance War: 6 league groups (intern/junior/intermediate/senior/elite/invincible) with gems, Totem Fragments, Modules
 - Demotion threshold: rank 86 (`GAME.pvp.demotionThreshold`)
 - On any PvP change: call `updatePvpCard(id)` → `updateAllPageTotals()` → `updateChartsByModes(selectedModes)`
 

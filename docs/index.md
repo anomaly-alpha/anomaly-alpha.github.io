@@ -35,7 +35,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 - **Description** — paragraph explaining the reward/event
 - **Tips & Strategy** — yellow-tinted box with 5 bulleted tips
 - **Live PvP data** — gems, PvP Currency, Tickets, Totem Frags, Modules read from current form selections
-- **Demotion warning** — Multiverse War modal shows safe/danger status based on pvp3-rank vs threshold 86
+- **Demotion warning** — Alliance War modal shows safe/danger status based on pvp3-rank vs threshold 86
 
 | Card | Category | Badge | Gems in modal |
 |------|----------|-------|--------------|
@@ -54,7 +54,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 - Rank selector (1-120), default: rank 13
 - Dynamic gems, PvP Currency, Hero Shop Tickets, Totem Frags, Modules per per-league payout tables
 - Restricted Arena + Open Arena: 14 leagues with gems, PvP Currency, Tickets
-- Multiverse War: 6 grouped leagues with gems, Totem Fragments, Modules
+- Alliance War: 6 grouped leagues with gems, Totem Fragments, Modules
 - localStorage persistence per card
 - Clear button to reset to defaults
 - Demotion zone warning at rank 86+ (Alliance War card only)
