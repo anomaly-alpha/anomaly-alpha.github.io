@@ -428,10 +428,10 @@ function updateModeButtonStates() {
     }
   });
 
-  // CTA visibility: show when all modes active, hide when user has filtered
+  // CTA visibility: always show
   const ctaEl = document.getElementById('cards-cta');
   if (ctaEl) {
-    ctaEl.style.display = isAllSelected ? 'block' : 'none';
+    ctaEl.style.display = 'block';
   }
 }
 

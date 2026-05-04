@@ -1197,6 +1197,7 @@ body .gem-card--mode-highlight--all {
 .gem-cards-cta {
   font-family: 'Orbitron', sans-serif;
   letter-spacing: 0.05em;
+  color: var(--gem-star);
 }
 
 /* Particles */
