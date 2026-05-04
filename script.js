@@ -350,7 +350,7 @@ function loadPageState() {
         selectedModes = validModes;
       }
     } else {
-      selectedModes = ['event', 'pvp', 'login', 'code'];
+      selectedModes = ['event', 'pvp', 'login']; // Default: CODE inactive
     }
     updateModeButtonStates();
     updateAllPageTotals(true);
@@ -366,7 +366,7 @@ function loadPageState() {
 
 // ===== FILTER & MODE FUNCTIONS =====
 
-let selectedModes = ['event', 'pvp', 'login', 'code'];
+let selectedModes = ['event', 'pvp', 'login']; // Default: CODE inactive
 let hidden = false;
 let currentMode = 'all';
 
@@ -374,7 +374,7 @@ function filterCards(category, evt) {
   const cards = document.querySelectorAll('[data-category]');
 
   if (category === 'all') {
-    selectedModes = UI?.defaults?.selectedModes ? [...UI.defaults.selectedModes] : ['event', 'pvp', 'login', 'code'];
+    selectedModes = ['event', 'pvp', 'login']; // Default: CODE inactive
     updateAllButtons();
   } else {
     const modeIndex = selectedModes.indexOf(category);
@@ -383,7 +383,7 @@ function filterCards(category, evt) {
     } else {
       selectedModes.push(category);
     }
-    if (selectedModes.length === 0) selectedModes = ['event', 'pvp', 'login', 'code'];
+    if (selectedModes.length === 0) selectedModes = ['event', 'pvp', 'login'];
   }
 
   updateModeButtonStates();
