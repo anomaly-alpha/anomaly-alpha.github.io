@@ -1193,6 +1193,12 @@ body .gem-card--mode-highlight--all {
   margin-top: 0.25rem;
 }
 
+/* CTA message */
+.gem-cards-cta {
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.05em;
+}
+
 /* Particles */
 .gem-particle {
   position: absolute;

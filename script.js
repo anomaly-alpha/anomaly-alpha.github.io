@@ -427,6 +427,12 @@ function updateModeButtonStates() {
       btn.classList.toggle('active', selectedModes.includes(mode));
     }
   });
+
+  // CTA visibility: show when all modes active, hide when user has filtered
+  const ctaEl = document.getElementById('cards-cta');
+  if (ctaEl) {
+    ctaEl.style.display = isAllSelected ? 'block' : 'none';
+  }
 }
 
 function updateAllPageTotals(skipAnimation) {
