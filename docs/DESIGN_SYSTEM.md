@@ -216,8 +216,15 @@ The design system uses CSS custom properties (design tokens) for all visual valu
 
 | Class | Type | Description |
 |-------|------|-------------|
-| `.gem-select` | Block | Base select input |
-| `.gem-select--league` | Modifier | League selector variant |
+| `.gem-select` | Block | Base select input with `appearance: none` + custom chevron arrow |
+| `.gem-select:hover` | State | Brighter border on hover |
+| `.gem-select:focus` | State | Cyan border + glow ring on focus |
+| `.gem-select--league` | Modifier | Wider league selector (`min-width: 9rem`) |
+| `.gem-select--pvp` | Modifier | Pink (#e91e8a) category — background, border, arrow |
+| `.gem-select--login` | Modifier | Amber (#f39c12) category — background, border, arrow |
+| `.gem-select--event` | Modifier | Orange (#ff6b35) category — background, border, arrow |
+| `.gem-select--code` | Modifier | Green (#2ecc71) category — background, border, arrow |
+| Arrow hover | State | Arrow brightens per category on `.gem-select--{cat}:hover` |
 
 ### Alert Component
 
