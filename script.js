@@ -521,6 +521,7 @@ function updateChartsByCategory(category) {
 }
 
 function updateChartsByModes(modes) {
+  if (hidden) return;
   const combinedData = {
     distribution: [0, 0, 0, 0, 0],
     rewards: new Array(7).fill(0),
