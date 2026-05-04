@@ -347,7 +347,7 @@ function loadPageState() {
       if (savedModes.length > 0) {
         selectedModes = savedModes.filter(m => validModes.includes(m));
       } else {
-        selectedModes = validModes;
+        selectedModes = UI?.defaults?.selectedModes ? [...UI.defaults.selectedModes] : ['event', 'pvp', 'login'];
       }
     } else {
       selectedModes = ['event', 'pvp', 'login']; // Default: CODE inactive
@@ -366,7 +366,7 @@ function loadPageState() {
 
 // ===== FILTER & MODE FUNCTIONS =====
 
-let selectedModes = ['event', 'pvp', 'login']; // Default: CODE inactive
+let selectedModes = UI?.defaults?.selectedModes ? [...UI.defaults.selectedModes] : ['event', 'pvp', 'login'];
 let hidden = false;
 let currentMode = 'all';
 
