@@ -449,10 +449,10 @@ anomaly-alpha/
 ├── vendor/
 │   └── chart.umd.js     — Self-hosted Chart.js 4.4.1
 ├── fonts/               — Self-hosted Rajdhani + Orbitron woff2 files
-├── journal/         — Development journal entries
-├── PLAN-aesthetic-enhancement.md — This plan
-└── docs/
-    └── DESIGN_SYSTEM.md          — This file
+├── journal/               — Daily session journals (YYYY-MM-DD/index.md)
+├── docs/
+    ├── plan/              — Session plans (YYYY-MM-DD/*.md)
+    │   └── DESIGN_SYSTEM.md          — This file
 ```
 anomaly-alpha/
 ├── styles.css       (1392 lines) — Design tokens + BEM classes + animations
@@ -466,8 +466,9 @@ anomaly-alpha/
 ├── vendor/
 │   └── chart.umd.js     — Self-hosted Chart.js 4.4.1
 ├── fonts/               — Self-hosted Rajdhani + Orbitron woff2 files
-├── journal/         — Development journal entries
-└── docs/
+├── journal/               — Daily session journals (YYYY-MM-DD/index.md)
+├── docs/
+    ├── plan/              — Session plans (YYYY-MM-DD/*.md)
     └── DESIGN_SYSTEM.md          — This file
 ```
 

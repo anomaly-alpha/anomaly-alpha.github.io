@@ -66,11 +66,11 @@
 ### docs/DESIGN_SYSTEM.md
 - Line counts: styles.css 1331→1342, index.html 1306→1284, script.js 1224→1207
 
-### docs/plan/IMPLEMENTATION_PLAN.md
+### docs/plan/2026-04-29/IMPLEMENTATION_PLAN.md
 - Line counts throughout: 1294→1284, 1224→1207, 1326→1342
 - Fix duplicate rows in Files Summary table (lines ~548-549): remove duplicate faq row, fix beginners line count to 181
 
-### journal/2026-05-03.md
+### journal/2026-05-03/index.md
 - Fix Session 2 line count claims: 1294→1284, 1223→1207, 1331→1342
 
 ---
@@ -81,12 +81,12 @@ Update all stale gem values (login 60→460, 293→1393, total 3643→4043, spid
 
 | File | Key values to update |
 |------|---------------------|
-| `docs/plan/JSON_EXTRACTION_PLAN.md` | weeklyTotal=60→460, loginTotal 293→1393 |
-| `docs/plan/REWARDS_CHART_FIX.md` | Login=293→1393 |
-| `docs/plan/SPIDER_CHART_FIX.md` | Login=293→1393, PvP actual 750→live, targets [550,1500,360,330]→[550,2664,360,330] |
-| `docs/plan/DYNAMIC_MODE_TOTALS.md` | Weekly=293→460 |
-| `docs/plan/FIX_TOTAL_GEMS.md` | Weekly=293→460, Login=293→1393 |
-| `docs/plan/PVP_TOTAL_FIX.md` | Any stale login/PvP values |
-| `docs/plan/TOTAL_UPDATE_PLAN.md` | Any stale gem totals |
-| `docs/plan/PVP_IMPLEMENTATION_PLAN.md` | Remove multiplier references, explain payout table system |
-| `docs/plan/PLAN_state_persistence.md` | Fix `gemInfographicState` contradiction — text says single key but code block shows 4 individual keys |
+| `docs/plan/2026-05-02/JSON_EXTRACTION_PLAN.md` | weeklyTotal=60→460, loginTotal 293→1393 |
+| `docs/plan/2026-05-02/REWARDS_CHART_FIX.md` | Login=293→1393 |
+| `docs/plan/2026-05-02/SPIDER_CHART_FIX.md` | Login=293→1393, PvP actual 750→live, targets [550,1500,360,330]→[550,2664,360,330] |
+| `docs/plan/2026-05-01/DYNAMIC_MODE_TOTALS.md` | Weekly=293→460 |
+| `docs/plan/2026-05-01/FIX_TOTAL_GEMS.md` | Weekly=293→460, Login=293→1393 |
+| `docs/plan/2026-05-01/PVP_TOTAL_FIX.md` | Any stale login/PvP values |
+| `docs/plan/2026-05-01/TOTAL_UPDATE_PLAN.md` | Any stale gem totals |
+| `docs/plan/2026-05-01/PVP_IMPLEMENTATION_PLAN.md` | Remove multiplier references, explain payout table system |
+| `docs/plan/2026-05-02/PLAN_state_persistence.md` | Fix `gemInfographicState` contradiction — text says single key but code block shows 4 individual keys |

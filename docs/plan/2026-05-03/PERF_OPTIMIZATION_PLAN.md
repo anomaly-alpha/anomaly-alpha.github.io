@@ -187,10 +187,10 @@ git add -A && git commit -m "perf: local Tailwind build, preconnect hints, repo 
 | `README.md` | Usage: add build step. Tech Stack: "via CDN" → "local build". File structure: add new files. |
 | `docs/index.md` | Tech Stack: "via CDN" → "local build via npm". |
 | `docs/DESIGN_SYSTEM.md` | File Structure tree: add build files. |
-| `docs/plan/IMPLEMENTATION_PLAN.md` | Tech Stack table + file structure + files table. |
+| `docs/plan/2026-04-29/IMPLEMENTATION_PLAN.md` | Tech Stack table + file structure + files table. |
 | `AGENTS.md` | Quick start, architecture rules, commands, CDN deps, file ownership. |
 | `CONTEXT.md` | Constraints section updated. |
-| `journal/2026-05-03.md` | Session 3 entry for perf work. |
+| `journal/2026-05-03/index.md` | Session 3 entry for perf work. |
 
 ---
 

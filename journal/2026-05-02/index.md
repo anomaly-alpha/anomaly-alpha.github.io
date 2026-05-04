@@ -29,9 +29,9 @@ Codebase cleanup: remove scanline animation, remove floating controls (theme tog
 #### Updated Documentation
 - **README.md**: Removed theme toggle, save/share, export data, scanline from features. Updated file line counts (818/1184/1266). Fixed spider target (2664). Removed html2canvas from tech stack.
 - **docs/index.md**: Same feature removals. Updated line counts and tech stack.
-- **docs/plan/IMPLEMENTATION_PLAN.md**: Removed scanline, save/share, theme toggle sections. Updated line counts, animation table, out-of-scope list.
+- **docs/plan/2026-04-29/IMPLEMENTATION_PLAN.md**: Removed scanline, save/share, theme toggle sections. Updated line counts, animation table, out-of-scope list.
 - **docs/DESIGN_SYSTEM.md**: Removed scanline from animation table.
-- **journal/2026-05-02.md**: This file.
+- **journal/2026-05-02/index.md**: This file.
 
 ### Files Modified
 - `index.html` — removed scanline div and 3 floating control groups
@@ -39,11 +39,11 @@ Codebase cleanup: remove scanline animation, remove floating controls (theme tog
 - `styles.css` — removed scanline CSS rule and keyframes
 - `README.md` — updated features, line counts, tech stack
 - `docs/index.md` — updated features, line counts, tech stack
-- `docs/plan/IMPLEMENTATION_PLAN.md` — updated sections, line counts, removed stale references
+- `docs/plan/2026-04-29/IMPLEMENTATION_PLAN.md` — updated sections, line counts, removed stale references
 - `docs/DESIGN_SYSTEM.md` — removed scanline from animation table
 
 ### Files Created
-- `journal/2026-05-02.md`
+- `journal/2026-05-02/index.md`
 
 ### Line Counts After Changes
 - `index.html`: 818 lines

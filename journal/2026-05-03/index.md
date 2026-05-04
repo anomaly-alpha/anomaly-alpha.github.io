@@ -48,7 +48,7 @@
 ### Work Completed
 - **index.html** - 4 edits: meta description, FAQ structured data (2 answers), login button, removed initialData + animation blocks
 - **script.js** - 2 edits: fixed fallback values (293→1393), removed dead `chartAnimConfig` variable
-- **docs/plan/SIMPLIFY_INDEX_DATA.md** - Updated with final plan
+- **docs/plan/2026-05-03/SIMPLIFY_INDEX_DATA.md** - Updated with final plan
 - **MD docs** - Updated line counts (index.html 1306→1294→1284, script.js 1224→1223→1207, styles.css 1326→1331→1342)
 
 ### Line Counts After Changes
@@ -69,7 +69,7 @@
 ### Work Completed
 - **Created build files**: `package.json` (dev dep: tailwindcss ^3.4.17), `tailwind.config.js`, `src/tailwind-input.css`, `.gitignore`
 - **Updated index.html**: removed `<script src="https://cdn.tailwindcss.com">` (124 KiB render-blocker), added `<link rel="stylesheet" href="tailwind.css">`, added 4 `<link rel="preconnect">` hints
-- **Updated docs**: AGENTS.md, CONTEXT.md, README.md, docs/index.md, docs/DESIGN_SYSTEM.md, docs/plan/IMPLEMENTATION_PLAN.md, docs/plan/PERF_OPTIMIZATION_PLAN.md
+- **Updated docs**: AGENTS.md, CONTEXT.md, README.md, docs/index.md, docs/DESIGN_SYSTEM.md, docs/plan/2026-04-29/IMPLEMENTATION_PLAN.md, docs/plan/2026-05-03/PERF_OPTIMIZATION_PLAN.md
 - **Build**: ran `npm install && npm run build` — generated `tailwind.css` (9.8 KiB, 657 lines)
 
 ---
@@ -118,7 +118,7 @@
 
 ### Files Updated
 - `docs/PERFORMANCE_PLAN.md` — rewritten with locked decisions, execution checklist format
-- `journal/2026-05-03.md` — this session entry
+- `journal/2026-05-03/index.md` — this session entry
 
 ### Session Notes
 - Discovered that guide pages still load Tailwind Play CDN (blocking script) — was not addressed in Session 3 which only fixed index.html
@@ -333,7 +333,7 @@ All 5 external origins eliminated: fonts.googleapis, fonts.gstatic, cdn.jsdelivr
 - `styles.css` — Added background tokens in `:root` + `:root.light-mode`; replaced `.gem-select` block with fully redesigned select (appearance: none, hover, focus, 8 category arrow SVGs, 4 category background/border modifiers, `--league` min-width)
 - `index.html` — Added `gem-select--pvp` modifier to all 6 `<select>` elements (3 league + 3 rank)
 - `docs/DESIGN_SYSTEM.md` — Updated Select Component table with 10 rows
-- `docs/plan/SELECT_DESIGN_SYSTEM.md` — Created with full plan, updated with executed decisions
+- `docs/plan/2026-05-04/SELECT_DESIGN_SYSTEM.md` — Created with full plan, updated with executed decisions
 - `AGENTS.md` — Added Node.js download note to Quick start
 - `README.md` — Added Node.js requirement note to Usage
 

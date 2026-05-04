@@ -130,7 +130,7 @@ Added `gem-select--pvp` to all 6 selects in `index.html`:
 | `styles.css` | Added CSS vars in :root + light-mode, replaced .gem-select block |
 | `index.html` | Added `gem-select--pvp` to all 6 `<select>` elements |
 | `docs/DESIGN_SYSTEM.md` | Updated Select Component table |
-| `docs/plan/SELECT_DESIGN_SYSTEM.md` | Updated with final decisions |
+| `docs/plan/2026-05-04/SELECT_DESIGN_SYSTEM.md` | Updated with final decisions |
 
 ---
 

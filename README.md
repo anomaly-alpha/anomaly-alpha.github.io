@@ -112,7 +112,8 @@ anomaly-alpha/
 ├── docs/
 │   ├── DESIGN_SYSTEM.md  — CSS token reference
 │   ├── index.md          — Feature documentation
-│   └── plan/             — Historical plans and fix notes
+│   └── plan/             — Daily session plans (YYYY-MM-DD/*.md)
+├── journal/              — Daily session journals (YYYY-MM-DD/index.md)
 ```
 
 ## Usage
