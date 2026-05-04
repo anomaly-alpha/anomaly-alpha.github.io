@@ -49,7 +49,7 @@ Open `index.html` in a browser. Works from `file://`.
 - **JS**: `function` declarations, camelCase, UPPER_SNAKE_CASE for constants, `onclick` HTML attributes
 - **CSS**: BEM (`.gem-block__element--modifier`), custom property tokens (`--gem-*`), category suffixes (`--event`, `--pvp`, `--login`, `--code`)
 - **Config**: inline JSON in HTML, always use `loadConfig(id)` to parse
-- **State**: `selectedModes` array + `currentChartFilter` string, persisted via `savePageState()`/`loadPageState()`
+- **State**: `selectedModes` array (defaults: event, pvp, login — CODE inactive) + `currentChartFilter` string, persisted via `savePageState()`/`loadPageState()`
 - **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`
 - **URL params**: `?theme=light&mode=<name>&chart=<name>` restored on page load
 

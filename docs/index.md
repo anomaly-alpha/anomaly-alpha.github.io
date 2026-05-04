@@ -9,7 +9,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 | Category | Gems | Description |
 |----------|-----|-------------|
 | Event Rewards | 500 | The Long Haul (300) + Earth's Defenders (200) |
-| PvP | ~1,850 (varies) | Restricted Arena + Open Arena + Multiverse Alliance War (Elite II, rank 13 defaults) |
+| PvP | ~1,850 (varies) | Restricted Arena + Open Arena + Alliance War (Elite II, rank 13 defaults) |
 | Login Rewards | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
 | Promo Code | 300 | Code: 30KGTG |
 
@@ -44,7 +44,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 | Earth's Defenders | Event | ★ Top 10% | 200 (static) |
 | Restricted Arena | PvP | ★ Weekly | live from pvp1-league/rank |
 | Open Arena | PvP | ★ Weekly | live from pvp2-league/rank |
-| Multiverse Alliance War | PvP | ★ 5 Matches / 2 Weeks | live from pvp3-league/rank + demotion warning |
+| Alliance War | PvP | ★ 5 Matches / 2 Weeks | live from pvp3-league/rank + demotion warning |
 | Daily Login | Login | ★ 30×7 | 910 (static) |
 | Weekly Login | Login | ★ 60+400=460 | 460 (static) |
 | Monthly Login | Login | ★ 90÷4=23 | 23 (static) |
@@ -57,7 +57,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 - Multiverse War: 6 grouped leagues with gems, Totem Fragments, Modules
 - localStorage persistence per card
 - Clear button to reset to defaults
-- Demotion zone warning at rank 86+ (Multiverse Alliance War card only)
+- Demotion zone warning at rank 86+ (Alliance War card only)
 
 ### Chart Interactions (3 charts)
 - **Distribution (doughnut)** — 4 category segments with mode colors
@@ -84,7 +84,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 
 ## Tech Stack
 
-- **Structure**: `index.html` (1282 lines), `styles.css` (1392 lines), `script.js` (1224 lines), 6 guide pages (1175 total)
+- **Structure**: Main HTML + inline JSON configs, 6 guide pages
 - **Styling**: Tailwind CSS (local build via npm) + custom CSS design token system
 - **Charts**: Chart.js (doughnut, bar, radar) — self-hosted in `vendor/chart.umd.js`
 - **Icons**: Inline SVGs (32 icons, replaced Font Awesome)

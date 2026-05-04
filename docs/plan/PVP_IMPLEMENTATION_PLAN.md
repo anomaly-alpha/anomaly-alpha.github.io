@@ -18,7 +18,7 @@ Replace 3 static season cards (lines 491-555 in gem_infographic.html) with 3 int
 During the May 1 session, the following additional changes were made to the infographic:
 
 1. **Removed Season category** - Season filter and cards entirely removed
-2. **Merged Warfare into PvP** - Warfare (Multiverse Alliance War) is now part of PvP cards
+2. **Merged Warfare into PvP** - Warfare (Alliance War) is now part of PvP cards
 3. **Removed Gem Calculator** - Removed the calculator section and its JavaScript
 4. **Removed legend, summary boxes** - Removed visual elements that were replaced by unified mode cards
 5. **Unified mode cards at top** - Each mode (All, Event, PvP, Daily, Code) now has a large clickable card with total + countdown timer
@@ -56,7 +56,7 @@ On May 1, several HTML structural issues were discovered and fixed:
 |--------|----------|----------------|--------------|------|---------------|
 | 1 | Restricted Arena | Elite I | 50 | fa-user-lock | purple-accent |
 | 2 | Open Arena | Elite III | 50 | fa-fist-raised | cyan-glow |
-| 3 | Multiverse Alliance War | Elite II | 50 | fa-globe | pink-glow |
+| 3 | Alliance War | Elite II | 50 | fa-globe | pink-glow |
 
 ---
 
@@ -125,7 +125,7 @@ On May 1, several HTML structural issues were discovered and fixed:
 
 <!-- PvP Card 2: Open Arena (copy structure, change IDs and colors to cyan-glow) -->
 
-<!-- PvP Card 3: Multiverse Alliance War (copy structure, change IDs and colors to pink-glow) -->
+<!-- PvP Card 3: Alliance War (copy structure, change IDs and colors to pink-glow) -->
 ```
 
 ---
@@ -168,7 +168,7 @@ const pvpLeagueData = {
 const pvpTypes = {
     1: { name: "Restricted Arena", icon: "fa-user-lock", frequency: "Weekly", color: "purple-accent", colorClass: "bg-purple-accent", borderClass: "border-purple-accent", defaultLeague: "eliteI" },
     2: { name: "Open Arena", icon: "fa-fist-raised", frequency: "Weekly", color: "cyan-glow", colorClass: "bg-cyan-glow", borderClass: "border-cyan-glow", defaultLeague: "eliteIII" },
-    3: { name: "Multiverse Alliance War", icon: "fa-globe", frequency: "5 matches / 2 weeks", color: "pink-glow", colorClass: "bg-pink-glow", borderClass: "border-pink-glow", defaultLeague: "eliteII" }
+    3: { name: "Alliance War", icon: "fa-globe", frequency: "5 matches / 2 weeks", color: "pink-glow", colorClass: "bg-pink-glow", borderClass: "border-pink-glow", defaultLeague: "eliteII" }
 };
 
 // Generate rank options 1-120
@@ -360,7 +360,7 @@ function updateTotalGems() {
 |------|----------|----------------|---------------|-------|
 | 1 | Restricted Arena | Elite I | 50 | purple-accent |
 | 2 | Open Arena | Elite III | 50 | cyan-glow |
-| 3 | Multiverse Alliance War | Elite II | 50 | pink-glow |
+| 3 | Alliance War | Elite II | 50 | pink-glow |
 
 **Demotion Zone:** Rank 86+
 **Max Rank:** 120

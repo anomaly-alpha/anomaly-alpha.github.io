@@ -158,7 +158,7 @@ All 9 cards have an info icon button (`.gem-card__info-btn`) in the top-right co
 | 3 | Earth's Defenders | Event | 200 | ★ Top 10% | Info icon opens modal |
 | 4 | Restricted Arena | PvP | dynamic | ★ Weekly | Live gems + PvP Currency + Tickets from pvp1-league/rank |
 | 5 | Open Arena | PvP | dynamic | ★ Weekly | Live gems + PvP Currency + Tickets from pvp2-league/rank |
-| 6 | Multiverse Alliance War | PvP | dynamic | ★ 5 Matches / 2 Weeks | Live gems + Totem Frags + Modules from pvp3-league/rank; demotion warning |
+| 6 | Alliance War | PvP | dynamic | ★ 5 Matches / 2 Weeks | Live gems + Totem Frags + Modules from pvp3-league/rank; demotion warning |
 | 7 | Daily Login | Login | 910 | ★ 30×7 | Info icon opens modal |
 | 8 | Weekly Login | Login | 460 | ★ 60+400=460 | Info icon opens modal |
 | 9 | Monthly Login | Login | 23 | ★ 90÷4=23 | Info icon opens modal |
@@ -610,7 +610,7 @@ The following were in older versions but are NOT in current implementation:
 **Sessions:** ~9 sessions over 8 hours.
 
 **Phase 1 — PvP Cards:**
-- Replaced 3 static season cards with interactive PvP cards (Restricted Arena, Open Arena, Multiverse Alliance War)
+- Replaced 3 static season cards with interactive PvP cards (Restricted Arena, Open Arena, Alliance War)
 - Added `getPvpPayout()`, `generateRankOptions()`, `animateValue()`, `updatePvpCard()`, `savePvpSelection()`/`loadPvpSelection()`, `clearPvpSelection()`, `initializePvPCards()`
 - Rank 1-120 selectors, league selectors (14 leagues for arenas, 6 groups for multiverse), demotion zone at rank 86+
 

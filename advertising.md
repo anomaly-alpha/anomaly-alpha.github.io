@@ -124,7 +124,7 @@
 >
 > **Community-Built Gem Calculator Launches for Invincible: Guarding the Globe Players**
 >
-> [CITY, Date] — A new free web tool launched today to help players of Invincible: Guarding the Globe plan their weekly gem income. The Gem Rewards Calculator (https://anomaly-alpha.github.io) provides instant payout estimates for all PvP modes — Restricted Arena, Open Arena, and Multiverse Alliance War — across all 14 leagues and 120 rank positions.
+> [CITY, Date] — A new free web tool launched today to help players of Invincible: Guarding the Globe plan their weekly gem income. The Gem Rewards Calculator (https://anomaly-alpha.github.io) provides instant payout estimates for all PvP modes — Restricted Arena, Open Arena, and Alliance War — across all 14 leagues and 120 rank positions.
 >
 > Additional features include event reward tracking, login streak calculations, current promo code redemption, and interactive charts for income visualisation.
 >

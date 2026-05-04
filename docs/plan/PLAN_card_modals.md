@@ -21,7 +21,7 @@
   - Earth's Defenders: `fa-info-circle gem-text--event`
   - Restricted Arena: `fa-info-circle gem-text--pvp`
   - Open Arena: `fa-info-circle gem-text--pvp`
-  - Multiverse Alliance War: `fa-info-circle gem-text--pvp`
+  - Alliance War: `fa-info-circle gem-text--pvp`
   - Daily Login: `fa-info-circle gem-text--login`
   - Weekly Login: `fa-info-circle gem-text--login`
   - Monthly Login: `fa-info-circle gem-text--login`

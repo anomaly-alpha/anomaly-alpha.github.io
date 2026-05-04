@@ -114,7 +114,7 @@ Cards, categories, login rewards, promo code data.
 3. Earth's Defenders (event) - 200 gems, Top 10%
 4. Restricted Arena (pvp) - Card index 1, Weekly
 5. Open Arena (pvp) - Card index 2, Weekly
-6. Multiverse Alliance War (pvp) - Card index 3, 5 matches/2 weeks, hasDemotionWarning
+6. Alliance War (pvp) - Card index 3, 5 matches/2 weeks, hasDemotionWarning
 7. Daily Login (login) - 210 gems, formula: 30×7
 8. Weekly Login (login) - 60 gems
 9. Monthly Login (login) - 23 gems, formula: 90÷4

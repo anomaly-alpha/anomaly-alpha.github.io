@@ -10,7 +10,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 
 ### Gem Categories
 - **Event** — Time-limited game events with ranking thresholds (500 gems: The Long Haul 300 top 5%, Earth's Defenders 200 top 10%)
-- **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout (3 cards: Restricted Arena + Open Arena + Multiverse Alliance War; ~1,850 at Elite II rank 13 defaults)
+- **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout (3 cards: Restricted Arena + Open Arena + Alliance War; ~1,850 at Elite II rank 13 defaults)
 - **Login** — Daily/weekly/monthly login rewards with streak mechanics (1,393/week: 910 daily + 460 weekly + 23 monthly)
 - **Code** — Promotional codes distributed through official channels (current: 30KGTG, 300 gems)
 
@@ -18,14 +18,14 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **League** — 14-tier PvP ranking system (Intern → Invincible) with per-league payout tables for Restricted/Open arenas; 6-group system for Multiverse War
 - **Rank** — Position 1-120 within a league; higher ranks earn more gems, PvP Currency, Hero Shop Tickets, Totem Fragments, and Modules
 - **Tier** — Rank bracket within a league's payout table that defines reward values
-- **Demotion Threshold** — Rank 86: at or above this rank, Multiverse Alliance War players risk being demoted
+- **Demotion Threshold** — Rank 86: at or above this rank, Alliance War players risk being demoted
 - **Spider Chart** — Radar chart comparing actual gem income vs target income across 4 categories
 
 ### Card Modal System
 - Every reward card has an **info icon** (`.gem-card__info-btn`) that opens a **card modal**
 - The modal shows: hero tagline, description, tips, and for PvP cards — live gems, PvP Currency, Hero Shop Tickets, Totem Frags, Modules from current form selections
 - A **star badge** (`★`) appears in the modal header for all cards
-- The **Multiverse Alliance War** modal includes a **demotion warning** based on current rank vs threshold
+- The **Alliance War** modal includes a **demotion warning** based on current rank vs threshold
 
 ### Guide Pages (Topical Cluster)
 - `/guide/code/` — Promo code guide: current code 30KGTG, redemption steps, 5 tips

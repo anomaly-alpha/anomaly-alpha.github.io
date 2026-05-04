@@ -7,7 +7,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 | Category | Gems | Notes |
 |----------|------|-------|
 | Event | 500 | The Long Haul (300) + Earth's Defenders (200) |
-| PvP | ~1,850 | Varies with league/rank — Restricted Arena, Open Arena, Multiverse Alliance War (Elite II, rank 13 default) |
+| PvP | ~1,850 | Varies with league/rank — Restricted Arena, Open Arena, Alliance War (Elite II, rank 13 default) |
 | Login | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
 | Code | 300 | Promo code 30KGTG (tap to reveal, click to copy) |
 
@@ -45,7 +45,7 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 | Earth's Defenders | orange (event) | ★ Top 10% |
 | Restricted Arena | pink (pvp) | ★ Weekly |
 | Open Arena | pink (pvp) | ★ Weekly |
-| Multiverse Alliance War | pink (pvp) | ★ 5 Matches / 2 Weeks |
+| Alliance War | pink (pvp) | ★ 5 Matches / 2 Weeks |
 | Daily Login | amber (login) | ★ 30×7 |
 | Weekly Login | amber (login) | ★ 60+400=460 |
 | Monthly Login | amber (login) | ★ 90÷4=23 |
@@ -56,8 +56,8 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 - **Dynamic gems, PvP Currency, Tickets, Totem Frags, Modules** based on per-league payout tables
 - **Restricted Arena**: gems + PvP Currency + Hero Shop Tickets
 - **Open Arena**: gems + PvP Currency + Hero Shop Tickets
-- **Multiverse Alliance War**: gems + Totem Fragments + Modules (6 league groups)
-- **Demotion zone warning** at rank 86+ (Multiverse Alliance War card only)
+- **Alliance War**: gems + Totem Fragments + Modules (6 league groups)
+- **Demotion zone warning** at rank 86+ (Alliance War card only)
 - **localStorage persistence** per card
 - **Clear button** to reset to defaults (Elite II, rank 13)
 
@@ -80,9 +80,9 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (1282 lines) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (1224 lines) — All JS: charts, filters, PvP, modals, countdowns
-├── styles.css           (1392 lines) — CSS custom properties + BEM component classes
+├── index.html           (1392 lines) — Main HTML + inline JSON configs (6 in <head>)
+├── script.js            (1144 lines) — All JS: charts, filters, PvP, modals, countdowns
+├── styles.css           (1500 lines) — CSS custom properties + BEM component classes
 ├── tailwind.css         — Generated Tailwind utility classes (1105 lines, from npm run build)
 ├── package.json         — Dev dependencies config
 ├── tailwind.config.js   — Tailwind content paths config
@@ -93,6 +93,7 @@ anomaly-alpha/
 ├── fonts/               — Self-hosted woff2 files (Rajdhani + Orbitron)
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
 ├── og-image.svg         — 1200×630 social sharing preview card
+├── favicon.ico           — Browser favicon for tab
 ├── robots.txt           — Allows all crawlers, references sitemap
 ├── sitemap.xml          — 7 URLs (main + 6 guide pages)
 ├── AGENTS.md            — Agent instructions for this repo
@@ -194,6 +195,12 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Spider chart frozen actuals** — Replaced `totals.pvp` snapshot with `getModeTotal('pvp')` live call in `buildModeData`; `updatePvPCard` now calls `updateChartsByModes(selectedModes)` to propagate PvP changes to all 3 charts immediately
 - ✅ **PvP card modal crash** — Fixed missing `arena` arg in `getPvpPayout()` + undefined `chips`/`cards` properties in `showCardModal` (May 3)
 - ✅ **Weekly login payout** — Updated 60 → 460 gems (60 free + 400 from chests); propagated through config, cards, FAQ schema, and total counter (4043) (May 3)
+- ✅ **Charts hidden by default** — Config + loadPageState respects config default
+- ✅ **selectedModes defaults** — Defaults when localStorage empty or missing
+- ✅ **All modes fix** — Clicking All after reload now restores all cards
+- ✅ **CTA always visible** — Added yellow "Explore All Modes" CTA button, always visible
+- ✅ **CODE mode inactive** — CODE mode defaults to inactive (red highlight), encouraging exploration
+- ✅ **Renamed Alliance War** — Shortened to "Alliance War" for fit
 
 ### SEO & Content
 - ✅ **Open Graph & Twitter tags** — 10 meta tags for rich social sharing previews
