@@ -7,6 +7,8 @@ npm install && npm run build    # One-time setup (or after HTML changes)
 ```
 Open `index.html` in a browser. Works from `file://`.
 
+**Note:** Requires Node.js (any recent LTS) to build Tailwind. If `npm` isn't available, download from [nodejs.org](https://nodejs.org) for your platform.
+
 ## File ownership
 
 | File | Role |

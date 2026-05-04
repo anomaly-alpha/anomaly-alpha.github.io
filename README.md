@@ -119,6 +119,8 @@ anomaly-alpha/
 
 Run `npm install && npm run build` (one-time setup). Then open `index.html` in any browser — the page loads inline JSON configs embedded in the HTML, so it works directly from disk (`file://`) as well as via a local server.
 
+**Node.js requirement:** Tailwind CSS build requires Node.js (any recent LTS). If `npm` isn't available, download from [nodejs.org](https://nodejs.org) for your platform.
+
 ## Design System
 
 CSS custom property design tokens with BEM naming convention:
