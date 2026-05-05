@@ -1,7 +1,7 @@
 # Design System — Gem Rewards Infographic
 
-**Status:** Current (May 4, 2026)
-**Version:** 1.0
+**Status:** Current (May 5, 2026)
+**Version:** 1.1
 
 ---
 
@@ -150,6 +150,8 @@ The design system uses CSS custom properties (design tokens) for all visual valu
 | Token | Value |
 |-------|-------|
 | `--gem-font` | `'Rajdhani', sans-serif` |
+
+All `@font-face` declarations use `font-display: optional` to prevent layout shift from font swap on slow connections. Fallback fonts (system sans-serif) display when the custom font doesn't arrive within ~50ms. Fonts are preloaded via `<link rel="preload" as="font">` in `<head>`.
 
 ---
 
@@ -301,9 +303,15 @@ The design system uses CSS custom properties (design tokens) for all visual valu
 
 | Class | Type | Description |
 |-------|------|-------------|
-| `.gem-orb` | Block | Gradient orb base |
-| `.gem-orb--1` | Modifier | Cyan orb (larger) |
-| `.gem-orb--2` | Modifier | Pink orb (smaller) |
+| `.gem-orb` | Block | Gradient orb base (`position: fixed` to avoid CLS from parent container shifts) |
+| `.gem-orb--1` | Modifier | Cyan orb (larger, `top:20%; left:10%`) |
+| `.gem-orb--2` | Modifier | Pink orb (smaller, `bottom:5%; right:8%`) |
+
+### Noise Texture
+
+| Selector | Description |
+|----------|-------------|
+| `body::after` | Fixed-position SVG noise overlay (`opacity: 0.03, z-index: 1`) for sci-fi ambient grain |
 
 ### Code Reveal Component
 
@@ -414,6 +422,20 @@ The following color aliases are defined in `tailwind.config.js` for use in gradi
 
 These use Tailwind's `theme.extend.colors` and are detected via the JIT engine from content patterns in `index.html` and `guide/*/index.html`.
 
+### FOUC Visibility Guard
+
+All pages wrap the inline critical CSS block with an `html` visibility guard:
+
+```css
+<style>
+html { visibility: hidden }  /* first rule — hides page */
+/* ... all critical CSS rules ... */
+html { visibility: visible }  /* last rule — reveals page */
+</style>
+```
+
+This prevents any element from rendering until the **entire** critical CSS block has been parsed, eliminating flashes of unstyled content (FOUC) on slow devices.
+
 ---
 
 ## Theming Architecture
@@ -465,37 +487,28 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 ```
 anomaly-alpha/
 ├── index.html       (114 KB) — HTML with inline JSON configs + critical CSS inlined
-├── script.js        (28 KB)  — JavaScript (minified)
-├── styles.css       (33 KB)  — Design tokens + BEM classes + animations (minified)
-├── tailwind.css     (14 KB)  — Generated Tailwind utility classes (minified)
-├── package.json         — Dev dependencies (Tailwind CLI, csso, terser, critical)
+├── script.js        (28 KB)  — JavaScript (minified via terser)
+├── styles.css       (33 KB)  — Design tokens + BEM classes + animations (minified via csso)
+├── tailwind.css     (14 KB)  — Generated + minified Tailwind utility classes
+├── package.json         — Dev dependencies (tailwindcss, csso, terser, critical)
 ├── tailwind.config.js   — Tailwind config with color aliases + content paths
 ├── src/
 │   └── tailwind-input.css — Tailwind source directives
 ├── vendor/
 │   └── chart.umd.js     — Self-hosted Chart.js 4.4.1 (lazy-loaded)
 ├── fonts/               — Self-hosted Rajdhani + Orbitron woff2 files
-├── journal/               — Daily session journals (YYYY-MM-DD/index.md)
+├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
+├── og-image.svg         — 1200×630 social sharing preview card
+├── _headers             — Cloudflare Pages cache-control config
+├── 404.html             — Custom error page
+├── data/
+│   ├── arena_payouts.txt     — Open + Restricted arena payout tables
+│   └── multiverse_war_payouts.txt — Alliance War payout tables
+├── guide/               — 6 detail guide pages (code, event, pvp, login, faq, beginners)
+├── journal/             — Daily session journals (YYYY-MM-DD/index.md)
 ├── docs/
     ├── plan/              — Session plans (YYYY-MM-DD/*.md)
-    └── DESIGN_SYSTEM.md          — This file
-```
-anomaly-alpha/
-├── styles.css       (1565 lines) — Design tokens + BEM classes + animations
-├── index.html       (1392 lines) — HTML with inline JSON configs
-├── script.js        (1145 lines) — JavaScript with token-aware logic
-├── tailwind.css         — Generated Tailwind utility classes (1129 lines)
-├── package.json         — Dev dependencies (Tailwind CLI)
-├── tailwind.config.js   — Tailwind content paths config
-├── src/
-│   └── tailwind-input.css — Tailwind source directives
-├── vendor/
-│   └── chart.umd.js     — Self-hosted Chart.js 4.4.1
-├── fonts/               — Self-hosted Rajdhani + Orbitron woff2 files
-├── journal/               — Daily session journals (YYYY-MM-DD/index.md)
-├── docs/
-    ├── plan/              — Session plans (YYYY-MM-DD/*.md)
-    └── DESIGN_SYSTEM.md          — This file
+    └── DESIGN_SYSTEM.md   — This file
 ```
 
 ---

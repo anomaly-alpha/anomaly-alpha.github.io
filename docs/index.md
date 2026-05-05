@@ -133,12 +133,14 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **Toned active mode buttons** — Active mode selector uses more transparent colors (30% bg, 65% border, subtle glow)
 
 ### Performance Improvements
-- ✅ **Lighthouse 88→96** — Lazy-loaded Chart.js, inlined critical CSS, fixed forced reflow
+- ✅ **Lighthouse 98 desktop / 92 mobile** — CLS 0.000 on both, TBT 30ms, LCP 0.6s
 - ✅ **Chart.js lazy-loaded** — 205KB deferred until first "Show Charts" click
 - ✅ **DOMContentLoaded in requestAnimationFrame** — TBT 240ms → 30ms
 - ✅ **Critical CSS inlined** — Main page + all 6 guides: render-blocking eliminated
 - ✅ **CSS/JS minified** — csso + terser in build pipeline (-31KB)
 - ✅ **Tailwind color aliases defined** — Fixes gradient bars site-wide (orange-accent, green-accent, etc.)
+- ✅ **CLS fixed** — Orbs changed to `position: fixed`, fonts to `font-display: optional`, fonts preloaded
+- ✅ **FOUC guard** — `html { visibility: hidden/visible }` wraps critical CSS to prevent flash on slow devices
 - ✅ **Removed search feature** — Eliminated most expensive JS operation (querySelectorAll per keystroke); removed from HTML, CSS, and JS
 - ✅ **Disabled chart animations** — All `chart.update('active')` changed to `'none'` for instant non-animated redraws (9 locations)
 - ✅ **CSS-driven countdown pulse** — Replaced JS class-toggle every 1s with pure CSS `infinite` animation
@@ -171,6 +173,8 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **Spider chart frozen actuals** — `buildModeData` now uses `getModeTotal('pvp')` live instead of `totals.pvp` snapshot; `updatePvPCard` triggers chart update so spider reflects current PvP selections immediately
 - ✅ **PvP card modal crash** — Fixed missing `arena` arg in `getPvpPayout()` + undefined `chips`/`cards` properties
 - ✅ **Weekly login payout** — Updated 60 → 460 gems; propagated to config, cards, FAQ schema, total counter (4043); login total now 1,393
+- ✅ **Guide cross-link data** — Fixed "993" → "1,393" gems/week in FAQ and Beginners guide login card descriptions
+- ✅ **PvP accent bars unified** — All 3 PvP mode cards use `via-pink-glow` gradient accent bar (was cyan/purple/pink mix)
 
 ### SEO & Content
 - ✅ **Open Graph & Twitter tags** — 10 meta tags for rich social sharing previews
@@ -189,3 +193,4 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - Anomaly
 - TheOneTruePanda
 - dbp loves allen
+- Sy

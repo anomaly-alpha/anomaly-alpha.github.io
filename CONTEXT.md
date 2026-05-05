@@ -50,10 +50,12 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 
 ## Performance Architecture
 - **Critical CSS inlined** — All pages inline above-fold CSS in `<style>` and load full CSS asynchronously via `<link rel="preload" as="style" onload="this.rel='stylesheet'">`
+- **FOUC guard** — `html { visibility: hidden/visible }` wraps each inline `<style>` block so no element renders until full CSS is parsed
 - **Chart.js lazy-loaded** — `vendor/chart.umd.js` (205KB) loaded dynamically on first "Show Charts" click via `loadChartJs()` + `initCharts()`
 - **DOMContentLoaded in requestAnimationFrame** — All initialization deferred to after first paint
 - **Minified assets** — CSS minified via csso, JS minified via terser (in `npm run build`)
 - **Tailwind color aliases** — `orange-accent`, `green-accent`, `yellow-accent`, `pink-glow`, `cyan-glow`, `purple-accent` defined in `tailwind.config.js` for gradient stop classes
+- **Font loading** — All fonts preloaded via `<link rel="preload" as="font">`, use `font-display: optional` to avoid CLS from font swap
 
 ## Design Language
 - CSS custom properties as design tokens (`--gem-event`, `--gem-pvp`, etc.)
