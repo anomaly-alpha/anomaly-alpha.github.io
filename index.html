@@ -430,22 +430,22 @@ html { visibility: hidden }
     {
       "id": "promo-code",
       "category": "code",
-      "title": "Promo Code",
+      "title": "Promo Codes",
       "gems": 300,
-      "code": "30KGTG",
+      "codes": ["SURV3Y","MOSTV4","CONMAN","SHUTV4","THKMRK","AALIEN","CONQST","30KGTG","INVTV4","KIGTV4","HEHTV4","PDCAST","FRATV4","SUBTV4","SAMTV4","IGTTV4","TUTTV4","KABTV4","LEXTV4","JOTTV4","NOLAN4","LUCAN4","THULA4","KREGG4","ANISS4","BANTV4"],
       "isRevealable": true,
-      "description": "A secret code whispered among allies—tap to reveal",
+      "description": "Secret codes whispered among allies—tap to reveal",
       "tooltip": "Code reward",
       "guideUrl": "guide/code/",
       "delay": 0,
       "modal": {
-        "hero": "\"A secret code whispered among allies.\"",
-        "description": "A promotional code that rewards 300 gems when redeemed. The code is shared through official Invincible game channels, community events, and special promotions. Tap the card to reveal the code, then tap again to copy it to your clipboard for redemption in the in-game store.",
+        "hero": "\"Secret codes whispered among allies.\"",
+        "description": "Promotional codes that reward gems when redeemed. Codes are shared through official Invincible game channels, community events, and special promotions. Tap the card to reveal all active codes, then tap any code to copy it to your clipboard for redemption in the in-game store.",
         "badge": "\u2605 Tap to Reveal",
         "tips": [
-          "Tap the card to reveal the code — a 3D flip animation reveals the characters",
-          "Tap the revealed code to copy it instantly to your clipboard",
-          "Codes have expiration dates — redeem them promptly when discovered",
+          "Tap the card to reveal all active promo codes",
+          "Tap any code to copy it instantly to your clipboard",
+          "Individual codes may have expiration dates — redeem them promptly",
           "Follow official Invincible social media for new codes as they release",
           "Some codes are one-time use — don't share claimed codes"
         ]
@@ -637,7 +637,7 @@ html { visibility: hidden }
       }
     }
   ],
-  "promoCode": "30KGTG"
+  "promoCodes": ["SURV3Y","MOSTV4","CONMAN","SHUTV4","THKMRK","AALIEN","CONQST","30KGTG","INVTV4","KIGTV4","HEHTV4","PDCAST","FRATV4","SUBTV4","SAMTV4","IGTTV4","TUTTV4","KABTV4","LEXTV4","JOTTV4","NOLAN4","LUCAN4","THULA4","KREGG4","ANISS4","BANTV4"]
 }
     </script>
 
@@ -875,10 +875,10 @@ html { visibility: hidden }
             },
             {
               "@type": "Question",
-              "name": "What is the current promo code for Invincible Guarding the Globe?",
+              "name": "What are the active promo codes for Invincible Guarding the Globe?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "The current promo code is 30KGTG, worth 300 gems. Tap to reveal on the rewards infographic."
+                "text": "There are 26 active promo codes worth 300 gems each. Tap the Promo Codes card on the rewards infographic to reveal all codes, then tap any code to copy it."
               }
             },
             {
@@ -1008,22 +1008,19 @@ html { visibility: hidden }
                     <svg class="gem-text--code" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336l24 0 0-64-24 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0c13.3 0 24 10.7 24 24l0 88 8 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></svg>
                 </button>
                 <div class="gem-card__body">
-                    <!-- gem payout -->
                     <p class="gem-card__gems">
                         <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>300</span> <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
-                    <!-- title -->
-                    <h2 class="gem-card__title gem-card__title--code">Promo Code</h2>
-                    <!-- pills -->
+                    <h2 class="gem-card__title gem-card__title--code">Promo Codes</h2>
                     <div class="gem-label gem-label--code">
                         <span>Code Redemption</span>
                     </div>
                 </div>
                 <div class="gem-divider">
-                    <p class="gem-card__desc gem-code__hint">A secret code whispered among allies—tap to reveal</p>
+                    <p class="gem-card__desc gem-code__hint">Secret codes whispered among allies—tap to reveal</p>
                     <div class="gem-code__reveal hidden">
-                        <span class="gem-code__value">30KGTG</span>
-                        <span class="gem-code__copy-hint">click to copy</span>
+                        <div class="gem-code__grid"></div>
+                        <p class="gem-code__copy-hint">tap a code to copy</p>
                     </div>
                 </div>
             </div>

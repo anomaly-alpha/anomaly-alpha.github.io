@@ -9,7 +9,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 | Event | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~1,850 | Varies with league/rank — Restricted Arena, Open Arena, Alliance War (Elite II, rank 13 default) |
 | Login | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
-| Code | 300 | Promo code 30KGTG (tap to reveal, click to copy) |
+| Code | 300 each | 26 promo codes (tap to reveal, click to copy) |
 
 **Total: ~4,043 gems/week** (varies with PvP selections)
 
@@ -19,7 +19,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 
 ### Interactive Elements
 - **Animated counter** that counts up on value changes (PvP selections, mode filtering)
-- **Promo code reveal** — tap to reveal "30KGTG" with 3D flip animation, tap again to copy
+- **Promo code reveal** — tap to reveal 26 active codes in a grid, tap any code to copy
 - **Mode selector** — 5 buttons (All, Code, Event, PvP, Login) each showing gem total + countdown timer
 - **Multi-select mode filtering** — toggle Event, PvP, Login, Code independently
 - **Mode button hover** — hovering a mode button highlights all matching cards in that mode's color
