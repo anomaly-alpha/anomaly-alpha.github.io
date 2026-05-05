@@ -399,6 +399,23 @@ document.body.classList.toggle('light-mode');
 
 ---
 
+### Tailwind Color Aliases
+
+The following color aliases are defined in `tailwind.config.js` for use in gradient stop classes and background/border utilities:
+
+| Alias | Hex | Usage |
+|-------|-----|-------|
+| `orange-accent` | `#ff6b35` | Event category gradient bars (`via-orange-accent`) |
+| `green-accent` | `#2ecc71` | Code category gradient bars (`via-green-accent`) |
+| `yellow-accent` | `#f39c12` | Login category gradient bars (`via-yellow-accent`) |
+| `pink-glow` | `#e91e8a` | PvP/Alliance War gradient bars (`via-pink-glow`) |
+| `cyan-glow` | `#00e5ff` | Cyan accent gradient bars (`via-cyan-glow`) |
+| `purple-accent` | `#9b59b6` | Special gradient bars (`via-purple-accent`) |
+
+These use Tailwind's `theme.extend.colors` and are detected via the JIT engine from content patterns in `index.html` and `guide/*/index.html`.
+
+---
+
 ## Theming Architecture
 
 ### Token Definition (`:root`)
@@ -447,21 +464,21 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 ## File Structure
 ```
 anomaly-alpha/
-├── styles.css       — Design tokens + BEM classes + animations
-├── index.html       — HTML with inline JSON configs + gradient orbs
-├── script.js        — JavaScript with token-aware logic
-├── tailwind.css         — Generated Tailwind utility classes
-├── package.json         — Dev dependencies (Tailwind CLI)
-├── tailwind.config.js   — Tailwind content paths config
+├── index.html       (114 KB) — HTML with inline JSON configs + critical CSS inlined
+├── script.js        (28 KB)  — JavaScript (minified)
+├── styles.css       (33 KB)  — Design tokens + BEM classes + animations (minified)
+├── tailwind.css     (14 KB)  — Generated Tailwind utility classes (minified)
+├── package.json         — Dev dependencies (Tailwind CLI, csso, terser, critical)
+├── tailwind.config.js   — Tailwind config with color aliases + content paths
 ├── src/
 │   └── tailwind-input.css — Tailwind source directives
 ├── vendor/
-│   └── chart.umd.js     — Self-hosted Chart.js 4.4.1
+│   └── chart.umd.js     — Self-hosted Chart.js 4.4.1 (lazy-loaded)
 ├── fonts/               — Self-hosted Rajdhani + Orbitron woff2 files
 ├── journal/               — Daily session journals (YYYY-MM-DD/index.md)
 ├── docs/
     ├── plan/              — Session plans (YYYY-MM-DD/*.md)
-    │   └── DESIGN_SYSTEM.md          — This file
+    └── DESIGN_SYSTEM.md          — This file
 ```
 anomaly-alpha/
 ├── styles.css       (1565 lines) — Design tokens + BEM classes + animations

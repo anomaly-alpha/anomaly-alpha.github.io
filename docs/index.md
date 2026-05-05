@@ -86,7 +86,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 
 - **Structure**: Main HTML + inline JSON configs, 6 guide pages
 - **Styling**: Tailwind CSS (local build via npm) + custom CSS design token system
-- **Charts**: Chart.js (doughnut, bar, radar) — self-hosted in `vendor/chart.umd.js`
+- **Charts**: Chart.js (doughnut, bar, radar) — self-hosted in `vendor/chart.umd.js`, lazy-loaded on first toggle
 - **Icons**: Inline SVGs (32 icons, replaced Font Awesome)
 - **Typography**: Rajdhani + Orbitron — self-hosted woff2 files in `fonts/`
 - **Data**: Inline JSON configs (6 configs embedded in `<head>`, source in `data/`)
@@ -133,6 +133,12 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **Toned active mode buttons** — Active mode selector uses more transparent colors (30% bg, 65% border, subtle glow)
 
 ### Performance Improvements
+- ✅ **Lighthouse 88→96** — Lazy-loaded Chart.js, inlined critical CSS, fixed forced reflow
+- ✅ **Chart.js lazy-loaded** — 205KB deferred until first "Show Charts" click
+- ✅ **DOMContentLoaded in requestAnimationFrame** — TBT 240ms → 30ms
+- ✅ **Critical CSS inlined** — Main page + all 6 guides: render-blocking eliminated
+- ✅ **CSS/JS minified** — csso + terser in build pipeline (-31KB)
+- ✅ **Tailwind color aliases defined** — Fixes gradient bars site-wide (orange-accent, green-accent, etc.)
 - ✅ **Removed search feature** — Eliminated most expensive JS operation (querySelectorAll per keystroke); removed from HTML, CSS, and JS
 - ✅ **Disabled chart animations** — All `chart.update('active')` changed to `'none'` for instant non-animated redraws (9 locations)
 - ✅ **CSS-driven countdown pulse** — Replaced JS class-toggle every 1s with pure CSS `infinite` animation

@@ -80,25 +80,29 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (1392 lines) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (1145 lines) — All JS: charts, filters, PvP, modals, countdowns
-├── styles.css           (1565 lines) — CSS custom properties + BEM component classes
-├── tailwind.css         — Generated Tailwind utility classes (1129 lines, from npm run build)
-├── package.json         — Dev dependencies config
-├── tailwind.config.js   — Tailwind content paths config
+├── index.html           (114 KB) — Main HTML + inline JSON configs (6 in <head>)
+├── script.js            (28 KB) — All JS: charts, filters, PvP, modals, countdowns (minified)
+├── styles.css           (33 KB) — CSS custom properties + BEM component classes (minified)
+├── tailwind.css         (14 KB) — Generated Tailwind utility classes (minified)
+├── package.json         — Dev dependencies config (tailwindcss, csso, terser, critical)
+├── tailwind.config.js   — Tailwind config with color aliases + content paths
 ├── src/
 │   └── tailwind-input.css — Tailwind source with @tailwind directives
 ├── vendor/
-│   └── chart.umd.js     — Self-hosted Chart.js 4.4.1
+│   └── chart.umd.js     — Self-hosted Chart.js 4.4.1 (lazy-loaded)
 ├── fonts/               — Self-hosted woff2 files (Rajdhani + Orbitron)
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
 ├── og-image.svg         — 1200×630 social sharing preview card
 ├── favicon.ico           — Browser favicon for tab
 ├── robots.txt           — Allows all crawlers, references sitemap
 ├── sitemap.xml          — 7 URLs (main + 6 guide pages)
+├── _headers             — Cloudflare Pages cache config
+├── 404.html             — Custom error page
 ├── AGENTS.md            — Agent instructions for this repo
 ├── README.md            — This file
+├── gem_infographic.html — Legacy redirect stub (index.html)
 ├── googleeb60e8e5ee55440e.html — Google Search Console verification
+├── advertising.md       — Marketing copy for social channels
 ├── guide/               — Topical cluster guide pages
 │   ├── code/index.html  — Promo code guide (current code, redemption steps)
 │   ├── event/index.html — Event rewards guide (The Long Haul, Earth's Defenders)
@@ -177,6 +181,12 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Config-driven selectedModes** — Default modes read from UI config, fixing drift between config and runtime
 
 ### Performance Improvements
+- ✅ **Lighthouse 88→96** — Lazy-loaded Chart.js, inlined critical CSS, fixed forced reflow
+- ✅ **Chart.js lazy-loaded** — 205KB deferred until user clicks "Show Charts" (`loadChartJs()` + `initCharts()`)
+- ✅ **DOMContentLoaded in requestAnimationFrame** — TBT 240ms → 30ms
+- ✅ **Critical CSS inlined** — Main page + all 6 guides: render-blocking eliminated via `<style>` + `preload`
+- ✅ **CSS/JS minified** — csso + terser in build pipeline (-31KB total)
+- ✅ **Tailwind color aliases** — `orange-accent`, `green-accent`, `yellow-accent`, `pink-glow`, `cyan-glow`, `purple-accent` defined in config (fixes gradient bars site-wide)
 - ✅ **Removed search feature** — Eliminated most expensive JS operation (querySelectorAll per keystroke); removed HTML, CSS, and JS
 - ✅ **Disabled chart animations** — All `chart.update('active')` changed to `'none'` for instant non-animated canvas redraws
 - ✅ **CSS-driven countdown pulse** — Replaced JS class-toggle every 1s with pure CSS `infinite` animation
