@@ -12,7 +12,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Event** — Time-limited game events with ranking thresholds (500 gems: The Long Haul 300 top 5%, Earth's Defenders 200 top 10%)
 - **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout (3 cards: Restricted Arena + Open Arena + Alliance War; ~1,850 at Elite II rank 13 defaults)
 - **Login** — Daily/weekly/monthly login rewards with streak mechanics (1,393/week: 910 daily + 460 weekly + 23 monthly)
-- **Code** — Promotional codes distributed through official channels (26 active codes, 300 gems each)
+- **Code** — Promotional codes distributed through official channels (26 active codes, 300 gems each). Code guide optimized for GSC keywords: "invincible guarding the globe codes", "invincible codes", "invincible game promo code"
 
 ### Key Terms
 - **League** — 14-tier PvP ranking system (Intern → Invincible) with per-league payout tables for Restricted/Open arenas; 6-group system for Alliance War
@@ -58,6 +58,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Minified assets** — CSS minified via csso, JS minified via terser (in `npm run build`)
 - **Tailwind color aliases** — `orange-accent`, `green-accent`, `yellow-accent`, `pink-glow`, `cyan-glow`, `purple-accent` defined in `tailwind.config.js` for gradient stop classes
 - **Font loading** — All fonts preloaded via `<link rel="preload" as="font">`, use `font-display: optional` to avoid CLS from font swap
+- **Sitemap** — All 7 URLs with `<lastmod>` tags; code guide `changefreq:weekly` (others `monthly`)
 
 ## Design Language
 - CSS custom properties as design tokens (`--gem-event`, `--gem-pvp`, etc.)
