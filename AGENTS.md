@@ -14,10 +14,10 @@ Open `index.html` in a browser. Works from `file://`.
 | File | Role |
 |------|------|
 | `index.html` | HTML + 6 inline `<script type="application/json">` configs in `<head>` + OG/Twitter/canonical tags + structured data |
-| `script.js` | All JS (global scope, no imports/exports) |
-| `styles.css` | CSS custom property tokens + BEM classes |
-| `tailwind.css` | Generated Tailwind utility classes (from `npm run build`) |
-| `package.json` | Dev dependencies config (Tailwind CLI) |
+| `script.js` | All JS (global scope, no imports/exports, minified via terser) |
+| `styles.css` | CSS custom property tokens + BEM classes (minified via csso) |
+| `tailwind.css` | Generated Tailwind utility classes (from `npm run build`, minified via csso) |
+| `package.json` | Dev dependencies config (Tailwind CLI, csso, terser, critical) |
 | `tailwind.config.js` | Tailwind content paths configuration |
 | `src/tailwind-input.css` | Tailwind source with `@tailwind` directives |
 | `robots.txt` | Crawl directives, sitemap reference |
@@ -34,15 +34,17 @@ Open `index.html` in a browser. Works from `file://`.
 ## Architecture rules
 
 - **Never use `fetch()`** — all data comes from inline JSON configs loaded via `loadConfig(id)`
-- **Never recreate charts** — create once in `DOMContentLoaded`, update via `chart.update('none')`
+- **Charts are lazy-loaded** — Chart.js loaded dynamically on first "Show Charts" click via `loadChartJs()` + `initCharts()`
+- **Never recreate charts** — create once via `initCharts()`, update via `chart.update('none')`
 - **Never use JSDoc** — minimal inline comments, section headers (`// ===== NAME =====`) only
 - **Build tools (npm scripts) generate local Tailwind CSS** — output is committed, no runtime build needed
 - **Prefer local assets over CDN dependencies** when practical for performance
 
 ## Commands
 
-- `npm install` — Install dev dependencies (tailwindcss CLI)
-- `npm run build` — Rebuild tailwind.css from HTML source
+- `npm install` — Install dev dependencies (tailwindcss, csso, terser, critical)
+- `npm run build` — Full build: Tailwind + CSS minification + JS minification
+- `npm run build:tailwind` — Tailwind rebuild only (skip minification)
 - `npm run update-assets` — Download latest vendor assets (Chart.js, fonts)
 - No runtime build — all generated files are committed
 

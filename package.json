@@ -2,10 +2,14 @@
   "name": "anomaly-alpha.github.io",
   "private": true,
   "scripts": {
-    "build": "tailwindcss -i src/tailwind-input.css -o tailwind.css",
+    "build": "tailwindcss -i src/tailwind-input.css -o tailwind.css && node -e \"var c=require('csso'),f=require('fs');['tailwind.css','styles.css'].forEach(function(p){var r=c.minify(f.readFileSync(p,'utf8'));f.writeFileSync(p,r.css)});console.log('CSS minified')\" && node -e \"var t=require('terser'),f=require('fs');t.minify(f.readFileSync('script.js','utf8'),{compress:true,mangle:true}).then(function(r){f.writeFileSync('script.js',r.code);console.log('JS minified')})\"",
+    "build:tailwind": "tailwindcss -i src/tailwind-input.css -o tailwind.css",
     "update-assets": "curl -Lo vendor/chart.umd.js https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"
   },
   "devDependencies": {
-    "tailwindcss": "^3.4.17"
+    "critical": "^7.2.1",
+    "csso": "^5.0.5",
+    "tailwindcss": "^3.4.17",
+    "terser": "^5.46.2"
   }
 }
