@@ -166,6 +166,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **Spider chart live updates** — Spider actuals recompute from live PvP form values via `getModeTotal('pvp')`; `updatePvPCard` calls `updateChartsByModes(selectedModes)` so all 3 charts update on every PvP selector change
 
 ### Bug Fixes
+- ✅ **Counter animation CLS** — Locked `.gem-counter` to `min-width: 10ch` (was 5ch) so the inline-block box never changes width during number animation; reordered `filterCards()` to swap card visibility before triggering the 400ms counter animation
 - ✅ **Card hover shadow** — Hardcoded values replacing undefined `var(--gem-shadow--card)`
 - ✅ **Mode-highlight specificity** — `body ` prefix + `!important` to override `.gem-card--hover:hover`
 - ✅ **modeTotals reassignment** — `Object.assign()` instead of `const` reassignment

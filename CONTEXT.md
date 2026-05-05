@@ -49,6 +49,8 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - OG/Twitter cards: 10 meta tags for rich social sharing
 
 ## Performance Architecture
+- **Counter CLS prevention** — `.gem-counter` uses `min-width: 10ch` + `font-variant-numeric: tabular-nums` + `display: inline-block` so the total number box never changes width during `animateValue()` rAF animation, preventing layout shift on mode toggle
+- **Animation timing** — `filterCards()` runs card visibility changes before `updateAllPageTotals()` so the 400ms counter animation starts on a settled layout, avoiding visual overlap with card show/hide
 - **Critical CSS inlined** — All pages inline above-fold CSS in `<style>` and load full CSS asynchronously via `<link rel="preload" as="style" onload="this.rel='stylesheet'">`
 - **FOUC guard** — `html { visibility: hidden/visible }` wraps each inline `<style>` block so no element renders until full CSS is parsed
 - **Chart.js lazy-loaded** — `vendor/chart.umd.js` (205KB) loaded dynamically on first "Show Charts" click via `loadChartJs()` + `initCharts()`
