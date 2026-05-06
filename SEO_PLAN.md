@@ -19,11 +19,9 @@
 | What | Before | After |
 |------|--------|-------|
 | `<title>` | Invincible Promo Codes — Free Gem Rewards Guide | **Invincible Guarding the Globe Codes — 26 Active Codes** |
-| `<meta description>` | Complete guide to Invincible Guarding the Globe promo codes... | **Find all current Invincible Guarding the Globe codes, promo codes, and reward codes. 26 active codes worth 300 gems each — how to redeem, where to find new codes, and tips.** |
-| OG/Twitter title | Invincible Promo Codes — Free Gem Rewards Guide | **Invincible Guarding the Globe Codes — 26 Active Codes** |
-| OG/Twitter desc | 26 active promo codes worth 300 gems each... | **Find all current Invincible Guarding the Globe codes and reward codes. 26 active promo codes worth 300 gems each.** |
-| `Guide.name` ld+json | Invincible Promo Codes — Free Gem Rewards Guide | **Invincible Guarding the Globe Codes** |
-| `Guide.description` ld+json | Learn how to redeem promo codes... | **Find active Invincible Guarding the Globe codes, promo codes, and reward codes. 26 codes worth 300 gems each.** |
+| `<meta description>` | Complete guide to Invincible Guarding the Globe promo codes... | **Find all current Invincible Guarding the Globe codes, promo codes, and reward codes — how to redeem, where to find new codes, and tips.** |
+| OG/Twitter desc | 26 active promo codes worth 300 gems each... | **Find all current Invincible Guarding the Globe codes and reward codes.** |
+| `Guide.description` ld+json | Learn how to redeem promo codes... | **Find active Invincible Guarding the Globe codes, promo codes, and reward codes.** |
 | Breadcrumb name | Promo Codes Guide | **Invincible Guarding the Globe Codes** |
 | H1 hero | PROMO CODES | **INVINCIBLE GUARDING THE GLOBE CODES** |
 | Hero subtitle | 26 codes available | **26 active codes — find new codes, redeem rewards** |

@@ -186,7 +186,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **6 guide detail pages** — Code, event, PvP, login, FAQ, and beginners guides forming a topical cluster
 - ✅ **Full internal linking** — 9 card guide links + bidirectional nav between all pages
 - ✅ **Pre-filled PvP defaults** — Non-JS crawlers see 520 gems, 590 currency, 1 ticket (arenas); 810 gems, 26 frags, 2 modules (war)
-- ✅ **Improved title & H1** — "Invincible Guarding the Globe — Gem Rewards & PvP Guide"
+- ✅ **Improved title & H1** — "Invincible Guarding the Globe — Gem Rewards & Promo Codes"
 - ✅ **H1 game context** — Screen-reader-only prefix for keyword coverage
 
 ## Contributors
