@@ -100,12 +100,67 @@ Top queries: "invincible guarding the globe codes" (pos 2.5), "invincible guardi
 - `SEO_PLAN.md` — executed state
 
 ### Commits
-- (previous session: counter CLS fix)
-- (this session) — seo: optimize meta tags for GSC keyword data + audit findings + copy animation
+- `c4d83e8` — seo: optimize meta tags for GSC keyword data + audit findings + copy animation
+- `63d0350` — feat: update code data structure with per-code rewards
+- `ce15628` — chore: add GSC export data to repo (open source transparency)
+- `24dbadb` — feat: per-code rewards with animated total (like PvP cards)
+
+---
+
+## Session 3 — Redemption Steps + Per-Code Rewards
+
+### Tasks
+1. Add verification-code redemption flow to code guide
+2. Update data structure with per-code rewards (SURV3Y: 800g+5tickets)
+3. Add animated gem/ticket totals to promo card (like PvP cards)
+4. Update all docs and journal
+
+### Changes Made
+
+#### Redemption Flow Update
+- **`guide/code/index.html`** — Replaced outdated "in-game store" redemption steps with accurate verification code flow:
+  1. Open game → account settings (top left LVL)
+  2. Generate verification code (live for a few minutes)
+  3. Redeem at redeem.invincible.ubisoft.barcelona
+  4. Relaunch game → rewards in pop up
+- Added FAQ entry for redemption process
+- Updated "New Codes" section to reference verification code flow
+- Updated meta/OG descriptions
+
+#### Per-Code Rewards
+- **Data structure**: Changed from flat array to objects with `{code, gems, tickets}`
+- **SURV3Y**: 800 gems + 5 tickets. All others: 300 gems + 0 tickets
+- **Card UI**: Static "300" replaced with animated `<span id="code-total-gems">` and bonus ticket line `<span id="code-total-tickets">` matching PvP card pattern
+- **JS**: Added `updateCodeRewards()` function, called from `updateAllPageTotals()`
+- Removed reward badges from individual code chips
+- Cleaned up unused `.gem-code__chip-wrap` and `.gem-code__chip-reward` CSS
+
+#### Documentation
+- `CONTEXT.md` — Updated code description with variable rewards + verification code redemption
+- `docs/index.md` — Updated code table and guide description
+- `README.md` — Updated code description
+- `guide/faq/index.html` — Updated FAQ entries + structured data
+- `index.html` — Updated FAQ structured data
+- This journal entry
+
+### Files Modified
+- `guide/code/index.html` — Redemption steps, FAQ, meta, New Codes section
+- `guide/faq/index.html` — FAQ visual + structured data
+- `index.html` — per-code data structure, FAQ structured data
+- `script.js` — updateCodeRewards(), revealCode cleanup
+- `styles.css` — removed chip-wrap/reward classes
+- `README.md`, `CONTEXT.md`, `docs/index.md` — updated descriptions
+
+### Pending
+- Identify reward values for remaining 25 codes (only SURV3Y confirmed as 800g+5t)
+
+### Commits
+- `24dbadb` — feat: per-code rewards with animated total (like PvP cards)
+- (next) — feat: update redemption steps with verification code flow
 
 ### Pending
 - `npm run build` needs to be run on a machine with Node.js (not available in this environment)
 - Build generates minified `tailwind.css` and minifies CSS/JS via csso + terser
 
 ### Commits
-- (this session) — perf: prevent counter animation layout shift on mobile — lock width at 10ch + reorder card swap before animation
+- (session 1) — perf: prevent counter animation layout shift on mobile — lock width at 10ch + reorder card swap before animation
