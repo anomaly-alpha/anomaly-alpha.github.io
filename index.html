@@ -432,7 +432,7 @@ html { visibility: hidden }
       "category": "code",
       "title": "Promo Codes",
       "gems": 300,
-      "codes": [{"code":"SURV3Y","gems":300},{"code":"MOSTV4","gems":300},{"code":"CONMAN","gems":300},{"code":"SHUTV4","gems":300},{"code":"THKMRK","gems":300},{"code":"AALIEN","gems":300},{"code":"CONQST","gems":300},{"code":"30KGTG","gems":300},{"code":"INVTV4","gems":300},{"code":"KIGTV4","gems":300},{"code":"HEHTV4","gems":300},{"code":"PDCAST","gems":300},{"code":"FRATV4","gems":300},{"code":"SUBTV4","gems":300},{"code":"SAMTV4","gems":300},{"code":"IGTTV4","gems":300},{"code":"TUTTV4","gems":300},{"code":"KABTV4","gems":300},{"code":"LEXTV4","gems":300},{"code":"JOTTV4","gems":300},{"code":"NOLAN4","gems":300},{"code":"LUCAN4","gems":300},{"code":"THULA4","gems":300},{"code":"KREGG4","gems":300},{"code":"ANISS4","gems":300},{"code":"BANTV4","gems":300}],
+      "codes": [{"code":"SURV3Y","gems":800,"tickets":5},{"code":"MOSTV4","gems":300,"tickets":0},{"code":"CONMAN","gems":300,"tickets":0},{"code":"SHUTV4","gems":300,"tickets":0},{"code":"THKMRK","gems":300,"tickets":0},{"code":"AALIEN","gems":300,"tickets":0},{"code":"CONQST","gems":300,"tickets":0},{"code":"30KGTG","gems":300,"tickets":0},{"code":"INVTV4","gems":300,"tickets":0},{"code":"KIGTV4","gems":300,"tickets":0},{"code":"HEHTV4","gems":300,"tickets":0},{"code":"PDCAST","gems":300,"tickets":0},{"code":"FRATV4","gems":300,"tickets":0},{"code":"SUBTV4","gems":300,"tickets":0},{"code":"SAMTV4","gems":300,"tickets":0},{"code":"IGTTV4","gems":300,"tickets":0},{"code":"TUTTV4","gems":300,"tickets":0},{"code":"KABTV4","gems":300,"tickets":0},{"code":"LEXTV4","gems":300,"tickets":0},{"code":"JOTTV4","gems":300,"tickets":0},{"code":"NOLAN4","gems":300,"tickets":0},{"code":"LUCAN4","gems":300,"tickets":0},{"code":"THULA4","gems":300,"tickets":0},{"code":"KREGG4","gems":300,"tickets":0},{"code":"ANISS4","gems":300,"tickets":0},{"code":"BANTV4","gems":300,"tickets":0}],
       "isRevealable": true,
       "description": "Secret codes whispered among allies—tap to reveal",
       "tooltip": "Code reward",
@@ -637,7 +637,7 @@ html { visibility: hidden }
       }
     }
   ],
-  "promoCodes": [{"code":"SURV3Y","gems":300},{"code":"MOSTV4","gems":300},{"code":"CONMAN","gems":300},{"code":"SHUTV4","gems":300},{"code":"THKMRK","gems":300},{"code":"AALIEN","gems":300},{"code":"CONQST","gems":300},{"code":"30KGTG","gems":300},{"code":"INVTV4","gems":300},{"code":"KIGTV4","gems":300},{"code":"HEHTV4","gems":300},{"code":"PDCAST","gems":300},{"code":"FRATV4","gems":300},{"code":"SUBTV4","gems":300},{"code":"SAMTV4","gems":300},{"code":"IGTTV4","gems":300},{"code":"TUTTV4","gems":300},{"code":"KABTV4","gems":300},{"code":"LEXTV4","gems":300},{"code":"JOTTV4","gems":300},{"code":"NOLAN4","gems":300},{"code":"LUCAN4","gems":300},{"code":"THULA4","gems":300},{"code":"KREGG4","gems":300},{"code":"ANISS4","gems":300},{"code":"BANTV4","gems":300}]
+  "promoCodes": [{"code":"SURV3Y","gems":800,"tickets":5},{"code":"MOSTV4","gems":300,"tickets":0},{"code":"CONMAN","gems":300,"tickets":0},{"code":"SHUTV4","gems":300,"tickets":0},{"code":"THKMRK","gems":300,"tickets":0},{"code":"AALIEN","gems":300,"tickets":0},{"code":"CONQST","gems":300,"tickets":0},{"code":"30KGTG","gems":300,"tickets":0},{"code":"INVTV4","gems":300,"tickets":0},{"code":"KIGTV4","gems":300,"tickets":0},{"code":"HEHTV4","gems":300,"tickets":0},{"code":"PDCAST","gems":300,"tickets":0},{"code":"FRATV4","gems":300,"tickets":0},{"code":"SUBTV4","gems":300,"tickets":0},{"code":"SAMTV4","gems":300,"tickets":0},{"code":"IGTTV4","gems":300,"tickets":0},{"code":"TUTTV4","gems":300,"tickets":0},{"code":"KABTV4","gems":300,"tickets":0},{"code":"LEXTV4","gems":300,"tickets":0},{"code":"JOTTV4","gems":300,"tickets":0},{"code":"NOLAN4","gems":300,"tickets":0},{"code":"LUCAN4","gems":300,"tickets":0},{"code":"THULA4","gems":300,"tickets":0},{"code":"KREGG4","gems":300,"tickets":0},{"code":"ANISS4","gems":300,"tickets":0},{"code":"BANTV4","gems":300,"tickets":0}]
 }
     </script>
 
@@ -878,7 +878,7 @@ html { visibility: hidden }
               "name": "What are the active promo codes for Invincible Guarding the Globe?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "There are 26 active promo codes worth up to 300 gems each. Tap the Promo Codes card on the rewards infographic to reveal all codes, then tap any code to copy it."
+                "text": "There are 26 active promo codes with rewards including gems and Hero Shop Tickets. Tap the Promo Codes card on the rewards infographic to reveal all codes, then tap any code to copy it."
               }
             },
             {
@@ -1009,8 +1009,12 @@ html { visibility: hidden }
                 </button>
                 <div class="gem-card__body">
                     <p class="gem-card__gems">
-                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span>300</span> <span class="text-lg text-white/60 font-semibold">GEMS EACH</span>
+                        <span class="inline-flex items-center gap-2"><span class="gem-icon--gem"></span><span id="code-total-gems"></span></span>
+                        <span class="text-lg text-white/60 font-semibold">GEMS</span>
                     </p>
+                    <div class="flex gap-4 text-sm text-white/60">
+                        <span><svg class="mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM232 120l0 136c0 8 4 15.5 10.7 20l96 64c11 7.4 25.9 4.4 33.3-6.7s4.4-25.9-6.7-33.3L280 243.2 280 120c0-13.3-10.7-24-24-24s-24 10.7-24 24z"/></svg><span id="code-total-tickets">0</span> Tickets</span>
+                    </div>
                     <h2 class="gem-card__title gem-card__title--code">Promo Codes</h2>
                     <div class="gem-label gem-label--code">
                         <span>Code Redemption</span>
