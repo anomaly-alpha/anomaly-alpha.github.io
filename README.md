@@ -80,11 +80,11 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (114 KB) — Main HTML + inline JSON configs (6 in <head>)
-├── script.js            (28 KB) — All JS: charts, filters, PvP, modals, countdowns (minified)
+├── index.html           (112 KB) — Main HTML + inline JSON configs (6 in <head>)
+├── script.js            (29 KB) — All JS: charts, filters, PvP, modals, countdowns (minified)
 ├── styles.css           (33 KB) — CSS custom properties + BEM component classes (minified)
-├── tailwind.css         (14 KB) — Generated Tailwind utility classes (minified)
-├── package.json         — Dev dependencies config (tailwindcss, csso, terser, critical)
+├── tailwind.css         (12 KB) — Generated Tailwind utility classes (minified)
+├── package.json         — Dev dependencies config (tailwindcss, csso, terser)
 ├── tailwind.config.js   — Tailwind config with color aliases + content paths
 ├── src/
 │   └── tailwind-input.css — Tailwind source with @tailwind directives
@@ -92,7 +92,7 @@ anomaly-alpha/
 │   └── chart.umd.js     — Self-hosted Chart.js 4.4.1 (lazy-loaded)
 ├── fonts/               — Self-hosted woff2 files (Rajdhani + Orbitron)
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
-├── og-image.svg         — 1200×630 social sharing preview card
+├── og-images/*.png      — Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners)
 ├── favicon.ico           — Browser favicon for tab
 ├── robots.txt           — Allows all crawlers, references sitemap
 ├── sitemap.xml          — 7 URLs (main + 6 guide pages)
@@ -180,8 +180,24 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Select dropdown design system** — Category-colored custom `<select>` elements with `appearance: none`, custom chevron arrows, hover/focus states, and per-category background/border/arrow colors (PvP pink, login amber, event orange, code green)
 - ✅ **Config-driven selectedModes** — Default modes read from UI config, fixing drift between config and runtime
 
+### Accessibility
+- ✅ **`<main>` landmarks** — All 8 pages wrap core content for screen reader navigation
+- ✅ **`aria-label` attributes** — Card grid links in guide pages have descriptive labels
+- ✅ **Reduced motion support** — `prefers-reduced-motion` disables unnecessary animations
+
+### Code Rewards System
+- ✅ **`CODE_REWARDS` config** — Per-code reward values with gem + ticket amounts
+- ✅ **Animated promo card total** — `updatePromoCardTotal()` animates sum like PvP cards using `animateValue()`
+- ✅ **Last-copied code display** — Promo card shows most recently tapped code's reward value via `getLastCopiedCode()`
+- ✅ **Redemption flow** — Updated UI with verification code generation steps, inline link to redeem site
+
+### OG Images
+- ✅ **7 per-page OG PNGs** — Per-guide social preview images in `og-images/` (`home.png` for homepage, `code.png` for code guide, etc.)
+- ✅ **`og:image:type` + `og:image:alt`** — All pages have proper PNG mime type and alt text
+- ✅ **Editable SVG sources** — `og-images/*.svg` files for each page, with page-specific titles and accent colors
+
 ### Performance Improvements
-- ✅ **Lighthouse 88→96** — Lazy-loaded Chart.js, inlined critical CSS, fixed forced reflow
+- ✅ **Lighthouse 88→100** — Lazy-loaded Chart.js, inlined critical CSS, fixed forced reflow
 - ✅ **Chart.js lazy-loaded** — 205KB deferred until user clicks "Show Charts" (`loadChartJs()` + `initCharts()`)
 - ✅ **DOMContentLoaded in requestAnimationFrame** — TBT 240ms → 30ms
 - ✅ **Critical CSS inlined** — Main page + all 6 guides: render-blocking eliminated via `<style>` + `preload`
@@ -191,6 +207,9 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **Disabled chart animations** — All `chart.update('active')` changed to `'none'` for instant non-animated canvas redraws
 - ✅ **CSS-driven countdown pulse** — Replaced JS class-toggle every 1s with pure CSS `infinite` animation
 - ✅ **Reduced countdown interval** — 1000ms → 5000ms, cutting DOM writes 5×
+- ✅ **Font-display: optional** — Changed from `swap` to `optional`, zero CLS on mobile
+- ✅ **FOUC guard** — `html { visibility: hidden/visible }` wraps critical CSS, prevents flash on slow loads
+- ✅ **Narrowed counter** — `.gem-counter` `min-width: 6ch` with `font-size: 3rem` on mobile for compact fit
 - ✅ **GPU-optimized particles** — Added `will-change: transform` + `translate3d()` to particle CSS
 - ✅ **Fixed PvP state persistence** — Removed wipe block; `savePageState()`/`loadPageState()` persist theme, modes, chart filter, visibility across reloads
 - ✅ **Removed continuous animations** — 27 sparkle elements, rotating background, scanline, and 3 dead utility classes deleted; 37 → 9 continuous animations (9 particles only)
@@ -217,13 +236,17 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - ✅ **CTA always visible** — Added yellow "Explore All Modes" CTA button, always visible
 - ✅ **CODE mode inactive** — CODE mode defaults to inactive (red highlight), encouraging exploration
 - ✅ **Renamed Alliance War** — Shortened to "Alliance War" for fit
+- ✅ **Consistent icons** — Blue access card icon for Hero Shop Tickets, green rectangular chip for PvP Currency
+- ✅ **PvP accent bars unified** — All 3 PvP card accent bars use `via-pink-glow` (was mix of cyan/purple/pink)
+- ✅ **Last-copied code on promo card** — Shows individual reward value of most recently tapped code (not sum of all codes)
+- ✅ **Payout updates on code click** — PvP ticket icon on promo card; payout totals update reactively
 
 ### SEO & Content
 - ✅ **Open Graph & Twitter tags** — 10 meta tags for rich social sharing previews
 - ✅ **Canonical URL** — Self-referencing canonical on every page
 - ✅ **Structured data** — WebPage + FAQPage + Person schema on main page; Guide + BreadcrumbList on detail pages
 - ✅ **robots.txt & sitemap.xml** — Crawl directives and all 7 URLs submitted
-- ✅ **og-image.svg** — 1200×630 social preview matching the gem theme
+- ✅ **Per-page OG PNG images** — 7 PNG files in `og-images/` (`home.png`, `code.png`, etc.) with `og:image:type`, `og:image:alt`
 - ✅ **6 guide detail pages** — Code, event, PvP, login, FAQ, and beginners guides forming a topical cluster
 - ✅ **Full internal linking** — 9 card guide links + bidirectional nav between all pages
 - ✅ **Pre-filled PvP defaults** — Non-JS crawlers see real values (520 gems, 590 currency, 1 ticket for arenas; 810 gems, 26 frags, 2 modules for war)

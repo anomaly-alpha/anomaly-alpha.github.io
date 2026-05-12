@@ -23,6 +23,10 @@ Changed from `5ch` to `10ch` so the inline-block box never changes width during
 `animateValue()` rAF loop. Accommodates max total (~4,193) with headroom for
 values up to 99,999,999.
 
+**Later narrowed to `6ch` (May 12)** — With smaller mobile font (`3rem`), 10ch
+was wider than needed. 6ch + `font-size: 3rem` on mobile provides sufficient
+width while keeping the counter compact.
+
 ### 2. Reorder card swap before animation — `script.js` `filterCards()`
 
 Moved `a.forEach(...)` (card `display: none/block`) **before**

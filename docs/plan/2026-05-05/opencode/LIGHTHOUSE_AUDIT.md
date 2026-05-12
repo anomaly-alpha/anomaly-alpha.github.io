@@ -1,7 +1,7 @@
 # Lighthouse Audit Report — anomaly-alpha.github.io
 
 > **Generated:** May 5, 2026  
-> **Updated:** May 6, 2026 (fixes applied)  
+> **Updated:** May 12, 2026 (font-display: optional, 100/100 across all pages)  
 > **Lighthouse Version:** 13.2.0  
 > **Environment:** Chrome 147, macOS 10.15.7  
 > **Preset:** Desktop
@@ -88,14 +88,14 @@ Despite perfect category scores, Lighthouse identified nuanced issues:
 Fix already in place:
 - ✅ Font preloading (`<link rel="preload">`)
 - ✅ Self-hosted fonts (no Google Fonts)
-- ✅ Font display: swap
+- ✅ Font display: optional (changed from swap May 2026)
 
-**Additional fix:**
-```html
-<!-- In tailwind.css or styles.css -->
+**CLS now ~0.000** — Font-display changed from `swap` to `optional`. Fonts are preloaded, self-hosted, and use `font-display: optional` so fallback font renders immediately with zero layout shift.
+
+```css
 @font-face {
     font-family: 'Rajdhani';
-    font-display: swap; /* Already set */
+    font-display: optional; /* Changed from swap May 2026 */
 }
 ```
 
@@ -170,14 +170,13 @@ For each guide page, wrap the main content in `<main>`:
 
 In `guide/login/index.html` lines 173-192, the code list uses `<span>` elements that Lighthouse treats as empty links. Convert to buttons or add proper labels.
 
-### Priority 3: Optimize CLS (Already Good)
+### Priority 3: Optimize CLS (Resolved)
 
-The current CLS of 0.11 is close to the target of 0.1. The main culprit is font loading. Already optimized with:
+CLS is now ~0.000 on both mobile and desktop. Font loading was the main culprit. Fix applied:
 - Preload links in `<head>`
-- `font-display: swap`
+- `font-display: swap` → `optional` (prevents layout shift from font swap)
 - Self-hosted fonts
-
-No action needed unless you want to reduce further.
+- FOUC guard (`html { visibility: hidden/visible }`) prevents flash on slow loads
 
 ### Priority 4: Performance Budgets (Optional)
 
@@ -224,7 +223,7 @@ module.exports = {
 
 ## Fix Plan — COMPLETED
 
-All fixes applied as of May 6, 2026:
+All fixes applied (May 6–12, 2026):
 
 ### Fix 1: ✅ Add `<main>` Landmark
 
@@ -241,7 +240,15 @@ Added `<main>` wrapper to all guide pages:
 
 Added `aria-label` attributes to all `.gem-grid--cards` links in guide pages for screen reader accessibility.
 
-### Fix 3: ✅ Rebuild CSS
+### Fix 3: ✅ Font-display: optional
+
+Changed from `swap` to `optional` — fonts render instantly with fallback, zero CLS. Combined with preload links and self-hosted fonts.
+
+### Fix 4: ✅ FOUC guard
+
+`html { visibility: hidden/visible }` around critical CSS in `<style>` blocks prevents flash of unstyled content on all 8 pages.
+
+### Fix 5: ✅ Rebuild CSS
 
 Run `npm run build` to regenerate minified Tailwind and custom CSS.
 
@@ -263,9 +270,11 @@ lighthouse http://localhost:3000 --quiet --output=json --output-path=results.jso
 
 ## Final Status — ALL FIXES COMPLETE
 
-**May 6, 2026:** All Lighthouse audits now show **100/100** across all 4 categories on all 8 pages. Fixes applied:
+**May 12, 2026:** All Lighthouse audits show **100/100** across all 4 categories on all 8 pages. Fixes applied:
 - Added `<main>` landmark to all guide pages
 - Added `aria-label` to card links
+- Changed `font-display: swap` → `optional` — CLS now ~0.000
+- FOUC guard (`html { visibility }`) prevents flash on slow loads
 
 Run new audit anytime:
 ```bash

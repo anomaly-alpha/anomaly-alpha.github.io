@@ -17,12 +17,12 @@ Open `index.html` in a browser. Works from `file://`.
 | `script.js` | All JS (global scope, no imports/exports, minified via terser) |
 | `styles.css` | CSS custom property tokens + BEM classes (minified via csso) |
 | `tailwind.css` | Generated Tailwind utility classes (from `npm run build`, minified via csso) |
-| `package.json` | Dev dependencies config (Tailwind CLI, csso, terser, critical) |
+| `package.json` | Dev dependencies config (Tailwind CLI, csso, terser) |
 | `tailwind.config.js` | Tailwind content paths configuration |
 | `src/tailwind-input.css` | Tailwind source with `@tailwind` directives |
 | `robots.txt` | Crawl directives, sitemap reference |
 | `sitemap.xml` | All 7 URLs (main + 6 guides) |
-| `og-image.svg` | 1200×630 social sharing preview |
+| `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners) |
 | `googleeb60e8e5ee55440e.html` | Google Search Console verification |
 | `guide/*/index.html` | Detail guides for code, event, pvp, login, faq, beginners |
 | `data/arena_payouts.txt` | Open + Restricted arena payout tables |
@@ -42,7 +42,7 @@ Open `index.html` in a browser. Works from `file://`.
 
 ## Commands
 
-- `npm install` — Install dev dependencies (tailwindcss, csso, terser, critical)
+- `npm install` — Install dev dependencies (tailwindcss, csso, terser)
 - `npm run build` — Full build: Tailwind + CSS minification + JS minification
 - `npm run build:tailwind` — Tailwind rebuild only (skip minification)
 - `npm run update-assets` — Download latest vendor assets (Chart.js, fonts)
@@ -56,6 +56,8 @@ Open `index.html` in a browser. Works from `file://`.
 - **State**: `selectedModes` array (defaults: event, pvp, login — CODE inactive) + `currentChartFilter` string, persisted via `savePageState()`/`loadPageState()`
 - **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`
 - **URL params**: `?theme=light&mode=<name>&chart=<name>` restored on page load
+- **Code rewards**: `CODE_REWARDS` config with per-code values; `updatePromoCardTotal()` animates sum like PvP; `getLastCopiedCode()` returns most recently tapped code
+- **OG images**: 7 per-page PNG files in `og-images/` (`home.png`, `code.png`, etc.); SVGs previously served as editable sources
 
 ## PvP system
 
@@ -97,6 +99,13 @@ Open `index.html` in a browser. Works from `file://`.
 - **Structured data** — WebPage + FAQPage schema on main page; Guide schema on detail pages
 - **Internal linking** — bidirectional nav between main page and all guide pages, guide pages link to each other
 - **Guide page structure** — Each guide links to all 5 other guides + back to main page
+
+## Plan conventions
+
+- **When planning**: save the plan to `docs/plan/YYYY-MM-DD/<model-name>/` without making code changes
+- **Model name**: use the model ID from the system prompt (e.g. `opencode-go/deepseek-v4-flash`), dropping the org prefix (e.g. `deepseek-v4-flash`)
+- **Go-build workflow**: first plan, then build — never skip the plan step
+- **Existing plans**: reorganized under `docs/plan/YYYY-MM-DD/opencode/` (retroactively assigned, since model info not captured at time)
 
 ## Reference docs
 

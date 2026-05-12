@@ -7,7 +7,6 @@
     "update-assets": "curl -Lo vendor/chart.umd.js https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"
   },
   "devDependencies": {
-    "critical": "^7.2.1",
     "csso": "^5.0.5",
     "tailwindcss": "^3.4.17",
     "terser": "^5.46.2"

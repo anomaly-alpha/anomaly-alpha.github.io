@@ -24,6 +24,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 ### Card Modal System
 - Every reward card has an **info icon** (`.gem-card__info-btn`) that opens a **card modal**
 - The modal shows: hero tagline, description, tips, and for PvP cards — live gems, PvP Currency, Hero Shop Tickets, Totem Frags, Modules from current form selections
+- The **Promo Code** modal shows the last copied code's reward value
 - A **star badge** (`★`) appears in the modal header for all cards
 - The **Alliance War** modal includes a **demotion warning** based on current rank vs threshold
 
@@ -37,19 +38,20 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 
 ## Architecture
 - Inline JSON configs in HTML `<head>` (no fetch, works from `file://`)
-- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME`, `CONTRIBUTORS` — global config objects
+- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME`, `CONTRIBUTORS`, `CODE_REWARDS` — global config objects
 - `getPvpPayout(arena, leagueId, rank)` — core PvP calculation function, reads per-league payout tables from `GAME.pvp.arenas` (restricted/open) and `GAME.pvp.multiverse` (6 grouped leagues for Alliance War)
 - Modal data lives in `REWARDS.cards[].modal` — loaded via `findCardById(id)` helper
 - `showCardModal(cardId)` / `closeCardModal()` — modal lifecycle
 - Category colors centralized in `UI.categoryColors` (canonical source)
 - Chart filter CSS classes in `UI.chartFilterCssClasses`
 - Contributors stored in `CONTRIBUTORS.contributors` (hex colors, used for JSON-LD author sync)
+- Code rewards stored in `CODE_REWARDS` config with per-code reward values; `updatePromoCardTotal()` animates sum like PvP cards; `getLastCopiedCode()` returns most recently tapped code
 - PvP league select options generated from `GAME.pvp.leagues` (14) and `GAME.pvp.multiverseLeagues` (6)
 - Structured data: WebPage + FAQPage schema on main page, Guide schema on detail pages
-- OG/Twitter cards: 10 meta tags for rich social sharing
+- OG/Twitter cards: 10+ meta tags for rich social sharing; 7 per-page PNG images with `og:image:type`, `width/height`, `alt`
 
 ## Performance Architecture
-- **Counter CLS prevention** — `.gem-counter` uses `min-width: 10ch` + `font-variant-numeric: tabular-nums` + `display: inline-block` so the total number box never changes width during `animateValue()` rAF animation, preventing layout shift on mode toggle
+- **Counter CLS prevention** — `.gem-counter` uses `min-width: 6ch` + `font-variant-numeric: tabular-nums` + `display: inline-block` so the total number box never changes width during `animateValue()` rAF animation, preventing layout shift on mode toggle
 - **Animation timing** — `filterCards()` runs card visibility changes before `updateAllPageTotals()` so the 400ms counter animation starts on a settled layout, avoiding visual overlap with card show/hide
 - **Critical CSS inlined** — All pages inline above-fold CSS in `<style>` and load full CSS asynchronously via `<link rel="preload" as="style" onload="this.rel='stylesheet'">`
 - **FOUC guard** — `html { visibility: hidden/visible }` wraps each inline `<style>` block so no element renders until full CSS is parsed
@@ -58,6 +60,8 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Minified assets** — CSS minified via csso, JS minified via terser (in `npm run build`)
 - **Tailwind color aliases** — `orange-accent`, `green-accent`, `yellow-accent`, `pink-glow`, `cyan-glow`, `purple-accent` defined in `tailwind.config.js` for gradient stop classes
 - **Font loading** — All fonts preloaded via `<link rel="preload" as="font">`, use `font-display: optional` to avoid CLS from font swap
+- **Accessibility** — All pages have `<main>` landmarks; card links have `aria-label` attributes; reduced motion support via `prefers-reduced-motion`
+- **OG images** — 7 per-page PNG files in `og-images/` (`home.png`, `code.png`, etc.) with `og:image:type`, `og:image:width/height`, `og:image:alt`
 - **Sitemap** — All 7 URLs with `<lastmod>` tags; code guide `changefreq:weekly` (others `monthly`)
 
 ## Design Language

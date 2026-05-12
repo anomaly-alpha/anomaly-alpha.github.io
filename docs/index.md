@@ -166,7 +166,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **Spider chart live updates** — Spider actuals recompute from live PvP form values via `getModeTotal('pvp')`; `updatePvPCard` calls `updateChartsByModes(selectedModes)` so all 3 charts update on every PvP selector change
 
 ### Bug Fixes
-- ✅ **Counter animation CLS** — Locked `.gem-counter` to `min-width: 10ch` (was 5ch) so the inline-block box never changes width during number animation; reordered `filterCards()` to swap card visibility before triggering the 400ms counter animation
+- ✅ **Counter animation CLS** — Locked `.gem-counter` to `min-width: 6ch` (was 10ch, narrowed May 12) with `font-size: 3rem` on mobile; reordered `filterCards()` to swap card visibility before triggering the 400ms counter animation
 - ✅ **Card hover shadow** — Hardcoded values replacing undefined `var(--gem-shadow--card)`
 - ✅ **Mode-highlight specificity** — `body ` prefix + `!important` to override `.gem-card--hover:hover`
 - ✅ **modeTotals reassignment** — `Object.assign()` instead of `const` reassignment
@@ -178,18 +178,19 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - ✅ **PvP accent bars unified** — All 3 PvP mode cards use `via-pink-glow` gradient accent bar (was cyan/purple/pink mix)
 
 ### SEO & Content
-- ✅ **Open Graph & Twitter tags** — 10 meta tags for rich social sharing previews
+- ✅ **Font-display: optional** — Changed from `swap` to `optional` to eliminate CLS from font swap (May 11)
+- ✅ **`<main>` landmarks** — All 8 pages wrap core content for screen reader navigation
+- ✅ **`aria-label` on card links** — Guide page card grids have descriptive aria-labels
+- ✅ **`CODE_REWARDS` config** — Per-code reward data structure with gem + ticket values
+- ✅ **Animated promo card total** — `updatePromoCardTotal()` animates sum like PvP using `animateValue()`
+- ✅ **Last-copied code display** — Promo card shows most recently tapped code's reward via `getLastCopiedCode()`
+- ✅ **Verification code redemption UI** — Updated redemption steps with inline redeem site link
+- ✅ **Per-page OG PNG images** — 7 PNGs in `og-images/` (`home.png`, `code.png`, etc.) with `og:image:type`, `og:image:alt`
+- ✅ **Open Graph & Twitter tags** — 10+ meta tags for rich social sharing previews
 - ✅ **Canonical URL** — Self-referencing canonical on every page
 - ✅ **Structured data** — WebPage + FAQPage + Person schema on main page; Guide + BreadcrumbList on detail pages
 - ✅ **robots.txt & sitemap.xml** — Crawl directives and all 7 URLs submitted
-- ✅ **og-image.svg** — 1200×630 social preview matching the gem theme
-- ✅ **6 guide detail pages** — Code, event, PvP, login, FAQ, and beginners guides forming a topical cluster
-- ✅ **Full internal linking** — 9 card guide links + bidirectional nav between all pages
-- ✅ **Pre-filled PvP defaults** — Non-JS crawlers see 520 gems, 590 currency, 1 ticket (arenas); 810 gems, 26 frags, 2 modules (war)
-- ✅ **Improved title & H1** — "Invincible Guarding the Globe — Gem Rewards & Promo Codes"
-- ✅ **H1 game context** — Screen-reader-only prefix for keyword coverage
-
-## Contributors
+ ## Contributors
 
 - Anomaly
 - TheOneTruePanda

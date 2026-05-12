@@ -1,7 +1,7 @@
 # Design System — Gem Rewards Infographic
 
-**Status:** Current (May 5, 2026)
-**Version:** 1.1
+**Status:** Current (May 12, 2026)
+**Version:** 1.2
 
 ---
 
@@ -151,7 +151,7 @@ The design system uses CSS custom properties (design tokens) for all visual valu
 |-------|-------|
 | `--gem-font` | `'Rajdhani', sans-serif` |
 
-All `@font-face` declarations use `font-display: optional` to prevent layout shift from font swap on slow connections. Fallback fonts (system sans-serif) display when the custom font doesn't arrive within ~50ms. Fonts are preloaded via `<link rel="preload" as="font">` in `<head>`.
+All `@font-face` declarations use `font-display: optional` (was `swap`, changed May 2026) to prevent layout shift from font swap on slow connections. Fallback fonts (system sans-serif) display when the custom font doesn't arrive within ~50ms. Fonts are preloaded via `<link rel="preload" as="font">` in `<head>`.
 
 ---
 
@@ -486,11 +486,11 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 ## File Structure
 ```
 anomaly-alpha/
-├── index.html       (114 KB) — HTML with inline JSON configs + critical CSS inlined
-├── script.js        (28 KB)  — JavaScript (minified via terser)
+├── index.html       (112 KB) — HTML with inline JSON configs + critical CSS inlined
+├── script.js        (29 KB)  — JavaScript (minified via terser)
 ├── styles.css       (33 KB)  — Design tokens + BEM classes + animations (minified via csso)
-├── tailwind.css     (14 KB)  — Generated + minified Tailwind utility classes
-├── package.json         — Dev dependencies (tailwindcss, csso, terser, critical)
+├── tailwind.css     (12 KB)  — Generated + minified Tailwind utility classes
+├── package.json         — Dev dependencies (tailwindcss, csso, terser)
 ├── tailwind.config.js   — Tailwind config with color aliases + content paths
 ├── src/
 │   └── tailwind-input.css — Tailwind source directives
@@ -498,7 +498,7 @@ anomaly-alpha/
 │   └── chart.umd.js     — Self-hosted Chart.js 4.4.1 (lazy-loaded)
 ├── fonts/               — Self-hosted Rajdhani + Orbitron woff2 files
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
-├── og-image.svg         — 1200×630 social sharing preview card
+├── og-images/*.png      — Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners)
 ├── _headers             — Cloudflare Pages cache-control config
 ├── 404.html             — Custom error page
 ├── data/
