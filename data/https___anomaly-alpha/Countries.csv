@@ -1,15 +1,59 @@
 Country,Clicks,Impressions,CTR,Position
-United States,1,33,3.03%,5.7
-United Kingdom,1,6,16.67%,6
-Ireland,1,2,50%,4.5
+United States,9,298,3.02%,7.5
+United Kingdom,2,82,2.44%,7.77
+Brazil,2,10,20%,3.7
+Sweden,2,5,40%,6
+Canada,1,30,3.33%,9.77
+India,1,7,14.29%,5.86
+Ireland,1,5,20%,9.6
+Puerto Rico,1,1,100%,3
 Macedonia,1,1,100%,4
-Australia,0,3,0%,7.67
-Canada,0,2,0%,5.5
+Australia,0,21,0%,7.52
+Slovenia,0,6,0%,3.5
+Philippines,0,6,0%,4.83
+Turkey,0,5,0%,5.2
+Mexico,0,5,0%,5.4
+Netherlands,0,4,0%,5.25
+Argentina,0,4,0%,8.25
+Denmark,0,3,0%,4.67
+Israel,0,3,0%,5
+Germany,0,3,0%,6.67
+Hungary,0,3,0%,6.67
+Slovakia,0,3,0%,7.67
+France,0,3,0%,9
+Vietnam,0,3,0%,9
+Serbia,0,2,0%,3.5
+Japan,0,2,0%,5
+Jordan,0,2,0%,6.5
+Italy,0,2,0%,8
+Morocco,0,2,0%,8.5
+Russia,0,2,0%,8.5
+Ukraine,0,2,0%,8.5
+Norway,0,2,0%,9
+New Zealand,0,2,0%,9
+Poland,0,2,0%,11.5
+Cambodia,0,2,0%,19.5
 Croatia,0,1,0%,1
-Brazil,0,1,0%,2
+Chile,0,1,0%,2
+Algeria,0,1,0%,2
 Venezuela,0,1,0%,2
+Afghanistan,0,1,0%,3
 Cyprus,0,1,0%,3
 Iraq,0,1,0%,3
+Bangladesh,0,1,0%,4
+Malaysia,0,1,0%,4
+South Korea,0,1,0%,5
+Latvia,0,1,0%,5
+Singapore,0,1,0%,5
 Spain,0,1,0%,6
+Finland,0,1,0%,6
+Lithuania,0,1,0%,6
+Czechia,0,1,0%,7
+Jamaica,0,1,0%,7
 Nepal,0,1,0%,7
-Philippines,0,1,0%,8
+Romania,0,1,0%,7
+Saudi Arabia,0,1,0%,7
+Trinidad & Tobago,0,1,0%,7
+Kazakhstan,0,1,0%,8
+Bolivia,0,1,0%,9
+Belarus,0,1,0%,10

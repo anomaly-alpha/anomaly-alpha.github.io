@@ -29,7 +29,7 @@ Codebase cleanup: remove scanline animation, remove floating controls (theme tog
 #### Updated Documentation
 - **README.md**: Removed theme toggle, save/share, export data, scanline from features. Updated file line counts (818/1184/1266). Fixed spider target (2664). Removed html2canvas from tech stack.
 - **docs/index.md**: Same feature removals. Updated line counts and tech stack.
-- **docs/plan/2026-04-29/IMPLEMENTATION_PLAN.md**: Removed scanline, save/share, theme toggle sections. Updated line counts, animation table, out-of-scope list.
+- **docs/plan/2026-04-29/opencode/IMPLEMENTATION_PLAN.md**: Removed scanline, save/share, theme toggle sections. Updated line counts, animation table, out-of-scope list.
 - **docs/DESIGN_SYSTEM.md**: Removed scanline from animation table.
 - **journal/2026-05-02/index.md**: This file.
 

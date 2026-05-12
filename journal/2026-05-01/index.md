@@ -79,7 +79,7 @@ Implement 3 interactive PvP League cards with rank selectors in gem_infographic.
 
 ### Files Modified
 - `gem_infographic.html` - Complete restructure
-- `PVP_IMPLEMENTATION_PLAN.md` - Implementation reference
+- `docs/plan/2026-05-01/opencode/PVP_IMPLEMENTATION_PLAN.md` - Implementation reference
 
 ### Removed Features (No Longer Present)
 - Gem Calculator section

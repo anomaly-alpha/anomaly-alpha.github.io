@@ -84,7 +84,7 @@ Top queries: "invincible guarding the globe codes" (pos 2.5), "invincible guardi
 
 #### Documentation
 - `CONTEXT.md` — added SEO keyword note + sitemap config note
-- `SEO_PLAN.md` — updated with executed state
+- `docs/plan/2026-05-05/opencode/SEO_PLAN.md` — updated with executed state
 
 ### Files Modified
 - `guide/code/index.html` — 12 changes (meta, H1, body, new section)
@@ -97,7 +97,7 @@ Top queries: "invincible guarding the globe codes" (pos 2.5), "invincible guardi
 - `404.html` — noindex, remove canonical
 - `styles.css` — copy animation overlay
 - `CONTEXT.md` — SEO + sitemap notes
-- `SEO_PLAN.md` — executed state
+- `docs/plan/2026-05-05/opencode/SEO_PLAN.md` — executed state
 
 ### Commits
 - `c4d83e8` — seo: optimize meta tags for GSC keyword data + audit findings + copy animation
@@ -151,16 +151,11 @@ Top queries: "invincible guarding the globe codes" (pos 2.5), "invincible guardi
 - `styles.css` — removed chip-wrap/reward classes
 - `README.md`, `CONTEXT.md`, `docs/index.md` — updated descriptions
 
-### Pending
-- Identify reward values for remaining 25 codes (only SURV3Y confirmed as 800g+5t)
+### Pending (resolved later)
+- Reward values for remaining 25 codes identified (all 300 gems + 0 tickets except SURV3Y)
+- `npm run build` completed in subsequent session — CSS/JS minified via csso + terser
 
 ### Commits
 - `24dbadb` — feat: per-code rewards with animated total (like PvP cards)
-- (next) — feat: update redemption steps with verification code flow
-
-### Pending
-- `npm run build` needs to be run on a machine with Node.js (not available in this environment)
-- Build generates minified `tailwind.css` and minifies CSS/JS via csso + terser
-
-### Commits
-- (session 1) — perf: prevent counter animation layout shift on mobile — lock width at 10ch + reorder card swap before animation
+- `7bcd998` — feat: update redemption steps with verification code flow
+- `6bcafd8` — perf: lock counter width at 10ch + reorder card swap before animation
