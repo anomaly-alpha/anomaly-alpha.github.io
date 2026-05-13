@@ -103,13 +103,21 @@ The `.gem-card__tab` positioning + color variant CSS was only in `styles.css` (l
 
 ---
 
-## Remaining Issues
+## Mobile Audit Results
+
+| Page | Perf | A11y | SEO | CLS | LCP |
+|------|------|------|-----|-----|-----|
+| Homepage | 97 | 100 | 100 | 0.0176 | 2.5s |
+| Login | 99 | 100 | 100 | 0.0000 | 1.8s |
+| Code | 99 | 100 | 100 | 0.0000 | 1.8s |
+
+All mobile scores 95+, CLS well under 0.1. No mobile-specific issues found.
+
+## Remaining Issues (Low Priority)
 
 | Issue | Page | Impact | Notes |
 |-------|------|--------|-------|
-| Homepage CLS 0.0402 | Main | Negligible | From JS mode filtering (`display: none/block`), perf score still 100 |
-| Accessibility label mismatch | Login (maybe others) | Minor | `label-content-name-mismatch` — visible text doesn't match accessible name |
-| Speed Index variance | Main | Minor | 0.5s on desktop, likely fine on mobile |
+| Homepage desktop CLS 0.04 | Main | Negligible | From JS mode filtering — perf score still 100, below 0.1 threshold |
 
 ---
 
@@ -119,9 +127,11 @@ The `.gem-card__tab` positioning + color variant CSS was only in `styles.css` (l
 # Serve locally
 python3 -m http.server 3000 --directory .
 
-# Run Lighthouse
+# Run Lighthouse (desktop)
 npx lighthouse http://localhost:3000 --preset=desktop --output=json --output-path=report.json
 
-# Mobile audit (not yet run)
-npx lighthouse http://localhost:3000/guide/login/ --preset=mobile --output=json --output-path=mobile-report.json
+# Run Lighthouse (mobile, default preset)
+npx lighthouse http://localhost:3000 --output=json --output-path=mobile-report.json
+
+# Note: --preset=mobile is not valid in Lighthouse 12.x; omit preset for mobile emulation
 ```
