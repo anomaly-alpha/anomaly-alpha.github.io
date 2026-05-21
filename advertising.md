@@ -13,7 +13,7 @@
 >
 > 🔹 Live PvP payout tables (all 14 leagues, 120 ranks) → https://anomaly-alpha.github.io/guide/pvp/
 > 🔹 Event & login reward tracker → https://anomaly-alpha.github.io/guide/event/
-> 🔹 26 active promo codes (tap to reveal + copy) → https://anomaly-alpha.github.io/guide/code/
+> 🔹 24 active promo codes (tap to reveal + copy) → https://anomaly-alpha.github.io/guide/code/
 > 🔹 Weekly countdown timers
 > 🔹 Charts to visualise your income
 >
@@ -41,7 +41,7 @@
 
 ## 3. Reddit Post (r/InvincibleGuardians, r/gachagaming)
 
-> **Title:** Built a gem income calculator for Guarding the Globe — all PvP leagues, events, login streaks, 26 promo codes
+> **Title:** Built a gem income calculator for Guarding the Globe — all PvP leagues, events, login streaks, 24 promo codes
 
 > **Body:**
 > Hey everyone,
@@ -51,7 +51,7 @@
 > - PvP payouts for Restricted Arena, Open Arena & Alliance War (all 14 leagues, ranks 1–120) → https://anomaly-alpha.github.io/guide/pvp/
 > - Event reward estimates (The Long Haul, Earth's Defenders) → https://anomaly-alpha.github.io/guide/event/
 > - Login rewards (daily, weekly, monthly) → https://anomaly-alpha.github.io/guide/login/
-> - 26 active promo codes (tap to reveal + copy, redeem at redeem.invincible.ubisoft.barcelona) → https://anomaly-alpha.github.io/guide/code/
+> - 24 active promo codes (tap to reveal + copy, redeem at redeem.invincible.ubisoft.barcelona) → https://anomaly-alpha.github.io/guide/code/
 > - Charts to track your totals and targets
 
 > No install, no login, no data collection. Just a static HTML page that works on mobile + desktop.
@@ -70,7 +70,7 @@
 > ✅ Live PvP payouts — all leagues, all ranks → https://anomaly-alpha.github.io/guide/pvp/
 > ✅ Event reward tracker → https://anomaly-alpha.github.io/guide/event/
 > ✅ Login streak breakdown → https://anomaly-alpha.github.io/guide/login/
-> ✅ 26 active promo codes (tap to reveal + copy) → https://anomaly-alpha.github.io/guide/code/
+> ✅ 24 active promo codes (tap to reveal + copy) → https://anomaly-alpha.github.io/guide/code/
 > ✅ Charts to spot your best income sources
 >
 > Free, no signup, works in your browser:
@@ -107,7 +107,7 @@
 > • 14 PvP leagues with 120 rank tiers each → https://anomaly-alpha.github.io/guide/pvp/
 > • Event reward tier estimates → https://anomaly-alpha.github.io/guide/event/
 > • Login streak totals (daily, weekly, monthly) → https://anomaly-alpha.github.io/guide/login/
-> • 26 active promo codes (tap to reveal + copy; redeem via verification code at redeem.invincible.ubisoft.barcelona) → https://anomaly-alpha.github.io/guide/code/
+> • 24 active promo codes (tap to reveal + copy; redeem via verification code at redeem.invincible.ubisoft.barcelona) → https://anomaly-alpha.github.io/guide/code/
 > • Visual charts for income distribution
 
 > Built with vanilla HTML, CSS, and JS — no frameworks, no runtime dependencies, no tracking.

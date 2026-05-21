@@ -486,7 +486,7 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 ## File Structure
 ```
 anomaly-alpha/
-├── index.html       (112 KB) — HTML with inline JSON configs + critical CSS inlined
+├── index.html       (114 KB) — HTML with inline JSON configs + critical CSS inlined
 ├── script.js        (29 KB)  — JavaScript (minified via terser)
 ├── styles.css       (33 KB)  — Design tokens + BEM classes + animations (minified via csso)
 ├── tailwind.css     (12 KB)  — Generated + minified Tailwind utility classes
@@ -507,8 +507,10 @@ anomaly-alpha/
 ├── guide/               — 6 detail guide pages (code, event, pvp, login, faq, beginners)
 ├── journal/             — Daily session journals (YYYY-MM-DD/index.md)
 ├── docs/
-    ├── plan/              — Session plans (YYYY-MM-DD/*.md)
-    └── DESIGN_SYSTEM.md   — This file
+│   ├── DESIGN_SYSTEM.md   — This file
+│   ├── CONFIG_SCHEMA.md   — Config shape reference
+│   ├── adr/               — Architecture Decision Records
+│   └── plan/              — Improvement plans + session plans (YYYY-MM-DD/*.md)
 ```
 
 ---
@@ -547,3 +549,7 @@ To update a color across the entire application, change the token value in `styl
 - [MDN: CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
 - [BEM Naming Convention](http://getbem.com/introduction/)
 - [color-mix() Function](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix())
+
+## Improvement Plans
+
+160 executable plans covering architecture, security, performance, accessibility, SEO, testing, PWA, CSS, JS quality, and new features are available at `docs/plan/2026-05-20/deepseek-v4-flash/`.

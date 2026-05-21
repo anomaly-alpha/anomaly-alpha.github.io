@@ -11,7 +11,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 | Event Rewards | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~1,850 (varies) | Restricted Arena + Open Arena + Alliance War (Elite II, rank 13 defaults) |
 | Login Rewards | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
-| Promo Codes | Variable | 26 active codes (gems + tickets) |
+| Promo Codes | Variable | 24 active codes (gems + tickets) |
 
 **Total: ~4,043 gems/week** (varies with PvP selections)
 
@@ -67,7 +67,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 - Instant chart updates on filter changes (no animation overhead)
 
 ### Guide Pages (Topical Cluster)
-- `/guide/code/` — Promo code guide: 26 active codes, verification code redemption, 5 tips
+- `/guide/code/` — Promo code guide: 24 active codes, verification code redemption, 5 tips
 - `/guide/event/` — Event rewards guide: The Long Haul + Earth's Defenders with full strategies
 - `/guide/pvp/` — PvP guide: 14 leagues table, real payout tables, 3 arena modes with demotion zone
 - `/guide/login/` — Login rewards guide: daily (910), weekly (460), monthly (23) with income summary table
@@ -113,83 +113,26 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 - Sufficient color contrast
 - Escape key closes modal
 
-## Recent Updates (May 2026)
+## Improvement Plans
 
-### Core Architecture
-- ✅ **Inline JSON configs** — 6 JSON configs embedded in `<head>` as `<script type="application/json">` tags for file:// compatibility
-- ✅ **Design token system** — CSS custom properties for all colors, shadows, and design values
-- ✅ **BEM naming** — Semantic component classes
-- ✅ **14 PvP leagues** — Intern through Invincible (updated selectors and config)
-- ✅ **7-tier rank system** — Ranks 1-120 with tier-based gems/cards/chips
+160 executable improvement plans at `docs/plan/2026-05-20/deepseek-v4-flash/` cover every aspect of the project:
 
-### UI/UX Enhancements
-- ✅ **Mode button hover highlight** — Cards highlight in their category color when hovering mode buttons
-- ✅ **Per-card hover color** — `--card-color` CSS variable dynamically set per card's data-category
-- ✅ **Login cards unified** — All 3 login cards use `gem-card--login` (amber) instead of mixed purple/cyan
-- ✅ **Mode selector gem icon** — Flexbox layout for side-by-side gem icon + number
-- ✅ **Custom SVG favicon** — Cyan-to-pink gradient gem shape
-- ✅ **Charts toggle** — Show/hide charts section with animated chevron
-- ✅ **Card modals (9 cards)** — All cards trigger modal via info icon (`.gem-card__info-btn`); modal has hero tagline, description, tips, live PvP data, demotion warning; star badge in header; entry animation (pop-in)
-- ✅ **Toned active mode buttons** — Active mode selector uses more transparent colors (30% bg, 65% border, subtle glow)
-
-### Performance Improvements
-- ✅ **Lighthouse 98 desktop / 92 mobile** — CLS 0.000 on both, TBT 30ms, LCP 0.6s
-- ✅ **Chart.js lazy-loaded** — 205KB deferred until first "Show Charts" click
-- ✅ **DOMContentLoaded in requestAnimationFrame** — TBT 240ms → 30ms
-- ✅ **Critical CSS inlined** — Main page + all 6 guides: render-blocking eliminated
-- ✅ **CSS/JS minified** — csso + terser in build pipeline (-31KB)
-- ✅ **Tailwind color aliases defined** — Fixes gradient bars site-wide (orange-accent, green-accent, etc.)
-- ✅ **CLS fixed** — Orbs changed to `position: fixed`, fonts to `font-display: optional`, fonts preloaded
-- ✅ **FOUC guard** — `html { visibility: hidden/visible }` wraps critical CSS to prevent flash on slow devices
-- ✅ **Removed search feature** — Eliminated most expensive JS operation (querySelectorAll per keystroke); removed from HTML, CSS, and JS
-- ✅ **Disabled chart animations** — All `chart.update('active')` changed to `'none'` for instant non-animated redraws (9 locations)
-- ✅ **CSS-driven countdown pulse** — Replaced JS class-toggle every 1s with pure CSS `infinite` animation
-- ✅ **Reduced countdown interval** — 1000ms → 5000ms
-- ✅ **GPU-optimized particles** — `will-change: transform` + `translate3d()` avoids layout thrashing
-- ✅ **Removed continuous animations** — 27 sparkle elements, rotating background gradient, scanline, 3 dead utility classes deleted; 37→9 continuous animations (9 particles)
-- ✅ **Inlined `@keyframes pulse`** — Header icon pulse no longer depends on Tailwind CDN
-- ✅ **PvP state persists** — Removed localStorage wipe block; `savePageState()`/`loadPageState()` preserve modes, chart filter, and charts visibility
-- ✅ **Removed floating controls** — Theme toggle, save/share menu, and export data buttons removed along with their JS functions
-- ✅ **Zero CDN dependencies** — Eliminated all 5 external origins (fonts.googleapis, gstatic, jsdelivr, cdnjs, cdn.tailwindcss.com)
-- ✅ **Font Awesome replaced** — 32 icons converted to inline SVGs, ~300 KB library removed
-- ✅ **Google Fonts self-hosted** — Rajdhani + Orbitron woff2 files in `fonts/` (48 KB)
-- ✅ **Chart.js self-hosted** — Downloaded to `vendor/chart.umd.js`, no CDN round-trip
-- ✅ **Tailwind Play CDN removed** — All 6 guide pages use local `tailwind.css` instead of ~283 KB blocking script
-
-### Data & Calculations
-- ✅ **PvP defaults** — Elite II, rank 13 (user's actual settings)
-- ✅ **Login total** — 1,393/week (910+460+23)
-- ✅ **Spider chart targets** — (550, 2664, 360, 330)
-- ✅ **Real arena payout data** — 14 per-league tables with gems + PvP Currency + Tickets (Restricted + Open)
-- ✅ **Real multiverse war data** — 6 grouped leagues with gems + Totem Fragments + Modules
-- ✅ **getPvpPayout(arena, leagueId, rank)** — Core function, reads per-league tables from `GAME.pvp.arenas` and `GAME.pvp.multiverse`
-- ✅ **Spider chart live updates** — Spider actuals recompute from live PvP form values via `getModeTotal('pvp')`; `updatePvPCard` calls `updateChartsByModes(selectedModes)` so all 3 charts update on every PvP selector change
-
-### Bug Fixes
-- ✅ **Counter animation CLS** — Locked `.gem-counter` to `min-width: 6ch` (was 10ch, narrowed May 12) with `font-size: 3rem` on mobile; reordered `filterCards()` to swap card visibility before triggering the 400ms counter animation
-- ✅ **Card hover shadow** — Hardcoded values replacing undefined `var(--gem-shadow--card)`
-- ✅ **Mode-highlight specificity** — `body ` prefix + `!important` to override `.gem-card--hover:hover`
-- ✅ **modeTotals reassignment** — `Object.assign()` instead of `const` reassignment
-- ✅ **getRewardsChartData GAME.ev** — Replaced with `REWARDS.categories.event.total`
-- ✅ **Spider chart frozen actuals** — `buildModeData` now uses `getModeTotal('pvp')` live instead of `totals.pvp` snapshot; `updatePvPCard` triggers chart update so spider reflects current PvP selections immediately
-- ✅ **PvP card modal crash** — Fixed missing `arena` arg in `getPvpPayout()` + undefined `chips`/`cards` properties
-- ✅ **Weekly login payout** — Updated 60 → 460 gems; propagated to config, cards, FAQ schema, total counter (4043); login total now 1,393
-- ✅ **Guide cross-link data** — Fixed "993" → "1,393" gems/week in FAQ and Beginners guide login card descriptions
-- ✅ **PvP accent bars unified** — All 3 PvP mode cards use `via-pink-glow` gradient accent bar (was cyan/purple/pink mix)
-
-### SEO & Content
-- ✅ **Font-display: optional** — Changed from `swap` to `optional` to eliminate CLS from font swap (May 11)
-- ✅ **`<main>` landmarks** — All 8 pages wrap core content for screen reader navigation
-- ✅ **`aria-label` on card links** — Guide page card grids have descriptive aria-labels
-- ✅ **`CODE_REWARDS` config** — Per-code reward data structure with gem + ticket values
-- ✅ **Animated promo card total** — `updatePromoCardTotal()` animates sum like PvP using `animateValue()`
-- ✅ **Last-copied code display** — Promo card shows most recently tapped code's reward via `getLastCopiedCode()`
-- ✅ **Verification code redemption UI** — Updated redemption steps with inline redeem site link
-- ✅ **Per-page OG PNG images** — 7 PNGs in `og-images/` (`home.png`, `code.png`, etc.) with `og:image:type`, `og:image:alt`
-- ✅ **Open Graph & Twitter tags** — 10+ meta tags for rich social sharing previews
-- ✅ **Canonical URL** — Self-referencing canonical on every page
-- ✅ **Structured data** — WebPage + FAQPage + Person schema on main page; Guide + BreadcrumbList on detail pages
-- ✅ **robots.txt & sitemap.xml** — Crawl directives and all 7 URLs submitted
+| Category | Plans | Focus |
+|----------|-------|-------|
+| Architecture | 01-10 | Source maps, testing, PWA, CI/CD, linting |
+| Content/SEO | 11-20, 71-80 | Guide audit, FAQ, breadcrumbs, structured data |
+| UX | 21-30, 51-60 | Mobile, shortcuts, scroll-top, presets, profiles |
+| Performance | 31-40, 61-70 | Fonts, Brotli, caching, container queries, code splitting |
+| Features | 41-50, 148-150 | Battle pass, goals, export, recommender, campaign |
+| Testing | 42-45, 79 | E2E, Lighthouse CI, axe-core, mobile-friendly |
+| Accessibility | 81-90, 04, 44, 160 | WCAG 2.2, HCM, color blindness, SR announcements |
+| DevOps | 91-100, 151-152 | Danger, Renovate, ADRs, depcheck, bundle viz |
+| Security | 109-113 | CSP, Trusted Types, COOP/COEP, Permissions |
+| Modern CSS | 114-120, 136-137 | @layer, @starting-style, :has(), light-dark(), @scope |
+| Web APIs | 125-131, 145-147 | Web Share, Broadcast, Wake Lock, File System |
+| PWA | 03, 127, 129, 135, 147 | Workbox, badges, window controls, SW strategy |
+| Build | 132-133 | Biome, Lightning CSS |
+| Code Quality | 46-48, 121-124 | JSDoc, magic numbers, AbortController, Error.cause |
  ## Contributors
 
 - Anomaly

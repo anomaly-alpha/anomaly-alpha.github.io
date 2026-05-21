@@ -12,7 +12,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Event** — Time-limited game events with ranking thresholds (500 gems: The Long Haul 300 top 5%, Earth's Defenders 200 top 10%)
 - **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout (3 cards: Restricted Arena + Open Arena + Alliance War; ~1,850 at Elite II rank 13 defaults)
 - **Login** — Daily/weekly/monthly login rewards with streak mechanics (1,393/week: 910 daily + 460 weekly + 23 monthly)
-- **Code** — Promotional codes distributed through official channels (26 active codes, variable rewards including gems and Hero Shop Tickets). Redeemed via verification code at redeem.invincible.ubisoft.barcelona
+- **Code** — Promotional codes distributed through official channels (26 active codes + 8 expired, variable rewards including gems, Hero Shop Tickets, and hero shards). Redeemed via verification code at redeem.invincible.ubisoft.barcelona
 
 ### Key Terms
 - **League** — 14-tier PvP ranking system (Intern → Invincible) with per-league payout tables for Restricted/Open arenas; 6-group system for Alliance War
@@ -29,7 +29,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - The **Alliance War** modal includes a **demotion warning** based on current rank vs threshold
 
 ### Guide Pages (Topical Cluster)
-- `/guide/code/` — Promo code guide: 26 active codes, redemption steps (verification code + redeem site), 5 tips
+- `/guide/code/` — Promo code guide: 24 active codes, redemption steps (verification code + redeem site), 5 tips
 - `/guide/event/` — Event rewards guide: The Long Haul + Earth's Defenders strategies
 - `/guide/pvp/` — PvP guide: 14 leagues, payout tables, 3 arena modes, demotion zone
 - `/guide/login/` — Login rewards guide: daily/weekly/monthly breakdown with income table
@@ -38,14 +38,14 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 
 ## Architecture
 - Inline JSON configs in HTML `<head>` (no fetch, works from `file://`)
-- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME`, `CONTRIBUTORS`, `CODE_REWARDS` — global config objects
+- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME` — global config objects loaded from 6 inline `<script>` tags; `contributors-config` is a 7th tag rendered directly in HTML
 - `getPvpPayout(arena, leagueId, rank)` — core PvP calculation function, reads per-league payout tables from `GAME.pvp.arenas` (restricted/open) and `GAME.pvp.multiverse` (6 grouped leagues for Alliance War)
 - Modal data lives in `REWARDS.cards[].modal` — loaded via `findCardById(id)` helper
 - `showCardModal(cardId)` / `closeCardModal()` — modal lifecycle
 - Category colors centralized in `UI.categoryColors` (canonical source)
 - Chart filter CSS classes in `UI.chartFilterCssClasses`
-- Contributors stored in `CONTRIBUTORS.contributors` (hex colors, used for JSON-LD author sync)
-- Code rewards stored in `CODE_REWARDS` config with per-code reward values; `updatePromoCardTotal()` animates sum like PvP cards; `getLastCopiedCode()` returns most recently tapped code
+- Contributors stored in `contributors-config` inline JSON (hex colors, rendered directly in HTML for JSON-LD author sync)
+- Code rewards defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; promo card total animates via `animateValue()`
 - PvP league select options generated from `GAME.pvp.leagues` (14) and `GAME.pvp.multiverseLeagues` (6)
 - Structured data: WebPage + FAQPage schema on main page, Guide schema on detail pages
 - OG/Twitter cards: 10+ meta tags for rich social sharing; 7 per-page PNG images with `og:image:type`, `width/height`, `alt`
@@ -81,6 +81,26 @@ All visual values are defined as CSS custom properties in `:root` with full dark
 - **Light mode**: `:root.light-mode` overrides all tokens needing different values
 
 Full token reference: `docs/DESIGN_SYSTEM.md`
+
+## Improvement Plans
+
+160 executable improvement plans spanning 18 categories at `docs/plan/2026-05-20/deepseek-v4-flash/`:
+- **Architecture**: Source maps, testing, PWA, CI/CD (01-10)
+- **SEO/Content**: Guide audit, FAQ, breadcrumbs, structured data (11-20, 71-80)
+- **UX**: Mobile, shortcuts, profiles, print, presets (21-30, 51-60)
+- **Performance**: Fonts, Brotli, caching, container queries (31-40, 61-70)
+- **Features**: Battle pass, goals, history, export, recommender (41-50)
+- **Accessibility**: WCAG 2.2 mapping, HCM, color blindness, SR (81-90)
+- **Security**: CSP, Trusted Types, COOP/COEP, Permissions (109-113)
+- **Modern CSS**: `@layer`, `@starting-style`, `light-dark()`, `@scope` (114-120, 136-137)
+- **Web APIs**: Web Share, Broadcast, Wake Lock, File System (125-131)
+- **PWA depth**: Workbox, badges, window controls, SW strategy (127, 129, 135)
+- **Build**: Biome, Lightning CSS, bundle viz, depcheck (132-133, 151-152)
+- **Monitoring**: RUM, CLS debugging, PerformanceObserver (158-159)
+- **Game content**: Campaign, daily missions, streak bonuses (148-150)
+- **Code quality**: AbortController, Error.cause, Set methods, structuredClone (121-124, 134)
+
+Each plan is self-contained with file paths, code snippets, and verification steps.
 
 ## Constraints
 - Build step (npm run build) generates local Tailwind CSS. Output is committed. Works from file:// after build.

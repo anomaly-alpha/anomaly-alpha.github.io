@@ -13,7 +13,7 @@ Open `index.html` in a browser. Works from `file://`.
 
 | File | Role |
 |------|------|
-| `index.html` | HTML + 6 inline `<script type="application/json">` configs in `<head>` + OG/Twitter/canonical tags + structured data |
+| `index.html` | HTML + 7 inline `<script type="application/json">` configs in `<head>` + OG/Twitter/canonical tags + structured data |
 | `script.js` | All JS (global scope, no imports/exports, minified via terser) |
 | `styles.css` | CSS custom property tokens + BEM classes (minified via csso) |
 | `tailwind.css` | Generated Tailwind utility classes (from `npm run build`, minified via csso) |
@@ -56,7 +56,7 @@ Open `index.html` in a browser. Works from `file://`.
 - **State**: `selectedModes` array (defaults: event, pvp, login — CODE inactive) + `currentChartFilter` string, persisted via `savePageState()`/`loadPageState()`
 - **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`
 - **URL params**: `?theme=light&mode=<name>&chart=<name>` restored on page load
-- **Code rewards**: `CODE_REWARDS` config with per-code values; `updatePromoCardTotal()` animates sum like PvP; `getLastCopiedCode()` returns most recently tapped code
+- **Code rewards**: defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; `promo` card total animates via `animateValue()`
 - **OG images**: 7 per-page PNG files in `og-images/` (`home.png`, `code.png`, etc.); SVGs previously served as editable sources
 
 ## PvP system
@@ -107,7 +107,28 @@ Open `index.html` in a browser. Works from `file://`.
 - **Go-build workflow**: first plan, then build — never skip the plan step
 - **Existing plans**: reorganized under `docs/plan/YYYY-MM-DD/opencode/` (retroactively assigned, since model info not captured at time)
 
+## Improvement Plans
+
+A comprehensive set of 160 executable improvement plans exists at:
+**`docs/plan/2026-05-20/deepseek-v4-flash/`**
+
+| File | Focus |
+|------|-------|
+| `01-10` | Architecture, Foundation, Testing |
+| `11-30` | Content, SEO, UX, DevOps |
+| `31-50` | Features, Performance, CI, Code Quality |
+| `51-70` | Features, Performance, Security |
+| `71-80` | SEO, Structured Data |
+| `81-90` | Accessibility, Inclusive Design |
+| `91-100` | Process, DX, Documentation |
+| `101-108` | bfcache, IndexedDB, CSS Nesting, View Transitions, Prerendering |
+| `109-135` | Security headers, Modern CSS, JS APIs, Build tooling, PWA depth |
+| `136-160` | CSS functions, Encapsulation, Storage, Campaign, Search, RUM |
+
+Each plan is self-contained with file paths, code snippets, and verification steps.
+
 ## Reference docs
 
 - `CONTEXT.md` — domain model (categories, leagues, tiers, tokens)
 - `docs/DESIGN_SYSTEM.md` — complete CSS token reference
+- `docs/plan/2026-05-20/deepseek-v4-flash/` — 160 improvement plans
