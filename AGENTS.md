@@ -57,6 +57,7 @@ Open `index.html` in a browser. Works from `file://`.
 - **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`
 - **URL params**: `?theme=light&mode=<name>&chart=<name>` restored on page load
 - **Code rewards**: defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; `promo` card total animates via `animateValue()`
+- **Adding promo codes**: insert into both `cards[0].codes` and `promoCodes` arrays in `index.html` (same data, two locations), then run `npm run build`
 - **OG images**: 7 per-page PNG files in `og-images/` (`home.png`, `code.png`, etc.); SVGs previously served as editable sources
 
 ## PvP system
