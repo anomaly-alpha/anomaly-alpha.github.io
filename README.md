@@ -111,13 +111,15 @@ anomaly-alpha/
 │   ├── faq/index.html   — Gem rewards FAQ
 │   └── beginners/index.html — New player guide
 ├── data/                — Source data files
-│   ├── arena_payouts.txt     — Open + Restricted arena payout data
-│   └── multiverse_war_payouts.txt — Multiverse War payout data
+│   ├── arena_payouts.txt             — Open + Restricted arena payout data
+│   ├── multiverse_war_payouts.txt    — Multiverse War payout data
+│   └── https___anomaly-alpha*/       — Google Search Console export folders
 ├── docs/
 │   ├── DESIGN_SYSTEM.md  — CSS token reference
 │   ├── index.md          — Feature documentation
 │   ├── adr/              — Architecture Decision Records
-│   └── plan/             — Improvement plans + session plans (YYYY-MM-DD/*.md)
+│   ├── plan/             — Improvement plans + session plans (YYYY-MM-DD/*.md)
+│   └── reports/          — SEO performance reports (from GSC exports)
 ├── journal/              — Daily session journals (YYYY-MM-DD/index.md)
 ```
 
@@ -129,17 +131,7 @@ Run `npm install && npm run build` (one-time setup). Then open `index.html` in a
 
 ## Design System
 
-CSS custom property design tokens with BEM naming convention:
-- **Category tokens**: `--gem-event` (#ff6b35), `--gem-pvp` (#e91e8a), `--gem-login` (#f39c12), `--gem-code` (#2ecc71), `--gem-cyan` (#00e5ff), `--gem-purple` (#9b59b6), `--gem-star` (#ffeb3b)
-- **Card modifiers**: `.gem-card--event`, `.gem-card--pvp`, `.gem-card--login`, `.gem-card--code`
-- **Label classes**: `.gem-label--event`, `.gem-label--pvp`, etc.
-- **Text classes**: `.gem-text--event`, `.gem-text--pvp`, etc.
-- **Shadow tokens**: `--gem-shadow--card`, `--gem-shadow--glow-cyan`, `--gem-shadow--glow-pink`, `--gem-shadow--gem`
-- **Alert tokens**: `--gem-alert--danger-bg/border/text`, `--gem-alert--success-*`, `--gem-alert--info-*`
-- **Hover highlight**: `--card-color` CSS variable per card for dynamic category-color hover effects
-- **Info icon**: `.gem-card__info-btn` — circular icon button on every card, triggers modal
-- **Modal badge**: `.gem-modal__badge--star` — yellow star badge in modal header
-- Light mode via `:root.light-mode` token overrides
+CSS custom property design tokens with BEM naming. Category colors (`--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, `--gem-star`), BEM component modifiers (`.gem-card--*`, `.gem-label--*`, `.gem-text--*`), shadow/alert token sets. Light mode via `:root.light-mode` overrides.
 
 Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 
@@ -152,24 +144,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 
 ## Improvement Plans
 
-160 executable improvement plans covering architecture, security, performance, accessibility, SEO, testing, PWA, CSS, JS quality, and new features are available at:
-
-**`docs/plan/2026-05-20/deepseek-v4-flash/`**
-
-| Plans | Focus |
-|-------|-------|
-| 01-10 | Source maps, testing, PWA, a11y, CI/CD |
-| 11-30 | Guide consistency, mobile UX, shortcuts, FAQ, breadcrumbs |
-| 31-50 | Features (battle pass, goals, history, export, recommender) |
-| 51-70 | Features cont'd (presets, profiles, calendar) + performance |
-| 71-80 | SEO (Article schema, meta descriptions, hreflang, HowTo) |
-| 81-90 | Accessibility (WCAG 2.2, contrast, HCM, screen readers) |
-| 91-100 | Dev process (Danger, Renovate, Gitpod, ADRs) |
-| 101-108 | bfcache, IndexedDB, View Transitions, prerendering |
-| 109-135 | Security headers, Modern CSS, JS APIs, Build tooling |
-| 136-160 | CSS nesting, light-dark(), @scope, search, campaign tracking |
-
-Each plan is self-contained with file paths, code snippets, and verification steps.
+160 executable plans at `docs/plan/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plan/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
 
 
 

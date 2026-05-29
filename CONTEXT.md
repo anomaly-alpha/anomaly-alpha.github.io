@@ -51,18 +51,14 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - OG/Twitter cards: 10+ meta tags for rich social sharing; 7 per-page PNG images with `og:image:type`, `width/height`, `alt`
 
 ## Performance Architecture
-- **Counter CLS prevention** — `.gem-counter` uses `min-width: 6ch` + `font-variant-numeric: tabular-nums` + `display: inline-block` so the total number box never changes width during `animateValue()` rAF animation, preventing layout shift on mode toggle
-- **Animation timing** — `filterCards()` runs card visibility changes before `updateAllPageTotals()` so the 400ms counter animation starts on a settled layout, avoiding visual overlap with card show/hide
-- **Critical CSS inlined** — All pages inline above-fold CSS in `<style>` and load full CSS asynchronously via `<link rel="preload" as="style" onload="this.rel='stylesheet'">`
-- **FOUC guard** — `html { visibility: hidden/visible }` wraps each inline `<style>` block so no element renders until full CSS is parsed
-- **Chart.js lazy-loaded** — `vendor/chart.umd.js` (205KB) loaded dynamically on first "Show Charts" click via `loadChartJs()` + `initCharts()`
-- **DOMContentLoaded in requestAnimationFrame** — All initialization deferred to after first paint
-- **Minified assets** — CSS minified via csso, JS minified via terser (in `npm run build`)
-- **Tailwind color aliases** — `orange-accent`, `green-accent`, `yellow-accent`, `pink-glow`, `cyan-glow`, `purple-accent` defined in `tailwind.config.js` for gradient stop classes
-- **Font loading** — All fonts preloaded via `<link rel="preload" as="font">`, use `font-display: optional` to avoid CLS from font swap
-- **Accessibility** — All pages have `<main>` landmarks; card links have `aria-label` attributes; reduced motion support via `prefers-reduced-motion`
-- **OG images** — 7 per-page PNG files in `og-images/` (`home.png`, `code.png`, etc.) with `og:image:type`, `og:image:width/height`, `og:image:alt`
-- **Sitemap** — All 7 URLs with `<lastmod>` tags; code guide `changefreq:weekly` (others `monthly`)
+- **Counter CLS prevention** — `.gem-counter` uses `min-width: 6ch` + `font-variant-numeric: tabular-nums` + `display: inline-block` to prevent width changes during `animateValue()` rAF
+- **Animation timing** — `filterCards()` runs before `updateAllPageTotals()` so counter animation starts on settled layout
+- **Critical CSS inlined** — Above-fold CSS in `<style>`, full CSS loaded async via `<link rel="preload" as="style" onload="this.rel='stylesheet'">`, FOUC guarded by `html { visibility: hidden/visible }`
+- **Chart.js lazy-loaded** — `vendor/chart.umd.js` (205KB) loaded on first "Show Charts" click
+- **Deferred init** — `DOMContentLoaded` handler wrapped in `requestAnimationFrame` for first-paint priority
+- **Minified assets** — CSS via csso, JS via terser (`npm run build`)
+- **Font loading** — Preloaded woff2, `font-display: optional` to prevent CLS
+- **Accessibility** — `<main>` landmarks, `aria-label` on card links, `prefers-reduced-motion` support
 
 ## Design Language
 - CSS custom properties as design tokens (`--gem-event`, `--gem-pvp`, etc.)
@@ -71,36 +67,11 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - Category colors: event=orange (#ff6b35), pvp=pink (#e91e8a), login=amber (#f39c12), code=green (#2ecc71), all=cyan (#00e5ff)
 
 ### Design Token System
-All visual values are defined as CSS custom properties in `:root` with full dark/light mode support:
-- **Category tokens**: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, `--gem-purple`
-- **Semantic tokens**: `--gem-star` (badges/tips), `--gem-gem` (gem icon glow)
-- **Background tokens**: `--gem-bg-dark`, `--gem-bg-mid`, `--gem-bg-light`
-- **Orb tokens**: `--gem-orb-cyan`, `--gem-orb-pvp` (gradient orbs)
-- **Alert tokens**: complete set with bg/border/text for danger/success/info
-- **Shadow tokens**: `--gem-shadow--card`, `--gem-shadow--glow-cyan`, `--gem-shadow--glow-pink`, `--gem-shadow--main`, `--gem-shadow--gem`
-- **Light mode**: `:root.light-mode` overrides all tokens needing different values
-
-Full token reference: `docs/DESIGN_SYSTEM.md`
+CSS custom properties in `:root` with dark/light mode support (`:root.light-mode`). Categories: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, `--gem-purple`. Semantic: `--gem-star`, `--gem-gem`. Background, orb, alert, and shadow tokens also defined. Full reference: `docs/DESIGN_SYSTEM.md`.
 
 ## Improvement Plans
 
-160 executable improvement plans spanning 18 categories at `docs/plan/2026-05-20/deepseek-v4-flash/`:
-- **Architecture**: Source maps, testing, PWA, CI/CD (01-10)
-- **SEO/Content**: Guide audit, FAQ, breadcrumbs, structured data (11-20, 71-80)
-- **UX**: Mobile, shortcuts, profiles, print, presets (21-30, 51-60)
-- **Performance**: Fonts, Brotli, caching, container queries (31-40, 61-70)
-- **Features**: Battle pass, goals, history, export, recommender (41-50)
-- **Accessibility**: WCAG 2.2 mapping, HCM, color blindness, SR (81-90)
-- **Security**: CSP, Trusted Types, COOP/COEP, Permissions (109-113)
-- **Modern CSS**: `@layer`, `@starting-style`, `light-dark()`, `@scope` (114-120, 136-137)
-- **Web APIs**: Web Share, Broadcast, Wake Lock, File System (125-131)
-- **PWA depth**: Workbox, badges, window controls, SW strategy (127, 129, 135)
-- **Build**: Biome, Lightning CSS, bundle viz, depcheck (132-133, 151-152)
-- **Monitoring**: RUM, CLS debugging, PerformanceObserver (158-159)
-- **Game content**: Campaign, daily missions, streak bonuses (148-150)
-- **Code quality**: AbortController, Error.cause, Set methods, structuredClone (121-124, 134)
-
-Each plan is self-contained with file paths, code snippets, and verification steps.
+160 executable plans at `docs/plan/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plan/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
 
 ## Constraints
 - Build step (npm run build) generates local Tailwind CSS. Output is committed. Works from file:// after build.
