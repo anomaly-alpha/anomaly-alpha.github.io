@@ -11,7 +11,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 | Event Rewards | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~1,850 (varies) | Restricted Arena + Open Arena + Alliance War (Elite II, rank 13 defaults) |
 | Login Rewards | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
-| Promo Codes | Variable | 24 active codes (gems + tickets) |
+| Promo Codes | Variable | 27 active codes (gems + tickets) |
 
 **Total: ~4,043 gems/week** (varies with PvP selections)
 
@@ -20,6 +20,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 ### Interactive Elements
 - **Animated counter** that counts up on value changes
 - **Promo code reveal** — tap to reveal with 3D flip animation, tap again to copy
+- **Scrolling ticker banner** ("Why Use This") — 44px monochrome newspaper-style ticker showing PvP 1,850+/wk • Codes 27 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk
 - **Mode selector** (5 buttons: All, Code, Event, PvP, Login) — each showing gem total + countdown timer
 - **Multi-select mode filtering** — toggle Event, PvP, Login, Code independently
 - **Mode button hover** — hovering a mode button highlights all matching cards in that mode's color
@@ -67,7 +68,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 - Instant chart updates on filter changes (no animation overhead)
 
 ### Guide Pages (Topical Cluster)
-- `/guide/code/` — Promo code guide: 24 active codes, verification code redemption, 5 tips
+- `/guide/code/` — Promo code guide: 27 active codes with click-to-copy (`copyCode()`), verification code redemption, 5 tips
 - `/guide/event/` — Event rewards guide: The Long Haul + Earth's Defenders with full strategies
 - `/guide/pvp/` — PvP guide: 14 leagues table, real payout tables, 3 arena modes with demotion zone
 - `/guide/login/` — Login rewards guide: daily (910), weekly (460), monthly (23) with income summary table

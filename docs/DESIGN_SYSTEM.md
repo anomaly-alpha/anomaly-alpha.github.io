@@ -321,6 +321,7 @@ All `@font-face` declarations use `font-display: optional` (was `swap`, changed 
 | `.gem-code__reveal` | Element | Revealed code |
 | `.gem-code__value` | Element | Code value |
 | `.gem-code__copy-hint` | Element | Copy hint |
+| `.gem-code__chip` | Element | Clickable code chip (used on guide/code/index.html with `onclick="copyCode()"`) |
 
 ### Mode Button Component
 
@@ -344,6 +345,28 @@ All `@font-face` declarations use `font-display: optional` (was `swap`, changed 
 | `.gem-grid--cards` | Card grid (1→2→3 columns) |
 | `.gem-grid--modes` | Mode button row |
 | `.gem-grid--charts` | Chart grid (2→3 columns) |
+
+### Ticker Component
+
+| Class | Type | Description |
+|-------|------|-------------|
+| `.gem-ticker` | Block | Scrolling ticker container (44px, monochrome, newspaper style) |
+| `.gem-ticker__track` | Element | Flex overflow-hidden track |
+| `.gem-ticker__content` | Element | Scrolling content with `@keyframes gem-ticker` animation |
+| `.gem-ticker__item` | Element | Single stat item (label + value) |
+| `.gem-ticker__label` | Element | Uppercase label within item |
+| `.gem-ticker__sep` | Element | Bullet separator (`•`) between items |
+
+### Breadcrumb Component
+
+| Class | Type | Description |
+|-------|------|-------------|
+| `.gem-breadcrumb` | Block | Breadcrumb nav container |
+| `.gem-breadcrumb__list` | Element | Flex row wrapping breadcrumb items |
+| `.gem-breadcrumb__item` | Element | Single breadcrumb list item |
+| `.gem-breadcrumb__item--current` | Modifier | Current page indicator (dimmed white) |
+| `.gem-breadcrumb__sep` | Element | Separator between items (`›`) |
+| `.gem-breadcrumb__link` | Element | Link to parent page (cyan, white on hover) |
 
 ---
 

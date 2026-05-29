@@ -12,7 +12,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Event** — Time-limited game events with ranking thresholds (500 gems: The Long Haul 300 top 5%, Earth's Defenders 200 top 10%)
 - **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout (3 cards: Restricted Arena + Open Arena + Alliance War; ~1,850 at Elite II rank 13 defaults)
 - **Login** — Daily/weekly/monthly login rewards with streak mechanics (1,393/week: 910 daily + 460 weekly + 23 monthly)
-- **Code** — Promotional codes distributed through official channels (26 active codes + 8 expired, variable rewards including gems, Hero Shop Tickets, and hero shards). Redeemed via verification code at redeem.invincible.ubisoft.barcelona
+- **Code** — Promotional codes distributed through official channels (27 active codes + 8 expired, variable rewards including gems, Hero Shop Tickets, and hero shards). Redeemed via verification code at redeem.invincible.ubisoft.barcelona
 
 ### Key Terms
 - **League** — 14-tier PvP ranking system (Intern → Invincible) with per-league payout tables for Restricted/Open arenas; 6-group system for Alliance War
@@ -29,7 +29,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - The **Alliance War** modal includes a **demotion warning** based on current rank vs threshold
 
 ### Guide Pages (Topical Cluster)
-- `/guide/code/` — Promo code guide: 24 active codes, redemption steps (verification code + redeem site), 5 tips
+- `/guide/code/` — Promo code guide: 27 active codes with click-to-copy (`copyCode()`), redemption steps (verification code + redeem site), 5 tips
 - `/guide/event/` — Event rewards guide: The Long Haul + Earth's Defenders strategies
 - `/guide/pvp/` — PvP guide: 14 leagues, payout tables, 3 arena modes, demotion zone
 - `/guide/login/` — Login rewards guide: daily/weekly/monthly breakdown with income table
@@ -47,7 +47,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - Contributors stored in `contributors-config` inline JSON (hex colors, rendered directly in HTML for JSON-LD author sync)
 - Code rewards defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; promo card total animates via `animateValue()`
 - PvP league select options generated from `GAME.pvp.leagues` (14) and `GAME.pvp.multiverseLeagues` (6)
-- Structured data: WebPage + FAQPage schema on main page, Guide schema on detail pages
+- Structured data: WebPage + FAQPage schema on main page, Article + FAQPage schema on detail pages
 - OG/Twitter cards: 10+ meta tags for rich social sharing; 7 per-page PNG images with `og:image:type`, `width/height`, `alt`
 
 ## Performance Architecture

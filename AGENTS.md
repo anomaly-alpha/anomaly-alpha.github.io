@@ -57,7 +57,9 @@ Open `index.html` in a browser. Works from `file://`.
 - **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`
 - **URL params**: `?theme=light&mode=<name>&chart=<name>` restored on page load
 - **Code rewards**: defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; `promo` card total animates via `animateValue()`
-- **Adding promo codes**: insert into both `cards[0].codes` and `promoCodes` arrays in `index.html` (same data, two locations), then run `npm run build`
+- **Adding promo codes**: insert into `cards[0].codes` and `promoCodes` arrays in `index.html` (same data, two locations), **and** add a `<span>` to the hardcoded list in `guide/code/index.html` line 143 (active codes) — then run `npm run build`
+- **Guide code page must include `script.js`** — `guide/code/index.html` needs `<script src="../../script.js">` before `</body>` for `copyCode()` to work on code chips
+- **Guide code page hardcoded spans** — `guide/code/index.html:143` contains a hardcoded list of 27 active code `<span>` elements with `onclick` + `gem-code__chip` class; this must stay in sync with `promoCodes` array in `index.html`
 - **OG images**: 7 per-page PNG files in `og-images/` (`home.png`, `code.png`, etc.); SVGs previously served as editable sources
 
 ## PvP system
@@ -75,6 +77,14 @@ Open `index.html` in a browser. Works from `file://`.
 - `requestAnimationFrame` only for `animateValue()` (counter)
 - Chart animations disabled (`duration: 0`, update with `'none'`)
 - Countdown refreshes every 5s (`setInterval`)
+
+## Ticker ("Why Use This")
+
+- **HTML**: scrolling `<section class="gem-ticker">` in `index.html` with duplicated content for seamless loop
+- **CSS**: BEM classes `.gem-ticker`, `__track`, `__content`, `__item`, `__label`, `__sep` + `@keyframes gem-ticker` (0%→-50% X translation)
+- **Height**: 44px, monochrome (no category colors), old-school newspaper scroll
+- **Content**: "PvP 1,850+/wk • Codes 27 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk" repeated twice
+- **Duration**: 40s linear infinite, will-change:transform
 
 ## Category colors
 
