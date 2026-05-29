@@ -138,8 +138,18 @@ A comprehensive set of 160 executable improvement plans exists at:
 
 Each plan is self-contained with file paths, code snippets, and verification steps.
 
+### Post-160 plans
+
+| Plan | Date | Focus |
+|------|------|-------|
+| `161` | 2026-05-28 | Gems/Codes SEO, Breadcrumbs, Article Schema (copywriting overhaul + meta refresh + dynamic code count + breadcrumb nav + Article schema) |
+| `162` | 2026-05-28 | GSC Export Analyzer (standalone plan for AI models to analyze Google Search Console exports and update SEO performance report) |
+
+Located at `docs/plan/2026-05-28/deepseek-v4-flash-free/` with INDEX.md.
+
 ## Reference docs
 
 - `CONTEXT.md` — domain model (categories, leagues, tiers, tokens)
 - `docs/DESIGN_SYSTEM.md` — complete CSS token reference
+- `docs/reports/SEO_PERFORMANCE.md` — SEO performance report (updated from GSC exports)
 - `docs/plan/2026-05-20/deepseek-v4-flash/` — 160 improvement plans

@@ -134,7 +134,11 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 | PWA | 03, 127, 129, 135, 147 | Workbox, badges, window controls, SW strategy |
 | Build | 132-133 | Biome, Lightning CSS |
 | Code Quality | 46-48, 121-124 | JSDoc, magic numbers, AbortController, Error.cause |
- ## Contributors
+
+## SEO Reports
+
+Live SEO performance analysis from Google Search Console exports at `docs/reports/SEO_PERFORMANCE.md`. Updated periodically by running plan 162 (`docs/plan/2026-05-28/deepseek-v4-flash-free/162-gsc-export-analyzer.md`) against new GSC exports in `data/`.
+## Contributors
 
 - Anomaly
 - TheOneTruePanda
