@@ -2,8 +2,8 @@
   "name": "anomaly-alpha.github.io",
   "private": true,
   "scripts": {
-    "update-code-count": "node scripts/update-code-count.js",
-    "build": "node scripts/update-code-count.js && tailwindcss -i src/tailwind-input.css -o tailwind.css && node -e \"var c=require('csso'),f=require('fs');['tailwind.css','styles.css'].forEach(function(p){var r=c.minify(f.readFileSync(p,'utf8'));f.writeFileSync(p,r.css)});console.log('CSS minified')\" && node -e \"var t=require('terser'),f=require('fs');t.minify(f.readFileSync('script.js','utf8'),{compress:true,mangle:true}).then(function(r){f.writeFileSync('script.js',r.code);console.log('JS minified')})\"",
+    "update-codes": "node scripts/generate-codes.js",
+    "build": "node scripts/generate-codes.js && tailwindcss -i src/tailwind-input.css -o tailwind.css && node -e \"var c=require('csso'),f=require('fs');['tailwind.css','styles.css'].forEach(function(p){var r=c.minify(f.readFileSync(p,'utf8'));f.writeFileSync(p,r.css)});console.log('CSS minified')\" && node -e \"var t=require('terser'),f=require('fs');t.minify(f.readFileSync('script.js','utf8'),{compress:true,mangle:true}).then(function(r){f.writeFileSync('script.js',r.code);console.log('JS minified')})\"",
     "build:tailwind": "tailwindcss -i src/tailwind-input.css -o tailwind.css",
     "update-assets": "curl -Lo vendor/chart.umd.js https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"
   },

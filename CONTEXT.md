@@ -12,7 +12,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Event** — Time-limited game events with ranking thresholds (500 gems: The Long Haul 300 top 5%, Earth's Defenders 200 top 10%)
 - **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout (3 cards: Restricted Arena + Open Arena + Alliance War; ~1,850 at Elite II rank 13 defaults)
 - **Login** — Daily/weekly/monthly login rewards with streak mechanics (1,393/week: 910 daily + 460 weekly + 23 monthly)
-- **Code** — Promotional codes distributed through official channels (27 active codes + 8 expired, variable rewards including gems, Hero Shop Tickets, and hero shards). Redeemed via verification code at redeem.invincible.ubisoft.barcelona
+- **Code** — Promotional codes distributed through official channels. Single source of truth: `data/codes.json`. Generated outputs: `data/generated/promo-codes.js` (loaded by main page) and `guide/code/index.html` chips (via injection markers). Active A-Z, expired by date descending. 27 active codes + 8 expired, variable rewards including gems, Hero Shop Tickets, and hero shards. Redeemed via verification code at redeem.invincible.ubisoft.barcelona. See [ADR-001](docs/adr/ADR-001-promo-code-single-source-of-truth.md).
 
 ### Key Terms
 - **League** — 14-tier PvP ranking system (Intern → Invincible) with per-league payout tables for Restricted/Open arenas; 6-group system for Alliance War
@@ -69,9 +69,17 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 ### Design Token System
 CSS custom properties in `:root` with dark/light mode support (`:root.light-mode`). Categories: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, `--gem-purple`. Semantic: `--gem-star`, `--gem-gem`. Background, orb, alert, and shadow tokens also defined. Full reference: `docs/DESIGN_SYSTEM.md`.
 
+## Architecture Decision Records
+
+ADRs live in `docs/adr/`. Each records a hard-to-reverse decision with context, rationale, and alternatives considered.
+
+| ADR | Title |
+|-----|-------|
+| 001 | [Promo Code Single Source of Truth](docs/adr/ADR-001-promo-code-single-source-of-truth.md) |
+
 ## Improvement Plans
 
-160 executable plans at `docs/plan/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plan/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
+160 executable plans at `docs/plan/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plan/2026-05-28/deepseek-v4-flash-free/` and `docs/plan/2026-05-31/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
 
 ## Constraints
 - Build step (npm run build) generates local Tailwind CSS. Output is committed. Works from file:// after build.
