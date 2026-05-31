@@ -1,0 +1,96 @@
+Countries from GSC Export (https___anomaly-alpha):
+
+1. United States
+2. United Kingdom
+3. Brazil
+4. Sweden
+5. Canada
+6. Italy
+7. Australia
+8. Philippines
+9. Germany
+10. India
+11. Ireland
+12. Vietnam
+13. Poland
+14. Malaysia
+15. Lithuania
+16. Argentina
+17. Denmark
+18. Portugal
+19. Puerto Rico
+20. Macedonia
+21. Mexico
+22. Netherlands
+23. Turkey
+24. France
+25. New Zealand
+26. Thailand
+27. Spain
+28. Israel
+29. Slovenia
+30. Belgium
+31. Serbia
+32. Hungary
+33. Norway
+34. Algeria
+35. Japan
+36. China
+37. Ukraine
+38. Switzerland
+39. Romania
+40. Bangladesh
+41. Indonesia
+42. Russia
+43. United Arab Emirates
+44. South Korea
+45. Slovakia
+46. Hong Kong
+47. Chile
+48. Czechia
+49. Egypt
+50. Singapore
+51. Jamaica
+52. Jordan
+53. Iran
+54. Paraguay
+55. Qatar
+56. Ecuador
+57. Georgia
+58. Nepal
+59. Austria
+60. Kazakhstan
+61. Morocco
+62. Cuba
+63. Uzbekistan
+64. Colombia
+65. Cambodia
+66. Saudi Arabia
+67. Bahamas
+68. Croatia
+69. Montenegro
+70. Peru
+71. Venezuela
+72. Afghanistan
+73. Cyprus
+74. Iraq
+75. Greece
+76. Tunisia
+77. Latvia
+78. Finland
+79. Gambia
+80. Nicaragua
+81. Lebanon
+82. Trinidad & Tobago
+83. Cape Verde
+84. Estonia
+85. Ethiopia
+86. Namibia
+87. Bolivia
+88. Suriname
+89. Taiwan
+90. South Africa
+91. Belarus
+92. Dominican Republic
+93. El Salvador
+94. Azerbaijan
