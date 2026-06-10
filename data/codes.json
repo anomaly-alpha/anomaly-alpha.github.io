@@ -1,5 +1,5 @@
 {
-  "updated": "2026-05-31",
+  "updated": "2026-06-10",
   "codes": [
     {
       "code": "AALIEN",
@@ -20,7 +20,9 @@
     {
       "code": "CONMAN",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "expired": true,
+      "expiredDate": "2026-06-07"
     },
     {
       "code": "CONQST",
@@ -30,7 +32,9 @@
     {
       "code": "DSCORD",
       "gems": 1000,
-      "tickets": 0
+      "tickets": 0,
+      "expired": true,
+      "expiredDate": "2026-06-07"
     },
     {
       "code": "FRATV4",
@@ -40,7 +44,9 @@
     {
       "code": "FRIEND",
       "gems": 500,
-      "tickets": 0
+      "tickets": 0,
+      "expired": true,
+      "expiredDate": "2026-06-07"
     },
     {
       "code": "HEHTV4",
@@ -124,6 +130,12 @@
       "code": "SUBTV4",
       "gems": 300,
       "tickets": 0
+    },
+    {
+      "code": "SUMMER",
+      "gems": 200,
+      "tickets": 0,
+      "reward": "1 x Armoured Eve"
     },
     {
       "code": "THKMRK",

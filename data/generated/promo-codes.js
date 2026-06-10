@@ -16,28 +16,13 @@ window.__PROMO_CODES=[
     "tickets": 0
   },
   {
-    "code": "CONMAN",
-    "gems": 300,
-    "tickets": 0
-  },
-  {
     "code": "CONQST",
     "gems": 300,
     "tickets": 0
   },
   {
-    "code": "DSCORD",
-    "gems": 1000,
-    "tickets": 0
-  },
-  {
     "code": "FRATV4",
     "gems": 300,
-    "tickets": 0
-  },
-  {
-    "code": "FRIEND",
-    "gems": 500,
     "tickets": 0
   },
   {
@@ -122,6 +107,12 @@ window.__PROMO_CODES=[
     "code": "SUBTV4",
     "gems": 300,
     "tickets": 0
+  },
+  {
+    "code": "SUMMER",
+    "gems": 200,
+    "tickets": 0,
+    "reward": "1 x Armoured Eve"
   },
   {
     "code": "THKMRK",
