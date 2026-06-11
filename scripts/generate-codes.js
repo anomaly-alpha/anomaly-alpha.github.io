@@ -11,7 +11,11 @@ const { codes, updated } = JSON.parse(fs.readFileSync(codesPath, 'utf8'));
 const active = codes.filter(c => !c.expired);
 const expired = codes.filter(c => c.expired);
 
-active.sort((a, b) => a.code.localeCompare(b.code));
+active.sort((a, b) => {
+  const aDate = a.dateAdded ? new Date(a.dateAdded) : new Date(0);
+  const bDate = b.dateAdded ? new Date(b.dateAdded) : new Date(0);
+  return bDate - aDate;
+});
 expired.sort((a, b) => new Date(b.expiredDate) - new Date(a.expiredDate));
 
 const activeCount = active.length;

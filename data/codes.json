@@ -4,182 +4,214 @@
     {
       "code": "AALIEN",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-03-15"
     },
     {
       "code": "ANISS4",
       "gems": 0,
       "tickets": 0,
-      "reward": "1 x Anissa"
+      "reward": "1 x Anissa",
+      "dateAdded": "2026-04-26"
     },
     {
       "code": "BANTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "CONMAN",
       "gems": 300,
       "tickets": 0,
       "expired": true,
-      "expiredDate": "2026-06-07"
+      "expiredDate": "2026-06-07",
+      "dateAdded": "2026-05-15"
     },
     {
       "code": "CONQST",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-03-01"
     },
     {
       "code": "DSCORD",
       "gems": 1000,
       "tickets": 0,
       "expired": true,
-      "expiredDate": "2026-06-07"
+      "expiredDate": "2026-06-07",
+      "dateAdded": "2026-05-19"
     },
     {
       "code": "FRATV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "FRIEND",
       "gems": 500,
       "tickets": 0,
       "expired": true,
-      "expiredDate": "2026-06-07"
+      "expiredDate": "2026-06-07",
+      "dateAdded": "2026-05-26"
     },
     {
       "code": "HEHTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "IGTTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "INVTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "JOTTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "KABTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "KIGTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "KREGG4",
       "gems": 0,
       "tickets": 0,
-      "reward": "1 x Kregg"
+      "reward": "1 x Kregg",
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "KRESSA",
       "gems": 0,
       "tickets": 0,
-      "reward": "1 x Kregg, 1 x Anissa"
+      "reward": "1 x Kregg, 1 x Anissa",
+      "dateAdded": "2026-05-20"
     },
     {
       "code": "LEXTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "LUCAN4",
       "gems": 0,
       "tickets": 0,
-      "reward": "1 x Lucan"
+      "reward": "1 x Lucan",
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "MOSTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "NOLAN4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-03-01"
     },
     {
       "code": "PDCAST",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "SAMTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "SHUTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "SUBTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "SUMMER",
       "gems": 200,
       "tickets": 0,
-      "reward": "1 x Armoured Eve"
+      "reward": "1 x Armoured Eve",
+      "dateAdded": "2026-06-07"
     },
     {
       "code": "THKMRK",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-03-01"
     },
     {
       "code": "THULA4",
       "gems": 0,
       "tickets": 0,
-      "reward": "1 x Thula"
+      "reward": "1 x Thula",
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "TUTTV4",
       "gems": 300,
-      "tickets": 0
+      "tickets": 0,
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "SURV3Y",
       "gems": 800,
       "tickets": 5,
       "expired": true,
-      "expiredDate": "2026-05-06"
+      "expiredDate": "2026-05-06",
+      "dateAdded": "2026-04-01"
     },
     {
       "code": "30KGTG",
       "gems": 300,
       "tickets": 0,
       "expired": true,
-      "expiredDate": "2026-05-06"
+      "expiredDate": "2026-05-06",
+      "dateAdded": "2026-03-15"
     },
     {
       "code": "GEMS01",
       "gems": 250,
       "tickets": 0,
       "expired": true,
-      "expiredDate": "2026-05-06"
+      "expiredDate": "2026-05-06",
+      "dateAdded": "2026-03-01"
     },
     {
       "code": "NOT3S1",
       "gems": 500,
       "tickets": 0,
       "expired": true,
-      "expiredDate": "2026-04-21"
+      "expiredDate": "2026-04-21",
+      "dateAdded": "2026-02-01"
     },
     {
       "code": "POTENT",
@@ -187,28 +219,32 @@
       "tickets": 0,
       "expired": true,
       "expiredDate": "2026-04-14",
-      "reward": "1 x Aquarus"
+      "reward": "1 x Aquarus",
+      "dateAdded": "2026-03-01"
     },
     {
       "code": "TOTEMS",
       "gems": 500,
       "tickets": 0,
       "expired": true,
-      "expiredDate": "2026-03-03"
+      "expiredDate": "2026-03-03",
+      "dateAdded": "2025-12-01"
     },
     {
       "code": "FILES3",
       "gems": 350,
       "tickets": 0,
       "expired": true,
-      "expiredDate": "2026-03-03"
+      "expiredDate": "2026-03-03",
+      "dateAdded": "2025-12-01"
     },
     {
       "code": "TROPHY",
       "gems": 500,
       "tickets": 0,
       "expired": true,
-      "expiredDate": "2026-03-03"
+      "expiredDate": "2026-03-03",
+      "dateAdded": "2025-11-01"
     }
   ]
 }
