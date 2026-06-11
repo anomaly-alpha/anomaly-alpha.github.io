@@ -85,8 +85,11 @@ const replacements = [
   [/<!--GUIDE_CODES_EXPIRED_START-->[\s\S]*?<!--GUIDE_CODES_EXPIRED_END-->/,
    `<!--GUIDE_CODES_EXPIRED_START-->\n${expiredChips}\n<!--GUIDE_CODES_EXPIRED_END-->`],
 
-  // Title, og:title, twitter:title, article headline: "— 25 Codes [Jun 2026]"
+  // Title, og:title, twitter:title: "— 25 Codes [Jun 2026]"
   [/(Invincible Guarding the Globe Codes & Gems — )\d+( Codes \[)[A-Z][a-z]{2} \d{4}(\])/g, `$1${activeCount}$2${monthYear}$3`],
+
+  // JSON-LD headline: same format as title
+  [/("headline": "Invincible Guarding the Globe Codes & Gems — )\d+( Codes \[)[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `$1${activeCount}$2${monthYear}$3`],
 
   // JSON-LD dateModified
   [/(dateModified": ")\d{4}-\d{2}-\d{2}(")/, `$1${updated}$2`],
