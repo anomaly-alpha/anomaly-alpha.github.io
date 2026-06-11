@@ -12,7 +12,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Event** — Time-limited game events with ranking thresholds (500 gems: The Long Haul 300 top 5%, Earth's Defenders 200 top 10%)
 - **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout (3 cards: Restricted Arena + Open Arena + Alliance War; ~1,850 at Elite II rank 13 defaults)
 - **Login** — Daily/weekly/monthly login rewards with streak mechanics (1,393/week: 910 daily + 460 weekly + 23 monthly)
-- **Code** — Promotional codes distributed through official channels. Single source of truth: `data/codes.json`. Generated outputs: `data/generated/promo-codes.js` (loaded by main page) and `guide/code/index.html` chips (via injection markers). Active A-Z, expired by date descending. 27 active codes + 8 expired, variable rewards including gems, Hero Shop Tickets, and hero shards. Redeemed via verification code at redeem.invincible.ubisoft.barcelona. See [ADR-001](docs/adr/ADR-001-promo-code-single-source-of-truth.md).
+- **Code** — Promotional codes distributed through official channels. Single source of truth: `data/codes.json`. Generated outputs: `data/generated/promo-codes.js` (loaded by main page) and `guide/code/index.html` chips (via injection markers). Active newest-first, expired by date descending. 25 active codes + 11 expired, variable rewards including gems, Hero Shop Tickets, and hero shards. Redeemed via verification code at redeem.invincible.ubisoft.barcelona. See [ADR-001](docs/adr/ADR-001-promo-code-single-source-of-truth.md).
 
 ### Key Terms
 - **League** — 14-tier PvP ranking system (Intern → Invincible) with per-league payout tables for Restricted/Open arenas; 6-group system for Alliance War
@@ -29,7 +29,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - The **Alliance War** modal includes a **demotion warning** based on current rank vs threshold
 
 ### Guide Pages (Topical Cluster)
-- `/guide/code/` — Promo code guide: 27 active codes with click-to-copy (`copyCode()`), redemption steps (verification code + redeem site), 5 tips
+- `/guide/code/` — Promo code guide: 25 active codes with click-to-copy (`copyCode()`), redemption steps (verification code + redeem site), 5 tips
 - `/guide/event/` — Event rewards guide: The Long Haul + Earth's Defenders strategies
 - `/guide/pvp/` — PvP guide: 14 leagues, payout tables, 3 arena modes, demotion zone
 - `/guide/login/` — Login rewards guide: daily/weekly/monthly breakdown with income table
