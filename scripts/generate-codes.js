@@ -55,23 +55,23 @@ let html = fs.readFileSync(codeGuidePath, 'utf8');
 const replacements = [
   // GUIDE_DESC
   [/<!--GUIDE_DESC_START-->[\s\S]*?<!--GUIDE_DESC_END-->/,
-   `<!--GUIDE_DESC_START-->\n    <meta name="description" content="See all ${activeCount} active codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for ${monthYear}.">\n<!--GUIDE_DESC_END-->`],
+    `<!--GUIDE_DESC_START-->\n    <meta name="description" content="See all ${activeCount} active promo codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for ${monthYear}.">\n<!--GUIDE_DESC_END-->`],
 
   // GUIDE_OG_DESC
   [/<!--GUIDE_OG_DESC_START-->[\s\S]*?<!--GUIDE_OG_DESC_END-->/,
-   `<!--GUIDE_OG_DESC_START-->\n    <meta property="og:description" content="See all ${activeCount} active codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for ${monthYear}.">\n<!--GUIDE_OG_DESC_END-->`],
+    `<!--GUIDE_OG_DESC_START-->\n    <meta property="og:description" content="See all ${activeCount} active promo codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for ${monthYear}.">\n<!--GUIDE_OG_DESC_END-->`],
 
   // GUIDE_OG_IMAGE_ALT
   [/<!--GUIDE_OG_IMAGE_ALT_START-->[\s\S]*?<!--GUIDE_OG_IMAGE_ALT_END-->/,
-   `<!--GUIDE_OG_IMAGE_ALT_START-->\n    <meta property="og:image:alt" content="Codes Guide — ${activeCount} ACTIVE CODES">\n<!--GUIDE_OG_IMAGE_ALT_END-->`],
+    `<!--GUIDE_OG_IMAGE_ALT_START-->\n    <meta property="og:image:alt" content="Codes Guide — ${activeCount} ACTIVE PROMO CODES">\n<!--GUIDE_OG_IMAGE_ALT_END-->`],
 
   // GUIDE_TWITTER_DESC
   [/<!--GUIDE_TWITTER_DESC_START-->[\s\S]*?<!--GUIDE_TWITTER_DESC_END-->/,
-   `<!--GUIDE_TWITTER_DESC_START-->\n    <meta name="twitter:description" content="See all ${activeCount} active codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for ${monthYear}.">\n<!--GUIDE_TWITTER_DESC_END-->`],
+    `<!--GUIDE_TWITTER_DESC_START-->\n    <meta name="twitter:description" content="See all ${activeCount} active promo codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for ${monthYear}.">\n<!--GUIDE_TWITTER_DESC_END-->`],
 
   // GUIDE_LD_DESC (JSON-LD)
   [/<!--GUIDE_LD_DESC_START-->[\s\S]*?<!--GUIDE_LD_DESC_END-->/,
-   `<!--GUIDE_LD_DESC_START-->\n          "description": "Find active Invincible Guarding the Globe codes, promo codes, and reward codes. ${activeCount} active codes with gems, hero shards & tickets.",\n<!--GUIDE_LD_DESC_END-->`],
+    `<!--GUIDE_LD_DESC_START-->\n          "description": "Find active Invincible Guarding the Globe promo codes, codes, and reward codes. ${activeCount} active promo codes with gems, hero shards & tickets.",\n<!--GUIDE_LD_DESC_END-->`],
 
   // GUIDE_TAB
   [/<!--GUIDE_TAB_START-->[\s\S]*?<!--GUIDE_TAB_END-->/,
@@ -89,17 +89,18 @@ const replacements = [
   [/<!--GUIDE_CODES_EXPIRED_START-->[\s\S]*?<!--GUIDE_CODES_EXPIRED_END-->/,
    `<!--GUIDE_CODES_EXPIRED_START-->\n${expiredChips}\n<!--GUIDE_CODES_EXPIRED_END-->`],
 
-  // Title, og:title, twitter:title: "— 25 Codes [Jun 2026]"
-  [/(Invincible Guarding the Globe Codes & Gems — )\d+( Codes \[)[A-Z][a-z]{2} \d{4}(\])/g, `$1${activeCount}$2${monthYear}$3`],
+  // Title, og:title, twitter:title: "Promo Codes — 25 Active [Jun 2026]"
+  [/(Invincible Guarding the Globe) Codes & Gems — \d+ Codes \[[A-Z][a-z]{2} \d{4}(\])/g, `$1 Promo Codes — ${activeCount} Active [${monthYear}$2`],
 
   // JSON-LD headline: same format as title
-  [/("headline": "Invincible Guarding the Globe Codes & Gems — )\d+( Codes \[)[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `$1${activeCount}$2${monthYear}$3`],
+  [/("headline": "Invincible Guarding the Globe) Codes & Gems — \d+ Codes \[[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `$1 Promo Codes — ${activeCount} Active [${monthYear}$2`],
 
   // JSON-LD dateModified
   [/(dateModified": ")\d{4}-\d{2}-\d{2}(")/, `$1${updated}$2`],
 
-  // Subtitle: "27 Active Codes — Tap, Copy, Redeem"
-  [/\d+ Active Codes — Tap, Copy, Redeem/g, `${activeCount} Active Codes — Tap, Copy, Redeem`],
+  // Subtitle: "27 Active Promo Codes — Tap, Copy, Redeem"
+  [/\d+ Active Promo Codes — Tap, Copy, Redeem/g, `${activeCount} Active Promo Codes — Tap, Copy, Redeem`],
+  [/\d+ Active Codes — Tap, Copy, Redeem/g, `${activeCount} Active Promo Codes — Tap, Copy, Redeem`],
 
   // Card subtitle: "27 active codes + 8 expired"
   [/\d+ active codes \+ \d+ expired/g, `${activeCount} active codes + ${expiredCount} expired`],
