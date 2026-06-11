@@ -69,9 +69,13 @@ const replacements = [
   [/<!--GUIDE_TWITTER_DESC_START-->[\s\S]*?<!--GUIDE_TWITTER_DESC_END-->/,
     `<!--GUIDE_TWITTER_DESC_START-->\n    <meta name="twitter:description" content="See all ${activeCount} active promo codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for ${monthYear}.">\n<!--GUIDE_TWITTER_DESC_END-->`],
 
+  // GUIDE_ARTICLE_MODIFIED
+  [/<!--GUIDE_ARTICLE_MODIFIED_START-->[\s\S]*?<!--GUIDE_ARTICLE_MODIFIED_END-->/,
+    `<!--GUIDE_ARTICLE_MODIFIED_START-->\n    <meta property="article:modified_time" content="${updated}T00:00:00Z">\n<!--GUIDE_ARTICLE_MODIFIED_END-->`],
+
   // GUIDE_LD_DESC (JSON-LD)
-  [/<!--GUIDE_LD_DESC_START-->[\s\S]*?<!--GUIDE_LD_DESC_END-->/,
-    `<!--GUIDE_LD_DESC_START-->\n          "description": "Find active Invincible Guarding the Globe promo codes, codes, and reward codes. ${activeCount} active promo codes with gems, hero shards & tickets.",\n<!--GUIDE_LD_DESC_END-->`],
+  [/"description": "__GUIDE_LD_DESC__",/,
+    `          "description": "Find active Invincible Guarding the Globe promo codes, codes, and reward codes. ${activeCount} active promo codes with gems, hero shards & tickets.",`],
 
   // GUIDE_TAB
   [/<!--GUIDE_TAB_START-->[\s\S]*?<!--GUIDE_TAB_END-->/,
