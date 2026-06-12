@@ -1,96 +1,109 @@
-Countries from GSC Export (https___anomaly-alpha):
+Countries from GSC Export (https___anomaly-alpha-0610):
 
 1. United States
 2. United Kingdom
-3. Brazil
-4. Sweden
-5. Canada
-6. Italy
-7. Australia
-8. Philippines
-9. Germany
-10. India
-11. Ireland
-12. Vietnam
-13. Poland
-14. Malaysia
-15. Lithuania
-16. Argentina
-17. Denmark
-18. Portugal
-19. Puerto Rico
-20. Macedonia
-21. Mexico
-22. Netherlands
-23. Turkey
-24. France
-25. New Zealand
-26. Thailand
-27. Spain
-28. Israel
-29. Slovenia
-30. Belgium
-31. Serbia
-32. Hungary
-33. Norway
+3. Canada
+4. Australia
+5. Brazil
+6. France
+7. Sweden
+8. India
+9. Russia
+10. Germany
+11. Philippines
+12. Italy
+13. Denmark
+14. Mexico
+15. Poland
+16. Ireland
+17. Vietnam
+18. New Zealand
+19. Indonesia
+20. Argentina
+21. Malaysia
+22. Lithuania
+23. Portugal
+24. Myanmar (Burma)
+25. Puerto Rico
+26. Macedonia
+27. Congo - Kinshasa
+28. Palestine
+29. Netherlands
+30. Turkey
+31. Spain
+32. Belgium
+33. Israel
 34. Algeria
-35. Japan
-36. China
-37. Ukraine
-38. Switzerland
-39. Romania
-40. Bangladesh
-41. Indonesia
-42. Russia
-43. United Arab Emirates
-44. South Korea
-45. Slovakia
-46. Hong Kong
-47. Chile
-48. Czechia
-49. Egypt
-50. Singapore
-51. Jamaica
-52. Jordan
-53. Iran
-54. Paraguay
-55. Qatar
-56. Ecuador
-57. Georgia
-58. Nepal
-59. Austria
-60. Kazakhstan
-61. Morocco
-62. Cuba
-63. Uzbekistan
-64. Colombia
-65. Cambodia
-66. Saudi Arabia
-67. Bahamas
-68. Croatia
-69. Montenegro
-70. Peru
-71. Venezuela
-72. Afghanistan
-73. Cyprus
-74. Iraq
-75. Greece
-76. Tunisia
-77. Latvia
-78. Finland
-79. Gambia
-80. Nicaragua
-81. Lebanon
-82. Trinidad & Tobago
-83. Cape Verde
-84. Estonia
-85. Ethiopia
-86. Namibia
-87. Bolivia
-88. Suriname
-89. Taiwan
-90. South Africa
-91. Belarus
-92. Dominican Republic
-93. El Salvador
-94. Azerbaijan
+35. China
+36. Thailand
+37. Japan
+38. Egypt
+39. Singapore
+40. Romania
+41. Serbia
+42. Ukraine
+43. Colombia
+44. Slovenia
+45. Hungary
+46. South Africa
+47. Switzerland
+48. South Korea
+49. United Arab Emirates
+50. Dominican Republic
+51. Norway
+52. Bangladesh
+53. Kazakhstan
+54. Hong Kong
+55. Iran
+56. Chile
+57. Tunisia
+58. Jordan
+59. Slovakia
+60. Georgia
+61. Qatar
+62. Czechia
+63. Jamaica
+64. Iraq
+65. Pakistan
+66. Greece
+67. Taiwan
+68. Paraguay
+69. Cambodia
+70. Saudi Arabia
+71. Peru
+72. Bahrain
+73. Ecuador
+74. Nepal
+75. Bolivia
+76. Austria
+77. Finland
+78. Lebanon
+79. Estonia
+80. Mauritius
+81. Morocco
+82. Suriname
+83. Cuba
+84. Uzbekistan
+85. Mongolia
+86. Bahamas
+87. Croatia
+88. Montenegro
+89. Benin
+90. Venezuela
+91. Afghanistan
+92. Cyprus
+93. Kuwait
+94. Swaziland
+95. Guatemala
+96. Latvia
+97. Gambia
+98. Nicaragua
+99. Ghana
+100. Trinidad & Tobago
+101. Cape Verde
+102. Ethiopia
+103. Namibia
+104. Belarus
+105. Brunei
+106. El Salvador
+107. Azerbaijan
