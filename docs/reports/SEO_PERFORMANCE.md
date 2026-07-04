@@ -9,27 +9,28 @@
 
 1. Add new GSC export folder to `data/` (e.g. `data/https___anomaly-alpha-XXXX/`)
 2. Update the **GSC Period** date in the Quick Summary table
-3. Replace each section's table with data from the new export's CSVs (`Chart.csv`, `Pages.csv`, `Queries.csv`, `Devices.csv`, `Search appearance.csv`)
-4. Update the **Trend** comparison rows by shifting previous period into the older slot
-5. Update **Issues & Opportunities** — close items that are resolved, add new ones
-6. Update the **Generated** date at the top
+3. Normalize all totals to per-day values when comparing across different-length windows
+4. Replace each section's table with data from the new export's CSVs (`Chart.csv`, `Pages.csv`, `Queries.csv`, `Devices.csv`, `Search appearance.csv`)
+5. Update the **Trend** comparison rows by shifting previous period into the older slot
+6. Update **Issues & Opportunities** — close items that are resolved, add new ones
+7. Update the **Generated** date at the top
 
 ---
 
 ## Quick Summary
 
-| Metric | Current (May 2–Jul 2) | Previous (May 2–Jun 8) | Change |
-|--------|-------------------|-------------------|--------|
-| GSC Period | 62 days (May 2–Jul 2) | 38 days (May 3–Jun 8) | +24 days |
-| Total Clicks | 410 | 120 | **+241.7%** |
-| Total Impressions | 11,402 | 4,157 | **+174.3%** |
-| CTR | 3.60% | 2.89% | **+0.71pp** |
-| Avg Position | 7.3 | 7.3 | → |
-| Pages with Data | 7 | 7 | → |
-| Rich Results | None | None | → |
-| Mobile Share (clicks) | 85% | 80% | +5pp |
+| Metric | Current (May 2–Jul 2, 62d) | Previous (May 2–Jun 8, 38d) | Raw Δ | Per-Day Δ |
+|--------|-------------------|-------------------|-------|----------|
+| GSC Period | 62 days | 38 days | +63% | — |
+| Total Clicks | 410 | 120 | +242% | **+109%** (3.16→6.61/day) |
+| Total Impressions | 11,402 | 4,157 | +174% | **+68%** (109→184/day) |
+| CTR | 3.60% | 2.89% | +0.71pp | +0.71pp |
+| Avg Position | 7.3 | 7.3 | → | → |
+| Pages with Data | 7 | 7 | → | → |
+| Rich Results | None | None | → | → |
+| Mobile Share (clicks) | 85% | 80% | +5pp | +5pp |
 
-> **Note:** Latest export uses "Last 3 months" filter (May 2–Jul 2). Previous used "Last 3 months" for the May 2–Jun 8 window.
+> **Why per-day matters:** The 0704 window is 63% longer than 0610. Raw percentage increases overstate growth. Per-day normalization gives a true picture. The inflection point at Jun 10 is visible in the weekly trend data below.
 
 ---
 
@@ -362,11 +363,11 @@ Since the May 28 changes (confirmed by 0610 export):
 
 ## Comparison History
 
-| Export | Period | Days | Clicks | Impressions | CTR | Position | Rich Results | Filter |
-|--------|--------|------|--------|-------------|-----|----------|-------------|--------|
-| 0505 | May 2–5 | ~3 | ~7 | ~55 | ~12.7% | ~5.5 | None | Last 3 months |
-| 0512 | May 2–12 | 10 | 20 | 557 | 3.59% | 6.9 | None | Last 3 months |
-| 0530 | May 2–26 | 25 | 53 | 1,694 | 3.13% | 6.9 | None | Last 3 months |
-| 0529 | May 2–29 | 28 | 63 | 1,959 | 3.22% | 6.9 | None | Last 16 months |
-| 0610 | May 2–Jun 8 | 38 | 120 | 4,157 | 2.89% | 7.3 | None | Last 3 months |
-| **0704** | **May 2–Jul 2** | **62** | **410** | **11,402** | **3.60%** | **7.3** | **None** | **Last 3 months** |
+| Export | Period | Days | Clicks | /day | Impressions | /day | CTR | Position | Rich Results | Filter |
+|--------|--------|------|--------|------|-------------|------|-----|----------|-------------|--------|
+| 0505 | May 2–5 | ~3 | ~7 | ~2.3 | ~55 | ~18 | ~12.7% | ~5.5 | None | Last 3 months |
+| 0512 | May 2–12 | 10 | 20 | 2.0 | 557 | 55.7 | 3.59% | 6.9 | None | Last 3 months |
+| 0530 | May 2–26 | 25 | 53 | 2.1 | 1,694 | 67.8 | 3.13% | 6.9 | None | Last 3 months |
+| 0529 | May 2–29 | 28 | 63 | 2.3 | 1,959 | 70.0 | 3.22% | 6.9 | None | Last 16 months |
+| 0610 | May 2–Jun 8 | 38 | 120 | **3.2** | 4,157 | **109.4** | 2.89% | 7.3 | None | Last 3 months |
+| **0704** | **May 2–Jul 2** | **62** | **410** | **6.6** | **11,402** | **183.9** | **3.60%** | **7.3** | **None** | **Last 3 months** |

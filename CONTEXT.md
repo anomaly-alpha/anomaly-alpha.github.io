@@ -13,6 +13,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout (3 cards: Restricted Arena + Open Arena + Alliance War; ~1,850 at Elite II rank 13 defaults)
 - **Login** — Daily/weekly/monthly login rewards with streak mechanics (1,393/week: 910 daily + 460 weekly + 23 monthly)
 - **Code** — Promotional codes distributed through official channels. Single source of truth: `data/codes.json`. Generated outputs: `data/generated/promo-codes.js` (loaded by main page) and `guide/code/index.html` chips (via injection markers). Active newest-first, expired by date descending. 28 active codes + 11 expired, variable rewards including gems, Hero Shop Tickets, and hero shards. Redeemed via verification code at redeem.invincible.ubisoft.barcelona. See [ADR-001](docs/adr/ADR-001-promo-code-single-source-of-truth.md).
+  - **Code age indicator** (not expiry): Active codes show age bands based on `dateAdded`: green <10 days, yellow 10-20, orange 20-30, red >30. No claim about actual remaining days — the game doesn't publish expiry dates. Expired codes use the authoritative `expiredDate` field.
 
 ### Key Terms
 - **League** — 14-tier PvP ranking system (Intern → Invincible) with per-league payout tables for Restricted/Open arenas; 6-group system for Alliance War
@@ -21,12 +22,22 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Demotion Threshold** — Rank 86: at or above this rank, Alliance War players risk being demoted
 - **Spider Chart** — Radar chart comparing actual gem income vs target income across 4 categories
 
+### Mode System
+- **selectedModes** — Array of active category modes (`event`, `pvp`, `login`, `code`); defaults to `event`, `pvp`, `login` (code inactive by default)
+- **Forecast mode** — Layers on top of selectedModes. When active, a chart projects gem accumulation over custom timeframes using the current mode selections as baseline. Does NOT replace the card grid. Toggled via a "Forecast" button in the mode selector row.
+
 ### Card Modal System
 - Every reward card has an **info icon** (`.gem-card__info-btn`) that opens a **card modal**
 - The modal shows: hero tagline, description, tips, and for PvP cards — live gems, PvP Currency, Hero Shop Tickets, Totem Frags, Modules from current form selections
 - The **Promo Code** modal shows the last copied code's reward value
 - A **star badge** (`★`) appears in the modal header for all cards
 - The **Alliance War** modal includes a **demotion warning** based on current rank vs threshold
+
+### Experience (XP) Systems
+- **Hero XP** — Levels up individual heroes. Earned from GDA Ops battles, campaign missions, idle rewards, and alliance activities. Each hero level increases power and unlocks skills.
+- **Agent XP** — Levels up the player account. Earned from alliance cooperative gameplay. Higher account level unlocks new GDA Ops battles.
+- **Hero Special XP** — Used for ascension/level-breaking when a hero hits their level cap. Earned from GDA Ops (much rarer than regular Hero XP).
+- **Hero Rank Up** — Separate from XP: requires hero duplicates or same-faction heroes. Progression: Rare → Rare+ → Elite → Elite+ → Exceptional → Exceptional+ → Epic → Epic+ → Legendary → Legendary+ → Seismic → Seismic+ → Omnipotent → Omnipotent+.
 
 ### Guide Pages (Topical Cluster)
 - `/guide/code/` — Promo code guide: 28 active codes with click-to-copy (`copyCode()`), redemption steps (verification code + redeem site), 5 tips
@@ -35,6 +46,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - `/guide/login/` — Login rewards guide: daily/weekly/monthly breakdown with income table
 - `/guide/faq/` — Gem rewards FAQ with FAQPage schema
 - `/guide/beginners/` — New player guide with priority checklist and spending tips
+- `/guide/xp/` — XP & progression guide: Hero XP, Agent XP, Hero Special XP, Hero Rank-Up reference table (Rare→Omnipotent+)
 
 ## Architecture
 - Inline JSON configs in HTML `<head>` (no fetch, works from `file://`)
