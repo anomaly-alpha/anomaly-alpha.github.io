@@ -93,32 +93,32 @@ const replacements = [
   [/<!--GUIDE_CODES_EXPIRED_START-->[\s\S]*?<!--GUIDE_CODES_EXPIRED_END-->/,
    `<!--GUIDE_CODES_EXPIRED_START-->\n${expiredChips}\n<!--GUIDE_CODES_EXPIRED_END-->`],
 
-  // Title, og:title, twitter:title: "Promo Codes — 25 Active [Jun 2026]"
-  [/(Invincible Guarding the Globe) Codes & Gems — \d+ Codes \[[A-Z][a-z]{2} \d{4}(\])/g, `$1 Promo Codes — ${activeCount} Active [${monthYear}$2`],
+  // Title, og:title, twitter:title — replace count + month in "[N Active [Mon YYYY]]"
+  [/(Invincible Guarding the Globe).*?— \d+[A-Za-z ]+\[[A-Z][a-z]{2} \d{4}\]/g, `$1 Promo Codes — ${activeCount} Active [${monthYear}]`],
 
-  // JSON-LD headline: same format as title
-  [/("headline": "Invincible Guarding the Globe) Codes & Gems — \d+ Codes \[[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `$1 Promo Codes — ${activeCount} Active [${monthYear}$2`],
+  // JSON-LD headline — same pattern as title
+  [/("headline": "Invincible Guarding the Globe).*?— \d+[A-Za-z ]+\[[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `$1 Promo Codes — ${activeCount} Active [${monthYear}$2`],
 
   // JSON-LD dateModified
   [/(dateModified": ")\d{4}-\d{2}-\d{2}(")/, `$1${updated}$2`],
 
-  // Subtitle: "27 Active Promo Codes — Tap, Copy, Redeem"
+  // Subtitle: "N Active Promo Codes — Tap, Copy, Redeem"
   [/\d+ Active Promo Codes — Tap, Copy, Redeem/g, `${activeCount} Active Promo Codes — Tap, Copy, Redeem`],
   [/\d+ Active Codes — Tap, Copy, Redeem/g, `${activeCount} Active Promo Codes — Tap, Copy, Redeem`],
 
-  // Card subtitle: "27 active codes + 8 expired"
+  // Card subtitle: "N active codes + M expired"
   [/\d+ active codes \+ \d+ expired/g, `${activeCount} active codes + ${expiredCount} expired`],
 
-  // Body: "All 27 active Invincible Guarding the Globe codes"
+  // Body: "All N active Invincible Guarding the Globe codes"
   [/All \d+ active Invincible Guarding the Globe codes/g, `All ${activeCount} active Invincible Guarding the Globe codes`],
 
-  // Body: "With 27 active codes available"
+  // Body: "With N active codes available"
   [/With \d+ active codes available/g, `With ${activeCount} active codes available`],
 
-  // Body: "the 27 codes listed above"
+  // Body: "the N codes listed above"
   [/the \d+ codes listed above/g, `the ${activeCount} codes listed above`],
 
-  // Body: "27 codes listed above"
+  // Body: "N codes listed above"
   [/\d+ codes listed above/g, `${activeCount} codes listed above`],
 ];
 

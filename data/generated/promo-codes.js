@@ -1,5 +1,24 @@
 window.__PROMO_CODES=[
   {
+    "code": "JUL4TH",
+    "gems": 250,
+    "tickets": 0,
+    "dateAdded": "2026-07-03"
+  },
+  {
+    "code": "INVCBL",
+    "gems": 0,
+    "tickets": 0,
+    "reward": "1 x Invincible",
+    "dateAdded": "2026-06-26"
+  },
+  {
+    "code": "IGTG33",
+    "gems": 500,
+    "tickets": 0,
+    "dateAdded": "2026-06-07"
+  },
+  {
     "code": "SUMMER",
     "gems": 200,
     "tickets": 0,

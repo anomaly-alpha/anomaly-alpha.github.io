@@ -1,13 +1,13 @@
 # SEO Performance Report
 
-**Generated:** Jun 10, 2026
-**GSC export periods:** May 2 – May 5 (0505), May 2 – May 12 (0512), May 2 – May 26 (0530), May 2 – May 29 (latest), May 2 – Jun 8 (0610)
+**Generated:** Jul 4, 2026
+**GSC export periods:** May 2 – May 5 (0505), May 2 – May 12 (0512), May 2 – May 26 (0530), May 2 – May 29 (0529), May 2 – Jun 8 (0610), May 2 – Jul 2 (0704)
 
 ---
 
 ## How to Update
 
-1. Add new GSC export folder to `data/` (e.g. `data/https___anomaly-alpha-0612/`)
+1. Add new GSC export folder to `data/` (e.g. `data/https___anomaly-alpha-XXXX/`)
 2. Update the **GSC Period** date in the Quick Summary table
 3. Replace each section's table with data from the new export's CSVs (`Chart.csv`, `Pages.csv`, `Queries.csv`, `Devices.csv`, `Search appearance.csv`)
 4. Update the **Trend** comparison rows by shifting previous period into the older slot
@@ -18,18 +18,18 @@
 
 ## Quick Summary
 
-| Metric | Current (May 2–Jun 8) | Previous (May 2–29) | Change |
+| Metric | Current (May 2–Jul 2) | Previous (May 2–Jun 8) | Change |
 |--------|-------------------|-------------------|--------|
-| GSC Period | 38 days (May 3–Jun 8) | 28 days (May 3–29) | +10 days |
-| Total Clicks | 120 | 63 | +90.5% |
-| Total Impressions | 4,157 | 1,959 | +112.2% |
-| CTR | 2.89% | 3.22% | −0.33pp |
-| Avg Position | 7.3 | 6.9 | −0.4 |
+| GSC Period | 62 days (May 2–Jul 2) | 38 days (May 3–Jun 8) | +24 days |
+| Total Clicks | 410 | 120 | **+241.7%** |
+| Total Impressions | 11,402 | 4,157 | **+174.3%** |
+| CTR | 3.60% | 2.89% | **+0.71pp** |
+| Avg Position | 7.3 | 7.3 | → |
 | Pages with Data | 7 | 7 | → |
 | Rich Results | None | None | → |
-| Mobile Share (clicks) | 80% | 81% | −1pp |
+| Mobile Share (clicks) | 85% | 80% | +5pp |
 
-> **Note:** Latest export uses "Last 3 months" filter (May 2–Jun 8). Previous used "Last 16 months" for the May 2–29 window.
+> **Note:** Latest export uses "Last 3 months" filter (May 2–Jul 2). Previous used "Last 3 months" for the May 2–Jun 8 window.
 
 ---
 
@@ -74,6 +74,30 @@
 | 2026-06-06 | 2 | 112 | 1.79% | 8.5 |
 | 2026-06-07 | 4 | 141 | 2.84% | 7.9 |
 | 2026-06-08 | 5 | 173 | 2.89% | 7.6 |
+| 2026-06-09 | 3 | 123 | 2.44% | 8.2 |
+| 2026-06-10 | 6 | 210 | 2.86% | 7.8 |
+| 2026-06-11 | 11 | 259 | 4.25% | 7.7 |
+| 2026-06-12 | 16 | 244 | 6.56% | 7.8 |
+| 2026-06-13 | 7 | 176 | 3.98% | 7.5 |
+| 2026-06-14 | 12 | 169 | 7.1% | 7.6 |
+| 2026-06-15 | 6 | 152 | 3.95% | 6.8 |
+| 2026-06-16 | 16 | 187 | 8.56% | 8.9 |
+| 2026-06-17 | 14 | 201 | 6.97% | 7.4 |
+| 2026-06-18 | 10 | 225 | 4.44% | 7.6 |
+| 2026-06-19 | 12 | 191 | 6.28% | 7.8 |
+| 2026-06-20 | 3 | 118 | 2.54% | 7.8 |
+| 2026-06-21 | 19 | 313 | 6.07% | 6.9 |
+| 2026-06-22 | 14 | 401 | 3.49% | 10.4 |
+| 2026-06-23 | 12 | 389 | 3.08% | 7.3 |
+| 2026-06-24 | 4 | 294 | 1.36% | 7.6 |
+| 2026-06-25 | 12 | 341 | 3.52% | 6.9 |
+| 2026-06-26 | 14 | 603 | 2.32% | 7.0 |
+| 2026-06-27 | 14 | 443 | 3.16% | 7.3 |
+| 2026-06-28 | 13 | 433 | 3% | 7.0 |
+| 2026-06-29 | 8 | 421 | 1.9% | 7.4 |
+| 2026-06-30 | 18 | 485 | 3.71% | 7.6 |
+| 2026-07-01 | 24 | 636 | 3.77% | 7.1 |
+| 2026-07-02 | 24 | 527 | 4.55% | 7.6 |
 
 **Weekly averages:**
 
@@ -83,34 +107,38 @@
 | May 10–16 | 1.4 | 54.7 | 2.61% | 6.1 |
 | May 17–23 | 3.3 | 94.1 | 3.49% | 7.4 |
 | May 24–29 | 2.2 | 70.0 | 3.10% | 6.8 |
-| May 30–Jun 5 | **6.3** | **210.9** | 2.98% | 8.0 |
-| Jun 6–8 | **3.7** | **142.0** | 2.58% | 8.0 |
+| May 30–Jun 5 | 6.3 | 210.9 | 2.98% | 8.0 |
+| Jun 6–8 | 3.7 | 142.0 | 2.58% | 8.0 |
+| **Jun 9–15** | **8.7** | **190.4** | **4.58%** | **7.6** |
+| **Jun 16–22** | **12.6** | **233.7** | **5.38%** | **8.1** |
+| **Jun 23–29** | **11.0** | **417.7** | **2.63%** | **7.2** |
+| **Jun 30–Jul 2** | **22.0** | **549.3** | **4.00%** | **7.4** |
 
 ---
 
 ## Page Performance (Pages.csv)
 
-| Page | Clicks | Impressions | CTR | Position | Trend vs May 2–29 |
+| Page | Clicks | Impressions | CTR | Position | Trend vs May 2–Jun 8 |
 |------|--------|-------------|-----|----------|----------------|
-| `/guide/code/` | **40 (33%)** | **1,599 (38%)** | 2.50% | 9.53 | **↑↑ clicks 13→40, imps 426→1599** |
-| `/guide/pvp/` | 34 (28%) | 957 (23%) | 3.55% | 6.48 | ↑ clicks 30→34, imps 748→957 |
-| `/` (home) | 24 (20%) | 463 (11%) | 5.18% | 5.30 | **↑↑ clicks 8→24, imps 199→463** |
-| `/guide/beginners/` | 13 (11%) | 424 (10%) | 3.07% | 6.67 | **↑↑ clicks 5→13, imps 252→424** |
-| `/guide/event/` | 5 (4%) | 264 (6%) | 1.89% | 6.39 | → clicks 5→5, imps 196→264 |
-| `/guide/faq/` | 3 (3%) | 352 (8%) | 0.85% | 6.70 | ↑ clicks 1→3, imps 230→352 |
-| `/guide/login/` | 1 (1%) | 98 (2%) | 1.02% | 6.01 | → clicks 1→1, imps 66→98 |
+| `/guide/code/` | **264 (64%)** | **7,619 (64%)** | 3.47% | 8.16 | **↑↑ clicks 40→264, imps 1599→7619** |
+| `/` (home) | 77 (19%) | 1,101 (9%) | 6.99% | 5.06 | **↑↑ clicks 24→77, imps 463→1101** |
+| `/guide/pvp/` | 40 (10%) | 1,381 (12%) | 2.90% | 6.82 | ↑ clicks 34→40, imps 957→1381 |
+| `/guide/beginners/` | 18 (4%) | 699 (6%) | 2.58% | 7.09 | ↑ clicks 13→18, imps 424→699 |
+| `/guide/faq/` | 7 (2%) | 603 (5%) | 1.16% | 7.56 | ↑ clicks 3→7, imps 352→603 |
+| `/guide/event/` | 5 (1%) | 359 (3%) | 1.39% | 6.72 | → clicks 5→5, imps 264→359 |
+| `/guide/login/` | 2 (0%) | 148 (1%) | 1.35% | 6.74 | ↑ clicks 1→2, imps 98→148 |
 
-**Previous period (May 2–29):**
+**Previous period (May 2–Jun 8):**
 
 | Page | Clicks | Impressions | CTR | Position |
 |------|--------|-------------|-----|----------|
-| `/guide/code/` | 13 | 426 | 3.05% | 10.31 |
-| `/guide/pvp/` | 30 | 748 | 4.01% | 6.33 |
-| `/` (home) | 8 | 199 | 4.02% | 5.69 |
-| `/guide/beginners/` | 5 | 252 | 1.98% | 6.43 |
-| `/guide/event/` | 5 | 196 | 2.55% | 6.20 |
-| `/guide/faq/` | 1 | 230 | 0.43% | 7.16 |
-| `/guide/login/` | 1 | 66 | 1.52% | 5.82 |
+| `/guide/code/` | 40 | 1,599 | 2.50% | 9.53 |
+| `/guide/pvp/` | 34 | 957 | 3.55% | 6.48 |
+| `/` (home) | 24 | 463 | 5.18% | 5.30 |
+| `/guide/beginners/` | 13 | 424 | 3.07% | 6.67 |
+| `/guide/event/` | 5 | 264 | 1.89% | 6.39 |
+| `/guide/faq/` | 3 | 352 | 0.85% | 6.70 |
+| `/guide/login/` | 1 | 98 | 1.02% | 6.01 |
 
 ---
 
@@ -120,51 +148,72 @@
 
 | Query | Clicks | Impressions | CTR | Position |
 |-------|--------|-------------|-----|----------|
-| invincible guarding the globe codes | 2 | 25 | 8% | 16.84 |
-| invincible: guarding the globe codes | 2 | 9 | 22.22% | 21.67 |
+| new invincible codes | 8 | 124 | 6.45% | 7.98 |
+| invincible promo codes | 6 | 159 | 3.77% | 7.82 |
+| invincible guarding the globe codes | 6 | 118 | 5.08% | 15.18 |
+| invincible gtg calculator | 5 | 88 | 5.68% | 3.36 |
+| invincible codes | 4 | 193 | 2.07% | 9.70 |
+| invincible guarding the globe promo codes | 3 | 140 | 2.14% | 9.21 |
+| invincible redeem code | 3 | 45 | 6.67% | 7.64 |
+| invincible promo code | 2 | 72 | 2.78% | 6.93 |
+| redeem invincible ubisoft barcelona | 2 | 69 | 2.90% | 8.71 |
+| ubisoft invincible redeem code | 2 | 67 | 2.99% | 7.94 |
+| invincible redeem codes | 2 | 64 | 3.12% | 8.08 |
+| invincible code | 2 | 53 | 3.77% | 12.92 |
+| invincible guarding the globe redeem | 2 | 49 | 4.08% | 7.69 |
+| new invincible guarding the globe codes | 2 | 42 | 4.76% | 8.07 |
+| invincible code redeem barcelona | 2 | 24 | 8.33% | 6.42 |
+| invincible: guarding the globe codes | 2 | 17 | 11.76% | 17.88 |
+| code invincible | 2 | 14 | 14.29% | 8.57 |
+| invincible guarding the globe gems | 2 | 12 | 16.67% | 6.08 |
+| invincible guarding the globe code redeem | 2 | 5 | 40% | 23 |
 | invincible barcelona code | 2 | 3 | 66.67% | 3.67 |
-| invincible vs ranked rewards | 1 | 40 | 2.5% | 6.42 |
-| invincible codes | 1 | 19 | 5.26% | 23 |
-| https://redeem.invincible.ubisoft.barcelona/ | 1 | 10 | 10% | 20.7 |
-| invincible codes barcelona | 1 | 8 | 12.5% | 4 |
-| invincible guarding the globe gems | 1 | 7 | 14.29% | 5.86 |
-| invincible new codes | 1 | 3 | 33.33% | 17 |
-| invinciblecodes | 1 | 2 | 50% | 9 |
-| invincible guarding the globe code redeem | 1 | 2 | 50% | 17.5 |
-| invincible guarding the globe reward code | 1 | 1 | 100% | 1 |
+| free gems invincible guarding the globe | 2 | 2 | 100% | 15 |
 
 ### Top queries with impressions but zero clicks (CTR leaks)
 
 | Query | Impressions | Clicks | Position | Severity |
 |-------|-------------|--------|----------|----------|
-| invincible promo codes | 65 | 0 | 8.86 | **163 imp total for promo code queries** |
-| invincible promo code | 49 | 0 | 7.33 | — |
-| invincible guarding the globe promo codes | 49 | 0 | 9.24 | — |
-| invincible gtg calculator | 29 | 0 | **3.83** | **CRITICAL** — position 3-4, core use case |
-| invincible guarding the globe calculator | 22 | 0 | **3.32** | **CRITICAL** — position 3-4, core use case |
-| invincible gtg xp calculator | 20 | 0 | 5.75 | HIGH |
-| promo codes for invincible guarding the globe | 20 | 0 | 9.05 | MEDIUM |
-| invincible game promo code | 19 | 0 | 10.11 | MEDIUM |
-| how to get gems in invincible guarding the globe | 16 | 0 | 7.00 | MEDIUM |
-| invincible pvp | 12 | 0 | 5.33 | MEDIUM |
-| invincible guarding the globe promo code | 12 | 0 | 9.92 | MEDIUM |
-| new invincible codes | 11 | 0 | 10.18 | MEDIUM |
-| new invincible guarding the globe codes | 8 | 0 | 5.62 | HIGH |
-| invincible vs ranks lp | 8 | 0 | 7.62 | HIGH |
-| invincible calculator | 7 | 0 | 4.86 | HIGH |
-| thkmrk (expired code) | 6 | 0 | **2.50** | **CRITICAL** — position 2-3, expired code |
-| ubisoft invincible redemption portal | 6 | 0 | 9.17 | MEDIUM |
-| shutv4 (expired code) | 4 | 0 | 5.25 | HIGH |
+| invincible gtg xp calculator | 60 | 0 | 5.62 | **HIGH** — pos 5-6, core calculator variant |
+| invincible guarding the globe promo code | 50 | 0 | 9.68 | MEDIUM — title now says "Promo Codes" |
+| invincible code redeem | 39 | 0 | 9.67 | MEDIUM |
+| invincible guarding the globe new codes | 36 | 0 | 9.14 | MEDIUM |
+| promo codes for invincible guarding the globe | 35 | 0 | 9.14 | MEDIUM |
+| invincible redeem code barcelona | 33 | 0 | 7.36 | **HIGH** |
+| invincible game promo code | 27 | 0 | 9.52 | MEDIUM |
+| invincible pvp | 26 | 0 | 6.42 | **HIGH** |
+| invincible gem | 23 | 0 | 3.39 | **CRITICAL** — pos 3, 0 clicks |
+| invincible calculator | 18 | 0 | 4.33 | **CRITICAL** — pos 4, 0 clicks |
+| invincible barcelona redeem code | 18 | 0 | 6.28 | **HIGH** |
+| how to get gems in invincible guarding the globe | 18 | 0 | 6.78 | **HIGH** |
+| barcelona invincible redeem | 17 | 0 | 6.24 | **HIGH** |
+| thkmrk (expired code) | 13 | 0 | 3.62 | **CRITICAL** — pos 3-4, expired code |
+| invincible redeemer | 13 | 0 | 6.15 | **HIGH** |
+| invincible new code | 12 | 0 | 6.25 | **HIGH** |
+| summer code invincible guarding the globe | 13 | 0 | 10.85 | MEDIUM |
 
-### Previous period (May 2–29) top leaks
+### Previous period (May 2–Jun 8) top leaks
 
 | Query | Impressions | Position |
 |-------|-------------|----------|
-| invincible promo code | 26 | 7.73 |
-| invincible promo codes | 25 | 9.08 |
-| how to get gems in invincible guarding the globe | 14 | 7.21 |
-| invincible guarding the globe calculator | 12 | 3.58 |
-| new invincible guarding the globe codes | 6 | 4.17 |
+| invincible promo codes | 65 | 8.86 |
+| invincible promo code | 49 | 7.33 |
+| invincible guarding the globe promo codes | 49 | 9.24 |
+| invincible gtg calculator | 29 | 3.83 |
+| invincible guarding the globe calculator | 22 | 3.32 |
+| invincible gtg xp calculator | 20 | 5.75 |
+| promo codes for invincible guarding the globe | 20 | 9.05 |
+| invincible game promo code | 19 | 10.11 |
+| how to get gems in invincible guarding the globe | 16 | 7.00 |
+| invincible pvp | 12 | 5.33 |
+| invincible guarding the globe promo code | 12 | 9.92 |
+| new invincible codes | 11 | 10.18 |
+| new invincible guarding the globe codes | 8 | 5.62 |
+| invincible vs ranks lp | 8 | 7.62 |
+| invincible calculator | 7 | 4.86 |
+| thkmrk (expired code) | 6 | 2.50 |
+| ubisoft invincible redemption portal | 6 | 9.17 |
+| shutv4 (expired code) | 4 | 5.25 |
 
 ---
 
@@ -172,17 +221,17 @@
 
 | Device | Clicks | Impressions | CTR | Position | Share |
 |--------|--------|-------------|-----|----------|-------|
-| Mobile | 96 | 2,543 | 3.78% | 6.93 | **80%** |
-| Desktop | 19 | 1,284 | 1.48% | 8.96 | 16% |
-| Tablet | 3 | 34 | 8.82% | 5.59 | 3% |
+| Mobile | 349 | 8,385 | 4.16% | 7.08 | **85%** |
+| Desktop | 53 | 2,936 | 1.81% | 8.99 | 13% |
+| Tablet | 8 | 81 | 9.88% | 6.32 | 2% |
 
-**Previous period (May 2–29):**
+**Previous period (May 2–Jun 8):**
 
 | Device | Clicks | Impressions | CTR | Position |
 |--------|--------|-------------|-----|----------|
-| Mobile | 51 | 1,305 | 3.91% | 6.77 |
-| Desktop | 12 | 638 | 1.88% | 8.01 |
-| Tablet | 0 | 16 | 0% | 5.75 |
+| Mobile | 96 | 2,543 | 3.78% | 6.93 |
+| Desktop | 19 | 1,284 | 1.48% | 8.96 |
+| Tablet | 3 | 34 | 8.82% | 5.59 |
 
 ---
 
@@ -192,18 +241,19 @@
 
 | Country | Clicks | Impressions | CTR | Position |
 |---------|--------|-------------|-----|----------|
-| United States | 54 | 1,983 | 2.72% | 7.95 |
-| United Kingdom | 12 | 478 | 2.51% | 7.59 |
-| Canada | 5 | 185 | 2.70% | 7.16 |
-| Australia | 5 | 108 | 4.63% | 7.56 |
-| Brazil | 5 | 88 | 5.68% | 5.36 |
-| France | 4 | 34 | 11.76% | 6.71 |
-| Sweden | 4 | 15 | 26.67% | 6.13 |
-| India | 3 | 51 | 5.88% | 7.18 |
-| Russia | 3 | 15 | 20.00% | 8.00 |
-| Germany | 2 | 74 | 2.70% | 8.51 |
+| United States | 177 | 5,937 | 2.98% | 8.02 |
+| United Kingdom | 45 | 1,460 | 3.08% | 7.41 |
+| Australia | 18 | 301 | 5.98% | 7.01 |
+| Canada | 17 | 587 | 2.90% | 7.05 |
+| Brazil | 17 | 250 | 6.80% | 6.35 |
+| France | 16 | 107 | 14.95% | 6.64 |
+| Turkey | 12 | 148 | 8.11% | 6.40 |
+| India | 8 | 106 | 7.55% | 6.91 |
+| Germany | 7 | 242 | 2.89% | 7.39 |
+| Italy | 7 | 154 | 4.55% | 7.37 |
 
-Total countries with data: 107 (was 95 in previous export)
+Total countries with data: 139 (was 107 in previous export)
+Countries with clicks: 47 (was 27 in previous export)
 
 ---
 
@@ -213,7 +263,7 @@ Total countries with data: 107 (was 95 in previous export)
 |---------|--------|-------------|--------|
 | All | 0 | 0 | **No rich results detected** |
 
-FAQPage and Article schemas were added May 28, 2026. Not yet reflected in GSC data despite 2 weeks since implementation. May require re-crawl request.
+FAQPage and Article schemas were added May 28, 2026. Still not reflected in GSC data after 5 weeks. Re-crawl request has not been performed.
 
 ---
 
@@ -223,23 +273,34 @@ FAQPage and Article schemas were added May 28, 2026. Not yet reflected in GSC da
 
 | # | Issue | Impact | First Seen |
 |---|-------|--------|------------|
-| 1 | **Calculator queries at pos 3-4 get 0 clicks** — "invincible gtg calculator" (29 imp, pos 3.83) and "invincible guarding the globe calculator" (22 imp, pos 3.32) — homepage meta rewritten Jun 10 for this intent | CRITICAL | May 12 |
-| 2 | **Promo code queries: 163 combined zero-click impressions** — "invincible promo codes" (65), "promo code" (49), "promo codes" (49) all 0 clicks. Code guide title changed to "Promo Codes" Jun 10 to address this | HIGH | May 5 |
-| 3 | **FAQ page CTR 0.85%** — 352 impressions, 3 clicks. Improved from 0.43% but still below 1% | HIGH | May 12 |
-| 4 | **No rich results** — schema markup not surfacing in SERP after 2 weeks | HIGH | May 5 |
-| 5 | **Expired code queries clicking** — "thkmrk" at pos 2.50 (6 imp, 0 clicks), "shutv4" at pos 5.25 (4 imp, 0 clicks) — opportunity to add expired code capture content | MEDIUM | Jun 10 |
-| 6 | **Code guide position 9.53** — improved from 10.31 but still not top 5 for brand+code queries. Query "invincible guarding the globe codes" at pos 16.84 | MEDIUM | May 5 |
-| 7 | **Site age ~6 weeks** — still in Google sandbox/observation phase | LOW | May 5 |
+| 1 | **"invincible gem" at pos 3.39 gets 0 clicks** — 23 impressions, position 3-4, no click-through. No dedicated page for "gems" meta | CRITICAL | Jul 4 |
+| 2 | **"invincible calculator" at pos 4.33 gets 0 clicks** — 18 impressions. Homepage rewritten Jun 10 for calculator intent, but only "gtg calculator" (pos 3.36) now converts (5 clicks). The generic "calculator" query still misses | CRITICAL | May 12 |
+| 3 | **"invincible gtg xp calculator" at pos 5.62 gets 0 clicks** — 60 impressions. XP calculator content missing from site | HIGH | May 12 |
+| 4 | **FAQ page CTR 1.16%** — 603 impressions, 7 clicks. Improved from 0.85% but still below site average | HIGH | May 12 |
+| 5 | **No rich results** — schema markup not surfacing in SERP after 5 weeks | HIGH | May 5 |
+| 6 | **Code guide position 8.16** — improved from 9.53 but still not top 5. Query "invincible guarding the globe codes" at pos 15.18 | MEDIUM | May 5 |
+| 7 | **Expired code queries clicking** — "thkmrk" at pos 3.62 (13 imp, 0 clicks), "shutv4" at pos 5.71 (7 imp, 0 clicks) | MEDIUM | Jun 10 |
+| 8 | **"redeem.invincible.ubisoft.barcelona" at pos 10.15 gets 0 clicks** — 156 impressions, 0 clicks. Users searching for the redeem URL directly aren't landing on the code guide | MEDIUM | Jul 4 |
 
 ### Recently Improved
 
 | # | Issue | Status | Notes |
 |---|-------|--------|-------|
-| — | **Code guide growth** | RESOLVED | +208% clicks (13→40), +275% impressions (426→1599). May 28 changes proved effective. |
-| — | **Homepage growth** | RESOLVED | +200% clicks (8→24), +133% impressions (199→463). Now #3 page behind code and PvP. |
-| — | **Beginners guide growth** | RESOLVED | +160% clicks (5→13), +68% impressions (252→424). |
-| — | **FAQ page CTR improved** | IMPROVING | 0.43% → 0.85%. Still below target. |
-| — | **"invincible vs ranked rewards"** | RESOLVED | Sustained 1 click (40 imp, pos 6.42) across both exports. |
+| — | **Calculator queries converting** | **RESOLVED** | "invincible gtg calculator" went from 0→5 clicks. Homepage rewrite (Jun 10) working. |
+| — | **Promo code queries converting** | **RESOLVED** | "invincible promo codes" went from 0→6 clicks. Title change (Jun 10) working. |
+| — | **Code guide growth** | **SUSTAINED** | +560% clicks (40→264), +376% impressions (1599→7619). Now **64% of all site traffic**. |
+| — | **Homepage growth** | **SUSTAINED** | +221% clicks (24→77), +138% impressions (463→1101). Now #2 page. |
+| — | **Beginners guide growth** | **SUSTAINED** | +38% clicks (13→18), +65% impressions (424→699). |
+| — | **FAQ page CTR improved** | **IMPROVING** | 0.85% → 1.16%. Still below target (3%). |
+| — | **Mobile share growth** | **IMPROVING** | 80% → 85%. Mobile now dominant. |
+| — | **Site traffic inflection** | **ACHIEVED** | Jun 12 onward: sustained 10+ clicks/day. Peaked at 24 clicks on Jul 1 and Jul 2. |
+| — | **Brand query expansion** | **GROWING** | "new invincible codes" is now #1 query (8 clicks, 124 imp). Previously not in top 10. |
+
+### Actions Taken (Jul 4)
+
+- **Updated promo codes**: Added IGTG33 (500g), INVCBL (1x Invincible), JUL4TH (250g). 28 active codes now.
+- **Updated code guide**: Now shows 28 active + 11 expired codes.
+- **Generated this SEO report**: 0704 export analysis.
 
 ### Actions Taken (Jun 10)
 
@@ -261,6 +322,19 @@ FAQPage and Article schemas were added May 28, 2026. Not yet reflected in GSC da
 - Code guide now has click-to-copy
 - Ticker redesign deployed
 
+### Confirmed Impact (0704 export — 24 days after Jun 10 changes)
+
+The Jun 10 changes are now fully reflected in GSC data:
+
+- **Code guide explosion**: +560% clicks (40→264) — site's #1 growth driver. Partly organic growth, partly meta/title improvements.
+- **Calculator intent converting**: "invincible gtg calculator" went from 0 to 5 clicks (pos 3.36). Homepage rewrite paid off.
+- **Promo code conversion**: "invincible promo codes" went from 0 to 6 clicks (pos 7.82). Title change working.
+- **Homepage growth**: +221% clicks (24→77). Now capturing brand queries.
+- **CTR improved**: 2.89% → 3.60% (+0.71pp) — despite impressions growing 174%, clicks grew faster at 242%.
+- **New daily record**: Jul 1 and Jul 2 set new highs at 24 clicks/day each.
+- **New brand queries emerged**: "new invincible codes" (8 clicks) now #1 converting query.
+- **"invincible gem" leak emerged**: 23 impressions at pos 3.39 with 0 clicks — new opportunity.
+
 ### Early Signals (May 30 – Jun 8)
 
 Since the Jun 10 changes:
@@ -276,12 +350,13 @@ Since the May 28 changes (confirmed by 0610 export):
 
 ### Next Actions
 
-1. **Wait 1-2 more weeks** for full impact of Jun 10 changes (re-crawl + data lag)
-2. **Monitor calculator query conversion** — CRITICAL gap, rewrite deployed Jun 10
-3. **Monitor promo code query conversion** — HIGH gap, title change deployed Jun 10
-4. Continue building backlinks for code guide to push position from 9→top 5
-5. **Request re-crawl** in Google Search Console for all 7 pages (schema still not detected)
-6. Re-evaluate FAQ page — if CTR stays below 1% on next export, consider merging FAQ into homepage or beginners guide
+1. **Address "invincible gem" CTR leak** — 23 impressions at pos 3.39, 0 clicks. Consider adding a landing page or section targeting "invincible gem" / "gems" query intent
+2. **Address generic "calculator" query** — 18 impressions at pos 4.33 still 0 clicks. The homepage rewrite targets "gtg calculator" but not generic "calculator"
+3. **Request re-crawl** in Google Search Console for all 7 pages (schema still not detected after 5 weeks)
+4. **XP calculator content** — "invincible gtg xp calculator" at pos 5.62 (60 imp, 0 clicks). Consider adding XP calculation content
+5. Continue building backlinks for code guide to push position from 8→top 5
+6. Re-evaluate FAQ page — CTR at 1.16% is improved but still ~3x below site average. Consider content refresh
+7. **Update "redeem.invincible.ubisoft.barcelona" landing** — 156 impressions, 0 clicks for the redeem URL search. Add clearer content about the redemption portal on the code guide
 
 ---
 
@@ -292,5 +367,6 @@ Since the May 28 changes (confirmed by 0610 export):
 | 0505 | May 2–5 | ~3 | ~7 | ~55 | ~12.7% | ~5.5 | None | Last 3 months |
 | 0512 | May 2–12 | 10 | 20 | 557 | 3.59% | 6.9 | None | Last 3 months |
 | 0530 | May 2–26 | 25 | 53 | 1,694 | 3.13% | 6.9 | None | Last 3 months |
-| 0529 | May 2–29 | 28 | 63 | 1,959 | 3.22% | 6.9 | None | **Last 16 months** |
+| 0529 | May 2–29 | 28 | 63 | 1,959 | 3.22% | 6.9 | None | Last 16 months |
 | 0610 | May 2–Jun 8 | 38 | 120 | 4,157 | 2.89% | 7.3 | None | Last 3 months |
+| **0704** | **May 2–Jul 2** | **62** | **410** | **11,402** | **3.60%** | **7.3** | **None** | **Last 3 months** |
