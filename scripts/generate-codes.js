@@ -5,6 +5,7 @@ const rootDir = path.resolve(__dirname, '..');
 const codesPath = path.join(rootDir, 'data', 'codes.json');
 const jsOutputPath = path.join(rootDir, 'data', 'generated', 'promo-codes.js');
 const codeGuidePath = path.join(rootDir, 'guide', 'code', 'index.html');
+const indexPath = path.join(rootDir, 'index.html');
 
 const { codes, updated } = JSON.parse(fs.readFileSync(codesPath, 'utf8'));
 
@@ -69,9 +70,7 @@ const replacements = [
   [/<!--GUIDE_TWITTER_DESC_START-->[\s\S]*?<!--GUIDE_TWITTER_DESC_END-->/,
     `<!--GUIDE_TWITTER_DESC_START-->\n    <meta name="twitter:description" content="See all ${activeCount} active promo codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for ${monthYear}.">\n<!--GUIDE_TWITTER_DESC_END-->`],
 
-  // GUIDE_ARTICLE_MODIFIED
-  [/<!--GUIDE_ARTICLE_MODIFIED_START-->[\s\S]*?<!--GUIDE_ARTICLE_MODIFIED_END-->/,
-    `<!--GUIDE_ARTICLE_MODIFIED_START-->\n    <meta property="article:modified_time" content="${updated}T00:00:00Z">\n<!--GUIDE_ARTICLE_MODIFIED_END-->`],
+  // GUIDE_ARTICLE_MODIFIED — removed: dateModified should only update on substantive content changes, not code list updates
 
   // GUIDE_LD_DESC (JSON-LD)
   [/"description": "__GUIDE_LD_DESC__",/,
@@ -99,8 +98,7 @@ const replacements = [
   // JSON-LD headline — same pattern as title
   [/("headline": "Invincible Guarding the Globe).*?— \d+[A-Za-z ]+\[[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `$1 Promo Codes — ${activeCount} Active [${monthYear}$2`],
 
-  // JSON-LD dateModified
-  [/(dateModified": ")\d{4}-\d{2}-\d{2}(")/, `$1${updated}$2`],
+  // JSON-LD dateModified — removed: should only update on substantive content changes
 
   // Subtitle: "N Active Promo Codes — Tap, Copy, Redeem"
   [/\d+ Active Promo Codes — Tap, Copy, Redeem/g, `${activeCount} Active Promo Codes — Tap, Copy, Redeem`],
@@ -127,4 +125,15 @@ for (const [pattern, replacement] of replacements) {
 }
 
 fs.writeFileSync(codeGuidePath, html, 'utf8');
+console.log(`Updated guide/code/index.html — ${activeCount} active, ${expiredCount} expired, ${monthYear}`);
+
+// Update inline promo codes in index.html
+let indexHtml = fs.readFileSync(indexPath, 'utf8');
+const inlineCodes = 'window.__PROMO_CODES=' + JSON.stringify(active) + ';';
+indexHtml = indexHtml.replace(
+  /<!--PROMO_CODES_INLINE_START-->[\s\S]*?<!--PROMO_CODES_INLINE_END-->/,
+  `<!--PROMO_CODES_INLINE_START-->\n    <script>${inlineCodes}</script>\n    <!--PROMO_CODES_INLINE_END-->`
+);
+fs.writeFileSync(indexPath, indexHtml, 'utf8');
+console.log(`Updated index.html inline promo codes — ${activeCount} active`);
 console.log(`Updated guide/code/index.html — ${activeCount} active, ${expiredCount} expired, ${monthYear}`);

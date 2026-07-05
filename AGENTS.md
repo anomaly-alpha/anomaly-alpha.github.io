@@ -33,6 +33,9 @@ Open `index.html` in a browser. Works from `file://`.
 | `data/generated/promo-codes.js` | Generated active-codes bundle (from `npm run update-codes`) |
 | `scripts/generate-codes.js` | Generator: reads `data/codes.json`, writes `data/generated/promo-codes.js` + updates `guide/code/index.html` via markers |
 | `vendor/chart.umd.js` | Self-hosted Chart.js (downloaded via `npm run update-assets`) |
+| `lighthouse-config.js` | Shared Lighthouse audit config (mobile, 3G, 4× CPU) |
+| `lighthouserc.js` | CI assertion budget for Lighthouse performance checks |
+| `scripts/run-lighthouse.ps1` | Batch PowerShell script auditing all 8 pages |
 | `fonts/` | Self-hosted Rajdhani + Orbitron woff2 files |
 | `CONTEXT.md` | Domain model, architecture summary |
 
@@ -56,7 +59,19 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run build:tailwind` — Tailwind rebuild only (skip minification)
 - `npm run update-codes` — Regenerate `data/generated/promo-codes.js` and update all code counts/descriptions/chips in `guide/code/index.html` from `data/codes.json`
 - `npm run update-assets` — Download latest vendor assets (Chart.js, fonts)
+- `npm run lighthouse:home` — Run Lighthouse audit on homepage
+- `npm run lighthouse:all` — Batch audit all 8 pages via PowerShell script
+- `npm run lighthouse:report` — Print score table from saved JSON reports
+- `npm run lighthouse:budget` — Check against performance budgets (lighthouserc.js)
 - No runtime build — all generated files are committed
+
+### Post-change verification
+
+After any major HTML/CSS/JS changes, always:
+1. Run `npm run build` to regenerate assets
+2. Run `npm run lighthouse:all` to audit all 8 pages via Chrome headless
+3. Check the score table with `npm run lighthouse:report`
+4. Fix any regressions before committing
 
 ## Key conventions
 
@@ -162,4 +177,5 @@ Located at `docs/plan/2026-05-28/deepseek-v4-flash-free/` with INDEX.md.
 - `CONTEXT.md` — domain model (categories, leagues, tiers, tokens)
 - `docs/DESIGN_SYSTEM.md` — complete CSS token reference
 - `docs/reports/SEO_PERFORMANCE.md` — SEO performance report (updated from GSC exports)
+- `docs/reports/LIGHTHOUSE_AUDIT.md` — Lighthouse performance audit scores + fix plan
 - `docs/plan/2026-05-20/deepseek-v4-flash/` — 160 improvement plans
