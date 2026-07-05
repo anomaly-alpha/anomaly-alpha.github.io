@@ -7,7 +7,7 @@ npm install && npm run build    # One-time setup (or after HTML changes)
 ```
 Open `index.html` in a browser. Works from `file://`.
 
-**Note:** Requires Node.js (any recent LTS) to build Tailwind. If `npm` isn't available, download from [nodejs.org](https://nodejs.org) for your platform.
+**Note:** Requires Node.js 18+ to build Tailwind. If `npm` isn't available, download from [nodejs.org](https://nodejs.org) for your platform.
 
 ## File ownership
 
@@ -21,10 +21,12 @@ Open `index.html` in a browser. Works from `file://`.
 | `tailwind.config.js` | Tailwind content paths configuration |
 | `src/tailwind-input.css` | Tailwind source with `@tailwind` directives |
 | `robots.txt` | Crawl directives, sitemap reference |
-| `sitemap.xml` | All 7 URLs (main + 6 guides) |
-| `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners) |
+| `.editorconfig` | Editor formatting defaults (indent, line endings, charset) |
+| `CHANGELOG.md` | Release history (auto-curated from git log) |
+| `sitemap.xml` | All 8 URLs (main + 7 guides) |
+| `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp) |
 | `googleeb60e8e5ee55440e.html` | Google Search Console verification |
-| `guide/*/index.html` | Detail guides for code, event, pvp, login, faq, beginners |
+| `guide/*/index.html` | Detail guides for code, event, pvp, login, faq, beginners, xp |
 | `data/arena_payouts.txt` | Open + Restricted arena payout tables |
 | `data/multiverse_war_payouts.txt` | Multiverse War payout tables |
 | `data/codes.json` | Single source of truth for promo codes (hand-edited only) |
@@ -36,7 +38,9 @@ Open `index.html` in a browser. Works from `file://`.
 
 ## Architecture rules
 
-- **Never use `fetch()`** — all data comes from inline JSON configs loaded via `loadConfig(id)`
+- **Never use `fetch()`** — all data from inline JSON configs loaded via `loadConfig(id)`
+- **Forecaster is a separate chart** — `initForecastChart()` creates a 4th Chart.js line chart instance (separate from the 3 existing charts). Destroyed and recreated only when the forecaster toggles off/on; otherwise updated via `chart.update('none')`.
+- **No test framework** — manual QA via browser open/reload. Changes are verified by opening the affected page(s) in a browser and checking functionality. No CI/CD pipeline exists — commits are pushed directly to GitHub Pages.
 - **Charts are lazy-loaded** — Chart.js loaded dynamically on first "Show Charts" click via `loadChartJs()` + `initCharts()`
 - **Never recreate charts** — create once via `initCharts()`, update via `chart.update('none')`
 - **Never use JSDoc** — minimal inline comments, section headers (`// ===== NAME =====`) only
@@ -46,7 +50,9 @@ Open `index.html` in a browser. Works from `file://`.
 ## Commands
 
 - `npm install` — Install dev dependencies (tailwindcss, csso, terser)
-- `npm run build` — Full build: Tailwind + CSS minification + JS minification
+- `npm run build` — Full build: generate codes + Tailwind + CSS minification + JS minification
+- `npm run build:css` — Tailwind + CSS minification only (skip code gen and JS minification)
+- `npm run build:js` — JS minification only (via terser)
 - `npm run build:tailwind` — Tailwind rebuild only (skip minification)
 - `npm run update-codes` — Regenerate `data/generated/promo-codes.js` and update all code counts/descriptions/chips in `guide/code/index.html` from `data/codes.json`
 - `npm run update-assets` — Download latest vendor assets (Chart.js, fonts)
@@ -58,11 +64,11 @@ Open `index.html` in a browser. Works from `file://`.
 - **CSS**: BEM (`.gem-block__element--modifier`), custom property tokens (`--gem-*`), category suffixes (`--event`, `--pvp`, `--login`, `--code`)
 - **Config**: inline JSON in HTML, always use `loadConfig(id)` to parse
 - **State**: `selectedModes` array (defaults: event, pvp, login — CODE inactive) + `currentChartFilter` string, persisted via `savePageState()`/`loadPageState()`
-- **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`
-- **URL params**: `?theme=light&mode=<name>&chart=<name>` restored on page load
+- **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`, `gem_forecast`, `gem_visits`
+- **URL params**: `?theme=light&mode=<name>&chart=<name>&forecast=1M,100,full,4` restored on page load
 - **Code rewards**: defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; `promo` card total animates via `animateValue()`
 - **Single source of truth**: `data/codes.json` is the only hand-edited file for promo codes. Run `npm run update-codes` to regenerate `data/generated/promo-codes.js` (active codes) and update all dynamic content in `guide/code/index.html` via markers
-- **Guide code page markers**: 9 marker pairs (`GUIDE_DESC`, `GUIDE_OG_DESC`, `GUIDE_OG_IMAGE_ALT`, `GUIDE_TWITTER_DESC`, `GUIDE_LD_DESC`, `GUIDE_TAB`, `GUIDE_UPDATED`, `GUIDE_CODES_ACTIVE`, `GUIDE_CODES_EXPIRED`) — generated by `scripts/generate-codes.js` from `data/codes.json`
+- **Guide code page markers**: 10 marker pairs (`GUIDE_DESC`, `GUIDE_OG_DESC`, `GUIDE_OG_IMAGE_ALT`, `GUIDE_TWITTER_DESC`, `GUIDE_LD_DESC`, `GUIDE_TAB`, `GUIDE_UPDATED`, `GUIDE_CODES_ACTIVE`, `GUIDE_CODES_EXPIRED`, `GUIDE_ARTICLE_MODIFIED`) — generated by `scripts/generate-codes.js` from `data/codes.json`
 - **Guide code page must include `script.js`** — `guide/code/index.html` needs `<script src="../../script.js">` before `</body>` for `copyCode()` to work on code chips
 - **OG images**: 7 per-page PNG files in `og-images/` (`home.png`, `code.png`, etc.); SVGs previously served as editable sources
 
@@ -113,7 +119,7 @@ Open `index.html` in a browser. Works from `file://`.
 - **Canonical** — self-referencing canonical on every page
 - **Structured data** — WebPage + FAQPage schema on main page; Guide schema on detail pages
 - **Internal linking** — bidirectional nav between main page and all guide pages, guide pages link to each other
-- **Guide page structure** — Each guide links to all 5 other guides + back to main page
+- **Guide page structure** — Each guide links to all 6 other guides + back to main page
 
 ## Plan conventions
 

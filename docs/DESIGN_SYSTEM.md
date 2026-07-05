@@ -1,7 +1,7 @@
 # Design System — Gem Rewards Infographic
 
-**Status:** Current (May 12, 2026)
-**Version:** 1.2
+**Status:** Current (Jul 4, 2026)
+**Version:** 1.3
 
 ---
 
@@ -54,6 +54,8 @@ The design system uses CSS custom properties (design tokens) for all visual valu
 | `--gem-card-border--code` | `rgba(46,204,113,0.20)` | — |
 | `--gem-card-border--cyan` | `rgba(0,229,255,0.20)` | — |
 | `--gem-card-border--purple` | `rgba(155,89,182,0.20)` | — |
+
+> **Note:** `—` in the Light Mode column means the token is not overridden in light mode — it falls through to its dark mode value, or is unused in light mode.
 | `--gem-border--subtle` | `rgba(255,255,255,0.10)` | `rgba(26,32,44,0.10)` |
 | `--gem-border--medium` | `rgba(255,255,255,0.30)` | `rgba(26,32,44,0.30)` |
 | `--gem-border--accent` | `rgba(0,229,255,0.30)` | — |
@@ -503,6 +505,64 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 | `pulse` | 3s | cubic-bezier(0.4, 0, 0.6, 1) | Header icon pulse (infinite) |
 | `gem-countdown-pulse` | 1s | ease-out infinite | Countdown second tick (CSS-only) |
 | `gem-modal--pop-in` | 0.3s | cubic-bezier(0.34, 1.56, 0.64, 1) | Modal entry |
+
+---
+
+## Interactive States
+
+Interactive state styles are defined per component. Below is the consolidated reference.
+
+### Buttons (`.gem-btn`)
+
+| State | Style |
+|-------|-------|
+| Default | `background: var(--gem-btn-bg); border: 1px solid var(--gem-btn-border);` |
+| Hover | `background: var(--gem-btn-hover);` |
+| Focus | `outline: none; box-shadow: 0 0 0 2px var(--gem-cyan);` |
+| Active | `transform: scale(0.97);` |
+
+### Select Inputs (`.gem-select`)
+
+| State | Style |
+|-------|-------|
+| Default | Category-colored background + border; custom chevron arrow via `background-image` |
+| Hover | Border brightens (category color at higher opacity); arrow brightens |
+| Focus | Cyan border ring (`box-shadow: 0 0 0 2px var(--gem-cyan)`) |
+| Disabled | Not used — all selects are always enabled |
+
+### Code Chips (`.gem-code__chip`)
+
+| State | Style |
+|-------|-------|
+| Default | Green tint, rounded, pointer cursor |
+| Hover | `transform: scale(1.05);` green glow |
+| Focus | Visible outline ring (browser default) |
+| Copied (`.copied`) | Brief scale pulse via `@keyframes gem-code--copied` (0.4s, ease-out) |
+| Expired (`.gem-code__chip--expired`) | Red tint, muted opacity, no pointer cursor (display-only) |
+
+### Card Hover (`.gem-card`)
+
+| State | Style |
+|-------|-------|
+| Hover | Category-colored glow border + shadow using JS-set `--card-color` variable |
+| `.gem-card--mode-highlight--{cat}` | Subtle category-colored overlay (applied by mode hover via JS) |
+
+### Links (`.gem-breadcrumb__link`, inline `<a>`)
+
+| State | Style |
+|-------|-------|
+| Default | `color: var(--gem-cyan);` |
+| Hover | `color: #ffffff;` (dark mode) |
+| Visited | Same as default — no separate visited color |
+
+### Mode Buttons (`.gem-mode-btn`)
+
+| State | Style |
+|-------|-------|
+| Default | Category-colored accent, translucent background |
+| Active (`.gem-mode-btn--active`) | Solid category-colored border, brighter background |
+| Hover | Category-colored glow overlay, scale(1.05) |
+| Focus | Cyan focus ring |
 
 ---
 

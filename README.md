@@ -92,10 +92,10 @@ anomaly-alpha/
 │   └── chart.umd.js     — Self-hosted Chart.js 4.4.1 (lazy-loaded)
 ├── fonts/               — Self-hosted woff2 files (Rajdhani + Orbitron)
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
-├── og-images/*.png      — Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners)
+├── og-images/*.png      — Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp)
 ├── favicon.ico           — Browser favicon for tab
 ├── robots.txt           — Allows all crawlers, references sitemap
-├── sitemap.xml          — 7 URLs (main + 6 guide pages)
+├── sitemap.xml          — 8 URLs (main + 7 guide pages)
 ├── _headers             — Cloudflare Pages cache config
 ├── 404.html             — Custom error page
 ├── AGENTS.md            — Agent instructions for this repo
@@ -109,7 +109,8 @@ anomaly-alpha/
 │   ├── pvp/index.html   — PvP guide (14 leagues, payout tables, 3 arena modes)
 │   ├── login/index.html — Login rewards guide (daily, weekly, monthly breakdown)
 │   ├── faq/index.html   — Gem rewards FAQ
-│   └── beginners/index.html — New player guide
+│   ├── beginners/index.html — New player guide
+│   └── xp/index.html    — XP & progression guide (Hero Rank-Up reference)
 ├── data/                — Source data files
 │   ├── arena_payouts.txt             — Open + Restricted arena payout data
 │   ├── multiverse_war_payouts.txt    — Multiverse War payout data

@@ -25,6 +25,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 ### Mode System
 - **selectedModes** — Array of active category modes (`event`, `pvp`, `login`, `code`); defaults to `event`, `pvp`, `login` (code inactive by default)
 - **Forecast mode** — Layers on top of selectedModes. When active, a chart projects gem accumulation over custom timeframes using the current mode selections as baseline. Does NOT replace the card grid. Toggled via a "Forecast" button in the mode selector row.
+- **Forecaster implementation**: `initForecaster()` builds the panel and controls; `initForecastChart()` creates a dedicated Chart.js line chart instance (the 4th chart, separate from the 3 main charts). On first render it creates the chart; subsequent renders use `chart.update('none')`. Destroyed and recreated only when the forecaster panel is toggled off then on again. Controls include timeframe selector (1w/1m/3m/6m/1y), login consistency slider (100/75/50/25%), event participation toggle (Full/Partial/None), and promo codes per month (0/2/4/6/8). Produces 3 projection lines: conservative, expected, optimistic. Milestone panel shows projected dates to reach gem thresholds. State persisted in `gem_forecast` localStorage key, shareable via `?forecast=1M,100,full,4` URL params.
 
 ### Card Modal System
 - Every reward card has an **info icon** (`.gem-card__info-btn`) that opens a **card modal**

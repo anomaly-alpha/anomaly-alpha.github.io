@@ -19,7 +19,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 
 ### Interactive Elements
 - **Animated counter** that counts up on value changes
-- **Promo code reveal** — tap to reveal with 3D flip animation, tap again to copy
+- **Promo code reveal** — tap to reveal 28 active codes in a grid, tap any code to copy
 - **Scrolling ticker banner** ("Why Use This") — 44px monochrome newspaper-style ticker showing PvP 1,850+/wk • Codes 28 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk
 - **Mode selector** (5 buttons: All, Code, Event, PvP, Login) — each showing gem total + countdown timer
 - **Multi-select mode filtering** — toggle Event, PvP, Login, Code independently
@@ -74,7 +74,8 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 - `/guide/login/` — Login rewards guide: daily (910), weekly (460), monthly (23) with income summary table
 - `/guide/faq/` — Gem rewards FAQ with FAQPage schema
 - `/guide/beginners/` — New player guide with priority checklist and gem spending tips
-- Each guide links to all 5 other guides + back to main page for topical relevance
+- `/guide/xp/` — XP & progression guide: Hero XP, Agent XP, Hero Rank-Up table (Rare→Omnipotent+)
+- Each guide links to all 6 other guides + back to main page for topical relevance
 
 ### Visual Effects
 - Floating particles in background (9 particles)
@@ -85,7 +86,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 
 ## Tech Stack
 
-- **Structure**: Main HTML + inline JSON configs, 6 guide pages
+- **Structure**: Main HTML + inline JSON configs, 7 guide pages
 - **Styling**: Tailwind CSS (local build via npm) + custom CSS design token system
 - **Charts**: Chart.js (doughnut, bar, radar) — self-hosted in `vendor/chart.umd.js`, lazy-loaded on first toggle
 - **Icons**: Inline SVGs (32 icons, replaced Font Awesome)
