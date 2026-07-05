@@ -980,7 +980,7 @@ html { visibility: hidden }
             </h1>
             <!-- HEADER: Subheading -->
             <p class="gem-subtitle--hero">
-                Know Your Full Gem Income — PvP, Events, Login &amp; 28 Active Codes
+                Calculate Your Full Gem Income — PvP, Events, Login &amp; 28 Active Codes
             </p>
             <p class="text-sm gem-text--cyan mt-2">New to the game? <a href="guide/beginners/" class="underline hover:text-white transition-colors">Start here &rarr;</a></p>
             <p class="text-xs gem-text--muted mt-3">Free tool by players, for players. No signup, no ads, just results.</p>
@@ -1209,6 +1209,7 @@ html { visibility: hidden }
                 <div class="gem-divider pt-3">
                     <div class="flex items-center gap-2 mb-2">
                         <label for="pvp1-league" class="text-white/60 text-xs">League:</label>
+                        <span id="pvp1-recommended-badge" class="gem-badge--recommended" style="display:none">★ Recommended</span>
                         <select id="pvp1-league" onchange="updatePvpCard(1)" class="gem-select gem-select--league gem-select--pvp">
                         </select>
                     </div>
@@ -1256,6 +1257,7 @@ html { visibility: hidden }
                 <div class="gem-divider pt-3">
                     <div class="flex items-center gap-2 mb-2">
                         <label for="pvp2-league" class="text-white/60 text-xs">League:</label>
+                        <span id="pvp2-recommended-badge" class="gem-badge--recommended" style="display:none">★ Recommended</span>
                         <select id="pvp2-league" onchange="updatePvpCard(2)" class="gem-select gem-select--league gem-select--pvp">
                         </select>
                     </div>
@@ -1308,6 +1310,7 @@ html { visibility: hidden }
 
                     <div class="flex items-center gap-2 mb-2">
                         <label for="pvp3-league" class="text-white/60 text-xs">League:</label>
+                        <span id="pvp3-recommended-badge" class="gem-badge--recommended" style="display:none">★ Recommended</span>
                         <select id="pvp3-league" onchange="updatePvpCard(3)" class="gem-select gem-select--league gem-select--pvp">
                         </select>
                     </div>
@@ -1321,6 +1324,11 @@ html { visibility: hidden }
                 </div>
             </article>
             <!-- ===== END CARD: Alliance War ===== -->
+
+            <!-- ===== RECOMMENDATIONS ===== -->
+            <section class="gem-card gem-card--pvp p-5 col-span-full">
+                <div id="pvp-recommendations" class="gem-section"></div>
+            </section>
 
             <!-- ===== CARD: Daily Login (Login category) ===== -->
             <div class="gem-card gem-card--login gem-card--hover gem-card--fade-in gem-tooltip--trigger gem-card--delay-5" data-category="login" data-card-id="daily-login">
