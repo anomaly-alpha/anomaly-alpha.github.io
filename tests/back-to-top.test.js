@@ -26,3 +26,30 @@ describe('Button Structure', function() {
     assert_true(progress !== null, 'progress ring should exist');
   });
 });
+
+describe('Button Styling', function() {
+  it('should be positioned fixed', function() {
+    const btn = document.querySelector('.gem-back-to-top');
+    const style = getComputedStyle(btn);
+    assertEqual(style.position, 'fixed');
+  });
+
+  it('should be at bottom-right', function() {
+    const btn = document.querySelector('.gem-back-to-top');
+    const style = getComputedStyle(btn);
+    assertEqual(style.bottom, '2rem');
+    assertEqual(style.right, '2rem');
+  });
+
+  it('should have opacity 0 when hidden', function() {
+    const btn = document.querySelector('.gem-back-to-top');
+    const style = getComputedStyle(btn);
+    assertEqual(style.opacity, '0');
+  });
+
+  it('should have pointer-events none when hidden', function() {
+    const btn = document.querySelector('.gem-back-to-top');
+    const style = getComputedStyle(btn);
+    assertEqual(style.pointerEvents, 'none');
+  });
+});
