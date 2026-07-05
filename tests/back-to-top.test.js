@@ -53,3 +53,41 @@ describe('Button Styling', function() {
     assertEqual(style.pointerEvents, 'none');
   });
 });
+
+describe('Scroll Behavior', function() {
+  it('should show button when scrollY > 300', function() {
+    const btn = document.querySelector('.gem-back-to-top');
+    // Ensure hidden state first
+    btn.setAttribute('hidden', '');
+    btn.classList.remove('gem-back-to-top--visible', 'gem-back-to-top--hiding');
+
+    Object.defineProperty(window, 'scrollY', { value: 400, writable: true, configurable: true });
+    window.dispatchEvent(new Event('scroll'));
+
+    assert_true(btn.classList.contains('gem-back-to-top--visible'), 'should have visible class');
+    assert_false(btn.hasAttribute('hidden'), 'should remove hidden attribute');
+  });
+
+  it('should hide button when scrollY <= 300', function() {
+    const btn = document.querySelector('.gem-back-to-top');
+    // Ensure visible state first
+    btn.removeAttribute('hidden');
+    btn.classList.add('gem-back-to-top--visible');
+    btn.classList.remove('gem-back-to-top--hiding');
+
+    Object.defineProperty(window, 'scrollY', { value: 100, writable: true, configurable: true });
+    window.dispatchEvent(new Event('scroll'));
+
+    assert_true(btn.classList.contains('gem-back-to-top--hiding'), 'should have hiding class');
+  });
+
+  it('should update progress ring on scroll', function() {
+    const circle = document.querySelector('.gem-back-to-top__progress circle');
+    Object.defineProperty(window, 'scrollY', { value: 500, writable: true, configurable: true });
+    Object.defineProperty(document.documentElement, 'scrollHeight', { value: 2000, writable: true, configurable: true });
+    Object.defineProperty(window, 'innerHeight', { value: 800, writable: true, configurable: true });
+    window.dispatchEvent(new Event('scroll'));
+    const offset = circle.getAttribute('stroke-dashoffset');
+    assert_true(offset !== '100.53', 'progress ring should update');
+  });
+});
