@@ -1,16 +1,98 @@
 SERP Query: invincible pvp
 Date: 2026-07-05
-Our Rank: ~#7
-GSC Clicks: 0
-GSC Impressions: 26
-============================================================
+======================================================================
 
-Top Competitors:
----------------
-  1. Ubisoft Help Center
-  2. Pocket Tactics
-  3. GamingonPhone
+Our Rank: ~#7  |  GSC Clicks: 0  |  GSC Impressions: 26
+----------------------------------------------------------------------
 
----
-Our site: https://anomaly-alpha.github.io/
-Anomaly SERP Dump — 2026-07-05
+TOP 10 RESULTS
+==============
+
+─── Result #1 ───────────────────────────────────────────
+  URL:      ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/section/485-gameplay/
+  Title:    Gameplay — Invincible: Guarding The Globe Help Center
+  Snippet:  How many currencies are there? What is The Lab? How do I rank up a hero? Official FAQs answered.
+  Author:   Ubisoft Support
+  Updated:  Official
+  DA:       ~95
+  Features: Official FAQs. Currency guide. Rank-up requirements. Artifact system. Authoritative source.
+
+─── Result #2 ───────────────────────────────────────────
+  URL:      pockettactics.com/invincible-guarding-the-globe/codes/
+  Title:    Invincible: Guarding the Globe codes July 2026
+  Snippet:  Redeem Invincible: Guarding the Globe codes for new heroes, free currencies, and upgrade materials so you can save the world.
+  Author:   Quinn Collins
+  Updated:  Jul 5, 2026
+  DA:       ~70
+  Features: Author byline, screenshots, Google Preferred Source badge, 27 active codes, 43 expired (largest archive), Network N Media
+
+─── Result #3 ───────────────────────────────────────────
+  URL:      gamingonphone.com/guides/invincible-guarding-the-globe-beginners-guide-and-tips/
+  Title:    Invincible: Guarding the Globe Beginners Guide and Tips
+  Snippet:  Invincible: Guarding the Globe is an idle squad RPG. Original storyline, character collection, stunning graphics.
+  Author:   Jhorsnell Tunguia
+  Updated:  Feb 20, 2024
+  DA:       ~55
+  Features: Gameplay basics. Team composition (Attacker/Defender/Support). Controls. 2x speed. Campaign/GDA Ops/Alliance.
+
+─── Result #4 ───────────────────────────────────────────
+  URL:      anomaly-alpha.github.io/guide/pvp/
+  Title:    PvP Guide & Gems: ~1,850/Week
+  Snippet:  All 14 league payouts, Restricted Arena, Open Arena, and Alliance War gem earnings. League comparator tool.
+  Author:   Anomaly
+  Updated:  May 28, 2026
+  DA:       ~30
+  Features: OUR SITE. 14 leagues. 120 ranks. Restricted+Open+Multiverse. League comparator. Demotion threshold. Schema: Article+FAQPage+Breadcrumb+Guide+DigitalDocument+DefinedTerm.
+
+─── Result #5 ───────────────────────────────────────────
+  URL:      ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2234-what-are-the-rewards-for-multiverse-arena/
+  Title:    What are the rewards for Multiverse Arena?
+  Snippet:  League and position rewards table for Invincible league.
+  Author:   Ubisoft Support
+  Updated:  Official
+  DA:       ~95
+  Features: Official payout table. 6 league groups. Gems/Frags/Modules.
+
+─── Result #6 ───────────────────────────────────────────
+  URL:      ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2227-what-is-multiverse-arena/
+  Title:    What is Multiverse Arena?
+  Snippet:  A new game mode. Dimensional portals opening. Assemble your best team.
+  Author:   Ubisoft Support
+  Updated:  Official
+  DA:       ~95
+  Features: Official description. Game mode explanation.
+
+─── Result #7 ───────────────────────────────────────────
+  URL:      ldplayer.net/blog/ultimate-beginner-guide-and-tips-to-invincible-guarding-the-globe.html
+  Title:    Ultimate Beginner Guide and Tips to Invincible: Guarding the Globe
+  Snippet:  8 rarity levels explained. Gold, GDA Gems, Hero XP, Special Hero XP. Gear, team building, controls.
+  Author:   N/A
+  Updated:  Feb 20, 2024
+  DA:       ~50
+  Features: 8 rarities. All currencies detailed. Campaign/GDA Ops/Alliance modes. Emulator site (LDPlayer).
+
+─── Result #8 ───────────────────────────────────────────
+  URL:      pocketgamer.com/invincible-guarding-the-globe/tips/
+  Title:    Invincible: Guarding the Globe - Top tips for not dying in a Viltrumite...
+  Snippet:  1. Learn the basics 2. Using your powers 3. Position yourself well 4. Grab some AFK rewards 5. Complete Agent Journey.
+  Author:   Iwan Morris
+  Updated:  Mar 13, 2024
+  DA:       ~65
+  Features: Authored tips. PocketGamer network (Steel Media). 6 tips. AFK rewards. Rerolling advice.
+
+─── Result #9 ───────────────────────────────────────────
+  URL:      appsmenow.com/walkthrough/188635-invincible-guarding-the-globe
+  Title:    Invincible: Guarding the Globe: Walkthrough, Guides And Tips
+  Snippet:  Welcome to the walkthrough and guide! Step-by-step walkthrough, tips, cheats, and strategies.
+  Author:   N/A
+  Updated:  Feb 19, 2024
+  DA:       ~50
+  Features: Walkthrough format. Campaign focus. Discussion section. User guide submissions.
+
+─── SUMMARY ────────────────────────────────────────────────
+
+  Dominant content type: Mixed guides & calculators
+  Our position gap: ~NaN DA points behind #1
+
+Anomaly SERP Dump — 2026-07-05  |  GSC period: May 2 – Jul 2, 2026
+Site total: 410 clicks, 11,402 impressions, 3.60% CTR, avg pos 7.3

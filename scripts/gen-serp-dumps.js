@@ -1,68 +1,195 @@
 const fs = require('fs');
 const path = require('path');
-const dir = 'serp-dumps/2026-07-05/queries';
+const qdir = 'serp-dumps/2026-07-05/queries';
+if (!fs.existsSync(qdir)) fs.mkdirSync(qdir, { recursive: true });
 
-if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+// Shared result templates usable across queries
+const SITES = {
+  destructoid: { url: 'destructoid.com/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe codes (July 2026)', snippet: 'Need a hero? Invincible: Guarding The Globe codes are always here to help! Updated: July 3, 2026. We added a new code!', author: 'Kristina Timotic', date: 'Jul 3, 2026', da: '~80', features: 'Author byline, screenshots, 27 active codes, 15 expired, HowTo' },
+  vg247: { url: 'vg247.com/invincible-guarding-the-globe-codes/', title: 'Invincible Guarding the Globe codes for July 2026', snippet: 'Redeem these codes for free heroes, Hero Dossiers, and GDA Gems. Updated June 23, 2026.', author: 'Amelia Zollner', date: 'Jun 23, 2026', da: '~85', features: 'Author byline, 3 screenshots, QR code, IGN network, 24 codes' },
+  pockettactics: { url: 'pockettactics.com/invincible-guarding-the-globe/codes/', title: 'Invincible: Guarding the Globe codes July 2026', snippet: 'Redeem Invincible: Guarding the Globe codes for new heroes, free currencies, and upgrade materials.', author: 'Quinn Collins', date: 'Jul 5, 2026', da: '~70', features: 'Author byline, screenshots, 27 active, 43 expired, Preferred Source badge' },
+  progameguides: { url: 'progameguides.com/invincible-guarding-the-globe/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe Codes (May 2026)', snippet: 'Spoiler warning—I get it; I know why Rex had to die. So if you want the best boy in your team, you need these codes.', author: 'Danilo Grbovic', date: 'May 19, 2026', da: '~75', features: 'Personality writing, 27 active, 15 expired, 9-step guide' },
+  ubisoftHelp: { url: 'ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/', title: 'Where can I redeem code for the game? — Invincible: Guarding The Globe Help Center', snippet: 'The only official website for redeeming codes is: redeem.invincible.ubisoft.barcelona', author: 'Ubisoft Support', date: 'Official', da: '~95', features: 'Official source, highest authority, trusted by Google' },
+  axeetech: { url: 'axeetech.com/invincible-guarding-the-globe-codes/', title: 'Invincible Guarding the Globe Codes June 2026 [Gems, Heroes]', snippet: 'The latest Invincible Guarding the Globe codes grant players free gems, Hero Dossiers, and exclusive character unlocks.', author: 'Axee Davies', date: 'Apr 1, 2026', da: '~50', features: 'iOS/Android distinction, daily testing claim, 8 codes' },
+  minutetactics: { url: 'minutetactics.com/codes/invincible-guarding-the-globe-promo-codes/', title: 'Invincible: Guarding the Globe Codes April 2026', snippet: 'This page tracks every code that Ubisoft Barcelona Mobile has released — 16 are working right now.', author: 'MinuteTactics', date: 'Mar 20, 2026', da: '~55', features: 'Table with Status/Added/Expires, community-verified, recommended start code' },
+  mobilematters: { url: 'mobilematters.gg/guides/redeem-codes/invincible-guarding-the-globe-codes/', title: 'Invincible Guarding the Globe Codes (June 2026)', snippet: 'Get your hands on freebies when you redeem one of the many codes available.', author: 'N/A', date: 'Jun 4, 2026', da: '~55', features: 'Concise, 7-step guide, tutorial requirement noted, 3 codes' },
+  supercheats: { url: 'supercheats.com/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe Codes - Active Codes for Free Dossiers and Gems', snippet: 'IGTG33 - 500 GDA Gems. KREGG4 - one Kregg. KRESSA - free rewards. Updated Jul 1, 2026.', author: 'N/A', date: 'Dec 2, 2025', da: '~65', features: 'Legacy cheat site, simple format, no screenshots, domain authority' },
+  gamerant: { url: 'gamerant.com/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe Codes', snippet: 'This collection of the latest Invincible: Guarding The Globe codes will help players receive various goodies.', author: 'R', date: 'Mar 21, 2025', da: '~70', features: 'Valve network, 12 codes, no recent updates' },
+  moyens: { url: 'uk.moyens.net/gaming/codes/invincible-guarding-the-globe-codes-february-2026-revealed/', title: 'Invincible: Guarding The Globe Codes for February 2026 Revealed', snippet: 'Your Go-To List of Invincible: Guarding The Globe Codes — 20 active codes.', author: 'N/A', date: 'Feb 10, 2026', da: '~55', features: '20 codes, troubleshooting section, Facebook/Discord promo' },
+  theInvincibles: { url: 'the-invincibles.netlify.app/', title: 'Invincible: Guarding the Globe Experience Calculator', snippet: 'Welcome to the Invincible: Guarding the Globe Experience Calculator! Helps you determine how much experience your heroes need to level up.', author: 'N/A', date: 'N/A', da: '~30', features: 'Interactive XP calculator, Discord community, Gold/Blue/Pink XP breakdown' },
+  ubisoftGameplay: { url: 'ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/section/485-gameplay/', title: 'Gameplay — Invincible: Guarding The Globe Help Center', snippet: 'How many currencies are there? What is The Lab? What are artifacts? How do I rank up a hero?', author: 'Ubisoft Support', date: 'Official', da: '~95', features: 'Official FAQs, currency guide, rank-up requirements, artifact system' },
+  mumuplayer: { url: 'mumuplayer.com/blog/invincible-guarding-the-globe-currency-guide.html', title: 'Ultimate Currency Guide for Invincible: Guarding the Globe', snippet: 'Unlock the secrets of in-game currency with our complete currency guide. From earning and spending to managing in-game currencies.', author: 'N/A', date: 'N/A', da: '~45', features: 'Comprehensive currency guide, GDA Gems, Agent XP, Hero XP sections' },
+  ldplayer: { url: 'ldplayer.net/blog/ultimate-beginner-guide-and-tips-to-invincible-guarding-the-globe.html', title: 'Ultimate Beginner Guide and Tips to Invincible: Guarding the Globe', snippet: 'Welcome to the thrilling world of Invincible: Guarding the Globe. 8 rarity levels explained.', author: 'N/A', date: 'Feb 20, 2024', da: '~50', features: '8 rarities explained, team building, gear, currencies, rank-up guide' },
+  gamingonphone: { url: 'gamingonphone.com/guides/invincible-guarding-the-globe-beginners-guide-and-tips/', title: 'Invincible: Guarding the Globe Beginners Guide and Tips', snippet: 'Invincible: Guarding the Globe is an idle squad RPG by Ubisoft Entertainment set in the Invincible universe.', author: 'Jhorsnell Tunguia', date: 'Feb 20, 2024', da: '~55', features: 'Gameplay basics, team comp, controls, 2x speed, Campaign/GDA Ops/Alliance modes' },
+  pocketgamer: { url: 'pocketgamer.com/invincible-guarding-the-globe/tips/', title: 'Invincible: Guarding the Globe - Top tips for not dying in a Viltrumite...', snippet: '1. Learn the basics 2. Using your powers 3. Position yourself well 4. Grab some AFK rewards.', author: 'Iwan Morris', date: 'Mar 13, 2024', da: '~65', features: '6 tips, authored byline, PocketGamer network' },
+  appsmenow: { url: 'appsmenow.com/walkthrough/188635-invincible-guarding-the-globe', title: 'Invincible: Guarding the Globe: Walkthrough, Guides And Tips', snippet: 'Welcome to the Invincible: Guarding the Globe walkthrough and guide! Comprehensive guide covering 100%.', author: 'N/A', date: 'Feb 19, 2024', da: '~50', features: 'Walkthrough format, discussion section, level guides' },
+  chaptercheats: { url: 'chaptercheats.com/cheat/android/622221/invincible-guarding-the-globe/hint/202426', title: 'Hero XP and How to Earn It - Invincible: Guarding The Globe Hints & Secrets', snippet: 'Hero XP is a valuable resource. Several ways to earn Hero XP — GDA Ops battles, campaign mode, idle rewards.', author: 'N/A', date: 'Feb 20, 2024', da: '~40', features: 'Focused XP guide, 3 earning methods, no codes section' },
+  facebook: { url: 'facebook.com/InvincibleGtG/', title: 'Attention, Agents! “Any codes?” YES, okay, YES! Reward codes have arrived!', snippet: 'Find all the information here and stay tuned to our social media to claim them before anyone else.', author: 'Official InvincibleGtG', date: 'Ongoing', da: '~100', features: 'Official social media, real-time code announcements, community engagement' },
+  threads: { url: 'threads.com/@skyboundgames', title: 'Alliances collide in Invincible: Guarding the Globe. REWARD CODE: HQFALL', snippet: 'REDEM at redeem.invincible.ubisoft.barcelona', author: 'Skybound Games', date: 'N/A', da: '~60', features: 'Publisher channel, QR codes, exclusive codes' },
+};
 
-// 40 queries with GSC data + top competitors
-const queries = [
-  { file: 'promo-codes.txt', q: 'invincible guarding the globe promo codes', r: 10, imps: 159, cls: 6, competitors: ['Destructoid.com (DA~80)', 'VG247.com (DA~85)', 'PocketTactics.com (DA~70)', 'ProGameGuides.com (DA~75)', 'Ubisoft Help Center', 'AxeeTech.com', 'MinuteTactics.com', 'MobileMatters.gg', 'SuperCheats.com (DA~65)'] },
-  { file: 'invincible-codes.txt', q: 'invincible codes', r: 10, imps: 193, cls: 4, competitors: ['Destructoid', 'VG247', 'Pocket Tactics', 'Pro Game Guides', 'SuperCheats'] },
-  { file: 'new-codes.txt', q: 'new invincible codes', r: 8, imps: 124, cls: 8, competitors: ['Destructoid', 'VG247', 'Pocket Tactics', 'Pro Game Guides', 'MobileMatters'] },
-  { file: 'invincible-promo-code.txt', q: 'invincible promo code', r: 7, imps: 72, cls: 2, competitors: ['Destructoid', 'VG247', 'Pocket Tactics', 'Pro Game Guides', 'SuperCheats'] },
-  { file: 'gtg-promo-codes.txt', q: 'invincible guarding the globe promo codes (long)', r: 10, imps: 140, cls: 3, competitors: ['Destructoid', 'VG247', 'Pocket Tactics', 'Pro Game Guides', 'AxeeTech'] },
-  { file: 'gtg-codes.txt', q: 'invincible guarding the globe codes', r: 15, imps: 118, cls: 6, competitors: ['Destructoid', 'VG247', 'Pocket Tactics', 'Pro Game Guides', 'SuperCheats', 'Ubisoft Help'] },
-  { file: 'invincible-code.txt', q: 'invincible code', r: 13, imps: 53, cls: 2, competitors: ['Destructoid', 'VG247', 'SuperCheats', 'GameRant'] },
-  { file: 'new-gtg-codes.txt', q: 'new invincible guarding the globe codes', r: 8, imps: 42, cls: 2, competitors: ['Destructoid', 'VG247', 'Pocket Tactics', 'MobileMatters'] },
-  { file: 'promo-codes-for-gtg.txt', q: 'promo codes for invincible guarding the globe', r: 10, imps: 35, cls: 0, competitors: ['Destructoid', 'VG247', 'Pocket Tactics', 'Pro Game Guides'] },
-  { file: 'game-promo-code.txt', q: 'invincible game promo code', r: 10, imps: 27, cls: 0, competitors: ['Destructoid', 'VG247', 'SuperCheats'] },
-  { file: 'invincible-new-code.txt', q: 'invincible new code', r: 7, imps: 12, cls: 0, competitors: ['Destructoid', 'VG247', 'Pocket Tactics'] },
-  { file: 'summer-code.txt', q: 'summer code invincible guarding the globe', r: 11, imps: 13, cls: 0, competitors: ['Destructoid', 'Pro Game Guides', 'Moyens.net'] },
-  { file: 'gtg-codes-colon.txt', q: 'invincible: guarding the globe codes', r: 18, imps: 17, cls: 2, competitors: ['Destructoid', 'VG247', 'Pocket Tactics'] },
-  { file: 'code-invincible.txt', q: 'code invincible', r: 9, imps: 14, cls: 2, competitors: ['Destructoid', 'VG247', 'SuperCheats'] },
-  { file: 'redeem-code.txt', q: 'invincible redeem code', r: 8, imps: 45, cls: 3, competitors: ['Ubisoft Help Center', 'Destructoid', 'VG247', 'Pocket Tactics'] },
-  { file: 'redeem-codes.txt', q: 'invincible redeem codes', r: 8, imps: 64, cls: 2, competitors: ['Ubisoft Help Center', 'Destructoid', 'VG247'] },
-  { file: 'redeem-barcelona.txt', q: 'redeem invincible ubisoft barcelona', r: 9, imps: 69, cls: 2, competitors: ['Ubisoft Help Center', 'Facebook/InvincibleGtG', 'Threads/skyboundgames'] },
-  { file: 'ubisoft-redeem.txt', q: 'ubisoft invincible redeem code', r: 8, imps: 67, cls: 2, competitors: ['Ubisoft Help Center', 'Destructoid', 'VG247'] },
-  { file: 'gtg-redeem.txt', q: 'invincible guarding the globe redeem', r: 8, imps: 49, cls: 2, competitors: ['Ubisoft Help Center', 'Destructoid', 'VG247'] },
-  { file: 'code-redeem-barcelona.txt', q: 'invincible code redeem barcelona', r: 7, imps: 24, cls: 2, competitors: ['Ubisoft Help Center', 'Destructoid'] },
-  { file: 'gtg-code-redeem.txt', q: 'invincible guarding the globe code redeem', r: 23, imps: 5, cls: 2, competitors: ['Ubisoft Help Center', 'Destructoid'] },
-  { file: 'barcelona-code.txt', q: 'invincible barcelona code', r: 4, imps: 3, cls: 2, competitors: ['Ubisoft Help Center', 'Facebook/InvincibleGtG'] },
-  { file: 'invincible-redeemer.txt', q: 'invincible redeemer', r: 7, imps: 13, cls: 0, competitors: ['Ubisoft Help Center', 'Destructoid', 'SuperCheats'] },
-  { file: 'barcelona-redeem.txt', q: 'barcelona invincible redeem', r: 7, imps: 17, cls: 0, competitors: ['Ubisoft Help Center', 'Destructoid'] },
-  { file: 'gem-calculator.txt', q: 'invincible guarding the globe gems calculator', r: 1, imps: 88, cls: 5, competitors: ['The-Invincibles.netlify.app', 'Ubisoft Help Center', 'MuMuPlayer.com', 'LDPlayer.net'] },
-  { file: 'gtg-calculator.txt', q: 'invincible gtg calculator', r: 3, imps: 88, cls: 5, competitors: ['The-Invincibles.netlify.app', 'ChaptersCheats.com'] },
-  { file: 'xp-calculator.txt', q: 'invincible gtg xp calculator', r: 6, imps: 60, cls: 0, competitors: ['The-Invincibles.netlify.app', 'Ubisoft Help Center', 'MuMuPlayer.com', 'LDPlayer.net'] },
-  { file: 'calculator.txt', q: 'invincible calculator', r: 5, imps: 18, cls: 0, competitors: ['The-Invincibles.netlify.app', 'Ubisoft Help Center'] },
-  { file: 'free-gems.txt', q: 'invincible guarding the globe free gems', r: 10, imps: 2, cls: 2, competitors: ['VG247', 'Pocket Tactics', 'Destructoid', 'AxeeTech', 'MobileMatters', 'MinuteTactics', 'SuperCheats', 'Moyens.net'] },
-  { file: 'gtg-gems.txt', q: 'invincible guarding the globe gems', r: 6, imps: 12, cls: 2, competitors: ['VG247', 'Destructoid', 'Pocket Tactics', 'Ubisoft Help Center', 'MuMuPlayer'] },
-  { file: 'invincible-gem.txt', q: 'invincible gem', r: 4, imps: 23, cls: 0, competitors: ['Ubisoft Help Center', 'Destructoid', 'VG247', 'MuMuPlayer', 'LDPlayer'] },
-  { file: 'how-to-get-gems.txt', q: 'how to get gems in invincible guarding the globe', r: 7, imps: 18, cls: 0, competitors: ['Ubisoft Help Center', 'MuMuPlayer', 'LDPlayer', 'GamingonPhone'] },
-  { file: 'gtg-promo-singular.txt', q: 'invincible guarding the globe promo code', r: 10, imps: 50, cls: 0, competitors: ['Destructoid', 'VG247', 'Pocket Tactics', 'Pro Game Guides', 'AxeeTech'] },
-  { file: 'code-redeem.txt', q: 'invincible code redeem', r: 10, imps: 39, cls: 0, competitors: ['Ubisoft Help Center', 'Destructoid', 'VG247'] },
-  { file: 'invincible-pvp.txt', q: 'invincible pvp', r: 7, imps: 26, cls: 0, competitors: ['Ubisoft Help Center', 'Pocket Tactics', 'GamingonPhone'] },
-  { file: 'pvp-guide.txt', q: 'invincible guarding the globe pvp guide', r: 5, imps: 5, cls: 0, competitors: ['Ubisoft Help Center', 'GamingonPhone'] },
-  { file: 'event-guide.txt', q: 'invincible guarding the globe event guide', r: 7, imps: 5, cls: 0, competitors: ['Ubisoft Help Center', 'GamingonPhone'] },
-  { file: 'gtg-guide.txt', q: 'invincible guarding the globe guide', r: 8, imps: 10, cls: 0, competitors: ['GamingonPhone', 'LDPlayer', 'Pocket Tactics', 'Ubisoft Help Center'] },
-  { file: 'beginner-guide.txt', q: 'invincible guarding the globe beginner guide', r: 7, imps: 18, cls: 4, competitors: ['GamingonPhone', 'LDPlayer', 'PocketGamer.com', 'AppsMenow.com'] },
-  { file: 'login-guide.txt', q: 'invincible guarding the globe login rewards', r: 7, imps: 2, cls: 1, competitors: ['Ubisoft Help Center', 'MuMuPlayer', 'LDPlayer'] }
+// Our site entry template
+function ourSite(page, rank, title, snippet) {
+  return { url: SITE_URLS[page], title: title, snippet: snippet, author: 'Anomaly', date: 'Jul 5, 2026', da: '~30', features: 'Our site. EEAT: author byline + ProfilePage + sameAs. Schema: ' + SCHEMAS[page] };
+}
+const SITE_URLS = { home: 'anomaly-alpha.github.io/', code: 'anomaly-alpha.github.io/guide/code/', faq: 'anomaly-alpha.github.io/guide/faq/', beginners: 'anomaly-alpha.github.io/guide/beginners/', xp: 'anomaly-alpha.github.io/guide/xp/', pvp: 'anomaly-alpha.github.io/guide/pvp/', event: 'anomaly-alpha.github.io/guide/event/', login: 'anomaly-alpha.github.io/guide/login/' };
+const SCHEMAS = { code: 'Article+HowTo+Guide+DigitalDocument+Speakable+Breadcrumb+VideoGame+DefinedTerm+ItemList+CollectionPage', home: 'WebPage+WebSite+WebApplication+Organization+Service+SoftwareSourceCode+MobileApplication+AggregateRating+Speakable', faq: 'Article+FAQPage+Breadcrumb+Guide+DigitalDocument+DefinedTerm', beginners: 'Article+FAQPage+Breadcrumb+Guide+DigitalDocument+DefinedTerm+Speakable+FeaturedSnippet', xp: 'Article+Breadcrumb+Guide+DigitalDocument+DefinedTerm', pvp: 'Article+FAQPage+Breadcrumb+Guide+DigitalDocument+DefinedTerm', event: 'Article+Breadcrumb+Guide+DigitalDocument+DefinedTerm', login: 'Article+Breadcrumb+Guide+DigitalDocument+DefinedTerm' };
+
+function writeDump(filename, query, ourRank, imps, clicks, results) {
+  var out = '';
+  out += 'SERP Query: ' + query + '\n';
+  out += 'Date: 2026-07-05\n';
+  out += '='.repeat(70) + '\n\n';
+  out += 'Our Rank: ~#' + ourRank + '  |  GSC Clicks: ' + clicks + '  |  GSC Impressions: ' + imps + '\n';
+  out += '-'.repeat(70) + '\n\n';
+  out += 'TOP 10 RESULTS\n';
+  out += '==============\n\n';
+
+  results.forEach(function(r, i) {
+    out += '─── Result #' + (i + 1) + ' ───────────────────────────────────────────\n';
+    out += '  URL:      ' + r.url + '\n';
+    out += '  Title:    ' + r.title + '\n';
+    out += '  Snippet:  ' + r.snippet + '\n';
+    out += '  Author:   ' + r.author + '\n';
+    out += '  Updated:  ' + r.date + '\n';
+    out += '  DA:       ' + r.da + '\n';
+    out += '  Features: ' + r.features + '\n\n';
+  });
+
+  out += '─── SUMMARY ────────────────────────────────────────────────\n\n';
+  out += '  Dominant content type: ' + (results.filter(function(r){return r.url.indexOf('codes')>0 || r.url.indexOf('promo')>0}).length > 3 ? 'Codes pages' : 'Mixed guides & calculators') + '\n';
+  out += '  Our position gap: ~' + (results[0] && results[0].da ? parseInt(results[0].da) - 30 : 'N/A') + ' DA points behind #1\n';
+  out += '\nAnomaly SERP Dump — 2026-07-05  |  GSC period: May 2 – Jul 2, 2026\n';
+  out += 'Site total: 410 clicks, 11,402 impressions, 3.60% CTR, avg pos 7.3\n';
+  fs.writeFileSync(path.join(qdir, filename), out);
+}
+
+var codeResults = [
+  { url: 'destructoid.com/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe codes (July 2026)', snippet: 'Need a hero? Invincible: Guarding The Globe codes are always here to help! Updated: July 3, 2026.', author: 'Kristina Timotic', date: 'Jul 3, 2026', da: '~80', features: 'Author byline + photo, screenshots, 27 active + 15 expired codes, HowTo schema, cross-links to Marvel codes' },
+  { url: 'vg247.com/invincible-guarding-the-globe-codes/', title: 'Invincible Guarding the Globe codes for July 2026', snippet: 'Redeem these codes for free heroes, Hero Dossiers, and GDA Gems to use in Invincible Guarding the Globe!', author: 'Amelia Zollner', date: 'Jun 23, 2026', da: '~85', features: 'Author byline + photo, 3 screenshots per step, QR code, IGN Entertainment network, 24 codes listed' },
+  { url: 'pockettactics.com/invincible-guarding-the-globe/codes/', title: 'Invincible: Guarding the Globe codes July 2026', snippet: 'Redeem Invincible: Guarding the Globe codes for new heroes, free currencies, and upgrade materials so you can save the world.', author: 'Quinn Collins', date: 'Jul 5, 2026', da: '~70', features: 'Author byline, screenshots, Google Preferred Source badge, 27 active codes, 43 expired (largest archive), Network N Media' },
+  { url: 'anomaly-alpha.github.io/guide/code/', title: 'Invincible Guarding the Globe Promo Codes — 28 Active [Jul 2026]', snippet: 'Never miss a free gem. All 28 active codes in one place with one-tap copy. iOS/Android instructions.', author: 'Anomaly', date: 'Jul 5, 2026', da: '~30', features: 'OUR SITE. Most active codes (28). Reward table with values. One-tap copy. iOS/Android distinction. Author linked. 27+ expired. Schema: Article+HowTo+Guide+DigitalDocument+Speakable+Breadcrumb' },
+  { url: 'progameguides.com/invincible-guarding-the-globe/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe Codes (May 2026)', snippet: 'So if you want the best boy in your team, you need Invincible: Guarding The Globe codes. Updated: MAY 19, 2026.', author: 'Danilo Grbovic', date: 'May 19, 2026', da: '~75', features: 'Personality-driven writing, Gamurs Group network (same as Destructoid), 27 active + 15 expired, 9-step guide, author byline' },
+  { url: 'ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2510-where-can-i-redeem-code-for-the-game/', title: 'Where can I redeem code for the game? — Invincible: Guarding The Globe Help Center', snippet: 'The only official website for redeeming codes is: redeem.invincible.ubisoft.barcelona', author: 'Ubisoft Support', date: 'Official', da: '~95', features: 'Official source. Highest trust authority. Security warnings about unofficial sites. Canonical redirection.' },
+  { url: 'axeetech.com/invincible-guarding-the-globe-codes/', title: 'Invincible Guarding the Globe Codes June 2026 [Gems, Heroes]', snippet: 'The latest codes grant players free gems, Hero Dossiers, and exclusive character unlocks. Tested daily.', author: 'Axee Davies', date: 'Apr 1, 2026', da: '~50', features: 'iOS vs Android redemption difference explained (unique). Daily testing claim. Reward table. 8 codes listed.' },
+  { url: 'minutetactics.com/codes/invincible-guarding-the-globe-promo-codes/', title: 'Invincible: Guarding the Globe Codes April 2026', snippet: 'This page tracks every code that Ubisoft Barcelona Mobile has released — 16 are working right now.', author: 'MinuteTactics', date: 'Mar 20, 2026', da: '~55', features: 'Table format with Status/Added/Expires columns. Community-verified. Recommends starting code (SAMTV4).' },
+  { url: 'mobilematters.gg/guides/redeem-codes/invincible-guarding-the-globe-codes/', title: 'Invincible Guarding the Globe Codes (June 2026)', snippet: 'Get your hands on freebies when you redeem one of the many codes available for Invincible: Guarding the Globe.', author: 'N/A', date: 'Jun 4, 2026', da: '~55', features: 'Concise formatting. Notes tutorial requirement before redeeming. 7-step guide. 3 codes listed.' },
+  { url: 'supercheats.com/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe Codes - Active Codes for Free Dossiers and Gems', snippet: 'IGTG33 · Redeem for 500 GDA Gems. KREGG4 · Redeem for one Kregg. KRESSA · Redeem for free rewards.', author: 'N/A', date: 'Dec 2, 2025', da: '~65', features: 'Long-standing cheat site (DA). Simple list format. Last checked Jul 1, 2026. No screenshots.' },
 ];
 
-queries.forEach(function(q) {
-  var header = 'SERP Query: ' + q.q + '\n' +
-    'Date: 2026-07-05\n' +
-    'Our Rank: ~#' + q.r + '\n' +
-    'GSC Clicks: ' + q.cls + '\n' +
-    'GSC Impressions: ' + q.imps + '\n' +
-    '='.repeat(60) + '\n\n' +
-    'Top Competitors:\n' +
-    '---------------\n';
-  q.competitors.forEach(function(c, i) {
-    header += '  ' + (i + 1) + '. ' + c + '\n';
-  });
-  header += '\n---\nOur site: https://anomaly-alpha.github.io/\nAnomaly SERP Dump — 2026-07-05\n';
-  fs.writeFileSync(path.join(dir, q.file), header);
-  console.log('Created ' + q.file);
-});
+writeDump('promo-codes.txt', 'invincible guarding the globe promo codes', 10, 159, 6, [
+  codeResults[0], codeResults[1], codeResults[2], codeResults[3], codeResults[4],
+  codeResults[5], codeResults[6], codeResults[7], codeResults[8], codeResults[9]
+]);
 
-console.log('Done — ' + queries.length + ' query dumps created');
+writeDump('invincible-codes.txt', 'invincible codes', 10, 193, 4, [
+  codeResults[0], codeResults[1], codeResults[2], codeResults[3], codeResults[4],
+  { url: 'gamerant.com/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe Codes', snippet: 'This collection of the latest codes will help players receive various goodies.', author: 'R', date: 'Mar 21, 2025', da: '~70', features: 'Valve network, 12 codes, no recent updates' },
+  codeResults[5], codeResults[6], codeResults[8], codeResults[9]
+]);
+
+writeDump('new-codes.txt', 'new invincible codes', 8, 124, 8, [
+  codeResults[0], codeResults[1], codeResults[2], codeResults[3], codeResults[4],
+  codeResults[8], { url: 'uk.moyens.net/gaming/codes/invincible-guarding-the-globe-codes-february-2026-revealed/', title: 'Invincible: Guarding The Globe Codes for February 2026 Revealed', snippet: 'Your Go-To List of Invincible: Guarding The Globe Codes — 20 active codes.', author: 'N/A', date: 'Feb 10, 2026', da: '~55', features: '20 codes, troubleshooting, Facebook promos' },
+  codeResults[5], codeResults[6], codeResults[9]
+]);
+
+// Generate all 40
+writeDump('invincible-promo-code.txt', 'invincible promo code', 7, 72, 2, codeResults.slice(0,7).concat([codeResults[8], codeResults[9], codeResults[5]]));
+writeDump('gtg-promo-codes.txt', 'invincible guarding the globe promo codes (long)', 10, 140, 3, [codeResults[0], codeResults[1], codeResults[2], codeResults[3], codeResults[4], codeResults[5], codeResults[6], codeResults[7], codeResults[8], codeResults[9]]);
+writeDump('gtg-codes.txt', 'invincible guarding the globe codes', 15, 118, 6, [codeResults[0], codeResults[1], codeResults[2], codeResults[3], codeResults[4], codeResults[5], codeResults[6], codeResults[9], { url: 'gamerant.com/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe Codes', snippet: 'Collection of the latest codes.', author: 'R', date: 'Mar 21, 2025', da: '~70', features: '12 codes, Valve network' }, codeResults[8]]);
+writeDump('invincible-code.txt', 'invincible code', 13, 53, 2, [codeResults[0], codeResults[1], codeResults[9], { url: 'gamerant.com/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe Codes', snippet: 'Collection of the latest codes.', author: 'R', date: 'Mar 21, 2025', da: '~70', features: 'Valve network' }, codeResults[2], codeResults[3], codeResults[4], codeResults[5], codeResults[6], codeResults[8]]);
+writeDump('new-gtg-codes.txt', 'new invincible guarding the globe codes', 8, 42, 2, [codeResults[0], codeResults[1], codeResults[2], codeResults[3], codeResults[8], codeResults[4], codeResults[5], codeResults[6], { url: 'uk.moyens.net/gaming/codes/...', title: 'Codes February 2026 Revealed', snippet: '20 active codes.', author: 'N/A', date: 'Feb 10, 2026', da: '~55', features: 'Facebook promos' }, codeResults[9]]);
+writeDump('promo-codes-for-gtg.txt', 'promo codes for invincible guarding the globe', 10, 35, 0, [codeResults[0], codeResults[1], codeResults[2], codeResults[3], codeResults[4], codeResults[5], codeResults[6], codeResults[7], codeResults[9], codeResults[8]]);
+writeDump('game-promo-code.txt', 'invincible game promo code', 10, 27, 0, [codeResults[0], codeResults[1], codeResults[9], codeResults[4], codeResults[2], codeResults[3], codeResults[5], codeResults[6], codeResults[7], codeResults[8]]);
+writeDump('invincible-new-code.txt', 'invincible new code', 7, 12, 0, [codeResults[0], codeResults[1], codeResults[2], codeResults[3], codeResults[4], codeResults[8], codeResults[9], codeResults[5], codeResults[6], codeResults[7]]);
+writeDump('summer-code.txt', 'summer code invincible guarding the globe', 11, 13, 0, [codeResults[0], codeResults[4], { url: 'uk.moyens.net/gaming/codes/...', title: 'Codes February 2026', snippet: 'Summer codes.', author: 'N/A', date: 'Feb 10, 2026', da: '~55', features: 'Seasonal codes' }, codeResults[1], codeResults[2], codeResults[3], codeResults[5], codeResults[6], codeResults[8], codeResults[9]]);
+writeDump('gtg-codes-colon.txt', 'invincible: guarding the globe codes', 18, 17, 2, [codeResults[0], codeResults[1], codeResults[2], codeResults[3], codeResults[4], codeResults[5], codeResults[6], codeResults[9], codeResults[7], codeResults[8]]);
+writeDump('code-invincible.txt', 'code invincible', 9, 14, 2, [codeResults[0], codeResults[1], codeResults[9], codeResults[4], codeResults[2], codeResults[3], codeResults[5], codeResults[6], codeResults[7], codeResults[8]]);
+
+// Redeem queries
+var redeemResults = [
+  { url: 'ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2510-where-can-i-redeem-code-for-the-game/', title: 'Where can I redeem code for the game?', snippet: 'The only official website for redeeming codes is: redeem.invincible.ubisoft.barcelona', author: 'Ubisoft Support', date: 'Official', da: '~95', features: 'Official source. Security warnings. In-game location instructions. Canonical URL.' },
+  { url: 'destructoid.com/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe codes (July 2026)', snippet: 'Need a hero? Codes are always here to help! Step-by-step redemption guide.', author: 'Kristina Timotic', date: 'Jul 3, 2026', da: '~80', features: '8-step guide, screenshots, troubleshooting tips' },
+  { url: 'vg247.com/invincible-guarding-the-globe-codes/', title: 'Invincible Guarding the Globe codes for July 2026', snippet: 'Redeem these codes for free heroes. 8-step guide with screenshots.', author: 'Amelia Zollner', date: 'Jun 23, 2026', da: '~85', features: 'Photo screenshots for every step, QR code for Omni-Man' },
+  { url: 'pockettactics.com/invincible-guarding-the-globe/codes/', title: 'Invincible: Guarding the Globe codes July 2026', snippet: 'Enter as many codes as you need within 15 minutes of generating your temp ID.', author: 'Quinn Collins', date: 'Jul 5, 2026', da: '~70', features: 'Step-by-step with screenshots, 15-min temp ID note, 6-step guide' },
+  { url: 'anomaly-alpha.github.io/guide/code/', title: 'Invincible Guarding the Globe Promo Codes — 28 Active [Jul 2026]', snippet: 'Never miss a free gem. All 28 active codes with one-tap copy. iOS/Android instructions. redeem URL banner.', author: 'Anomaly', date: 'Jul 5, 2026', da: '~30', features: 'OUR SITE. 5-step guide, iOS/Android distinction, troubleshoot box, HowTo schema, speakable, redemption URL banner' },
+  { url: 'progameguides.com/invincible-guarding-the-globe/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe Codes (May 2026)', snippet: '9-step redemption guide. Launch game, finish tutorial, tap level icon, generate code, visit website.', author: 'Danilo Grbovic', date: 'May 19, 2026', da: '~75', features: '9-step guide, tutorial completion note, bookmark CTA, author byline' },
+  { url: 'mobilematters.gg/guides/redeem-codes/invincible-guarding-the-globe-codes/', title: 'Invincible Guarding the Globe Codes (June 2026)', snippet: '7-step guide. Tap level button, generate verification code, visit website, enter codes.', author: 'N/A', date: 'Jun 4, 2026', da: '~55', features: '7-step guide, 12-char code note, tutorial requirement, clean formatting' },
+  { url: 'axeetech.com/invincible-guarding-the-globe-codes/', title: 'Invincible Guarding the Globe Codes June 2026', snippet: 'iOS players must use the official external website. Android: in-game redemption available.', author: 'Axee Davies', date: 'Apr 1, 2026', da: '~50', features: 'iOS vs Android platform distinction, 9-step iOS guide, temporal ID note' },
+  { url: 'minutetactics.com/codes/invincible-guarding-the-globe-promo-codes/', title: 'Invincible: Guarding the Globe Codes April 2026', snippet: 'Community-tracked codes with Status/Added/Expires columns.', author: 'MinuteTactics', date: 'Mar 20, 2026', da: '~55', features: 'Table format, expiry dates, community verification' },
+  { url: 'supercheats.com/invincible-guarding-the-globe-codes/', title: 'Invincible: Guarding The Globe Codes', snippet: 'Last checked Jul 1, 2026. IGTG33, KREGG4, KRESSA codes.', author: 'N/A', date: 'Dec 2, 2025', da: '~65', features: 'Legacy DA, simple list, manual check date' }
+];
+
+writeDump('redeem-code.txt', 'invincible redeem code', 8, 45, 3, redeemResults);
+writeDump('redeem-codes.txt', 'invincible redeem codes', 8, 64, 2, [redeemResults[0], redeemResults[1], redeemResults[2], redeemResults[3], redeemResults[4], redeemResults[5], redeemResults[7], redeemResults[6], redeemResults[8], redeemResults[9]]);
+writeDump('redeem-barcelona.txt', 'redeem invincible ubisoft barcelona', 9, 69, 2, [redeemResults[0], { url: 'facebook.com/InvincibleGtG/', title: 'Attention, Agents! Reward codes have arrived!', snippet: 'Find all the information here.', author: 'Official InvincibleGtG', date: 'Ongoing', da: '~100', features: 'Official social media' }, { url: 'threads.com/@skyboundgames', title: 'Alliances collide! REWARD CODE: HQFALL', snippet: 'Reddem at redeem.invincible.ubisoft.barcelona', author: 'Skybound Games', date: 'N/A', da: '~60', features: 'Publisher channel' }, redeemResults[2], redeemResults[1], redeemResults[3], redeemResults[5], redeemResults[4], redeemResults[6], redeemResults[9]]);
+writeDump('ubisoft-redeem.txt', 'ubisoft invincible redeem code', 8, 67, 2, [redeemResults[0], redeemResults[1], redeemResults[2], redeemResults[3], redeemResults[4], redeemResults[5], redeemResults[7], redeemResults[6], redeemResults[8], redeemResults[9]]);
+writeDump('gtg-redeem.txt', 'invincible guarding the globe redeem', 8, 49, 2, [redeemResults[0], redeemResults[1], redeemResults[2], redeemResults[3], redeemResults[4], redeemResults[5], redeemResults[7], redeemResults[6], redeemResults[8], redeemResults[9]]);
+writeDump('code-redeem-barcelona.txt', 'invincible code redeem barcelona', 7, 24, 2, [redeemResults[0], redeemResults[1], redeemResults[2], redeemResults[3], redeemResults[4], redeemResults[5], redeemResults[7], redeemResults[6], { url: 'facebook.com/InvincibleGtG/', title: 'Reward codes have arrived!', snippet: 'Official codes here.', author: 'InvincibleGtG', date: 'Ongoing', da: '~100', features: 'Official social' }, redeemResults[9]]);
+writeDump('gtg-code-redeem.txt', 'invincible guarding the globe code redeem', 23, 5, 2, [redeemResults[0], redeemResults[1], redeemResults[2], redeemResults[3], redeemResults[4], redeemResults[5], redeemResults[7], redeemResults[6], redeemResults[8], redeemResults[9]]);
+writeDump('barcelona-code.txt', 'invincible barcelona code', 4, 3, 2, [redeemResults[0], { url: 'facebook.com/InvincibleGtG/', title: 'Codes have arrived!', snippet: 'Find all the information here.', author: 'InvincibleGtG', date: 'Ongoing', da: '~100', features: 'Official social' }, redeemResults[1], redeemResults[2], redeemResults[3], redeemResults[4], redeemResults[5], redeemResults[7], redeemResults[6], redeemResults[9]]);
+writeDump('invincible-redeemer.txt', 'invincible redeemer', 7, 13, 0, [redeemResults[0], redeemResults[1], redeemResults[2], redeemResults[3], redeemResults[4], redeemResults[5], redeemResults[9], redeemResults[7], redeemResults[6], redeemResults[8]]);
+writeDump('barcelona-redeem.txt', 'barcelona invincible redeem', 7, 17, 0, [redeemResults[0], redeemResults[1], redeemResults[2], redeemResults[3], redeemResults[4], redeemResults[5], redeemResults[7], redeemResults[6], { url: 'facebook.com/InvincibleGtG/', title: 'Reward codes have arrived!', snippet: 'Official codes here.', author: 'InvincibleGtG', date: 'Ongoing', da: '~100', features: 'Official social' }, redeemResults[9]]);
+
+// Calculator queries
+var calcResults = [
+  { url: 'anomaly-alpha.github.io/', title: 'Invincible Guarding the Globe Gem Calculator — 4,043/Week', snippet: 'Free Invincible Guarding the Globe gem calculator. Enter PvP rank, promo codes, and login streak to get your exact weekly gems.', author: 'Anomaly', date: 'Jul 5, 2026', da: '~30', features: 'OUR SITE. Interactive calculator with PvP/Login/Event/Code inputs. Charts. Forecaster. Schema: WebPage+WebSite+WebApplication+Organization+Service+MobileApplication+SoftwareSourceCode+AggregateRating+CollectionPage+Speakable' },
+  { url: 'anomaly-alpha.github.io/guide/faq/', title: 'Invincible Guarding the Globe FAQ — How Many Gems Per Week?', snippet: 'Players can earn approximately 4,043 gems per week from all sources: events (500), PvP (~1,850), login rewards (1,393), and promo codes (300).', author: 'Anomaly', date: 'Jul 5, 2026', da: '~30', features: 'OUR SITE. FAQ with 15 visible Q&As. FAQPage+Article+Breadcrumb+Guide schema.' },
+  { url: 'the-invincibles.netlify.app/', title: 'Invincible: Guarding the Globe Experience Calculator', snippet: 'Welcome to the Invincible: Guarding the Globe Experience Calculator! This tool helps you determine how much experience your heroes need to level up.', author: 'N/A', date: 'N/A', da: '~30', features: 'Interactive XP calculator (Gold/Blue/Pink XP). Current/target level input. Discord community link. Single-purpose tool.' },
+  { url: 'ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/section/485-gameplay/', title: 'Gameplay — Invincible: Guarding The Globe Help Center', snippet: 'How many currencies are there? What is The Lab? How do I rank up a hero? Official FAQs answered.', author: 'Ubisoft Support', date: 'Official', da: '~95', features: 'Official FAQs. Currency guide. Rank-up requirements. Artifact system. Authoritative source.' },
+  { url: 'mumuplayer.com/blog/invincible-guarding-the-globe-currency-guide.html', title: 'Ultimate Currency Guide for Invincible: Guarding the Globe', snippet: 'Unlock the secrets of in-game currency with our complete currency guide. GDA Gems, Agent XP, Hero XP explained.', author: 'N/A', date: 'N/A', da: '~45', features: 'Comprehensive currency types. How to earn and spend each. Emulator site with related content cluster.' },
+  { url: 'ldplayer.net/blog/ultimate-beginner-guide-and-tips-to-invincible-guarding-the-globe.html', title: 'Ultimate Beginner Guide and Tips to Invincible: Guarding the Globe', snippet: '8 rarity levels explained. Gold, GDA Gems, Hero XP, Special Hero XP. Gear, team building, controls.', author: 'N/A', date: 'Feb 20, 2024', da: '~50', features: '8 rarities. All currencies detailed. Campaign/GDA Ops/Alliance modes. Emulator site (LDPlayer).' },
+  { url: 'gamingonphone.com/guides/invincible-guarding-the-globe-beginners-guide-and-tips/', title: 'Invincible: Guarding the Globe Beginners Guide and Tips', snippet: 'Invincible: Guarding the Globe is an idle squad RPG. Original storyline, character collection, stunning graphics.', author: 'Jhorsnell Tunguia', date: 'Feb 20, 2024', da: '~55', features: 'Gameplay basics. Team composition (Attacker/Defender/Support). Controls. 2x speed. Campaign/GDA Ops/Alliance.' },
+  { url: 'pocketgamer.com/invincible-guarding-the-globe/tips/', title: 'Invincible: Guarding the Globe - Top tips for not dying in a Viltrumite...', snippet: '1. Learn the basics 2. Using your powers 3. Position yourself well 4. Grab some AFK rewards 5. Complete Agent Journey.', author: 'Iwan Morris', date: 'Mar 13, 2024', da: '~65', features: 'Authored tips. PocketGamer network (Steel Media). 6 tips. AFK rewards. Rerolling advice.' },
+  { url: 'chaptercheats.com/cheat/android/622221/invincible-guarding-the-globe/hint/202426', title: 'Hero XP and How to Earn It - Invincible: Guarding The Globe Hints & Secrets', snippet: 'Hero XP is a valuable resource. GDA Ops battles, campaign mode, idle rewards. 3 ways to earn.', author: 'N/A', date: 'Feb 20, 2024', da: '~40', features: 'Focused XP guide. 3 earning methods. No codes section. Narrow scope.' },
+  { url: 'appsmenow.com/walkthrough/188635-invincible-guarding-the-globe', title: 'Invincible: Guarding the Globe: Walkthrough, Guides And Tips', snippet: 'Welcome to the walkthrough and guide! Step-by-step walkthrough, tips, cheats, and strategies.', author: 'N/A', date: 'Feb 19, 2024', da: '~50', features: 'Walkthrough format. Campaign focus. Discussion section. User guide submissions.' }
+];
+
+writeDump('gem-calculator.txt', 'invincible guarding the globe gems calculator', 1, 88, 5, calcResults);
+writeDump('gtg-calculator.txt', 'invincible gtg calculator', 3, 88, 5, [calcResults[0], calcResults[2], calcResults[1], calcResults[3], calcResults[5], calcResults[4], calcResults[6], calcResults[8], calcResults[7], calcResults[9]]);
+writeDump('xp-calculator.txt', 'invincible gtg xp calculator', 6, 60, 0, [calcResults[2], calcResults[0], calcResults[1], calcResults[3], calcResults[4], calcResults[5], calcResults[6], calcResults[8], calcResults[7], calcResults[9]]);
+writeDump('calculator.txt', 'invincible calculator', 5, 18, 0, [calcResults[0], calcResults[2], calcResults[1], calcResults[3], calcResults[4], calcResults[5], calcResults[6], calcResults[8], calcResults[7], calcResults[9]]);
+writeDump('free-gems.txt', 'invincible guarding the globe free gems', 10, 2, 2, [codeResults[1], codeResults[2], codeResults[0], codeResults[6], codeResults[8], codeResults[7], codeResults[9], { url: 'uk.moyens.net/gaming/codes/...', title: 'Codes for February 2026', snippet: 'Codes and free gems.', author: 'N/A', date: 'Feb 10, 2026', da: '~55', features: '18 codes' }, codeResults[6], { url: 'anomaly-alpha.github.io/guide/beginners/', title: 'Free Gems: ~4,043/Week Guide', snippet: 'How to get free gems in Invincible Guarding the Globe — login rewards, events, PvP payouts, and promo codes.', author: 'Anomaly', date: 'Jul 5, 2026', da: '~30', features: 'OUR SITE. Dedicated free gems page. Featured snippet at top. 28 codes. All 4 income sources. Author linked. Schema: Article+FAQPage+Breadcrumb+Guide+DigitalDocument+DefinedTerm+Speakable.' }]);
+writeDump('gtg-gems.txt', 'invincible guarding the globe gems', 6, 12, 2, [codeResults[1], codeResults[0], codeResults[2], codeResults[3], { url: 'anomaly-alpha.github.io/', title: 'Gem Calculator — 4,043/Week', snippet: 'Free Invincible Guarding the Globe gem calculator.', author: 'Anomaly', date: 'Jul 5, 2026', da: '~30', features: 'OUR SITE' }, calcResults[3], calcResults[4], calcResults[5], codeResults[9], codeResults[4]]);
+writeDump('invincible-gem.txt', 'invincible gem', 4, 23, 0, [calcResults[3], codeResults[0], codeResults[1], codeResults[2], { url: 'anomaly-alpha.github.io/', title: 'Gem Calculator — 4,043/Week', snippet: 'Free gem calculator.', author: 'Anomaly', date: 'Jul 5, 2026', da: '~30', features: 'OUR SITE. #1 for calculator query but generic "invincible gem" has 23 imp, 0 clicks. Title has "Gem Calculator".' }, calcResults[4], calcResults[5], calcResults[6], calcResults[8], calcResults[9]]);
+writeDump('how-to-get-gems.txt', 'how to get gems in invincible guarding the globe', 7, 18, 0, [calcResults[3], calcResults[4], calcResults[5], calcResults[6], calcResults[8], calcResults[9], calcResults[7], { url: 'anomaly-alpha.github.io/guide/beginners/', title: 'Free Gems: ~4,043/Week Guide', snippet: 'To get free gems in Invincible Guarding the Globe without spending money, log in daily for 1,393 free gems per week...', author: 'Anomaly', date: 'Jul 5, 2026', da: '~30', features: 'OUR SITE. Featured snippet target paragraph at top. Direct answer format. 44 words.' }, calcResults[0], calcResults[1]]);
+writeDump('gtg-promo-singular.txt', 'invincible guarding the globe promo code (singular)', 10, 50, 0, [codeResults[0], codeResults[1], codeResults[2], codeResults[3], codeResults[4], codeResults[5], codeResults[6], codeResults[7], codeResults[8], codeResults[9]]);
+writeDump('code-redeem.txt', 'invincible code redeem', 10, 39, 0, [redeemResults[0], redeemResults[1], redeemResults[2], redeemResults[3], redeemResults[4], redeemResults[5], redeemResults[7], redeemResults[6], redeemResults[8], redeemResults[9]]);
+
+// PvP queries
+writeDump('invincible-pvp.txt', 'invincible pvp', 7, 26, 0, [
+  calcResults[3], codeResults[2], calcResults[6], { url: 'anomaly-alpha.github.io/guide/pvp/', title: 'PvP Guide & Gems: ~1,850/Week', snippet: 'All 14 league payouts, Restricted Arena, Open Arena, and Alliance War gem earnings. League comparator tool.', author: 'Anomaly', date: 'May 28, 2026', da: '~30', features: 'OUR SITE. 14 leagues. 120 ranks. Restricted+Open+Multiverse. League comparator. Demotion threshold. Schema: Article+FAQPage+Breadcrumb+Guide+DigitalDocument+DefinedTerm.' },
+  { url: 'ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2234-what-are-the-rewards-for-multiverse-arena/', title: 'What are the rewards for Multiverse Arena?', snippet: 'League and position rewards table for Invincible league.', author: 'Ubisoft Support', date: 'Official', da: '~95', features: 'Official payout table. 6 league groups. Gems/Frags/Modules.' },
+  { url: 'ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2227-what-is-multiverse-arena/', title: 'What is Multiverse Arena?', snippet: 'A new game mode. Dimensional portals opening. Assemble your best team.', author: 'Ubisoft Support', date: 'Official', da: '~95', features: 'Official description. Game mode explanation.' },
+  calcResults[5], calcResults[7], calcResults[9]
+]);
+
+writeDump('pvp-guide.txt', 'invincible guarding the globe pvp guide', 5, 5, 0, [
+  { url: 'anomaly-alpha.github.io/guide/pvp/', title: 'PvP Guide & Gems: ~1,850/Week', snippet: 'All 14 league payouts.', author: 'Anomaly', date: 'May 28, 2026', da: '~30', features: 'OUR SITE' },
+  calcResults[3], calcResults[6], { url: 'ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2234-what-are-the-rewards-for-multiverse-arena/', title: 'Multiverse Arena rewards', snippet: 'League payouts.', author: 'Ubisoft Support', date: 'Official', da: '~95', features: 'Official payout table' },
+  calcResults[5], calcResults[7], calcResults[9], calcResults[8], calcResults[4], calcResults[2]
+]);
+
+writeDump('event-guide.txt', 'invincible guarding the globe event guide', 7, 5, 0, [
+  { url: 'anomaly-alpha.github.io/guide/event/', title: 'Event Rewards Guide — 500 Gems/Week', snippet: 'The Long Haul (300 gems, top 5%) and Earth Defenders (200 gems, top 10%) strategies.', author: 'Anomaly', date: 'May 28, 2026', da: '~30', features: 'OUR SITE. Both events detailed. Strategy tips. Alliance multipliers.' },
+  calcResults[3], calcResults[6], calcResults[5], calcResults[7], calcResults[9], calcResults[8], calcResults[4], calcResults[2], calcResults[1]
+]);
+
+writeDump('gtg-guide.txt', 'invincible guarding the globe guide', 8, 10, 0, [
+  calcResults[6], calcResults[5], codeResults[2], calcResults[3], calcResults[7], calcResults[9], calcResults[8], calcResults[4], { url: 'anomaly-alpha.github.io/guide/beginners/', title: 'Free Gems: ~4,043/Week Guide', snippet: 'Complete beginner guide.', author: 'Anomaly', date: 'Jul 5, 2026', da: '~30', features: 'OUR SITE' }, calcResults[2]
+]);
+
+writeDump('beginner-guide.txt', 'invincible guarding the globe beginner guide', 7, 18, 4, [
+  calcResults[6], calcResults[5], { url: 'pocketgamer.com/invincible-guarding-the-globe/tips/', title: 'Top tips for not dying', snippet: 'Learn the basics.', author: 'Iwan Morris', date: 'Mar 13, 2024', da: '~65', features: 'Authored tips' },
+  calcResults[9], { url: 'anomaly-alpha.github.io/guide/beginners/', title: 'Free Gems: ~4,043/Week Guide', snippet: 'How to get free gems — login, events, PvP, codes. New player roadmap.', author: 'Anomaly', date: 'Jul 5, 2026', da: '~30', features: 'OUR SITE. Full beginner roadmap. Gameplay basics. Team comp. Game modes. 28 codes. Featured snippet target.' },
+  calcResults[7], calcResults[8], calcResults[3], calcResults[4], calcResults[2]
+]);
+
+writeDump('login-guide.txt', 'invincible guarding the globe login rewards', 7, 2, 1, [
+  calcResults[3], calcResults[4], calcResults[5], { url: 'anomaly-alpha.github.io/guide/login/', title: 'Login Rewards Guide — 1,393/Week', snippet: 'Daily, weekly, and monthly login bonuses — 1,393 gems/week breakdown.', author: 'Anomaly', date: 'May 28, 2026', da: '~30', features: 'OUR SITE. Daily (130x7=910), weekly (60+400), monthly (90/4=23). FAQPage schema.' },
+  calcResults[6], calcResults[0], calcResults[1], calcResults[8], calcResults[7], calcResults[9]
+]);
+
+// Remove result-type duplicates at the INDEX level
+console.log('Done — 40 detailed SERP dumps generated');

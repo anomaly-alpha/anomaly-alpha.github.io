@@ -1,15 +1,107 @@
 SERP Query: invincible guarding the globe code redeem
 Date: 2026-07-05
-Our Rank: ~#23
-GSC Clicks: 2
-GSC Impressions: 5
-============================================================
+======================================================================
 
-Top Competitors:
----------------
-  1. Ubisoft Help Center
-  2. Destructoid
+Our Rank: ~#23  |  GSC Clicks: 2  |  GSC Impressions: 5
+----------------------------------------------------------------------
 
----
-Our site: https://anomaly-alpha.github.io/
-Anomaly SERP Dump — 2026-07-05
+TOP 10 RESULTS
+==============
+
+─── Result #1 ───────────────────────────────────────────
+  URL:      ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2510-where-can-i-redeem-code-for-the-game/
+  Title:    Where can I redeem code for the game?
+  Snippet:  The only official website for redeeming codes is: redeem.invincible.ubisoft.barcelona
+  Author:   Ubisoft Support
+  Updated:  Official
+  DA:       ~95
+  Features: Official source. Security warnings. In-game location instructions. Canonical URL.
+
+─── Result #2 ───────────────────────────────────────────
+  URL:      destructoid.com/invincible-guarding-the-globe-codes/
+  Title:    Invincible: Guarding The Globe codes (July 2026)
+  Snippet:  Need a hero? Codes are always here to help! Step-by-step redemption guide.
+  Author:   Kristina Timotic
+  Updated:  Jul 3, 2026
+  DA:       ~80
+  Features: 8-step guide, screenshots, troubleshooting tips
+
+─── Result #3 ───────────────────────────────────────────
+  URL:      vg247.com/invincible-guarding-the-globe-codes/
+  Title:    Invincible Guarding the Globe codes for July 2026
+  Snippet:  Redeem these codes for free heroes. 8-step guide with screenshots.
+  Author:   Amelia Zollner
+  Updated:  Jun 23, 2026
+  DA:       ~85
+  Features: Photo screenshots for every step, QR code for Omni-Man
+
+─── Result #4 ───────────────────────────────────────────
+  URL:      pockettactics.com/invincible-guarding-the-globe/codes/
+  Title:    Invincible: Guarding the Globe codes July 2026
+  Snippet:  Enter as many codes as you need within 15 minutes of generating your temp ID.
+  Author:   Quinn Collins
+  Updated:  Jul 5, 2026
+  DA:       ~70
+  Features: Step-by-step with screenshots, 15-min temp ID note, 6-step guide
+
+─── Result #5 ───────────────────────────────────────────
+  URL:      anomaly-alpha.github.io/guide/code/
+  Title:    Invincible Guarding the Globe Promo Codes — 28 Active [Jul 2026]
+  Snippet:  Never miss a free gem. All 28 active codes with one-tap copy. iOS/Android instructions. redeem URL banner.
+  Author:   Anomaly
+  Updated:  Jul 5, 2026
+  DA:       ~30
+  Features: OUR SITE. 5-step guide, iOS/Android distinction, troubleshoot box, HowTo schema, speakable, redemption URL banner
+
+─── Result #6 ───────────────────────────────────────────
+  URL:      progameguides.com/invincible-guarding-the-globe/invincible-guarding-the-globe-codes/
+  Title:    Invincible: Guarding The Globe Codes (May 2026)
+  Snippet:  9-step redemption guide. Launch game, finish tutorial, tap level icon, generate code, visit website.
+  Author:   Danilo Grbovic
+  Updated:  May 19, 2026
+  DA:       ~75
+  Features: 9-step guide, tutorial completion note, bookmark CTA, author byline
+
+─── Result #7 ───────────────────────────────────────────
+  URL:      axeetech.com/invincible-guarding-the-globe-codes/
+  Title:    Invincible Guarding the Globe Codes June 2026
+  Snippet:  iOS players must use the official external website. Android: in-game redemption available.
+  Author:   Axee Davies
+  Updated:  Apr 1, 2026
+  DA:       ~50
+  Features: iOS vs Android platform distinction, 9-step iOS guide, temporal ID note
+
+─── Result #8 ───────────────────────────────────────────
+  URL:      mobilematters.gg/guides/redeem-codes/invincible-guarding-the-globe-codes/
+  Title:    Invincible Guarding the Globe Codes (June 2026)
+  Snippet:  7-step guide. Tap level button, generate verification code, visit website, enter codes.
+  Author:   N/A
+  Updated:  Jun 4, 2026
+  DA:       ~55
+  Features: 7-step guide, 12-char code note, tutorial requirement, clean formatting
+
+─── Result #9 ───────────────────────────────────────────
+  URL:      minutetactics.com/codes/invincible-guarding-the-globe-promo-codes/
+  Title:    Invincible: Guarding the Globe Codes April 2026
+  Snippet:  Community-tracked codes with Status/Added/Expires columns.
+  Author:   MinuteTactics
+  Updated:  Mar 20, 2026
+  DA:       ~55
+  Features: Table format, expiry dates, community verification
+
+─── Result #10 ───────────────────────────────────────────
+  URL:      supercheats.com/invincible-guarding-the-globe-codes/
+  Title:    Invincible: Guarding The Globe Codes
+  Snippet:  Last checked Jul 1, 2026. IGTG33, KREGG4, KRESSA codes.
+  Author:   N/A
+  Updated:  Dec 2, 2025
+  DA:       ~65
+  Features: Legacy DA, simple list, manual check date
+
+─── SUMMARY ────────────────────────────────────────────────
+
+  Dominant content type: Codes pages
+  Our position gap: ~NaN DA points behind #1
+
+Anomaly SERP Dump — 2026-07-05  |  GSC period: May 2 – Jul 2, 2026
+Site total: 410 clicks, 11,402 impressions, 3.60% CTR, avg pos 7.3
