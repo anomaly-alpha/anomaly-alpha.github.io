@@ -84,8 +84,19 @@ html { visibility: hidden }
           "description": "Find active Invincible Guarding the Globe promo codes, codes, and reward codes. 28 active promo codes with gems, hero shards & tickets.",
           "url": "https://anomaly-alpha.github.io/guide/code/",
           "about": { "@id": "#game" },
+          "audience": {
+            "@type": "Audience",
+            "audienceType": "Invincible Guarding the Globe players"
+          },
+          "accountablePerson": { "@type": "Person", "name": "Anomaly", "url": "https://anomaly-alpha.github.io/authors/anomaly/" },
+          "hasPart": [
+            { "@type": "WebPageElement", "name": "Active codes list" },
+            { "@type": "WebPageElement", "name": "How to redeem" },
+            { "@type": "WebPageElement", "name": "Tips and strategy" },
+            { "@type": "WebPageElement", "name": "Frequently asked questions" }
+          ],
           "author": [
-            { "@type": "Person", "name": "Anomaly" },
+            { "@type": "Person", "name": "Anomaly", "url": "https://anomaly-alpha.github.io/authors/anomaly/" },
             { "@type": "Person", "name": "TheOneTruePanda" }
           ],
           "publisher": {
@@ -108,6 +119,10 @@ html { visibility: hidden }
         },
         {
           "@type": "HowTo",
+          "speakable": {
+            "@type": "SpeakableSpecification",
+            "cssSelector": [".gem-card__gems", ".gem-text--code", ".gem-subtitle--hero"]
+          },
           "name": "Redeem Invincible Guarding the Globe Promo Codes at the Ubisoft Barcelona Portal",
           "description": "How to redeem active promo codes at the Ubisoft Barcelona redemption portal using a verification code from the in-game settings.",
           "step": [

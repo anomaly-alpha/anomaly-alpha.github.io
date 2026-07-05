@@ -835,28 +835,35 @@ html { visibility: hidden }
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@id": "#webpage",
           "@type": "WebPage",
           "name": "Invincible Guarding the Globe Gem Calculator — 4,043/Week",
           "description": "Free Invincible Guarding the Globe gem calculator. Enter PvP rank, promo codes, and login streak to get your exact weekly gems — ~4,043/week combined.",
           "url": "https://anomaly-alpha.github.io/",
+          "speakable": {
+            "@type": "SpeakableSpecification",
+            "cssSelector": [".gem-counter", ".gem-mode-btn__count", ".gem-subtitle--hero"]
+          },
+          "hasPart": [
+            { "@type": "WebPageElement", "name": "Calculator", "url": "#calculator-section" },
+            { "@type": "WebPageElement", "name": "Promo Codes", "url": "https://anomaly-alpha.github.io/guide/code/" },
+            { "@type": "WebPageElement", "name": "PvP Rewards", "url": "https://anomaly-alpha.github.io/guide/pvp/" },
+            { "@type": "WebPageElement", "name": "Login Rewards", "url": "https://anomaly-alpha.github.io/guide/login/" },
+            { "@type": "WebPageElement", "name": "Event Rewards", "url": "https://anomaly-alpha.github.io/guide/event/" },
+            { "@type": "WebPageElement", "name": "Beginner's Guide", "url": "https://anomaly-alpha.github.io/guide/beginners/" }
+          ],
           "about": {
             "@type": "VideoGame",
-            "name": "Invincible Guarding the Globe",
-            "applicationCategory": "Game",
-            "operatingSystem": "iOS, Android",
-            "gamePlatform": "iOS, Android"
+            "name": "Invincible Guarding the Globe"
           },
-          "relatedLink": [
-            "https://anomaly-alpha.github.io/guide/code/",
-            "https://anomaly-alpha.github.io/guide/event/",
-            "https://anomaly-alpha.github.io/guide/pvp/",
-            "https://anomaly-alpha.github.io/guide/login/",
-            "https://anomaly-alpha.github.io/guide/faq/",
-            "https://anomaly-alpha.github.io/guide/beginners/",
-            "https://anomaly-alpha.github.io/guide/xp/"
-          ],
+          "audience": {
+            "@type": "Audience",
+            "audienceType": "Mobile gamers and Invincible fans"
+          },
+          "accountablePerson": { "@id": "#anomaly" },
+          "reviewedBy": { "@id": "#anomaly" },
           "author": [
-            { "@type": "Person", "name": "Anomaly" },
+            { "@type": "Person", "@id": "#anomaly", "name": "Anomaly", "url": "https://anomaly-alpha.github.io/authors/anomaly/" },
             { "@type": "Person", "name": "TheOneTruePanda" },
             { "@type": "Person", "name": "dbp loves allen" },
             { "@type": "Person", "name": "Sy" }
@@ -880,6 +887,10 @@ html { visibility: hidden }
             "availability": "https://schema.org/InStock"
           },
           "genre": ["RPG", "Strategy", "Superhero"],
+          "audience": {
+            "@type": "Audience",
+            "audienceType": "Mobile gamers, ages 12+"
+          },
           "associatedTool": {
             "@type": "WebApplication",
             "name": "Gem Rewards Calculator",
@@ -910,7 +921,6 @@ html { visibility: hidden }
             }
           ]
         },
-
         {
           "@type": "WebApplication",
           "name": "Invincible Guarding the Globe Gem Calculator",
@@ -921,6 +931,21 @@ html { visibility: hidden }
           "browserRequirements": "Requires JavaScript"
         },
         {
+          "@type": "WebPageElement",
+          "name": "Image",
+          "image": {
+            "@type": "ImageObject",
+            "contentUrl": "https://anomaly-alpha.github.io/og-images/home.png",
+            "width": 1200,
+            "height": 630,
+            "caption": "Gem Rewards & PvP Guide — ~4,043 GEMS/WEEK",
+            "license": "https://anomaly-alpha.github.io/",
+            "acquireLicensePage": "https://anomaly-alpha.github.io/",
+            "creditText": "Gem Rewards Calculator",
+            "copyrightNotice": "© Gem Rewards Calculator"
+          }
+        },
+        {
           "@type": "Organization",
           "name": "Gem Rewards Calculator",
           "url": "https://anomaly-alpha.github.io/",
@@ -929,6 +954,13 @@ html { visibility: hidden }
             "url": "https://anomaly-alpha.github.io/og-images/home.png",
             "width": 1200,
             "height": 630
+          },
+          "foundingDate": "2025",
+          "founder": { "@type": "Person", "name": "Anomaly" },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "url": "https://github.com/anomaly-alpha/anomaly-alpha.github.io"
           },
           "sameAs": [
             "https://github.com/anomaly-alpha/anomaly-alpha.github.io"
