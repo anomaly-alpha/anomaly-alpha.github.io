@@ -91,3 +91,25 @@ describe('Scroll Behavior', function() {
     assert_true(offset !== '100.53', 'progress ring should update');
   });
 });
+
+describe('Reduced Motion', function() {
+  it('should not add animation classes when reduced motion preferred', function() {
+    // Mock matchMedia
+    const originalMatchMedia = window.matchMedia;
+    window.matchMedia = function() {
+      return { matches: true, addEventListener: function() {} };
+    };
+
+    const btn = document.querySelector('.gem-back-to-top');
+    btn.setAttribute('hidden', '');
+    btn.classList.remove('gem-back-to-top--visible', 'gem-back-to-top--hiding');
+
+    Object.defineProperty(window, 'scrollY', { value: 400, writable: true, configurable: true });
+    window.dispatchEvent(new Event('scroll'));
+
+    // Should use hidden attribute only, no animation classes
+    assert_false(btn.classList.contains('gem-back-to-top--visible'), 'should not add visible class');
+
+    window.matchMedia = originalMatchMedia;
+  });
+});
