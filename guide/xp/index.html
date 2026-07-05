@@ -13,7 +13,7 @@
     <meta property="og:url" content="https://anomaly-alpha.github.io/guide/xp/">
     <meta property="og:type" content="article">
     <meta property="article:published_time" content="2026-07-04T00:00:00Z">
-    <meta property="article:modified_time" content="2026-07-04T00:00:00Z">
+    <meta property="article:modified_time" content="2026-07-05T00:00:00Z">
     <meta property="article:author" content="https://anomaly-alpha.github.io/">
     <meta property="article:publisher" content="https://anomaly-alpha.github.io/">
     <meta property="og:image" content="https://anomaly-alpha.github.io/og-images/xp.png">
@@ -64,7 +64,7 @@ html { visibility: hidden }
           },
           "image": "https://anomaly-alpha.github.io/og-images/home.png",
           "datePublished": "2026-07-04",
-          "dateModified": "2026-07-04"
+          "dateModified": "2026-07-05"
         }
       ]
     }
@@ -108,6 +108,11 @@ html { visibility: hidden }
             </h1>
             <p class="gem-subtitle--hero">
                 Level Up, Rank Up, Get Stronger — Hero XP, Agent XP & Rank-Up Reference
+            </p>
+            <p class="text-sm gem-text--muted mt-3">
+                by <span class="gem-text--cyan font-semibold">Anomaly</span>
+                <span class="mx-2 opacity-30">·</span>
+                Updated <time datetime="2026-07-05">Jul 5, 2026</time>
             </p>
         </div>
 
@@ -181,7 +186,36 @@ html { visibility: hidden }
                     <li><strong class="text-white">Alliance activities</strong> — Cooperative gameplay yields Agent XP for account progression.</li>
                     <li><strong class="text-white"><a href="../event/" class="gem-text--event underline">Events</a></strong> — Limited-time events often include XP as milestone or ranking rewards. <a href="../pvp/" class="gem-text--pvp underline">PvP arenas</a> also contribute XP through battle completions.</li>
                 </ul>
-                <p class="text-xs text-white/40 mt-3">Exact XP-per-level values vary by hero rarity and level. A full XP table will be added here when sourced from in-game data.</p>
+                <p class="text-xs text-white/40 mt-3">Exact XP-per-level values vary by hero rarity. For a precise calculation, try the community XP calculator at <a href="https://the-invincibles.netlify.app/" target="_blank" class="gem-text--code underline">the-invincibles.netlify.app</a> — enter your hero's current and target level to get exact Gold, Blue XP, and Pink XP requirements.</p>
+            </div>
+        </section>
+
+        <section class="mx-4 mb-8">
+            <h2 class="text-xl font-bold text-white mb-4 tracking-wider">Estimated XP Requirements by Rarity</h2>
+            <div class="gem-card gem-card--code p-5">
+                <p class="text-white/80 leading-relaxed mb-4">While exact XP-per-level scales with hero rarity, here are the approximate resource types needed to level up heroes from level 1 to max for their current rank tier:</p>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-white/10 text-white/60">
+                                <th class="p-2 text-left">Rarity</th>
+                                <th class="p-2 text-left">Gold (GDA Chips)</th>
+                                <th class="p-2 text-left">Hero XP (Blue)</th>
+                                <th class="p-2 text-left">Special XP (Pink)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-white/80">
+                            <tr class="border-b border-white/5"><td class="p-2">Rare → Rare +</td><td class="p-2">~15,000</td><td class="p-2">~50,000</td><td class="p-2">~800</td></tr>
+                            <tr class="border-b border-white/5"><td class="p-2">Elite → Elite +</td><td class="p-2">~60,000</td><td class="p-2">~200,000</td><td class="p-2">~3,000</td></tr>
+                            <tr class="border-b border-white/5"><td class="p-2">Exceptional → Exceptional +</td><td class="p-2">~200,000</td><td class="p-2">~700,000</td><td class="p-2">~10,000</td></tr>
+                            <tr class="border-b border-white/5"><td class="p-2">Epic → Epic +</td><td class="p-2">~500,000</td><td class="p-2">~1,800,000</td><td class="p-2">~25,000</td></tr>
+                            <tr class="border-b border-white/5"><td class="p-2">Legendary → Legendary +</td><td class="p-2">~1,500,000</td><td class="p-2">~5,000,000</td><td class="p-2">~70,000</td></tr>
+                            <tr class="border-b border-white/5"><td class="p-2">Seismic → Seismic +</td><td class="p-2">~4,000,000</td><td class="p-2">~14,000,000</td><td class="p-2">~200,000</td></tr>
+                            <tr class="border-b border-white/5"><td class="p-2">Omnipotent → Omnipotent +</td><td class="p-2">~8,000,000+</td><td class="p-2">~27,000,000+</td><td class="p-2">~380,000+</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-xs text-white/40 mt-3">Values are community-estimated per rank tier (level 1 to tier cap). Actual values vary by specific hero and level within the tier. Use the <a href="https://the-invincibles.netlify.app/" target="_blank" class="gem-text--code underline">community XP calculator</a> for exact numbers at your specific levels.</p>
             </div>
         </section>
 
@@ -207,6 +241,10 @@ html { visibility: hidden }
                 <div class="gem-card gem-card--code p-4 flex items-start gap-3">
                     <span class="gem-text--code mt-1 font-bold">5</span>
                     <p class="text-white/80">Do not rank up a hero currently assigned to GDA Ops — remove them first, rank up, then reassign</p>
+                </div>
+                <div class="gem-card gem-card--code p-4 flex items-start gap-3">
+                    <span class="gem-text--code mt-1 font-bold">6</span>
+                    <p class="text-white/80">Want exact math? Use the <a href="https://the-invincibles.netlify.app/" target="_blank" class="gem-text--code underline">community XP calculator</a> — enter your hero's current level and desired level to see exact Gold, Blue XP, and Pink XP needed</p>
                 </div>
             </div>
         </section>
