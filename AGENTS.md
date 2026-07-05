@@ -37,6 +37,10 @@ Open `index.html` in a browser. Works from `file://`.
 | `lighthouserc.js` | CI assertion budget for Lighthouse performance checks |
 | `scripts/run-lighthouse.ps1` | Batch PowerShell script auditing all 8 pages |
 | `fonts/` | Self-hosted Rajdhani + Orbitron woff2 files |
+| `serp-dumps/YYYY-MM-DD/` | Historical SERP snapshot directories (INDEX.md + 40 query files, regenerated periodically) |
+| `serp-dumps/YYYY-MM-DD/INDEX.md` | Index of all 40 tracked queries with rank/impressions/clicks + instructions for new dumps |
+| `serp-dumps/YYYY-MM-DD/queries/*.txt` | Per-query SERP competitor analysis files (generated via `scripts/gen-serp-dumps.js`) |
+| `scripts/gen-serp-dumps.js` | Generator: reads GSC query data, writes 40 SERP dump files + INDEX.md |
 | `CONTEXT.md` | Domain model, architecture summary |
 
 ## Architecture rules
