@@ -113,3 +113,31 @@ describe('Reduced Motion', function() {
     window.matchMedia = originalMatchMedia;
   });
 });
+
+describe('Integration', function() {
+  it('click should scroll to top', function() {
+    const btn = document.querySelector('.gem-back-to-top');
+    let scrolledToTop = false;
+    const originalScrollTo = window.scrollTo;
+    window.scrollTo = function(opts) {
+      if (opts && opts.top === 0) scrolledToTop = true;
+    };
+
+    btn.click();
+    assert_true(scrolledToTop, 'should call scrollTo with top: 0');
+
+    window.scrollTo = originalScrollTo;
+  });
+
+  it('should have correct z-index', function() {
+    const btn = document.querySelector('.gem-back-to-top');
+    const style = getComputedStyle(btn);
+    assertEqual(style.zIndex, '50');
+  });
+
+  it('should be circular', function() {
+    const btn = document.querySelector('.gem-back-to-top');
+    const style = getComputedStyle(btn);
+    assertEqual(style.borderRadius, '50%');
+  });
+});
