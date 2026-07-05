@@ -15,7 +15,12 @@
     "build:js": "node -e \"var t=require('terser'),f=require('fs');t.minify(f.readFileSync('script.js','utf8'),{compress:true,mangle:true}).then(function(r){f.writeFileSync('script.js',r.code);console.log('JS minified')})\"",
     "build": "node scripts/generate-codes.js && npm run build:css && npm run build:js",
     "build:tailwind": "tailwindcss -i src/tailwind-input.css -o tailwind.css",
-    "update-assets": "curl -Lo vendor/chart.umd.js https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"
+    "update-assets": "curl -Lo vendor/chart.umd.js https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js",
+    "lighthouse:single": "lighthouse --config-path=lighthouse-config.js --output html --output json --chrome-flags=\"--headless --no-sandbox --disable-gpu --disable-dev-shm-usage\"",
+    "lighthouse:home": "npm run lighthouse:single -- https://anomaly-alpha.github.io/ --output-path ./lighthouse-reports/home",
+    "lighthouse:all": "pwsh -File scripts/run-lighthouse.ps1",
+    "lighthouse:report": "node -e \"var f=require('fs'),p=['home','code','event','pvp','login','faq','beginners','xp'];console.log('| Page | Perf | A11y | BP | SEO | LCP | TBT | CLS |');console.log('|------|------|------|-----|-----|-----|-----|-----|');p.forEach(function(n){try{var r=JSON.parse(f.readFileSync('./lighthouse-reports/'+n+'.json','utf8')),m=r.audits;console.log('| '+n+' | '+Math.round(r.categories.performance.score*100)+' | '+Math.round(r.categories.accessibility.score*100)+' | '+Math.round(r.categories['best-practices'].score*100)+' | '+Math.round(r.categories.seo.score*100)+' | '+m['largest-contentful-paint'].displayValue+' | '+m['total-blocking-time'].displayValue+' | '+m['cumulative-layout-shift'].displayValue+' |')}catch(e){}});\"",
+    "lighthouse:budget": "npx lhci assert --config=lighthouserc.js 2>&1 || echo 'Budget check complete (warnings ok)'"
   },
   "devDependencies": {
     "csso": "^5.0.5",

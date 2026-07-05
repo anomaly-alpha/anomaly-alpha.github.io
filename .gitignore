@@ -1,5 +1,7 @@
 node_modules/
 .DS_Store
 .obsidian/
+.vs/
 lighthouse-report.html
 *.report.html
+lighthouse-reports/
