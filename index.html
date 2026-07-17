@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Browser integration & security -->
+    <meta name="theme-color" content="#050a14">
+    <meta name="apple-mobile-web-app-title" content="Gem Rewards Calculator">
+    <meta name="color-scheme" content="dark light">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="description" content="Get all free gems in Invincible Guarding the Globe — promo codes, PvP rewards, login bonuses, and weekly events. See how many gems you earn.">
     <meta name="robots" content="max-snippet:150, max-image-preview:large">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -946,18 +951,20 @@ html { visibility: hidden }
             "license": "https://anomaly-alpha.github.io/",
             "acquireLicensePage": "https://anomaly-alpha.github.io/",
             "creditText": "Gem Rewards Calculator",
-            "copyrightNotice": "© Gem Rewards Calculator"
+            "copyrightNotice": "© Gem Rewards Calculator",
+            "creator": { "@type": "Organization", "name": "Anomaly Alpha" }
           }
         },
         {
           "@type": "Organization",
-          "name": "Gem Rewards Calculator",
+          "name": "Anomaly Alpha",
           "url": "https://anomaly-alpha.github.io/",
           "logo": {
             "@type": "ImageObject",
             "url": "https://anomaly-alpha.github.io/og-images/home.png",
             "width": 1200,
-            "height": 630
+            "height": 630,
+            "creator": { "@type": "Organization", "name": "Anomaly Alpha" }
           },
           "foundingDate": "2025",
           "founder": { "@type": "Person", "name": "Anomaly" },
@@ -974,7 +981,7 @@ html { visibility: hidden }
           "@type": "Service",
           "name": "Invincible Guarding the Globe Gem Calculator",
           "url": "https://anomaly-alpha.github.io/",
-          "provider": { "@type": "Organization", "name": "Gem Rewards Calculator" },
+          "provider": { "@type": "Organization", "name": "Anomaly Alpha" },
           "description": "Free weekly gem income calculator for Invincible Guarding the Globe players.",
           "audience": { "@type": "Audience", "audienceType": "Invincible Guarding the Globe players" }
         },
@@ -1576,6 +1583,13 @@ html { visibility: hidden }
             </div>
         </footer>
         <!-- ===== END FOOTER: Contributor credits ===== -->
+
+        <!-- ===== LEGAL FOOTER ===== -->
+        <footer class="gem-legal-footer">
+            <a href="terms/" class="gem-legal-footer__link">Terms of Service</a>
+            <span class="gem-legal-footer__sep">·</span>
+            <a href="privacy/" class="gem-legal-footer__link">Privacy Policy</a>
+        </footer>
 
     </div>
     <!-- ===== END MAIN CONTAINER: Card with border and glow ===== -->

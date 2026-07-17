@@ -82,6 +82,10 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 ### Design Token System
 CSS custom properties in `:root` with dark/light mode support (`:root.light-mode`). Categories: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, `--gem-purple`. Semantic: `--gem-star`, `--gem-gem`. Background, orb, alert, and shadow tokens also defined. Full reference: `docs/DESIGN_SYSTEM.md`.
 
+### Organization Entity
+- **Anomaly Alpha** — The organization that publishes and maintains the site. Schema.org `Organization` type. Named "Anomaly Alpha" in JSON-LD publisher/provider fields across all pages. Previously used "Gem Rewards Calculator" as the organization name (changed Jul 2026). `og:site_name` remains "Gem Rewards Calculator" (site name, not publisher name).
+- **Anomaly** — Person (founder/developer). Schema.org `Person` type at `/authors/anomaly/`. Not to be confused with the publishing Organization.
+
 ## Architecture Decision Records
 
 ADRs live in `docs/adr/`. Each records a hard-to-reverse decision with context, rationale, and alternatives considered.

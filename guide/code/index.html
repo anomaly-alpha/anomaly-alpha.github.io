@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Browser integration & security -->
+    <meta name="theme-color" content="#050a14">
+    <meta name="apple-mobile-web-app-title" content="Gem Rewards Calculator">
+    <meta name="color-scheme" content="dark light">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
 <!--GUIDE_DESC_START-->
     <meta name="description" content="See all 28 active promo codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for Jul 2026.">
 <!--GUIDE_DESC_END-->
@@ -117,13 +122,14 @@ html { visibility: hidden }
           ],
           "publisher": {
             "@type": "Organization",
-            "name": "Gem Rewards Calculator",
+            "name": "Anomaly Alpha",
             "url": "https://anomaly-alpha.github.io/",
             "logo": {
               "@type": "ImageObject",
               "url": "https://anomaly-alpha.github.io/og-images/home.png",
               "width": 1200,
-              "height": 630
+              "height": 630,
+              "creator": { "@type": "Organization", "name": "Anomaly Alpha" }
             },
             "sameAs": [
               "https://github.com/anomaly-alpha/anomaly-alpha.github.io"
@@ -452,6 +458,11 @@ Last updated: <time datetime="2026-07-04">Jul 4, 2026</time>
         </footer>
         </article>
         </main>
+        <footer class="gem-legal-footer">
+            <a href="../../terms/" class="gem-legal-footer__link">Terms of Service</a>
+            <span class="gem-legal-footer__sep">·</span>
+            <a href="../../privacy/" class="gem-legal-footer__link">Privacy Policy</a>
+        </footer>
     </div>
     <!-- Back to Top Button -->
     <button class="gem-back-to-top" aria-label="Back to top" hidden>
