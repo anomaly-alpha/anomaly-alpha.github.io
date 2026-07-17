@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#050a14">
+    <meta name="color-scheme" content="dark light">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="icon" href="../favicon.ico" sizes="any">
+    <title>SEO Dashboard — Gem Rewards Calculator</title>
+    <link rel="stylesheet" href="../tailwind.css">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="relative min-h-screen p-5 md:p-10 gem-grid-bg">
+    <div class="particles">
+        <div class="gem-particle gem-particle--1" style="left:10%;animation-duration:12s;animation-delay:0s"></div>
+        <div class="gem-particle gem-particle--2" style="left:30%;animation-duration:18s;animation-delay:2s"></div>
+        <div class="gem-particle gem-particle--3" style="left:50%;animation-duration:14s;animation-delay:4s"></div>
+        <div class="gem-particle gem-particle--1" style="left:70%;animation-duration:16s;animation-delay:1s"></div>
+        <div class="gem-particle gem-particle--2" style="left:90%;animation-duration:20s;animation-delay:3s"></div>
+    </div>
+
+    <div class="gem-container">
+        <main class="gem-card p-8 md:p-10">
+            <div class="gem-hero mb-8">
+                <a href="../" class="gem-text--cyan hover:text-white transition-colors text-sm">&larr; Gem Rewards Calculator</a>
+                <h1 class="gem-title--hero mt-4">SEO Performance Dashboard</h1>
+                <p class="gem-subtitle--hero" id="seoLastUpdated">Loading&hellip;</p>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="kpiCards">
+                <div class="gem-card p-4 text-center">
+                    <p class="text-white/50 text-xs uppercase tracking-wider">Total Clicks</p>
+                    <p class="text-2xl font-bold gem-text--cyan" id="kpiClicks">&mdash;</p>
+                </div>
+                <div class="gem-card p-4 text-center">
+                    <p class="text-white/50 text-xs uppercase tracking-wider">Impressions</p>
+                    <p class="text-2xl font-bold gem-text--cyan" id="kpiImpressions">&mdash;</p>
+                </div>
+                <div class="gem-card p-4 text-center">
+                    <p class="text-white/50 text-xs uppercase tracking-wider">CTR</p>
+                    <p class="text-2xl font-bold gem-text--cyan" id="kpiCtr">&mdash;</p>
+                </div>
+                <div class="gem-card p-4 text-center">
+                    <p class="text-white/50 text-xs uppercase tracking-wider">Avg Position</p>
+                    <p class="text-2xl font-bold gem-text--cyan" id="kpiPosition">&mdash;</p>
+                </div>
+            </div>
+
+            <!-- Trend Chart -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold gem-text--cyan mb-4">Daily Trend (Last 30 Days)</h2>
+                <div class="gem-card p-4">
+                    <canvas id="trendChart" height="250"></canvas>
+                </div>
+            </section>
+
+            <!-- Page Performance -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold gem-text--cyan mb-4">Page Performance</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm" id="pageTable">
+                        <thead>
+                            <tr class="text-white/50 text-xs uppercase tracking-wider">
+                                <th class="text-left p-2">Page</th>
+                                <th class="text-right p-2">Clicks</th>
+                                <th class="text-right p-2">Impressions</th>
+                                <th class="text-right p-2">CTR</th>
+                                <th class="text-right p-2">Position</th>
+                                <th class="text-right p-2">Share</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pageBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- CTR Leaks -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold gem-text--cyan mb-4">CTR Leaks</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm" id="leakTable">
+                        <thead>
+                            <tr class="text-white/50 text-xs uppercase tracking-wider">
+                                <th class="text-left p-2">Query</th>
+                                <th class="text-right p-2">Impressions</th>
+                                <th class="text-right p-2">Position</th>
+                                <th class="text-right p-2">Score</th>
+                                <th class="text-right p-2">Severity</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leakBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Devices -->
+            <section class="mb-8">
+                <h2 class="text-lg font-bold gem-text--cyan mb-4">Device Breakdown</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm" id="deviceTable">
+                        <thead>
+                            <tr class="text-white/50 text-xs uppercase tracking-wider">
+                                <th class="text-left p-2">Device</th>
+                                <th class="text-right p-2">Clicks</th>
+                                <th class="text-right p-2">Share</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deviceBody"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+        <footer class="gem-legal-footer">
+            <a href="../terms/" class="gem-legal-footer__link">Terms of Service</a>
+            <span class="gem-legal-footer__sep">&middot;</span>
+            <a href="../privacy/" class="gem-legal-footer__link">Privacy Policy</a>
+        </footer>
+    </div>
+
+    <script src="../data/generated/seo-data.js"></script>
+    <script src="../vendor/chart.umd.js"></script>
+    <script>
+    function initSeoDashboard() {
+        var data = window.__SEO_DATA;
+        if (!data) {
+            document.getElementById('seoLastUpdated').textContent = 'No data available';
+            return;
+        }
+
+        function fmt(n) { return n.toLocaleString(); }
+
+        document.getElementById('seoLastUpdated').textContent = 'Updated ' + data.fetched;
+        document.getElementById('kpiClicks').textContent = fmt(data.totals.clicks);
+        document.getElementById('kpiImpressions').textContent = fmt(data.totals.impressions);
+        document.getElementById('kpiCtr').textContent = data.totals.ctr + '%';
+        document.getElementById('kpiPosition').textContent = data.totals.position;
+
+        var ctx = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.daily.map(function(d) { return d.date; }),
+                datasets: [{
+                    label: 'Clicks',
+                    data: data.daily.map(function(d) { return d.clicks; }),
+                    borderColor: '#00e5ff',
+                    backgroundColor: 'rgba(0, 229, 255, 0.1)',
+                    fill: true,
+                    tension: 0.3,
+                }, {
+                    label: 'Impressions',
+                    data: data.daily.map(function(d) { return d.impressions; }),
+                    borderColor: '#e91e8a',
+                    backgroundColor: 'rgba(233, 30, 138, 0.1)',
+                    borderDash: [5, 5],
+                    fill: true,
+                    tension: 0.3,
+                    yAxisID: 'y1',
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: 'rgba(255,255,255,0.8)' } } },
+                scales: {
+                    x: { ticks: { color: 'rgba(255,255,255,0.5)', maxTicksLimit: 10 } },
+                    y: { ticks: { color: 'rgba(255,255,255,0.5)' }, beginAtZero: true },
+                    y1: { position: 'right', ticks: { color: 'rgba(255,255,255,0.5)' }, beginAtZero: true, grid: { display: false } },
+                }
+            }
+        });
+
+        var pageBody = document.getElementById('pageBody');
+        data.pages.forEach(function(p) {
+            var tr = document.createElement('tr');
+            tr.className = 'border-t border-white/5';
+            tr.innerHTML = '<td class="p-2 gem-text--cyan">' + p.url + '</td>' +
+                '<td class="p-2 text-right text-white/80">' + fmt(p.clicks) + '</td>' +
+                '<td class="p-2 text-right text-white/60">' + fmt(p.impressions) + '</td>' +
+                '<td class="p-2 text-right text-white/60">' + p.ctr + '%</td>' +
+                '<td class="p-2 text-right text-white/60">' + p.position.toFixed(2) + '</td>' +
+                '<td class="p-2 text-right text-white/60">' + p.share + '%</td>';
+            pageBody.appendChild(tr);
+        });
+
+        var leakBody = document.getElementById('leakBody');
+        data.ctrLeaks.forEach(function(l) {
+            var sevColor = l.severity === 'CRITICAL' ? '#ff6b35' : l.severity === 'HIGH' ? '#f39c12' : '#2ecc71';
+            var tr = document.createElement('tr');
+            tr.className = 'border-t border-white/5';
+            tr.innerHTML = '<td class="p-2 text-white/80">' + l.query + '</td>' +
+                '<td class="p-2 text-right text-white/60">' + fmt(l.impressions) + '</td>' +
+                '<td class="p-2 text-right text-white/60">' + l.position.toFixed(2) + '</td>' +
+                '<td class="p-2 text-right text-white/60">' + l.score + '</td>' +
+                '<td class="p-2 text-right" style="color:' + sevColor + '">' + l.severity + '</td>';
+            leakBody.appendChild(tr);
+        });
+
+        var deviceBody = document.getElementById('deviceBody');
+        data.devices.forEach(function(d) {
+            var tr = document.createElement('tr');
+            tr.className = 'border-t border-white/5';
+            tr.innerHTML = '<td class="p-2 text-white/80">' + d.name + '</td>' +
+                '<td class="p-2 text-right text-white/80">' + fmt(d.clicks) + '</td>' +
+                '<td class="p-2 text-right text-white/60">' + d.share + '%</td>';
+            deviceBody.appendChild(tr);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', initSeoDashboard);
+    </script>
+</body>
+</html>

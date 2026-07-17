@@ -16,6 +16,7 @@
     "build": "node scripts/generate-codes.js && npm run build:css && npm run build:js",
     "build:tailwind": "tailwindcss -i src/tailwind-input.css -o tailwind.css",
     "update-assets": "curl -Lo vendor/chart.umd.js https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js",
+    "analyze-gsc": "node scripts/analyze-gsc.js",
     "lighthouse:single": "lighthouse --config-path=lighthouse-config.js --output html --output json --chrome-flags=\"--headless --no-sandbox --disable-gpu --disable-dev-shm-usage\"",
     "lighthouse:home": "npm run lighthouse:single -- https://anomaly-alpha.github.io/ --output-path ./lighthouse-reports/home",
     "lighthouse:all": "pwsh -File scripts/run-lighthouse.ps1",
