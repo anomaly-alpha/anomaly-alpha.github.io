@@ -26,8 +26,8 @@ function collectContext(userId, guildId, channelId, opts = {}) {
   const rel = getRelationship(userId, guildId);
   const familiarity = rel ? rel.familiarity : 0;
 
-  const patienceLine = familiarity >= 15 ? getPatienceLine(userId, guildId, userContent) : '';
-  const callbackLine = familiarity >= 30 ? getCallbackLine(channelId, userId) : '';
+  const patienceLine = getPatienceLine(userId, guildId, userContent);
+  const callbackLine = familiarity >= 50 ? getCallbackLine(channelId, userId) : '';
   const gratitudeLine = familiarity >= 15 ? getGratitudeDirective(userContent) : '';
   const firstOfDayLine = familiarity >= 15 ? getFirstOfDayLine(userId, guildId) : '';
   const milestoneLine = familiarity >= 15 ? getMilestoneLine(userId, interactionCount) : '';
