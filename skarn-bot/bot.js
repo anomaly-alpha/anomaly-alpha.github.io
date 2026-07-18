@@ -59,7 +59,28 @@ client.once('ready', () => {
   console.log(`Logged in as ${client.user.tag} (${client.commands.size} commands)`);
   console.log(`Sleep mode: ${SLEEP_START}:00 - ${SLEEP_END}:00 (UTC${SLEEP_TIMEZONE >= 0 ? '+' : ''}${SLEEP_TIMEZONE})`);
 
-  // Check every 60 seconds
+  // Rotating status
+  const statuses = [
+    { type: 'Playing', text: 'with AI 🤖' },
+    { type: 'Listening', text: 'to commands' },
+    { type: 'Watching', text: 'the server 👀' },
+    { type: 'Playing', text: 'Tetris' },
+    { type: 'Listening', text: 'to your questions' },
+    { type: 'Watching', text: 'you type...' },
+    { type: 'Playing', text: '52 commands' },
+    { type: 'Listening', text: 'for mentions' },
+  ];
+  let statusIndex = 0;
+
+  function setStatus() {
+    const status = statuses[statusIndex];
+    client.user.setActivity(status.text, { type: status.type });
+    statusIndex = (statusIndex + 1) % statuses.length;
+  }
+  setStatus();
+  setInterval(setStatus, 30000); // Change every 30 seconds
+
+  // Sleep mode check
   setInterval(() => {
     if (isSleepTime() && !isAsleep) {
       isAsleep = true;
