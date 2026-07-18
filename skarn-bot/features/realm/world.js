@@ -20,11 +20,14 @@ function getConnectedLocations(id) {
 }
 
 function moveTo(userId, guildId, locationId) {
-  const loc = LOCATIONS[locationId];
-  if (!loc) return { error: `Unknown location '${locationId}'` };
-
   const char = getCharacter(userId, guildId);
   if (!char) return { error: 'No character found' };
+
+  const connected = getConnectedLocations(char.current_location).map(l => l.id);
+  if (!connected.includes(locationId)) return { error: 'Location not reachable from here' };
+
+  const loc = LOCATIONS[locationId];
+  if (!loc) return { error: `Unknown location '${locationId}'` };
 
   discoveredLocation(userId, guildId, locationId);
   saveCharacter(userId, guildId, { current_location: locationId });

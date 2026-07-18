@@ -650,9 +650,10 @@ async function handleTrade(interaction) {
   }
 
   // Channel message for trade initiation
-  return interaction.channel.send(
-    `🤝 **${interaction.user.username}** initiated a trade with **${partner.username}**!`
-  );
+  return interaction.reply({
+    content: `🤝 **${interaction.user.username}** initiated a trade with **${partner.username}**!`,
+    flags: EPHEMERAL,
+  });
 }
 
 // ===== delete =====

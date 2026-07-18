@@ -1,6 +1,7 @@
 const { getCharacter, saveCharacter, getInventory, logKill } = require('./realmStore');
 const { ENEMY_SCALING, CLASS_STATS } = require('./realmConfig');
 const { generateCombatNarration } = require('./aiDriver');
+const { canCall, recordCall, canGuildCall, incrementGuildDaily } = require('./realmRateLimit');
 
 // ===== In-Memory Combat Store =====
 
@@ -59,7 +60,14 @@ function startCombat(userId, guildId, enemy, locationId) {
     startedAt: Date.now(),
     lastActionAt: Date.now(),
     history: [],
+    timeout: null,
   };
+
+  const timeout = setTimeout(() => {
+    handleTimeout(userId, guildId);
+    activeCombats.delete(combatId);
+  }, 5 * 60 * 1000);
+  combat.timeout = timeout;
 
   activeCombats.set(combatId, combat);
 
@@ -185,6 +193,9 @@ async function processCombatRound(userId, guildId, playerAction, isDefending) {
 
   combat.history.push(roundResult);
 
+  // Clear timeout on round actions
+  if (combat.timeout) clearTimeout(combat.timeout);
+
   // Check outcomes
   let outcome = null;
   let xpGained = 0;
@@ -220,19 +231,23 @@ async function processCombatRound(userId, guildId, playerAction, isDefending) {
     roundResult.goldLost = goldPenalty;
   }
 
-  // Generate AI narration
+  // Generate AI narration (rate-limited)
   let narration = null;
-  try {
-    narration = await generateCombatNarration(
-      char,
-      combat.enemy,
-      playerAction,
-      playerDamage,
-      combat.enemy.hp,
-      combat.history.slice(-4)
-    );
-  } catch {
-    narration = null;
+  if (canCall(userId) && canGuildCall(guildId)) {
+    try {
+      narration = await generateCombatNarration(
+        char,
+        combat.enemy,
+        playerAction,
+        playerDamage,
+        combat.enemy.hp,
+        combat.history.slice(-4)
+      );
+      recordCall(userId);
+      incrementGuildDaily(guildId);
+    } catch {
+      narration = null;
+    }
   }
 
   return {
@@ -307,6 +322,8 @@ function getCombatState(userId, guildId) {
 
 function clearCombat(userId, guildId) {
   const combatId = `${userId}:${guildId}`;
+  const combat = activeCombats.get(combatId);
+  if (combat && combat.timeout) clearTimeout(combat.timeout);
   const deleted = activeCombats.delete(combatId);
   return deleted;
 }
