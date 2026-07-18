@@ -15,8 +15,6 @@ const AI_ERRORS = [
 ];
 
 async function handleMention(message, client) {
-  // Only handle mentions of the bot
-  if (!message.mentions.has(client.user)) return;
   if (message.author.bot) return;
 
   const userId = message.author.id;
