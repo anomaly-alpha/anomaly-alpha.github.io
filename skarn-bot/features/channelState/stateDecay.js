@@ -1,4 +1,6 @@
 const { db } = require('../../db/database');
+const { runDecay } = require('../relationship/relationshipTracker');
+const { flushCulture } = require('../culture/cultureTracker');
 
 const CHARGED_DECAY_MS = 30 * 60 * 1000; // 30 minutes
 const DORMANT_THRESHOLD_MS = 6 * 60 * 60 * 1000; // 6 hours
@@ -22,6 +24,12 @@ function runDecayPass() {
      WHERE current_state != 'Dormant'
      AND (? - last_message_at) > ?`
   ).run(now, DORMANT_THRESHOLD_MS);
+
+  // Relationship familiarity decay (daily)
+  runDecay();
+
+  // Flush server culture n-grams to SQLite
+  flushCulture();
 }
 
 module.exports = { runDecayPass };

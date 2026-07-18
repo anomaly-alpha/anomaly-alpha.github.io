@@ -1,10 +1,9 @@
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
-const { getUserMemory, getChannelState } = require('../../db/database');
-const { getStateLine } = require('../channelState/stateTracker');
 const { canCall, recordCall } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
-const { postProcess, splitMessage, ROLE_NATURE } = require('../discordNative/postProcess');
+const { collectContext } = require('../promptContext');
+const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { simulateTyping } = require('../discordNative/typingSim');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
 
@@ -26,19 +25,8 @@ async function execute(interaction) {
 
   try {
     const message = interaction.options.getString('message');
-    const channelState = getChannelState(interaction.channel.id, interaction.guild.id);
-    const stateLine = getStateLine(channelState.current_state);
-
-    const memory = getUserMemory(interaction.user.id, interaction.guild.id, 5);
-    const memoryLine = memory.length > 0
-      ? 'What Skarn remembers about this person: ' + memory.map(m => m.fact_text).join('; ')
-      : '';
-
-    const systemPrompt = buildSystemPrompt({
-      roleLine: roles.consult,
-      stateLine,
-      memoryLine,
-    });
+    const ctx = collectContext(interaction.user.id, interaction.guild.id, interaction.channel.id);
+    const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
 
     const context = await getRecentContext(interaction.channel, 5);
     const contextualMessage = buildContextualPrompt(message, context);
@@ -66,8 +54,9 @@ async function execute(interaction) {
       await interaction.editReply(chunks[0]);
     } else {
       await interaction.editReply(chunks[0]);
-      for (let i = 1; i < chunks.length; i++) {
-        await interaction.followUp(chunks[i]);
+      const tail = await maybeBurst(chunks.slice(1), interaction.channel);
+      for (const chunk of tail) {
+        await interaction.followUp(chunk);
       }
     }
   } catch (error) {

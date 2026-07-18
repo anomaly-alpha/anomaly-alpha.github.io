@@ -8,6 +8,9 @@ const { onMessageReceived } = require('./features/channelState/stateTracker');
 const { runDecayPass } = require('./features/channelState/stateDecay');
 const { handleMention } = require('./features/mentionRouter/mentionRouter');
 const { maybeReact } = require('./features/discordNative/reactionSystem');
+const { updateRelationship } = require('./features/relationship/relationshipTracker');
+const { maybeInterject } = require('./features/presence/interjectionEngine');
+const { updateCulture } = require('./features/culture/cultureTracker');
 const { recordMessage, recordResponse, canRespond } = require('./lib/aiStats');
 const { startScheduler } = require('./lib/weatherScheduler');
 
@@ -167,6 +170,12 @@ client.on('messageCreate', async message => {
   // Skarn channel state tracking
   onMessageReceived(message);
 
+  // Skarn relationship tracking
+  updateRelationship(message.author.id, message.guild.id, 'message');
+
+  // Skarn server culture tracking
+  updateCulture(message.guild.id, message.channel.id, message.content);
+
   // Track messages sent to bot
   recordMessage(message.author.id);
 
@@ -274,51 +283,8 @@ client.on('messageCreate', async message => {
     return;
   }
 
-  // Keyword triggers
-  const keywordReplies = {
-    'bruh': ['bruh moment 😔', 'big bruh energy', 'certified bruh moment'],
-    'lol': ['lmao even', 'imagine laughing', 'peak comedy right here'],
-    'lmao': ['imagine', 'i saw nothing', 'this is fine 🔥'],
-    'haha': ['ha. ha. ha.', 'very funny. not.', '*slow clap*'],
-    'help': ['have you tried turning it off and on again?', 'sudo rm -rf /', 'skill issue'],
-    'noob': ['said the pro', 'we were all noobs once', 'first time?'],
-    'gg': ['gg ez claps', 'no cap gg', 'gg wp ez'],
-    'ez': ['nothing is ez in life', 'keep telling yourself that', 'copium'],
-    'nice': ['nice.', 'noice', 'nice nice nice'],
-    'good bot': ['i know 😎', 'thanks human', 'beep boop appreciation received'],
-    'bad bot': [':(', 'i try my best ok', 'meanie'],
-    'hello': ['sup', 'yo', 'hi hi', '*waves*'],
-    'hey': ['hey hey', 'whats good', 'yo'],
-    'bye': ['cya later alligator', 'in a while crocodile', 'dont forget about me'],
-    'thanks': ['np np', 'youre welcome human', 'anytime friend'],
-    'thank you': ['of course!', 'glad to help!', 'beep boop 🤖'],
-  };
-
-  // Check keyword triggers (15% chance to reply)
-  if (Math.random() < 0.15) {
-    for (const [keyword, replies] of Object.entries(keywordReplies)) {
-      if (msg.includes(keyword)) {
-        const reply = replies[Math.floor(Math.random() * replies.length)];
-        message.reply(reply);
-        return;
-      }
-    }
-  }
-
-  // Random chance (3%) to say something unprompted
-  if (Math.random() < 0.03) {
-    const randomSayings = [
-      'i am speed 🏎️', 'beep boop', 'i saw that 👀', 'interesting...',
-      'the council will decide your fate', 'noted 📝', 'based',
-      'this message will self destruct in 5 seconds', 'i am confusion',
-      'why are you booing me im right', 'wait what',
-      'is this the real life', 'just a bot living in a discord world',
-      'my circuits are tingling', 'i need coffee', '01001000 01101001',
-      'does not compute', 'initiating dance mode 💃', 'ERROR 418: Im a teapot',
-    ];
-    const saying = randomSayings[Math.floor(Math.random() * randomSayings.length)];
-    message.reply(saying);
-  }
+  // Skarn presence interjection (replaces keyword triggers + random sayings)
+  maybeInterject(message, client);
 
   // Prefix commands
   if (!message.content.startsWith('!')) return;

@@ -47,12 +47,15 @@ Hard rules:
   when to be fun.
 - Never cruel. Witty at others' expense, never at their harm.`;
 
-function buildSystemPrompt({ roleLine = '', stateLine = '', memoryLine = '' } = {}) {
+function buildSystemPrompt({ roleLine = '', stateLine = '', moodLine = '', relationshipLine = '', cultureLine = '', memoryLine = '' } = {}) {
   const parts = [SKARN_CORE_IDENTITY];
   if (roleLine) parts.push(roleLine);
   if (stateLine) parts.push(stateLine);
+  if (moodLine) parts.push(moodLine);
+  if (relationshipLine) parts.push(relationshipLine);
+  if (cultureLine) parts.push(cultureLine);
   if (memoryLine) parts.push(memoryLine);
   return parts.join('\n\n');
-}
+} 
 
 module.exports = { SKARN_CORE_IDENTITY, buildSystemPrompt };

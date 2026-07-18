@@ -119,3 +119,36 @@ CREATE INDEX IF NOT EXISTS idx_realm_inventory_user ON realm_inventory(user_id, 
 CREATE INDEX IF NOT EXISTS idx_realm_quests_user ON realm_quests(user_id, guild_id);
 CREATE INDEX IF NOT EXISTS idx_realm_npc_memory_user ON realm_npc_memory(npc_id, user_id, guild_id);
 CREATE INDEX IF NOT EXISTS idx_realm_kill_log_user ON realm_kill_log(user_id, guild_id);
+
+-- ===== Persona Depth System =====
+
+CREATE TABLE IF NOT EXISTS user_relationship (
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  familiarity REAL NOT NULL DEFAULT 0,
+  banter_level TEXT NOT NULL DEFAULT 'match',
+  interaction_count INTEGER NOT NULL DEFAULT 0,
+  last_interaction_at INTEGER NOT NULL,
+  tags TEXT NOT NULL DEFAULT '[]',
+  preferred_tone TEXT NOT NULL DEFAULT 'neutral',
+  PRIMARY KEY (user_id, guild_id)
+);
+
+CREATE TABLE IF NOT EXISTS guild_mood (
+  guild_id TEXT PRIMARY KEY,
+  current_mood TEXT NOT NULL DEFAULT 'neutral',
+  last_activity_at INTEGER NOT NULL,
+  last_mood_shift_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS server_culture (
+  guild_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  ngram TEXT NOT NULL,
+  frequency INTEGER NOT NULL DEFAULT 1,
+  first_seen_at INTEGER NOT NULL,
+  last_seen_at INTEGER NOT NULL,
+  PRIMARY KEY (guild_id, channel_id, ngram)
+);
+
+CREATE INDEX IF NOT EXISTS idx_user_relationship_guild ON user_relationship(guild_id, familiarity);

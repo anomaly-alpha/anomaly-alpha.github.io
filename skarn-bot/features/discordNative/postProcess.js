@@ -99,4 +99,14 @@ function splitMessage(text, maxLength) {
   return chunks.length > 0 ? chunks : [text];
 }
 
-module.exports = { postProcess, splitMessage, ROLE_NATURE };
+async function maybeBurst(chunks, channel) {
+  if (chunks.length <= 1) return chunks;
+  const totalLen = chunks.reduce((s, c) => s + c.length, 0);
+  if (totalLen >= 200 && totalLen <= 400) {
+    const delay = 2000 + Math.random() * 2000;
+    await new Promise(resolve => setTimeout(resolve, delay));
+  }
+  return chunks;
+}
+
+module.exports = { postProcess, splitMessage, maybeBurst, ROLE_NATURE };

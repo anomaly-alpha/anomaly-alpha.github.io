@@ -1,10 +1,9 @@
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
-const { getUserMemory, getChannelState } = require('../../db/database');
-const { getStateLine } = require('../channelState/stateTracker');
 const { canCall, recordCall } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
-const { postProcess, splitMessage, ROLE_NATURE } = require('../discordNative/postProcess');
+const { collectContext } = require('../promptContext');
+const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { simulateTyping } = require('../discordNative/typingSim');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
 
@@ -39,19 +38,8 @@ async function handleMention(message, client) {
   if (!cleanMsg) return;
 
   try {
-    const channelState = getChannelState(channelId, message.guild.id);
-    const stateLine = getStateLine(channelState.current_state);
-
-    const memory = getUserMemory(userId, message.guild.id, 5);
-    const memoryLine = memory.length > 0
-      ? 'What Skarn remembers about this person: ' + memory.map(m => m.fact_text).join('; ')
-      : '';
-
-    const systemPrompt = buildSystemPrompt({
-      roleLine: roles.consult,
-      stateLine,
-      memoryLine,
-    });
+    const ctx = collectContext(userId, message.guild.id, channelId);
+    const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
 
     const context = await getRecentContext(message.channel, 5);
     const contextualMessage = buildContextualPrompt(cleanMsg, context);
@@ -77,8 +65,9 @@ async function handleMention(message, client) {
 
     const chunks = splitMessage(reply, 400);
     await message.reply(chunks[0]);
-    for (let i = 1; i < chunks.length; i++) {
-      await message.channel.send(chunks[i]);
+    const tail = await maybeBurst(chunks.slice(1), message.channel);
+    for (const chunk of tail) {
+      await message.channel.send(chunk);
     }
   } catch (error) {
     console.error('Mention reply error:', error);
