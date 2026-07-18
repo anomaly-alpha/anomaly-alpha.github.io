@@ -42,7 +42,7 @@ function buildExplorationButtons(choices) {
   if (!choices || choices.length === 0) return [];
   return [new ActionRowBuilder().addComponents(
     choices.slice(0, 4).map((c, i) =>
-      new ButtonBuilder().setCustomId(`exp_${i}`).setLabel(`${c.index}. ${c.text.substring(0, 80)}`).setStyle(ButtonStyle.Primary)
+      new ButtonBuilder().setCustomId(`exp_${i}`).setLabel(`${c.index}. ${c.text}`.substring(0, 80)).setStyle(ButtonStyle.Primary)
     )
   )];
 }
