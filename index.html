@@ -1086,6 +1086,14 @@ html { visibility: hidden }
             </p>
             <p class="text-sm gem-text--cyan mt-2">New to the game? <a href="guide/beginners/" class="underline hover:text-white transition-colors">Start here &rarr;</a></p>
             <p class="text-white/60 text-sm max-w-2xl mx-auto mt-2">Gems are the premium currency in Invincible: Guarding the Globe &mdash; used for energy refills, hero pulls, and shop items. Earn up to ~4,043 free gems every week from all sources combined.</p>
+            <div class="flex justify-center gap-3 mt-3">
+                <button onclick="shareOnTwitter('https://anomaly-alpha.github.io/','Invincible Guarding the Globe Gem Calculator \u2014 ~4,043 gems/week. Plan your income from PvP, events, login, and codes.')" class="text-white/40 hover:text-white transition-colors text-xs" aria-label="Share on X">Share on X</button>
+                <span class="text-white/20 text-xs">|</span>
+                <button onclick="shareOnReddit('https://anomaly-alpha.github.io/','Invincible Guarding the Globe Gem Calculator \u2014 ~4,043 gems/week')" class="text-white/40 hover:text-white transition-colors text-xs" aria-label="Share on Reddit">Share on Reddit</button>
+                <span class="text-white/20 text-xs">|</span>
+                <button onclick="copyPageLink('https://anomaly-alpha.github.io/')" class="text-white/40 hover:text-white transition-colors text-xs" aria-label="Copy link">Copy Link</button>
+                <span id="linkCopied" class="text-xs gem-text--code" style="display:none">Copied!</span>
+            </div>
             <p class="text-xs gem-text--muted mt-3">Free tool by players, for players. No signup, no ads, just results.</p>
             <nav class="flex flex-wrap justify-center gap-3 mt-4 border-t border-white/10 pt-4">
                 <a href="guide/code/" class="text-xs gem-text--code hover:text-white transition-colors tracking-wider">Codes</a>

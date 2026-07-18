@@ -29,7 +29,9 @@ console.log(`Wrote ${activeCount} active codes to data/generated/promo-codes.js`
 
 // Build code chips
 function activeChip(c) {
-  return `<span class="gem-code__chip gem-text--code text-sm font-bold tracking-widest bg-white/5 px-3 py-1.5 rounded border border-white/10 cursor-pointer" onclick="event.stopPropagation();copyCode('${c.code}',this)">${c.code}</span>`;
+  const daysOld = Math.floor((new Date() - new Date(c.dateAdded + 'T00:00:00Z')) / (1000 * 60 * 60 * 24));
+  const badge = daysOld < 7 ? '<span class="gem-code--badge gem-code--badge--new">NEW</span>' : daysOld < 14 ? '<span class="gem-code--badge gem-code--badge--recent">Recent</span>' : '';
+  return `<span class="gem-code__chip gem-text--code text-sm font-bold tracking-widest bg-white/5 px-3 py-1.5 rounded border border-white/10 cursor-pointer" onclick="event.stopPropagation();copyCode('${c.code}',this)">${c.code}${badge}</span>`;
 }
 
 function expiredChip(c) {
