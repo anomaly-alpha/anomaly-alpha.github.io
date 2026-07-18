@@ -238,4 +238,5 @@ module.exports = {
   getWorldState,
   setWorldState,
   getLeaderboard,
+  db,
 };
