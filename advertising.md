@@ -274,3 +274,15 @@
 > • League comparator tool in PvP guide
 > • Featured snippet targeting "how to get free gems" query
 > • SERP dump system tracking 40 queries across all pages
+
+---
+
+## UTM Tracking URLs
+
+Use these links to track which channels drive traffic (requires analytics to measure):
+
+- Discord: `https://anomaly-alpha.github.io/?utm_source=discord&utm_medium=social&utm_campaign=gem-calc-promo`
+- Discord (code guide): `https://anomaly-alpha.github.io/guide/code/?utm_source=discord&utm_medium=social&utm_campaign=promo-codes`
+- Reddit: `https://anomaly-alpha.github.io/?utm_source=reddit&utm_medium=social&utm_campaign=gem-calc-promo`
+- Reddit (code guide): `https://anomaly-alpha.github.io/guide/code/?utm_source=reddit&utm_medium=social&utm_campaign=promo-codes`
+- Twitter/X: `https://anomaly-alpha.github.io/?utm_source=twitter&utm_medium=social&utm_campaign=gem-calc-promo`
