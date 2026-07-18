@@ -16,17 +16,21 @@ function updateCallbacks(channelId, authorId, content) {
   }
   const buf = channelBuffers.get(channelId);
 
-  // Check each sampling criterion independently
+  // Check each sampling criterion with independent probability roll
+  // Note: spec mentions "2+ reactions" gate for short messages, but
+  // messageCreate fires before reactions exist — not practically checkable.
   const result = sentiment.analyze(content);
-  const isFunny = result.comparative > 0.5;
-  const isShort = content.length < 50;
-  const isSetup = content.endsWith('?') && isBanterTone(content);
+  let entryType = null;
 
-  const sample = (isFunny && Math.random() < 0.10) ||
-    (isShort && Math.random() < 0.30) ||
-    (isSetup && Math.random() < 0.30);
+  if (result.comparative > 0.5 && Math.random() < 0.10) {
+    entryType = 'funny';
+  } else if (content.length < 50 && Math.random() < 0.30) {
+    entryType = 'notable';
+  } else if (content.endsWith('?') && isBanterTone(content) && Math.random() < 0.30) {
+    entryType = 'setup';
+  }
 
-  if (!sample) return;
+  if (!entryType) return;
 
   // Remove oldest if at capacity
   if (buf.length >= 10) buf.shift();
@@ -35,6 +39,7 @@ function updateCallbacks(channelId, authorId, content) {
     text: content.length > 60 ? content.slice(0, 60) + '...' : content,
     author: authorId,
     timestamp: Date.now(),
+    type: entryType,
   });
 }
 
