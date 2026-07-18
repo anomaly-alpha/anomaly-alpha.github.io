@@ -108,10 +108,10 @@ function addQuest(userId, guildId, questId, title, description = '', giverNpc = 
 function updateQuest(userId, guildId, questId, patch) {
   const sets = Object.keys(patch).map(k => `${k} = ?`).join(', ');
   const values = Object.values(patch);
-  values.push(userId, guildId, questId);
+  values.push(Date.now(), userId, guildId, questId);
   db.prepare(
     `UPDATE realm_quests SET ${sets}, updated_at = ? WHERE user_id = ? AND guild_id = ? AND quest_id = ?`
-  ).run(...values, Date.now());
+  ).run(...values);
 }
 
 function completeQuest(userId, guildId, questId) {
