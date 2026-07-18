@@ -114,6 +114,22 @@ const categories = {
       { name: '/removefriend', desc: 'Remove a friend' },
     ],
   },
+  'Realm of Skarn': {
+    color: 0xff6b35,
+    commands: [
+      { name: '/realm create', desc: 'Create a new character' },
+      { name: '/realm start', desc: 'Begin your journey in the Realm' },
+      { name: '/realm explore', desc: 'Continue exploring from your current location' },
+      { name: '/realm stats', desc: 'View your character sheet' },
+      { name: '/realm inventory', desc: 'View and manage your inventory' },
+      { name: '/realm quests', desc: 'View active and completed quests' },
+      { name: '/realm rest', desc: 'Rest at your current location to recover HP' },
+      { name: '/realm trade', desc: 'Initiate a trade with another player' },
+      { name: '/realm delete', desc: 'Delete your character (with confirmation)' },
+      { name: '/realm leaderboard', desc: 'Top characters by level in this server' },
+      { name: '/realm help', desc: 'Show Realm commands and tips' },
+    ],
+  },
 };
 
 module.exports = {
