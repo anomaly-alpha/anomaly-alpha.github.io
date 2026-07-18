@@ -12,9 +12,11 @@ function normalizeQuery(query) {
 async function searchWeb(query) {
   const key = normalizeQuery(query);
 
-  // Cache hit?
+  // Cache hit — reorder for LRU
   const cached = cache.get(key);
   if (cached && Date.now() - cached.cachedAt < CACHE_TTL) {
+    cache.delete(key);
+    cache.set(key, cached);
     return { results: cached.results, source: 'cache' };
   }
 
