@@ -30,6 +30,14 @@
     <title>Music &amp; Playlists — Gem Rewards Calculator</title>
     <link rel="stylesheet" href="../tailwind.css">
     <link rel="stylesheet" href="../styles.css">
+    <!-- Music Banner Config -->
+    <script type="application/json" id="music-config">
+    {"name":"Browse All Playlists","page":"../music/","color":"cyan"}
+    </script>
+    <!-- Music Banner Config -->
+    <script type="application/json" id="music-config">
+    {"name":"Browse All Playlists","page":"../music/","color":"cyan"}
+    </script>
 </head>
 <body class="relative min-h-screen p-5 md:p-10 gem-grid-bg">
     <div class="particles">
@@ -40,7 +48,19 @@
         <div class="gem-particle gem-particle--2" style="left:90%;animation-duration:20s;animation-delay:3s"></div>
     </div>
 
-    <div class="gem-container">
+    <!-- Music Banner -->
+    <div id="musicBanner" class="gem-music-banner gem-music-banner--expanded">
+        <div class="gem-music-banner__content">
+            <span class="gem-music-banner__icon">&#x1F3B5;</span>
+            <span class="gem-music-banner__label" id="musicBannerLabel">Loading...</span>
+        </div>
+        <div class="gem-music-banner__actions">
+            <button id="musicBannerToggle" class="gem-music-banner__btn" aria-label="Minimize music banner">&minus;</button>
+        </div>
+    </div>
+    <button id="musicBannerTrigger" class="gem-music-banner__trigger" aria-label="Show music banner" hidden>&#x1F3B5;</button>
+
+        <div class="gem-container">
         <main class="gem-card p-8 md:p-10">
             <div class="gem-hero mb-8">
                 <a href="../" class="gem-text--cyan hover:text-white transition-colors text-sm">&larr; Gem Rewards Calculator</a>

@@ -1039,8 +1039,24 @@ html { visibility: hidden }
       ]
     }
     </script>
+    <!-- Music Banner Config -->
+    <script type="application/json" id="music-config">
+    {"name":"Today's Top Hits","page":"music/","color":"cyan"}
+    </script>
 </head>
 <body class="relative min-h-screen flex items-center justify-center p-5 md:p-10 gem-grid-bg">
+
+    <!-- Music Banner -->
+    <div id="musicBanner" class="gem-music-banner gem-music-banner--expanded">
+        <div class="gem-music-banner__content">
+            <span class="gem-music-banner__icon">&#x1F3B5;</span>
+            <span class="gem-music-banner__label" id="musicBannerLabel">Loading...</span>
+        </div>
+        <div class="gem-music-banner__actions">
+            <button id="musicBannerToggle" class="gem-music-banner__btn" aria-label="Minimize music banner">&minus;</button>
+        </div>
+    </div>
+    <button id="musicBannerTrigger" class="gem-music-banner__trigger" aria-label="Show music banner" hidden>&#x1F3B5;</button>
 
     <!-- ===== BACKGROUND: Floating particles ===== -->
     <div class="particles">
@@ -1095,14 +1111,7 @@ html { visibility: hidden }
                 <span id="linkCopied" class="text-xs gem-text--code" style="display:none">Copied!</span>
             </div>
             <p class="text-xs gem-text--muted mt-3">Free tool by players, for players. No signup, no ads, just results.</p>
-            <div class="gem-card gem-card--cyan p-3 mt-4 flex items-center gap-3 max-w-md mx-auto">
-                <span class="text-lg shrink-0">&#x1F3B5;</span>
-                <div>
-                    <p class="text-xs text-white/60">Listen while you play</p>
-                    <a href="music/" class="gem-text--cyan text-sm font-semibold hover:text-white transition-colors">Today's Top Hits &rarr;</a>
-                </div>
-            </div>
-            <nav class="flex flex-wrap justify-center gap-3 mt-4 border-t border-white/10 pt-4">
+                        <nav class="flex flex-wrap justify-center gap-3 mt-4 border-t border-white/10 pt-4">
                 <a href="guide/code/" class="text-xs gem-text--code hover:text-white transition-colors tracking-wider">Codes</a>
                 <a href="guide/event/" class="text-xs gem-text--event hover:text-white transition-colors tracking-wider">Events</a>
                 <a href="guide/pvp/" class="text-xs gem-text--pvp hover:text-white transition-colors tracking-wider">PvP</a>

@@ -265,9 +265,29 @@ html { visibility: hidden }
         }      ]
     }
     </script>
+    <!-- Music Banner Config -->
+    <script type="application/json" id="music-config">
+    {"name":"Peaceful Piano","page":"../../music/","color":"cyan"}
+    </script>
+    <!-- Music Banner Config -->
+    <script type="application/json" id="music-config">
+    {"name":"Peaceful Piano","page":"../../music/","color":"cyan"}
+    </script>
 </head>
 <body class="relative min-h-screen p-5 md:p-10 gem-grid-bg">
-    <div class="relative gem-container gem-container__shadow max-w-4xl mx-auto">
+    <!-- Music Banner -->
+    <div id="musicBanner" class="gem-music-banner gem-music-banner--expanded">
+        <div class="gem-music-banner__content">
+            <span class="gem-music-banner__icon">&#x1F3B5;</span>
+            <span class="gem-music-banner__label" id="musicBannerLabel">Loading...</span>
+        </div>
+        <div class="gem-music-banner__actions">
+            <button id="musicBannerToggle" class="gem-music-banner__btn" aria-label="Minimize music banner">&minus;</button>
+        </div>
+    </div>
+    <button id="musicBannerTrigger" class="gem-music-banner__trigger" aria-label="Show music banner" hidden>&#x1F3B5;</button>
+
+        <div class="relative gem-container gem-container__shadow max-w-4xl mx-auto">
         <div class="gem-corner gem-corner--tl"></div>
         <div class="gem-corner gem-corner--tr"></div>
         <div class="gem-corner gem-corner--bl"></div>
@@ -309,14 +329,7 @@ html { visibility: hidden }
                 <span class="mx-2 opacity-30">·</span>
                 Updated <time datetime="2026-05-28">May 28, 2026</time>
             </p>
-            <div class="gem-card gem-card--cyan p-3 mt-4 flex items-center gap-3 max-w-md mx-auto">
-                <span class="text-lg shrink-0">&#x1F3B5;</span>
-                <div>
-                    <p class="text-xs text-white/60">Listen while you play</p>
-                    <a href="../../music/" class="gem-text--cyan text-sm font-semibold hover:text-white transition-colors">Peaceful Piano &rarr;</a>
-                </div>
-            </div>
-        </div>
+                    </div>
 
         <section class="mx-4 mb-8">
             <div class="space-y-4">
