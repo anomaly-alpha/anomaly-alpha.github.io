@@ -1,19 +1,42 @@
-const HOURLY_CAP = 50;
+const fs = require('fs');
+const path = require('path');
 
-const aiHourlyCap = new Map();   // "userId" -> { count, hourStart }
-const messageCount = new Map();  // "userId" -> total messages sent to bot
-const responseCount = new Map(); // "userId" -> total responses received
+const HOURLY_CAP = 50;
+const STATS_FILE = path.join(__dirname, '..', 'data', 'ai-stats.json');
+
+const aiHourlyCap = new Map(); // "userId" -> { count, hourStart } (in-memory only)
+
+let stats = { messageCount: {}, responseCount: {} };
+
+function loadStats() {
+  try {
+    if (fs.existsSync(STATS_FILE)) {
+      stats = JSON.parse(fs.readFileSync(STATS_FILE, 'utf8'));
+    }
+  } catch {}
+}
+
+function saveStats() {
+  const dir = path.dirname(STATS_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
+}
+
+// Load on startup
+loadStats();
 
 function currentHour() {
   return Math.floor(Date.now() / 3600000);
 }
 
 function recordMessage(userId) {
-  messageCount.set(userId, (messageCount.get(userId) || 0) + 1);
+  stats.messageCount[userId] = (stats.messageCount[userId] || 0) + 1;
+  saveStats();
 }
 
 function recordResponse(userId) {
-  responseCount.set(userId, (responseCount.get(userId) || 0) + 1);
+  stats.responseCount[userId] = (stats.responseCount[userId] || 0) + 1;
+  saveStats();
 }
 
 function canRespond(userId) {
@@ -41,15 +64,16 @@ function getStats(userId) {
     used,
     cap: HOURLY_CAP,
     resetsAt,
-    messagesSent: messageCount.get(userId) || 0,
-    responsesReceived: responseCount.get(userId) || 0,
+    messagesSent: stats.messageCount[userId] || 0,
+    responsesReceived: stats.responseCount[userId] || 0,
   };
 }
 
 function resetStats(userId) {
   aiHourlyCap.delete(userId);
-  messageCount.delete(userId);
-  responseCount.delete(userId);
+  delete stats.messageCount[userId];
+  delete stats.responseCount[userId];
+  saveStats();
 }
 
 module.exports = { recordMessage, recordResponse, canRespond, getStats, resetStats };
