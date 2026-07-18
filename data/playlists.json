@@ -10,7 +10,7 @@
       "color": "cyan"
     },
     {
-      "id": "37i9dQZF1DX6VdMW310YC7",
+      "id": "37i9dQZF1DX76Wlfdnj7AP",
       "name": "Beast Mode",
       "description": "Get hyped. High-energy tracks for climbing the PvP ladder.",
       "page": "/guide/pvp/",
@@ -18,15 +18,15 @@
       "color": "pvp"
     },
     {
-      "id": "37i9dQZF1DWY4f1Ha8TbJE",
-      "name": "Epic & Cinematic",
-      "description": "Epic orchestral energy for event battles and alliance wars.",
+      "id": "37i9dQZF1DWSfv493aPhol",
+      "name": "Gaming Time!",
+      "description": "Epic gaming tracks for event battles and alliance wars.",
       "page": "/guide/event/",
       "pageName": "Event Guide",
       "color": "event"
     },
     {
-      "id": "37i9dQZF1DX4WTs9gsN1bn",
+      "id": "37i9dQZF1DX4WYpdgoIcn6",
       "name": "Chill Hits",
       "description": "Kick back and relax. Easy listening for daily login rewards.",
       "page": "/guide/login/",
@@ -42,7 +42,7 @@
       "color": "code"
     },
     {
-      "id": "37i9dQZF1DX6i7ft3La30I",
+      "id": "37i9dQZF1DXc5e2bJhV6pu",
       "name": "Morning Motivation",
       "description": "Start your journey right. Motivating tracks for new players.",
       "page": "/guide/beginners/",
@@ -50,7 +50,7 @@
       "color": "cyan"
     },
     {
-      "id": "37i9dQZF1DWZeKCadgEMbQ",
+      "id": "37i9dQZF1DX4sWSpwq3LiO",
       "name": "Peaceful Piano",
       "description": "Calm piano pieces. Relax while browsing FAQs and guides.",
       "page": "/guide/faq/",
@@ -58,7 +58,7 @@
       "color": "cyan"
     },
     {
-      "id": "37i9dQZF1DX70TzV5rU7gH",
+      "id": "37i9dQZF1DWZeKCadgRdKQ",
       "name": "Deep Focus",
       "description": "Concentrate. Focused beats for studying hero rank-up costs.",
       "page": "/guide/xp/",
