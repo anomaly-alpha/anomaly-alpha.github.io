@@ -18,7 +18,7 @@ module.exports = {
           { name: 'On', value: 'on' },
           { name: 'Off', value: 'off' },
         ))
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
   async execute(interaction) {
     const mode = interaction.options.getString('mode');
     const config = loadConfig();
@@ -34,11 +34,11 @@ module.exports = {
         config[guildId].aiChannels.push(channelId);
       }
       saveConfig(config);
-      await interaction.reply({ content: 'AI chat mode enabled in this channel. The bot will respond to all messages.', ephemeral: true });
+      await interaction.reply(`AI chat enabled in <#${channelId}>. I'll respond to all messages here.`);
     } else {
       config[guildId].aiChannels = config[guildId].aiChannels.filter(id => id !== channelId);
       saveConfig(config);
-      await interaction.reply({ content: 'AI chat mode disabled in this channel.', ephemeral: true });
+      await interaction.reply(`AI chat disabled in <#${channelId}>.`);
     }
   },
 };
