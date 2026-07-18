@@ -20,6 +20,7 @@ Then fill in your values:
 DISCORD_TOKEN=your_bot_token
 CLIENT_ID=your_application_id
 OPENAI_API_KEY=your_openai_key
+AI_MODEL=gpt-3.5-turbo
 ```
 
 ## Running
@@ -28,7 +29,15 @@ OPENAI_API_KEY=your_openai_key
 npm start
 ```
 
-## Quick Reference (52 Commands)
+## Quick Reference (56 Commands)
+
+### Skarn Persona (New)
+| Command | Description |
+|---------|-------------|
+| `/consult` | Speak with Skarn (in-character conversation) |
+| `/etch` | Tell Skarn something to remember about you |
+| `/forget` | Delete all facts Skarn remembers about you |
+| `/vein` | Summarize recent channel conversation |
 
 ### General
 | Command | Description |
@@ -87,7 +96,7 @@ npm start
 | `/recipe`    | Recipe finder       |
 | `/code`      | Code helper         |
 | `/debate`    | AI debate partner   |
-| `/summarize` | Summarize a channel |
+| `/vein`      | Summarize channel (new) |
 
 ### Leveling
 | Command | Description |
@@ -184,18 +193,22 @@ npm start
 
 ### AI Chat
 
-#### `/ask`
+#### `/consult` (Recommended)
+- **Parameters:** `message` (required)
+- **Response:** In-character reply from Skarn with memory and mood awareness
+
+#### `/ask` (Deprecated — use `/consult`)
 - **Parameters:** `question` (required)
 - **Response:** AI answer to your question
 
 #### `/aichat`
 - **Parameters:** `mode` (on/off)
 - **Permission:** Manage Channels
-- **Effect:** Bot responds to all messages in channel
+- **Effect:** Bot responds to all messages in channel using Skarn persona
 
 #### `@Skarn`
 - **Usage:** Mention the bot with a message
-- **Response:** AI reply
+- **Response:** In-character reply from Skarn
 
 ---
 
@@ -277,7 +290,11 @@ npm start
 - **Parameters:** `topic` (required)
 - **Response:** AI takes a side, you argue the other
 
-#### `/summarize`
+#### `/vein` (Recommended)
+- **Parameters:** `channel` (optional), `timeframe` (optional: 1-24 hours), `focus` (optional)
+- **Response:** In-character summary from Skarn
+
+#### `/summarize` (Deprecated — use `/vein`)
 - **Parameters:** `channel` (optional), `timeframe` (optional: 1h to 1 week), `focus` (optional)
 - **Response:** AI summary of channel messages
 
