@@ -13,7 +13,7 @@ module.exports = {
       if (typeof result !== 'number' || !isFinite(result)) throw new Error('Invalid');
       await interaction.reply(`🧮 **${expr}** = **${result}**`);
     } catch {
-      await interaction.reply({ content: 'Invalid math expression.', ephemeral: true });
+      await interaction.reply({ content: 'Invalid math expression.', flags: 64 });
     }
   },
 };

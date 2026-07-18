@@ -61,7 +61,7 @@ async function handleMention(message, client) {
         { role: 'user', content: cleanMsg },
       ],
       max_completion_tokens: roleTokenBudgets.consult,
-      temperature: 0.8,
+      temperature: 0.85,
     });
 
     const reply = completion.choices[0].message.content;

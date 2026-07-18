@@ -16,7 +16,7 @@ const AI_ERRORS = [
 async function execute(interaction) {
   // Rate limit check
   if (!canCall(interaction.user.id)) {
-    return interaction.reply({ content: RATE_LIMIT_MSG, ephemeral: true });
+    return interaction.reply({ content: RATE_LIMIT_MSG, flags: 64 });
   }
 
   await interaction.deferReply();
@@ -70,7 +70,7 @@ async function execute(interaction) {
     if (interaction.deferred) {
       await interaction.editReply(errorMsg);
     } else {
-      await interaction.reply({ content: errorMsg, ephemeral: true });
+      await interaction.reply({ content: errorMsg, flags: 64 });
     }
   }
 }

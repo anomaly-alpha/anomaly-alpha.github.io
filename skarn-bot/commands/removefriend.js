@@ -25,7 +25,7 @@ module.exports = {
 
     const index = friends.findIndex(f => f.name.toLowerCase() === name.toLowerCase());
     if (index === -1) {
-      return interaction.reply({ content: `**${name}** not found on the friends list.`, ephemeral: true });
+      return interaction.reply({ content: `**${name}** not found on the friends list.`, flags: 64 });
     }
 
     const removed = friends.splice(index, 1)[0];

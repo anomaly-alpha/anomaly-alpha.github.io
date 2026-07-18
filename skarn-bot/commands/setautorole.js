@@ -18,6 +18,6 @@ module.exports = {
     if (!config[interaction.guild.id]) config[interaction.guild.id] = {};
     config[interaction.guild.id].autoRole = role.id;
     saveConfig(config);
-    await interaction.reply({ content: `New members will automatically receive the **${role.name}** role.`, ephemeral: true });
+    await interaction.reply({ content: `New members will automatically receive the **${role.name}** role.`, flags: 64 });
   },
 };

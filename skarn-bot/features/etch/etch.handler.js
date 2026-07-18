@@ -10,7 +10,7 @@ async function execute(interaction) {
   const fact = interaction.options.getString('fact');
   addUserMemory(interaction.user.id, interaction.guild.id, fact);
   const reply = CONFIRMATIONS[Math.floor(Math.random() * CONFIRMATIONS.length)];
-  await interaction.reply({ content: reply, ephemeral: true });
+  await interaction.reply({ content: reply, flags: 64 });
 }
 
 module.exports = { execute };

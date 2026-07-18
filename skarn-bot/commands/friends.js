@@ -43,7 +43,7 @@ module.exports = {
       );
 
       if (matches.length === 0) {
-        return interaction.reply({ content: `No friends found matching "${search}".`, ephemeral: true });
+        return interaction.reply({ content: `No friends found matching "${search}".`, flags: 64 });
       }
 
       const list = matches.map(f => {

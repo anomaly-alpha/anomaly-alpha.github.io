@@ -15,7 +15,7 @@ module.exports = {
     const options = interaction.options.getString('options').split(',').map(o => o.trim()).slice(0, 10);
 
     if (options.length < 2) {
-      await interaction.reply({ content: 'You need at least 2 options.', ephemeral: true });
+      await interaction.reply({ content: 'You need at least 2 options.', flags: 64 });
       return;
     }
 

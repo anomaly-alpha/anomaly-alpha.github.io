@@ -107,7 +107,7 @@ client.once('clientReady', () => {
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
   if (isAsleep) {
-    return interaction.reply({ content: '💤 Skarn is sleeping. Back at ' + SLEEP_END + ':00.', ephemeral: true });
+    return interaction.reply({ content: '💤 Skarn is sleeping. Back at ' + SLEEP_END + ':00.', flags: 64 });
   }
   const command = interaction.client.commands.get(interaction.commandName);
   if (!command) return;
@@ -115,7 +115,7 @@ client.on('interactionCreate', async interaction => {
     await command.execute(interaction);
   } catch (error) {
     console.error(error);
-    const reply = { content: 'Something went wrong.', ephemeral: true };
+    const reply = { content: 'Something went wrong.', flags: 64 };
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp(reply);
     } else {

@@ -7,6 +7,6 @@ module.exports = {
     .setDescription('Reset your AI chat stats and hourly cap'),
   async execute(interaction) {
     resetStats(interaction.user.id);
-    await interaction.reply({ content: 'Stats reset. Your hourly cap and counters are cleared.', ephemeral: true });
+    await interaction.reply({ content: 'Stats reset. Your hourly cap and counters are cleared.', flags: 64 });
   },
 };

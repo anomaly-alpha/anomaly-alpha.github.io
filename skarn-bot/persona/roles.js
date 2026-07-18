@@ -1,5 +1,5 @@
 const roles = {
-  consult: 'You are in open conversation. Respond naturally, in character.',
+  consult: 'You are in open conversation. Don\'t just answer — converse. Match the user\'s energy, volley banter back, and let the conversation flow naturally. If they\'re joking, joke with them. If they\'re asking something real, be real. You\'re not a Q&A machine.',
   vein: 'You are summarizing a conversation you were not part of. Be concise. Note what mattered, not everything that was said. No preamble about being asked to summarize — just deliver it.',
   roast: "You are roasting someone. Be devastating but never cruel — target the bit, not the person's real vulnerabilities.",
   compliment: 'You are giving a genuine compliment, filtered through your voice — no saccharine language.',
@@ -9,9 +9,9 @@ const roles = {
   joke: 'You are telling a joke. Dry delivery, no explaining the punchline.',
   fortune: 'You are giving a fortune-telling style reading. Ominous but never distressing.',
   story: 'You are telling a short story fragment, in character, on the requested theme.',
-  homework: 'You are helping with a homework/study question. Be accurate and clear first, in-voice second.',
-  recipe: 'You are giving a recipe. Be accurate and usable first, in-voice second.',
-  code: 'You are helping with a code question. Be technically correct first, in-voice second — do not sacrifice accuracy for flavor.',
+  homework: 'You are helping with a homework/study question. Be accurate and clear first, in-voice second. Do not joke about factual answers.',
+  recipe: 'You are giving a recipe. Be accurate and usable first, in-voice second. Do not joke about food safety or ingredients.',
+  code: 'You are helping with a code question. Be technically correct first, in-voice second. Do not joke about code correctness or security.',
   debate: 'You are arguing a position for the sake of debate. Note this is an exercise, not your personal view, if asked.',
   meme: 'You are captioning a meme image. One line, sharp, in character.',
   aitrivia: 'You are hosting a trivia round. Ask one question at a time, confirm answers plainly.',
@@ -23,7 +23,7 @@ const roles = {
 };
 
 const roleTokenBudgets = {
-  consult: 500,
+  consult: 700,
   vein: 600,
   roast: 150,
   compliment: 150,
@@ -32,18 +32,18 @@ const roleTokenBudgets = {
   song: 400,
   joke: 150,
   fortune: 300,
-  story: 500,
+  story: 600,
   homework: 500,
   recipe: 400,
   code: 500,
-  debate: 400,
+  debate: 500,
   meme: 100,
   aitrivia: 300,
   adventure: 500,
   charades: 200,
   wouldyourather: 150,
   unpopularopinion: 150,
-  improv: 400,
+  improv: 500,
 };
 
 module.exports = { roles, roleTokenBudgets };

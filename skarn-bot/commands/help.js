@@ -130,7 +130,7 @@ module.exports = {
         .setTitle(selected)
         .setDescription(list)
         .setColor(cat.color);
-      return interaction.reply({ embeds: [embed], ephemeral: true });
+      return interaction.reply({ embeds: [embed], flags: 64 });
     }
 
     // Show all categories overview
@@ -147,6 +147,6 @@ module.exports = {
       .setColor(0x00e5ff)
       .setFooter({ text: 'Use /help category:"Name" for details on a category' });
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed], flags: 64 });
   },
 };

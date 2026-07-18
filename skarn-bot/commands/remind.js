@@ -47,6 +47,6 @@ module.exports = {
       } catch {}
     }, minutes * 60 * 1000);
 
-    await interaction.reply({ content: `I'll remind you in **${minutes}** minute(s): ${message}`, ephemeral: true });
+    await interaction.reply({ content: `I'll remind you in **${minutes}** minute(s): ${message}`, flags: 64 });
   },
 };

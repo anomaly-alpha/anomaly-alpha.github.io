@@ -30,7 +30,7 @@ module.exports = {
     const focus = interaction.options.getString('focus') || 'general summary';
 
     if (!process.env.OPENAI_API_KEY) {
-      return interaction.reply({ content: 'AI is not configured. Add OPENAI_API_KEY.', ephemeral: true });
+      return interaction.reply({ content: 'AI is not configured. Add OPENAI_API_KEY.', flags: 64 });
     }
 
     await interaction.deferReply();
@@ -61,7 +61,7 @@ module.exports = {
       const sorted = allMessages.reverse();
 
       if (sorted.length === 0) {
-        return interaction.editReply({ content: 'No messages found in this timeframe.', ephemeral: true });
+        return interaction.editReply({ content: 'No messages found in this timeframe.', flags: 64 });
       }
 
       // Build conversation text
@@ -72,7 +72,7 @@ module.exports = {
         .join('\n');
 
       if (conversation.length === 0) {
-        return interaction.editReply({ content: 'No user messages found (only bot messages).', ephemeral: true });
+        return interaction.editReply({ content: 'No user messages found (only bot messages).', flags: 64 });
       }
 
       // Truncate if too long for API
@@ -112,7 +112,7 @@ module.exports = {
       await interaction.editReply({ embeds: [embed] });
     } catch (error) {
       console.error('Summarize error:', error);
-      await interaction.editReply({ content: 'Failed to summarize. Try a shorter timeframe.', ephemeral: true });
+      await interaction.editReply({ content: 'Failed to summarize. Try a shorter timeframe.', flags: 64 });
     }
   },
 };

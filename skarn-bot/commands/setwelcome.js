@@ -18,6 +18,6 @@ module.exports = {
     if (!config[interaction.guild.id]) config[interaction.guild.id] = {};
     config[interaction.guild.id].welcomeChannel = channel.id;
     saveConfig(config);
-    await interaction.reply({ content: `Welcome messages will be sent to ${channel}.`, ephemeral: true });
+    await interaction.reply({ content: `Welcome messages will be sent to ${channel}.`, flags: 64 });
   },
 };

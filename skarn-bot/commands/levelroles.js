@@ -21,7 +21,7 @@ module.exports = {
     // Remove a level role
     if (removeLevel) {
       if (!levelRoles[removeLevel]) {
-        return interaction.reply({ content: `No role set for Level ${removeLevel}.`, ephemeral: true });
+        return interaction.reply({ content: `No role set for Level ${removeLevel}.`, flags: 64 });
       }
       const roleId = levelRoles[removeLevel];
       delete levelRoles[removeLevel];
@@ -31,14 +31,14 @@ module.exports = {
       const role = await interaction.guild.roles.fetch(roleId).catch(() => null);
       return interaction.reply({
         content: `Removed **${role?.name || 'Unknown Role'}** from Level ${removeLevel}.`,
-        ephemeral: true,
+        flags: 64,
       });
     }
 
     // View all level roles
     const entries = Object.entries(levelRoles).sort((a, b) => a[0] - b[0]);
     if (entries.length === 0) {
-      return interaction.reply({ content: 'No level roles configured. Use `/setlevelrole` to add one.', ephemeral: true });
+      return interaction.reply({ content: 'No level roles configured. Use `/setlevelrole` to add one.', flags: 64 });
     }
 
     const list = entries.map(([level, roleId]) => `**Level ${level}** → <@&${roleId}>`).join('\n');

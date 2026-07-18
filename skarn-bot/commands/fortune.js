@@ -17,10 +17,10 @@ module.exports = {
     .setName('fortune')
     .setDescription('AI fortune teller predicts your future'),
   async execute(interaction) {
-    if (!process.env.OPENAI_API_KEY) return interaction.reply({ content: 'AI not configured.', ephemeral: true });
+    if (!process.env.OPENAI_API_KEY) return interaction.reply({ content: 'AI not configured.', flags: 64 });
 
     if (!canCall(interaction.user.id)) {
-      return interaction.reply({ content: 'Even a Warmaster paces himself. Give it a moment.', ephemeral: true });
+      return interaction.reply({ content: 'Even a Warmaster paces himself. Give it a moment.', flags: 64 });
     }
 
     await interaction.deferReply();
@@ -63,7 +63,7 @@ module.exports = {
       if (interaction.deferred) {
         await interaction.editReply(errorMsg);
       } else {
-        await interaction.reply({ content: errorMsg, ephemeral: true });
+        await interaction.reply({ content: errorMsg, flags: 64 });
       }
     }
   },

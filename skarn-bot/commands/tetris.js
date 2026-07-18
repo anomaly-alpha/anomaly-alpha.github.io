@@ -26,15 +26,15 @@ module.exports = {
     const opponent = interaction.options.getUser('opponent');
 
     if (opponent.id === interaction.user.id) {
-      return interaction.reply({ content: "You can't challenge yourself.", ephemeral: true });
+      return interaction.reply({ content: "You can't challenge yourself.", flags: 64 });
     }
     if (opponent.bot) {
-      return interaction.reply({ content: "You can't challenge a bot.", ephemeral: true });
+      return interaction.reply({ content: "You can't challenge a bot.", flags: 64 });
     }
 
     const gameKey = [interaction.user.id, opponent.id].sort().join('_');
     if (activeGames.has(gameKey)) {
-      return interaction.reply({ content: 'A game is already in progress between you two.', ephemeral: true });
+      return interaction.reply({ content: 'A game is already in progress between you two.', flags: 64 });
     }
 
     const game = new TetrisGame(interaction.user.id, opponent.id);
@@ -90,7 +90,7 @@ module.exports = {
 
     collector.on('collect', async i => {
       if (i.user.id !== game.currentTurn) {
-        return i.reply({ content: "It's not your turn!", ephemeral: true });
+        return i.reply({ content: "It's not your turn!", flags: 64 });
       }
 
       const playerId = i.user.id;

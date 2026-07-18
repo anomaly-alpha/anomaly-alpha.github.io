@@ -32,6 +32,6 @@ module.exports = {
       .setColor(0x00e5ff)
       .setThumbnail(interaction.user.displayAvatarURL());
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed], flags: 64 });
   },
 };

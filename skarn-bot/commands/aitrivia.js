@@ -39,11 +39,11 @@ module.exports = {
     const difficulty = interaction.options.getString('difficulty') || 'medium';
 
     if (!process.env.OPENAI_API_KEY) {
-      return interaction.reply({ content: 'AI is not configured. Add OPENAI_API_KEY.', ephemeral: true });
+      return interaction.reply({ content: 'AI is not configured. Add OPENAI_API_KEY.', flags: 64 });
     }
 
     if (!canCall(interaction.user.id)) {
-      return interaction.reply({ content: 'Even a Warmaster paces himself. Give it a moment.', ephemeral: true });
+      return interaction.reply({ content: 'Even a Warmaster paces himself. Give it a moment.', flags: 64 });
     }
 
     await interaction.deferReply();
@@ -77,7 +77,7 @@ module.exports = {
       try {
         trivia = JSON.parse(content);
       } catch {
-        await interaction.editReply({ content: 'Failed to generate question. Try again.', ephemeral: true });
+        await interaction.editReply({ content: 'Failed to generate question. Try again.', flags: 64 });
         return;
       }
 
@@ -149,7 +149,7 @@ module.exports = {
       if (interaction.deferred) {
         await interaction.editReply(errorMsg);
       } else {
-        await interaction.reply({ content: errorMsg, ephemeral: true });
+        await interaction.reply({ content: errorMsg, flags: 64 });
       }
     }
   },

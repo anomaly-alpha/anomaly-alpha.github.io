@@ -19,6 +19,6 @@ module.exports = {
     config[interaction.guild.id].logChannel = channel.id;
     config[interaction.guild.id].logMessages = true;
     saveConfig(config);
-    await interaction.reply({ content: `Message logs will be sent to ${channel}.`, ephemeral: true });
+    await interaction.reply({ content: `Message logs will be sent to ${channel}.`, flags: 64 });
   },
 };

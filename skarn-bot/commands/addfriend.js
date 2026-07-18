@@ -26,7 +26,7 @@ module.exports = {
     const friends = loadFriends();
 
     if (friends.length >= MAX_FRIENDS) {
-      return interaction.reply({ content: `Friend list is full (${MAX_FRIENDS}/${MAX_FRIENDS}). Remove someone first.`, ephemeral: true });
+      return interaction.reply({ content: `Friend list is full (${MAX_FRIENDS}/${MAX_FRIENDS}). Remove someone first.`, flags: 64 });
     }
 
     const code = interaction.options.getString('code').toUpperCase();
@@ -36,12 +36,12 @@ module.exports = {
 
     // Check for duplicate code
     if (friends.find(f => f.code === code)) {
-      return interaction.reply({ content: `Friend code \`${code}\` is already on the list.`, ephemeral: true });
+      return interaction.reply({ content: `Friend code \`${code}\` is already on the list.`, flags: 64 });
     }
 
     // Check for duplicate name
     if (friends.find(f => f.name.toLowerCase() === name.toLowerCase())) {
-      return interaction.reply({ content: `**${name}** is already on the list.`, ephemeral: true });
+      return interaction.reply({ content: `**${name}** is already on the list.`, flags: 64 });
     }
 
     friends.push({ code, name, power, note });

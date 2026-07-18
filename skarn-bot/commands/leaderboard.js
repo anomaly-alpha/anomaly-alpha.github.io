@@ -23,7 +23,7 @@ module.exports = {
       .slice(0, 10);
 
     if (sorted.length === 0) {
-      return interaction.reply({ content: 'No one has earned XP yet.', ephemeral: true });
+      return interaction.reply({ content: 'No one has earned XP yet.', flags: 64 });
     }
 
     const medals = ['🥇', '🥈', '🥉'];

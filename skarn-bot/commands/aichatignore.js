@@ -24,11 +24,11 @@ module.exports = {
     if (idx === -1) {
       list.push(userId);
       saveConfig(config);
-      await interaction.reply({ content: 'Skarn will now ignore you in AI chat channels. Use /aichatignore again to reverse.', ephemeral: true });
+      await interaction.reply({ content: 'Skarn will now ignore you in AI chat channels. Use /aichatignore again to reverse.', flags: 64 });
     } else {
       list.splice(idx, 1);
       saveConfig(config);
-      await interaction.reply({ content: 'Skarn will respond to you again in AI chat channels.', ephemeral: true });
+      await interaction.reply({ content: 'Skarn will respond to you again in AI chat channels.', flags: 64 });
     }
   },
 };

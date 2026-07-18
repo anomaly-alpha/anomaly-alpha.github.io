@@ -11,7 +11,7 @@ module.exports = {
     const question = interaction.options.getString('question');
 
     if (!process.env.OPENAI_API_KEY) {
-      return interaction.reply({ content: 'AI is not configured yet. Add OPENAI_API_KEY to the environment.', ephemeral: true });
+      return interaction.reply({ content: 'AI is not configured yet. Add OPENAI_API_KEY to the environment.', flags: 64 });
     }
 
     await interaction.deferReply();
@@ -34,7 +34,7 @@ module.exports = {
       await interaction.editReply(`**${interaction.user.username}:** ${question}\n\n**Skarn:** ${reply}`);
     } catch (error) {
       console.error('OpenAI error:', error);
-      await interaction.editReply({ content: 'Failed to get AI response. Check the API key.', ephemeral: true });
+      await interaction.editReply({ content: 'Failed to get AI response. Check the API key.', flags: 64 });
     }
   },
 };

@@ -34,7 +34,7 @@ module.exports = {
       if (data.responseStatus !== 200) throw new Error('Translation failed');
       await interaction.editReply(`**Original:** ${text}\n**Translated:** ${data.responseData.translatedText}`);
     } catch {
-      await interaction.editReply({ content: 'Translation failed.', ephemeral: true });
+      await interaction.editReply({ content: 'Translation failed.', flags: 64 });
     }
   },
 };

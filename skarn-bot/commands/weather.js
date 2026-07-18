@@ -25,7 +25,7 @@ module.exports = {
         .setColor(0x00e5ff);
       await interaction.editReply({ embeds: [embed] });
     } catch {
-      await interaction.editReply({ content: 'Could not fetch weather for that location.', ephemeral: true });
+      await interaction.editReply({ content: 'Could not fetch weather for that location.', flags: 64 });
     }
   },
 };
