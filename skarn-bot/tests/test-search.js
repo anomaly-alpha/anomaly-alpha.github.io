@@ -1,4 +1,4 @@
-const { describe, it, mock } = require('node:test');
+const { describe, it } = require('node:test');
 const assert = require('node:assert');
 const { searchWeb, cleanCache } = require('../features/search/searchEngine');
 
@@ -27,8 +27,11 @@ describe('searchEngine', () => {
     assert.strictEqual(second.source, 'cache');
   });
 
-  it('cleans stale cache entries', () => {
-    // cleanCache doesn't throw
+  it('cleans stale cache entries without error', async () => {
+    // Populate cache first so cleanCache has something to work with
+    await searchWeb('cleanup test ' + Date.now());
+    cleanCache();
+    // Running again after clean is also fine
     cleanCache();
   });
 });

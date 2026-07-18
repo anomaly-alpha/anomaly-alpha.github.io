@@ -4,6 +4,7 @@ const { search } = require('duck-duck-scrape');
 const cache = new Map(); // normalizedQuery → { results, cachedAt }
 const CACHE_MAX = 50;
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const MAX_RESULTS = 5;
 
 function normalizeQuery(query) {
   return query.toLowerCase().replace(/\s+/g, ' ').trim();
@@ -23,7 +24,7 @@ async function searchWeb(query) {
   // Fresh search
   try {
     const result = await search(query, { safeSearch: -1 });
-    const results = (result.results || []).slice(0, 5).map(r => ({
+    const results = (result.results || []).slice(0, MAX_RESULTS).map(r => ({
       title: r.title || '',
       snippet: r.description || '',
       url: r.url || '',
