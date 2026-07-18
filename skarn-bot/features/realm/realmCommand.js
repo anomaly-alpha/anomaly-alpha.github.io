@@ -32,7 +32,7 @@ function checkProcessing(key) {
   if (Date.now() > expires) { clearProcessing(key); return false; }
   return true;
 }
-function clearProcessing(key) { clearProcessing(key); }
+function clearProcessing(key) { isProcessing.delete(key); }
 function randomError() { return AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)]; }
 function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
 
