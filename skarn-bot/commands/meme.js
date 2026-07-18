@@ -1,4 +1,10 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const openai = require('../ai/client');
+const { buildSystemPrompt } = require('../persona/identity');
+const { roles, roleTokenBudgets } = require('../persona/roles');
+const { canCall, recordCall } = require('../lib/rateLimit');
+const { getChannelState, getUserMemory } = require('../db/database');
+const { getStateLine } = require('../features/channelState/stateTracker');
 
 const MEMES = [
   { title: 'This is Fine', url: 'https://api.memegen.link/images/doge/This_is_fine/_.png' },
@@ -32,23 +38,34 @@ module.exports = {
 
     // Try AI caption if topic provided
     if (topic && process.env.OPENAI_API_KEY) {
-      try {
-        const OpenAI = require('openai');
-        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      if (!canCall(interaction.user.id)) {
+        // Skip AI, fall through to random meme
+      } else {
+        try {
+          const channelState = getChannelState(interaction.channel.id, interaction.guild.id);
+          const stateLine = getStateLine(channelState.current_state);
+          const memory = getUserMemory(interaction.user.id, interaction.guild.id, 5);
+          const memoryLine = memory.length > 0
+            ? 'What Skarn remembers about this person: ' + memory.map(m => m.fact_text).join('; ')
+            : '';
+          const systemPrompt = buildSystemPrompt({ roleLine: roles.meme, stateLine, memoryLine });
 
-        const completion = await openai.chat.completions.create({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            { role: 'system', content: 'Generate a short funny meme caption (max 10 words). Just the text, nothing else.' },
-            { role: 'user', content: `Meme about: ${topic}` },
-          ],
-          max_tokens: 30,
-          temperature: 1.0,
-        });
+          const completion = await openai.chat.completions.create({
+            model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: `Meme about: ${topic}` },
+            ],
+            max_tokens: roleTokenBudgets.meme,
+            temperature: 1.0,
+          });
 
-        title = `${completion.choices[0].message.content} — ${topic}`;
-      } catch {
-        // AI failed, use random meme
+          recordCall(interaction.user.id);
+
+          title = `${completion.choices[0].message.content} — ${topic}`;
+        } catch {
+          // AI failed, use random meme
+        }
       }
     }
 

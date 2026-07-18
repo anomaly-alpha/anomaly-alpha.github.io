@@ -1,4 +1,16 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const openai = require('../ai/client');
+const { buildSystemPrompt } = require('../persona/identity');
+const { roles, roleTokenBudgets } = require('../persona/roles');
+const { canCall, recordCall } = require('../lib/rateLimit');
+const { getChannelState, getUserMemory } = require('../db/database');
+const { getStateLine } = require('../features/channelState/stateTracker');
+
+const AI_ERRORS = [
+  'The connection is frayed. Try again.',
+  'Even the Warmaster\'s reach has limits. Try in a moment.',
+  'Signal lost. The boundary holds.',
+];
 
 const activeAdventures = new Map();
 
@@ -18,20 +30,31 @@ module.exports = {
     const theme = interaction.options.getString('theme') || 'fantasy medieval';
     if (!process.env.OPENAI_API_KEY) return interaction.reply({ content: 'AI not configured.', ephemeral: true });
 
+    if (!canCall(interaction.user.id)) {
+      return interaction.reply({ content: 'Even a Warmaster paces himself. Give it a moment.', ephemeral: true });
+    }
+
     await interaction.deferReply();
     try {
-      const OpenAI = require('openai');
-      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      const channelState = getChannelState(interaction.channel.id, interaction.guild.id);
+      const stateLine = getStateLine(channelState.current_state);
+      const memory = getUserMemory(interaction.user.id, interaction.guild.id, 5);
+      const memoryLine = memory.length > 0
+        ? 'What Skarn remembers about this person: ' + memory.map(m => m.fact_text).join('; ')
+        : '';
+      const systemPrompt = buildSystemPrompt({ roleLine: roles.adventure, stateLine, memoryLine });
 
       const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: process.env.AI_MODEL || 'gpt-3.5-turbo',
         messages: [
-          { role: 'system', content: `You are a ${theme} Dungeon Master. Create immersive scenes with choices. Describe the scene vividly. Always end with 4 numbered choices (1-4). Keep it exciting and dramatic.` },
-          { role: 'user', content: `Start a new adventure for ${interaction.user.username}. Describe the opening scene and give me 4 choices.` },
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: `Start a new ${theme} adventure for ${interaction.user.username}. Describe the opening scene and give me 4 choices.` },
         ],
-        max_tokens: 300,
+        max_tokens: roleTokenBudgets.adventure,
         temperature: 0.9,
       });
+
+      recordCall(interaction.user.id);
 
       const scene = completion.choices[0].message.content;
 
@@ -56,36 +79,55 @@ module.exports = {
       const history = [{ role: 'assistant', content: scene }];
 
       collector.on('collect', async i => {
+        if (!canCall(i.user.id)) {
+          await i.reply({ content: 'Even a Warmaster paces himself. Give it a moment.', ephemeral: true });
+          return;
+        }
+
         const choice = i.customId.replace('adv_', '');
         history.push({ role: 'user', content: `Choice ${choice}` });
 
-        const next = await openai.chat.completions.create({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            { role: 'system', content: `You are a ${theme} Dungeon Master. Continue the adventure based on the player's choice. Describe what happens. End with 4 new numbered choices. Keep it exciting.` },
-            ...history,
-          ],
-          max_tokens: 300,
-          temperature: 0.9,
-        });
+        try {
+          const next = await openai.chat.completions.create({
+            model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              ...history,
+            ],
+            max_tokens: roleTokenBudgets.adventure,
+            temperature: 0.9,
+          });
 
-        const nextScene = next.choices[0].message.content;
-        history.push({ role: 'assistant', content: nextScene });
+          recordCall(i.user.id);
 
-        const nextEmbed = new EmbedBuilder()
-          .setTitle('Adventure')
-          .setDescription(nextScene)
-          .setColor(0x00e5ff)
-          .setFooter({ text: 'Click a button to choose your action' });
+          const nextScene = next.choices[0].message.content;
+          history.push({ role: 'assistant', content: nextScene });
 
-        await i.update({ embeds: [nextEmbed], components: [row] });
+          const nextEmbed = new EmbedBuilder()
+            .setTitle('Adventure')
+            .setDescription(nextScene)
+            .setColor(0x00e5ff)
+            .setFooter({ text: 'Click a button to choose your action' });
+
+          await i.update({ embeds: [nextEmbed], components: [row] });
+        } catch (error) {
+          console.error('Adventure continuation error:', error);
+          const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
+          await i.update({ content: errorMsg });
+        }
       });
 
       collector.on('end', () => {
         interaction.editReply({ components: [] }).catch(() => {});
       });
-    } catch {
-      await interaction.editReply({ content: 'Adventure failed to load.', ephemeral: true });
+    } catch (error) {
+      console.error('Adventure error:', error);
+      const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
+      if (interaction.deferred) {
+        await interaction.editReply(errorMsg);
+      } else {
+        await interaction.reply({ content: errorMsg, ephemeral: true });
+      }
     }
   },
 };
