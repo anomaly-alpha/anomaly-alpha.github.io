@@ -5,3 +5,4 @@ node_modules/
 lighthouse-report.html
 *.report.html
 lighthouse-reports/
+.mimocode/
