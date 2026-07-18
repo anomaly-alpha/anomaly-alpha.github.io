@@ -8,6 +8,12 @@ function escHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+function relativize(absPath) {
+  // Convert absolute paths (/, /guide/pvp/) to relative (../, ../guide/pvp/) for file:// support
+  var rel = '..' + (absPath === '/' ? '' : absPath);
+  return rel;
+}
+
 function buildPlaylistGrid(playlists) {
   return playlists.map(p => {
     const card = [
@@ -16,7 +22,7 @@ function buildPlaylistGrid(playlists) {
       '  <h3 class="gem-music-card__title">' + escHtml(p.name) + '</h3>',
       '  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/' + encodeURIComponent(p.id) + '?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
       '  <p class="gem-music-card__desc">' + escHtml(p.description) + '</p>',
-      '  <a href="' + escHtml(p.page) + '" class="gem-music-card__link">Go to ' + escHtml(p.pageName) + ' &rarr;</a>',
+      '  <a href="' + escHtml(relativize(p.page)) + '" class="gem-music-card__link">Go to ' + escHtml(p.pageName) + ' &rarr;</a>',
       '</div>'
     ];
     return card.join('\n');
