@@ -258,6 +258,8 @@ async function handleExplore(interaction) {
 
     await interaction.editReply({ embeds: [embed], components });
 
+    clearProcessing(key); // ready for button clicks
+
     const collector = interaction.channel.createMessageComponentCollector({
       filter: i => i.user.id === userId, time: 120000,
     });
