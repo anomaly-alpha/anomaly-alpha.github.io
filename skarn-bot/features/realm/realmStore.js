@@ -13,11 +13,9 @@ function saveCharacter(userId, guildId, data) {
   const existing = getCharacter(userId, guildId);
   if (existing) {
     const sets = Object.keys(data).map(k => `${k} = ?`).join(', ');
-    const values = Object.values(data);
-    values.push(userId, guildId);
     db.prepare(
       `UPDATE realm_characters SET ${sets}, updated_at = ? WHERE user_id = ? AND guild_id = ?`
-    ).run(...values, now);
+    ).run(...Object.values(data), now, userId, guildId);
   } else {
     const cols = ['user_id', 'guild_id', 'created_at', 'updated_at', ...Object.keys(data)];
     const placeholders = cols.map(() => '?').join(', ');
