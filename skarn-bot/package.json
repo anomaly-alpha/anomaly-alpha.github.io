@@ -13,6 +13,7 @@
     "discord-rpc": "^4.0.1",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.7",
+    "duck-duck-scrape": "^2.2.7",
     "node-fetch": "^2.7.0",
     "openai": "^6.48.0",
     "sentiment": "^5.0.2"
