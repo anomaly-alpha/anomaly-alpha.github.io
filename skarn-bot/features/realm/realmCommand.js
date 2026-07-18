@@ -244,7 +244,9 @@ async function handleExplore(interaction) {
     const activeQuests = realmStore.getActiveQuests(userId, guildId);
     const quest = activeQuests[0] || null;
 
-    const rawText = await generateExploration(char, location, quest, null);
+    const sceneHistory = []; // tracks turns for AI context
+    const rawText = await generateExploration(char, location, quest, sceneHistory);
+    sceneHistory.push({ role: 'assistant', content: rawText });
     recordCall(userId);
     incrementGuildDaily(guildId);
 
@@ -269,9 +271,9 @@ async function handleExplore(interaction) {
 
       try {
         if (i.customId.startsWith('combat_')) {
-          await handleCombatButton(i, userId, guildId, key, collector, interaction);
+          await handleCombatButton(i, userId, guildId, key, collector, interaction, sceneHistory);
         } else if (i.customId.startsWith('exp_')) {
-          await handleExploreChoice(i, userId, guildId, key, char, quest, choiceTexts, collector, interaction);
+          await handleExploreChoice(i, userId, guildId, key, char, quest, choiceTexts, collector, interaction, sceneHistory);
         }
       } catch (err) {
         console.error('Explore collector error:', err);
@@ -297,9 +299,11 @@ async function handleExplore(interaction) {
 
 // ===== Explore Button Handler =====
 
-async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceTexts, collector, interaction) {
+async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceTexts, collector, interaction, sceneHistory) {
   const idx = parseInt(i.customId.replace('exp_', ''), 10);
   const choiceText = choiceTexts[idx] || '';
+
+  sceneHistory.push({ role: 'user', content: choiceText });
 
   const currentChar = realmStore.getCharacter(userId, guildId);
   if (!currentChar) {
@@ -335,7 +339,8 @@ async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceT
 
     const updatedChar = realmStore.getCharacter(userId, guildId);
     try {
-      const raw = await generateExploration(updatedChar, moveResult.location, quest, null);
+      const raw = await generateExploration(updatedChar, moveResult.location, quest, sceneHistory);
+      sceneHistory.push({ role: 'assistant', content: raw });
       recordCall(userId);
       incrementGuildDaily(guildId);
 

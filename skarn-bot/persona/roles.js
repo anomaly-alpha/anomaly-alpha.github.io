@@ -47,8 +47,8 @@ const roleTokenBudgets = {
   wouldyourather: 150,
   unpopularopinion: 150,
   improv: 500,
-  realm: 700,
-  realm_combat: 700,
+  realm: 1000,
+  realm_combat: 800,
   realm_npc: 600,
 };
 
