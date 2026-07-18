@@ -25,6 +25,8 @@ function getDeadpanBudget(baseBudget, userId, channelId) {
     banterChains.delete(key);
     return baseBudget;
   }
+  // Only reduce at chain 3+ (spec [S5] 3b)
+  if (chain.count < 3) return baseBudget;
   const multiplier = Math.max(0.25, 1 - chain.count * 0.15);
   return Math.round(baseBudget * multiplier);
 }
@@ -41,9 +43,9 @@ function extendBanterChain(userId, channelId) {
 }
 
 function recordSetup(channelId, userId, content) {
-  if (content.endsWith('?') && content.toLowerCase().includes('what') ||
+  if (content.endsWith('?') && (content.toLowerCase().includes('what') ||
       content.toLowerCase().includes('imagine') ||
-      content.toLowerCase().includes('guess what')) {
+      content.toLowerCase().includes('guess what'))) {
     setups.set(`${channelId}:${userId}`, { text: content, at: Date.now() });
   }
 }
