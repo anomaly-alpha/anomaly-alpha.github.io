@@ -60,7 +60,7 @@ function isSleepTime() {
 let isAsleep = false;
 
 // ===== Ready =====
-client.once('ready', () => {
+client.once('clientReady', () => {
   console.log(`Logged in as ${client.user.tag} (${client.commands.size} commands)`);
   console.log(`Sleep mode: ${SLEEP_START}:00 - ${SLEEP_END}:00 (UTC${SLEEP_TIMEZONE >= 0 ? '+' : ''}${SLEEP_TIMEZONE})`);
 
@@ -162,7 +162,10 @@ client.on('messageCreate', async message => {
   onMessageReceived(message);
 
   // Skarn mention routing (before keyword triggers and old AI logic)
-  await handleMention(message, client);
+  if (message.mentions.has(client.user)) {
+    await handleMention(message, client);
+    return;
+  }
 
   // XP gain (15-25 XP per message, 60s cooldown per user)
   if (!xpCooldown.has(message.author.id)) {
