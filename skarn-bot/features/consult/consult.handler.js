@@ -6,6 +6,9 @@ const { collectContext } = require('../promptContext');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { simulateTyping } = require('../discordNative/typingSim');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
+const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
+const { getRelationship } = require('../../db/database');
+const { flagForApology } = require('../etiquette/etiquetteEngine');
 
 const RATE_LIMIT_MSG = 'Even a Warmaster paces himself. Give it a moment.';
 
@@ -23,15 +26,23 @@ async function execute(interaction) {
 
   await interaction.deferReply();
 
+  const rel = getRelationship(interaction.user.id, interaction.guild.id);
+  const interactionCount = rel ? rel.interaction_count : 0;
+
   try {
     const message = interaction.options.getString('message');
-    const ctx = collectContext(interaction.user.id, interaction.guild.id, interaction.channel.id);
+    const ctx = collectContext(interaction.user.id, interaction.guild.id, interaction.channel.id, {
+      roleNature: 'casual',
+      userContent: message,
+      interactionCount,
+    });
     const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
 
     const context = await getRecentContext(interaction.channel, 5);
     const contextualMessage = buildContextualPrompt(message, context);
 
     recordCall(interaction.user.id);
+    extendBanterChain(interaction.user.id, interaction.channel.id);
 
     const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
@@ -40,14 +51,20 @@ async function execute(interaction) {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: contextualMessage },
       ],
-      max_completion_tokens: roleTokenBudgets.consult,
+      max_completion_tokens: getDeadpanBudget(roleTokenBudgets.consult, interaction.user.id, interaction.channel.id),
       temperature: 0.8,
     });
 
     let reply = completion.choices[0].message.content;
     reply = postProcess(reply, ROLE_NATURE.consult);
 
+    const isPunchlineMsg = isPunchline(reply, interaction.channel.id, interaction.user.id);
+
     await simulateTyping(interaction.channel, reply.length);
+
+    if (isPunchlineMsg) {
+      await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
+    }
 
     const chunks = splitMessage(reply, 400);
     if (chunks.length === 1) {
@@ -60,6 +77,7 @@ async function execute(interaction) {
       }
     }
   } catch (error) {
+    flagForApology(interaction.user.id);
     console.error('Consult error:', error);
     const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
     if (interaction.deferred) {

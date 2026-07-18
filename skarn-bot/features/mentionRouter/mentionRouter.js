@@ -6,6 +6,9 @@ const { collectContext } = require('../promptContext');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { simulateTyping } = require('../discordNative/typingSim');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
+const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
+const { getRelationship } = require('../../db/database');
+const { flagForApology } = require('../etiquette/etiquetteEngine');
 
 const COOLDOWN_MS = 1 * 1000; // 1 second per user per channel
 const cooldowns = new Map(); // `${userId}:${channelId}` -> timestamp
@@ -37,14 +40,22 @@ async function handleMention(message, client) {
   const cleanMsg = message.content.replace(/<@!?\d+>/g, '').trim();
   if (!cleanMsg) return;
 
+  const rel = getRelationship(userId, message.guild.id);
+  const interactionCount = rel ? rel.interaction_count : 0;
+
   try {
-    const ctx = collectContext(userId, message.guild.id, channelId);
+    const ctx = collectContext(userId, message.guild.id, channelId, {
+      roleNature: 'casual',
+      userContent: cleanMsg,
+      interactionCount,
+    });
     const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
 
     const context = await getRecentContext(message.channel, 5);
     const contextualMessage = buildContextualPrompt(cleanMsg, context);
 
     recordCall(userId);
+    extendBanterChain(userId, channelId);
     cooldowns.set(key, Date.now());
 
     const openai = getOpenAIClient();
@@ -54,14 +65,20 @@ async function handleMention(message, client) {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: contextualMessage },
       ],
-      max_completion_tokens: roleTokenBudgets.consult,
+      max_completion_tokens: getDeadpanBudget(roleTokenBudgets.consult, userId, channelId),
       temperature: 0.85,
     });
 
     let reply = completion.choices[0].message.content;
     reply = postProcess(reply, ROLE_NATURE.consult);
 
+    const isPunchlineMsg = isPunchline(reply, channelId, userId);
+
     await simulateTyping(message.channel, reply.length);
+
+    if (isPunchlineMsg) {
+      await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
+    }
 
     const chunks = splitMessage(reply, 400);
     await message.reply(chunks[0]);
@@ -70,6 +87,7 @@ async function handleMention(message, client) {
       await message.channel.send(chunk);
     }
   } catch (error) {
+    flagForApology(userId);
     console.error('Mention reply error:', error);
     const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
     await message.reply(errorMsg);

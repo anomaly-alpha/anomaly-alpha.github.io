@@ -11,6 +11,10 @@ const { maybeReact } = require('./features/discordNative/reactionSystem');
 const { updateRelationship } = require('./features/relationship/relationshipTracker');
 const { maybeInterject } = require('./features/presence/interjectionEngine');
 const { updateCulture } = require('./features/culture/cultureTracker');
+const { updateWarmth, maybeActiveListen, cleanWarmth, refreshAiChannels } = require('./features/warmth/warmthManager');
+const { updateCallbacks, cleanCallbacks } = require('./features/humor/callbackEngine');
+const { extendBanterChain, cleanChains, recordSetup } = require('./features/humor/comedyTiming');
+const { clearFlags } = require('./features/etiquette/etiquetteEngine');
 const { recordMessage, recordResponse, canRespond } = require('./lib/aiStats');
 const { startScheduler } = require('./lib/weatherScheduler');
 
@@ -108,7 +112,13 @@ client.once('clientReady', () => {
   }, 60000);
 
   // Skarn state decay (runs every 10 minutes, regardless of sleep mode)
-  setInterval(runDecayPass, 10 * 60 * 1000);
+  setInterval(() => {
+    runDecayPass();
+    cleanCallbacks();
+    cleanChains();
+    clearFlags();
+    cleanWarmth();
+  }, 10 * 60 * 1000);
 });
 
 // ===== Slash command handler =====
@@ -175,6 +185,17 @@ client.on('messageCreate', async message => {
 
   // Skarn server culture tracking
   updateCulture(message.guild.id, message.channel.id, message.content);
+
+  // Warmth tracking
+  updateWarmth(message.author.id, message.guild.id, message.content);
+  // Callback tracking (notable message sampling)
+  updateCallbacks(message.channel.id, message.author.id, message.content);
+  // Active listening (non-AI channels only, handled internally)
+  maybeActiveListen(message, client);
+  // Comedy: banter chain tracking
+  if (!message.content.startsWith('!')) extendBanterChain(message.author.id, message.channel.id);
+  // Comedy: record setups for punchline detection
+  recordSetup(message.channel.id, message.author.id, message.content);
 
   // Track messages sent to bot
   recordMessage(message.author.id);

@@ -47,7 +47,12 @@ Hard rules:
   when to be fun.
 - Never cruel. Witty at others' expense, never at their harm.`;
 
-function buildSystemPrompt({ roleLine = '', stateLine = '', moodLine = '', relationshipLine = '', cultureLine = '', memoryLine = '' } = {}) {
+function buildSystemPrompt({
+  roleLine = '', stateLine = '', moodLine = '', relationshipLine = '',
+  cultureLine = '', memoryLine = '',
+  warmthLine = '', patienceLine = '', callbackLine = '',
+  gratitudeLine = '', firstOfDayLine = '', milestoneLine = '', apologyLine = ''
+} = {}) {
   const parts = [SKARN_CORE_IDENTITY];
   if (roleLine) parts.push(roleLine);
   if (stateLine) parts.push(stateLine);
@@ -55,7 +60,14 @@ function buildSystemPrompt({ roleLine = '', stateLine = '', moodLine = '', relat
   if (relationshipLine) parts.push(relationshipLine);
   if (cultureLine) parts.push(cultureLine);
   if (memoryLine) parts.push(memoryLine);
+  if (warmthLine) parts.push(warmthLine);
+  if (patienceLine) parts.push(patienceLine);
+  if (callbackLine) parts.push(callbackLine);
+  if (gratitudeLine) parts.push(gratitudeLine);
+  if (firstOfDayLine) parts.push(firstOfDayLine);
+  if (milestoneLine) parts.push(milestoneLine);
+  if (apologyLine) parts.push(apologyLine);
   return parts.join('\n\n');
-} 
+}
 
 module.exports = { SKARN_CORE_IDENTITY, buildSystemPrompt };
