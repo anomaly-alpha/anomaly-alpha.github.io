@@ -22,8 +22,17 @@ const AI_ERRORS = [
 ];
 
 const isProcessing = new Map();
+const PROCESSING_TTL = 30000; // 30s auto-expire to prevent stuck keys
 
 function guardKey(i) { return `${i.user.id}:${i.guildId}`; }
+function setProcessing(key) { isProcessing.set(key, Date.now() + PROCESSING_TTL); }
+function checkProcessing(key) {
+  const expires = isProcessing.get(key);
+  if (!expires) return false;
+  if (Date.now() > expires) { clearProcessing(key); return false; }
+  return true;
+}
+function clearProcessing(key) { clearProcessing(key); }
 function randomError() { return AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)]; }
 function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
 
@@ -219,8 +228,8 @@ async function handleExplore(interaction) {
   }
 
   const key = guardKey(interaction);
-  if (isProcessing.has(key)) return interaction.reply({ content: 'Processing your last action...', flags: EPHEMERAL });
-  isProcessing.set(key, true);
+  if (checkProcessing(key)) return interaction.reply({ content: 'Processing your last action...', flags: EPHEMERAL });
+  setProcessing(key);
 
   try {
     await interaction.deferReply();
@@ -252,11 +261,11 @@ async function handleExplore(interaction) {
     });
 
     collector.on('collect', async i => {
-      if (isProcessing.has(key)) {
+      if (checkProcessing(key)) {
         await i.reply({ content: 'Still processing...', flags: EPHEMERAL }).catch(() => {});
         return;
       }
-      isProcessing.set(key, true);
+      setProcessing(key);
 
       try {
         if (i.customId.startsWith('combat_')) {
@@ -268,18 +277,18 @@ async function handleExplore(interaction) {
         console.error('Explore collector error:', err);
         try { await i.update({ content: randomError() }); } catch {}
       } finally {
-        isProcessing.delete(key);
+        clearProcessing(key);
       }
     });
 
     collector.on('end', () => {
-      isProcessing.delete(key);
+      clearProcessing(key);
       interaction.editReply({ components: [] }).catch(() => {});
     });
 
   } catch (err) {
     console.error('Explore error:', err);
-    isProcessing.delete(key);
+    clearProcessing(key);
     const msg = randomError();
     if (interaction.deferred) await interaction.editReply(msg);
     else await interaction.reply({ content: msg, flags: EPHEMERAL });
