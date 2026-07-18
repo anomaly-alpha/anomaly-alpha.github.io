@@ -8,7 +8,10 @@
     "deploy": "node deploy-commands.js"
   },
   "dependencies": {
+    "canvas": "^3.2.3",
     "discord.js": "^14.16.3",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "node-fetch": "^2.7.0",
+    "openai": "^6.48.0"
   }
 }

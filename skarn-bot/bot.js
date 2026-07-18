@@ -2,6 +2,9 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
+const OpenAI = require('openai');
+
+const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
 
 const client = new Client({
   intents: [
@@ -225,6 +228,36 @@ client.on('messageCreate', async message => {
     ];
     const saying = randomSayings[Math.floor(Math.random() * randomSayings.length)];
     message.reply(saying);
+  }
+
+  // ===== AI replies =====
+  const configData = loadJSON('config.json');
+  const aiChannels = configData[message.guild?.id]?.aiChannels || [];
+  const isMentioned = message.mentions.has(client.user);
+  const isAIChannel = aiChannels.includes(message.channel.id);
+
+  if ((isMentioned || isAIChannel) && openai) {
+    // Get clean message (remove bot mention)
+    const cleanMsg = message.content.replace(/<@!?\d+>/g, '').trim();
+    if (!cleanMsg) return;
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          { role: 'system', content: 'You are Skarn, a helpful and funny Discord bot. Keep replies short (1-2 sentences max), casual, and entertaining. Use occasional emojis but not too many. You are witty and helpful.' },
+          { role: 'user', content: cleanMsg },
+        ],
+        max_tokens: 150,
+        temperature: 0.8,
+      });
+      const reply = completion.choices[0].message.content;
+      await message.reply(reply);
+    } catch (error) {
+      console.error('AI reply error:', error);
+      await message.reply('My AI brain glitched. Try again later.');
+    }
+    return;
   }
 
   // Prefix commands
