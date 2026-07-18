@@ -9,6 +9,7 @@ const { getRecentContext, buildContextualPrompt } = require('../discordNative/co
 const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
 const { getRelationship } = require('../../db/database');
 const { flagForApology } = require('../etiquette/etiquetteEngine');
+const { extractMemory } = require('../memory/memoryExtractor');
 
 const COOLDOWN_MS = 1 * 1000; // 1 second per user per channel
 const cooldowns = new Map(); // `${userId}:${channelId}` -> timestamp
@@ -86,6 +87,9 @@ async function handleMention(message, client) {
     for (const chunk of tail) {
       await message.channel.send(chunk);
     }
+
+    // Auto-extract memory from conversation (non-blocking)
+    extractMemory(userId, message.guild.id, cleanMsg, reply).catch(() => {});
   } catch (error) {
     flagForApology(userId);
     console.error('Mention reply error:', error);

@@ -9,6 +9,7 @@ const { getRecentContext, buildContextualPrompt } = require('../discordNative/co
 const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
 const { getRelationship } = require('../../db/database');
 const { flagForApology } = require('../etiquette/etiquetteEngine');
+const { extractMemory } = require('../memory/memoryExtractor');
 
 const RATE_LIMIT_MSG = 'Even a Warmaster paces himself. Give it a moment.';
 
@@ -76,6 +77,9 @@ async function execute(interaction) {
         await interaction.followUp(chunk);
       }
     }
+
+    // Auto-extract memory from conversation (non-blocking)
+    extractMemory(interaction.user.id, interaction.guild.id, message, reply).catch(() => {});
   } catch (error) {
     flagForApology(interaction.user.id);
     console.error('Consult error:', error);
