@@ -43,19 +43,31 @@ function buildContextPrompt(character, location, quest, npcMemory, history) {
 
 // ===== Core AI Call =====
 
+function withTimeout(promise, ms) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('AI call timed out')), ms)),
+  ]);
+}
+
 async function callAi(role, context, message, temperature = 0.8) {
   const client = getOpenAIClient();
   const roleLine = roles[role] || '';
   const systemPrompt = buildSystemPrompt({ roleLine, stateLine: context });
+  const maxTokens = roleTokenBudgets[role] || 500;
 
-  const response = await client.chat.completions.create({
-    model: MODEL,
-    temperature,
-    messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: message },
-    ],
-  });
+  const response = await withTimeout(
+    client.chat.completions.create({
+      model: MODEL,
+      temperature,
+      max_completion_tokens: maxTokens,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message },
+      ],
+    }),
+    30000, // 30 second timeout
+  );
 
   return response.choices[0].message.content;
 }
