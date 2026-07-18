@@ -24,8 +24,14 @@ function buildContextPrompt(character, location, quest, npcMemory, history) {
   }
 
   if (quest) {
-    parts.push(`Active Quest: ${quest.title} — ${quest.description}` +
-      (quest.objectives ? ` Objectives: ${quest.objectives.join('; ')}` : ''));
+    let objectiveText = '';
+    if (quest.objectives) {
+      try {
+        const objectives = typeof quest.objectives === 'string' ? JSON.parse(quest.objectives) : quest.objectives;
+        objectiveText = ` Objectives: ${objectives.map(o => `${o.current || 0}/${o.count || 1} ${o.type} ${o.target}`).join('; ')}`;
+      } catch { /* objectives parse failed, skip */ }
+    }
+    parts.push(`Active Quest: ${quest.title} — ${quest.description}${objectiveText}`);
   }
 
   if (npcMemory && npcMemory.length) {
