@@ -1,6 +1,15 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 const categories = {
+  'Skarn Persona': {
+    color: 0x00e5ff,
+    commands: [
+      { name: '/consult', desc: 'Speak with Skarn (in-character)' },
+      { name: '/etch', desc: 'Tell Skarn something to remember' },
+      { name: '/forget', desc: 'Delete all remembered facts' },
+      { name: '/vein', desc: 'Summarize channel conversation' },
+    ],
+  },
   'General': {
     color: 0x00e5ff,
     commands: [
@@ -27,7 +36,6 @@ const categories = {
   'AI Chat': {
     color: 0x9b59b6,
     commands: [
-      { name: '/ask', desc: 'Ask AI anything' },
       { name: '/aichat', desc: 'Toggle AI in a channel' },
       { name: '@Skarn', desc: 'Mention bot for AI reply' },
     ],
@@ -63,7 +71,6 @@ const categories = {
       { name: '/recipe', desc: 'Recipe finder' },
       { name: '/code', desc: 'Code helper' },
       { name: '/debate', desc: 'AI debate partner' },
-      { name: '/summarize', desc: 'Summarize a channel' },
     ],
   },
   'Leveling': {
