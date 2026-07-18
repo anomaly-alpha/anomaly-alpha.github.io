@@ -1,6 +1,6 @@
 # Skarn Discord Bot
 
-A Discord bot built with Discord.js v14 with moderation, fun, utility, and server management features.
+A Discord bot built with Discord.js v14 with AI-powered features, fun games, and server management.
 
 ## Setup
 
@@ -19,6 +19,7 @@ Then fill in your values:
 ```
 DISCORD_TOKEN=your_bot_token
 CLIENT_ID=your_application_id
+OPENAI_API_KEY=your_openai_key
 ```
 
 ## Running
@@ -27,40 +28,96 @@ CLIENT_ID=your_application_id
 npm start
 ```
 
-## Quick Reference
+## Quick Reference (52 Commands)
 
-| Command | Usage | Description |
-|---------|-------|-------------|
-| `/ping` | `/ping` | Check bot responsiveness |
-| `/hello` | `/hello` | Get a greeting |
-| `/serverinfo` | `/serverinfo` | Server stats |
-| `/userinfo` | `/userinfo user:@someone` | User info |
-| `/avatar` | `/avatar user:@someone` | Show user avatar |
-| `/8ball` | `/8ball question:"..."` | Magic 8-ball |
-| `/poll` | `/poll question:"..." options:"A,B,C"` | Create a poll |
-| `/coinflip` | `/coinflip` | Flip a coin |
-| `/dice` | `/dice sides:20` | Roll a dice |
-| `/meme` | `/meme` | Random meme from Reddit |
-| `/trivia` | `/trivia` | Play trivia |
-| `/calc` | `/calc expression:"2+2"` | Math calculator |
-| `/weather` | `/weather location:"London"` | Get weather |
-| `/translate` | `/translate text:"hello" to:"es"` | Translate text |
-| `/remind` | `/remind minutes:30 message:"..."` | Set a reminder |
-| `/embed` | `/embed title:"..." description:"..."` | Create embed |
-| `/kick` | `/kick user:@someone reason:"..."` | Kick a member |
-| `/ban` | `/ban user:@someone reason:"..."` | Ban a member |
-| `/timeout` | `/timeout user:@someone minutes:10` | Timeout a member |
-| `/purge` | `/purge amount:10` | Delete messages |
-| `/warn` | `/warn user:@someone reason:"..."` | Warn a member |
-| `/warnings` | `/warnings user:@someone` | View warnings |
-| `/level` | `/level user:@someone` | Check level |
-| `/leaderboard` | `/leaderboard` | XP leaderboard |
-| `/giveaway` | `/giveaway prize:"..." winners:1 minutes:60` | Start giveaway |
-| `/ticket` | `/ticket` | Create ticket panel |
-| `/reactionrole` | `/reactionrole role:@role emoji:"👍"` | Reaction role |
-| `/setwelcome` | `/setwelcome channel:#general` | Set welcome channel |
-| `/setautorole` | `/setautorole role:@member` | Set auto-role |
-| `/setlog` | `/setlog channel:#logs` | Set logging channel |
+### General
+| Command | Description |
+|---------|-------------|
+| `/ping` | Check if bot is alive |
+| `/hello` | Get a greeting |
+| `/serverinfo` | Server stats |
+| `/userinfo` | Info about a user |
+| `/avatar` | Show user avatar |
+| `/help` | List all commands |
+
+### Fun
+| Command | Description |
+|---------|-------------|
+| `/coinflip` | Flip a coin |
+| `/dice` | Roll a dice |
+| `/8ball` | Magic 8-ball |
+| `/poll` | Create a poll |
+| `/meme` | Random meme with image |
+| `/trivia` | Classic trivia game |
+| `/giveaway` | Start a giveaway |
+
+### AI Chat
+| Command | Description |
+|---------|-------------|
+| `/ask` | Ask AI anything |
+| `/aichat` | Toggle AI in a channel |
+| `@Skarn` | Mention bot for AI reply |
+
+### AI Games
+| Command | Description |
+|---------|-------------|
+| `/aitrivia` | AI trivia on any topic |
+| `/adventure` | AI Dungeon Master game |
+| `/charades` | Word guessing game |
+| `/wouldyourather` | Would You Rather |
+| `/unpopularopinion` | Hot take voting |
+| `/improv` | AI improv comedy |
+
+### AI Creative
+| Command | Description |
+|---------|-------------|
+| `/song` | AI writes a song |
+| `/joke` | Custom AI joke |
+| `/fortune` | AI fortune teller |
+| `/story` | Collaborative story |
+| `/roast` | Get roasted by AI |
+| `/compliment` | AI compliment |
+| `/insult` | Playful insult |
+| `/pickup` | Pickup line generator |
+
+### AI Utility
+| Command | Description |
+|---------|-------------|
+| `/homework` | Homework helper |
+| `/recipe` | Recipe finder |
+| `/code` | Code helper |
+| `/debate` | AI debate partner |
+| `/summarize` | Summarize a channel |
+
+### Leveling
+| Command | Description |
+|---------|-------------|
+| `/level` | Check your level |
+| `/leaderboard` | XP leaderboard |
+| `/setlevelrole` | Set role for level (Admin) |
+| `/levelroles` | View level roles (Admin) |
+
+### Server Setup
+| Command | Description |
+|---------|-------------|
+| `/setwelcome` | Set welcome channel (Admin) |
+| `/setautorole` | Set auto-role (Admin) |
+| `/setlog` | Set logging channel (Admin) |
+| `/reactionrole` | Reaction role message (Admin) |
+| `/ticket` | Create ticket panel (Admin) |
+| `/embed` | Create custom embed |
+
+### Games
+| Command | Description |
+|---------|-------------|
+| `/tetris` | Head-to-head Tetris |
+
+### Friends
+| Command | Description |
+|---------|-------------|
+| `/friends` | View friend list |
+| `/addfriend` | Add a friend |
+| `/removefriend` | Remove a friend |
 
 ---
 
@@ -69,7 +126,7 @@ npm start
 ### General
 
 #### `/ping`
-- **Description:** Checks if the bot is responsive
+- **Description:** Checks if bot is alive
 - **Response:** "Pong!"
 
 #### `/hello`
@@ -77,28 +134,24 @@ npm start
 - **Response:** "Hey username!"
 
 #### `/serverinfo`
-- **Description:** Displays server information
-- **Response:** Embed with server name, member count, creation date, owner
+- **Description:** Displays server info
+- **Response:** Embed with name, members, creation date, owner
 
 #### `/userinfo`
-- **Parameters:** `user` (optional) — defaults to yourself
-- **Response:** Embed with user ID, join date, account creation date
+- **Parameters:** `user` (optional)
+- **Response:** Embed with ID, join date, account creation
 
 #### `/avatar`
-- **Parameters:** `user` (optional) — defaults to yourself
-- **Response:** Embed with user's avatar image
+- **Parameters:** `user` (optional)
+- **Response:** Embed with avatar image
+
+#### `/help`
+- **Parameters:** `category` (optional)
+- **Response:** Lists all commands by category
 
 ---
 
 ### Fun
-
-#### `/8ball`
-- **Parameters:** `question` (required)
-- **Response:** Random answer from 20 classic 8-ball responses
-
-#### `/poll`
-- **Parameters:** `question` (required), `options` (required, comma-separated, max 10)
-- **Response:** Embed with numbered options and reaction emojis for voting
 
 #### `/coinflip`
 - **Response:** Heads or Tails
@@ -107,143 +160,246 @@ npm start
 - **Parameters:** `sides` (optional, default 6, max 100)
 - **Response:** Random number with dice notation
 
+#### `/8ball`
+- **Parameters:** `question` (required)
+- **Response:** Random answer from 20 classic responses
+
+#### `/poll`
+- **Parameters:** `question` (required), `options` (required, comma-separated, max 10)
+- **Response:** Embed with numbered options and reaction emojis
+
 #### `/meme`
-- **Response:** Random meme from r/memes with upvote count
+- **Parameters:** `topic` (optional)
+- **Response:** Random meme with image. Topic adds AI caption.
 
 #### `/trivia`
 - **Response:** Trivia question with clickable answer buttons (15s timer)
 
----
-
-### Utility
-
-#### `/calc`
-- **Parameters:** `expression` (required, e.g. `2+2`, `10*5`, `2^8`)
-- **Response:** Calculated result
-
-#### `/weather`
-- **Parameters:** `location` (required, city name)
-- **Response:** Embed with temperature, condition, humidity, wind
-
-#### `/translate`
-- **Parameters:** `text` (required), `to` (required, language code)
-- **Languages:** English, Spanish, French, German, Italian, Portuguese, Japanese, Korean, Chinese, Russian, Arabic, Hindi
-- **Response:** Original text + translated text
-
-#### `/remind`
-- **Parameters:** `minutes` (required, 1-10080), `message` (required)
-- **Response:** DM or channel message after the time expires
-
-#### `/embed`
-- **Parameters:** `title` (required), `description` (required), `color` (optional hex)
-- **Response:** Rich embed message with your title and description
-
----
-
-### Moderation
-
-#### `/kick`
-- **Parameters:** `user` (required), `reason` (optional)
-- **Permission:** Kick Members
-- **Response:** Confirmation message
-
-#### `/ban`
-- **Parameters:** `user` (required), `reason` (optional)
-- **Permission:** Ban Members
-- **Response:** Confirmation message
-
-#### `/timeout`
-- **Parameters:** `user` (required), `minutes` (required, 1-40320), `reason` (optional)
-- **Permission:** Moderate Members
-- **Response:** Confirmation message
-
-#### `/purge`
-- **Parameters:** `amount` (required, 1-100)
+#### `/giveaway`
+- **Parameters:** `prize` (required), `winners` (required), `minutes` (required)
 - **Permission:** Manage Messages
-- **Response:** Number of deleted messages
+- **Response:** Embed with Enter button, picks winners when time expires
 
-#### `/warn`
-- **Parameters:** `user` (required), `reason` (required)
-- **Permission:** Moderate Members
-- **Response:** Warning embed with total count
-- **Storage:** Warnings saved to `data/warnings.json`
+---
 
-#### `/warnings`
-- **Parameters:** `user` (required)
-- **Permission:** Moderate Members
-- **Response:** List of all warnings for that user
+### AI Chat
+
+#### `/ask`
+- **Parameters:** `question` (required)
+- **Response:** AI answer to your question
+
+#### `/aichat`
+- **Parameters:** `mode` (on/off)
+- **Permission:** Manage Channels
+- **Effect:** Bot responds to all messages in channel
+
+#### `@Skarn`
+- **Usage:** Mention the bot with a message
+- **Response:** AI reply
+
+---
+
+### AI Games
+
+#### `/aitrivia`
+- **Parameters:** `topic` (optional), `difficulty` (optional)
+- **Response:** AI-generated trivia question with buttons
+
+#### `/adventure`
+- **Parameters:** `theme` (optional: fantasy, sci-fi, horror, pirate, zombie)
+- **Response:** Interactive text adventure with choice buttons
+
+#### `/charades`
+- **Parameters:** `category` (optional: movies, animals, objects, celebrity, random)
+- **Response:** Progressive clues to guess a word
+
+#### `/wouldyourather`
+- **Response:** Would You Rather question with A/B buttons
+
+#### `/unpopularopinion`
+- **Response:** Hot take with Agree/Disagree voting
+
+#### `/improv`
+- **Parameters:** `scenario` (required)
+- **Response:** AI starts an improv scene, you continue
+
+---
+
+### AI Creative
+
+#### `/song`
+- **Parameters:** `topic` (required), `style` (optional: pop, rock, hip hop, country, R&B, metal, classical)
+- **Response:** AI-written song with verses and chorus
+
+#### `/joke`
+- **Parameters:** `topic` (optional)
+- **Response:** Custom AI joke
+
+#### `/fortune`
+- **Response:** Dramatic AI fortune teller prediction
+
+#### `/story`
+- **Parameters:** `text` (required), `genre` (optional)
+- **Response:** AI continues your story
+
+#### `/roast`
+- **Parameters:** `target` (optional, defaults to you)
+- **Response:** Playful AI roast
+
+#### `/compliment`
+- **Parameters:** `target` (optional)
+- **Response:** Genuine AI compliment
+
+#### `/insult`
+- **Parameters:** `target` (optional)
+- **Response:** Silly playful insult
+
+#### `/pickup`
+- **Response:** Creative AI pickup line
+
+---
+
+### AI Utility
+
+#### `/homework`
+- **Parameters:** `question` (required)
+- **Response:** Step-by-step explanation
+
+#### `/recipe`
+- **Parameters:** `ingredients` (required)
+- **Response:** Recipe using your ingredients
+
+#### `/code`
+- **Parameters:** `request` (required), `language` (optional)
+- **Response:** Code help with examples
+
+#### `/debate`
+- **Parameters:** `topic` (required)
+- **Response:** AI takes a side, you argue the other
+
+#### `/summarize`
+- **Parameters:** `channel` (optional), `timeframe` (optional: 1h to 1 week), `focus` (optional)
+- **Response:** AI summary of channel messages
 
 ---
 
 ### Leveling
 
 #### `/level`
-- **Parameters:** `user` (optional) — defaults to yourself
-- **Response:** Embed with level, XP, progress bar
-- **Storage:** Saved to `data/levels.json`
-- **Auto-XP:** 15-25 XP per message (60s cooldown), level up at every 100 * level XP
+- **Parameters:** `user` (optional)
+- **Response:** Level, XP, progress bar
+- **Auto-XP:** 15-25 per message (60s cooldown)
 
 #### `/leaderboard`
-- **Response:** Top 10 users by XP with medals
+- **Response:** Top 10 users by XP
+
+#### `/setlevelrole`
+- **Parameters:** `level` (required), `role` (required)
+- **Permission:** Administrator
+- **Effect:** Role assigned at specific level
+
+#### `/levelroles`
+- **Parameters:** `remove` (optional level number)
+- **Permission:** Administrator
+- **Response:** View or remove level roles
 
 ---
 
-### Server Management
-
-#### `/giveaway`
-- **Parameters:** `prize` (required), `winners` (required), `minutes` (required)
-- **Permission:** Manage Messages
-- **Response:** Embed with "Enter" button, picks winners when time expires
-
-#### `/ticket`
-- **Permission:** Administrator
-- **Response:** Creates a ticket panel with a button. Clicking creates a private channel.
-
-#### `/reactionrole`
-- **Parameters:** `role` (required), `emoji` (required), `description` (optional)
-- **Permission:** Manage Roles
-- **Response:** Embed with reaction — react to get/unget the role
+### Server Setup
 
 #### `/setwelcome`
 - **Parameters:** `channel` (required)
 - **Permission:** Administrator
-- **Effect:** New members get a welcome embed in the specified channel
+- **Effect:** Welcome embed on member join
 
 #### `/setautorole`
 - **Parameters:** `role` (required)
 - **Permission:** Administrator
-- **Effect:** New members automatically receive the role
+- **Effect:** Auto-assign role on join
 
 #### `/setlog`
 - **Parameters:** `channel` (required)
 - **Permission:** Administrator
-- **Effect:** Logs deleted and edited messages to the channel
+- **Effect:** Log deleted/edited messages
+
+#### `/reactionrole`
+- **Parameters:** `role` (required), `emoji` (required), `description` (optional)
+- **Permission:** Manage Roles
+- **Response:** Embed with reaction to toggle role
+
+#### `/ticket`
+- **Permission:** Administrator
+- **Response:** Creates ticket panel with button
+
+#### `/embed`
+- **Parameters:** `title` (required), `description` (required), `color` (optional)
+- **Response:** Custom rich embed
+
+---
+
+### Games
+
+#### `/tetris`
+- **Parameters:** `opponent` (required)
+- **Response:** Head-to-head turn-based Tetris with buttons
+
+---
+
+### Friends
+
+#### `/friends`
+- **Parameters:** `search` (optional)
+- **Response:** Friend list with codes and power levels
+- **Storage:** `data/friends.json`
+
+#### `/addfriend`
+- **Parameters:** `code` (required), `name` (required), `power` (required), `note` (optional)
+- **Response:** Adds friend to list (max 30)
+
+#### `/removefriend`
+- **Parameters:** `name` (required)
+- **Response:** Removes friend from list
 
 ---
 
 ### Automatic Features
 
-- **Leveling:** Earn 15-25 XP per message (60s cooldown). Level up announced in channel.
-- **Welcome:** Embed message when a member joins (if configured).
-- **Auto-Role:** Role assigned on join (if configured).
-- **Logging:** Message delete/edit events logged (if configured).
+- **Leveling:** Earn 15-25 XP per message. Level up announced.
+- **Level Roles:** Auto-assign roles at configured levels.
+- **Welcome:** Embed message when member joins.
+- **Auto-Role:** Role assigned on join.
+- **Logging:** Message delete/edit events logged.
+- **Funny Replies:** Bot randomly responds to keywords and chat.
+- **AI Chat:** Responds when mentioned or in AI-enabled channels.
 
 ---
 
 ## Bot Permissions
 
-When inviting the bot, these permissions are required:
+When inviting the bot:
 
-- **View Channels** — needed to see messages
-- **Send Messages** — needed to reply
-- **Use Application Commands** — needed for slash commands
-- **Add Reactions** — needed for polls and reaction roles
-- **Manage Messages** — needed for purge
-- **Kick Members** — needed for /kick
-- **Ban Members** — needed for /ban
-- **Moderate Members** — needed for /timeout and /warn
-- **Manage Roles** — needed for auto-role and reaction roles
-- **Manage Channels** — needed for ticket creation
+- **View Channels** — see messages
+- **Send Messages** — reply
+- **Use Application Commands** — slash commands
+- **Add Reactions** — polls, reaction roles
+- **Manage Roles** — auto-role, reaction roles
+- **Manage Channels** — AI chat toggle
+- **Manage Messages** — giveaways
+
+---
+
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `DISCORD_TOKEN` | Yes | Bot token from Developer Portal |
+| `CLIENT_ID` | Yes | Application ID from Developer Portal |
+| `OPENAI_API_KEY` | For AI | OpenAI API key |
+| `SLEEP_START` | No | Sleep hour (0 = disabled) |
+| `SLEEP_END` | No | Wake hour (0 = disabled) |
+| `SLEEP_TIMEZONE` | No | UTC offset (default 0) |
+
+---
 
 ## Development
 
@@ -270,57 +426,19 @@ module.exports = {
 npm run deploy
 ```
 
-### Adding a new prefix command
-
-Edit `bot.js` and add to the `messageCreate` handler:
-
-```js
-if (commandName === 'newcmd') {
-  message.reply('Response here');
-}
-```
-
 ## Project Structure
 
 ```
 skarn-bot/
-├── bot.js                  # Main bot file + event handlers
+├── bot.js                  # Main bot + event handlers
 ├── deploy-commands.js      # Registers slash commands
-├── commands/               # 30 slash command files
-│   ├── ping.js
-│   ├── hello.js
-│   ├── serverinfo.js
-│   ├── userinfo.js
-│   ├── avatar.js
-│   ├── 8ball.js
-│   ├── poll.js
-│   ├── coinflip.js
-│   ├── dice.js
-│   ├── meme.js
-│   ├── trivia.js
-│   ├── calc.js
-│   ├── weather.js
-│   ├── translate.js
-│   ├── remind.js
-│   ├── embed.js
-│   ├── kick.js
-│   ├── ban.js
-│   ├── timeout.js
-│   ├── purge.js
-│   ├── warn.js
-│   ├── warnings.js
-│   ├── level.js
-│   ├── leaderboard.js
-│   ├── giveaway.js
-│   ├── ticket.js
-│   ├── reactionrole.js
-│   ├── setwelcome.js
-│   ├── setautorole.js
-│   └── setlog.js
+├── commands/               # 52 slash command files
+├── games/
+│   └── tetris.js           # Tetris game engine
 ├── data/                   # Runtime data (gitignored)
 │   ├── config.json         # Server settings
-│   ├── warnings.json       # Warning records
-│   └── levels.json         # XP/level data
+│   ├── levels.json         # XP/level data
+│   └── friends.json        # Friend list
 ├── .env                    # Secrets (never commit)
 ├── .env.example            # Template
 ├── .gitignore
