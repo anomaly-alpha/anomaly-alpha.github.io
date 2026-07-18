@@ -167,6 +167,21 @@ client.on('messageCreate', async message => {
     return;
   }
 
+  // Reply-to-bot routing in AI channels
+  if (message.reference?.messageId && process.env.AI_MODEL) {
+    const cfg = loadJSON('config.json');
+    const aiChans = cfg[message.guild?.id]?.aiChannels || [];
+    if (aiChans.includes(message.channel.id)) {
+      try {
+        const refMsg = await message.channel.messages.fetch(message.reference.messageId);
+        if (refMsg.author.id === client.user.id) {
+          await handleMention(message, client);
+          return;
+        }
+      } catch {}
+    }
+  }
+
   // XP gain (15-25 XP per message, 60s cooldown per user)
   if (!xpCooldown.has(message.author.id)) {
     xpCooldown.add(message.author.id);

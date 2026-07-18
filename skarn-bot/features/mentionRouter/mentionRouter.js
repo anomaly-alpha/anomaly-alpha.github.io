@@ -5,7 +5,7 @@ const { getStateLine } = require('../channelState/stateTracker');
 const { canCall, recordCall } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
 
-const COOLDOWN_MS = 15 * 1000; // 15 seconds per user per channel
+const COOLDOWN_MS = 1 * 1000; // 1 second per user per channel
 const cooldowns = new Map(); // `${userId}:${channelId}` -> timestamp
 
 const AI_ERRORS = [
