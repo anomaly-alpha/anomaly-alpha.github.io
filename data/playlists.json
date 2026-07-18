@@ -1,0 +1,69 @@
+{
+  "updated": "2026-07-17",
+  "playlists": [
+    {
+      "id": "37i9dQZF1E8Ligr8EnF31Q",
+      "name": "Today's Top Hits",
+      "description": "The biggest songs right now. Great background while planning your gem stack.",
+      "page": "/",
+      "pageName": "Home",
+      "color": "cyan"
+    },
+    {
+      "id": "37i9dQZF1DX6VdMW310YC7",
+      "name": "Beast Mode",
+      "description": "Get hyped. High-energy tracks for climbing the PvP ladder.",
+      "page": "/guide/pvp/",
+      "pageName": "PvP Guide",
+      "color": "pvp"
+    },
+    {
+      "id": "37i9dQZF1DWY4f1Ha8TbJE",
+      "name": "Epic & Cinematic",
+      "description": "Epic orchestral energy for event battles and alliance wars.",
+      "page": "/guide/event/",
+      "pageName": "Event Guide",
+      "color": "event"
+    },
+    {
+      "id": "37i9dQZF1DX4WTs9gsN1bn",
+      "name": "Chill Hits",
+      "description": "Kick back and relax. Easy listening for daily login rewards.",
+      "page": "/guide/login/",
+      "pageName": "Login Guide",
+      "color": "login"
+    },
+    {
+      "id": "37i9dQZF1DXdPec7aLTmlC",
+      "name": "Happy Hits!",
+      "description": "Upbeat and uplifting. Perfect for discovering new promo codes.",
+      "page": "/guide/code/",
+      "pageName": "Code Guide",
+      "color": "code"
+    },
+    {
+      "id": "37i9dQZF1DX6i7ft3La30I",
+      "name": "Morning Motivation",
+      "description": "Start your journey right. Motivating tracks for new players.",
+      "page": "/guide/beginners/",
+      "pageName": "Beginner Guide",
+      "color": "cyan"
+    },
+    {
+      "id": "37i9dQZF1DWZeKCadgEMbQ",
+      "name": "Peaceful Piano",
+      "description": "Calm piano pieces. Relax while browsing FAQs and guides.",
+      "page": "/guide/faq/",
+      "pageName": "FAQ",
+      "color": "cyan"
+    },
+    {
+      "id": "37i9dQZF1DX70TzV5rU7gH",
+      "name": "Deep Focus",
+      "description": "Concentrate. Focused beats for studying hero rank-up costs.",
+      "page": "/guide/xp/",
+      "pageName": "XP Guide",
+      "color": "cyan"
+    }
+  ]
+}
