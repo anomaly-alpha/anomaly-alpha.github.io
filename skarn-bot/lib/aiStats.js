@@ -46,4 +46,10 @@ function getStats(userId) {
   };
 }
 
-module.exports = { recordMessage, recordResponse, canRespond, getStats };
+function resetStats(userId) {
+  aiHourlyCap.delete(userId);
+  messageCount.delete(userId);
+  responseCount.delete(userId);
+}
+
+module.exports = { recordMessage, recordResponse, canRespond, getStats, resetStats };
