@@ -18,7 +18,7 @@ let aiCacheLoadedAt = 0;
 
 function refreshAiChannels() {
   try {
-    const configPath = path.join(__dirname, '..', 'data', 'config.json');
+    const configPath = path.join(__dirname, '..', '..', 'data', 'config.json');
     if (fs.existsSync(configPath)) {
       const cfg = JSON.parse(fs.readFileSync(configPath, 'utf8'));
       aiChannelSet = new Set();
@@ -176,9 +176,7 @@ function cleanWarmth() {
   }
 
   // Prune old consecutive long message tracking
-  for (const [key, ts] of consecutiveLongMessages) {
-    // Keys are "userId:guildId" → count; no timestamp stored, so clear all
-    // if sentiment buffer for that key is gone (already pruned above)
+  for (const [key] of consecutiveLongMessages) {
     if (!sentimentBuffer.has(key)) consecutiveLongMessages.delete(key);
   }
 }

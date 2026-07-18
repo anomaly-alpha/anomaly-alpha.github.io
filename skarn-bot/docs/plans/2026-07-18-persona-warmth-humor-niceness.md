@@ -30,7 +30,7 @@
 - No test file (no test framework exists)
 
 **Interfaces:**
-- Produces: `updateWarmth(userId, guildId, content)` — called per message; `getWarmthLine(userId, guildId, roleNature)` → string; `getPatienceLine(userId, content)` → string; `maybeActiveListen(message, client)` → void (async, sends message or no-ops)
+- Produces: `updateWarmth(userId, guildId, content)` — called per message; `getWarmthLine(userId, guildId, roleNature)` → string; `getPatienceLine(userId, guildId, content)` → string; `maybeActiveListen(message, client)` → void (async, sends message or no-ops)
 
 - [ ] **Step 1: Create `features/warmth/warmthManager.js`**
 
@@ -74,7 +74,7 @@ function getWarmthLine(userId, guildId, roleNature) {
   return '';
 }
 
-function getPatienceLine(userId, content) {
+function getPatienceLine(userId, guildId, content) {
   if (!repeatBuffer.has(userId)) {
     repeatBuffer.set(userId, { topics: [], windowStart: Date.now() });
   }
@@ -477,7 +477,7 @@ function collectContext(userId, guildId, channelId, opts = {}) {
     : '';
 
   const warmthLine = getWarmthLine(userId, guildId, roleNature);
-  const patienceLine = getPatienceLine(userId, userContent);
+  const patienceLine = getPatienceLine(userId, guildId, userContent);
   const callbackLine = getCallbackLine(channelId, userId);
   const gratitudeLine = getGratitudeDirective(userContent);
   const firstOfDayLine = getFirstOfDayLine(userId, guildId);
