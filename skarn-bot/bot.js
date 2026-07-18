@@ -7,6 +7,7 @@ const path = require('path');
 const { onMessageReceived } = require('./features/channelState/stateTracker');
 const { runDecayPass } = require('./features/channelState/stateDecay');
 const { handleMention } = require('./features/mentionRouter/mentionRouter');
+const { maybeReact } = require('./features/discordNative/reactionSystem');
 const { recordMessage, recordResponse, canRespond } = require('./lib/aiStats');
 const { startScheduler } = require('./lib/weatherScheduler');
 
@@ -175,6 +176,9 @@ client.on('messageCreate', async message => {
     recordResponse(message.author.id);
     return;
   }
+
+  // Skarn passive reactions (not during sleep)
+  maybeReact(message, client, isAsleep);
 
   // Reply-to-bot routing in AI channels
   if (message.reference?.messageId && process.env.AI_MODEL) {

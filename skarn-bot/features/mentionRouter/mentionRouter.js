@@ -4,6 +4,9 @@ const { getUserMemory, getChannelState } = require('../../db/database');
 const { getStateLine } = require('../channelState/stateTracker');
 const { canCall, recordCall } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
+const { postProcess, splitMessage, ROLE_NATURE } = require('../discordNative/postProcess');
+const { simulateTyping } = require('../discordNative/typingSim');
+const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
 
 const COOLDOWN_MS = 1 * 1000; // 1 second per user per channel
 const cooldowns = new Map(); // `${userId}:${channelId}` -> timestamp
@@ -50,6 +53,9 @@ async function handleMention(message, client) {
       memoryLine,
     });
 
+    const context = await getRecentContext(message.channel, 5);
+    const contextualMessage = buildContextualPrompt(cleanMsg, context);
+
     recordCall(userId);
     cooldowns.set(key, Date.now());
 
@@ -58,14 +64,22 @@ async function handleMention(message, client) {
       model: process.env.AI_MODEL || 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: cleanMsg },
+        { role: 'user', content: contextualMessage },
       ],
       max_completion_tokens: roleTokenBudgets.consult,
       temperature: 0.85,
     });
 
-    const reply = completion.choices[0].message.content;
-    await message.reply(reply);
+    let reply = completion.choices[0].message.content;
+    reply = postProcess(reply, ROLE_NATURE.consult);
+
+    await simulateTyping(message.channel, reply.length);
+
+    const chunks = splitMessage(reply, 400);
+    await message.reply(chunks[0]);
+    for (let i = 1; i < chunks.length; i++) {
+      await message.channel.send(chunks[i]);
+    }
   } catch (error) {
     console.error('Mention reply error:', error);
     const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];

@@ -4,6 +4,9 @@ const { getUserMemory, getChannelState } = require('../../db/database');
 const { getStateLine } = require('../channelState/stateTracker');
 const { canCall, recordCall } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
+const { postProcess, splitMessage, ROLE_NATURE } = require('../discordNative/postProcess');
+const { simulateTyping } = require('../discordNative/typingSim');
+const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
 
 const RATE_LIMIT_MSG = 'Even a Warmaster paces himself. Give it a moment.';
 
@@ -37,6 +40,9 @@ async function execute(interaction) {
       memoryLine,
     });
 
+    const context = await getRecentContext(interaction.channel, 5);
+    const contextualMessage = buildContextualPrompt(message, context);
+
     recordCall(interaction.user.id);
 
     const openai = getOpenAIClient();
@@ -44,24 +50,24 @@ async function execute(interaction) {
       model: process.env.AI_MODEL || 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: systemPrompt },
-        { role: 'user', content: message },
+        { role: 'user', content: contextualMessage },
       ],
       max_completion_tokens: roleTokenBudgets.consult,
       temperature: 0.8,
     });
 
-    const reply = completion.choices[0].message.content;
+    let reply = completion.choices[0].message.content;
+    reply = postProcess(reply, ROLE_NATURE.consult);
 
-    // Split if over 2000 chars
-    if (reply.length <= 2000) {
-      await interaction.editReply(reply);
+    await simulateTyping(interaction.channel, reply.length);
+
+    const chunks = splitMessage(reply, 400);
+    if (chunks.length === 1) {
+      await interaction.editReply(chunks[0]);
     } else {
-      await interaction.editReply(reply.slice(0, 1997) + '...');
-      let remaining = reply.slice(1997);
-      while (remaining.length > 0) {
-        const chunk = remaining.slice(0, 2000);
-        remaining = remaining.slice(2000);
-        await interaction.followUp(chunk);
+      await interaction.editReply(chunks[0]);
+      for (let i = 1; i < chunks.length; i++) {
+        await interaction.followUp(chunks[i]);
       }
     }
   } catch (error) {

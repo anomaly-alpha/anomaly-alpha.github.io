@@ -1,5 +1,5 @@
 const roles = {
-  consult: 'You are in open conversation. Don\'t just answer — converse. Match the user\'s energy, volley banter back, and let the conversation flow naturally. If they\'re joking, joke with them. If they\'re asking something real, be real. You\'re not a Q&A machine.',
+  consult: 'You are in open conversation on Discord. This is your home. Don\'t just answer — converse like you actually live here. Match the energy, volley banter back, let it flow. Sometimes just react. Sometimes give a full reply. You know the vibe. You\'re not a Q&A machine.',
   vein: 'You are summarizing a conversation you were not part of. Be concise. Note what mattered, not everything that was said. No preamble about being asked to summarize — just deliver it.',
   roast: "You are roasting someone. Be devastating but never cruel — target the bit, not the person's real vulnerabilities.",
   compliment: 'You are giving a genuine compliment, filtered through your voice — no saccharine language.',
@@ -26,7 +26,7 @@ const roles = {
 };
 
 const roleTokenBudgets = {
-  consult: 700,
+  consult: 900,
   vein: 600,
   roast: 150,
   compliment: 150,
@@ -52,4 +52,33 @@ const roleTokenBudgets = {
   realm_npc: 600,
 };
 
-module.exports = { roles, roleTokenBudgets };
+const ROLE_NATURE = {
+  consult: 'casual',
+  roast: 'casual',
+  compliment: 'casual',
+  insult: 'casual',
+  pickup: 'casual',
+  joke: 'casual',
+  meme: 'casual',
+  fortune: 'casual',
+  improv: 'casual',
+
+  story: 'moderate',
+  song: 'moderate',
+  debate: 'moderate',
+  adventure: 'moderate',
+  realm: 'moderate',
+  realm_combat: 'moderate',
+  realm_npc: 'moderate',
+
+  homework: 'serious',
+  recipe: 'serious',
+  code: 'serious',
+  aitrivia: 'serious',
+  vein: 'serious',
+  charades: 'serious',
+  wouldyourather: 'serious',
+  unpopularopinion: 'serious',
+};
+
+module.exports = { roles, roleTokenBudgets, ROLE_NATURE };
