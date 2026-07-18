@@ -279,7 +279,7 @@ async function handleExplore(interaction) {
         }
       } catch (err) {
         console.error('Explore collector error:', err);
-        try { await i.update({ content: randomError() }); } catch {}
+        try { await i.editReply({ content: randomError() }); } catch {}
       } finally {
         clearProcessing(key);
       }
@@ -302,6 +302,7 @@ async function handleExplore(interaction) {
 // ===== Explore Button Handler =====
 
 async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceTexts, collector, interaction, sceneHistory) {
+  await i.deferUpdate().catch(() => {});
   const idx = parseInt(i.customId.replace('exp_', ''), 10);
   const choiceText = choiceTexts[idx] || '';
 
@@ -309,7 +310,7 @@ async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceT
 
   const currentChar = realmStore.getCharacter(userId, guildId);
   if (!currentChar) {
-    await i.update({ content: 'Your character no longer exists.', embeds: [], components: [] });
+    await i.editReply({ content: 'Your character no longer exists.', embeds: [], components: [] });
     collector.stop();
     return;
   }
@@ -331,12 +332,12 @@ async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceT
 
   if (matchedLoc) {
     const moveResult = moveTo(userId, guildId, matchedLoc.id);
-    if (moveResult.error) return i.update({ content: moveResult.error });
+    if (moveResult.error) return i.editReply({ content: moveResult.error });
 
     checkQuestProgress(userId, guildId, 'explore', matchedLoc.id);
 
     if (!canCall(userId) || !canGuildCall(guildId)) {
-      return i.update({ content: 'The realm is overwhelmed. Try again.' });
+      return i.editReply({ content: 'The realm is overwhelmed. Try again.' });
     }
 
     const updatedChar = realmStore.getCharacter(userId, guildId);
@@ -352,9 +353,9 @@ async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceT
 
       const embed = buildExploreEmbed(moveResult.location, parsed.narrative || raw, updatedChar);
       const components = buildExplorationButtons(parsed.choices);
-      await i.update({ embeds: [embed], components });
+      await i.editReply({ embeds: [embed], components });
     } catch {
-      await i.update({ content: randomError(), embeds: [], components: [] });
+      await i.editReply({ content: randomError(), embeds: [], components: [] });
     }
   } else if (matchedNpc) {
     const npc = generateNpc(matchedNpc, currentChar.current_location);
@@ -393,21 +394,21 @@ async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceT
       .setColor(0xf39c12)
       .setFooter({ text: `HP: ${currentChar.hp_current}/${currentChar.hp_max} | Gold: ${currentChar.gold} | Lv.${currentChar.level}` });
 
-    await i.update({ embeds: [embed], components: [] });
+    await i.editReply({ embeds: [embed], components: [] });
   } else if (triggersCombat || Math.random() < 0.12 * (currentLocation.dangerLevel || 1)) {
     const enemy = rollEnemy(currentLocation.dangerLevel || 1);
     const combatResult = startCombat(userId, guildId, enemy, currentChar.current_location);
-    if (combatResult.error) return i.update({ content: combatResult.error });
+    if (combatResult.error) return i.editReply({ content: combatResult.error });
 
     // Channel message for combat
     await interaction.channel.send(`⚔️ **${currentChar.name}** encounters a **${enemy.name}** (Lv.${enemy.level})!`);
 
     const combatEmbed = buildCombatEmbed(enemy, combatResult.playerHp, combatResult.playerMaxHp);
-    await i.update({ embeds: [combatEmbed], components: [buildCombatButtons()] });
+    await i.editReply({ embeds: [combatEmbed], components: [buildCombatButtons()] });
   } else {
     // Free action — new scene
     if (!canCall(userId) || !canGuildCall(guildId)) {
-      return i.update({ content: 'The realm is overwhelmed. Try again.' });
+      return i.editReply({ content: 'The realm is overwhelmed. Try again.' });
     }
 
     try {
@@ -421,9 +422,9 @@ async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceT
 
       const embed = buildExploreEmbed(currentLocation, parsed.narrative || raw, currentChar);
       const components = buildExplorationButtons(parsed.choices);
-      await i.update({ embeds: [embed], components });
+      await i.editReply({ embeds: [embed], components });
     } catch {
-      await i.update({ content: randomError(), embeds: [], components: [] });
+      await i.editReply({ content: randomError(), embeds: [], components: [] });
     }
   }
 }
@@ -431,16 +432,17 @@ async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceT
 // ===== Combat Button Handler =====
 
 async function handleCombatButton(i, userId, guildId, key, collector, interaction) {
+  await i.deferUpdate().catch(() => {});
   const action = i.customId.replace('combat_', '');
   const currentChar = realmStore.getCharacter(userId, guildId);
   if (!currentChar) {
-    await i.update({ content: 'Your character no longer exists.', embeds: [], components: [] });
+    await i.editReply({ content: 'Your character no longer exists.', embeds: [], components: [] });
     collector.stop();
     return;
   }
 
   const result = await processCombatRound(userId, guildId, action, action === 'defend');
-  if (result.error) return i.update({ content: result.error });
+  if (result.error) return i.editReply({ content: result.error });
 
   let desc = '';
   if (result.narration) desc += `${result.narration}\n\n`;
@@ -471,7 +473,7 @@ async function handleCombatButton(i, userId, guildId, key, collector, interactio
 
     const embed = new EmbedBuilder().setTitle('Combat Victory').setDescription(desc).setColor(0x2ecc71)
       .setFooter({ text: `HP: ${result.playerHp}/${result.playerMaxHp} | Gold: ${currentChar.gold + result.goldGained}` });
-    await i.update({ embeds: [embed], components: [] });
+    await i.editReply({ embeds: [embed], components: [] });
 
     setTimeout(async () => {
       try {
@@ -494,13 +496,13 @@ async function handleCombatButton(i, userId, guildId, key, collector, interactio
 
     const embed = new EmbedBuilder().setTitle('Defeated').setDescription(desc).setColor(0xe74c3c)
       .setFooter({ text: `HP: 1/${result.playerMaxHp}` });
-    await i.update({ embeds: [embed], components: [] });
+    await i.editReply({ embeds: [embed], components: [] });
 
   } else if (result.outcome === 'flee') {
     desc += '\n🏃 You escaped!';
     const embed = new EmbedBuilder().setTitle('Escaped').setDescription(desc).setColor(0xf39c12)
       .setFooter({ text: `HP: ${result.playerHp}/${result.playerMaxHp}` });
-    await i.update({ embeds: [embed], components: [] });
+    await i.editReply({ embeds: [embed], components: [] });
 
     setTimeout(async () => {
       try {
@@ -522,7 +524,7 @@ async function handleCombatButton(i, userId, guildId, key, collector, interactio
       .setTitle(`Combat: ${result.enemyName}`)
       .setDescription(desc)
       .setColor(0xe91e8a);
-    await i.update({ embeds: [embed], components: [buildCombatButtons()] });
+    await i.editReply({ embeds: [embed], components: [buildCombatButtons()] });
   }
 }
 
