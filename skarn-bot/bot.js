@@ -259,6 +259,13 @@ client.on('messageCreate', async message => {
   // ===== Auto funny replies =====
   const msg = message.content.toLowerCase();
 
+  // "skarn" keyword — always respond (not just @mentions)
+  if (msg.includes('skarn')) {
+    await handleMention(message, client);
+    recordResponse(message.author.id);
+    return;
+  }
+
   // Keyword triggers
   const keywordReplies = {
     'bruh': ['bruh moment 😔', 'big bruh energy', 'certified bruh moment'],
