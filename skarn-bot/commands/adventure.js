@@ -112,7 +112,7 @@ module.exports = {
 
           await i.update({ embeds: [nextEmbed], components: [row] });
         } catch (error) {
-          console.error('Adventure continuation error:', error);
+          if (error.code !== 10062) console.error('Adventure continuation error:', error);
           try {
             const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
             await i.update({ content: errorMsg });
