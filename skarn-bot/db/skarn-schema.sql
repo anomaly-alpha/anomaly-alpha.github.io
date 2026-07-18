@@ -23,16 +23,22 @@ CREATE TABLE IF NOT EXISTS realm_characters (
   user_id TEXT NOT NULL,
   guild_id TEXT NOT NULL,
   name TEXT NOT NULL,
-  class TEXT NOT NULL DEFAULT 'Adventurer',
+  race TEXT NOT NULL,
+  class TEXT NOT NULL,
+  backstory TEXT,
   level INTEGER NOT NULL DEFAULT 1,
   xp INTEGER NOT NULL DEFAULT 0,
-  xp_to_next INTEGER NOT NULL DEFAULT 100,
-  hp INTEGER NOT NULL DEFAULT 100,
-  max_hp INTEGER NOT NULL DEFAULT 100,
-  attack INTEGER NOT NULL DEFAULT 10,
-  defense INTEGER NOT NULL DEFAULT 5,
-  gold INTEGER NOT NULL DEFAULT 0,
-  region TEXT NOT NULL DEFAULT 'hub',
+  hp_current INTEGER NOT NULL,
+  hp_max INTEGER NOT NULL,
+  strength INTEGER NOT NULL,
+  dexterity INTEGER NOT NULL,
+  intelligence INTEGER NOT NULL,
+  constitution INTEGER NOT NULL,
+  wisdom INTEGER NOT NULL,
+  charisma INTEGER NOT NULL,
+  luck INTEGER NOT NULL,
+  gold INTEGER NOT NULL DEFAULT 50,
+  current_location TEXT NOT NULL DEFAULT 'abyssal_gate',
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL,
   PRIMARY KEY (user_id, guild_id)
@@ -42,56 +48,62 @@ CREATE TABLE IF NOT EXISTS realm_inventory (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id TEXT NOT NULL,
   guild_id TEXT NOT NULL,
-  item_name TEXT NOT NULL,
-  item_type TEXT NOT NULL DEFAULT 'misc',
-  quantity INTEGER NOT NULL DEFAULT 1,
+  item_id TEXT NOT NULL,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  description TEXT,
+  rarity TEXT NOT NULL DEFAULT 'common',
+  stats TEXT,
+  value INTEGER NOT NULL DEFAULT 0,
   equipped INTEGER NOT NULL DEFAULT 0,
-  stats TEXT NOT NULL DEFAULT '{}',
-  created_at INTEGER NOT NULL,
-  UNIQUE(user_id, guild_id, item_name)
+  created_at INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS realm_quests (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id TEXT NOT NULL,
   guild_id TEXT NOT NULL,
-  quest_name TEXT NOT NULL,
-  description TEXT NOT NULL DEFAULT '',
+  quest_id TEXT NOT NULL,
+  title TEXT NOT NULL,
+  description TEXT,
+  giver_npc TEXT,
+  objectives TEXT NOT NULL,
+  rewards TEXT,
   status TEXT NOT NULL DEFAULT 'active',
-  objectives TEXT NOT NULL DEFAULT '[]',
-  reward_xp INTEGER NOT NULL DEFAULT 0,
-  reward_gold INTEGER NOT NULL DEFAULT 0,
-  started_at INTEGER NOT NULL,
-  completed_at INTEGER,
-  UNIQUE(user_id, guild_id, quest_name)
+  chain_next TEXT,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS realm_npc_memory (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
+  npc_id TEXT NOT NULL,
   user_id TEXT NOT NULL,
   guild_id TEXT NOT NULL,
-  npc_name TEXT NOT NULL,
-  memory_text TEXT NOT NULL,
-  relationship INTEGER NOT NULL DEFAULT 0,
-  created_at INTEGER NOT NULL,
-  UNIQUE(user_id, guild_id, npc_name)
+  interaction_type TEXT NOT NULL,
+  summary TEXT NOT NULL,
+  sentiment INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS realm_discovered_locations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id TEXT NOT NULL,
   guild_id TEXT NOT NULL,
-  location_name TEXT NOT NULL,
+  location_id TEXT NOT NULL,
   discovered_at INTEGER NOT NULL,
-  UNIQUE(user_id, guild_id, location_name)
+  UNIQUE(user_id, guild_id, location_id)
 );
 
 CREATE TABLE IF NOT EXISTS realm_kill_log (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id TEXT NOT NULL,
   guild_id TEXT NOT NULL,
-  creature_name TEXT NOT NULL,
-  region TEXT NOT NULL DEFAULT 'unknown',
+  enemy_name TEXT NOT NULL,
+  enemy_level INTEGER NOT NULL,
+  location TEXT NOT NULL,
+  xp_earned INTEGER NOT NULL,
+  gold_earned INTEGER NOT NULL,
   killed_at INTEGER NOT NULL
 );
 
@@ -105,6 +117,5 @@ CREATE TABLE IF NOT EXISTS realm_world_state (
 
 CREATE INDEX IF NOT EXISTS idx_realm_inventory_user ON realm_inventory(user_id, guild_id);
 CREATE INDEX IF NOT EXISTS idx_realm_quests_user ON realm_quests(user_id, guild_id);
-CREATE INDEX IF NOT EXISTS idx_realm_npc_memory_user ON realm_npc_memory(user_id, guild_id);
+CREATE INDEX IF NOT EXISTS idx_realm_npc_memory_user ON realm_npc_memory(npc_id, user_id, guild_id);
 CREATE INDEX IF NOT EXISTS idx_realm_kill_log_user ON realm_kill_log(user_id, guild_id);
-CREATE INDEX IF NOT EXISTS idx_realm_discovered_locations_user ON realm_discovered_locations(user_id, guild_id);

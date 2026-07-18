@@ -49,52 +49,44 @@ function deleteCharacterCascade(userId, guildId) {
 
 function getInventory(userId, guildId) {
   return db.prepare(
-    'SELECT * FROM realm_inventory WHERE user_id = ? AND guild_id = ?'
+    'SELECT * FROM realm_inventory WHERE user_id = ? AND guild_id = ? ORDER BY created_at DESC'
   ).all(userId, guildId);
 }
 
-function addItem(userId, guildId, itemName, itemType = 'misc', quantity = 1, stats = {}) {
+function addItem(userId, guildId, itemId, name, type, description = '', rarity = 'common', stats = null, value = 0) {
   const now = Date.now();
-  const existing = db.prepare(
-    'SELECT * FROM realm_inventory WHERE user_id = ? AND guild_id = ? AND item_name = ?'
-  ).get(userId, guildId, itemName);
-  if (existing) {
-    db.prepare(
-      'UPDATE realm_inventory SET quantity = quantity + ? WHERE id = ?'
-    ).run(quantity, existing.id);
-  } else {
-    db.prepare(
-      'INSERT INTO realm_inventory (user_id, guild_id, item_name, item_type, quantity, equipped, stats, created_at) VALUES (?, ?, ?, ?, ?, 0, ?, ?)'
-    ).run(userId, guildId, itemName, itemType, quantity, JSON.stringify(stats), now);
-  }
+  db.prepare(
+    'INSERT INTO realm_inventory (user_id, guild_id, item_id, name, type, description, rarity, stats, value, equipped, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?)'
+  ).run(userId, guildId, itemId, name, type, description, rarity, stats ? JSON.stringify(stats) : null, value, now);
 }
 
-function removeItem(userId, guildId, itemName, quantity = 1) {
+function removeItem(userId, guildId, itemId) {
   const existing = db.prepare(
-    'SELECT * FROM realm_inventory WHERE user_id = ? AND guild_id = ? AND item_name = ?'
-  ).get(userId, guildId, itemName);
+    'SELECT * FROM realm_inventory WHERE user_id = ? AND guild_id = ? AND item_id = ?'
+  ).get(userId, guildId, itemId);
   if (!existing) return false;
-  if (existing.quantity <= quantity) {
-    db.prepare('DELETE FROM realm_inventory WHERE id = ?').run(existing.id);
-  } else {
-    db.prepare('UPDATE realm_inventory SET quantity = quantity - ? WHERE id = ?').run(quantity, existing.id);
-  }
+  db.prepare('DELETE FROM realm_inventory WHERE id = ?').run(existing.id);
   return true;
 }
 
-function equipItem(userId, guildId, itemName) {
+function equipItem(userId, guildId, itemId) {
   const existing = db.prepare(
-    'SELECT * FROM realm_inventory WHERE user_id = ? AND guild_id = ? AND item_name = ?'
-  ).get(userId, guildId, itemName);
+    'SELECT * FROM realm_inventory WHERE user_id = ? AND guild_id = ? AND item_id = ?'
+  ).get(userId, guildId, itemId);
   if (!existing) return false;
+  if (existing.type === 'weapon' || existing.type === 'armor') {
+    db.prepare(
+      'UPDATE realm_inventory SET equipped = 0 WHERE user_id = ? AND guild_id = ? AND type = ?'
+    ).run(userId, guildId, existing.type);
+  }
   db.prepare('UPDATE realm_inventory SET equipped = 1 WHERE id = ?').run(existing.id);
   return true;
 }
 
-function unequipItem(userId, guildId, itemName) {
+function unequipItem(userId, guildId, itemId) {
   const existing = db.prepare(
-    'SELECT * FROM realm_inventory WHERE user_id = ? AND guild_id = ? AND item_name = ?'
-  ).get(userId, guildId, itemName);
+    'SELECT * FROM realm_inventory WHERE user_id = ? AND guild_id = ? AND item_id = ?'
+  ).get(userId, guildId, itemId);
   if (!existing) return false;
   db.prepare('UPDATE realm_inventory SET equipped = 0 WHERE id = ?').run(existing.id);
   return true;
@@ -108,92 +100,91 @@ function getActiveQuests(userId, guildId) {
   ).all(userId, guildId, 'active');
 }
 
-function addQuest(userId, guildId, questName, description = '', objectives = [], rewardXp = 0, rewardGold = 0) {
+function addQuest(userId, guildId, questId, title, description = '', giverNpc = '', objectives = [], rewards = null) {
   const now = Date.now();
   db.prepare(
-    'INSERT OR IGNORE INTO realm_quests (user_id, guild_id, quest_name, description, status, objectives, reward_xp, reward_gold, started_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
-  ).run(userId, guildId, questName, description, 'active', JSON.stringify(objectives), rewardXp, rewardGold, now);
+    'INSERT OR IGNORE INTO realm_quests (user_id, guild_id, quest_id, title, description, giver_npc, objectives, rewards, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+  ).run(userId, guildId, questId, title, description, giverNpc, JSON.stringify(objectives), rewards ? JSON.stringify(rewards) : null, 'active', now, now);
 }
 
-function updateQuest(userId, guildId, questName, patch) {
+function updateQuest(userId, guildId, questId, patch) {
   const sets = Object.keys(patch).map(k => `${k} = ?`).join(', ');
   const values = Object.values(patch);
-  values.push(userId, guildId, questName);
+  values.push(userId, guildId, questId);
   db.prepare(
-    `UPDATE realm_quests SET ${sets} WHERE user_id = ? AND guild_id = ? AND quest_name = ?`
-  ).run(...values);
+    `UPDATE realm_quests SET ${sets}, updated_at = ? WHERE user_id = ? AND guild_id = ? AND quest_id = ?`
+  ).run(...values, Date.now());
 }
 
-function completeQuest(userId, guildId, questName) {
-  updateQuest(userId, guildId, questName, {
+function completeQuest(userId, guildId, questId) {
+  updateQuest(userId, guildId, questId, {
     status: 'completed',
-    completed_at: Date.now(),
   });
 }
 
 // ===== NPC Memory =====
 
-function addNpcMemory(userId, guildId, npcName, memoryText, relationship = 0) {
+function addNpcMemory(userId, guildId, npcId, interactionType, summary, sentiment = 0) {
   const now = Date.now();
   db.prepare(
-    'INSERT OR REPLACE INTO realm_npc_memory (user_id, guild_id, npc_name, memory_text, relationship, created_at) VALUES (?, ?, ?, ?, ?, ?)'
-  ).run(userId, guildId, npcName, memoryText, relationship, now);
+    'INSERT INTO realm_npc_memory (npc_id, user_id, guild_id, interaction_type, summary, sentiment, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+  ).run(npcId, userId, guildId, interactionType, summary, sentiment, now);
 }
 
-function getNpcMemory(userId, guildId, npcName) {
+function getNpcMemories(userId, guildId, npcId) {
   return db.prepare(
-    'SELECT * FROM realm_npc_memory WHERE user_id = ? AND guild_id = ? AND npc_name = ?'
-  ).get(userId, guildId, npcName);
+    'SELECT * FROM realm_npc_memory WHERE npc_id = ? AND user_id = ? AND guild_id = ? ORDER BY created_at DESC'
+  ).all(npcId, userId, guildId);
 }
 
-function getNpcRelationship(userId, guildId, npcName) {
+function getNpcSentiment(userId, guildId, npcId) {
   const row = db.prepare(
-    'SELECT relationship FROM realm_npc_memory WHERE user_id = ? AND guild_id = ? AND npc_name = ?'
-  ).get(userId, guildId, npcName);
-  return row ? row.relationship : 0;
+    'SELECT sentiment FROM realm_npc_memory WHERE npc_id = ? AND user_id = ? AND guild_id = ? ORDER BY created_at DESC LIMIT 1'
+  ).get(npcId, userId, guildId);
+  return row ? row.sentiment : 0;
 }
 
 // ===== Discovered Locations =====
 
-function discoveredLocation(userId, guildId, locationName) {
+function discoveredLocation(userId, guildId, locationId) {
   const now = Date.now();
   db.prepare(
-    'INSERT OR IGNORE INTO realm_discovered_locations (user_id, guild_id, location_name, discovered_at) VALUES (?, ?, ?, ?)'
-  ).run(userId, guildId, locationName, now);
+    'INSERT OR IGNORE INTO realm_discovered_locations (user_id, guild_id, location_id, discovered_at) VALUES (?, ?, ?, ?)'
+  ).run(userId, guildId, locationId, now);
 }
 
 function getDiscoveredLocations(userId, guildId) {
   return db.prepare(
-    'SELECT location_name FROM realm_discovered_locations WHERE user_id = ? AND guild_id = ?'
+    'SELECT location_id FROM realm_discovered_locations WHERE user_id = ? AND guild_id = ?'
   ).all(userId, guildId);
 }
 
 // ===== Kill Log =====
 
-function logKill(userId, guildId, creatureName, region = 'unknown') {
+function logKill(userId, guildId, enemyName, enemyLevel, location, xpEarned, goldEarned) {
   const now = Date.now();
   db.prepare(
-    'INSERT INTO realm_kill_log (user_id, guild_id, creature_name, region, killed_at) VALUES (?, ?, ?, ?, ?)'
-  ).run(userId, guildId, creatureName, region, now);
+    'INSERT INTO realm_kill_log (user_id, guild_id, enemy_name, enemy_level, location, xp_earned, gold_earned, killed_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+  ).run(userId, guildId, enemyName, enemyLevel, location, xpEarned, goldEarned, now);
 }
 
 function getKillStats(userId, guildId) {
   return db.prepare(
-    'SELECT creature_name, COUNT(*) as kills FROM realm_kill_log WHERE user_id = ? AND guild_id = ? GROUP BY creature_name ORDER BY kills DESC'
+    'SELECT enemy_name, COUNT(*) as kills, SUM(xp_earned) as total_xp, SUM(gold_earned) as total_gold FROM realm_kill_log WHERE user_id = ? AND guild_id = ? GROUP BY enemy_name ORDER BY kills DESC'
   ).all(userId, guildId);
 }
 
 // ===== World State =====
 
-function getWorldState(guildId, key) {
+function getWorldState(key, guildId) {
   const row = db.prepare(
-    'SELECT value FROM realm_world_state WHERE guild_id = ? AND key = ?'
-  ).get(guildId, key);
+    'SELECT value FROM realm_world_state WHERE key = ? AND guild_id = ?'
+  ).get(key, guildId);
   if (!row) return null;
   try { return JSON.parse(row.value); } catch { return row.value; }
 }
 
-function setWorldState(guildId, key, value) {
+function setWorldState(key, guildId, value) {
   const now = Date.now();
   const serialized = typeof value === 'string' ? value : JSON.stringify(value);
   db.prepare(
@@ -223,8 +214,8 @@ module.exports = {
   updateQuest,
   completeQuest,
   addNpcMemory,
-  getNpcMemory,
-  getNpcRelationship,
+  getNpcMemories,
+  getNpcSentiment,
   discoveredLocation,
   getDiscoveredLocations,
   logKill,
