@@ -1,0 +1,156 @@
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+
+const categories = {
+  'General': {
+    color: 0x00e5ff,
+    commands: [
+      { name: '/ping', desc: 'Check if bot is alive' },
+      { name: '/hello', desc: 'Get a greeting' },
+      { name: '/serverinfo', desc: 'Server stats and info' },
+      { name: '/userinfo', desc: 'Info about a user' },
+      { name: '/avatar', desc: 'Show user avatar' },
+      { name: '/help', desc: 'Show this help menu' },
+    ],
+  },
+  'Fun': {
+    color: 0xf39c12,
+    commands: [
+      { name: '/coinflip', desc: 'Flip a coin' },
+      { name: '/dice', desc: 'Roll a dice' },
+      { name: '/8ball', desc: 'Magic 8-ball' },
+      { name: '/poll', desc: 'Create a poll with reactions' },
+      { name: '/meme', desc: 'Random meme' },
+      { name: '/trivia', desc: 'Classic trivia game' },
+      { name: '/giveaway', desc: 'Start a giveaway' },
+    ],
+  },
+  'AI Chat': {
+    color: 0x9b59b6,
+    commands: [
+      { name: '/ask', desc: 'Ask AI anything' },
+      { name: '/aichat', desc: 'Toggle AI in a channel' },
+      { name: '@Skarn', desc: 'Mention bot for AI reply' },
+    ],
+  },
+  'AI Games': {
+    color: 0xe74c3c,
+    commands: [
+      { name: '/aitrivia', desc: 'AI trivia on any topic' },
+      { name: '/adventure', desc: 'AI Dungeon Master game' },
+      { name: '/charades', desc: 'Word guessing game' },
+      { name: '/wouldyourather', desc: 'Would You Rather' },
+      { name: '/unpopularopinion', desc: 'Hot take voting' },
+      { name: '/improv', desc: 'AI improv comedy' },
+    ],
+  },
+  'AI Creative': {
+    color: 0xe91e8a,
+    commands: [
+      { name: '/song', desc: 'AI writes a song' },
+      { name: '/joke', desc: 'Custom AI joke' },
+      { name: '/fortune', desc: 'AI fortune teller' },
+      { name: '/story', desc: 'Collaborative story' },
+      { name: '/roast', desc: 'Get roasted by AI' },
+      { name: '/compliment', desc: 'AI compliment' },
+      { name: '/insult', desc: 'Playful insult' },
+      { name: '/pickup', desc: 'Pickup line generator' },
+    ],
+  },
+  'AI Utility': {
+    color: 0x2ecc71,
+    commands: [
+      { name: '/homework', desc: 'Homework helper' },
+      { name: '/recipe', desc: 'Recipe finder' },
+      { name: '/code', desc: 'Code helper' },
+      { name: '/debate', desc: 'AI debate partner' },
+      { name: '/summarize', desc: 'Summarize a channel' },
+    ],
+  },
+  'Moderation': {
+    color: 0xff6b35,
+    commands: [
+      { name: '/kick', desc: 'Kick a member' },
+      { name: '/ban', desc: 'Ban a member' },
+      { name: '/timeout', desc: 'Timeout a member' },
+      { name: '/purge', desc: 'Delete messages' },
+      { name: '/warn', desc: 'Warn a member' },
+      { name: '/warnings', desc: 'View warnings' },
+    ],
+  },
+  'Leveling': {
+    color: 0xf1c40f,
+    commands: [
+      { name: '/level', desc: 'Check your level' },
+      { name: '/leaderboard', desc: 'XP leaderboard' },
+      { name: '/setlevelrole', desc: 'Set role for level (Admin)' },
+      { name: '/levelroles', desc: 'View level roles (Admin)' },
+    ],
+  },
+  'Server Setup': {
+    color: 0x1abc9c,
+    commands: [
+      { name: '/setwelcome', desc: 'Set welcome channel (Admin)' },
+      { name: '/setautorole', desc: 'Set auto-role (Admin)' },
+      { name: '/setlog', desc: 'Set logging channel (Admin)' },
+      { name: '/reactionrole', desc: 'Reaction role message (Admin)' },
+      { name: '/ticket', desc: 'Create ticket panel (Admin)' },
+      { name: '/embed', desc: 'Create custom embed' },
+    ],
+  },
+  'Games': {
+    color: 0x3498db,
+    commands: [
+      { name: '/tetris', desc: 'Head-to-head Tetris' },
+    ],
+  },
+  'Friends': {
+    color: 0x00e5ff,
+    commands: [
+      { name: '/friends', desc: 'View friend list' },
+      { name: '/addfriend', desc: 'Add a friend' },
+      { name: '/removefriend', desc: 'Remove a friend' },
+    ],
+  },
+};
+
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('help')
+    .setDescription('List all available commands')
+    .addStringOption(option =>
+      option.setName('category')
+        .setDescription('View a specific category')
+        .setRequired(false)
+        .addChoices(
+          ...Object.keys(categories).map(c => ({ name: c, value: c })),
+        )),
+  async execute(interaction) {
+    const selected = interaction.options.getString('category');
+
+    if (selected) {
+      const cat = categories[selected];
+      const list = cat.commands.map(c => `\`${c.name}\` — ${c.desc}`).join('\n');
+      const embed = new EmbedBuilder()
+        .setTitle(selected)
+        .setDescription(list)
+        .setColor(cat.color);
+      return interaction.reply({ embeds: [embed], ephemeral: true });
+    }
+
+    // Show all categories overview
+    const overview = Object.entries(categories).map(([name, cat]) => {
+      const count = cat.commands.length;
+      return `**${name}** (${count}) — ${cat.commands.slice(0, 3).map(c => c.name).join(', ')}...`;
+    }).join('\n');
+
+    const total = Object.values(categories).reduce((sum, cat) => sum + cat.commands.length, 0);
+
+    const embed = new EmbedBuilder()
+      .setTitle('Skarn Commands')
+      .setDescription(`${total} commands across ${Object.keys(categories).length} categories\n\n${overview}`)
+      .setColor(0x00e5ff)
+      .setFooter({ text: 'Use /help category:"Name" for details on a category' });
+
+    await interaction.reply({ embeds: [embed], ephemeral: true });
+  },
+};
