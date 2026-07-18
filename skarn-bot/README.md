@@ -59,34 +59,34 @@ npm start
 | `@Skarn` | Mention bot for AI reply |
 
 ### AI Games
-| Command | Description |
-|---------|-------------|
-| `/aitrivia` | AI trivia on any topic |
-| `/adventure` | AI Dungeon Master game |
-| `/charades` | Word guessing game |
-| `/wouldyourather` | Would You Rather |
-| `/unpopularopinion` | Hot take voting |
-| `/improv` | AI improv comedy |
+| Command             | Description            |
+| ------------------- | ---------------------- |
+| `/aitrivia`         | AI trivia on any topic |
+| `/adventure`        | AI Dungeon Master game |
+| `/charades`         | Word guessing game     |
+| `/wouldyourather`   | Would You Rather       |
+| `/unpopularopinion` | Hot take voting        |
+| `/improv`           | AI improv comedy       |
 
 ### AI Creative
-| Command | Description |
-|---------|-------------|
-| `/song` | AI writes a song |
-| `/joke` | Custom AI joke |
-| `/fortune` | AI fortune teller |
-| `/story` | Collaborative story |
-| `/roast` | Get roasted by AI |
-| `/compliment` | AI compliment |
-| `/insult` | Playful insult |
-| `/pickup` | Pickup line generator |
+| Command       | Description           |
+| ------------- | --------------------- |
+| `/song`       | AI writes a song      |
+| `/joke`       | Custom AI joke        |
+| `/fortune`    | AI fortune teller     |
+| `/story`      | Collaborative story   |
+| `/roast`      | Get roasted by AI     |
+| `/compliment` | AI compliment         |
+| `/insult`     | Playful insult        |
+| `/pickup`     | Pickup line generator |
 
 ### AI Utility
-| Command | Description |
-|---------|-------------|
-| `/homework` | Homework helper |
-| `/recipe` | Recipe finder |
-| `/code` | Code helper |
-| `/debate` | AI debate partner |
+| Command      | Description         |
+| ------------ | ------------------- |
+| `/homework`  | Homework helper     |
+| `/recipe`    | Recipe finder       |
+| `/code`      | Code helper         |
+| `/debate`    | AI debate partner   |
 | `/summarize` | Summarize a channel |
 
 ### Leveling
@@ -432,6 +432,7 @@ npm run deploy
 skarn-bot/
 ├── bot.js                  # Main bot + event handlers
 ├── deploy-commands.js      # Registers slash commands
+├── rich-presence.js        # Discord Rich Presence (desktop)
 ├── commands/               # 52 slash command files
 ├── games/
 │   └── tetris.js           # Tetris game engine
@@ -444,6 +445,19 @@ skarn-bot/
 ├── .gitignore
 ├── package.json
 └── README.md
+```
+
+## Rich Presence
+
+Shows "😈 Servant of ... / Anomaly Alpha" in your Discord status.
+
+```bash
+node rich-presence.js
+```
+
+Or run in background:
+```bash
+pm2 start rich-presence.js --name rpc
 ```
 
 ## License
