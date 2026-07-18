@@ -3,7 +3,7 @@ const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { getUserMemory, getChannelState } = require('../../db/database');
 const { getStateLine } = require('../channelState/stateTracker');
 const { canCall, recordCall } = require('../../lib/rateLimit');
-const openai = require('../../ai/client');
+const getOpenAIClient = require('../../ai/client');
 
 const COOLDOWN_MS = 15 * 1000; // 15 seconds per user per channel
 const cooldowns = new Map(); // `${userId}:${channelId}` -> timestamp
@@ -55,6 +55,7 @@ async function handleMention(message, client) {
     recordCall(userId);
     cooldowns.set(key, Date.now());
 
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: process.env.AI_MODEL || 'gpt-3.5-turbo',
       messages: [

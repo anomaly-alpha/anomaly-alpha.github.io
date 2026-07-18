@@ -3,7 +3,7 @@ const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { getChannelState } = require('../../db/database');
 const { getStateLine } = require('../channelState/stateTracker');
 const { canCall, recordCall } = require('../../lib/rateLimit');
-const openai = require('../../ai/client');
+const getOpenAIClient = require('../../ai/client');
 
 const AI_ERRORS = [
   'The connection is frayed. Try again.',
@@ -86,6 +86,7 @@ async function execute(interaction) {
 
     recordCall(interaction.user.id);
 
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: process.env.AI_MODEL || 'gpt-3.5-turbo',
       messages: [

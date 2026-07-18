@@ -3,7 +3,7 @@ const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { getUserMemory, getChannelState } = require('../../db/database');
 const { getStateLine } = require('../channelState/stateTracker');
 const { canCall, recordCall } = require('../../lib/rateLimit');
-const openai = require('../../ai/client');
+const getOpenAIClient = require('../../ai/client');
 
 const RATE_LIMIT_MSG = 'Even a Warmaster paces himself. Give it a moment.';
 
@@ -39,6 +39,7 @@ async function execute(interaction) {
 
     recordCall(interaction.user.id);
 
+    const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
       model: process.env.AI_MODEL || 'gpt-3.5-turbo',
       messages: [

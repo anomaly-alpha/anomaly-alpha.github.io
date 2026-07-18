@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const openai = require('../ai/client');
+const getOpenAIClient = require('../ai/client');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
 const { canCall, recordCall } = require('../lib/rateLimit');
@@ -36,6 +36,7 @@ module.exports = {
       const themes = ['love', 'career', 'adventure', 'mystery', 'destiny'];
       const theme = themes[Math.floor(Math.random() * themes.length)];
 
+      const openai = getOpenAIClient();
       const completion = await openai.chat.completions.create({
         model: process.env.AI_MODEL || 'gpt-3.5-turbo',
         messages: [
