@@ -76,13 +76,15 @@ async function handleCreate(interaction) {
   }
 
   // Step 1: Name
+  console.log('[REALM] create: waiting for name input from', userId);
   await interaction.reply({ content: '**Step 1/5** — What shall your character be called?', flags: EPHEMERAL });
 
   const nameMsg = await interaction.channel.awaitMessages({
     filter: m => m.author.id === userId && !m.author.bot,
     max: 1, time: 60000, errors: ['time'],
-  }).catch(() => null);
+  }).catch(e => { console.error('[REALM] awaitMessages error:', e.message); return null; });
 
+  console.log('[REALM] create: nameMsg received:', !!nameMsg);
   if (!nameMsg) return interaction.editReply({ content: 'Timed out. Try `/realm create` again.' });
   const charName = nameMsg.first().content.trim();
   await nameMsg.first().delete().catch(() => {});
@@ -762,7 +764,7 @@ module.exports = {
           return interaction.reply({ content: 'Unknown subcommand.', flags: EPHEMERAL });
       }
     } catch (err) {
-      console.error(`Realm ${sub} error:`, err);
+      console.error(`[REALM] ${sub} error:`, err.message, err.stack);
       const msg = 'Something went wrong. Try again.';
       if (interaction.replied || interaction.deferred) {
         await interaction.followUp({ content: msg, flags: EPHEMERAL }).catch(() => {});
