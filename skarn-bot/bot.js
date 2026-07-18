@@ -7,6 +7,7 @@ const path = require('path');
 const { onMessageReceived } = require('./features/channelState/stateTracker');
 const { runDecayPass } = require('./features/channelState/stateDecay');
 const { handleMention } = require('./features/mentionRouter/mentionRouter');
+const { recordMessage, recordResponse, canRespond } = require('./lib/aiStats');
 
 const client = new Client({
   intents: [
@@ -155,18 +156,19 @@ client.on('guildMemberAdd', async member => {
 // ===== Leveling system =====
 const xpCooldown = new Set();
 
-// ===== AI channel hourly cap =====
-const aiHourlyCap = new Map(); // "userId" -> { count, hourStart }
-
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
 
   // Skarn channel state tracking
   onMessageReceived(message);
 
+  // Track messages sent to bot
+  recordMessage(message.author.id);
+
   // Skarn mention routing (before keyword triggers and old AI logic)
   if (message.mentions.has(client.user)) {
     await handleMention(message, client);
+    recordResponse(message.author.id);
     return;
   }
 
@@ -179,6 +181,7 @@ client.on('messageCreate', async message => {
         const refMsg = await message.channel.messages.fetch(message.reference.messageId);
         if (refMsg.author.id === client.user.id) {
           await handleMention(message, client);
+          recordResponse(message.author.id);
           return;
         }
       } catch {}
@@ -197,19 +200,9 @@ client.on('messageCreate', async message => {
     const cfg = loadJSON('config.json');
     const aiChans = cfg[message.guild?.id]?.aiChannels || [];
     if (aiChans.includes(message.channel.id)) {
-      const userId = message.author.id;
-      const now = Date.now();
-      const currentHour = Math.floor(now / 3600000);
-      const entry = aiHourlyCap.get(userId);
-
-      if (entry && entry.hourStart === currentHour) {
-        if (entry.count >= 50) return;
-        entry.count++;
-      } else {
-        aiHourlyCap.set(userId, { count: 1, hourStart: currentHour });
-      }
-
+      if (!canRespond(message.author.id)) return;
       await handleMention(message, client);
+      recordResponse(message.author.id);
       return;
     }
   }
