@@ -442,6 +442,23 @@ html { visibility: hidden }
             </a>
         </section>
 
+        <!-- League Comparison -->
+        <section class="mx-4 mb-8">
+            <h2 class="text-lg font-bold gem-text--pvp mb-4">League Comparison &mdash; Gem Jumps</h2>
+            <p class="text-white/60 text-sm mb-4">Moving up a league increases your weekly gem payout. Here&rsquo;s how much each promotion is worth:</p>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm" id="leagueJumps">
+                    <thead>
+                        <tr class="text-white/50 text-xs uppercase tracking-wider border-b border-white/10">
+                            <th class="text-left p-2">League Promotion</th>
+                            <th class="text-right p-2">Gem Increase/Week</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leagueJumpsBody"></tbody>
+                </table>
+            </div>
+        </section>
+
         <footer class="gem-contributors">
             <a href="../../" class="gem-text--cyan hover:text-white transition-colors">&larr; Calculate Your Weekly Gems</a>
             <p class="text-white/30 text-xs mt-2">Use the <a href="../../" class="gem-text--cyan hover:text-white">interactive PvP calculator</a> on the main page to calculate exact payouts for your league and rank.</p>
@@ -464,5 +481,25 @@ html { visibility: hidden }
       </svg>
     </button>
     <script src="../../script.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tbody = document.getElementById('leagueJumpsBody');
+        if (!tbody || typeof GAME === 'undefined') return;
+        var leagues = GAME.pvp.leagues;
+        if (!leagues) return;
+        for (var i = 1; i < leagues.length; i++) {
+            var prev = leagues[i - 1];
+            var curr = leagues[i];
+            var prevGems = GAME.pvp.arenas.restricted.payouts[prev.id] ? GAME.pvp.arenas.restricted.payouts[prev.id][0] : 0;
+            var currGems = GAME.pvp.arenas.restricted.payouts[curr.id] ? GAME.pvp.arenas.restricted.payouts[curr.id][0] : 0;
+            var increase = currGems - prevGems;
+            var tr = document.createElement('tr');
+            tr.className = 'border-t border-white/5';
+            tr.innerHTML = '<td class="p-2 text-white/80">' + prev.name + ' \u2192 ' + curr.name + '</td>' +
+                '<td class="p-2 text-right ' + (increase > 0 ? 'gem-text--pvp' : 'text-white/60') + '">' + (increase > 0 ? '+' + increase : '0') + ' gems</td>';
+            tbody.appendChild(tr);
+        }
+    });
+    </script>
 </body>
 </html>
