@@ -135,6 +135,21 @@ function getNpcMemories(userId, guildId, npcId) {
   ).all(npcId, userId, guildId);
 }
 
+function getNpcMemory(userId, guildId, npcId, limit = 5) {
+  return db.prepare(
+    'SELECT * FROM realm_npc_memory WHERE npc_id = ? AND user_id = ? AND guild_id = ? ORDER BY created_at DESC LIMIT ?'
+  ).all(npcId, userId, guildId, limit);
+}
+
+function getNpcRelationship(userId, guildId, npcId) {
+  const memories = getNpcMemory(userId, guildId, npcId, 5);
+  if (memories.length === 0) return 'neutral';
+  const avg = memories.reduce((sum, m) => sum + m.sentiment, 0) / memories.length;
+  if (avg >= 2) return 'friendly';
+  if (avg <= -2) return 'hostile';
+  return 'neutral';
+}
+
 function getNpcSentiment(userId, guildId, npcId) {
   const row = db.prepare(
     'SELECT sentiment FROM realm_npc_memory WHERE npc_id = ? AND user_id = ? AND guild_id = ? ORDER BY created_at DESC LIMIT 1'
@@ -213,6 +228,8 @@ module.exports = {
   completeQuest,
   addNpcMemory,
   getNpcMemories,
+  getNpcMemory,
+  getNpcRelationship,
   getNpcSentiment,
   discoveredLocation,
   getDiscoveredLocations,
