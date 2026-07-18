@@ -92,12 +92,19 @@ async function handleCreate(interaction) {
     return interaction.editReply({ content: 'Name must be 2-32 characters. Try `/realm create` again.' });
   }
 
-  // Step 2: Race
+  // Step 2: Race (Discord limits 5 buttons per row)
   const races = Object.keys(RACE_BONUSES);
-  const raceRow = new ActionRowBuilder().addComponents(
-    races.map(r => new ButtonBuilder().setCustomId(`race_${r}`).setLabel(capitalize(r)).setStyle(ButtonStyle.Secondary))
+  const raceRow1 = new ActionRowBuilder().addComponents(
+    races.slice(0, 5).map(r => new ButtonBuilder().setCustomId(`race_${r}`).setLabel(capitalize(r)).setStyle(ButtonStyle.Secondary))
   );
-  await interaction.editReply({ content: `**Step 2/5** — Choose a race for **${charName}**:`, components: [raceRow] });
+  const raceComponents = [raceRow1];
+  if (races.length > 5) {
+    const raceRow2 = new ActionRowBuilder().addComponents(
+      races.slice(5).map(r => new ButtonBuilder().setCustomId(`race_${r}`).setLabel(capitalize(r)).setStyle(ButtonStyle.Secondary))
+    );
+    raceComponents.push(raceRow2);
+  }
+  await interaction.editReply({ content: `**Step 2/5** — Choose a race for **${charName}**:`, components: raceComponents });
 
   const raceInter = await interaction.channel.awaitMessageComponent({
     filter: i => i.user.id === userId && i.customId.startsWith('race_'),
@@ -108,12 +115,19 @@ async function handleCreate(interaction) {
   const selectedRace = raceInter.customId.replace('race_', '');
   await raceInter.update({ content: `Race: **${capitalize(selectedRace)}** ✓`, components: [] });
 
-  // Step 3: Class
+  // Step 3: Class (Discord limits 5 buttons per row)
   const classes = Object.keys(CLASS_STATS);
-  const classRow = new ActionRowBuilder().addComponents(
-    classes.map(c => new ButtonBuilder().setCustomId(`class_${c}`).setLabel(capitalize(c)).setStyle(ButtonStyle.Secondary))
+  const classRow1 = new ActionRowBuilder().addComponents(
+    classes.slice(0, 5).map(c => new ButtonBuilder().setCustomId(`class_${c}`).setLabel(capitalize(c)).setStyle(ButtonStyle.Secondary))
   );
-  await interaction.editReply({ content: `**Step 3/5** — Choose a class for **${charName}**:`, components: [classRow] });
+  const classComponents = [classRow1];
+  if (classes.length > 5) {
+    const classRow2 = new ActionRowBuilder().addComponents(
+      classes.slice(5).map(c => new ButtonBuilder().setCustomId(`class_${c}`).setLabel(capitalize(c)).setStyle(ButtonStyle.Secondary))
+    );
+    classComponents.push(classRow2);
+  }
+  await interaction.editReply({ content: `**Step 3/5** — Choose a class for **${charName}**:`, components: classComponents });
 
   const classInter = await interaction.channel.awaitMessageComponent({
     filter: i => i.user.id === userId && i.customId.startsWith('class_'),
