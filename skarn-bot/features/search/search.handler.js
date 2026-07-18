@@ -9,6 +9,14 @@ const { searchWeb, cleanCache } = require('./searchEngine');
 const COOLDOWN_MS = 5 * 1000;
 const cooldowns = new Map();
 
+// Clean up stale cooldown entries every 30 seconds
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, ts] of cooldowns) {
+    if (now - ts > COOLDOWN_MS) cooldowns.delete(key);
+  }
+}, 30 * 1000);
+
 const AI_ERRORS = [
   'The connection is frayed. Try again.',
   "Even the Warmaster's reach has limits. Try in a moment.",
@@ -33,6 +41,7 @@ async function execute(interaction) {
   await interaction.deferReply();
 
   let results = [];
+  let source = '';
   try {
     // Step 1: Web search
     const searchResult = await searchWeb(query);
@@ -44,6 +53,7 @@ async function execute(interaction) {
     }
 
     results = searchResult.results;
+    source = searchResult.source;
 
     // No results — reply directly without LLM call
     if (results.length === 0) {
@@ -80,7 +90,7 @@ async function execute(interaction) {
       .setTitle('Search: ' + query)
       .setDescription(results.map((r, i) => `[${i + 1}. ${r.title}](${r.url})`).join('\n'))
       .setColor(0x00e5ff)
-      .setFooter({ text: 'DuckDuckGo' });
+      .setFooter({ text: source === 'cache' ? 'Cached result' : 'DuckDuckGo' });
 
     // Step 6: Send response
     const chunks = splitMessage(reply, 400);
