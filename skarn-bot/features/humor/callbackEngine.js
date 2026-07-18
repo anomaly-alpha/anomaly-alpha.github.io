@@ -1,4 +1,14 @@
+const Sentiment = require('sentiment');
+const sentiment = new Sentiment();
+
 const channelBuffers = new Map(); // channelId → Entry[]
+
+const BANTER_WORDS = ['lmao', 'lmfao', 'lol', 'rofl', 'haha', 'hehe', 'lolz', 'lul'];
+
+function isBanterTone(content) {
+  const lower = content.toLowerCase();
+  return BANTER_WORDS.some(w => lower.includes(w));
+}
 
 function updateCallbacks(channelId, authorId, content) {
   if (!channelBuffers.has(channelId)) {
@@ -6,15 +16,17 @@ function updateCallbacks(channelId, authorId, content) {
   }
   const buf = channelBuffers.get(channelId);
 
-  // Only sample notable messages
-  const lower = content.toLowerCase();
-  const isNotable = content.length < 80 ||
-    lower.includes('lmao') || lower.includes('lmfao') ||
-    lower.includes('lol') || lower.endsWith('?') ||
-    lower.includes('💀') || lower.includes('😂');
+  // Check each sampling criterion independently
+  const result = sentiment.analyze(content);
+  const isFunny = result.comparative > 0.5;
+  const isShort = content.length < 50;
+  const isSetup = content.endsWith('?') && isBanterTone(content);
 
-  if (!isNotable) return;
-  if (Math.random() > 0.3) return; // 30% sample on notable
+  const sample = (isFunny && Math.random() < 0.10) ||
+    (isShort && Math.random() < 0.30) ||
+    (isSetup && Math.random() < 0.30);
+
+  if (!sample) return;
 
   // Remove oldest if at capacity
   if (buf.length >= 10) buf.shift();
