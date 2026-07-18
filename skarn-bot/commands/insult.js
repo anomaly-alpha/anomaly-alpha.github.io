@@ -42,7 +42,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Playfully insult ${target.username}:` },
         ],
-        max_tokens: roleTokenBudgets.insult,
+        max_completion_tokens: roleTokenBudgets.insult,
         temperature: 1.0,
       });
 

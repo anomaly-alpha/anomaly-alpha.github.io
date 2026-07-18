@@ -43,7 +43,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Roast ${target.username}:` },
         ],
-        max_tokens: roleTokenBudgets.roast,
+        max_completion_tokens: roleTokenBudgets.roast,
         temperature: 0.95,
       });
 

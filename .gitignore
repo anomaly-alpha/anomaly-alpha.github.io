@@ -6,3 +6,4 @@ lighthouse-report.html
 *.report.html
 lighthouse-reports/
 .mimocode/
+_dream_tmp*.py

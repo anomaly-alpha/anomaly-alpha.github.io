@@ -51,7 +51,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Category: ${category}\nGenerate a word and give 4 clues, one at a time from vague to specific.` },
         ],
-        max_tokens: roleTokenBudgets.charades,
+        max_completion_tokens: roleTokenBudgets.charades,
         temperature: 0.9,
       });
 

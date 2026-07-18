@@ -104,52 +104,56 @@ module.exports = {
         case 'drop': game.hardDrop(playerId); break;
       }
 
-      // Check if current player lost
-      if (game.players[playerId].lost) {
-        const winner = playerId === interaction.user.id ? opponent : interaction.user;
-        const loser = playerId === interaction.user.id ? interaction.user : opponent;
+      try {
+        // Check if current player lost
+        if (game.players[playerId].lost) {
+          const winner = playerId === interaction.user.id ? opponent : interaction.user;
+          const loser = playerId === interaction.user.id ? interaction.user : opponent;
 
-        const endEmbed = new EmbedBuilder()
-          .setTitle('Game Over!')
-          .setDescription(`🏆 **${winner.username}** wins!\n\n${loser.username} topped out.`)
-          .addFields(
-            { name: winner.username, value: `Score: ${game.players[winner.id].score}`, inline: true },
-            { name: loser.username, value: `Score: ${game.players[loser.id].score}`, inline: true },
-          )
-          .setColor(0xf1c40f);
+          const endEmbed = new EmbedBuilder()
+            .setTitle('Game Over!')
+            .setDescription(`🏆 **${winner.username}** wins!\n\n${loser.username} topped out.`)
+            .addFields(
+              { name: winner.username, value: `Score: ${game.players[winner.id].score}`, inline: true },
+              { name: loser.username, value: `Score: ${game.players[loser.id].score}`, inline: true },
+            )
+            .setColor(0xf1c40f);
 
-        await msg.edit({ embeds: [endEmbed], components: [] });
-        activeGames.delete(gameKey);
-        collector.stop();
-        await i.deferUpdate();
-        return;
+          await msg.edit({ embeds: [endEmbed], components: [] });
+          activeGames.delete(gameKey);
+          collector.stop();
+          await i.deferUpdate();
+          return;
+        }
+
+        const nextPlayer = game.nextTurn();
+        const nextUser = nextPlayer === interaction.user.id ? interaction.user : opponent;
+
+        // Update current player's board
+        const currentBoard = renderBoard(game, playerId);
+        const currentEmbed = new EmbedBuilder()
+          .setTitle(`${i.user.username}'s Board`)
+          .setDescription(`Score: **${game.players[playerId].score}**\nWaiting for opponent...`)
+          .setColor(0x00e5ff);
+        const currentControls = createControls(game, playerId);
+        await i.update({ embeds: [currentEmbed], components: [currentControls], files: [currentBoard] });
+
+        // Send next player's board
+        const nextBoard = renderBoard(game, nextPlayer);
+        const nextEmbed = new EmbedBuilder()
+          .setTitle(`${nextUser.username}'s Board`)
+          .setDescription(`Score: **${game.players[nextPlayer].score}**\nYour turn!`)
+          .setColor(0x00e5ff);
+        const nextControls = createControls(game, nextPlayer);
+        await interaction.channel.send({
+          content: `${nextUser} — your turn!`,
+          embeds: [nextEmbed],
+          components: [nextControls],
+          files: [nextBoard],
+        });
+      } catch {
+        // Interaction expired — safe to ignore
       }
-
-      const nextPlayer = game.nextTurn();
-      const nextUser = nextPlayer === interaction.user.id ? interaction.user : opponent;
-
-      // Update current player's board
-      const currentBoard = renderBoard(game, playerId);
-      const currentEmbed = new EmbedBuilder()
-        .setTitle(`${i.user.username}'s Board`)
-        .setDescription(`Score: **${game.players[playerId].score}**\nWaiting for opponent...`)
-        .setColor(0x00e5ff);
-      const currentControls = createControls(game, playerId);
-      await i.update({ embeds: [currentEmbed], components: [currentControls], files: [currentBoard] });
-
-      // Send next player's board
-      const nextBoard = renderBoard(game, nextPlayer);
-      const nextEmbed = new EmbedBuilder()
-        .setTitle(`${nextUser.username}'s Board`)
-        .setDescription(`Score: **${game.players[nextPlayer].score}**\nYour turn!`)
-        .setColor(0x00e5ff);
-      const nextControls = createControls(game, nextPlayer);
-      await interaction.channel.send({
-        content: `${nextUser} — your turn!`,
-        embeds: [nextEmbed],
-        components: [nextControls],
-        files: [nextBoard],
-      });
     });
 
     collector.on('end', (collected, reason) => {

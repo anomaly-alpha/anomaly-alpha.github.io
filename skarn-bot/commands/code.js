@@ -55,7 +55,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Help with ${language || 'programming'}: ${request}` },
         ],
-        max_tokens: roleTokenBudgets.code,
+        max_completion_tokens: roleTokenBudgets.code,
         temperature: 0.3,
       });
 

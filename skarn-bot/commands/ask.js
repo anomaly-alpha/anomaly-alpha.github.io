@@ -26,7 +26,7 @@ module.exports = {
           { role: 'system', content: SYSTEM_PROMPT },
           { role: 'user', content: question },
         ],
-        max_tokens: 150,
+        max_completion_tokens: 150,
         temperature: 0.8,
       });
 

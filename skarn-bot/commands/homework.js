@@ -42,7 +42,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: question },
         ],
-        max_tokens: roleTokenBudgets.homework,
+        max_completion_tokens: roleTokenBudgets.homework,
         temperature: 0.3,
       });
 

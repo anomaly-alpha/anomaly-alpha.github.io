@@ -41,10 +41,14 @@ module.exports = {
 
       collector.on('collect', async i => {
         const index = parseInt(i.customId.split('_')[1]);
-        if (index === correctIndex) {
-          await i.update({ content: `Correct! The answer was: **${q.correct_answer}**`, components: [] });
-        } else {
-          await i.update({ content: `Wrong! The answer was: **${q.correct_answer}**`, components: [] });
+        try {
+          if (index === correctIndex) {
+            await i.update({ content: `Correct! The answer was: **${q.correct_answer}**`, components: [] });
+          } else {
+            await i.update({ content: `Wrong! The answer was: **${q.correct_answer}**`, components: [] });
+          }
+        } catch {
+          // Interaction expired — safe to ignore
         }
       });
 

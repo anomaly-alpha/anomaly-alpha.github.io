@@ -40,7 +40,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Generate an unpopular opinion:' },
         ],
-        max_tokens: roleTokenBudgets.unpopularopinion,
+        max_completion_tokens: roleTokenBudgets.unpopularopinion,
         temperature: 1.0,
       });
 
@@ -67,11 +67,15 @@ module.exports = {
       collector.on('collect', async i => {
         if (i.customId === 'uo_agree') votes.agree++;
         else votes.disagree++;
-        await i.update({
-          content: `\u{1F44D} ${votes.agree} agree | \u{1F44E} ${votes.disagree} disagree`,
-          embeds: [embed],
-          components: [row],
-        });
+        try {
+          await i.update({
+            content: `\u{1F44D} ${votes.agree} agree | \u{1F44E} ${votes.disagree} disagree`,
+            embeds: [embed],
+            components: [row],
+          });
+        } catch {
+          // Interaction expired — safe to ignore
+        }
       });
     } catch (error) {
       console.error('UnpopularOpinion error:', error);

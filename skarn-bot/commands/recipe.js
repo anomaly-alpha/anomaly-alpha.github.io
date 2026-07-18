@@ -42,7 +42,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `I have: ${ingredients}. What can I make?` },
         ],
-        max_tokens: roleTokenBudgets.recipe,
+        max_completion_tokens: roleTokenBudgets.recipe,
         temperature: 0.7,
       });
 

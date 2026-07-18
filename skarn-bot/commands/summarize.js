@@ -88,7 +88,7 @@ module.exports = {
           { role: 'system', content: `You are a helpful assistant that summarizes Discord conversations. Be concise but capture all important points. Use bullet points. Focus on: ${focus}.` },
           { role: 'user', content: `Summarize this Discord conversation from #${channel.name} (${timeRange}):\n\n${truncated}` },
         ],
-        max_tokens: 500,
+        max_completion_tokens: 500,
         temperature: 0.3,
       });
 

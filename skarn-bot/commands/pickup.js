@@ -40,7 +40,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Generate a pickup line:' },
         ],
-        max_tokens: roleTokenBudgets.pickup,
+        max_completion_tokens: roleTokenBudgets.pickup,
         temperature: 1.0,
       });
 

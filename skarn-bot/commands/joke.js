@@ -42,7 +42,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Tell me a joke about: ${topic}` },
         ],
-        max_tokens: roleTokenBudgets.joke,
+        max_completion_tokens: roleTokenBudgets.joke,
         temperature: 1.0,
       });
 

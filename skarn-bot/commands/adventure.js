@@ -51,7 +51,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Start a new ${theme} adventure for ${interaction.user.username}. Describe the opening scene and give me 4 choices.` },
         ],
-        max_tokens: roleTokenBudgets.adventure,
+        max_completion_tokens: roleTokenBudgets.adventure,
         temperature: 0.9,
       });
 
@@ -95,7 +95,7 @@ module.exports = {
               { role: 'system', content: systemPrompt },
               ...history,
             ],
-            max_tokens: roleTokenBudgets.adventure,
+            max_completion_tokens: roleTokenBudgets.adventure,
             temperature: 0.9,
           });
 
@@ -113,8 +113,12 @@ module.exports = {
           await i.update({ embeds: [nextEmbed], components: [row] });
         } catch (error) {
           console.error('Adventure continuation error:', error);
-          const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
-          await i.update({ content: errorMsg });
+          try {
+            const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
+            await i.update({ content: errorMsg });
+          } catch {
+            // Interaction expired or already acknowledged — safe to ignore
+          }
         }
       });
 

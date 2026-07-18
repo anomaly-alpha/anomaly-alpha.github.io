@@ -283,7 +283,7 @@ client.on('messageCreate', async message => {
           { role: 'system', content: 'You are Skarn, a helpful and funny Discord bot. Keep replies short (1-2 sentences max), casual, and entertaining. Use occasional emojis but not too many. You are witty and helpful.' },
           { role: 'user', content: cleanMsg },
         ],
-        max_tokens: 150,
+        max_completion_tokens: 150,
         temperature: 0.8,
       });
       const reply = completion.choices[0].message.content;

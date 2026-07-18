@@ -43,7 +43,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Tell ${interaction.user.username}'s fortune about their ${theme}. The stars are aligned...` },
         ],
-        max_tokens: roleTokenBudgets.fortune,
+        max_completion_tokens: roleTokenBudgets.fortune,
         temperature: 0.95,
       });
 

@@ -42,7 +42,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Give a compliment to ${target.username}:` },
         ],
-        max_tokens: roleTokenBudgets.compliment,
+        max_completion_tokens: roleTokenBudgets.compliment,
         temperature: 0.9,
       });
 

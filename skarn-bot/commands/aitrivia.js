@@ -64,7 +64,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `${TRIVIA_FORMAT}\n\nGenerate a ${difficulty} trivia question about: ${topic}. Return ONLY the JSON, no markdown, no code blocks.` },
         ],
-        max_tokens: roleTokenBudgets.aitrivia,
+        max_completion_tokens: roleTokenBudgets.aitrivia,
         temperature: 0.9,
       });
 
@@ -123,7 +123,11 @@ module.exports = {
           )
           .setColor(isCorrect ? 0x2ecc71 : 0xe74c3c);
 
-        await i.update({ embeds: [resultEmbed], components: [] });
+        try {
+          await i.update({ embeds: [resultEmbed], components: [] });
+        } catch {
+          // Interaction expired — safe to ignore
+        }
       });
 
       collector.on('end', collected => {

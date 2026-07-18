@@ -46,7 +46,7 @@ async function execute(interaction) {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message },
       ],
-      max_tokens: roleTokenBudgets.consult,
+      max_completion_tokens: roleTokenBudgets.consult,
       temperature: 0.8,
     });
 

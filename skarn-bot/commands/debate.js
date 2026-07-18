@@ -45,7 +45,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Topic: ${topic}\nArgue ${botSide} this topic:` },
         ],
-        max_tokens: roleTokenBudgets.debate,
+        max_completion_tokens: roleTokenBudgets.debate,
         temperature: 0.8,
       });
 

@@ -42,7 +42,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Scenario: ${scenario}\n\nYou start the scene:` },
         ],
-        max_tokens: roleTokenBudgets.improv,
+        max_completion_tokens: roleTokenBudgets.improv,
         temperature: 0.95,
       });
 

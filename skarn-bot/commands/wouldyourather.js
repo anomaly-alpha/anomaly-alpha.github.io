@@ -40,7 +40,7 @@ module.exports = {
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Generate a would you rather question:' },
         ],
-        max_tokens: roleTokenBudgets.wouldyourather,
+        max_completion_tokens: roleTokenBudgets.wouldyourather,
         temperature: 1.0,
       });
 
@@ -68,7 +68,11 @@ module.exports = {
 
       collector.on('collect', async i => {
         const choice = i.customId === 'wyr_a' ? 'A' : 'B';
-        await i.update({ content: `You chose **${choice}**!`, embeds: [embed], components: [] });
+        try {
+          await i.update({ content: `You chose **${choice}**!`, embeds: [embed], components: [] });
+        } catch {
+          // Interaction expired — safe to ignore
+        }
       });
     } catch (error) {
       console.error('WouldYouRather error:', error);

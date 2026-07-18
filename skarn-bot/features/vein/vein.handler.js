@@ -93,7 +93,7 @@ async function execute(interaction) {
         { role: 'system', content: systemPrompt },
         { role: 'user', content: `Summarize this conversation from #${targetChannel.name}:\n\n${truncated}` },
       ],
-      max_tokens: roleTokenBudgets.vein,
+      max_completion_tokens: roleTokenBudgets.vein,
       temperature: 0.3,
     });
 
