@@ -17,10 +17,8 @@ describe('searchEngine', () => {
 
   it('returns cached results on repeated query', async () => {
     const query = 'unique test ' + Date.now();
-    let first;
-    try {
-      first = await searchWeb(query);
-    } catch (err) {
+    const first = await searchWeb(query);
+    if (first.source === 'error') {
       // If the first call fails, we can't test caching — skip
       assert.ok(true, 'network unavailable, skipping caching test');
       return;

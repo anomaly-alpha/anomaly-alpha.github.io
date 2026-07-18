@@ -21,21 +21,25 @@ async function searchWeb(query) {
   }
 
   // Fresh search
-  const result = await search(query, { safeSearch: -1 });
-  const results = (result.results || []).slice(0, 5).map(r => ({
-    title: r.title || '',
-    snippet: r.description || '',
-    url: r.url || '',
-  }));
+  try {
+    const result = await search(query, { safeSearch: -1 });
+    const results = (result.results || []).slice(0, 5).map(r => ({
+      title: r.title || '',
+      snippet: r.description || '',
+      url: r.url || '',
+    }));
 
-  // Store in cache
-  cache.set(key, { results, cachedAt: Date.now() });
-  if (cache.size > CACHE_MAX) {
-    const oldest = cache.keys().next().value;
-    cache.delete(oldest);
+    // Store in cache
+    cache.set(key, { results, cachedAt: Date.now() });
+    if (cache.size > CACHE_MAX) {
+      const oldest = cache.keys().next().value;
+      cache.delete(oldest);
+    }
+
+    return { results, source: 'duckduckgo' };
+  } catch (error) {
+    return { results: [], source: 'error', error: error.message || 'Unknown search error' };
   }
-
-  return { results, source: 'duckduckgo' };
 }
 
 function cleanCache() {
