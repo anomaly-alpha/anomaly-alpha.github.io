@@ -157,7 +157,7 @@ function addXp(userId, guildId, amount) {
   };
 }
 
-function heal(userId, guildId, percent = 0.25) {
+function heal(userId, guildId, percent = 1) {
   const char = getCharacter(userId, guildId);
   if (!char) return { error: 'No character found' };
 
