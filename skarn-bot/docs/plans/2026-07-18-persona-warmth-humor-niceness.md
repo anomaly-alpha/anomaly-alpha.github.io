@@ -349,7 +349,7 @@ git commit -m "feat(skarn): add comedy timing engine for punchline delays and de
 - [ ] **Step 1: Create directory and `features/etiquette/etiquetteEngine.js`**
 
 ```js
-const { getRelationship } = require('../db/database');
+const { getRelationship } = require('../../db/database');
 
 const flaggedUsers = new Map();      // userId → { at }
 const acknowledgedMilestones = new Set(); // "userId:milestone"
@@ -369,11 +369,11 @@ function getFirstOfDayLine(userId, guildId) {
   const lastSeen = firstOfDayCache.get(key);
 
   if (lastSeen === today) return '';
-  firstOfDayCache.set(key, today);
 
   const rel = getRelationship(userId, guildId);
   if (!rel || rel.familiarity < 15) return '';
 
+  firstOfDayCache.set(key, today);
   return "This is your first interaction with this person today. Acknowledge the gap casually if relevant — 'oh hey', 'back again', 'was wondering when you'd show'. Don't overdo it.";
 }
 
