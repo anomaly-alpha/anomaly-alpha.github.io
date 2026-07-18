@@ -3,6 +3,11 @@ const { Client, GatewayIntentBits, Collection, EmbedBuilder } = require('discord
 const fs = require('fs');
 const path = require('path');
 
+// ===== Skarn Persona System =====
+const { onMessageReceived } = require('./features/channelState/stateTracker');
+const { runDecayPass } = require('./features/channelState/stateDecay');
+const { handleMention } = require('./features/mentionRouter/mentionRouter');
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -92,6 +97,9 @@ client.once('ready', () => {
       console.log('Sleep mode: waking up');
     }
   }, 60000);
+
+  // Skarn state decay (runs every 10 minutes, regardless of sleep mode)
+  setInterval(runDecayPass, 10 * 60 * 1000);
 });
 
 // ===== Slash command handler =====
@@ -149,6 +157,12 @@ const xpCooldown = new Set();
 
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
+
+  // Skarn channel state tracking
+  onMessageReceived(message);
+
+  // Skarn mention routing (before keyword triggers and old AI logic)
+  await handleMention(message, client);
 
   // XP gain (15-25 XP per message, 60s cooldown per user)
   if (!xpCooldown.has(message.author.id)) {
