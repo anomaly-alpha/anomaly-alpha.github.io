@@ -1,3 +1,5 @@
+const { getRelationship } = require('../../db/database');
+
 const banterChains = new Map(); // "userId:channelId" -> { count, lastAt }
 const setups = new Map();       // "channelId:userId" -> { text, at }
 
@@ -31,7 +33,11 @@ function getDeadpanBudget(baseBudget, userId, channelId) {
   return Math.round(baseBudget * multiplier);
 }
 
-function extendBanterChain(userId, channelId) {
+function extendBanterChain(userId, guildId, channelId) {
+  // Only track banter for users with established relationship
+  const rel = getRelationship(userId, guildId);
+  if (!rel || rel.familiarity < 15) return;
+
   const key = `${userId}:${channelId}`;
   const chain = banterChains.get(key);
   if (chain) {

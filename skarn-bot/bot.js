@@ -193,7 +193,7 @@ client.on('messageCreate', async message => {
   // Active listening (non-AI channels only, handled internally)
   maybeActiveListen(message, client);
   // Comedy: banter chain tracking
-  if (!message.content.startsWith('!')) extendBanterChain(message.author.id, message.channel.id);
+  if (!message.content.startsWith('!')) extendBanterChain(message.author.id, message.guild.id, message.channel.id);
   // Comedy: record setups for punchline detection
   recordSetup(message.channel.id, message.author.id, message.content);
 

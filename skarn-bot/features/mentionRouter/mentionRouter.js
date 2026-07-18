@@ -55,7 +55,7 @@ async function handleMention(message, client) {
     const contextualMessage = buildContextualPrompt(cleanMsg, context);
 
     recordCall(userId);
-    extendBanterChain(userId, channelId);
+    extendBanterChain(userId, message.guild.id, channelId);
     cooldowns.set(key, Date.now());
 
     const openai = getOpenAIClient();

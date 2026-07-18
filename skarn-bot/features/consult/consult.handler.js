@@ -42,7 +42,7 @@ async function execute(interaction) {
     const contextualMessage = buildContextualPrompt(message, context);
 
     recordCall(interaction.user.id);
-    extendBanterChain(interaction.user.id, interaction.channel.id);
+    extendBanterChain(interaction.user.id, interaction.guild.id, interaction.channel.id);
 
     const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
