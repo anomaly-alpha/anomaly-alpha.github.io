@@ -4,11 +4,38 @@ const path = require('path');
 const fs = require('fs');
 const { getRelationship } = require('../../db/database');
 
+// ===== In-memory state =====
 const sentimentBuffer = new Map(); // "userId:guildId" → { scores[], timestamps[] }
-const repeatBuffer = new Map();    // "userId" → { topics[], windowStart }
+const repeatBuffer = new Map();    // "userId:guildId" → { topics[], windowStart }
 const consecutiveLongMessages = new Map(); // "userId:guildId" → count
 const ACTIVE_LISTEN_COOLDOWN = 5 * 60 * 1000;
 const activeListenCooldowns = new Map();
+const CACHE_TTL = 5 * 60 * 1000;
+
+// ===== Cached AI channel set (avoids disk I/O on every message) =====
+let aiChannelSet = null;
+let aiCacheLoadedAt = 0;
+
+function refreshAiChannels() {
+  try {
+    const configPath = path.join(__dirname, '..', 'data', 'config.json');
+    if (fs.existsSync(configPath)) {
+      const cfg = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      aiChannelSet = new Set();
+      for (const guildId in cfg) {
+        const chans = cfg[guildId]?.aiChannels || [];
+        for (const cid of chans) aiChannelSet.add(cid);
+      }
+      aiCacheLoadedAt = Date.now();
+    }
+  } catch {
+    // Config unavailable — skip
+  }
+}
+// Load once at module init
+refreshAiChannels();
+
+// ===== Warmth tracking =====
 
 function updateWarmth(userId, guildId, content) {
   const key = `${userId}:${guildId}`;
@@ -33,6 +60,8 @@ function updateWarmth(userId, guildId, content) {
   }
 }
 
+// ===== Context lines =====
+
 function getWarmthLine(userId, guildId, roleNature) {
   const key = `${userId}:${guildId}`;
   const buf = sentimentBuffer.get(key);
@@ -55,11 +84,12 @@ function getWarmthLine(userId, guildId, roleNature) {
   return '';
 }
 
-function getPatienceLine(userId, content) {
-  if (!repeatBuffer.has(userId)) {
-    repeatBuffer.set(userId, { topics: [], windowStart: Date.now() });
+function getPatienceLine(userId, guildId, content) {
+  const key = `${userId}:${guildId}`;
+  if (!repeatBuffer.has(key)) {
+    repeatBuffer.set(key, { topics: [], windowStart: Date.now() });
   }
-  const buf = repeatBuffer.get(userId);
+  const buf = repeatBuffer.get(key);
   // Reset window every 30 min
   if (Date.now() - buf.windowStart > 30 * 60 * 1000) {
     buf.topics = [];
@@ -81,21 +111,14 @@ function getPatienceLine(userId, content) {
   return '';
 }
 
+// ===== Active listening =====
+
 async function maybeActiveListen(message, client) {
   if (message.author.bot) return;
   if (!message.guild) return;
 
-  // Only fire in non-AI channels
-  try {
-    const configPath = path.join(__dirname, '..', 'data', 'config.json');
-    if (fs.existsSync(configPath)) {
-      const cfg = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-      const aiChans = cfg[message.guild.id]?.aiChannels || [];
-      if (aiChans.includes(message.channel.id)) return;
-    }
-  } catch {
-    // Config unavailable — proceed with caution
-  }
+  // Only fire in non-AI channels (cached set, O(1) lookup)
+  if (aiChannelSet && aiChannelSet.has(message.channel.id)) return;
 
   // Only for users with established relationship
   const rel = getRelationship(message.author.id, message.guild.id);
@@ -125,4 +148,46 @@ async function maybeActiveListen(message, client) {
   }
 }
 
-module.exports = { updateWarmth, getWarmthLine, getPatienceLine, maybeActiveListen };
+// ===== Cleanup (prevents unbounded memory growth) =====
+
+function cleanWarmth() {
+  const now = Date.now();
+  const oneHour = 60 * 60 * 1000;
+
+  // Refresh AI channel cache if stale
+  if (now - aiCacheLoadedAt > CACHE_TTL) {
+    refreshAiChannels();
+  }
+
+  // Prune old sentiment buffers
+  for (const [key, buf] of sentimentBuffer) {
+    const recent = buf.timestamps.filter(t => now - t < oneHour);
+    if (recent.length === 0) {
+      sentimentBuffer.delete(key);
+    } else {
+      buf.scores = buf.scores.slice(-recent.length);
+      buf.timestamps = recent;
+    }
+  }
+
+  // Prune old active listen cooldowns
+  for (const [channelId, ts] of activeListenCooldowns) {
+    if (now - ts > 10 * 60 * 1000) activeListenCooldowns.delete(channelId);
+  }
+
+  // Prune old consecutive long message tracking
+  for (const [key, ts] of consecutiveLongMessages) {
+    // Keys are "userId:guildId" → count; no timestamp stored, so clear all
+    // if sentiment buffer for that key is gone (already pruned above)
+    if (!sentimentBuffer.has(key)) consecutiveLongMessages.delete(key);
+  }
+}
+
+module.exports = {
+  updateWarmth,
+  getWarmthLine,
+  getPatienceLine,
+  maybeActiveListen,
+  cleanWarmth,
+  refreshAiChannels,
+};
