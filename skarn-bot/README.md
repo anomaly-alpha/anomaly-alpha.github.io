@@ -449,7 +449,7 @@ skarn-bot/
 
 ## Rich Presence
 
-Shows "Listening to 😈 Servant of ... / Anomaly Alpha" in your Discord status.
+Shows "Watching 😈 Servant of ... / Anomaly Alpha" with timer counting up from 1970.
 
 ```bash
 node rich-presence.js
@@ -458,6 +458,7 @@ node rich-presence.js
 Or run in background:
 ```bash
 pm2 start rich-presence.js --name rpc
+pm2 save
 ```
 
 ### Rich Presence commands
@@ -468,6 +469,11 @@ pm2 start rich-presence.js --name rpc
 | `pm2 stop rpc` | Stop |
 | `pm2 restart rpc` | Restart |
 | `pm2 status` | Check status |
+| `pm2 logs rpc` | View logs |
+
+### Platform-agnostic guide
+
+See `RPC_GUIDE.md` for setup on Windows, Linux, Mac.
 
 ## License
 
