@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#050a14">
+    <meta name="color-scheme" content="dark light">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="description" content="Curated playlists for Invincible Guarding the Globe — set the mood while you calculate your weekly gems.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="icon" href="../favicon.ico" sizes="any">
+    <link rel="canonical" href="https://anomaly-alpha.github.io/music/">
+    <meta property="og:title" content="Music & Playlists — Gem Rewards Calculator">
+    <meta property="og:description" content="Curated playlists for Invincible Guarding the Globe — set the mood while you calculate your weekly gems.">
+    <meta property="og:url" content="https://anomaly-alpha.github.io/music/">
+    <meta property="og:site_name" content="Gem Rewards Calculator">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://anomaly-alpha.github.io/og-images/home.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:site" content="@InvincibleGtG">
+    <meta name="twitter:creator" content="@anomaly_alpha">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://anomaly-alpha.github.io/og-images/home.png">
+    <meta name="twitter:title" content="Music & Playlists — Gem Rewards Calculator">
+    <meta name="twitter:description" content="Curated playlists for Invincible Guarding the Globe — set the mood while you calculate your weekly gems.">
+    <title>Music &amp; Playlists — Gem Rewards Calculator</title>
+    <link rel="stylesheet" href="../tailwind.css">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="relative min-h-screen p-5 md:p-10 gem-grid-bg">
+    <div class="particles">
+        <div class="gem-particle gem-particle--1" style="left:10%;animation-duration:12s;animation-delay:0s"></div>
+        <div class="gem-particle gem-particle--2" style="left:30%;animation-duration:18s;animation-delay:2s"></div>
+        <div class="gem-particle gem-particle--3" style="left:50%;animation-duration:14s;animation-delay:4s"></div>
+        <div class="gem-particle gem-particle--1" style="left:70%;animation-duration:16s;animation-delay:1s"></div>
+        <div class="gem-particle gem-particle--2" style="left:90%;animation-duration:20s;animation-delay:3s"></div>
+    </div>
+
+    <div class="gem-container">
+        <main class="gem-card p-8 md:p-10">
+            <div class="gem-hero mb-8">
+                <a href="../" class="gem-text--cyan hover:text-white transition-colors text-sm">&larr; Gem Rewards Calculator</a>
+                <h1 class="gem-title--hero mt-4">Music &amp; Playlists</h1>
+                <p class="gem-subtitle--hero">Set the mood while you calculate your weekly gems</p>
+                <p class="text-white/50 text-xs mt-2">Updated Jul 16, 2026 &middot; <span id="playlistCount">8 playlists</span></p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="musicGrid">
+                <!--MUSIC_GRID_START--><div class="gem-music-card">
+  <span class="gem-music-card__badge gem-music-card__badge--cyan">Home</span>
+  <h3 class="gem-music-card__title">Today's Top Hits</h3>
+  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1E8Ligr8EnF31Q?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  <p class="gem-music-card__desc">The biggest songs right now. Great background while planning your gem stack.</p>
+  <a href="/" class="gem-music-card__link">Go to Home &rarr;</a>
+</div>
+<div class="gem-music-card">
+  <span class="gem-music-card__badge gem-music-card__badge--pvp">PvP Guide</span>
+  <h3 class="gem-music-card__title">Beast Mode</h3>
+  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX6VdMW310YC7?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  <p class="gem-music-card__desc">Get hyped. High-energy tracks for climbing the PvP ladder.</p>
+  <a href="/guide/pvp/" class="gem-music-card__link">Go to PvP Guide &rarr;</a>
+</div>
+<div class="gem-music-card">
+  <span class="gem-music-card__badge gem-music-card__badge--event">Event Guide</span>
+  <h3 class="gem-music-card__title">Epic &amp; Cinematic</h3>
+  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DWY4f1Ha8TbJE?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  <p class="gem-music-card__desc">Epic orchestral energy for event battles and alliance wars.</p>
+  <a href="/guide/event/" class="gem-music-card__link">Go to Event Guide &rarr;</a>
+</div>
+<div class="gem-music-card">
+  <span class="gem-music-card__badge gem-music-card__badge--login">Login Guide</span>
+  <h3 class="gem-music-card__title">Chill Hits</h3>
+  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX4WTs9gsN1bn?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  <p class="gem-music-card__desc">Kick back and relax. Easy listening for daily login rewards.</p>
+  <a href="/guide/login/" class="gem-music-card__link">Go to Login Guide &rarr;</a>
+</div>
+<div class="gem-music-card">
+  <span class="gem-music-card__badge gem-music-card__badge--code">Code Guide</span>
+  <h3 class="gem-music-card__title">Happy Hits!</h3>
+  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXdPec7aLTmlC?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  <p class="gem-music-card__desc">Upbeat and uplifting. Perfect for discovering new promo codes.</p>
+  <a href="/guide/code/" class="gem-music-card__link">Go to Code Guide &rarr;</a>
+</div>
+<div class="gem-music-card">
+  <span class="gem-music-card__badge gem-music-card__badge--cyan">Beginner Guide</span>
+  <h3 class="gem-music-card__title">Morning Motivation</h3>
+  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX6i7ft3La30I?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  <p class="gem-music-card__desc">Start your journey right. Motivating tracks for new players.</p>
+  <a href="/guide/beginners/" class="gem-music-card__link">Go to Beginner Guide &rarr;</a>
+</div>
+<div class="gem-music-card">
+  <span class="gem-music-card__badge gem-music-card__badge--cyan">FAQ</span>
+  <h3 class="gem-music-card__title">Peaceful Piano</h3>
+  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DWZeKCadgEMbQ?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  <p class="gem-music-card__desc">Calm piano pieces. Relax while browsing FAQs and guides.</p>
+  <a href="/guide/faq/" class="gem-music-card__link">Go to FAQ &rarr;</a>
+</div>
+<div class="gem-music-card">
+  <span class="gem-music-card__badge gem-music-card__badge--cyan">XP Guide</span>
+  <h3 class="gem-music-card__title">Deep Focus</h3>
+  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DX70TzV5rU7gH?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  <p class="gem-music-card__desc">Concentrate. Focused beats for studying hero rank-up costs.</p>
+  <a href="/guide/xp/" class="gem-music-card__link">Go to XP Guide &rarr;</a>
+</div><!--MUSIC_GRID_END-->
+            </div>
+        </main>
+        <footer class="gem-legal-footer">
+            <a href="../terms/" class="gem-legal-footer__link">Terms of Service</a>
+            <span class="gem-legal-footer__sep">&middot;</span>
+            <a href="../privacy/" class="gem-legal-footer__link">Privacy Policy</a>
+        </footer>
+    </div>
+</body>
+</html>
