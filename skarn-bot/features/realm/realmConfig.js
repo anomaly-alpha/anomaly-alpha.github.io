@@ -13,29 +13,34 @@ const RACE_BONUSES = {
 
 const CLASS_STATS = {
   warrior: {
-    base: { str: 14, dex: 10, con: 13, int: 8, wis: 10, cha: 9 },
+    base: { str: 12, dex: 8, con: 10, int: 6, wis: 7, cha: 7 },
     primary: 'str',
     secondary: 'con',
   },
-  rogue: {
-    base: { str: 8, dex: 15, con: 10, int: 12, wis: 9, cha: 10 },
-    primary: 'dex',
-    secondary: 'int',
-  },
   mage: {
-    base: { str: 6, dex: 10, con: 8, int: 16, wis: 13, cha: 9 },
+    base: { str: 6, dex: 7, con: 7, int: 12, wis: 10, cha: 8 },
     primary: 'int',
     secondary: 'wis',
   },
+  rogue: {
+    base: { str: 8, dex: 12, con: 8, int: 7, wis: 7, cha: 8 },
+    primary: 'dex',
+    secondary: 'cha',
+  },
   cleric: {
-    base: { str: 12, dex: 8, con: 12, int: 9, wis: 15, cha: 10 },
+    base: { str: 8, dex: 7, con: 10, int: 7, wis: 12, cha: 6 },
     primary: 'wis',
     secondary: 'con',
   },
+  ranger: {
+    base: { str: 9, dex: 11, con: 9, int: 7, wis: 9, cha: 5 },
+    primary: 'dex',
+    secondary: 'wis',
+  },
   warlock: {
-    base: { str: 10, dex: 9, con: 11, int: 13, wis: 8, cha: 15 },
-    primary: 'cha',
-    secondary: 'int',
+    base: { str: 7, dex: 8, con: 7, int: 10, wis: 8, cha: 10 },
+    primary: 'int',
+    secondary: 'cha',
   },
 };
 

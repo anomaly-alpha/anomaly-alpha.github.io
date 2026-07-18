@@ -122,9 +122,9 @@ function addXp(userId, guildId, amount) {
   let finalHpMax, finalHpCurrent;
 
   if (levelsGained > 0) {
-    const newCon = char.constitution + levelsGained;
-    finalHpMax = hpForLevel(newCon, level);
-    finalHpCurrent = Math.min(char.hp_current + (levelsGained * 2), finalHpMax);
+    const hpIncrease = levelsGained * 2;
+    finalHpMax = char.hp_max + hpIncrease;
+    finalHpCurrent = char.hp_current + hpIncrease;
   } else {
     finalHpMax = hpForLevel(char.constitution, level);
     finalHpCurrent = char.hp_current;
