@@ -8,6 +8,58 @@ const categories = {
       { name: '/etch', desc: 'Tell Skarn something to remember' },
       { name: '/forget', desc: 'Delete all remembered facts' },
       { name: '/vein', desc: 'Summarize channel conversation' },
+      { name: '@Skarn', desc: 'Mention for an AI reply' },
+      { name: 'skarn', desc: 'Type his name — he\'s listening' },
+      { name: 'Reply to Skarn', desc: 'Reply to his messages to continue chatting' },
+    ],
+  },
+  'AI Chat': {
+    color: 0x9b59b6,
+    commands: [
+      { name: '/aichat', desc: 'Toggle AI auto-reply in a channel (Admin)' },
+      { name: '/aichatignore', desc: 'Opt out of AI chat responses' },
+      { name: '/aistats', desc: 'Check your remaining replies and stats' },
+      { name: '/aistatsreset', desc: 'Reset your stats and hourly cap' },
+    ],
+  },
+  'AI Games': {
+    color: 0xe74c3c,
+    commands: [
+      { name: '/aitrivia', desc: 'AI trivia on any topic' },
+      { name: '/adventure', desc: 'AI Dungeon Master game' },
+      { name: '/charades', desc: 'Word guessing game' },
+      { name: '/wouldyourather', desc: 'Would You Rather' },
+      { name: '/unpopularopinion', desc: 'Hot take voting' },
+      { name: '/improv', desc: 'AI improv comedy' },
+      { name: '/tetris', desc: 'Head-to-head Tetris' },
+    ],
+  },
+  'AI Creative': {
+    color: 0xe91e8a,
+    commands: [
+      { name: '/song', desc: 'AI writes a song' },
+      { name: '/joke', desc: 'Custom AI joke' },
+      { name: '/fortune', desc: 'AI fortune teller' },
+      { name: '/story', desc: 'Collaborative story' },
+      { name: '/roast', desc: 'Get roasted by AI' },
+      { name: '/compliment', desc: 'AI compliment' },
+      { name: '/insult', desc: 'Playful insult' },
+      { name: '/pickup', desc: 'Pickup line generator' },
+      { name: '/meme', desc: 'AI meme caption' },
+    ],
+  },
+  'AI Utility': {
+    color: 0x2ecc71,
+    commands: [
+      { name: '/ask', desc: 'Ask Skarn anything' },
+      { name: '/homework', desc: 'Homework helper' },
+      { name: '/recipe', desc: 'Recipe finder' },
+      { name: '/code', desc: 'Code helper' },
+      { name: '/debate', desc: 'AI debate partner' },
+      { name: '/summarize', desc: 'Summarize recent messages' },
+      { name: '/translate', desc: 'Translate text' },
+      { name: '/weather', desc: 'Weather lookup' },
+      { name: '/calc', desc: 'Math calculator' },
     ],
   },
   'General': {
@@ -28,49 +80,8 @@ const categories = {
       { name: '/dice', desc: 'Roll a dice' },
       { name: '/8ball', desc: 'Magic 8-ball' },
       { name: '/poll', desc: 'Create a poll with reactions' },
-      { name: '/meme', desc: 'Random meme' },
-      { name: '/trivia', desc: 'Classic trivia game' },
       { name: '/giveaway', desc: 'Start a giveaway' },
-    ],
-  },
-  'AI Chat': {
-    color: 0x9b59b6,
-    commands: [
-      { name: '/aichat', desc: 'Toggle AI in a channel' },
-      { name: '@Skarn', desc: 'Mention bot for AI reply' },
-    ],
-  },
-  'AI Games': {
-    color: 0xe74c3c,
-    commands: [
-      { name: '/aitrivia', desc: 'AI trivia on any topic' },
-      { name: '/adventure', desc: 'AI Dungeon Master game' },
-      { name: '/charades', desc: 'Word guessing game' },
-      { name: '/wouldyourather', desc: 'Would You Rather' },
-      { name: '/unpopularopinion', desc: 'Hot take voting' },
-      { name: '/improv', desc: 'AI improv comedy' },
-    ],
-  },
-  'AI Creative': {
-    color: 0xe91e8a,
-    commands: [
-      { name: '/song', desc: 'AI writes a song' },
-      { name: '/joke', desc: 'Custom AI joke' },
-      { name: '/fortune', desc: 'AI fortune teller' },
-      { name: '/story', desc: 'Collaborative story' },
-      { name: '/roast', desc: 'Get roasted by AI' },
-      { name: '/compliment', desc: 'AI compliment' },
-      { name: '/insult', desc: 'Playful insult' },
-      { name: '/pickup', desc: 'Pickup line generator' },
-    ],
-  },
-  'AI Utility': {
-    color: 0x2ecc71,
-    commands: [
-      { name: '/homework', desc: 'Homework helper' },
-      { name: '/recipe', desc: 'Recipe finder' },
-      { name: '/code', desc: 'Code helper' },
-      { name: '/debate', desc: 'AI debate partner' },
+      { name: '/trivia', desc: 'Classic trivia game' },
     ],
   },
   'Leveling': {
@@ -91,12 +102,6 @@ const categories = {
       { name: '/reactionrole', desc: 'Reaction role message (Admin)' },
       { name: '/ticket', desc: 'Create ticket panel (Admin)' },
       { name: '/embed', desc: 'Create custom embed' },
-    ],
-  },
-  'Games': {
-    color: 0x3498db,
-    commands: [
-      { name: '/tetris', desc: 'Head-to-head Tetris' },
     ],
   },
   'Friends': {
@@ -125,7 +130,7 @@ module.exports = {
 
     if (selected) {
       const cat = categories[selected];
-      const list = cat.commands.map(c => `\`${c.name}\` — ${c.desc}`).join('\n');
+      const list = cat.commands.map(c => `\`${c.name}\`\n└ ${c.desc}`).join('\n\n');
       const embed = new EmbedBuilder()
         .setTitle(selected)
         .setDescription(list)
@@ -136,7 +141,9 @@ module.exports = {
     // Show all categories overview
     const overview = Object.entries(categories).map(([name, cat]) => {
       const count = cat.commands.length;
-      return `**${name}** (${count}) — ${cat.commands.slice(0, 3).map(c => c.name).join(', ')}...`;
+      const cmdNames = cat.commands.slice(0, 4).map(c => `\`${c.name}\``).join(' ');
+      const extra = count > 4 ? ` +${count - 4} more` : '';
+      return `**${name}** ${cmdNames}${extra}`;
     }).join('\n');
 
     const total = Object.values(categories).reduce((sum, cat) => sum + cat.commands.length, 0);
@@ -145,7 +152,7 @@ module.exports = {
       .setTitle('Skarn Commands')
       .setDescription(`${total} commands across ${Object.keys(categories).length} categories\n\n${overview}`)
       .setColor(0x00e5ff)
-      .setFooter({ text: 'Use /help category:"Name" for details on a category' });
+      .setFooter({ text: 'Use /help category:"Name" for details' });
 
     await interaction.reply({ embeds: [embed], flags: 64 });
   },
