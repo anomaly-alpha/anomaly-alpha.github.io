@@ -155,6 +155,9 @@ client.on('guildMemberAdd', async member => {
 // ===== Leveling system =====
 const xpCooldown = new Set();
 
+// ===== AI channel hourly cap =====
+const aiHourlyCap = new Map(); // "userId" -> { count, hourStart }
+
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
 
@@ -179,6 +182,35 @@ client.on('messageCreate', async message => {
           return;
         }
       } catch {}
+    }
+  }
+
+  // Ignore check — skipped for mentions and replies (handled above)
+  if (process.env.AI_MODEL) {
+    const cfg = loadJSON('config.json');
+    const ignored = cfg[message.guild?.id]?.ignoredUsers || [];
+    if (ignored.includes(message.author.id)) return;
+  }
+
+  // AI channel auto-respond (100% rate, 50 per user per hour)
+  if (process.env.AI_MODEL) {
+    const cfg = loadJSON('config.json');
+    const aiChans = cfg[message.guild?.id]?.aiChannels || [];
+    if (aiChans.includes(message.channel.id)) {
+      const userId = message.author.id;
+      const now = Date.now();
+      const currentHour = Math.floor(now / 3600000);
+      const entry = aiHourlyCap.get(userId);
+
+      if (entry && entry.hourStart === currentHour) {
+        if (entry.count >= 50) return;
+        entry.count++;
+      } else {
+        aiHourlyCap.set(userId, { count: 1, hourStart: currentHour });
+      }
+
+      await handleMention(message, client);
+      return;
     }
   }
 
@@ -278,39 +310,6 @@ client.on('messageCreate', async message => {
     ];
     const saying = randomSayings[Math.floor(Math.random() * randomSayings.length)];
     message.reply(saying);
-  }
-
-  // ===== AI replies =====
-  const configData = loadJSON('config.json');
-  const aiChannels = configData[message.guild?.id]?.aiChannels || [];
-  const isMentioned = message.mentions.has(client.user);
-  const isAIChannel = aiChannels.includes(message.channel.id);
-
-  if ((isMentioned || isAIChannel) && process.env.OPENAI_API_KEY) {
-    // Get clean message (remove bot mention)
-    const cleanMsg = message.content.replace(/<@!?\d+>/g, '').trim();
-    if (!cleanMsg) return;
-
-    try {
-      const OpenAI = require('openai');
-      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-      const completion = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          { role: 'system', content: 'You are Skarn, a helpful and funny Discord bot. Keep replies short (1-2 sentences max), casual, and entertaining. Use occasional emojis but not too many. You are witty and helpful.' },
-          { role: 'user', content: cleanMsg },
-        ],
-        max_completion_tokens: 150,
-        temperature: 0.8,
-      });
-      const reply = completion.choices[0].message.content;
-      await message.reply(reply);
-    } catch (error) {
-      console.error('AI reply error:', error);
-      await message.reply('My AI brain glitched. Try again later.');
-    }
-    return;
   }
 
   // Prefix commands
