@@ -9,6 +9,10 @@ const FALLBACK_MEMES = [
   { title: 'UNO Reverse', url: 'https://api.memegen.link/images/uno/no_u.png' },
   { title: 'Is This a Pigeon?', url: 'https://api.memegen.link/images/butterfly/is_this/a_meme.png' },
   { title: 'Change My Mind', url: 'https://api.memegen.link/images/cmb/change_my_mind.png' },
+  { title: 'Two Buttons', url: 'https://api.memegen.link/images/twobuttons/make_command/break_command.png' },
+  { title: 'Distracted Boyfriend', url: 'https://api.memegen.link/images/boyfriend/new_meme/current_meme.png' },
+  { title: 'Expanding Brain', url: 'https://api.memegen.link/images/smart/using_a_bot/programming_a_bot.png' },
+  { title: 'Busy Philosoraptor', url: 'https://api.memegen.link/images/philosoraptor/if_discord_is_free.png' },
 ];
 
 module.exports = {
@@ -17,73 +21,64 @@ module.exports = {
     .setDescription('AI generates a funny meme with image')
     .addStringOption(option => option.setName('topic').setDescription('Topic for the meme (optional)')),
   async execute(interaction) {
-    const topic = interaction.options.getString('topic') || 'funny random situation';
+    const topic = interaction.options.getString('topic') || 'funny';
 
     await interaction.deferReply();
 
     if (!process.env.OPENAI_API_KEY) {
-      return sendFallback(interaction);
+      return sendFallback(interaction, topic);
     }
 
     try {
       const OpenAI = require('openai');
       const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-      // Step 1: Generate meme concept
-      const conceptCompletion = await openai.chat.completions.create({
+      // Step 1: Get funny meme concept
+      const completion = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [
-          { role: 'system', content: 'You are a meme creator. Generate a funny meme concept with top text and bottom text. Return ONLY valid JSON: {"top":"top text","bottom":"bottom text","imagePrompt":"description for image generation"}' },
-          { role: 'user', content: `Create a funny meme about: ${topic}` },
+          { role: 'system', content: 'Generate a funny meme caption. Return ONLY JSON: {"top":"top text (short, punchy)","bottom":"bottom text (punchline)"}' },
+          { role: 'user', content: `Funny meme about: ${topic}` },
         ],
-        max_tokens: 200,
+        max_tokens: 100,
         temperature: 0.95,
       });
 
-      let content = conceptCompletion.choices[0].message.content.trim();
+      let content = completion.choices[0].message.content.trim();
       content = content.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
-      const concept = JSON.parse(content);
+      const meme = JSON.parse(content);
 
-      // Step 2: Generate image
-      try {
-        const imageResponse = await openai.images.generate({
-          model: 'dall-e-3',
-          prompt: `Funny cartoon meme image: ${concept.imagePrompt}. Vibrant colors, simple, expressive characters.`,
-          size: '1024x1024',
-          n: 1,
-        });
+      // Step 2: Generate image with DALL-E
+      const imageRes = await openai.images.generate({
+        model: 'dall-e-3',
+        prompt: `cartoon meme illustration, ${topic}, funny expression, colorful, simple style, no text`,
+        size: '1024x1024',
+        n: 1,
+      });
 
-        const imageUrl = imageResponse.data[0].url;
-        const embed = new EmbedBuilder()
-          .setTitle(concept.top)
-          .setDescription(concept.bottom)
-          .setImage(imageUrl)
-          .setColor(0x00e5ff)
-          .setFooter({ text: `Topic: ${topic}` });
+      const imageUrl = imageRes.data[0].url;
 
-        await interaction.editReply({ embeds: [embed] });
-      } catch {
-        // Image failed, show text meme
-        const embed = new EmbedBuilder()
-          .setTitle(concept.top)
-          .setDescription(concept.bottom)
-          .setColor(0x00e5ff)
-          .setFooter({ text: `Topic: ${topic}` });
+      const embed = new EmbedBuilder()
+        .setTitle(meme.top)
+        .setDescription(`**${meme.bottom}**`)
+        .setImage(imageUrl)
+        .setColor(0x00e5ff)
+        .setFooter({ text: `Topic: ${topic}` });
 
-        await interaction.editReply({ embeds: [embed] });
-      }
-    } catch {
-      await sendFallback(interaction);
+      await interaction.editReply({ embeds: [embed] });
+    } catch (err) {
+      console.log('AI meme failed, using fallback:', err.message);
+      await sendFallback(interaction, topic);
     }
   },
 };
 
-function sendFallback(interaction) {
+function sendFallback(interaction, topic) {
   const meme = FALLBACK_MEMES[Math.floor(Math.random() * FALLBACK_MEMES.length)];
   const embed = new EmbedBuilder()
     .setTitle(meme.title)
     .setImage(meme.url)
     .setColor(0x00e5ff)
-    .setFooter({ text: 'Skarn Bot' });
+    .setFooter({ text: `Topic: ${topic}` });
   return interaction.editReply({ embeds: [embed] });
 }
