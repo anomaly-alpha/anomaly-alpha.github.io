@@ -100,7 +100,8 @@ async function generateCombatNarration(character, enemy, action, damage, enemyHp
   const context = buildContextPrompt(character, null, null, null, history);
   const prompt = `Combat scene: ${character.name} uses ${action} against ${enemy.name} for ${damage} damage. ` +
     `${enemy.name} has ${enemyHp} HP remaining. ` +
-    `Narrate this action in 1-2 vivid sentences. Keep it kinetic and tactical.`;
+    `Narrate this action in 1-2 vivid sentences. Keep it kinetic and tactical. ` +
+    `Never generate meta-text, self-referential comments, apologies, or failure messages. Only describe the combat action.`;
   return callAi('realm_combat', context, prompt, 0.8);
 }
 

@@ -243,6 +243,10 @@ async function processCombatRound(userId, guildId, playerAction, isDefending) {
         combat.enemy.hp,
         combat.history.slice(-4)
       );
+      // Filter out meta-text the AI sometimes generates
+      if (narration && /warmaster|didn't respond|apolog|sorry|can't|unable|error|failed/i.test(narration)) {
+        narration = null;
+      }
       recordCall(userId);
       incrementGuildDaily(guildId);
     } catch {
