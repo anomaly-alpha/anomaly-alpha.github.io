@@ -78,7 +78,7 @@ const LOCATIONS = {
   whispering_woods: {
     name: 'Whispering Woods',
     description: 'An ancient forest whose trees murmur secrets to those who listen.',
-    connections: ['shadow_market', 'ruined_temple'],
+    connections: ['shadow_market', 'ruined_temple', 'obsidian_mines'],
     dangerLevel: 2,
     npcPool: ['hermit', 'sprite'],
   },
@@ -92,14 +92,14 @@ const LOCATIONS = {
   ruined_temple: {
     name: 'Ruined Temple',
     description: 'The husk of a once-sacred place, now haunted by echoes of old prayers.',
-    connections: ['cursed_library', 'whispering_woods'],
+    connections: ['whispering_woods', 'dragon_maw'],
     dangerLevel: 3,
     npcPool: ['priest', 'wraith'],
   },
   dragon_maw: {
     name: "Dragon's Maw",
     description: 'A scorched canyon shaped like the open jaws of a primordial wyrm.',
-    connections: ['abyssal_gate', 'bone_arena'],
+    connections: ['obsidian_mines', 'ruined_temple'],
     dangerLevel: 5,
     npcPool: ['dragonkin', 'hoarder'],
   },
