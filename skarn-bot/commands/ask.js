@@ -1,7 +1,4 @@
 const { SlashCommandBuilder } = require('discord.js');
-const OpenAI = require('openai');
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const SYSTEM_PROMPT = `You are Skarn, a helpful and funny Discord bot. Keep replies short (1-2 sentences max), casual, and entertaining. Use occasional emojis but don't overdo it. You're witty and helpful but not annoying.`;
 
@@ -20,6 +17,9 @@ module.exports = {
     await interaction.deferReply();
 
     try {
+      const OpenAI = require('openai');
+      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
       const completion = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [

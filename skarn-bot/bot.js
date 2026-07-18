@@ -2,9 +2,6 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const OpenAI = require('openai');
-
-const openai = process.env.OPENAI_API_KEY ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) : null;
 
 const client = new Client({
   intents: [
@@ -236,12 +233,15 @@ client.on('messageCreate', async message => {
   const isMentioned = message.mentions.has(client.user);
   const isAIChannel = aiChannels.includes(message.channel.id);
 
-  if ((isMentioned || isAIChannel) && openai) {
+  if ((isMentioned || isAIChannel) && process.env.OPENAI_API_KEY) {
     // Get clean message (remove bot mention)
     const cleanMsg = message.content.replace(/<@!?\d+>/g, '').trim();
     if (!cleanMsg) return;
 
     try {
+      const OpenAI = require('openai');
+      const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
       const completion = await openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [
