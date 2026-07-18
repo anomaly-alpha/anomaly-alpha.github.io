@@ -66,17 +66,6 @@ const categories = {
       { name: '/summarize', desc: 'Summarize a channel' },
     ],
   },
-  'Moderation': {
-    color: 0xff6b35,
-    commands: [
-      { name: '/kick', desc: 'Kick a member' },
-      { name: '/ban', desc: 'Ban a member' },
-      { name: '/timeout', desc: 'Timeout a member' },
-      { name: '/purge', desc: 'Delete messages' },
-      { name: '/warn', desc: 'Warn a member' },
-      { name: '/warnings', desc: 'View warnings' },
-    ],
-  },
   'Leveling': {
     color: 0xf1c40f,
     commands: [
