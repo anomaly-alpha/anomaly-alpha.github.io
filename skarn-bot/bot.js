@@ -8,6 +8,7 @@ const { onMessageReceived } = require('./features/channelState/stateTracker');
 const { runDecayPass } = require('./features/channelState/stateDecay');
 const { handleMention } = require('./features/mentionRouter/mentionRouter');
 const { recordMessage, recordResponse, canRespond } = require('./lib/aiStats');
+const { startScheduler } = require('./lib/weatherScheduler');
 
 const client = new Client({
   intents: [
@@ -85,6 +86,9 @@ client.once('clientReady', () => {
   }
   setStatus();
   setInterval(setStatus, 30000); // Change every 30 seconds
+
+  // Weather scheduler
+  startScheduler(client);
 
   // Sleep mode check
   setInterval(() => {
