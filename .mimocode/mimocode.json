@@ -1,0 +1,44 @@
+{
+  "provider": {
+    "opencode-zen": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenCode Zen Free",
+      "options": {
+        "baseURL": "https://opencode.ai/zen/v1"
+      },
+      "models": {
+        "deepseek-v4-flash-free": {
+          "name": "DeepSeek V4 Flash Free",
+          "context": 200000
+        },
+        "mimo-v2.5-free": {
+          "name": "MiMo 2.5 Free",
+          "context": 200000
+        },
+        "hy3-free": {
+          "name": "HY3 Free",
+          "context": 190000
+        },
+        "nemotron-3-ultra-free": {
+          "name": "Nemotron 3 Ultra Free",
+          "context": 1000000
+        },
+        "north-mini-code-free": {
+          "name": "North Mini Code Free",
+          "context": 256000
+        },
+        "big-pickle": {
+          "name": "Big Pickle (MiMo 2.5 stealth)",
+          "context": 200000
+        }
+      }
+    }
+  },
+  "model_groups": {
+    "lite": "opencode-zen/deepseek-v4-flash-free"
+  },
+  "checkpoint": {
+    "thresholds": ["40%", "60%", "80%"]
+  },
+  "$schema": "https://mimo.xiaomi.com/mimocode/config.json"
+}
