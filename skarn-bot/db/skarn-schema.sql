@@ -535,3 +535,16 @@ CREATE TABLE IF NOT EXISTS daily_news (
 
 CREATE INDEX IF NOT EXISTS idx_daily_news_fetched ON daily_news(fetched_at);
 CREATE INDEX IF NOT EXISTS idx_daily_news_category ON daily_news(category);
+
+-- ===== Attention State (AI Chat Attention System) =====
+
+CREATE TABLE IF NOT EXISTS attention_state (
+  user_id        TEXT NOT NULL,
+  guild_id       TEXT NOT NULL DEFAULT '',
+  channel_id     TEXT NOT NULL,
+  last_bot_reply_at         INTEGER NOT NULL DEFAULT 0,
+  last_bot_channel_msg_at   INTEGER NOT NULL DEFAULT 0,
+  msgs_since_response       INTEGER NOT NULL DEFAULT 0,
+  last_user_msg_at          INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (user_id, guild_id, channel_id)
+);

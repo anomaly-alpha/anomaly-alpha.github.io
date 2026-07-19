@@ -771,6 +771,41 @@ function removeReactionRole(messageId, emoji) {
   db.prepare('DELETE FROM reaction_roles WHERE message_id = ? AND emoji = ?').run(messageId, emoji);
 }
 
+// ===== Attention State =====
+
+function getAttentionState(userId, guildId, channelId) {
+  const row = db.prepare('SELECT * FROM attention_state WHERE user_id = ? AND guild_id = ? AND channel_id = ?').get(userId, guildId, channelId);
+  return row || { last_bot_reply_at: 0, last_bot_channel_msg_at: 0, msgs_since_response: 0, last_user_msg_at: 0 };
+}
+
+function upsertAttentionState(userId, guildId, channelId, fields) {
+  const existing = db.prepare('SELECT 1 FROM attention_state WHERE user_id = ? AND guild_id = ? AND channel_id = ?').get(userId, guildId, channelId);
+  if (existing) {
+    const sets = Object.keys(fields).map(function(k) { return k + ' = ?'; }).join(', ');
+    const vals = Object.values(fields);
+    db.prepare('UPDATE attention_state SET ' + sets + ' WHERE user_id = ? AND guild_id = ? AND channel_id = ?').run.apply(db, vals.concat([userId, guildId, channelId]));
+  } else {
+    const cols = ['user_id', 'guild_id', 'channel_id'].concat(Object.keys(fields));
+    const placeholders = cols.map(function() { return '?'; }).join(', ');
+    const vals = [userId, guildId, channelId].concat(Object.values(fields));
+    db.prepare('INSERT INTO attention_state (' + cols.join(', ') + ') VALUES (' + placeholders + ')').run.apply(db, vals);
+  }
+}
+
+function resetMsgCount(userId, guildId, channelId) {
+  db.prepare('UPDATE attention_state SET msgs_since_response = 0 WHERE user_id = ? AND guild_id = ? AND channel_id = ?').run(userId, guildId, channelId);
+}
+
+function incrementMsgCount(userId, guildId, channelId) {
+  db.prepare('INSERT INTO attention_state (user_id, guild_id, channel_id, msgs_since_response, last_user_msg_at) VALUES (?, ?, ?, 1, ?) ON CONFLICT(user_id, guild_id, channel_id) DO UPDATE SET msgs_since_response = msgs_since_response + 1, last_user_msg_at = ?').run(userId, guildId || '', channelId, Date.now(), Date.now());
+}
+
+function getChannelActivity(channelId, windowMinutes) {
+  const cutoff = Date.now() - (windowMinutes * 60 * 1000);
+  const row = db.prepare('SELECT COUNT(*) as count FROM conversation_messages WHERE channel_id = ? AND created_at > ?').get(channelId, cutoff);
+  return row ? row.count : 0;
+}
+
 module.exports = {
   db,
   getUserMemory,
@@ -871,4 +906,9 @@ module.exports = {
   getReactionRolesByMessage,
   getAllReactionRoles,
   removeReactionRole,
+  getAttentionState,
+  upsertAttentionState,
+  resetMsgCount,
+  incrementMsgCount,
+  getChannelActivity,
 };
