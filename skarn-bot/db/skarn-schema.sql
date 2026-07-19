@@ -152,3 +152,69 @@ CREATE TABLE IF NOT EXISTS server_culture (
 );
 
 CREATE INDEX IF NOT EXISTS idx_user_relationship_guild ON user_relationship(guild_id, familiarity);
+
+-- ===== Conversation Graph =====
+
+CREATE TABLE IF NOT EXISTS conversation_threads (
+  thread_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  thread_type TEXT NOT NULL,
+  topic_summary TEXT,
+  topic_tags TEXT DEFAULT '[]',
+  sentiment_start REAL,
+  sentiment_end REAL,
+  message_count INTEGER DEFAULT 0,
+  started_at INTEGER NOT NULL,
+  last_active_at INTEGER NOT NULL,
+  archived_at INTEGER,
+  PRIMARY KEY (thread_id)
+);
+
+CREATE TABLE IF NOT EXISTS conversation_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  thread_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  role TEXT NOT NULL,
+  content TEXT NOT NULL,
+  sentiment REAL,
+  topics TEXT DEFAULT '[]',
+  is_question INTEGER DEFAULT 0,
+  tokens_est INTEGER,
+  created_at INTEGER NOT NULL,
+  FOREIGN KEY (thread_id) REFERENCES conversation_threads(thread_id)
+);
+
+CREATE TABLE IF NOT EXISTS conversation_summaries (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  thread_id TEXT NOT NULL,
+  summary_text TEXT NOT NULL,
+  covers_from INTEGER NOT NULL,
+  covers_to INTEGER NOT NULL,
+  message_count INTEGER NOT NULL,
+  created_at INTEGER NOT NULL,
+  FOREIGN KEY (thread_id) REFERENCES conversation_threads(thread_id)
+);
+
+CREATE TABLE IF NOT EXISTS user_profile (
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  top_topics TEXT DEFAULT '[]',
+  peak_hours TEXT DEFAULT '[]',
+  avg_message_length REAL DEFAULT 0,
+  humor_match REAL DEFAULT 0,
+  prefers_long_responses INTEGER DEFAULT 0,
+  sentiment_trend REAL DEFAULT 0,
+  last_deep_conversation_at INTEGER,
+  engagement_score REAL DEFAULT 0,
+  last_profile_update_at INTEGER NOT NULL,
+  PRIMARY KEY (user_id, guild_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_conv_msg_thread ON conversation_messages(thread_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_conv_msg_user ON conversation_messages(user_id, guild_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_conv_thread_user ON conversation_threads(user_id, guild_id, archived_at);
+CREATE INDEX IF NOT EXISTS idx_conv_summary_thread ON conversation_summaries(thread_id);
