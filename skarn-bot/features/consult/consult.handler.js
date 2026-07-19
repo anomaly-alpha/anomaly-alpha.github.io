@@ -5,6 +5,7 @@ const getOpenAIClient = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { estimateDelay } = require('../authenticity/typingController');
+const { simulateTyping } = require('../discordNative/typingSim');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
 const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
 const { getRelationship, addStory } = require('../../db/database');
@@ -108,6 +109,8 @@ async function execute(interaction) {
     }
 
     const isPunchlineMsg = isPunchline(reply, interaction.channel.id, interaction.user.id);
+
+    await simulateTyping(interaction.channel, reply.length);
 
     await new Promise(resolve => setTimeout(resolve, estimateDelay(reply)));
 

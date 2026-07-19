@@ -5,6 +5,7 @@ const getOpenAIClient = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { estimateDelay } = require('../authenticity/typingController');
+const { simulateTyping } = require('../discordNative/typingSim');
 const { shouldReactOnly, pickReaction } = require('../authenticity/reactionController');
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
@@ -133,6 +134,8 @@ async function handleMention(message, client) {
     detectFollowUps(userId, message.guild.id, channelId, cleanMsg);
 
     const isPunchlineMsg = isPunchline(reply, channelId, userId);
+
+    await simulateTyping(message.channel, reply.length);
 
     await new Promise(resolve => setTimeout(resolve, estimateDelay(reply)));
 
