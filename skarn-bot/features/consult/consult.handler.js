@@ -92,7 +92,7 @@ async function execute(interaction) {
     }
 
     // Auto-extract memory from conversation (non-blocking)
-    extractMemory(interaction.user.id, interaction.guild.id, message, reply).catch(() => {});
+    extractMemory(interaction.user.id, interaction.guild.id, message, reply, interaction.channel.id).catch(() => {});
   } catch (error) {
     flagForApology(interaction.user.id);
     console.error('Consult error:', error);

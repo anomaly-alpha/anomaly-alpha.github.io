@@ -99,7 +99,7 @@ async function handleMention(message, client) {
     }
 
     // Auto-extract memory from conversation (non-blocking)
-    extractMemory(userId, message.guild.id, cleanMsg, reply).catch(() => {});
+    extractMemory(userId, message.guild.id, cleanMsg, reply, channelId).catch(() => {});
   } catch (error) {
     flagForApology(userId);
     console.error('Mention reply error:', error);

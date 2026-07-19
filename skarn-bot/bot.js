@@ -122,6 +122,26 @@ client.once('clientReady', () => {
     clearFlags();
     cleanWarmth();
   }, 10 * 60 * 1000);
+
+  // ===== Daily maintenance jobs =====
+  const { summarizeOldThreads } = require('./features/conversation/summarizer');
+  const { updateAllProfiles } = require('./features/conversation/profileUpdater');
+  const { pruneOldMessages } = require('./db/database');
+
+  const DAILY_INTERVAL = 24 * 60 * 60 * 1000;
+
+  setInterval(async () => {
+    console.log('[Daily] Starting summarization...');
+    await summarizeOldThreads();
+
+    console.log('[Daily] Starting profile updates...');
+    await updateAllProfiles();
+
+    console.log('[Daily] Pruning old messages (>30 days)...');
+    pruneOldMessages(30 * 24 * 60 * 60 * 1000);
+
+    console.log('[Daily] Maintenance complete.');
+  }, DAILY_INTERVAL);
 });
 
 // ===== Slash command handler =====

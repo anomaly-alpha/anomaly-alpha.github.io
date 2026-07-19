@@ -49,7 +49,7 @@ Hard rules:
 
 function buildSystemPrompt({
   roleLine = '', stateLine = '', moodLine = '', relationshipLine = '',
-  cultureLine = '', memoryLine = '',
+  cultureLine = '', memoryLine = '', conversationLine = '',
   warmthLine = '', patienceLine = '', callbackLine = '',
   gratitudeLine = '', firstOfDayLine = '', milestoneLine = '', apologyLine = '',
   additionalContext = ''
@@ -61,6 +61,7 @@ function buildSystemPrompt({
   if (relationshipLine) parts.push(relationshipLine);
   if (cultureLine) parts.push(cultureLine);
   if (memoryLine) parts.push(memoryLine);
+  if (conversationLine) parts.push(conversationLine);
   if (warmthLine) parts.push(warmthLine);
   if (patienceLine) parts.push(patienceLine);
   if (callbackLine) parts.push(callbackLine);

@@ -6,6 +6,7 @@ const { getCultureLine } = require('./culture/cultureTracker');
 const { getWarmthLine, getPatienceLine } = require('./warmth/warmthManager');
 const { getCallbackLine } = require('./humor/callbackEngine');
 const { getGratitudeDirective, getFirstOfDayLine, getMilestoneLine, getApologyLine } = require('./etiquette/etiquetteEngine');
+const { assembleContext } = require('./conversation/contextAssembler');
 
 function collectContext(userId, guildId, channelId, opts = {}) {
   const { roleNature = 'casual', userContent = '', interactionCount = 0 } = opts;
@@ -33,10 +34,13 @@ function collectContext(userId, guildId, channelId, opts = {}) {
   const milestoneLine = familiarity >= 15 ? getMilestoneLine(userId, interactionCount) : '';
   const apologyLine = familiarity >= 15 ? getApologyLine(userId) : '';
 
+  const convContext = assembleContext(userId, guildId, channelId);
+  const conversationLine = convContext || '';
+
   return {
     stateLine, moodLine, relationshipLine, cultureLine, memoryLine,
     warmthLine, patienceLine, callbackLine, gratitudeLine,
-    firstOfDayLine, milestoneLine, apologyLine,
+    firstOfDayLine, milestoneLine, apologyLine, conversationLine,
   };
 }
 
