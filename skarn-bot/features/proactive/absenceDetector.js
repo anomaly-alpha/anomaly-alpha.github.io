@@ -14,7 +14,8 @@ function findAbsentRegulars(guildId) {
 
 function shouldSendCheckIn(userId, guildId) {
   const prefs = getUserPreferences(userId, guildId);
-  if (prefs && prefs.proactive_opt_out) return false;
+  // Opt-in required: only send if proactive_opt_out is explicitly 0 (= "not opted out")
+  if (!prefs || prefs.proactive_opt_out !== 0) return false;
 
   // Only send if we haven't sent one in the last 3 days
   const recent = db.prepare(

@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS knowledge_graph (
 CREATE TABLE IF NOT EXISTS user_preferences (
   user_id TEXT NOT NULL,
   guild_id TEXT NOT NULL,
-  proactive_opt_out INTEGER DEFAULT 0,
+  proactive_opt_out INTEGER DEFAULT 1,
   preferred_tone TEXT DEFAULT 'match',
   max_response_length TEXT DEFAULT 'auto',
   allow_nickname INTEGER DEFAULT 0,
