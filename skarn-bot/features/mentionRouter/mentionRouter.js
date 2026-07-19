@@ -144,7 +144,7 @@ async function handleMention(message, client) {
       await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
     }
 
-    const chunks = splitMessage(reply, 400);
+    const chunks = splitMessage(reply, 1900);
     await message.reply(chunks[0]);
     const tail = await maybeBurst(chunks.slice(1), message.channel);
     for (const chunk of tail) {
