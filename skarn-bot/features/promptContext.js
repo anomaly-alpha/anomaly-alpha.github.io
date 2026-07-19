@@ -7,7 +7,7 @@ const { getWarmthLine, getPatienceLine } = require('./warmth/warmthManager');
 const { getCallbackLine } = require('./humor/callbackEngine');
 const { getGratitudeDirective, getFirstOfDayLine, getMilestoneLine, getApologyLine } = require('./etiquette/etiquetteEngine');
 const { assembleContext } = require('./conversation/contextAssembler');
-const { formatKnowledge } = require('./intelligence/knowledgeGraph');
+const { searchKnowledge, formatKnowledgeSnippet } = require('./knowledge/knowledgeBase');
 
 function collectContext(userId, guildId, channelId, opts = {}) {
   const { roleNature = 'casual', userContent = '', interactionCount = 0 } = opts;
@@ -37,7 +37,8 @@ function collectContext(userId, guildId, channelId, opts = {}) {
 
   const convContext = assembleContext(userId, guildId, channelId);
   const conversationLine = convContext || '';
-  const knowledgeLine = formatKnowledge(userId, guildId);
+  const knowledge = searchKnowledge(userContent || '');
+  const knowledgeLine = knowledge ? formatKnowledgeSnippet(knowledge) : '';
 
   return {
     stateLine, moodLine, relationshipLine, cultureLine, memoryLine,
