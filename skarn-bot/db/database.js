@@ -588,25 +588,50 @@ function pruneSentimentBuffers(olderThanMs = 3600000) {
 // ===== App Flags =====
 
 function setFlag(key, value, ttlMs) {
-  db.prepare('INSERT OR REPLACE INTO app_flags (flag_key, flag_value, created_at, expires_at) VALUES (?, ?, ?, ?)').run(key, value, Date.now(), ttlMs ? Date.now() + ttlMs : null);
+  try {
+    db.prepare('INSERT OR REPLACE INTO app_flags (flag_key, flag_value, created_at, expires_at) VALUES (?, ?, ?, ?)').run(key, value, Date.now(), ttlMs ? Date.now() + ttlMs : null);
+  } catch (e) {
+    if (e.message && e.message.includes('no such table')) return;
+    throw e;
+  }
 }
 
 function getFlag(key) {
-  const row = db.prepare('SELECT flag_value FROM app_flags WHERE flag_key = ? AND (expires_at IS NULL OR expires_at > ?)').get(key, Date.now());
-  return row ? row.flag_value : null;
+  try {
+    const row = db.prepare('SELECT flag_value FROM app_flags WHERE flag_key = ? AND (expires_at IS NULL OR expires_at > ?)').get(key, Date.now());
+    return row ? row.flag_value : null;
+  } catch (e) {
+    if (e.message && e.message.includes('no such table')) return null;
+    throw e;
+  }
 }
 
 function deleteFlag(key) {
-  db.prepare('DELETE FROM app_flags WHERE flag_key = ?').run(key);
+  try {
+    db.prepare('DELETE FROM app_flags WHERE flag_key = ?').run(key);
+  } catch (e) {
+    if (e.message && e.message.includes('no such table')) return;
+    throw e;
+  }
 }
 
 function hasFlag(key) {
-  const row = db.prepare('SELECT 1 FROM app_flags WHERE flag_key = ? AND (expires_at IS NULL OR expires_at > ?)').get(key, Date.now());
-  return !!row;
+  try {
+    const row = db.prepare('SELECT 1 FROM app_flags WHERE flag_key = ? AND (expires_at IS NULL OR expires_at > ?)').get(key, Date.now());
+    return !!row;
+  } catch (e) {
+    if (e.message && e.message.includes('no such table')) return false;
+    throw e;
+  }
 }
 
 function pruneExpiredFlags() {
-  db.prepare('DELETE FROM app_flags WHERE expires_at IS NOT NULL AND expires_at < ?').run(Date.now());
+  try {
+    db.prepare('DELETE FROM app_flags WHERE expires_at IS NOT NULL AND expires_at < ?').run(Date.now());
+  } catch (e) {
+    if (e.message && e.message.includes('no such table')) return;
+    throw e;
+  }
 }
 
 // ===== App State =====

@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { db, pruneRateLimits, pruneExpiredFlags, pruneSentimentBuffers, pruneBanterChains, pruneCallbacks, decayMemoryEntries } = require('./db/database');
+const { db, pruneRateLimits, pruneExpiredFlags, pruneSentimentBuffers, pruneBanterChains, pruneCallbacks, decayMemoryEntries, getUserPreferences, setUserPreference } = require('./db/database');
 
 // ===== Skarn Persona System =====
 const { onMessageReceived } = require('./features/channelState/stateTracker');
@@ -334,8 +334,26 @@ client.on('messageCreate', async message => {
   // ===== Auto funny replies =====
   const msg = message.content.toLowerCase();
 
-  // "skarn" keyword — only if user has opted in
+  // "skarn" keyword — handle opt in/out, then AI
   if (msg.includes('skarn')) {
+    // Check opt-in/out patterns FIRST (before the canInteract gate)
+    if (msg.includes('opt') && msg.includes('in')) {
+      setUserPreference(message.author.id, message.guild.id, 'proactive_opt_in', 1);
+      await message.reply("you're opted in. i'll check in on you from time to time.");
+      return;
+    }
+    if (msg.includes('opt') && msg.includes('out')) {
+      setUserPreference(message.author.id, message.guild.id, 'proactive_opt_in', 0);
+      await message.reply("you're opted out now. say 'skarn opt in' anytime to change that.");
+      return;
+    }
+    if (msg.includes('status')) {
+      const prefs = getUserPreferences(message.author.id, message.guild.id);
+      const isOptedIn = prefs && prefs.proactive_opt_in === 1;
+      await message.reply(isOptedIn ? "you're opted in. i'll check in on you." : "you're opted out. say 'skarn opt in' if you want me to check in.");
+      return;
+    }
+    // Original behavior for non-opt messages
     const { canInteract } = require('./features/proactive/absenceDetector');
     if (canInteract(message.author.id, message.guild?.id)) {
       await handleMention(message, client);

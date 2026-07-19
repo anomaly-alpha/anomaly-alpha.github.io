@@ -462,3 +462,22 @@ CREATE TABLE IF NOT EXISTS ai_usage (
   count INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (user_id, stat_type)
 );
+
+-- ===== App Flags (ephemeral key-value with optional TTL) =====
+
+CREATE TABLE IF NOT EXISTS app_flags (
+  flag_key TEXT PRIMARY KEY,
+  flag_value TEXT,
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER
+);
+
+CREATE INDEX IF NOT EXISTS idx_app_flags_expire ON app_flags(expires_at);
+
+-- ===== App State (persistent bot-level key-value) =====
+
+CREATE TABLE IF NOT EXISTS app_state (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  updated_at INTEGER NOT NULL
+);
