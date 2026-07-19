@@ -10,6 +10,8 @@ const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/c
 const { getRelationship } = require('../../db/database');
 const { flagForApology } = require('../etiquette/etiquetteEngine');
 const { extractMemory } = require('../memory/memoryExtractor');
+const { storeMessage } = require('../conversation/messageStore');
+const { assembleContext } = require('../conversation/contextAssembler');
 
 const COOLDOWN_MS = 1 * 1000; // 1 second per user per channel
 const cooldowns = new Map(); // `${userId}:${channelId}` -> timestamp
@@ -41,6 +43,10 @@ async function handleMention(message, client) {
   const cleanMsg = message.content.replace(/<@!?\d+>/g, '').trim();
   if (!cleanMsg) return;
 
+  // Store user message and assemble conversation context
+  storeMessage(userId, message.guild.id, channelId, 'user', cleanMsg, { threadType: 'channel' });
+  const conversationContext = assembleContext(userId, message.guild.id, channelId);
+
   const rel = getRelationship(userId, message.guild.id);
   const interactionCount = rel ? rel.interaction_count : 0;
 
@@ -52,8 +58,9 @@ async function handleMention(message, client) {
     });
     const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
 
-    const context = await getRecentContext(message.channel, 5);
-    const contextualMessage = buildContextualPrompt(cleanMsg, context);
+    const contextualMessage = conversationContext
+      ? `Conversation context:\n${conversationContext}\n\nCurrent message: ${cleanMsg}`
+      : cleanMsg;
 
     recordCall(userId);
     extendBanterChain(userId, message.guild.id, channelId);
@@ -72,6 +79,9 @@ async function handleMention(message, client) {
 
     let reply = completion.choices[0].message.content;
     reply = postProcess(reply, ROLE_NATURE.consult);
+
+    // Store assistant response
+    storeMessage(userId, message.guild.id, channelId, 'assistant', reply, { threadType: 'channel' });
 
     const isPunchlineMsg = isPunchline(reply, channelId, userId);
 

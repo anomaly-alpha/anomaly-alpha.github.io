@@ -10,6 +10,8 @@ const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/c
 const { getRelationship } = require('../../db/database');
 const { flagForApology } = require('../etiquette/etiquetteEngine');
 const { extractMemory } = require('../memory/memoryExtractor');
+const { storeMessage } = require('../conversation/messageStore');
+const { assembleContext } = require('../conversation/contextAssembler');
 
 const RATE_LIMIT_MSG = 'Even a Warmaster paces himself. Give it a moment.';
 
@@ -32,6 +34,13 @@ async function execute(interaction) {
 
   try {
     const message = interaction.options.getString('message');
+
+    // Store user message
+    storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'user', message, { threadType: 'consult' });
+
+    // Assemble context with conversation history
+    const conversationContext = assembleContext(interaction.user.id, interaction.guild.id, interaction.channel.id);
+
     const ctx = collectContext(interaction.user.id, interaction.guild.id, interaction.channel.id, {
       roleNature: 'casual',
       userContent: message,
@@ -39,8 +48,9 @@ async function execute(interaction) {
     });
     const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
 
-    const context = await getRecentContext(interaction.channel, 5);
-    const contextualMessage = buildContextualPrompt(message, context);
+    const contextualMessage = conversationContext
+      ? `Conversation context:\n${conversationContext}\n\nCurrent message: ${message}`
+      : message;
 
     recordCall(interaction.user.id);
     extendBanterChain(interaction.user.id, interaction.guild.id, interaction.channel.id);
@@ -58,6 +68,9 @@ async function execute(interaction) {
 
     let reply = completion.choices[0].message.content;
     reply = postProcess(reply, ROLE_NATURE.consult);
+
+    // Store assistant response
+    storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'assistant', reply, { threadType: 'consult' });
 
     const isPunchlineMsg = isPunchline(reply, interaction.channel.id, interaction.user.id);
 
