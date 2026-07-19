@@ -160,9 +160,18 @@ function updateThreadSentiment(threadId, sentiment) {
 
 function insertMessage(threadId, userId, guildId, channelId, role, content, opts = {}) {
   const { sentiment = 0, topics = [], isQuestion = false, tokensEst = 0 } = opts;
-  db.prepare(
+  const result = db.prepare(
     'INSERT INTO conversation_messages (thread_id, user_id, guild_id, channel_id, role, content, sentiment, topics, is_question, tokens_est, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
   ).run(threadId, userId, guildId, channelId, role, content, sentiment, JSON.stringify(topics), isQuestion ? 1 : 0, tokensEst, Date.now());
+
+  // Index in FTS for search (best effort)
+  try {
+    db.prepare(
+      'INSERT INTO conversation_fts (rowid, content, thread_id, user_id, guild_id, role) VALUES (?, ?, ?, ?, ?, ?)'
+    ).run(result.lastInsertRowid, content, threadId, userId, guildId, role);
+  } catch {
+    // FTS may fail if not created yet — silently continue
+  }
 }
 
 function getRecentMessages(userId, guildId, channelId, limit = 20, maxAgeMs = 7 * 24 * 60 * 60 * 1000) {
@@ -242,9 +251,52 @@ function deleteUserConversation(userId, guildId) {
   for (const t of threads) {
     db.prepare('DELETE FROM conversation_messages WHERE thread_id = ?').run(t.thread_id);
     db.prepare('DELETE FROM conversation_summaries WHERE thread_id = ?').run(t.thread_id);
+    db.prepare('DELETE FROM conversation_fts WHERE thread_id = ?').run(t.thread_id);
   }
   db.prepare('DELETE FROM conversation_threads WHERE user_id = ? AND guild_id = ?').run(userId, guildId);
   db.prepare('DELETE FROM user_profile WHERE user_id = ? AND guild_id = ?').run(userId, guildId);
+}
+
+// ===== Full-Text Search =====
+
+function searchConversations(query, guildId, limit = 10) {
+  if (!query || query.length < 2) return [];
+  // Escape special FTS5 characters
+  const safe = query.replace(/['"()*^$~`]/g, '').trim();
+  if (!safe) return [];
+  return db.prepare(
+    `SELECT c.id, c.content, c.role, c.user_id, c.created_at, c.thread_id
+     FROM conversation_fts f
+     JOIN conversation_messages c ON f.rowid = c.id
+     WHERE f.guild_id = ? AND conversation_fts MATCH ?
+     ORDER BY c.created_at DESC LIMIT ?`
+  ).all(guildId, safe, limit);
+}
+
+// ===== Conversation Stats =====
+
+function getConversationStats(userId, guildId) {
+  const totalMessages = db.prepare(
+    'SELECT COUNT(*) as count FROM conversation_messages WHERE user_id = ? AND guild_id = ?'
+  ).get(userId, guildId);
+
+  const firstMessage = db.prepare(
+    'SELECT MIN(created_at) as first_seen FROM conversation_messages WHERE user_id = ? AND guild_id = ?'
+  ).get(userId, guildId);
+
+  const questionCount = db.prepare(
+    'SELECT COUNT(*) as count FROM conversation_messages WHERE user_id = ? AND guild_id = ? AND role = ? AND is_question = 1'
+  ).get(userId, guildId, 'user');
+
+  const byChannel = db.prepare(
+    'SELECT channel_id, COUNT(*) as count FROM conversation_messages WHERE user_id = ? AND guild_id = ? GROUP BY channel_id ORDER BY count DESC LIMIT 5'
+  ).all(userId, guildId);
+
+  const topWords = db.prepare(
+    `SELECT c.content FROM conversation_messages c WHERE c.user_id = ? AND c.guild_id = ? AND c.role = 'user' ORDER BY c.created_at DESC LIMIT 500`
+  ).all(userId, guildId);
+
+  return { totalMessages, firstMessage, questionCount, byChannel, topWords };
 }
 
 module.exports = {
@@ -277,4 +329,6 @@ module.exports = {
   upsertUserProfile,
   pruneOldMessages,
   deleteUserConversation,
+  searchConversations,
+  getConversationStats,
 };

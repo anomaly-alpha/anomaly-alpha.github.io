@@ -218,3 +218,13 @@ CREATE INDEX IF NOT EXISTS idx_conv_msg_thread ON conversation_messages(thread_i
 CREATE INDEX IF NOT EXISTS idx_conv_msg_user ON conversation_messages(user_id, guild_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_conv_thread_user ON conversation_threads(user_id, guild_id, archived_at);
 CREATE INDEX IF NOT EXISTS idx_conv_summary_thread ON conversation_summaries(thread_id);
+
+-- ===== Full-Text Search =====
+
+CREATE VIRTUAL TABLE IF NOT EXISTS conversation_fts USING fts5(
+  content,
+  thread_id UNINDEXED,
+  user_id UNINDEXED,
+  guild_id UNINDEXED,
+  role UNINDEXED
+);
