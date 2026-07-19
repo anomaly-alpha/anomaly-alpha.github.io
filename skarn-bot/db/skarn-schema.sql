@@ -311,3 +311,46 @@ CREATE TABLE IF NOT EXISTS response_learning (
 );
 
 CREATE INDEX IF NOT EXISTS idx_response_learning_user ON response_learning(user_id, guild_id, created_at);
+
+-- ===== Knowledge Base =====
+
+CREATE TABLE IF NOT EXISTS knowledge_base (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  topic TEXT NOT NULL UNIQUE,
+  summary TEXT NOT NULL,
+  source TEXT,
+  confidence REAL NOT NULL DEFAULT 0.5,
+  tags TEXT DEFAULT '[]',
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE VIRTUAL TABLE IF NOT EXISTS knowledge_fts USING fts5(
+  topic,
+  summary
+);
+
+-- ===== User Emotional Context =====
+
+CREATE TABLE IF NOT EXISTS user_emotional_context (
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  emotional_state TEXT NOT NULL DEFAULT 'neutral',
+  topics_emotional TEXT DEFAULT '{}',
+  last_mood_check INTEGER NOT NULL,
+  PRIMARY KEY (user_id, guild_id)
+);
+
+-- ===== Skarn Stories =====
+
+CREATE TABLE IF NOT EXISTS skarn_stories (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  topic TEXT NOT NULL,
+  story_text TEXT NOT NULL,
+  source TEXT,
+  used_count INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  last_used_at INTEGER
+);
+
+CREATE INDEX IF NOT EXISTS idx_skarn_stories_topic ON skarn_stories(topic);

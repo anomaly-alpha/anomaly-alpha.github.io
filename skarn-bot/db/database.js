@@ -412,6 +412,89 @@ function getConversationStats(userId, guildId) {
   return { totalMessages, firstMessage, questionCount, byChannel, topWords };
 }
 
+// ===== Knowledge Base =====
+
+function addKnowledgeBase(topic, summary, source, confidence) {
+  const now = Date.now();
+  confidence = confidence ?? 0.5;
+  db.prepare(
+    `INSERT INTO knowledge_base (topic, summary, source, confidence, tags, created_at, updated_at)
+     VALUES (?, ?, ?, ?, '[]', ?, ?)
+     ON CONFLICT(topic) DO UPDATE SET
+       summary = excluded.summary,
+       source = excluded.source,
+       confidence = excluded.confidence,
+       updated_at = excluded.updated_at`
+  ).run(topic, summary, source ?? null, confidence, now, now);
+  // Sync to FTS
+  const row = db.prepare('SELECT id FROM knowledge_base WHERE topic = ?').get(topic);
+  if (row) {
+    try {
+      db.prepare('DELETE FROM knowledge_fts WHERE rowid = ?').run(row.id);
+      db.prepare('INSERT INTO knowledge_fts (rowid, topic, summary) VALUES (?, ?, ?)').run(row.id, topic, summary);
+    } catch {
+      // FTS sync is best-effort
+    }
+  }
+}
+
+function searchKnowledgeBase(query) {
+  if (!query || query.length < 2) return [];
+  const safe = query.replace(/['"()*^$~`]/g, '').trim();
+  if (!safe) return [];
+  return db.prepare(
+    `SELECT k.* FROM knowledge_fts f
+     JOIN knowledge_base k ON f.rowid = k.id
+     WHERE knowledge_fts MATCH ?
+     ORDER BY k.confidence DESC`
+  ).all(safe);
+}
+
+function getKnowledgeBase(topic) {
+  return db.prepare('SELECT * FROM knowledge_base WHERE topic = ?').get(topic);
+}
+
+// ===== User Emotional Context =====
+
+function getUserEmotion(userId, guildId) {
+  return db.prepare(
+    'SELECT * FROM user_emotional_context WHERE user_id = ? AND guild_id = ?'
+  ).get(userId, guildId);
+}
+
+function setUserEmotion(userId, guildId, state) {
+  const now = Date.now();
+  db.prepare(
+    `INSERT INTO user_emotional_context (user_id, guild_id, emotional_state, topics_emotional, last_mood_check)
+     VALUES (?, ?, ?, '{}', ?)
+     ON CONFLICT(user_id, guild_id) DO UPDATE SET
+       emotional_state = excluded.emotional_state,
+       topics_emotional = excluded.topics_emotional,
+       last_mood_check = excluded.last_mood_check`
+  ).run(userId, guildId, state, now);
+}
+
+// ===== Skarn Stories =====
+
+function addStory(topic, storyText) {
+  const result = db.prepare(
+    'INSERT INTO skarn_stories (topic, story_text, created_at) VALUES (?, ?, ?)'
+  ).run(topic, storyText, Date.now());
+  return { id: result.lastInsertRowid };
+}
+
+function getStoriesByTopic(topic) {
+  return db.prepare(
+    'SELECT * FROM skarn_stories WHERE topic = ? ORDER BY created_at DESC'
+  ).all(topic);
+}
+
+function incrementStoryUse(storyId) {
+  db.prepare(
+    'UPDATE skarn_stories SET used_count = used_count + 1, last_used_at = ? WHERE id = ?'
+  ).run(Date.now(), storyId);
+}
+
 module.exports = {
   db,
   getUserMemory,
@@ -457,4 +540,12 @@ module.exports = {
   logMessageEdit,
   addMilestone,
   getMilestones,
+  addKnowledgeBase,
+  searchKnowledgeBase,
+  getKnowledgeBase,
+  getUserEmotion,
+  setUserEmotion,
+  addStory,
+  getStoriesByTopic,
+  incrementStoryUse,
 };
