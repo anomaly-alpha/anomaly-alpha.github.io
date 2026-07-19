@@ -395,7 +395,7 @@ client.on('messageCreate', async function(message) {
       // Chat gate
       try {
         var chatGate = require('./features/discordNative/chatGate');
-        if (chatGate.shouldRespond && await chatGate.shouldRespond(message)) {
+        if (chatGate.shouldRespond && await chatGate.shouldRespond(message, client)) {
           await handleMention(message);
           return;
         }
