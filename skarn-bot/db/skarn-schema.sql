@@ -248,6 +248,7 @@ CREATE TABLE IF NOT EXISTS user_preferences (
   user_id TEXT NOT NULL,
   guild_id TEXT NOT NULL,
   proactive_opt_out INTEGER DEFAULT 1,
+  proactive_opt_in INTEGER DEFAULT 0,
   preferred_tone TEXT DEFAULT 'match',
   max_response_length TEXT DEFAULT 'auto',
   allow_nickname INTEGER DEFAULT 0,
@@ -354,3 +355,124 @@ CREATE TABLE IF NOT EXISTS skarn_stories (
 );
 
 CREATE INDEX IF NOT EXISTS idx_skarn_stories_topic ON skarn_stories(topic);
+
+-- ===== Unified Memory =====
+
+CREATE TABLE IF NOT EXISTS memory_entries (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  source TEXT NOT NULL CHECK(source IN ('etch', 'extracted', 'conversation')),
+  type TEXT NOT NULL CHECK(type IN ('fact', 'interest', 'project', 'event', 'preference')),
+  content TEXT NOT NULL,
+  confidence REAL NOT NULL DEFAULT 0.5,
+  context TEXT,
+  first_seen_at INTEGER NOT NULL,
+  last_seen_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  UNIQUE(user_id, guild_id, type, content)
+);
+
+CREATE INDEX IF NOT EXISTS idx_memory_user ON memory_entries(user_id, guild_id);
+CREATE INDEX IF NOT EXISTS idx_memory_decay ON memory_entries(last_seen_at, confidence);
+
+-- ===== Rate Limits =====
+
+CREATE TABLE IF NOT EXISTS rate_limits (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  timestamp INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_rate_limits_user ON rate_limits(user_id, timestamp);
+
+-- ===== Cooldowns =====
+
+CREATE TABLE IF NOT EXISTS mention_cooldowns (
+  user_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  expires_at INTEGER NOT NULL,
+  PRIMARY KEY (user_id, channel_id)
+);
+
+CREATE TABLE IF NOT EXISTS interjection_cooldowns (
+  channel_id TEXT PRIMARY KEY,
+  expires_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS active_listen_cooldowns (
+  channel_id TEXT PRIMARY KEY,
+  expires_at INTEGER NOT NULL
+);
+
+-- ===== Sentiment Buffers =====
+
+CREATE TABLE IF NOT EXISTS sentiment_buffers (
+  channel_id TEXT PRIMARY KEY,
+  messages TEXT NOT NULL DEFAULT '[]',
+  updated_at INTEGER NOT NULL
+);
+
+-- ===== Banter Chains =====
+
+CREATE TABLE IF NOT EXISTS banter_chains (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  chain_data TEXT NOT NULL,
+  started_at INTEGER NOT NULL,
+  last_active_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_banter_user ON banter_chains(user_id, guild_id, channel_id);
+
+-- ===== Callbacks =====
+
+CREATE TABLE IF NOT EXISTS callbacks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  channel_id TEXT NOT NULL,
+  user_id TEXT,
+  message TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_callbacks_cleanup ON callbacks(channel_id, created_at);
+
+-- ===== Guild Config =====
+
+CREATE TABLE IF NOT EXISTS guild_config (
+  guild_id TEXT NOT NULL,
+  key TEXT NOT NULL,
+  value TEXT NOT NULL,
+  PRIMARY KEY (guild_id, key)
+);
+
+-- ===== User Levels =====
+
+CREATE TABLE IF NOT EXISTS user_levels (
+  guild_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  xp INTEGER NOT NULL DEFAULT 0,
+  level INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (guild_id, user_id)
+);
+
+-- ===== Friends =====
+
+CREATE TABLE IF NOT EXISTS friends (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  code TEXT NOT NULL UNIQUE,
+  name TEXT,
+  power TEXT,
+  note TEXT
+);
+
+-- ===== AI Usage =====
+
+CREATE TABLE IF NOT EXISTS ai_usage (
+  user_id TEXT NOT NULL,
+  stat_type TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (user_id, stat_type)
+);
