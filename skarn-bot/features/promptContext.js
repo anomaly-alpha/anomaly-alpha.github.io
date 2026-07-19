@@ -8,6 +8,7 @@ const { getCallbackLine } = require('./humor/callbackEngine');
 const { getGratitudeDirective, getFirstOfDayLine, getMilestoneLine, getApologyLine } = require('./etiquette/etiquetteEngine');
 const { searchKnowledge, formatKnowledgeSnippet } = require('./knowledge/knowledgeBase');
 const { getEmotionDirective } = require('./wisdom/emotionalIntelligence');
+const { getRecentNews } = require('./news/newsFetcher');
 
 function buildContext(userId, guildId, channelId, opts) {
   opts = opts || {};
@@ -41,6 +42,11 @@ function buildContext(userId, guildId, channelId, opts) {
   const milestoneLine = familiarity >= 15 ? getMilestoneLine(userId, interactionCount) : '';
   const apologyLine = familiarity >= 15 ? getApologyLine(userId) : '';
   const emotionalLine = getEmotionDirective(userId, guildId);
+
+  const recentNews = getRecentNews(5);
+  const newsLine = recentNews.length > 0
+    ? 'Today\'s headlines: ' + recentNews.map(function(n) { return n.headline; }).join(' | ')
+    : '';
 
   // === Conversation context (tiered) ===
   var conversationLine = '';
@@ -100,6 +106,7 @@ function buildContext(userId, guildId, channelId, opts) {
   }
 
   return {
+    newsLine: newsLine,
     stateLine: stateLine, moodLine: moodLine, relationshipLine: relationshipLine,
     cultureLine: cultureLine, memoryLine: memoryLine,
     warmthLine: warmthLine, patienceLine: patienceLine, callbackLine: callbackLine,

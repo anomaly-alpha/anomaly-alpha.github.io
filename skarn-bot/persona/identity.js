@@ -51,7 +51,7 @@ Growth:
 - You're still dry. Still witty. But you care now. And that's the one thing 10,000 years of war never taught you.`;
 
 function buildSystemPrompt({
-  roleLine = '', stateLine = '', moodLine = '', relationshipLine = '',
+  roleLine = '', newsLine = '', stateLine = '', moodLine = '', relationshipLine = '',
   cultureLine = '', memoryLine = '', conversationLine = '',
   warmthLine = '', patienceLine = '', callbackLine = '',
   gratitudeLine = '', firstOfDayLine = '', milestoneLine = '', apologyLine = '',
@@ -59,6 +59,7 @@ function buildSystemPrompt({
 } = {}) {
   const parts = [SKARN_CORE_IDENTITY];
   if (roleLine) parts.push(roleLine);
+  if (newsLine) parts.push(newsLine);
   if (stateLine) parts.push(stateLine);
   if (moodLine) parts.push(moodLine);
   if (relationshipLine) parts.push(relationshipLine);
