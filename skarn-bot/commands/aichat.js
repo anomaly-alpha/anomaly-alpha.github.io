@@ -55,10 +55,10 @@ module.exports = {
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('ManageChannels')) {
-      return message.reply({ content: 'You need the Manage Channels permission to use this command.', flags: 64 });
+      return message.reply({ content: 'You need the Manage Channels permission to use this command.' });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+      return message.reply({ content: 'This command can only be used in a server.' });
     }
     const result = getAichatResponse(args, message);
     await message.reply(result);

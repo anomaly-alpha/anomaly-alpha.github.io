@@ -8,11 +8,11 @@ function getAichatignoreResponse(userId, guildId) {
   if (idx === -1) {
     ignored.push(userId);
     setGuildConfig(guildId, 'ignoredUsers', ignored);
-    return { content: 'Skarn will now ignore you in AI chat channels. Use skarn aichatignore again to reverse.', flags: 64 };
+    return { content: 'Skarn will now ignore you in AI chat channels. Use skarn aichatignore again to reverse.' };
   } else {
     ignored.splice(idx, 1);
     setGuildConfig(guildId, 'ignoredUsers', ignored);
-    return { content: 'Skarn will respond to you again in AI chat channels.', flags: 64 };
+    return { content: 'Skarn will respond to you again in AI chat channels.' };
   }
 }
 
@@ -39,7 +39,7 @@ module.exports = {
   },
   async handleActivation(message, args) {
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+      return message.reply({ content: 'This command can only be used in a server.' });
     }
     const result = getAichatignoreResponse(message.author.id, message.guild.id);
     await message.reply(result);

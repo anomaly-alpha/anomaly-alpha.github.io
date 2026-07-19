@@ -15,7 +15,7 @@ function getRemindResponse(args, message) {
     } catch {}
   }, minutes * 60 * 1000);
 
-  return { content: `I'll remind you in **${minutes}** minute(s): ${text}`, flags: 64 };
+  return { content: `I'll remind you in **${minutes}** minute(s): ${text}` };
 }
 
 module.exports = {
@@ -42,7 +42,7 @@ module.exports = {
   },
   async handleActivation(message, args) {
     if (!args.minutes || !args.text) {
-      return message.reply({ content: 'Usage: `skarn remind <minutes> <message>` — e.g. `skarn remind 30 take out the trash` or `skarn remind 2h deploy check`', flags: 64 });
+      return message.reply({ content: 'Usage: `skarn remind <minutes> <message>` — e.g. `skarn remind 30 take out the trash` or `skarn remind 2h deploy check`' });
     }
     const result = getRemindResponse(args, message);
     await message.reply(result);

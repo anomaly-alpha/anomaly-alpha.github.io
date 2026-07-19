@@ -10,19 +10,19 @@ function getLevelrolesResponse(args, message) {
 
   if (removeLevel) {
     if (!levelRoles[removeLevel]) {
-      return { content: `No role set for Level ${removeLevel}.`, flags: 64 };
+      return { content: `No role set for Level ${removeLevel}.` };
     }
     const roleId = levelRoles[removeLevel];
     delete levelRoles[removeLevel];
     db.prepare('INSERT OR REPLACE INTO guild_config (guild_id, key, value) VALUES (?, ?, ?)').run(guildId, 'levelRoles', JSON.stringify(levelRoles));
 
     const role = message.guild.roles.cache.get(roleId);
-    return { content: `Removed **${role?.name || 'Unknown Role'}** from Level ${removeLevel}.`, flags: 64 };
+    return { content: `Removed **${role?.name || 'Unknown Role'}** from Level ${removeLevel}.` };
   }
 
   const entries = Object.entries(levelRoles).sort((a, b) => a[0] - b[0]);
   if (entries.length === 0) {
-    return { content: 'No level roles configured. Use `skarn setlevelrole` to add one.', flags: 64 };
+    return { content: 'No level roles configured. Use `skarn setlevelrole` to add one.' };
   }
 
   const list = entries.map(([level, roleId]) => `**Level ${level}** → <@&${roleId}>`).join('\n');
@@ -83,10 +83,10 @@ module.exports = {
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('Administrator')) {
-      return message.reply({ content: 'You need Administrator permission to use this command.', flags: 64 });
+      return message.reply({ content: 'You need Administrator permission to use this command.' });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+      return message.reply({ content: 'This command can only be used in a server.' });
     }
     const result = getLevelrolesResponse(args, message);
     await message.reply(result);

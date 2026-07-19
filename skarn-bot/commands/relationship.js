@@ -44,7 +44,7 @@ function getRelationshipResponse(userId, guildId, user) {
     embed.setDescription(`Nickname: **${prefs.nickname}**`);
   }
 
-  return { embeds: [embed], flags: 64 };
+  return { embeds: [embed] };
 }
 
 module.exports = {
@@ -100,7 +100,7 @@ module.exports = {
     await interaction.reply({ embeds: [embed], flags: 64 });
   },
   async handleActivation(message, args) {
-    if (!message.guild) return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+    if (!message.guild) return message.reply({ content: 'This command can only be used in a server.' });
     const result = getRelationshipResponse(message.author.id, message.guild.id, message.author);
     await message.reply(result);
   },

@@ -39,7 +39,7 @@ module.exports = {
     });
   },
   async handleActivation(message, args) {
-    await message.reply({ content: 'Please use the `/reactionrole` slash command to set up reaction roles.', flags: 64 });
+    await message.reply({ content: 'Please use the `/reactionrole` slash command to set up reaction roles.' });
   },
   activation: {
     type: 'command',

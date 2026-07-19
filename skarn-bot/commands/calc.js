@@ -27,7 +27,7 @@ module.exports = {
       const result = getCalcResponse(args);
       await message.reply(result);
     } catch (err) {
-      await message.reply({ content: err.message || 'Invalid math expression.', flags: 64 });
+      await message.reply({ content: err.message || 'Invalid math expression.' });
     }
   },
   activation: {

@@ -5,7 +5,7 @@ function getSetlogResponse(args, message) {
   const channelId = args.channel;
   setGuildConfig(message.guild.id, 'logChannel', channelId);
   setGuildConfig(message.guild.id, 'logMessages', true);
-  return { content: `Message logs will be sent to <#${channelId}>.`, flags: 64 };
+  return { content: `Message logs will be sent to <#${channelId}>.` };
 }
 
 module.exports = {
@@ -22,14 +22,14 @@ module.exports = {
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('Administrator')) {
-      return message.reply({ content: 'You need Administrator permission to use this command.', flags: 64 });
+      return message.reply({ content: 'You need Administrator permission to use this command.' });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+      return message.reply({ content: 'This command can only be used in a server.' });
     }
     const channel = message.mentions.channels.first();
     if (!channel) {
-      return message.reply({ content: 'Please mention a channel: `skarn setlog #channel`', flags: 64 });
+      return message.reply({ content: 'Please mention a channel: `skarn setlog #channel`' });
     }
     const result = getSetlogResponse({ channel: channel.id }, message);
     await message.reply(result);

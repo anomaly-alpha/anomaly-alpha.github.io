@@ -66,7 +66,7 @@ module.exports = {
     }, minutes * 60 * 1000);
   },
   async handleActivation(message, args) {
-    await message.reply({ content: 'Please use the `/giveaway` slash command to start a giveaway.', flags: 64 });
+    await message.reply({ content: 'Please use the `/giveaway` slash command to start a giveaway.' });
   },
   activation: {
     type: 'command',

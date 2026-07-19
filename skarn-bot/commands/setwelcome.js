@@ -4,7 +4,7 @@ const { setGuildConfig } = require('../db/database');
 function getSetwelcomeResponse(args, message) {
   const channelId = args.channel;
   setGuildConfig(message.guild.id, 'welcomeChannel', channelId);
-  return { content: `Welcome messages will be sent to <#${channelId}>.`, flags: 64 };
+  return { content: `Welcome messages will be sent to <#${channelId}>.` };
 }
 
 module.exports = {
@@ -20,14 +20,14 @@ module.exports = {
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('Administrator')) {
-      return message.reply({ content: 'You need Administrator permission to use this command.', flags: 64 });
+      return message.reply({ content: 'You need Administrator permission to use this command.' });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+      return message.reply({ content: 'This command can only be used in a server.' });
     }
     const channel = message.mentions.channels.first();
     if (!channel) {
-      return message.reply({ content: 'Please mention a channel: `skarn setwelcome #channel`', flags: 64 });
+      return message.reply({ content: 'Please mention a channel: `skarn setwelcome #channel`' });
     }
     const result = getSetwelcomeResponse({ channel: channel.id }, message);
     await message.reply(result);

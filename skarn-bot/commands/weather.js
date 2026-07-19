@@ -66,7 +66,7 @@ module.exports = {
       const result = await getWeatherResponse(args);
       await message.reply(result);
     } catch (err) {
-      await message.reply({ content: err.message || `Could not fetch weather for "${args.location}".`, flags: 64 });
+      await message.reply({ content: err.message || `Could not fetch weather for "${args.location}".` });
     }
   },
   activation: {

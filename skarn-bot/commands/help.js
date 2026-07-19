@@ -145,9 +145,9 @@ const categories = {
 function getHelpContent(category) {
   if (category) {
     const cat = categories[category];
-    if (!cat) return { content: `Unknown category: ${category}`, flags: 64 };
+    if (!cat) return { content: `Unknown category: ${category}` };
     const list = cat.commands.map(c => `\`${c.name}\`\n└ ${c.desc}`).join('\n\n');
-    return { embeds: [new EmbedBuilder().setTitle(category).setDescription(list).setColor(cat.color)], flags: 64 };
+    return { embeds: [new EmbedBuilder().setTitle(category).setDescription(list).setColor(cat.color)] };
   }
 
   const overview = Object.entries(categories).map(([name, cat]) => {
@@ -176,7 +176,7 @@ function getHelpContent(category) {
     embed.addFields({ name: '\uD83D\uDD11 Keyword Triggers', value: activationLines });
   }
 
-  return { embeds: [embed], flags: 64 };
+  return { embeds: [embed] };
 }
 
 module.exports = {
@@ -192,7 +192,7 @@ module.exports = {
         )),
   async execute(interaction) {
     const selected = interaction.options.getString('category');
-    await interaction.reply(getHelpContent(selected));
+    await interaction.reply({ ...getHelpContent(selected), flags: 64 });
   },
   async handleActivation(message, args) {
     const result = getHelpContent(args.category);

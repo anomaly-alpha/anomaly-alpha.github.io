@@ -11,17 +11,17 @@ function getWeathertrackResponse(subcommand, args, message) {
     const time = args.time;
 
     if (!/^\d{2}:\d{2}$/.test(time)) {
-      return { content: 'Invalid time format. Use HH:MM (24-hour, e.g. 08:00 or 14:30).', flags: 64 };
+      return { content: 'Invalid time format. Use HH:MM (24-hour, e.g. 08:00 or 14:30).' };
     }
 
     const [hours, minutes] = time.split(':').map(Number);
     if (hours > 23 || minutes > 59) {
-      return { content: 'Invalid time. Hours must be 00-23, minutes 00-59.', flags: 64 };
+      return { content: 'Invalid time. Hours must be 00-23, minutes 00-59.' };
     }
 
     const exists = tracks.some(t => t.location.toLowerCase() === location.toLowerCase() && t.channelId === channelId);
     if (exists) {
-      return { content: `Already tracking **${location}** in <#${channelId}>.`, flags: 64 };
+      return { content: `Already tracking **${location}** in <#${channelId}>.` };
     }
 
     tracks.push({ location, channelId, time, lastPosted: '' });
@@ -36,7 +36,7 @@ function getWeathertrackResponse(subcommand, args, message) {
 
     const idx = tracks.findIndex(t => t.location.toLowerCase() === location.toLowerCase() && t.channelId === channelId);
     if (idx === -1) {
-      return { content: `No tracking found for **${location}** in <#${channelId}>.`, flags: 64 };
+      return { content: `No tracking found for **${location}** in <#${channelId}>.` };
     }
 
     tracks.splice(idx, 1);
@@ -47,14 +47,14 @@ function getWeathertrackResponse(subcommand, args, message) {
 
   if (subcommand === 'list') {
     if (tracks.length === 0) {
-      return { content: 'No daily weather reports configured.', flags: 64 };
+      return { content: 'No daily weather reports configured.' };
     }
 
     const list = tracks.map(t => `**${t.location}** → <#${t.channelId}> at **${t.time}** EST`).join('\n');
-    return { embeds: [new EmbedBuilder().setTitle('Daily Weather Reports').setDescription(list).setColor(0x00e5ff)], flags: 64 };
+    return { embeds: [new EmbedBuilder().setTitle('Daily Weather Reports').setDescription(list).setColor(0x00e5ff)] };
   }
 
-  return { content: 'Unknown subcommand. Use add, remove, or list.', flags: 64 };
+  return { content: 'Unknown subcommand. Use add, remove, or list.' };
 }
 
 module.exports = {
@@ -138,10 +138,10 @@ module.exports = {
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('ManageChannels')) {
-      return message.reply({ content: 'You need Manage Channels permission to use this command.', flags: 64 });
+      return message.reply({ content: 'You need Manage Channels permission to use this command.' });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+      return message.reply({ content: 'This command can only be used in a server.' });
     }
     const subcommand = args.subcommand;
     const result = getWeathertrackResponse(subcommand, args, message);

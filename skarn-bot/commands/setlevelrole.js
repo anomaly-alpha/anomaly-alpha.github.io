@@ -48,13 +48,13 @@ module.exports = {
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('Administrator')) {
-      return message.reply({ content: 'You need Administrator permission to use this command.', flags: 64 });
+      return message.reply({ content: 'You need Administrator permission to use this command.' });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+      return message.reply({ content: 'This command can only be used in a server.' });
     }
     if (!args.level || !args.role) {
-      return message.reply({ content: 'Usage: `skarn setlevelrole <level> @role`', flags: 64 });
+      return message.reply({ content: 'Usage: `skarn setlevelrole <level> @role`' });
     }
     const result = getSetlevelroleResponse(args, message);
     await message.reply(result);

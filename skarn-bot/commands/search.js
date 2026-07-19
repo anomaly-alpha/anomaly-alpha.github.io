@@ -34,11 +34,11 @@ module.exports = {
     const last = cooldowns.get(key) || 0;
     if (Date.now() - last < COOLDOWN_MS) {
       const remaining = Math.ceil((COOLDOWN_MS - (Date.now() - last)) / 1000);
-      return message.reply({ content: `Slow down. Wait ${remaining}s.`, flags: 64 });
+      return message.reply({ content: `Slow down. Wait ${remaining}s.` });
     }
 
     if (!canCall(message.author.id)) {
-      return message.reply({ content: 'Even a Warmaster paces himself. Give it a moment.', flags: 64 });
+      return message.reply({ content: 'Even a Warmaster paces himself. Give it a moment.' });
     }
 
     const query = args.query;

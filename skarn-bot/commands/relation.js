@@ -7,7 +7,6 @@ function getRelationResponse(userId, guildId) {
   const tagStr = tags.length > 0 ? tags.join(', ') : 'none yet';
   return {
     content: `I'd say we're at **${Math.round(rel.familiarity)}/100**. Feels like you're one of the *${tagStr}*. Banter level: ${rel.banter_level}.`,
-    flags: 64,
   };
 }
 
@@ -25,7 +24,7 @@ module.exports = {
     });
   },
   async handleActivation(message, args) {
-    if (!message.guild) return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+    if (!message.guild) return message.reply({ content: 'This command can only be used in a server.' });
     const result = getRelationResponse(message.author.id, message.guild.id);
     await message.reply(result);
   },

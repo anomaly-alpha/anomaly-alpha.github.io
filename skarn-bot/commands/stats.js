@@ -54,7 +54,7 @@ async function getStatsResponse(args, message) {
       { name: 'Mood Trend', value: mood, inline: true },
     );
   }
-  return { embeds: [embed], flags: 64 };
+  return { embeds: [embed] };
 }
 
 module.exports = {
@@ -125,13 +125,13 @@ module.exports = {
   },
   async handleActivation(message, args) {
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+      return message.reply({ content: 'This command can only be used in a server.' });
     }
     try {
       const result = await getStatsResponse(args, message);
       await message.reply(result);
     } catch (err) {
-      await message.reply({ content: err.message || 'Error fetching stats.', flags: 64 });
+      await message.reply({ content: err.message || 'Error fetching stats.' });
     }
   },
   activation: {

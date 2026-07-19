@@ -16,7 +16,7 @@ async function getHistoryResponse(args, message) {
   ).all(targetUserId, guildId, cutoff);
 
   if (threads.length === 0) {
-    return { content: 'No conversation history found for that time period.', flags: 64 };
+    return { content: 'No conversation history found for that time period.' };
   }
 
   if (threadNum && threadNum <= threads.length) {
@@ -42,7 +42,7 @@ async function getHistoryResponse(args, message) {
     if (messages.length > 15) {
       embed.setFooter({ text: `Showing last 15 of ${messages.length} messages` });
     }
-    return { embeds: [embed], flags: 64 };
+    return { embeds: [embed] };
   }
 
   const embed = new EmbedBuilder()
@@ -64,7 +64,7 @@ async function getHistoryResponse(args, message) {
       inline: false,
     });
   }
-  return { embeds: [embed], flags: 64 };
+  return { embeds: [embed] };
 }
 
 module.exports = {
@@ -150,13 +150,13 @@ module.exports = {
   },
   async handleActivation(message, args) {
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+      return message.reply({ content: 'This command can only be used in a server.' });
     }
     try {
       const result = await getHistoryResponse(args, message);
       await message.reply(result);
     } catch (err) {
-      await message.reply({ content: err.message || 'Error fetching history.', flags: 64 });
+      await message.reply({ content: err.message || 'Error fetching history.' });
     }
   },
   activation: {

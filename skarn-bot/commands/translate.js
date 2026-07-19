@@ -47,7 +47,7 @@ module.exports = {
       const result = await getTranslateResponse(args);
       await message.reply(result);
     } catch (err) {
-      await message.reply({ content: err.message || 'Translation failed.', flags: 64 });
+      await message.reply({ content: err.message || 'Translation failed.' });
     }
   },
   activation: {
