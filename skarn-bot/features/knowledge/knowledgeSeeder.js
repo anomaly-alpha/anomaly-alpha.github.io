@@ -170,7 +170,7 @@ async function fetchWikipediaTopics() {
   titles = titles.filter(t => !SKIP_PREFIXES.some(p => t.title.startsWith(p)));
   titles = titles.map(t => t.title);
 
-  // Batch and fetch summaries
+  // Batch and fetch summaries (1 request/sec to respect rate limits)
   let count = 0;
   for (let i = 0; i < titles.length; i += 50) {
     const batch = titles.slice(i, i + 50);
@@ -189,6 +189,10 @@ async function fetchWikipediaTopics() {
       }
     } catch (e) {
       console.log(`[Knowledge] Wikipedia batch ${i} failed: ${e.message}`);
+    }
+    // Rate limit: wait 1 second between requests
+    if (i + 50 < titles.length) {
+      await new Promise(r => setTimeout(r, 1000));
     }
   }
 
