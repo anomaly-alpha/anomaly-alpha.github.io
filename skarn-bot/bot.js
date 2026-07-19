@@ -253,11 +253,13 @@ client.on('messageCreate', async message => {
     if (ignored.includes(message.author.id)) return;
   }
 
-  // AI channel auto-respond (100% rate, 50 per user per hour)
+  // AI channel auto-respond (100% rate, 50 per user per hour) — opt-in only
   if (process.env.AI_MODEL) {
     const cfg = loadJSON('config.json');
     const aiChans = cfg[message.guild?.id]?.aiChannels || [];
     if (aiChans.includes(message.channel.id)) {
+      const { canInteract } = require('./features/proactive/absenceDetector');
+      if (!canInteract(message.author.id, message.guild?.id)) return;
       if (!canRespond(message.author.id)) return;
       await handleMention(message, client);
       recordResponse(message.author.id);
@@ -317,10 +319,13 @@ client.on('messageCreate', async message => {
   // ===== Auto funny replies =====
   const msg = message.content.toLowerCase();
 
-  // "skarn" keyword — always respond (not just @mentions)
+  // "skarn" keyword — only if user has opted in
   if (msg.includes('skarn')) {
-    await handleMention(message, client);
-    recordResponse(message.author.id);
+    const { canInteract } = require('./features/proactive/absenceDetector');
+    if (canInteract(message.author.id, message.guild?.id)) {
+      await handleMention(message, client);
+      recordResponse(message.author.id);
+    }
     return;
   }
 

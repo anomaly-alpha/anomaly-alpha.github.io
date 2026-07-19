@@ -33,4 +33,10 @@ function generateCheckIn(userId) {
   return templates[Math.floor(Math.random() * templates.length)];
 }
 
-module.exports = { findAbsentRegulars, shouldSendCheckIn, generateCheckIn };
+function canInteract(userId, guildId) {
+  // Returns true if user has opted in (proactive_opt_out = 0)
+  const prefs = getUserPreferences(userId, guildId);
+  return prefs && prefs.proactive_opt_out === 0;
+}
+
+module.exports = { findAbsentRegulars, shouldSendCheckIn, generateCheckIn, canInteract };

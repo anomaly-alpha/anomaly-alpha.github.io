@@ -29,6 +29,10 @@ const AI_ERRORS = [
 async function handleMention(message, client) {
   if (message.author.bot) return;
 
+  // Respect opt-in: only respond if user has enabled interactions
+  const { canInteract } = require('../proactive/absenceDetector');
+  if (!canInteract(message.author.id, message.guild?.id)) return;
+
   const userId = message.author.id;
   const channelId = message.channel.id;
   const key = `${userId}:${channelId}`;
