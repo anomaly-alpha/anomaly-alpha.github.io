@@ -44,9 +44,9 @@ Every persistent table has a well-defined scope — the columns that form its pr
 
 **Scoping rule**: the majority of tables are scoped by `(user_id, guild_id)` — data belongs to a user within a specific server. Exceptions are channel-scoped concepts (`channel_state`, `sentiment_buffers`, cooldown tables) and guild-scoped config (`guild_config`, `guild_mood`). No table is truly global (all users, all guilds) except ephemeral key-value stores (`app_state`, `app_flags`) and the shared knowledge base (`knowledge_base`). This uniformity means bulk cleanup by user or by guild follows a predictable pattern.
 
-> **Drift — `user_memory` table is dead**: The `user_memory` table (schema lines 2–8) and its exports `getUserMemory()`, `addUserMemory()`, `deleteUserMemory()` in `database.js` are never called. All etch data is written to and read from `memory_entries`. The `user_memory` table, its indexes, and its helper functions are dead code.
+> **Drift — `user_memory` table is stale (write path dead, read path alive)**: The `user_memory` table (schema lines 2–8) is stale — nothing writes to it (`addUserMemory()` is a dead export), but `getUserMemory()` is still actively called by 19 command files, reading stale data. The drift was previously stated as "table is dead" — that is only correct about writes. See §6.2 for the full fragmentation picture.
 >
-> **Drift — `knowledge_graph` is NOT dead**: The documentation previously stated that `memory_entries` "replaces the previous `user_memory` + `knowledge_graph` separation." This is incorrect — `knowledge_graph` (schema lines 234–245) is still actively written by `features/intelligence/knowledgeGraph.js` and queried via `database.js` `getKnowledge()`. Only `user_memory` was replaced.
+> **Drift — `knowledge_graph` is NOT dead on reads, but IS dead on writes**: The documentation previously stated that `memory_entries` "replaces the previous `user_memory` + `knowledge_graph` separation." This is incorrect — `knowledge_graph` (schema lines 234–245) is still actively **read** by `modelRouter.js` via `getKnowledge()`, but it is NOT actively written (`addKnowledge()` is never called). Knowledge graph extraction (`knowledgeGraph.js`) writes to `memory_entries` instead. Only `user_memory`'s write path was replaced. See §6.2 for the full fragmentation picture.
 >
 > **Drift — "All state in SQLite" is not absolute**: Two modules maintain in-memory cooldown Maps: `features/discordNative/reactionSystem.js` (line 6) and `commands/search.js` (line 13). These are ephemeral (not durable state), but the rule as stated is contradicted by a literal reading.
 >
@@ -86,9 +86,9 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 
 ## 6. Memory systems — what's separate and why
 
-The codebase maintains **6 distinct memory stores**, each with a different scope, write path, and read path. This separation is deliberate in some cases and accidental (fragmentation) in others.
+The codebase maintains **7 distinct memory stores**, each with a different scope, write path, and read path. This separation is deliberate in some cases and accidental (fragmentation) in others.
 
-### 6.1 The six stores
+### 6.1 The seven stores
 
 | # | Store | Tables | Written by | Read by | Scope | Purpose |
 |---|-------|--------|------------|---------|-------|---------|
@@ -317,7 +317,7 @@ The following architectural and configuration decisions are unresolved. Each is 
 
 ### State Persistence
 
-- **All state in SQLite**: No in-memory Maps, Sets, or JSON files may hold state that could be lost on restart. Every cooldown, flag, chain, and buffer persists to SQLite.
+- **All state in SQLite**: Nearly all state persists to SQLite. Two exceptions exist: `features/discordNative/reactionSystem.js` and `commands/search.js` maintain ephemeral cooldowns in in-memory Maps (accepted trade-off — they are non-critical and losing them on restart is harmless). See §3 drift and §8.
 - **rate_limits**: Rolling window table for per-user API call rate limiting. Stores individual timestamps for the 10-minute sliding window.
 - **mention_cooldowns**: Per-user-per-channel cooldown for @mention responses (1s TTL).
 - **interjection_cooldowns**: Per-channel cooldown for random interjections (5min TTL).
@@ -330,7 +330,7 @@ The following architectural and configuration decisions are unresolved. Each is 
 
 ### Context Assembly
 
-- **buildContext()**: Single function in `features/promptContext.js` that produces all context lines for the AI system prompt. Merges the previous `collectContext()` (directive lines) and `assembleContext()` (conversation content) into one unified output.
+- **buildContext()**: Single function in `features/promptContext.js` that produces all context lines for the AI system prompt. Returns an object with context lines (e.g., stateLine, moodLine, relationshipLine, memoryLine, conversationLine, emotionalLine, knowledgeLine) for injection into the system prompt.
 - **Context lines**: Individual sections inside the system prompt: stateLine, moodLine, relationshipLine, cultureLine, memoryLine, warmthLine, patienceLine, callbackLine, gratitudeLine, firstOfDayLine, milestoneLine, apologyLine, emotionalLine, conversationLine, knowledgeLine, socraticLine.
 
 ### Intelligence Systems
@@ -344,7 +344,7 @@ The following architectural and configuration decisions are unresolved. Each is 
 
 - **Emotional intelligence**: Keyword + sentiment-based emotion detection (happy/sad/anxious/angry/stressed). State stored in `user_emotional_context`. Generates tone directives for the AI system prompt.
 - **Story engine**: Topic-triggered story retrieval (war/loss/change/tech/time/power). Hybrid model: stories are AI-generated on first use, stored in `skarn_stories`, referenced on subsequent related topics.
-- **Socratic questioning**: Keyword-triggered (`should I`, `what should`, etc.) module that adds a questioning directive to the system prompt for advice-seeking users.
+- **Socratic questioning**: Intended feature (ADR-001 Advice tier) — `socraticLine` is accepted as a parameter by `buildSystemPrompt()` but is never populated by `buildContext()`. Not currently implemented in the codebase.
 
 ### Relationship & Server Awareness
 

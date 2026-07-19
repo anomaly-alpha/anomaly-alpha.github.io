@@ -29,7 +29,7 @@ AI_MODEL=gpt-3.5-turbo
 npm start
 ```
 
-## Quick Reference (56 Commands)
+## Quick Reference (75 Commands)
 
 ### Skarn Persona (New)
 | Command | Description |
@@ -445,12 +445,14 @@ npm run deploy
 
 ## Project Structure
 
+*(simplified — see `features/` for current architecture; the tree below predates the vertical-slice refactor)*
+
 ```
 skarn-bot/
 ├── bot.js                  # Main bot + event handlers
 ├── deploy-commands.js      # Registers slash commands
 ├── rich-presence.js        # Discord Rich Presence (desktop)
-├── commands/               # 52 slash command files
+├── commands/               # 75 slash command files
 ├── games/
 │   └── tetris.js           # Tetris game engine
 ├── data/                   # Runtime data (gitignored)
