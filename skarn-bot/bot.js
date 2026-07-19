@@ -316,6 +316,11 @@ client.on('messageCreate', async function(message) {
         return;
       }
     }
+    // skarn keyword without matching phrase → route to AI (old step 20 fallback)
+    if (/\bskarn\b/i.test(message.content)) {
+      await handleMention(message);
+      return;
+    }
   }
 
   // Step 6: @mention → AI
