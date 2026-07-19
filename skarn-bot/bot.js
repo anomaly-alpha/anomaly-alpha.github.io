@@ -16,7 +16,7 @@ const { updateWarmth, maybeActiveListen, cleanWarmth, refreshAiChannels } = requ
 const { updateCallbacks, cleanCallbacks } = require('./features/humor/callbackEngine');
 const { extendBanterChain, cleanChains, recordSetup } = require('./features/humor/comedyTiming');
 const { clearFlags } = require('./features/etiquette/etiquetteEngine');
-const { recordMessage, recordResponse, canRespond } = require('./lib/aiStats');
+const { recordMessage, recordResponse, canRespond, getStats } = require('./lib/aiStats');
 const { startScheduler } = require('./lib/weatherScheduler');
 const { seedKnowledgeBase } = require('./features/knowledge/knowledgeSeeder');
 const { runDecay } = require('./features/relationship/relationshipTracker');
@@ -272,7 +272,13 @@ client.on('messageCreate', async message => {
     if (/^(skarn\s+)?status\b/.test(msg)) {
       const prefs = getUserPreferences(message.author.id, message.guild?.id);
       const isOptedIn = prefs && prefs.proactive_opt_in === 1;
-      await message.reply(isOptedIn ? "you're opted in. i'll check in on you." : "you're opted out. say 'skarn opt in' if you want me to check in.");
+      const stats = getStats(message.author.id);
+      const resetsStr = stats.resetsAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      const optPart = isOptedIn ? "you're opted in" : "you're opted out";
+      const usagePart = stats.messagesSent === 0
+        ? "you haven't used any replies yet — 50 available this hour."
+        : `${stats.remaining} replies left this hour, resets at ${resetsStr}.`;
+      await message.reply(`${optPart}. ${usagePart}`);
       return;
     }
   }
