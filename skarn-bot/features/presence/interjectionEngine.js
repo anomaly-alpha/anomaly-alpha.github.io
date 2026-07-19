@@ -1,12 +1,9 @@
-const { getRelationship } = require('../../db/database');
+const { getRelationship, checkInterjectionCooldown, setInterjectionCooldown } = require('../../db/database');
 const { canCall, recordCall } = require('../../lib/rateLimit');
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
 const getOpenAIClient = require('../../ai/client');
 const { collectContext } = require('../promptContext');
-
-const COOLDOWN_MS = 5 * 60 * 1000;
-const cooldowns = new Map();
 
 const FALLBACK_REPLIES = ['bruh moment 😔', 'based', 'i saw that 👀', 'interesting...', 'noted 📝', 'wait what', 'i am confusion', 'fr'];
 
@@ -24,9 +21,7 @@ async function maybeInterject(message, client) {
   if (!canInteract(message.author.id, message.guild?.id)) return;
 
   const channelId = message.channel.id;
-  const now = Date.now();
-  const lastInterjection = cooldowns.get(channelId) || 0;
-  if (now - lastInterjection < COOLDOWN_MS) return;
+  if (checkInterjectionCooldown(channelId)) return;
 
   const rel = getRelationship(message.author.id, message.guild.id);
   const tags = JSON.parse(rel.tags || '[]');
@@ -43,7 +38,7 @@ async function maybeInterject(message, client) {
     return;
   }
 
-  cooldowns.set(channelId, now);
+  setInterjectionCooldown(channelId);
 
   try {
     const ctx = collectContext(message.author.id, message.guild.id, message.channel.id);

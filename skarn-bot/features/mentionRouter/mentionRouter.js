@@ -20,9 +20,6 @@ const { assembleContext } = require('../conversation/contextAssembler');
 const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
 const { updateEmotion } = require('../wisdom/emotionalIntelligence');
 
-const COOLDOWN_MS = 1 * 1000; // 1 second per user per channel
-const cooldowns = new Map(); // `${userId}:${channelId}` -> timestamp
-
 const AI_ERRORS = [
   'The connection is frayed. Try again.',
   'Even the Warmaster\'s reach has limits. Try in a moment.',
@@ -38,11 +35,6 @@ async function handleMention(message, client) {
 
   const userId = message.author.id;
   const channelId = message.channel.id;
-  const key = `${userId}:${channelId}`;
-
-  // Cooldown check
-  const lastReply = cooldowns.get(key) || 0;
-  if (Date.now() - lastReply < COOLDOWN_MS) return; // Silently ignore
 
   // Rate limit check
   if (!canCall(userId)) {
@@ -85,7 +77,6 @@ async function handleMention(message, client) {
 
     recordCall(userId);
     extendBanterChain(userId, message.guild.id, channelId);
-    cooldowns.set(key, Date.now());
 
     const hasKnowledgeMatch = checkKnowledgeMatch(userId, message.guild.id, cleanMsg);
 

@@ -1,4 +1,4 @@
-const { getRelationship } = require('../../db/database');
+const { getRelationship, upsertBanterChain, pruneBanterChains } = require('../../db/database');
 
 const banterChains = new Map(); // "userId:channelId" -> { count, lastAt }
 const setups = new Map();       // "channelId:userId" -> { text, at }
@@ -34,18 +34,7 @@ function getDeadpanBudget(baseBudget, userId, channelId) {
 }
 
 function extendBanterChain(userId, guildId, channelId) {
-  // Only track banter for users with established relationship
-  const rel = getRelationship(userId, guildId);
-  if (!rel || rel.familiarity < 15) return;
-
-  const key = `${userId}:${channelId}`;
-  const chain = banterChains.get(key);
-  if (chain) {
-    chain.count++;
-    chain.lastAt = Date.now();
-  } else {
-    banterChains.set(key, { count: 1, lastAt: Date.now() });
-  }
+  upsertBanterChain(userId, guildId, channelId, JSON.stringify({ last_active: Date.now() }));
 }
 
 function recordSetup(channelId, userId, content) {
@@ -57,13 +46,7 @@ function recordSetup(channelId, userId, content) {
 }
 
 function cleanChains() {
-  const now = Date.now();
-  for (const [key, chain] of banterChains) {
-    if (now - chain.lastAt > 10 * 60 * 1000) banterChains.delete(key);
-  }
-  for (const [key, setup] of setups) {
-    if (now - setup.at > 60 * 1000) setups.delete(key);
-  }
+  pruneBanterChains(3600000);
 }
 
 module.exports = { isPunchline, getDeadpanBudget, extendBanterChain, recordSetup, cleanChains };
