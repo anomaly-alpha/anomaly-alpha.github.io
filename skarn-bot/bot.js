@@ -20,6 +20,8 @@ const { recordMessage, recordResponse, canRespond, getStats } = require('./lib/a
 const { startScheduler } = require('./lib/weatherScheduler');
 const { seedKnowledgeBase } = require('./features/knowledge/knowledgeSeeder');
 const { runDecay } = require('./features/relationship/relationshipTracker');
+const { fetchNews } = require('./features/news/newsFetcher');
+const { postDigest } = require('./features/news/newsDigest');
 
 const client = new Client({
   intents: [
@@ -127,6 +129,32 @@ client.once('clientReady', () => {
       console.log('Sleep mode: waking up');
     }
   }, 60000);
+
+  // Hourly news fetch
+  setInterval(() => {
+    fetchNews().then(count => {
+      if (count > 0) console.log(`[News] Fetched ${count} articles`);
+    }).catch(() => {});
+  }, 60 * 60 * 1000);
+
+  // Initial fetch on startup
+  fetchNews().then(count => {
+    console.log(`[News] Initial fetch: ${count} articles`);
+  }).catch(() => {});
+
+  // Daily digest at 6pm
+  function scheduleDigest() {
+    const now = new Date();
+    const target = new Date();
+    target.setHours(18, 0, 0, 0);
+    if (target <= now) target.setDate(target.getDate() + 1);
+    const delay = target - now;
+    setTimeout(() => {
+      postDigest(client).catch(() => {});
+      scheduleDigest(); // reschedule for next day
+    }, delay);
+  }
+  scheduleDigest();
 
   // Skarn state decay (runs every 10 minutes, regardless of sleep mode)
   setInterval(() => {
