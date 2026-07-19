@@ -258,6 +258,13 @@ client.on('messageCreate', async message => {
       await message.reply("you're opted out now. say 'skarn opt in' anytime to change that.");
       return;
     }
+    if (/^(skarn\s+)?chat\s*mode\b/.test(msg)) {
+      const cfg = loadJSON('config.json');
+      const aiChans = cfg[message.guild?.id]?.aiChannels || [];
+      const isEnabled = aiChans.includes(message.channel.id);
+      await message.reply(isEnabled ? "this channel has auto chat mode on. i'll chime in when i have something to say." : "auto chat mode is off in this channel.");
+      return;
+    }
     if (/^(skarn\s+)?status\b/.test(msg)) {
       const prefs = getUserPreferences(message.author.id, message.guild?.id);
       const isOptedIn = prefs && prefs.proactive_opt_in === 1;
@@ -299,7 +306,7 @@ client.on('messageCreate', async message => {
     if (ignored.includes(message.author.id)) return;
   }
 
-  // AI channel auto-respond (100% rate, 50 per user per hour) — opt-in only
+  // AI channel auto-respond with smart gating (heuristics + AI decides)
   if (process.env.AI_MODEL) {
     const cfg = loadJSON('config.json');
     const aiChans = cfg[message.guild?.id]?.aiChannels || [];
@@ -307,6 +314,14 @@ client.on('messageCreate', async message => {
       const { canInteract } = require('./features/proactive/absenceDetector');
       if (!canInteract(message.author.id, message.guild?.id)) return;
       if (!canRespond(message.author.id)) return;
+
+      // Gate: skip very short messages
+      if (msg.length < 20) return;
+
+      // Gate: AI decides for non-obvious messages
+      const { shouldRespond } = require('./features/discordNative/chatGate');
+      if (!await shouldRespond(msg)) return;
+
       await handleMention(message, client);
       recordResponse(message.author.id);
       return;
