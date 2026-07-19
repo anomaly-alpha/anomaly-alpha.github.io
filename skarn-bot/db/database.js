@@ -282,13 +282,13 @@ function getUserPreferences(userId, guildId) {
   const row = db.prepare('SELECT * FROM user_preferences WHERE user_id = ? AND guild_id = ?').get(userId, guildId);
   if (row) return row;
   db.prepare(
-    'INSERT INTO user_preferences (user_id, guild_id, proactive_opt_out) VALUES (?, ?, 1)'
+    'INSERT INTO user_preferences (user_id, guild_id, proactive_opt_in) VALUES (?, ?, 0)'
   ).run(userId, guildId);
   return db.prepare('SELECT * FROM user_preferences WHERE user_id = ? AND guild_id = ?').get(userId, guildId);
 }
 
 function setUserPreference(userId, guildId, key, value) {
-  const validKeys = ['proactive_opt_out', 'preferred_tone', 'max_response_length', 'allow_nickname', 'nickname', 'timezone'];
+  const validKeys = ['proactive_opt_in', 'preferred_tone', 'max_response_length', 'allow_nickname', 'nickname', 'timezone'];
   if (!validKeys.includes(key)) return;
   // Upsert: ensure row exists first
   getUserPreferences(userId, guildId);
