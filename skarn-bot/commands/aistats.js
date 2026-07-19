@@ -1,10 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
 const { getStats } = require('../lib/aiStats');
-
-const configFile = path.join(__dirname, '..', 'data', 'config.json');
-function loadConfig() { if (!fs.existsSync(configFile)) return {}; return JSON.parse(fs.readFileSync(configFile, 'utf8')); }
+const { getGuildConfig } = require('../db/database');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,11 +8,10 @@ module.exports = {
     .setDescription('Check your AI chat stats and remaining replies'),
   async execute(interaction) {
     const userId = interaction.user.id;
-    const guildId = interaction.guild.id;
+    const guildId = interaction.guild?.id;
     const stats = getStats(userId);
 
-    const config = loadConfig();
-    const ignored = (config[guildId]?.ignoredUsers || []).includes(userId);
+    const ignored = guildId ? (getGuildConfig(guildId, 'ignoredUsers') || []).includes(userId) : false;
 
     const resetsStr = stats.resetsAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 
