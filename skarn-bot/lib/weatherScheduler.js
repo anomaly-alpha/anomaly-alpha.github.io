@@ -1,22 +1,9 @@
-const fs = require('fs');
-const path = require('path');
 const fetch = require('node-fetch');
 const { EmbedBuilder } = require('discord.js');
 const getOpenAIClient = require('../ai/client');
+const { db, getGuildConfig, setGuildConfig } = require('../db/database');
 
-const CONFIG_FILE = path.join(__dirname, '..', 'data', 'config.json');
 const WEATHER_TZ_OFFSET = -5; // UTC-5 (EST)
-
-function loadConfig() {
-  if (!fs.existsSync(CONFIG_FILE)) return {};
-  return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
-}
-
-function saveConfig(data) {
-  const dir = path.dirname(CONFIG_FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(CONFIG_FILE, JSON.stringify(data, null, 2));
-}
 
 function getESTTime() {
   const now = new Date();
@@ -115,14 +102,13 @@ function startScheduler(client) {
     const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     const today = formatDate(now);
 
-    // Only check once per minute
     if (currentTime === lastCheckedMinute) return;
     lastCheckedMinute = currentTime;
 
-    const config = loadConfig();
+    const guilds = db.prepare("SELECT DISTINCT guild_id FROM guild_config WHERE key = 'weatherTracks'").all();
 
-    for (const [guildId, guildConfig] of Object.entries(config)) {
-      const tracks = guildConfig.weatherTracks || [];
+    for (const { guild_id } of guilds) {
+      const tracks = getGuildConfig(guild_id, 'weatherTracks') || [];
       let modified = false;
 
       for (const track of tracks) {
@@ -132,12 +118,11 @@ function startScheduler(client) {
             track.lastPosted = today;
             modified = true;
           }
-          // Stagger posts: 2s delay between channels
           await new Promise(r => setTimeout(r, 2000));
         }
       }
 
-      if (modified) saveConfig(config);
+      if (modified) setGuildConfig(guild_id, 'weatherTracks', tracks);
     }
   }, 60000);
 }

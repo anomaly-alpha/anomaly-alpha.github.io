@@ -1,10 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, ChannelType } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
-
-const configFile = path.join(__dirname, '..', 'data', 'config.json');
-function loadConfig() { if (!fs.existsSync(configFile)) return {}; return JSON.parse(fs.readFileSync(configFile, 'utf8')); }
-function saveConfig(data) { const dir = path.dirname(configFile); if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(configFile, JSON.stringify(data, null, 2)); }
+const { setGuildConfig } = require('../db/database');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -14,11 +9,8 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
   async execute(interaction) {
     const channel = interaction.options.getChannel('channel');
-    const config = loadConfig();
-    if (!config[interaction.guild.id]) config[interaction.guild.id] = {};
-    config[interaction.guild.id].logChannel = channel.id;
-    config[interaction.guild.id].logMessages = true;
-    saveConfig(config);
+    setGuildConfig(interaction.guild.id, 'logChannel', channel.id);
+    setGuildConfig(interaction.guild.id, 'logMessages', true);
     await interaction.reply({ content: `Message logs will be sent to ${channel}.`, flags: 64 });
   },
 };
