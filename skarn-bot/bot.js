@@ -17,6 +17,7 @@ const { extendBanterChain, cleanChains, recordSetup } = require('./features/humo
 const { clearFlags } = require('./features/etiquette/etiquetteEngine');
 const { recordMessage, recordResponse, canRespond } = require('./lib/aiStats');
 const { startScheduler } = require('./lib/weatherScheduler');
+const { seedKnowledgeBase } = require('./features/knowledge/knowledgeSeeder');
 
 const client = new Client({
   intents: [
@@ -76,6 +77,9 @@ client.once('clientReady', () => {
   const hasKey = !!process.env.GOOGLE_CSE_KEY;
   const hasCx = !!process.env.GOOGLE_CSE_CX;
   console.log(`Search backend: Google CSE ${hasKey && hasCx ? '✓ ready' : '✗ not configured (will use DDG fallback)'}`);
+
+  // Seed knowledge base
+  seedKnowledgeBase();
 
   // Rotating status
   const statuses = [
