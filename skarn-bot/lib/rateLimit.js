@@ -1,26 +1,19 @@
-// In-memory token bucket per user. 10 calls per rolling 10-minute window.
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_CALLS = 10;
-const calls = new Map(); // userId -> timestamp[]
+const { db } = require('../db/database');
+
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX_CALLS = 10;
+const RATE_LIMIT_MSG = 'Even a Warmaster paces himself. Give it a moment.';
 
 function canCall(userId) {
-  const now = Date.now();
-  const userCalls = calls.get(userId) || [];
-  // Prune old entries
-  const recent = userCalls.filter(t => now - t < WINDOW_MS);
-  if (recent.length === 0) {
-    calls.delete(userId); // Avoid leaving empty arrays forever in the map
-  } else {
-    calls.set(userId, recent);
-  }
-  return recent.length < MAX_CALLS;
+  const cutoff = Date.now() - RATE_LIMIT_WINDOW_MS;
+  const count = db.prepare(
+    'SELECT COUNT(*) as count FROM rate_limits WHERE user_id = ? AND timestamp > ?'
+  ).get(userId, cutoff);
+  return count.count < RATE_LIMIT_MAX_CALLS;
 }
 
 function recordCall(userId) {
-  const now = Date.now();
-  const userCalls = calls.get(userId) || [];
-  userCalls.push(now);
-  calls.set(userId, userCalls);
+  db.prepare('INSERT INTO rate_limits (user_id, timestamp) VALUES (?, ?)').run(userId, Date.now());
 }
 
-module.exports = { canCall, recordCall };
+module.exports = { canCall, recordCall, RATE_LIMIT_MSG };
