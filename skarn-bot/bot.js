@@ -27,6 +27,7 @@ const client = new Client({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.MessageContent,
+    GatewayIntentBits.DirectMessages,
   ]
 });
 
@@ -212,6 +213,14 @@ const xpCooldown = new Set();
 
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
+
+  // ===== DM handling =====
+  if (!message.guild) {
+    recordMessage(message.author.id);
+    await handleMention(message, client);
+    recordResponse(message.author.id);
+    return;
+  }
 
   // Skarn channel state tracking
   onMessageReceived(message);
