@@ -1,4 +1,4 @@
-const { getRelationship, updateRelationshipField, getUserMemory, db } = require('../../db/database');
+const { getRelationship, updateRelationshipField, db } = require('../../db/database');
 
 const DAILY_FAMILIARITY_CAP = 3;
 const DAILY_DECAY = 1;

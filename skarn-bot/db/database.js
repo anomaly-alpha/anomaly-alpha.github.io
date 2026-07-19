@@ -26,24 +26,6 @@ try {
   }
 }
 
-// ===== User Memory =====
-
-function getUserMemory(userId, guildId, limit = 5) {
-  return db.prepare(
-    'SELECT fact_text FROM user_memory WHERE user_id = ? AND guild_id = ? ORDER BY created_at DESC LIMIT ?'
-  ).all(userId, guildId, limit);
-}
-
-function addUserMemory(userId, guildId, factText) {
-  db.prepare(
-    'INSERT INTO user_memory (user_id, guild_id, fact_text, created_at) VALUES (?, ?, ?, ?)'
-  ).run(userId, guildId, factText, Date.now());
-}
-
-function deleteUserMemory(userId, guildId) {
-  db.prepare('DELETE FROM user_memory WHERE user_id = ? AND guild_id = ?').run(userId, guildId);
-}
-
 // ===== Channel State =====
 
 function getChannelState(channelId, guildId) {
@@ -253,30 +235,6 @@ function upsertUserProfile(userId, guildId, data) {
 const KNOWLEDGE_DECAY = 0.95;
 const KNOWLEDGE_DECAY_DAYS = 30;
 const KNOWLEDGE_MIN_CONFIDENCE = 0.2;
-
-function addKnowledge(userId, guildId, entityType, entityName, context, confidence) {
-  confidence = confidence ?? 0.5;
-  const now = Date.now();
-  const existing = db.prepare(
-    'SELECT id, confidence FROM knowledge_graph WHERE user_id = ? AND guild_id = ? AND entity_type = ? AND entity_name = ?'
-  ).get(userId, guildId, entityType, entityName);
-  if (existing) {
-    const newConf = Math.min(1, existing.confidence + 0.1);
-    db.prepare(
-      'UPDATE knowledge_graph SET confidence = ?, context = ?, last_seen_at = ? WHERE id = ?'
-    ).run(newConf, context ?? existing.context, now, existing.id);
-  } else {
-    db.prepare(
-      'INSERT INTO knowledge_graph (user_id, guild_id, entity_type, entity_name, context, confidence, first_seen_at, last_seen_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-    ).run(userId, guildId, entityType, entityName, context ?? null, confidence, now, now);
-  }
-}
-
-function getKnowledge(userId, guildId) {
-  return db.prepare(
-    'SELECT * FROM knowledge_graph WHERE user_id = ? AND guild_id = ? ORDER BY confidence DESC'
-  ).all(userId, guildId);
-}
 
 function decayKnowledge() {
   const cutoff = Date.now() - KNOWLEDGE_DECAY_DAYS * 24 * 60 * 60 * 1000;
@@ -821,9 +779,6 @@ function getChannelActivity(channelId, windowMinutes) {
 
 module.exports = {
   db,
-  getUserMemory,
-  addUserMemory,
-  deleteUserMemory,
   getChannelState,
   updateChannelState,
   getRelationship,
@@ -851,8 +806,6 @@ module.exports = {
   deleteUserConversation,
   searchConversations,
   getConversationStats,
-  addKnowledge,
-  getKnowledge,
   decayKnowledge,
   getUserPreferences,
   setUserPreference,
