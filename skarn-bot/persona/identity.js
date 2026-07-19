@@ -55,7 +55,7 @@ function buildSystemPrompt({
   cultureLine = '', memoryLine = '', conversationLine = '',
   warmthLine = '', patienceLine = '', callbackLine = '',
   gratitudeLine = '', firstOfDayLine = '', milestoneLine = '', apologyLine = '',
-  wisdomLine = '', emotionalLine = '', additionalContext = ''
+  wisdomLine = '', emotionalLine = '', knowledgeLine = '', additionalContext = ''
 } = {}) {
   const parts = [SKARN_CORE_IDENTITY];
   if (roleLine) parts.push(roleLine);
@@ -74,6 +74,7 @@ function buildSystemPrompt({
   if (apologyLine) parts.push(apologyLine);
   if (wisdomLine) parts.push(wisdomLine);
   if (emotionalLine) parts.push(emotionalLine);
+  if (knowledgeLine) parts.push(knowledgeLine);
   if (additionalContext) parts.push(additionalContext);
   return parts.join('\n\n');
 }
