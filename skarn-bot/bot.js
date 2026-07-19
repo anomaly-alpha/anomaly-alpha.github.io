@@ -216,6 +216,11 @@ client.on('messageCreate', async message => {
 
   // ===== DM handling =====
   if (!message.guild) {
+    // Auto-opt-in for DMs — sending a DM is implicit consent
+    const prefs = getUserPreferences(message.author.id, 'dm');
+    if (!prefs || prefs.proactive_opt_in !== 1) {
+      setUserPreference(message.author.id, 'dm', 'proactive_opt_in', 1);
+    }
     recordMessage(message.author.id);
     await handleMention(message, client);
     recordResponse(message.author.id);

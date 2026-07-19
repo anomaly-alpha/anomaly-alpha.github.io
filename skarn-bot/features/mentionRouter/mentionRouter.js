@@ -31,7 +31,8 @@ async function handleMention(message, client) {
 
   // Respect opt-in: only respond if user has enabled interactions
   const { canInteract } = require('../proactive/absenceDetector');
-  if (!canInteract(message.author.id, message.guild?.id)) return;
+  const guildId = message.guild?.id ?? 'dm';
+  if (!canInteract(message.author.id, guildId)) return;
 
   const userId = message.author.id;
   const channelId = message.channel.id;
@@ -64,16 +65,16 @@ async function handleMention(message, client) {
   }
 
   // Store user message
-  storeMessage(userId, message.guild.id, channelId, 'user', cleanMsg, { threadType: 'channel' });
+  storeMessage(userId, guildId, channelId, 'user', cleanMsg, { threadType: 'channel' });
 
-  const rel = getRelationship(userId, message.guild.id);
+  const rel = getRelationship(userId, guildId);
   const interactionCount = rel ? rel.interaction_count : 0;
 
   // Detect and track user emotion
-  updateEmotion(userId, message.guild.id, cleanMsg);
+  updateEmotion(userId, guildId, cleanMsg);
 
   try {
-    const ctx = buildContext(userId, message.guild.id, channelId, {
+    const ctx = buildContext(userId, guildId, channelId, {
       roleNature: 'casual',
       userContent: cleanMsg,
       interactionCount,
@@ -85,9 +86,9 @@ async function handleMention(message, client) {
       : cleanMsg;
 
     recordCall(userId);
-    extendBanterChain(userId, message.guild.id, channelId);
+    extendBanterChain(userId, guildId, channelId);
 
-    const hasKnowledgeMatch = checkKnowledgeMatch(userId, message.guild.id, cleanMsg);
+    const hasKnowledgeMatch = checkKnowledgeMatch(userId, guildId, cleanMsg);
 
     // Story engine: check if user message triggers a story topic
     const storyTopic = findStoryTopic(cleanMsg);
@@ -117,11 +118,11 @@ async function handleMention(message, client) {
     reply = postProcess(reply, ROLE_NATURE.consult);
 
     // Store assistant response
-    storeMessage(userId, message.guild.id, channelId, 'assistant', reply, { threadType: 'channel' });
+    storeMessage(userId, guildId, channelId, 'assistant', reply, { threadType: 'channel' });
 
     // Track response sentiment shift (non-blocking)
     const afterSentiment = analyzeSentiment(reply);
-    trackResponse(userId, message.guild.id, sentiment, afterSentiment);
+    trackResponse(userId, guildId, sentiment, afterSentiment);
 
     // Extract and store any new story from the AI reply (non-blocking)
     const extractedStory = extractStoryFromReply(reply);
@@ -131,7 +132,7 @@ async function handleMention(message, client) {
     }
 
     // Detect time-bound statements and unanswered questions (non-blocking)
-    detectFollowUps(userId, message.guild.id, channelId, cleanMsg);
+    detectFollowUps(userId, guildId, channelId, cleanMsg);
 
     const isPunchlineMsg = isPunchline(reply, channelId, userId);
 
@@ -151,7 +152,7 @@ async function handleMention(message, client) {
     }
 
     // Auto-extract memory from conversation (non-blocking)
-    extractMemory(userId, message.guild.id, cleanMsg, reply, channelId).catch(() => {});
+    extractMemory(userId, guildId, cleanMsg, reply, channelId).catch(() => {});
   } catch (error) {
     flagForApology(userId);
     console.error('Mention reply error:', error);
