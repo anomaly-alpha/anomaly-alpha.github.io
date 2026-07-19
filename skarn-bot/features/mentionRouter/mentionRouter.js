@@ -4,7 +4,7 @@ const { canCall, recordCall } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
 const { collectContext } = require('../promptContext');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
-const { simulateTyping } = require('../discordNative/typingSim');
+const { estimateDelay } = require('../authenticity/typingController');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
 const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
 const { getRelationship } = require('../../db/database');
@@ -85,7 +85,7 @@ async function handleMention(message, client) {
 
     const isPunchlineMsg = isPunchline(reply, channelId, userId);
 
-    await simulateTyping(message.channel, reply.length);
+    await new Promise(resolve => setTimeout(resolve, estimateDelay(reply)));
 
     if (isPunchlineMsg) {
       await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
