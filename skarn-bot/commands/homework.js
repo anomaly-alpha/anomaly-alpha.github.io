@@ -3,7 +3,7 @@ const getOpenAIClient = require('../ai/client');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
 const { canCall, recordCall } = require('../lib/rateLimit');
-const { getChannelState, getUserMemory } = require('../db/database');
+const { getChannelState, getUserFacts } = require('../db/database');
 const { getStateLine } = require('../features/channelState/stateTracker');
 
 const AI_ERRORS = [
@@ -29,9 +29,9 @@ module.exports = {
     try {
       const channelState = getChannelState(interaction.channel.id, interaction.guild.id);
       const stateLine = getStateLine(channelState.current_state);
-      const memory = getUserMemory(interaction.user.id, interaction.guild.id, 5);
+      const memory = getUserFacts(interaction.user.id, interaction.guild.id, 5);
       const memoryLine = memory.length > 0
-        ? 'What Skarn remembers about this person: ' + memory.map(m => m.fact_text).join('; ')
+        ? 'What Skarn remembers about this person: ' + memory.map(m => m.content).join('; ')
         : '';
       const systemPrompt = buildSystemPrompt({ roleLine: roles.homework, stateLine, memoryLine });
 
