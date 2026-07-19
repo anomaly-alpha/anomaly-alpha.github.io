@@ -1,6 +1,7 @@
-const { addKnowledgeBase } = require('../../db/database');
+const { addKnowledgeBase, getAppState, setAppState } = require('../../db/database');
+const fetch = require('node-fetch');
 
-const SEED_TOPICS = [
+const FALLBACK_TOPICS = [
   // ===== Science (18) =====
   { topic: 'quantum physics', summary: 'Study of matter and energy at atomic scale. Superposition, entanglement, wave-particle duality.', source: 'wikipedia', confidence: 0.9 },
   { topic: 'black holes', summary: 'Region of spacetime where gravity prevents escape. Formed when massive stars collapse.', source: 'wikipedia', confidence: 0.9 },
@@ -137,15 +138,90 @@ const SEED_TOPICS = [
   { topic: 'film history', summary: 'Evolution of cinema from the late 19th century through silent film, the Golden Age of Hollywood, new waves, and the digital era.', source: 'wikipedia', confidence: 0.9 },
 ];
 
-function seedKnowledgeBase() {
+const WIKI_MOST_VIEWED = 'https://en.wikipedia.org/w/api.php?action=query&list=mostviewed&format=json';
+const WIKI_SUMMARY = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&explaintext=true&exlimit=50&format=json';
+const SKIP_PREFIXES = ['Special:', 'Main Page', 'Wikipedia:', 'Help:', 'File:', 'Talk:', 'User:', 'Template:', 'Category:', 'Portal:'];
+
+async function fetchWikipediaTopics() {
+  let titles = [];
+
+  // Fetch page 1 (0-499)
+  try {
+    const res1 = await fetch(`${WIKI_MOST_VIEWED}&pvimlimit=500`);
+    const data1 = await res1.json();
+    titles.push(...(data1.query?.mostviewed || []));
+  } catch (e) {
+    console.log(`[Knowledge] Wikipedia page 1 fetch failed: ${e.message}`);
+    return 0;
+  }
+
+  // Fetch page 2 (500-999)
+  try {
+    const res2 = await fetch(`${WIKI_MOST_VIEWED}&pvimlimit=500&pvoffset=500`);
+    const data2 = await res2.json();
+    titles.push(...(data2.query?.mostviewed || []));
+  } catch (e) {
+    console.log(`[Knowledge] Wikipedia page 2 fetch failed: ${e.message}`);
+  }
+
+  // Filter non-article pages
+  titles = titles.filter(t => !SKIP_PREFIXES.some(p => t.title.startsWith(p)));
+  titles = titles.map(t => t.title);
+
+  // Batch and fetch summaries
   let count = 0;
-  for (const t of SEED_TOPICS) {
+  for (let i = 0; i < titles.length; i += 50) {
+    const batch = titles.slice(i, i + 50);
+    try {
+      const url = `${WIKI_SUMMARY}&titles=${encodeURIComponent(batch.join('|'))}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      const pages = data.query?.pages || {};
+      for (const page of Object.values(pages)) {
+        if (page.extract && page.title) {
+          const topic = page.title.toLowerCase().replace(/_/g, ' ');
+          addKnowledgeBase(topic, page.extract, 'wikipedia', 0.9);
+          count++;
+        }
+      }
+    } catch (e) {
+      console.log(`[Knowledge] Wikipedia batch ${i} failed: ${e.message}`);
+    }
+  }
+
+  return count;
+}
+
+function seedFallbackTopics() {
+  let count = 0;
+  for (const t of FALLBACK_TOPICS) {
     try {
       addKnowledgeBase(t.topic, t.summary, t.source, t.confidence);
       count++;
     } catch {}
   }
-  console.log(`[Knowledge] Seeded ${count} topics`);
+  return count;
 }
 
-module.exports = { seedKnowledgeBase };
+function seedKnowledgeBase() {
+  const fallbackCount = seedFallbackTopics();
+
+  const lastSeed = getAppState('last_wikipedia_seed');
+  if (lastSeed) {
+    const hoursSince = (Date.now() - parseInt(lastSeed, 10)) / (1000 * 60 * 60);
+    if (hoursSince < 24) {
+      console.log(`[Knowledge] Using cached data (last seed: ${Math.round(hoursSince)}h ago)`);
+      return;
+    }
+  }
+
+  console.log(`[Knowledge] Seeded ${fallbackCount} fallback topics, fetching Wikipedia...`);
+  fetchWikipediaTopics().then(wikiCount => {
+    setAppState('last_wikipedia_seed', Date.now().toString());
+    console.log(`[Knowledge] Wikipedia fetch complete: ${wikiCount} topics added`);
+  }).catch(e => {
+    console.log(`[Knowledge] Wikipedia fetch failed: ${e.message}`);
+  });
+}
+
+module.exports = { seedKnowledgeBase, seedFallbackTopics, fetchWikipediaTopics };
