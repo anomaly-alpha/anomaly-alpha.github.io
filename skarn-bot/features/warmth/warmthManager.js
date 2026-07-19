@@ -117,6 +117,10 @@ async function maybeActiveListen(message, client) {
   if (message.author.bot) return;
   if (!message.guild) return;
 
+  // Respect opt-in
+  const { canInteract } = require('../proactive/absenceDetector');
+  if (!canInteract(message.author.id, message.guild.id)) return;
+
   // Only fire in non-AI channels (cached set, O(1) lookup)
   if (aiChannelSet && aiChannelSet.has(message.channel.id)) return;
 

@@ -19,6 +19,10 @@ function isBanterMessage(content) {
 async function maybeInterject(message, client) {
   if (message.author.bot) return;
 
+  // Respect opt-in
+  const { canInteract } = require('../proactive/absenceDetector');
+  if (!canInteract(message.author.id, message.guild?.id)) return;
+
   const channelId = message.channel.id;
   const now = Date.now();
   const lastInterjection = cooldowns.get(channelId) || 0;
