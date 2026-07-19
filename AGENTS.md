@@ -183,3 +183,40 @@ Located at `docs/plan/2026-05-28/deepseek-v4-flash-free/` with INDEX.md.
 - `docs/reports/SEO_PERFORMANCE.md` — SEO performance report (updated from GSC exports)
 - `docs/reports/LIGHTHOUSE_AUDIT.md` — Lighthouse performance audit scores + fix plan
 - `docs/plan/2026-05-20/deepseek-v4-flash/` — 160 improvement plans
+
+---
+
+## `skarn-bot/` sub-project
+
+**`skarn-bot/` is a completely independent project** — its own bot, its own Node.js project (`package.json`), its own database schema, its own development lifecycle. Nothing in `skarn-bot/` relates to the web app in this repo's root. All work on skarn-bot happens within its directory tree.
+
+### skarn-bot docs structure
+
+Plans, specs, reports, ADRs, and prompts live under `skarn-bot/docs/` organized by type then date:
+
+```
+skarn-bot/docs/
+├── adr/                           # Architecture Decision Records (sequential)
+│   └── 0001-tiered-context-assembly.md
+├── compose/                       # Compose workflow artifacts
+│   ├── plans/YYYY-MM-DD/          # Implementation plans
+│   ├── specs/YYYY-MM-DD/          # Design specs
+│   └── reports/YYYY-MM-DD/        # Audit reports, findings
+├── plans/YYYY-MM-DD/              # Legacy implementation plans
+├── specs/YYYY-MM-DD/              # Legacy design specs
+├── reports/YYYY-MM-DD/            # Legacy final reports
+└── prompts/                       # Model prompts (not date-dependent)
+```
+
+Each date folder contains one or more files from that day's planning/design/review cycle. The filename after the date prefix describes the topic (e.g., `wisdom-knowledge-plan.md`).
+
+### skarn-bot conventions
+
+- **skarn-bot plans**: saved to `skarn-bot/docs/plans/YYYY-MM-DD/`
+- **skarn-bot specs**: saved to `skarn-bot/docs/specs/YYYY-MM-DD/`
+- **Compose specs**: saved to `skarn-bot/docs/compose/specs/YYYY-MM-DD/`
+- **Compose plans**: saved to `skarn-bot/docs/compose/plans/YYYY-MM-DD/`
+- **Compose reports**: saved to `skarn-bot/docs/compose/reports/YYYY-MM-DD/`
+- **skarn-bot prompts**: saved to `skarn-bot/docs/prompts/` (no date prefix)
+- ADRs go to `skarn-bot/docs/adr/` as `NNNN-title.md`
+- All skarn-bot work is committed to this repo's main branch and pushed to GitHub Pages alongside the web app
