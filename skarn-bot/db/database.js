@@ -495,6 +495,187 @@ function incrementStoryUse(storyId) {
   ).run(Date.now(), storyId);
 }
 
+// ===== Memory Entries =====
+
+function addMemoryEntry(userId, guildId, source, type, content, confidence, context) {
+  const now = Date.now();
+  const existing = db.prepare(
+    'SELECT id, confidence, context FROM memory_entries WHERE user_id = ? AND guild_id = ? AND type = ? AND content = ?'
+  ).get(userId, guildId, type, content);
+  if (existing) {
+    const newConf = source === 'etch' ? 1.0 : Math.min(1, existing.confidence + 0.1);
+    db.prepare(
+      'UPDATE memory_entries SET confidence = ?, context = ?, last_seen_at = ?, updated_at = ? WHERE id = ?'
+    ).run(newConf, context ?? existing.context, now, now, existing.id);
+    return;
+  }
+  db.prepare(
+    'INSERT INTO memory_entries (user_id, guild_id, source, type, content, confidence, context, first_seen_at, last_seen_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+  ).run(userId, guildId, source, type, content, confidence, context ?? null, now, now, now);
+}
+
+function getMemoryEntries(userId, guildId, limit = 10) {
+  return db.prepare(
+    'SELECT * FROM memory_entries WHERE user_id = ? AND guild_id = ? ORDER BY confidence DESC, last_seen_at DESC LIMIT ?'
+  ).all(userId, guildId, limit);
+}
+
+function getMemoryByType(userId, guildId, type, limit = 5) {
+  return db.prepare(
+    'SELECT * FROM memory_entries WHERE user_id = ? AND guild_id = ? AND type = ? ORDER BY confidence DESC, last_seen_at DESC LIMIT ?'
+  ).all(userId, guildId, type, limit);
+}
+
+function deleteUserMemoryEntries(userId, guildId) {
+  db.prepare('DELETE FROM memory_entries WHERE user_id = ? AND guild_id = ?').run(userId, guildId);
+}
+
+function decayMemoryEntries() {
+  const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+  db.prepare("UPDATE memory_entries SET confidence = confidence * 0.95 WHERE source = 'extracted' AND last_seen_at < ?").run(cutoff);
+  db.prepare("DELETE FROM memory_entries WHERE source = 'extracted' AND confidence < 0.2").run();
+  return db.prepare('SELECT changes()').get();
+}
+
+// ===== Rate Limits =====
+
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX_CALLS = 10;
+
+function canMakeCall(userId) {
+  const cutoff = Date.now() - RATE_LIMIT_WINDOW_MS;
+  const count = db.prepare('SELECT COUNT(*) as count FROM rate_limits WHERE user_id = ? AND timestamp > ?').get(userId, cutoff);
+  return count.count < RATE_LIMIT_MAX_CALLS;
+}
+
+function recordCall(userId) {
+  db.prepare('INSERT INTO rate_limits (user_id, timestamp) VALUES (?, ?)').run(userId, Date.now());
+}
+
+function pruneRateLimits() {
+  const cutoff = Date.now() - RATE_LIMIT_WINDOW_MS;
+  db.prepare('DELETE FROM rate_limits WHERE timestamp < ?').run(cutoff);
+}
+
+// ===== Cooldowns =====
+
+function checkMentionCooldown(userId, channelId) {
+  const row = db.prepare('SELECT expires_at FROM mention_cooldowns WHERE user_id = ? AND channel_id = ?').get(userId, channelId);
+  return row && row.expires_at > Date.now();
+}
+
+function setMentionCooldown(userId, channelId, ttlMs = 1000) {
+  db.prepare('INSERT OR REPLACE INTO mention_cooldowns (user_id, channel_id, expires_at) VALUES (?, ?, ?)').run(userId, channelId, Date.now() + ttlMs);
+}
+
+function checkInterjectionCooldown(channelId) {
+  const row = db.prepare('SELECT expires_at FROM interjection_cooldowns WHERE channel_id = ?').get(channelId);
+  return row && row.expires_at > Date.now();
+}
+
+function setInterjectionCooldown(channelId, ttlMs = 300000) {
+  db.prepare('INSERT OR REPLACE INTO interjection_cooldowns (channel_id, expires_at) VALUES (?, ?)').run(channelId, Date.now() + ttlMs);
+}
+
+function checkActiveListenCooldown(channelId) {
+  const row = db.prepare('SELECT expires_at FROM active_listen_cooldowns WHERE channel_id = ?').get(channelId);
+  return row && row.expires_at > Date.now();
+}
+
+function setActiveListenCooldown(channelId, ttlMs = 300000) {
+  db.prepare('INSERT OR REPLACE INTO active_listen_cooldowns (channel_id, expires_at) VALUES (?, ?)').run(channelId, Date.now() + ttlMs);
+}
+
+// ===== Sentiment Buffers =====
+
+function getSentimentBuffer(channelId) {
+  const row = db.prepare('SELECT messages FROM sentiment_buffers WHERE channel_id = ?').get(channelId);
+  return row ? JSON.parse(row.messages) : [];
+}
+
+function pushSentimentBuffer(channelId, content, maxSize = 5) {
+  const existing = getSentimentBuffer(channelId);
+  existing.push(content);
+  if (existing.length > maxSize) existing.shift();
+  db.prepare('INSERT OR REPLACE INTO sentiment_buffers (channel_id, messages, updated_at) VALUES (?, ?, ?)').run(channelId, JSON.stringify(existing), Date.now());
+}
+
+function pruneSentimentBuffers(olderThanMs = 3600000) {
+  const cutoff = Date.now() - olderThanMs;
+  db.prepare('DELETE FROM sentiment_buffers WHERE updated_at < ?').run(cutoff);
+}
+
+// ===== App Flags =====
+
+function setFlag(key, value, ttlMs) {
+  db.prepare('INSERT OR REPLACE INTO app_flags (flag_key, flag_value, created_at, expires_at) VALUES (?, ?, ?, ?)').run(key, value, Date.now(), ttlMs ? Date.now() + ttlMs : null);
+}
+
+function getFlag(key) {
+  const row = db.prepare('SELECT flag_value FROM app_flags WHERE flag_key = ? AND (expires_at IS NULL OR expires_at > ?)').get(key, Date.now());
+  return row ? row.flag_value : null;
+}
+
+function deleteFlag(key) {
+  db.prepare('DELETE FROM app_flags WHERE flag_key = ?').run(key);
+}
+
+function hasFlag(key) {
+  const row = db.prepare('SELECT 1 FROM app_flags WHERE flag_key = ? AND (expires_at IS NULL OR expires_at > ?)').get(key, Date.now());
+  return !!row;
+}
+
+function pruneExpiredFlags() {
+  db.prepare('DELETE FROM app_flags WHERE expires_at IS NOT NULL AND expires_at < ?').run(Date.now());
+}
+
+// ===== App State =====
+
+function getAppState(key) {
+  const row = db.prepare('SELECT value FROM app_state WHERE key = ?').get(key);
+  return row ? row.value : null;
+}
+
+function setAppState(key, value) {
+  db.prepare('INSERT OR REPLACE INTO app_state (key, value, updated_at) VALUES (?, ?, ?)').run(key, value, Date.now());
+}
+
+// ===== Banter Chains =====
+
+function getBanterChain(userId, guildId, channelId) {
+  return db.prepare('SELECT * FROM banter_chains WHERE user_id = ? AND guild_id = ? AND channel_id = ? ORDER BY last_active_at DESC LIMIT 1').get(userId, guildId, channelId);
+}
+
+function upsertBanterChain(userId, guildId, channelId, chainData) {
+  const existing = getBanterChain(userId, guildId, channelId);
+  const now = Date.now();
+  if (existing) {
+    db.prepare('UPDATE banter_chains SET chain_data = ?, last_active_at = ? WHERE id = ?').run(chainData, now, existing.id);
+  } else {
+    db.prepare('INSERT INTO banter_chains (user_id, guild_id, channel_id, chain_data, started_at, last_active_at) VALUES (?, ?, ?, ?, ?, ?)').run(userId, guildId, channelId, chainData, now, now);
+  }
+}
+
+function pruneBanterChains(olderThanMs = 3600000) {
+  const cutoff = Date.now() - olderThanMs;
+  db.prepare('DELETE FROM banter_chains WHERE last_active_at < ?').run(cutoff);
+}
+
+// ===== Callbacks =====
+
+function addCallback(channelId, userId, message) {
+  db.prepare('INSERT INTO callbacks (channel_id, user_id, message, created_at) VALUES (?, ?, ?, ?)').run(channelId, userId, message, Date.now());
+}
+
+function getCallbacks(channelId, limit = 5) {
+  return db.prepare('SELECT * FROM callbacks WHERE channel_id = ? ORDER BY created_at DESC LIMIT ?').all(channelId, limit);
+}
+
+function pruneCallbacks(olderThanMs = 3600000) {
+  const cutoff = Date.now() - olderThanMs;
+  db.prepare('DELETE FROM callbacks WHERE created_at < ?').run(cutoff);
+}
+
 module.exports = {
   db,
   getUserMemory,
@@ -548,4 +729,34 @@ module.exports = {
   addStory,
   getStoriesByTopic,
   incrementStoryUse,
+  addMemoryEntry,
+  getMemoryEntries,
+  getMemoryByType,
+  deleteUserMemoryEntries,
+  decayMemoryEntries,
+  canMakeCall,
+  recordCall,
+  pruneRateLimits,
+  checkMentionCooldown,
+  setMentionCooldown,
+  checkInterjectionCooldown,
+  setInterjectionCooldown,
+  checkActiveListenCooldown,
+  setActiveListenCooldown,
+  getSentimentBuffer,
+  pushSentimentBuffer,
+  pruneSentimentBuffers,
+  setFlag,
+  getFlag,
+  deleteFlag,
+  hasFlag,
+  pruneExpiredFlags,
+  getAppState,
+  setAppState,
+  getBanterChain,
+  upsertBanterChain,
+  pruneBanterChains,
+  addCallback,
+  getCallbacks,
+  pruneCallbacks,
 };
