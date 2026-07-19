@@ -774,26 +774,27 @@ function removeReactionRole(messageId, emoji) {
 // ===== Attention State =====
 
 function getAttentionState(userId, guildId, channelId) {
-  const row = db.prepare('SELECT * FROM attention_state WHERE user_id = ? AND guild_id = ? AND channel_id = ?').get(userId, guildId, channelId);
+  const row = db.prepare('SELECT * FROM attention_state WHERE user_id = ? AND guild_id = ? AND channel_id = ?').get(userId, guildId || '', channelId);
   return row || { last_bot_reply_at: 0, last_bot_channel_msg_at: 0, msgs_since_response: 0, last_user_msg_at: 0 };
 }
 
 function upsertAttentionState(userId, guildId, channelId, fields) {
-  const existing = db.prepare('SELECT 1 FROM attention_state WHERE user_id = ? AND guild_id = ? AND channel_id = ?').get(userId, guildId, channelId);
+  const gid = guildId || '';
+  const existing = db.prepare('SELECT 1 FROM attention_state WHERE user_id = ? AND guild_id = ? AND channel_id = ?').get(userId, gid, channelId);
   if (existing) {
     const sets = Object.keys(fields).map(function(k) { return k + ' = ?'; }).join(', ');
     const vals = Object.values(fields);
-    db.prepare('UPDATE attention_state SET ' + sets + ' WHERE user_id = ? AND guild_id = ? AND channel_id = ?').run.apply(db, vals.concat([userId, guildId, channelId]));
+    db.prepare('UPDATE attention_state SET ' + sets + ' WHERE user_id = ? AND guild_id = ? AND channel_id = ?').run(...vals, userId, gid, channelId);
   } else {
     const cols = ['user_id', 'guild_id', 'channel_id'].concat(Object.keys(fields));
     const placeholders = cols.map(function() { return '?'; }).join(', ');
-    const vals = [userId, guildId, channelId].concat(Object.values(fields));
-    db.prepare('INSERT INTO attention_state (' + cols.join(', ') + ') VALUES (' + placeholders + ')').run.apply(db, vals);
+    const vals = [userId, gid, channelId].concat(Object.values(fields));
+    db.prepare('INSERT INTO attention_state (' + cols.join(', ') + ') VALUES (' + placeholders + ')').run(...vals);
   }
 }
 
 function resetMsgCount(userId, guildId, channelId) {
-  db.prepare('UPDATE attention_state SET msgs_since_response = 0 WHERE user_id = ? AND guild_id = ? AND channel_id = ?').run(userId, guildId, channelId);
+  db.prepare('UPDATE attention_state SET msgs_since_response = 0 WHERE user_id = ? AND guild_id = ? AND channel_id = ?').run(userId, guildId || '', channelId);
 }
 
 function incrementMsgCount(userId, guildId, channelId) {
