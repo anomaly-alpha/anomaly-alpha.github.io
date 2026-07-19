@@ -7,7 +7,8 @@ const MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 async function fetchNews() {
   try {
-    const { results } = await searchWeb(NEWS_QUERY);
+    const { results, source } = await searchWeb(NEWS_QUERY);
+    console.log(`[News] Search returned ${results?.length || 0} results from ${source}`);
     if (!results || results.length === 0) return 0;
 
     const now = Date.now();

@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { db, pruneRateLimits, pruneExpiredFlags, pruneSentimentBuffers, pruneBanterChains, pruneCallbacks, decayMemoryEntries, getUserPreferences, setUserPreference, getGuildConfig, setGuildConfig } = require('./db/database');
+const { db, pruneRateLimits, pruneExpiredFlags, pruneSentimentBuffers, pruneBanterChains, pruneCallbacks, decayMemoryEntries, getUserPreferences, setUserPreference, getGuildConfig, setGuildConfig, cleanCooldowns } = require('./db/database');
 
 // ===== Skarn Persona System =====
 const { onMessageReceived } = require('./features/channelState/stateTracker');

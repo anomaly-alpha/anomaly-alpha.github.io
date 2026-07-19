@@ -84,14 +84,15 @@ async function searchWeb(query) {
   // Fresh search: Google CSE → DuckDuckGo → Wikipedia (reliable fallback)
   let results = null;
   let source = '';
-  try { results = await searchGoogle(query); source = 'google'; } catch {}
+  try { results = await searchGoogle(query); source = 'google'; } catch (e) { console.log(`[Search] Google CSE error: ${e.message}`); }
   if (!results || results.length === 0) {
-    try { results = await searchDuckDuckGo(query); source = 'duckduckgo'; } catch {}
+    try { results = await searchDuckDuckGo(query); source = 'duckduckgo'; } catch (e) { console.log(`[Search] DuckDuckGo error: ${e.message}`); }
   }
   if (!results || results.length === 0) {
-    try { results = await searchWikipedia(query); source = 'wikipedia'; } catch {}
+    try { results = await searchWikipedia(query); source = 'wikipedia'; } catch (e) { console.log(`[Search] Wikipedia error: ${e.message}`); }
   }
   if (!results || results.length === 0) {
+    console.log(`[Search] All backends failed for query: ${query}`);
     return { results: [], source: 'error', error: 'All search backends failed' };
   }
 
