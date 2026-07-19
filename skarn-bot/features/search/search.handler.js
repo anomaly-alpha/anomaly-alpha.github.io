@@ -91,7 +91,7 @@ async function execute(interaction) {
       .setTitle('Search: ' + query)
       .setDescription(results.map((r, i) => `[${i + 1}. ${r.title}](${r.url})`).join('\n'))
       .setColor(0x00e5ff)
-      .setFooter({ text: source === 'cache' ? 'Cached result' : 'DuckDuckGo' });
+      .setFooter({ text: source === 'cache' ? 'Cached' : source === 'wikipedia' ? 'Wikipedia' : source === 'google' ? 'Google' : 'DuckDuckGo' });
 
     // Step 6: Send response
     const chunks = splitMessage(reply, 400);
