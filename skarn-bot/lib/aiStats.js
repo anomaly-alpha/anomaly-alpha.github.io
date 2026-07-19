@@ -1,79 +1,53 @@
-const fs = require('fs');
-const path = require('path');
+const { db } = require('../db/database');
 
 const HOURLY_CAP = 50;
-const STATS_FILE = path.join(__dirname, '..', 'data', 'ai-stats.json');
-
-const aiHourlyCap = new Map(); // "userId" -> { count, hourStart } (in-memory only)
-
-let stats = { messageCount: {}, responseCount: {} };
-
-function loadStats() {
-  try {
-    if (fs.existsSync(STATS_FILE)) {
-      stats = JSON.parse(fs.readFileSync(STATS_FILE, 'utf8'));
-    }
-  } catch {}
-}
-
-function saveStats() {
-  const dir = path.dirname(STATS_FILE);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
-}
-
-// Load on startup
-loadStats();
 
 function currentHour() {
   return Math.floor(Date.now() / 3600000);
 }
 
 function recordMessage(userId) {
-  stats.messageCount[userId] = (stats.messageCount[userId] || 0) + 1;
-  saveStats();
+  db.prepare(
+    'INSERT OR REPLACE INTO ai_usage (user_id, stat_type, count) VALUES (?, ?, COALESCE((SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?), 0) + 1)'
+  ).run(userId, 'messages_sent', userId, 'messages_sent');
 }
 
 function recordResponse(userId) {
-  stats.responseCount[userId] = (stats.responseCount[userId] || 0) + 1;
-  saveStats();
+  db.prepare(
+    'INSERT OR REPLACE INTO ai_usage (user_id, stat_type, count) VALUES (?, ?, COALESCE((SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?), 0) + 1)'
+  ).run(userId, 'responses_received', userId, 'responses_received');
 }
 
 function canRespond(userId) {
   const hour = currentHour();
-  const entry = aiHourlyCap.get(userId);
-
-  if (entry && entry.hourStart === hour) {
-    if (entry.count >= HOURLY_CAP) return false;
-    entry.count++;
-  } else {
-    aiHourlyCap.set(userId, { count: 1, hourStart: hour });
-  }
+  const hourly = db.prepare(
+    'SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?'
+  ).get(userId, 'hourly_' + hour);
+  if (hourly && hourly.count >= HOURLY_CAP) return false;
+  db.prepare(
+    'INSERT OR REPLACE INTO ai_usage (user_id, stat_type, count) VALUES (?, ?, COALESCE((SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?), 0) + 1)'
+  ).run(userId, 'hourly_' + hour, userId, 'hourly_' + hour);
   return true;
 }
 
 function getStats(userId) {
   const hour = currentHour();
-  const entry = aiHourlyCap.get(userId);
-  const used = (entry && entry.hourStart === hour) ? entry.count : 0;
+  const hourly = db.prepare(
+    'SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?'
+  ).get(userId, 'hourly_' + hour);
+  const used = hourly ? hourly.count : 0;
   const remaining = Math.max(0, HOURLY_CAP - used);
-  const resetsAt = new Date((hour + 1) * 3600000);
-
-  return {
-    remaining,
-    used,
-    cap: HOURLY_CAP,
-    resetsAt,
-    messagesSent: stats.messageCount[userId] || 0,
-    responsesReceived: stats.responseCount[userId] || 0,
-  };
+  const messagesSent = (db.prepare(
+    'SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?'
+  ).get(userId, 'messages_sent') || {}).count || 0;
+  const responsesReceived = (db.prepare(
+    'SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?'
+  ).get(userId, 'responses_received') || {}).count || 0;
+  return { remaining, used, cap: HOURLY_CAP, resetsAt: new Date((hour + 1) * 3600000), messagesSent, responsesReceived };
 }
 
 function resetStats(userId) {
-  aiHourlyCap.delete(userId);
-  delete stats.messageCount[userId];
-  delete stats.responseCount[userId];
-  saveStats();
+  db.prepare('DELETE FROM ai_usage WHERE user_id = ?').run(userId);
 }
 
 module.exports = { recordMessage, recordResponse, canRespond, getStats, resetStats };

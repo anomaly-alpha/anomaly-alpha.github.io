@@ -1,18 +1,11 @@
-// Ephemeral in-memory rolling buffer for sentiment analysis.
-// NOT persisted to SQLite. Lost on restart (intentional).
-
-const buffer = new Map(); // channelId -> string[] (max 5)
-const BUFFER_SIZE = 5;
+const { pushSentimentBuffer, getSentimentBuffer } = require('../../db/database');
 
 function pushMessage(channelId, content) {
-  const msgs = buffer.get(channelId) || [];
-  msgs.push(content);
-  if (msgs.length > BUFFER_SIZE) msgs.shift();
-  buffer.set(channelId, msgs);
+  pushSentimentBuffer(channelId, content, 5);
 }
 
 function getMessages(channelId) {
-  return buffer.get(channelId) || [];
+  return getSentimentBuffer(channelId);
 }
 
 module.exports = { pushMessage, getMessages };
