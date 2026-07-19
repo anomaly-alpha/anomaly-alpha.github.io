@@ -5,17 +5,9 @@ const { canCall, recordCall } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { searchWeb } = require('./searchEngine');
+const { checkCooldown, setCooldown } = require('../../db/database');
 
 const COOLDOWN_MS = 5 * 1000;
-const cooldowns = new Map();
-
-// Clean up stale cooldown entries every 30 seconds
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, ts] of cooldowns) {
-    if (now - ts > COOLDOWN_MS) cooldowns.delete(key);
-  }
-}, 30 * 1000);
 
 const AI_ERRORS = [
   'The connection is frayed. Try again.',
@@ -24,12 +16,10 @@ const AI_ERRORS = [
 ];
 
 async function execute(interaction) {
-  // Cooldown check
-  const key = `${interaction.user.id}:${interaction.channel.id}`;
-  const last = cooldowns.get(key) || 0;
-  if (Date.now() - last < COOLDOWN_MS) {
-    const remaining = Math.ceil((COOLDOWN_MS - (Date.now() - last)) / 1000);
-    return interaction.reply({ content: `Slow down. Wait ${remaining}s.`, flags: 64 });
+  // Cooldown check (5s per user per channel)
+  const cooldownKey = 'search:' + interaction.guildId + ':' + interaction.user.id + ':' + interaction.channelId;
+  if (checkCooldown(cooldownKey)) {
+    return interaction.reply({ content: 'Please wait 5 seconds between searches.', flags: 64 });
   }
 
   // Rate limit check
@@ -45,7 +35,6 @@ async function execute(interaction) {
   try {
     // Step 1: Web search
     const searchResult = await searchWeb(query);
-    cooldowns.set(key, Date.now());
     recordCall(interaction.user.id);
 
     if (searchResult.source === 'error') {

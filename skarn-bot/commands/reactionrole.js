@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { addReactionRole } = require('../db/database');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -21,6 +22,9 @@ module.exports = {
     const msg = await interaction.reply({ embeds: [embed], fetchReply: true });
     await msg.react(emoji);
 
+    // Store in database for persistence
+    addReactionRole(interaction.guild.id, interaction.channel.id, msg.id, emoji, role.id);
+
     const filter = (reaction, user) => reaction.emoji.name === emoji && !user.bot;
     const collector = msg.createReactionCollector({ filter });
 
@@ -33,5 +37,16 @@ module.exports = {
       const member = await interaction.guild.members.fetch(user.id);
       await member.roles.remove(role);
     });
+  },
+  async handleActivation(message, args) {
+    await message.reply({ content: 'Please use the `/reactionrole` slash command to set up reaction roles.', flags: 64 });
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn reactionrole',
+    description: 'Create a reaction role message',
+    guildOnly: true,
+    requiredPermissions: ['ManageRoles'],
+    parseArgs: function(content) { return {}; },
   },
 };

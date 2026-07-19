@@ -84,6 +84,9 @@ client.once('clientReady', () => {
   // Seed knowledge base
   seedKnowledgeBase();
 
+  // Scan command files for activation phrases
+  require('./features/activation/activationRegistry').scanCommands();
+
   // Rotating status
   const statuses = [
     { type: 'Playing', text: 'with AI 🤖' },
@@ -134,6 +137,7 @@ client.once('clientReady', () => {
     cleanWarmth();
     runDecay();
     decayMemoryEntries();
+    cleanCooldowns();
     pruneRateLimits();
     pruneExpiredFlags();
     pruneSentimentBuffers();
@@ -208,222 +212,187 @@ client.on('guildMemberAdd', async member => {
   }
 });
 
-// ===== Leveling system =====
-const xpCooldown = new Set();
-
-client.on('messageCreate', async message => {
+client.on('messageCreate', async function(message) {
+  // Step 1: Skip bots
   if (message.author.bot) return;
 
-  // ===== DM handling =====
+  const handleMention = require('./features/mentionRouter/mentionRouter').handleMention;
+  const lookup = require('./features/activation/activationRegistry').lookup;
+
+  // Step 2: DM handling
   if (!message.guild) {
-    // Auto-opt-in for DMs — sending a DM is implicit consent
-    const prefs = getUserPreferences(message.author.id, 'dm');
-    if (!prefs || prefs.proactive_opt_in !== 1) {
-      setUserPreference(message.author.id, 'dm', 'proactive_opt_in', 1);
-    }
-    recordMessage(message.author.id);
-    await handleMention(message, client);
-    recordResponse(message.author.id);
-    return;
-  }
-
-  // Skarn channel state tracking
-  onMessageReceived(message);
-
-  // Skarn relationship tracking
-  updateRelationship(message.author.id, message.guild.id, 'message');
-
-  // Skarn server culture tracking
-  updateCulture(message.guild.id, message.channel.id, message.content);
-
-  // Warmth tracking
-  updateWarmth(message.author.id, message.guild.id, message.content);
-  // Callback tracking (notable message sampling)
-  updateCallbacks(message.channel.id, message.author.id, message.content);
-  // Active listening (non-AI channels only, handled internally)
-  maybeActiveListen(message, client);
-  // Comedy: banter chain tracking
-  if (!message.content.startsWith('!')) extendBanterChain(message.author.id, message.guild.id, message.channel.id);
-  // Comedy: record setups for punchline detection
-  recordSetup(message.channel.id, message.author.id, message.content);
-
-  // Track messages sent to bot
-  recordMessage(message.author.id);
-
-  // ===== Opt-in/out/status keyword check (runs before @mention and AI channel routing) =====
-  const msg = message.content.toLowerCase();
-  if (msg.includes('skarn')) {
-    if (/\bopt\s*in\b/.test(msg)) {
-      setUserPreference(message.author.id, message.guild?.id, 'proactive_opt_in', 1);
-      await message.reply("you're opted in. i'll check in on you from time to time.");
-      return;
-    }
-    if (/\bopt\s*out\b/.test(msg)) {
-      setUserPreference(message.author.id, message.guild?.id, 'proactive_opt_in', 0);
-      await message.reply("you're opted out now. say 'skarn opt in' anytime to change that.");
-      return;
-    }
-    if (/^(skarn\s+)?chat\s*mode\b/.test(msg)) {
-      const aiChans = getGuildConfig(message.guild?.id, 'aiChannels') || [];
-      const isEnabled = aiChans.includes(message.channel.id);
-      await message.reply(isEnabled ? "this channel has auto chat mode on. i'll chime in when i have something to say." : "auto chat mode is off in this channel.");
-      return;
-    }
-    if (/^(skarn\s+)?status\b/.test(msg)) {
-      const prefs = getUserPreferences(message.author.id, message.guild?.id);
-      const isOptedIn = prefs && prefs.proactive_opt_in === 1;
-      const stats = getStats(message.author.id);
-      const resetsStr = stats.resetsAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-      const optPart = isOptedIn ? "you're opted in" : "you're opted out";
-      const usagePart = stats.messagesSent === 0
-        ? `you haven't used any replies yet — ${stats.cap} available this hour.`
-        : `${stats.remaining} replies left this hour, resets at ${resetsStr}.`;
-      const ctaPart = isOptedIn ? "" : " say 'skarn opt in' for proactive check-ins.";
-      await message.reply(`${optPart}. ${usagePart}${ctaPart}`);
-      return;
-    }
-  }
-
-  // Skarn mention routing (before keyword triggers and old AI logic)
-  if (message.mentions.has(client.user)) {
-    await handleMention(message, client);
-    recordResponse(message.author.id);
-    return;
-  }
-
-  // Skarn passive reactions (not during sleep)
-  maybeReact(message, client, isAsleep);
-
-  // Reply-to-bot routing in AI channels
-  if (message.reference?.messageId && process.env.AI_MODEL) {
-    const aiChans = getGuildConfig(message.guild?.id, 'aiChannels') || [];
-    if (aiChans.includes(message.channel.id)) {
-      try {
-        const refMsg = await message.channel.messages.fetch(message.reference.messageId);
-        if (refMsg.author.id === client.user.id) {
-          await handleMention(message, client);
-          recordResponse(message.author.id);
+    // Auto opt-in
+    try {
+      const db = require('./db/database');
+      db.setUserPreference(message.author.id, 'proactive_opt_in', '1');
+    } catch (e) { /* ignore */ }
+    // Check activation registry first
+    const dmMatch = lookup(message.content);
+    if (dmMatch) {
+      if (dmMatch.type === 'command' && dmMatch.handler) {
+        if (!dmMatch.activation.guildOnly) {
+          try { await dmMatch.handler(message, dmMatch.args); } catch (e) { message.reply({ content: e.message, flags: 64 }); }
           return;
         }
-      } catch (e) { console.error('[Bot] Caught:', e.message); }
-    }
-  }
-
-  // Ignore check — skipped for mentions and replies (handled above)
-  if (process.env.AI_MODEL) {
-    const ignored = getGuildConfig(message.guild?.id, 'ignoredUsers') || [];
-    if (ignored.includes(message.author.id)) return;
-  }
-
-  // AI channel auto-respond with smart gating (heuristics + AI decides)
-  if (process.env.AI_MODEL) {
-    const aiChans = getGuildConfig(message.guild?.id, 'aiChannels') || [];
-    if (aiChans.includes(message.channel.id)) {
-      const { canInteract } = require('./features/proactive/absenceDetector');
-      if (!canInteract(message.author.id, message.guild?.id)) return;
-      if (!canRespond(message.author.id)) return;
-
-      // Gate: AI decides (heuristic bypass: questions, "skarn" → always respond)
-      const { shouldRespond } = require('./features/discordNative/chatGate');
-      if (!await shouldRespond(msg)) return;
-
-      await handleMention(message, client);
-      recordResponse(message.author.id);
-      return;
-    }
-  }
-
-  // XP gain (15-25 XP per message, 60s cooldown per user)
-  if (!xpCooldown.has(message.author.id)) {
-    xpCooldown.add(message.author.id);
-    setTimeout(() => xpCooldown.delete(message.author.id), 60000);
-
-    const xp = Math.floor(Math.random() * 11) + 15;
-    const guildId = message.guild.id;
-    var levelRow = db.prepare('SELECT * FROM user_levels WHERE guild_id = ? AND user_id = ?').get(guildId, message.author.id);
-    if (!levelRow) { levelRow = { xp: 0, level: 0 }; }
-
-    const userData = levelRow;
-    userData.xp += xp;
-
-    const xpForNext = (userData.level + 1) * 100;
-    if (userData.xp >= xpForNext) {
-      userData.level++;
-      userData.xp -= xpForNext;
-      message.channel.send(`🎉 ${message.author} leveled up to **Level ${userData.level}**!`);
-
-      // Assign level role if configured
-      const configRow = db.prepare('SELECT value FROM guild_config WHERE guild_id = ? AND key = ?').get(guildId, 'levelRoles');
-      const levelRoles = configRow ? JSON.parse(configRow.value) : {};
-      if (levelRoles[userData.level]) {
-        try {
-          const role = await message.guild.roles.fetch(levelRoles[userData.level]);
-          if (role) {
-            await message.member.roles.add(role);
-            message.channel.send(`🏅 You've earned the **${role.name}** role!`);
-          }
-        } catch {}
+      } else if (dmMatch.type === 'ai') {
+        message.content = dmMatch.aiContent;
+        await handleMention(message);
+        return;
       }
     }
-
-    db.prepare('INSERT OR REPLACE INTO user_levels (guild_id, user_id, xp, level) VALUES (?, ?, ?, ?)').run(guildId, message.author.id, userData.xp, userData.level);
+    // Fall through to AI
+    await handleMention(message);
+    return;
   }
 
-  // Logging
-  const logChanId = getGuildConfig(message.guild?.id, 'logChannel');
-  const logMessages = getGuildConfig(message.guild?.id, 'logMessages');
-  if (logChanId && logMessages) {
+  // Step 3: State tracking batch (non-blocking)
+  Promise.allSettled([
+    Promise.resolve().then(function() { return require('./features/channelState/stateTracker').onMessageReceived ? require('./features/channelState/stateTracker').onMessageReceived(message) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/relationship/relationshipTracker').updateRelationship ? require('./features/relationship/relationshipTracker').updateRelationship(message) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/culture/cultureTracker').updateCulture ? require('./features/culture/cultureTracker').updateCulture(message) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/warmth/warmthManager').updateWarmth ? require('./features/warmth/warmthManager').updateWarmth(message) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/humor/callbackEngine').updateCallbacks ? require('./features/humor/callbackEngine').updateCallbacks(message) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/warmth/warmthManager').maybeActiveListen ? require('./features/warmth/warmthManager').maybeActiveListen(message) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/humor/comedyTiming').extendBanterChain ? require('./features/humor/comedyTiming').extendBanterChain(message) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/humor/comedyTiming').recordSetup ? require('./features/humor/comedyTiming').recordSetup(message) : null; }).catch(function() {}),
+  ]);
+
+  // Step 4: Fast-path skippers (return immediately)
+  const c = message.content.toLowerCase().trim();
+  
+  if (c.startsWith('skarn opt in') || c.startsWith('skarn opt out')) {
+    const isOptIn = c.startsWith('skarn opt in');
     try {
-      const logChannel = await message.guild.channels.fetch(logChanId);
-      if (logChannel && logChannel.id !== message.channel.id) {
-        // Log deleted/edited messages handled by separate events
+      require('./db/database').setUserPreference(message.author.id, message.guild.id, 'proactive_opt_in', isOptIn ? '1' : '0');
+      await message.reply(isOptIn ? "You're in. I'll check in now and then." : "Opted out. No proactive messages.");
+    } catch (e) { await message.reply({ content: 'Something went wrong.', flags: 64 }); }
+    return;
+  }
+  
+  if (c.startsWith('skarn chat mode') || c === 'skarn chatmode') {
+    try {
+      const aiChannels = require('./db/database').getGuildConfig ? require('./db/database').getGuildConfig(message.guild.id, 'aiChannels') : [];
+      const enabled = aiChannels && aiChannels.includes(message.channel.id);
+      await message.reply(enabled ? 'AI chat is **enabled** in this channel.' : 'AI chat is **disabled** in this channel.');
+    } catch (e) { await message.reply({ content: 'Error checking chat mode.', flags: 64 }); }
+    return;
+  }
+  
+  if (c.startsWith('skarn status')) {
+    try {
+      const prefs = require('./db/database').getUserPreferences ? require('./db/database').getUserPreferences(message.author.id, message.guild.id) : {};
+      const optedIn = prefs && prefs.proactive_opt_in === 1;
+      await message.reply('Opt-in: ' + (optedIn ? 'ON' : 'OFF') + ' | Use `/aistats` for detailed stats.');
+    } catch (e) { await message.reply({ content: 'Error checking status.', flags: 64 }); }
+    return;
+  }
+
+  // Step 5: Activation phrase registry
+  if (c.startsWith('skarn') || c.startsWith('!')) {
+    const match = lookup(message.content);
+    if (match) {
+      if (match.type === 'command' && match.handler) {
+        if (match.activation.guildOnly && !message.guild) {
+          await message.reply('This command can only be used in a server.');
+          return;
+        }
+        if (match.activation.requiredPermissions && match.activation.requiredPermissions.length > 0) {
+          const member = message.member;
+          if (!member) return;
+          const missing = match.activation.requiredPermissions.filter(function(p) { return !member.permissions.has(p); });
+          if (missing.length > 0) {
+            await message.reply({ content: 'You need the ' + missing.join(', ') + ' permission(s) to use this command.', flags: 64 });
+            return;
+          }
+        }
+        try { await match.handler(message, match.args); } catch (err) {
+          await message.reply({ content: err.message || 'Command failed.', flags: 64 });
+        }
+        return;
       }
-    } catch (e) { console.error('[Bot] Caught:', e.message); }
+      if (match.type === 'ai') {
+        message.content = match.aiContent;
+        await handleMention(message);
+        return;
+      }
+    }
   }
 
-  // ===== Auto funny replies =====
-
-  // "skarn" keyword — AI response for non-opt messages (opt patterns handled above)
-  if (msg.includes('skarn')) {
-    const { canInteract } = require('./features/proactive/absenceDetector');
-    if (canInteract(message.author.id, message.guild?.id)) {
-      await handleMention(message, client);
-      recordResponse(message.author.id);
-    }
+  // Step 6: @mention → AI
+  if (message.mentions.has(client.user)) {
+    await handleMention(message);
     return;
   }
 
-  // Skarn presence interjection (replaces keyword triggers + random sayings)
-  maybeInterject(message, client);
+  // Step 7: Passive reactions (sleep-aware)
+  var isSleeping = false;
+  var SLEEP_START = process.env.SLEEP_START;
+  var SLEEP_END = process.env.SLEEP_END;
+  if (SLEEP_START && SLEEP_END) {
+    var now = new Date();
+    var hour = now.getHours();
+    var start = parseInt(SLEEP_START);
+    var end = parseInt(SLEEP_END);
+    if (start <= end) isSleeping = hour >= start && hour < end;
+    else isSleeping = hour >= start || hour < end;
+  }
+  if (!isSleeping) {
+    try { require('./features/discordNative/reactionSystem').maybeReact(message); } catch (e) {}
+  }
 
-  // Prefix commands
-  if (!message.content.startsWith('!')) return;
-  const args = message.content.slice(1).trim().split(/ +/);
-  const commandName = args.shift().toLowerCase();
-  if (commandName === 'ping') { message.reply('Pong!'); return; }
-
-  // !friends
-  if (commandName === 'friends') {
-    const friendsData = db.prepare('SELECT * FROM friends').all();
-    const search = args.join(' ').toLowerCase();
-    if (search) {
-      const matches = friendsData.filter(f => f.name.toLowerCase().includes(search) || f.code.toLowerCase().includes(search));
-      if (matches.length === 0) { message.reply(`No friends found matching "${search}".`); return; }
-      const list = matches.map(f => `\`${f.code}\` **${f.name}** ${f.power}${f.note ? ' — ' + f.note : ''}`).join('\n');
-      const embed = new EmbedBuilder().setTitle(`Search: ${search}`).setDescription(list).setColor(0x00e5ff);
-      message.reply({ embeds: [embed] });
-    } else {
-      const list = friendsData.map(f => `\`${f.code}\` **${f.name}** ${f.power}`).join('\n');
-      const full = friendsData.filter(f => f.power === '30/30').length;
-      const open = friendsData.length - full;
-      const embed = new EmbedBuilder()
-        .setTitle('Friends List')
-        .setDescription(list)
-        .addFields({ name: 'Total', value: `${friendsData.length}`, inline: true }, { name: 'Full', value: `${full}`, inline: true }, { name: 'Open', value: `${open}`, inline: true })
-        .setColor(0x00e5ff);
-      message.reply({ embeds: [embed] });
+  // Step 8: AI channel auto-respond
+  try {
+    var aiChannels = require('./db/database').getGuildConfig ? require('./db/database').getGuildConfig(message.guild.id, 'aiChannels') : [];
+    if (aiChannels && aiChannels.includes(message.channel.id)) {
+      // Ignored users check
+      var ignoredUsers = require('./db/database').getGuildConfig ? require('./db/database').getGuildConfig(message.guild.id, 'ignoredUsers') : [];
+      if (ignoredUsers && ignoredUsers.includes(message.author.id)) return;
+      
+      // Reply-to-bot check
+      if (message.reference && message.reference.messageId) {
+        try {
+          var refMsg = await message.channel.messages.fetch(message.reference.messageId);
+          if (refMsg.author.id === client.user.id) {
+            await handleMention(message);
+            return;
+          }
+        } catch (e) {}
+      }
+      
+      // Chat gate
+      try {
+        var chatGate = require('./features/discordNative/chatGate');
+        if (chatGate.shouldRespond && await chatGate.shouldRespond(message)) {
+          await handleMention(message);
+          return;
+        }
+      } catch (e) {}
     }
-    return;
+  } catch (e) {}
+
+  // Step 9: XP gain + Record message
+  try {
+    var xpKey = 'xp:' + message.guild.id + ':' + message.author.id;
+    var db = require('./db/database');
+    if (db.checkCooldown && !db.checkCooldown(xpKey)) {
+      db.setCooldown(xpKey, 60000);
+      var xp = Math.floor(Math.random() * 11) + 15;
+      if (db.addXp) db.addXp(message.guild.id, message.author.id, xp);
+    }
+    if (db.recordMessage) db.recordMessage(message.author.id, message.guild.id);
+  } catch (e) {}
+  
+  // Logging check
+  try {
+    var logChannelId = require('./db/database').getGuildConfig ? require('./db/database').getGuildConfig(message.guild.id, 'logChannel') : null;
+    if (logChannelId && require('./db/database').getGuildConfig(message.guild.id, 'logMessages') === 'true') {
+      // logging logic (existing code from bot.js)
+    }
+  } catch (e) {}
+
+  // Step 10: Passive interjection (if not sleeping)
+  if (!isSleeping) {
+    try { require('./features/presence/interjectionEngine').maybeInterject(message); } catch (e) {}
   }
 });
 

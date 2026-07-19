@@ -7,4 +7,15 @@ module.exports = {
   async execute(interaction) {
     await interaction.reply('Pong!');
   },
+  async handleActivation(message, args) {
+    await message.reply('Pong!');
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn ping',
+    description: 'Check if bot is responsive',
+    guildOnly: false,
+    requiredPermissions: [],
+    parseArgs: function() { return {}; },
+  },
 };

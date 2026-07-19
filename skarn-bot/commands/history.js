@@ -1,6 +1,72 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { db } = require('../db/database');
 
+async function getHistoryResponse(args, message) {
+  const authorId = message.author.id;
+  const guildId = message.guild.id;
+  const days = args.days || 7;
+  const threadNum = args.thread ? parseInt(args.thread) : null;
+
+  // For activation (text-based), only the message author can view their own history
+  const targetUserId = authorId;
+  const cutoff = Date.now() - (days * 24 * 60 * 60 * 1000);
+
+  const threads = db.prepare(
+    `SELECT * FROM conversation_threads WHERE user_id = ? AND guild_id = ? AND started_at > ? ORDER BY last_active_at DESC LIMIT 10`
+  ).all(targetUserId, guildId, cutoff);
+
+  if (threads.length === 0) {
+    return { content: 'No conversation history found for that time period.', flags: 64 };
+  }
+
+  if (threadNum && threadNum <= threads.length) {
+    const thread = threads[threadNum - 1];
+    const messages = db.prepare(
+      'SELECT * FROM conversation_messages WHERE thread_id = ? ORDER BY created_at'
+    ).all(thread.thread_id);
+
+    const embed = new EmbedBuilder()
+      .setTitle(`Conversation — ${new Date(thread.started_at).toLocaleDateString()}`)
+      .setDescription(`${thread.thread_type} channel • ${messages.length} messages`)
+      .setColor(0x00e5ff);
+
+    const recentMsgs = messages.slice(-15);
+    const chatLog = recentMsgs.map(m => {
+      const time = new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const role = m.role === 'user' ? '**You**' : '**Skarn**';
+      const content = m.content.length > 150 ? m.content.substring(0, 150) + '...' : m.content;
+      return `\`${time}\` ${role}: ${content}`;
+    }).join('\n');
+
+    embed.addFields({ name: 'Messages', value: chatLog || '*No messages*' });
+    if (messages.length > 15) {
+      embed.setFooter({ text: `Showing last 15 of ${messages.length} messages` });
+    }
+    return { embeds: [embed], flags: 64 };
+  }
+
+  const embed = new EmbedBuilder()
+    .setTitle(`Conversation History — ${message.author.username}`)
+    .setDescription(`Last ${days} days • Use \`skarn history thread:N\` to view messages`)
+    .setColor(0x00e5ff);
+
+  for (let i = 0; i < threads.length; i++) {
+    const thread = threads[i];
+    const date = new Date(thread.started_at).toLocaleDateString();
+    const time = new Date(thread.started_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const tags = JSON.parse(thread.topic_tags || '[]');
+    const tagStr = tags.length > 0 ? tags.map(t => t.topic || t).join(', ') : 'general';
+    const summary = thread.topic_summary || `*${thread.message_count} messages*`;
+
+    embed.addFields({
+      name: `#${i + 1} — ${date} ${time} (${thread.thread_type})`,
+      value: `${summary}\nTopics: ${tagStr}`,
+      inline: false,
+    });
+  }
+  return { embeds: [embed], flags: 64 };
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('history')
@@ -81,5 +147,24 @@ module.exports = {
     }
 
     await interaction.editReply({ embeds: [embed] });
+  },
+  async handleActivation(message, args) {
+    if (!message.guild) {
+      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+    }
+    try {
+      const result = await getHistoryResponse(args, message);
+      await message.reply(result);
+    } catch (err) {
+      await message.reply({ content: err.message || 'Error fetching history.', flags: 64 });
+    }
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn history',
+    description: 'View conversation history',
+    guildOnly: true,
+    requiredPermissions: [],
+    parseArgs: function(content) { return { user: content.slice('skarn history'.length).trim() || null }; },
   },
 };

@@ -481,3 +481,42 @@ CREATE TABLE IF NOT EXISTS app_state (
   value TEXT NOT NULL,
   updated_at INTEGER NOT NULL
 );
+
+-- === Command Activation & Gate Audit (Phase 2) ===
+
+CREATE TABLE IF NOT EXISTS cooldowns (
+  key TEXT PRIMARY KEY,
+  expires_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS reminders (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  guild_id TEXT,
+  message TEXT NOT NULL,
+  remind_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL,
+  delivered INTEGER DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS giveaways (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  guild_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  prize TEXT NOT NULL,
+  ends_at INTEGER NOT NULL,
+  host_id TEXT NOT NULL,
+  winner_count INTEGER DEFAULT 1,
+  ended INTEGER DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS reaction_roles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  guild_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  message_id TEXT NOT NULL,
+  emoji TEXT NOT NULL,
+  role_id TEXT NOT NULL,
+  UNIQUE(message_id, emoji)
+);

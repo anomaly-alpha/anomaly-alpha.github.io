@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { ensureAiConfigured, checkCanCall } = require('../lib/gates');
 
 const SYSTEM_PROMPT = `You are Skarn, a helpful and funny Discord bot. Keep replies short (1-2 sentences max), casual, and entertaining. Use occasional emojis but don't overdo it. You're witty and helpful but not annoying.`;
 
@@ -10,8 +11,11 @@ module.exports = {
   async execute(interaction) {
     const question = interaction.options.getString('question');
 
-    if (!process.env.OPENAI_API_KEY) {
-      return interaction.reply({ content: 'AI is not configured yet. Add OPENAI_API_KEY to the environment.', flags: 64 });
+    try {
+      ensureAiConfigured();
+      checkCanCall(interaction.user.id);
+    } catch (err) {
+      return interaction.reply({ content: err.message, flags: 64 });
     }
 
     await interaction.deferReply();

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { createGiveaway, getEndedGiveaways, markGiveawayEnded } = require('../db/database');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -25,6 +26,8 @@ module.exports = {
     );
 
     const msg = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
+
+    createGiveaway(interaction.guild.id, interaction.channel.id, prize, endTime, interaction.user.id, winnerCount);
 
     setTimeout(async () => {
       try {
@@ -54,7 +57,23 @@ module.exports = {
 
         await freshMsg.edit({ embeds: [resultEmbed], components: [] });
         await interaction.channel.send(`Congratulations ${winners.map(w => `<@${w}>`).join(', ')}! You won **${prize}**! 🎉`);
+
+        // Mark ended in database
+        const endedList = getEndedGiveaways();
+        const match = endedList.find(g => g.channel_id === interaction.channel.id && g.prize === prize);
+        if (match) markGiveawayEnded(match.id);
       } catch {}
     }, minutes * 60 * 1000);
+  },
+  async handleActivation(message, args) {
+    await message.reply({ content: 'Please use the `/giveaway` slash command to start a giveaway.', flags: 64 });
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn giveaway',
+    description: 'Start a giveaway',
+    guildOnly: true,
+    requiredPermissions: ['ManageMessages'],
+    parseArgs: function(content) { return {}; },
   },
 };

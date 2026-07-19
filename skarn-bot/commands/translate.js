@@ -1,6 +1,13 @@
 const { SlashCommandBuilder } = require('discord.js');
 const fetch = require('node-fetch');
 
+async function getTranslateResponse(args) {
+  const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(args.text)}&langpair=en|${args.to || 'en'}`);
+  const data = await res.json();
+  if (data.responseStatus !== 200) throw new Error('Translation failed');
+  return `**Original:** ${args.text}\n**Translated:** ${data.responseData.translatedText}`;
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('translate')
@@ -29,12 +36,26 @@ module.exports = {
     const to = interaction.options.getString('to');
     await interaction.deferReply();
     try {
-      const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${to}`);
-      const data = await res.json();
-      if (data.responseStatus !== 200) throw new Error('Translation failed');
-      await interaction.editReply(`**Original:** ${text}\n**Translated:** ${data.responseData.translatedText}`);
+      const result = await getTranslateResponse({ text, to });
+      await interaction.editReply(result);
     } catch {
       await interaction.editReply({ content: 'Translation failed.', flags: 64 });
     }
+  },
+  async handleActivation(message, args) {
+    try {
+      const result = await getTranslateResponse(args);
+      await message.reply(result);
+    } catch (err) {
+      await message.reply({ content: err.message || 'Translation failed.', flags: 64 });
+    }
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn translate',
+    description: 'Translate text',
+    guildOnly: false,
+    requiredPermissions: [],
+    parseArgs: function(content) { return { text: content.slice('skarn translate'.length).trim(), to: 'en' }; },
   },
 };

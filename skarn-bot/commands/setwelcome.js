@@ -1,6 +1,12 @@
 const { SlashCommandBuilder, PermissionFlagsBits, ChannelType } = require('discord.js');
 const { setGuildConfig } = require('../db/database');
 
+function getSetwelcomeResponse(args, message) {
+  const channelId = args.channel;
+  setGuildConfig(message.guild.id, 'welcomeChannel', channelId);
+  return { content: `Welcome messages will be sent to <#${channelId}>.`, flags: 64 };
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('setwelcome')
@@ -11,5 +17,27 @@ module.exports = {
     const channel = interaction.options.getChannel('channel');
     setGuildConfig(interaction.guild.id, 'welcomeChannel', channel.id);
     await interaction.reply({ content: `Welcome messages will be sent to ${channel}.`, flags: 64 });
+  },
+  async handleActivation(message, args) {
+    if (!message.member?.permissions.has('Administrator')) {
+      return message.reply({ content: 'You need Administrator permission to use this command.', flags: 64 });
+    }
+    if (!message.guild) {
+      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+    }
+    const channel = message.mentions.channels.first();
+    if (!channel) {
+      return message.reply({ content: 'Please mention a channel: `skarn setwelcome #channel`', flags: 64 });
+    }
+    const result = getSetwelcomeResponse({ channel: channel.id }, message);
+    await message.reply(result);
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn setwelcome',
+    description: 'Set welcome channel',
+    guildOnly: true,
+    requiredPermissions: ['Administrator'],
+    parseArgs: function(content) { const mention = content.slice('skarn setwelcome'.length).trim(); return { channel: mention.match(/<#(\d+)>/)?.[1] || '' }; },
   },
 };

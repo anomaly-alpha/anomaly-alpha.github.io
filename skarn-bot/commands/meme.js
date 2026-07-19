@@ -2,7 +2,8 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const getOpenAIClient = require('../ai/client');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
-const { canCall, recordCall } = require('../lib/rateLimit');
+const { ensureAiConfigured, checkCanCall } = require('../lib/gates');
+const { recordCall } = require('../lib/rateLimit');
 const { getChannelState, getUserMemory } = require('../db/database');
 const { getStateLine } = require('../features/channelState/stateTracker');
 
@@ -37,36 +38,35 @@ module.exports = {
     let title, imageUrl;
 
     // Try AI caption if topic provided
-    if (topic && process.env.OPENAI_API_KEY) {
-      if (!canCall(interaction.user.id)) {
-        // Skip AI, fall through to random meme
-      } else {
-        try {
-          const channelState = getChannelState(interaction.channel.id, interaction.guild.id);
-          const stateLine = getStateLine(channelState.current_state);
-          const memory = getUserMemory(interaction.user.id, interaction.guild.id, 5);
-          const memoryLine = memory.length > 0
-            ? 'What Skarn remembers about this person: ' + memory.map(m => m.fact_text).join('; ')
-            : '';
-          const systemPrompt = buildSystemPrompt({ roleLine: roles.meme, stateLine, memoryLine });
+    if (topic) {
+      try {
+        ensureAiConfigured();
+        checkCanCall(interaction.user.id);
 
-          const openai = getOpenAIClient();
-          const completion = await openai.chat.completions.create({
-            model: process.env.AI_MODEL || 'gpt-3.5-turbo',
-            messages: [
-              { role: 'system', content: systemPrompt },
-              { role: 'user', content: `Meme about: ${topic}` },
-            ],
-            max_completion_tokens: roleTokenBudgets.meme,
-            temperature: 1.0,
-          });
+        const channelState = getChannelState(interaction.channel.id, interaction.guild.id);
+        const stateLine = getStateLine(channelState.current_state);
+        const memory = getUserMemory(interaction.user.id, interaction.guild.id, 5);
+        const memoryLine = memory.length > 0
+          ? 'What Skarn remembers about this person: ' + memory.map(m => m.fact_text).join('; ')
+          : '';
+        const systemPrompt = buildSystemPrompt({ roleLine: roles.meme, stateLine, memoryLine });
 
-          recordCall(interaction.user.id);
+        const openai = getOpenAIClient();
+        const completion = await openai.chat.completions.create({
+          model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: `Meme about: ${topic}` },
+          ],
+          max_completion_tokens: roleTokenBudgets.meme,
+          temperature: 1.0,
+        });
 
-          title = `${completion.choices[0].message.content} — ${topic}`;
-        } catch {
-          // AI failed, use random meme
-        }
+        recordCall(interaction.user.id);
+
+        title = `${completion.choices[0].message.content} — ${topic}`;
+      } catch {
+        // AI failed, use random meme
       }
     }
 

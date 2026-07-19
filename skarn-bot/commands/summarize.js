@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, ChannelType } = require('discord.js');
+const { ensureAiConfigured, checkCanCall } = require('../lib/gates');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -29,8 +30,10 @@ module.exports = {
     const hours = parseInt(interaction.options.getString('timeframe') || '168'); // default 1 week
     const focus = interaction.options.getString('focus') || 'general summary';
 
-    if (!process.env.OPENAI_API_KEY) {
-      return interaction.reply({ content: 'AI is not configured. Add OPENAI_API_KEY.', flags: 64 });
+    try {
+      ensureAiConfigured();
+    } catch (err) {
+      return interaction.reply({ content: err.message, flags: 64 });
     }
 
     await interaction.deferReply();
@@ -77,6 +80,9 @@ module.exports = {
 
       // Truncate if too long for API
       const truncated = conversation.length > 12000 ? conversation.slice(0, 12000) + '\n... (truncated)' : conversation;
+
+      // Check rate limit before AI call
+      checkCanCall(interaction.user.id);
 
       // Summarize with AI
       const OpenAI = require('openai');

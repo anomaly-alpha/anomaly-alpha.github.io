@@ -1,6 +1,26 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 const db = require('../db/database').db;
 
+function getSetlevelroleResponse(args, message) {
+  const level = parseInt(args.level);
+  const roleId = args.role;
+  const guildId = message.guild.id;
+  const role = message.guild.roles.cache.get(roleId);
+
+  const configRow = db.prepare('SELECT value FROM guild_config WHERE guild_id = ? AND key = ?').get(guildId, 'levelRoles');
+  const levelRoles = configRow ? JSON.parse(configRow.value) : {};
+
+  levelRoles[level] = roleId;
+  db.prepare('INSERT OR REPLACE INTO guild_config (guild_id, key, value) VALUES (?, ?, ?)').run(guildId, 'levelRoles', JSON.stringify(levelRoles));
+
+  return {
+    embeds: [new EmbedBuilder()
+      .setTitle('Level Role Set')
+      .setDescription(`Users will receive **${role?.name || 'Unknown'}** at **Level ${level}**`)
+      .setColor(0x2ecc71)],
+  };
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('setlevelrole')
@@ -25,5 +45,30 @@ module.exports = {
       .setColor(0x2ecc71);
 
     await interaction.reply({ embeds: [embed] });
+  },
+  async handleActivation(message, args) {
+    if (!message.member?.permissions.has('Administrator')) {
+      return message.reply({ content: 'You need Administrator permission to use this command.', flags: 64 });
+    }
+    if (!message.guild) {
+      return message.reply({ content: 'This command can only be used in a server.', flags: 64 });
+    }
+    if (!args.level || !args.role) {
+      return message.reply({ content: 'Usage: `skarn setlevelrole <level> @role`', flags: 64 });
+    }
+    const result = getSetlevelroleResponse(args, message);
+    await message.reply(result);
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn setlevelrole',
+    description: 'Set level role',
+    guildOnly: true,
+    requiredPermissions: ['Administrator'],
+    parseArgs: function(content) {
+      const rest = content.slice('skarn setlevelrole'.length).trim();
+      const parts = rest.split(/\s+/);
+      return { level: parts[0] || '', role: parts[1]?.match(/<@&(\d+)>/)?.[1] || '' };
+    },
   },
 };

@@ -703,6 +703,74 @@ function setGuildConfig(guildId, key, value) {
   db.prepare('INSERT OR REPLACE INTO guild_config (guild_id, key, value) VALUES (?, ?, ?)').run(guildId, key, strVal);
 }
 
+// ===== FRIENDS (migrated from JSON) =====
+function getAllFriends() {
+  return db.prepare('SELECT * FROM friends ORDER BY name ASC').all();
+}
+function getFriendByCode(code) {
+  return db.prepare('SELECT * FROM friends WHERE code = ?').get(code);
+}
+function searchFriends(query) {
+  return db.prepare('SELECT * FROM friends WHERE LOWER(name) LIKE ?').all('%' + query.toLowerCase() + '%');
+}
+
+// ===== COOLDOWNS =====
+function checkCooldown(key) {
+  const row = db.prepare('SELECT 1 FROM cooldowns WHERE key = ? AND expires_at > ?').get(key, Date.now());
+  return !!row;
+}
+function setCooldown(key, ttlMs) {
+  db.prepare('INSERT OR REPLACE INTO cooldowns (key, expires_at) VALUES (?, ?)').run(key, Date.now() + ttlMs);
+}
+function cleanCooldowns() {
+  db.prepare('DELETE FROM cooldowns WHERE expires_at < ?').run(Date.now());
+}
+
+// ===== REMINDERS =====
+function createReminder(userId, channelId, guildId, message, remindAt) {
+  db.prepare('INSERT INTO reminders (user_id, channel_id, guild_id, message, remind_at, created_at) VALUES (?, ?, ?, ?, ?, ?)')
+    .run(userId, channelId, guildId, message, remindAt, Date.now());
+}
+function getDueReminders() {
+  return db.prepare('SELECT * FROM reminders WHERE remind_at <= ? AND delivered = 0').all(Date.now());
+}
+function markReminderDelivered(id) {
+  db.prepare('UPDATE reminders SET delivered = 1 WHERE id = ?').run(id);
+}
+function getPendingReminders() {
+  return db.prepare('SELECT * FROM reminders WHERE delivered = 0 ORDER BY remind_at ASC').all();
+}
+
+// ===== GIVEAWAYS =====
+function createGiveaway(guildId, channelId, prize, endsAt, hostId, winnerCount) {
+  db.prepare('INSERT INTO giveaways (guild_id, channel_id, prize, ends_at, host_id, winner_count) VALUES (?, ?, ?, ?, ?, ?)')
+    .run(guildId, channelId, prize, endsAt, hostId, winnerCount || 1);
+}
+function getActiveGiveaways() {
+  return db.prepare('SELECT * FROM giveaways WHERE ended = 0').all();
+}
+function getEndedGiveaways() {
+  return db.prepare('SELECT * FROM giveaways WHERE ends_at <= ? AND ended = 0').all(Date.now());
+}
+function markGiveawayEnded(id) {
+  db.prepare('UPDATE giveaways SET ended = 1 WHERE id = ?').run(id);
+}
+
+// ===== REACTION ROLES =====
+function addReactionRole(guildId, channelId, messageId, emoji, roleId) {
+  db.prepare('INSERT OR IGNORE INTO reaction_roles (guild_id, channel_id, message_id, emoji, role_id) VALUES (?, ?, ?, ?, ?)')
+    .run(guildId, channelId, messageId, emoji, roleId);
+}
+function getReactionRolesByMessage(messageId) {
+  return db.prepare('SELECT * FROM reaction_roles WHERE message_id = ?').all(messageId);
+}
+function getAllReactionRoles() {
+  return db.prepare('SELECT * FROM reaction_roles').all();
+}
+function removeReactionRole(messageId, emoji) {
+  db.prepare('DELETE FROM reaction_roles WHERE message_id = ? AND emoji = ?').run(messageId, emoji);
+}
+
 module.exports = {
   db,
   getUserMemory,
@@ -785,4 +853,22 @@ module.exports = {
   addCallback,
   getCallbacks,
   pruneCallbacks,
+  getAllFriends,
+  getFriendByCode,
+  searchFriends,
+  checkCooldown,
+  setCooldown,
+  cleanCooldowns,
+  createReminder,
+  getDueReminders,
+  markReminderDelivered,
+  getPendingReminders,
+  createGiveaway,
+  getActiveGiveaways,
+  getEndedGiveaways,
+  markGiveawayEnded,
+  addReactionRole,
+  getReactionRolesByMessage,
+  getAllReactionRoles,
+  removeReactionRole,
 };

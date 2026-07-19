@@ -1,18 +1,21 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
+const { createReminder } = require('../db/database');
 
-const remindersFile = path.join(__dirname, '..', 'data', 'reminders.json');
+function getRemindResponse(args, message) {
+  const minutes = args.minutes;
+  const text = args.text;
+  const remindAt = Date.now() + minutes * 60 * 1000;
 
-function loadReminders() {
-  if (!fs.existsSync(remindersFile)) return [];
-  return JSON.parse(fs.readFileSync(remindersFile, 'utf8'));
-}
+  createReminder(message.author.id, message.channel.id, message.guild?.id, text, remindAt);
 
-function saveReminders(data) {
-  const dir = path.dirname(remindersFile);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(remindersFile, JSON.stringify(data, null, 2));
+  setTimeout(async () => {
+    try {
+      const channel = await message.client.channels.fetch(message.channel.id);
+      await channel.send(`<@${message.author.id}> Reminder: **${text}**`);
+    } catch {}
+  }, minutes * 60 * 1000);
+
+  return { content: `I'll remind you in **${minutes}** minute(s): ${text}`, flags: 64 };
 }
 
 module.exports = {
@@ -24,29 +27,41 @@ module.exports = {
   async execute(interaction) {
     const minutes = interaction.options.getInteger('minutes');
     const message = interaction.options.getString('message');
-    const reminders = loadReminders();
+    const remindAt = Date.now() + minutes * 60 * 1000;
 
-    const reminder = {
-      userId: interaction.user.id,
-      channelId: interaction.channel.id,
-      guildId: interaction.guild.id,
-      message,
-      remindAt: Date.now() + minutes * 60 * 1000,
-    };
-    reminders.push(reminder);
-    saveReminders(reminders);
+    createReminder(interaction.user.id, interaction.channel.id, interaction.guild.id, message, remindAt);
 
     setTimeout(async () => {
       try {
-        const channel = await interaction.client.channels.fetch(reminder.channelId);
-        await channel.send(`<@${reminder.userId}> Reminder: **${message}**`);
-        const current = loadReminders();
-        const idx = current.findIndex(r => r.remindAt === reminder.remindAt && r.userId === reminder.userId);
-        if (idx !== -1) current.splice(idx, 1);
-        saveReminders(current);
+        const channel = await interaction.client.channels.fetch(interaction.channel.id);
+        await channel.send(`<@${interaction.user.id}> Reminder: **${message}**`);
       } catch {}
     }, minutes * 60 * 1000);
 
     await interaction.reply({ content: `I'll remind you in **${minutes}** minute(s): ${message}`, flags: 64 });
+  },
+  async handleActivation(message, args) {
+    if (!args.minutes || !args.text) {
+      return message.reply({ content: 'Usage: `skarn remind <minutes> <message>` — e.g. `skarn remind 30 take out the trash` or `skarn remind 2h deploy check`', flags: 64 });
+    }
+    const result = getRemindResponse(args, message);
+    await message.reply(result);
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn remind',
+    description: 'Set a reminder',
+    guildOnly: false,
+    requiredPermissions: [],
+    parseArgs: function(content) {
+      const rest = content.slice('skarn remind'.length).trim();
+      const match = rest.match(/^(\d+)\s*(m|min|minute|h|hr|hour)?\s+(.+)/i);
+      if (match) {
+        let minutes = parseInt(match[1]);
+        if (match[2] && /^h/i.test(match[2])) minutes *= 60;
+        return { minutes, text: match[3] };
+      }
+      return { minutes: null, text: rest };
+    },
   },
 };

@@ -10,6 +10,7 @@ const { generateBackstory, generateExploration, generateQuestHook } = require('.
 const realmStore = require('./realmStore');
 const { canCall, recordCall, canGuildCall, incrementGuildDaily } = require('./realmRateLimit');
 const { RACE_BONUSES, CLASS_STATS } = require('./realmConfig');
+const { checkCooldown, setCooldown } = require('../../db/database');
 
 // ===== Constants =====
 
@@ -21,18 +22,6 @@ const AI_ERRORS = [
   'Signal lost. The boundary holds.',
 ];
 
-const isProcessing = new Map();
-const PROCESSING_TTL = 30000; // 30s auto-expire to prevent stuck keys
-
-function guardKey(i) { return `${i.user.id}:${i.guildId}`; }
-function setProcessing(key) { isProcessing.set(key, Date.now() + PROCESSING_TTL); }
-function checkProcessing(key) {
-  const expires = isProcessing.get(key);
-  if (!expires) return false;
-  if (Date.now() > expires) { clearProcessing(key); return false; }
-  return true;
-}
-function clearProcessing(key) { isProcessing.delete(key); }
 function randomError() { return AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)]; }
 function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
 
@@ -227,9 +216,9 @@ async function handleExplore(interaction) {
     return interaction.reply({ embeds: [combatEmbed], components: [buildCombatButtons()], flags: EPHEMERAL });
   }
 
-  const key = guardKey(interaction);
-  if (checkProcessing(key)) return interaction.reply({ content: 'Processing your last action...', flags: EPHEMERAL });
-  setProcessing(key);
+  const key = 'realm:' + interaction.guildId + ':' + interaction.user.id;
+  if (checkCooldown(key)) return interaction.reply({ content: 'You already have a realm action in progress.', flags: EPHEMERAL });
+  setCooldown(key, 30000);
 
   try {
     await interaction.deferReply();
@@ -258,18 +247,18 @@ async function handleExplore(interaction) {
 
     await interaction.editReply({ embeds: [embed], components });
 
-    clearProcessing(key); // ready for button clicks
+    // ready for button clicks
 
     const collector = interaction.channel.createMessageComponentCollector({
       filter: i => i.user.id === userId, time: 120000,
     });
 
     collector.on('collect', async i => {
-      if (checkProcessing(key)) {
+      if (checkCooldown(key)) {
         await i.reply({ content: 'Still processing...', flags: EPHEMERAL }).catch(() => {});
         return;
       }
-      setProcessing(key);
+      setCooldown(key, 30000);
 
       try {
         if (i.customId.startsWith('combat_')) {
@@ -280,19 +269,15 @@ async function handleExplore(interaction) {
       } catch (err) {
         console.error('Explore collector error:', err);
         try { await i.editReply({ content: randomError() }); } catch {}
-      } finally {
-        clearProcessing(key);
       }
     });
 
     collector.on('end', () => {
-      clearProcessing(key);
       interaction.editReply({ components: [] }).catch(() => {});
     });
 
   } catch (err) {
     console.error('Explore error:', err);
-    clearProcessing(key);
     const msg = randomError();
     if (interaction.deferred) await interaction.editReply(msg);
     else await interaction.reply({ content: msg, flags: EPHEMERAL });

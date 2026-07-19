@@ -56,3 +56,10 @@
 - **proactive_opt_in**: The column (DEFAULT 0) controlling whether users receive proactive messages (check-ins, follow-ups). 0 = opted out by default (no proactive messages), 1 = opted in. Renamed from `proactive_opt_out` which had inverted semantics.
 - **Mention cooldown**: 1-second cooldown per user per channel for @mentions. Silently ignores rapid mentions.
 - **Proactive cap**: 1 proactive message per user per day maximum.
+
+## Command Activation
+
+- **Activation phrase**: A keyword that triggers a command when typed in chat (e.g., `skarn weather`, `skarn joke`). Every command has an optional activation phrase registered in the activation registry, providing a text-based alternative to slash commands.
+- **Activation registry**: Central module (`features/activation/activationRegistry.js`) that maps keyword phrases to commands. Built at startup by scanning each command file's `activation` export. Two routing types: `'command'` (runs the slash command handler) and `'ai'` (routes to the AI mention handler with an injected directive).
+- **Fast-path skippers**: The four built-in keyword handlers (`skarn opt in`, `skarn opt out`, `skarn chat mode`, `skarn status`) that run inline before the activation registry and return immediately without AI.
+- **Activation phrase wins**: A registered activation phrase always takes priority over the @mention AI handler and AI channel auto-respond for messages it matches.

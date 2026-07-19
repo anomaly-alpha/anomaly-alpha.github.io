@@ -1,6 +1,33 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { fetchWeather, buildRawEmbed, generateSkarnSummary } = require('../lib/weatherScheduler');
 
+async function getWeatherResponse(args) {
+  const { subcommand, location, style } = args;
+  const data = await fetchWeather(location);
+
+  if (subcommand === 'current') {
+    const current = data.current_condition[0];
+    return {
+      embeds: [new EmbedBuilder()
+        .setTitle(`Weather in ${location}`)
+        .addFields(
+          { name: 'Temperature', value: `${current.temp_C}°C / ${current.temp_F}°F`, inline: true },
+          { name: 'Condition', value: current.weatherDesc[0].value, inline: true },
+          { name: 'Humidity', value: `${current.humidity}%`, inline: true },
+          { name: 'Wind', value: `${current.windspeedKmph} km/h ${current.winddir16Point}`, inline: true },
+        )
+        .setColor(0x00e5ff)],
+    };
+  }
+
+  const embed = buildRawEmbed(location, data);
+  if (style === 'skarn') {
+    const summary = await generateSkarnSummary(location, data);
+    if (summary) embed.setDescription(summary);
+  }
+  return { embeds: [embed] };
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('weather')
@@ -23,38 +50,35 @@ module.exports = {
   async execute(interaction) {
     const subcommand = interaction.options.getSubcommand();
     const location = interaction.options.getString('location');
+    const style = interaction.options.getString('style') || 'skarn';
 
     await interaction.deferReply();
 
     try {
-      const data = await fetchWeather(location);
-
-      if (subcommand === 'current') {
-        const current = data.current_condition[0];
-        const embed = new EmbedBuilder()
-          .setTitle(`Weather in ${location}`)
-          .addFields(
-            { name: 'Temperature', value: `${current.temp_C}°C / ${current.temp_F}°F`, inline: true },
-            { name: 'Condition', value: current.weatherDesc[0].value, inline: true },
-            { name: 'Humidity', value: `${current.humidity}%`, inline: true },
-            { name: 'Wind', value: `${current.windspeedKmph} km/h ${current.winddir16Point}`, inline: true },
-          )
-          .setColor(0x00e5ff);
-        return interaction.editReply({ embeds: [embed] });
-      }
-
-      // Report subcommand
-      const style = interaction.options.getString('style') || 'skarn';
-      const embed = buildRawEmbed(location, data);
-
-      if (style === 'skarn') {
-        const summary = await generateSkarnSummary(location, data);
-        if (summary) embed.setDescription(summary);
-      }
-
-      await interaction.editReply({ embeds: [embed] });
+      const result = await getWeatherResponse({ subcommand, location, style });
+      await interaction.editReply(result);
     } catch {
       await interaction.editReply({ content: `Could not fetch weather for "${location}".`, flags: 64 });
     }
+  },
+  async handleActivation(message, args) {
+    try {
+      const result = await getWeatherResponse(args);
+      await message.reply(result);
+    } catch (err) {
+      await message.reply({ content: err.message || `Could not fetch weather for "${args.location}".`, flags: 64 });
+    }
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn weather',
+    description: 'Check the weather',
+    guildOnly: true,
+    requiredPermissions: [],
+    parseArgs: function(content) {
+      const rest = content.slice('skarn weather'.length).trim();
+      if (rest.toLowerCase().startsWith('report')) return { subcommand: 'report', location: rest.slice(6).trim(), style: 'skarn' };
+      return { subcommand: 'current', location: rest || null, style: 'skarn' };
+    },
   },
 };

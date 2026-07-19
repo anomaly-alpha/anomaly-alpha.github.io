@@ -1,6 +1,14 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { addKnowledgeBase } = require('../db/database');
 
+function getLearnResponse(args) {
+  const topic = args.topic.toLowerCase().trim();
+  const summary = args.info.trim();
+  if (topic.length < 2) return { content: 'Topic must be at least 2 characters.', flags: 64 };
+  addKnowledgeBase(topic, summary, 'user_taught', 0.8);
+  return { content: `📖 Got it! I'll remember that **${topic}** is: ${summary}`, flags: 64 };
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('learn')
@@ -13,5 +21,17 @@ module.exports = {
     if (topic.length < 2) return interaction.reply({ content: 'Topic must be at least 2 characters.', flags: 64 });
     addKnowledgeBase(topic, summary, 'user_taught', 0.8);
     await interaction.reply({ content: `📖 Got it! I'll remember that **${topic}** is: ${summary}`, flags: 64 });
+  },
+  async handleActivation(message, args) {
+    const result = getLearnResponse(args);
+    await message.reply(result);
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn learn',
+    description: 'Teach Skarn something',
+    guildOnly: false,
+    requiredPermissions: [],
+    parseArgs: function(content) { const parts = content.slice('skarn learn'.length).split('|').map(s=>s.trim()); return { topic: parts[0] || '', info: parts[1] || '' }; },
   },
 };
