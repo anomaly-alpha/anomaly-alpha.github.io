@@ -236,6 +236,27 @@ client.on('messageCreate', async message => {
   // Track messages sent to bot
   recordMessage(message.author.id);
 
+  // ===== Opt-in/out/status keyword check (runs before @mention and AI channel routing) =====
+  const msg = message.content.toLowerCase();
+  if (msg.includes('skarn')) {
+    if (/\bopt\s*in\b/.test(msg)) {
+      setUserPreference(message.author.id, message.guild?.id, 'proactive_opt_in', 1);
+      await message.reply("you're opted in. i'll check in on you from time to time.");
+      return;
+    }
+    if (/\bopt\s*out\b/.test(msg)) {
+      setUserPreference(message.author.id, message.guild?.id, 'proactive_opt_in', 0);
+      await message.reply("you're opted out now. say 'skarn opt in' anytime to change that.");
+      return;
+    }
+    if (/^(skarn\s+)?status\b/.test(msg)) {
+      const prefs = getUserPreferences(message.author.id, message.guild?.id);
+      const isOptedIn = prefs && prefs.proactive_opt_in === 1;
+      await message.reply(isOptedIn ? "you're opted in. i'll check in on you." : "you're opted out. say 'skarn opt in' if you want me to check in.");
+      return;
+    }
+  }
+
   // Skarn mention routing (before keyword triggers and old AI logic)
   if (message.mentions.has(client.user)) {
     await handleMention(message, client);
@@ -332,29 +353,9 @@ client.on('messageCreate', async message => {
   }
 
   // ===== Auto funny replies =====
-  const msg = message.content.toLowerCase();
 
-  // "skarn" keyword — handle opt in/out, then AI
+  // "skarn" keyword — AI response for non-opt messages (opt patterns handled above)
   if (msg.includes('skarn')) {
-    // Check opt-in/out patterns FIRST (before the canInteract gate)
-    if (/\bopt\s*in\b/.test(msg)) {
-      setUserPreference(message.author.id, message.guild?.id, 'proactive_opt_in', 1);
-      await message.reply("you're opted in. i'll check in on you from time to time.");
-      return;
-    }
-    if (/\bopt\s*out\b/.test(msg)) {
-      setUserPreference(message.author.id, message.guild?.id, 'proactive_opt_in', 0);
-      await message.reply("you're opted out now. say 'skarn opt in' anytime to change that.");
-      return;
-    }
-    // "status" only matches when it's the primary intent (not "status of X")
-    if (/^(skarn\s+)?status\b/.test(msg)) {
-      const prefs = getUserPreferences(message.author.id, message.guild?.id);
-      const isOptedIn = prefs && prefs.proactive_opt_in === 1;
-      await message.reply(isOptedIn ? "you're opted in. i'll check in on you." : "you're opted out. say 'skarn opt in' if you want me to check in.");
-      return;
-    }
-    // Original behavior for non-opt messages
     const { canInteract } = require('./features/proactive/absenceDetector');
     if (canInteract(message.author.id, message.guild?.id)) {
       await handleMention(message, client);
