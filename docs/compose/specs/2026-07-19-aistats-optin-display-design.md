@@ -43,7 +43,11 @@ Two changes to existing files:
     const stats = getStats(message.author.id);
     const resetsStr = stats.resetsAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     const optPart = isOptedIn ? "you're opted in" : "you're opted out";
-    await message.reply(`${optPart}. ${stats.remaining} replies left this hour, resets at ${resetsStr}.`);
+    const usagePart = stats.messagesSent === 0
+      ? `you haven't used any replies yet — ${stats.cap} available this hour.`
+      : `${stats.remaining} replies left this hour, resets at ${resetsStr}.`;
+    const ctaPart = isOptedIn ? "" : " say 'skarn opt in' for proactive check-ins.";
+    await message.reply(`${optPart}. ${usagePart}${ctaPart}`);
     return;
   }
   ```
@@ -69,11 +73,12 @@ skarn status (plain text)
 | No guild (DM) | `guildId` is undefined; `getUserPreferences` auto-creates row with `proactive_opt_in=0`; show "Opted Out" |
 | User opts in/out between calls | Always reads fresh from DB; no caching concerns |
 | `getStats` returns null | Cannot happen — `getStats` always returns an object with defaults |
+| Brand-new user (no AI usage) | `messagesSent === 0`; show "you haven't used any replies yet — ${stats.cap} available this hour." instead of remaining count |
 
 ## [S6] Verification
 
 1. `cd skarn-bot && node -e "require('./commands/aistats')"` — no import errors
 2. `cd skarn-bot && node -e "require('./bot')"` — no import errors (dry check; will fail on Discord token but import errors surface first)
-3. Manual: send `skarn status` in Discord — expect `Opt-in: no | Remaining: 50/50 | Resets at X:XX AM`
+3. Manual: send `skarn status` in Discord — expect `you're opted out. 50 replies left this hour, resets at X:XX AM. say 'skarn opt in' for proactive check-ins.`
 4. Manual: run `/aistats` — expect 6-field embed with "Opt-In Status" field
-5. Manual: send `skarn opt in` then `skarn status` — expect `Opt-in: yes`
+5. Manual: send `skarn opt in` then `skarn status` — expect `you're opted in. 50 replies left this hour, resets at X:XX AM.`
