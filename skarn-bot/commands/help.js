@@ -124,6 +124,13 @@ const categories = {
       { name: '/learn', desc: 'Teach Skarn something new' },
     ],
   },
+  'News': {
+    color: 0xe74c3c,
+    commands: [
+      { name: '/news', desc: 'Show today\'s headlines' },
+      { name: '/setnewschannel', desc: 'Set news digest channel (Admin)' },
+    ],
+  },
   'Realm of Skarn': {
     color: 0xff6b35,
     commands: [
