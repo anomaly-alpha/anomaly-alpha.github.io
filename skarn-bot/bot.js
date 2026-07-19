@@ -73,6 +73,9 @@ let isAsleep = false;
 client.once('clientReady', () => {
   console.log(`Logged in as ${client.user.tag} (${client.commands.size} commands)`);
   console.log(`Sleep mode: ${SLEEP_START}:00 - ${SLEEP_END}:00 (UTC${SLEEP_TIMEZONE >= 0 ? '+' : ''}${SLEEP_TIMEZONE})`);
+  const hasKey = !!process.env.GOOGLE_CSE_KEY;
+  const hasCx = !!process.env.GOOGLE_CSE_CX;
+  console.log(`Search backend: Google CSE ${hasKey && hasCx ? '✓ ready' : '✗ not configured (will use DDG fallback)'}`);
 
   // Rotating status
   const statuses = [
