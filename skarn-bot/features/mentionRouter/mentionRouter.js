@@ -5,11 +5,14 @@ const getOpenAIClient = require('../../ai/client');
 const { collectContext } = require('../promptContext');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { estimateDelay } = require('../authenticity/typingController');
+const { shouldReactOnly, pickReaction } = require('../authenticity/reactionController');
+const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
 const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
 const { getRelationship } = require('../../db/database');
 const { flagForApology } = require('../etiquette/etiquetteEngine');
 const { extractMemory } = require('../memory/memoryExtractor');
+const { detectFollowUps } = require('../intelligence/followUpEngine');
 const { storeMessage } = require('../conversation/messageStore');
 const { assembleContext } = require('../conversation/contextAssembler');
 
@@ -42,6 +45,13 @@ async function handleMention(message, client) {
   // Clean message content (remove bot mention)
   const cleanMsg = message.content.replace(/<@!?\d+>/g, '').trim();
   if (!cleanMsg) return;
+
+  // Reaction-only check — skip AI for casual/sharing messages (10% chance)
+  const sentiment = analyzeSentiment(cleanMsg);
+  if (shouldReactOnly('casual')) {
+    await message.react(pickReaction(sentiment));
+    return;
+  }
 
   // Store user message and assemble conversation context
   storeMessage(userId, message.guild.id, channelId, 'user', cleanMsg, { threadType: 'channel' });
@@ -82,6 +92,9 @@ async function handleMention(message, client) {
 
     // Store assistant response
     storeMessage(userId, message.guild.id, channelId, 'assistant', reply, { threadType: 'channel' });
+
+    // Detect time-bound statements and unanswered questions (non-blocking)
+    detectFollowUps(userId, message.guild.id, channelId, cleanMsg);
 
     const isPunchlineMsg = isPunchline(reply, channelId, userId);
 
