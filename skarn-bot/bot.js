@@ -276,7 +276,7 @@ client.on('messageCreate', async message => {
       const resetsStr = stats.resetsAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
       const optPart = isOptedIn ? "you're opted in" : "you're opted out";
       const usagePart = stats.messagesSent === 0
-        ? "you haven't used any replies yet — 50 available this hour."
+        ? `you haven't used any replies yet — ${stats.cap} available this hour.`
         : `${stats.remaining} replies left this hour, resets at ${resetsStr}.`;
       await message.reply(`${optPart}. ${usagePart}`);
       return;
