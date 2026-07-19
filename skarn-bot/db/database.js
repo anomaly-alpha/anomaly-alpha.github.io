@@ -509,6 +509,18 @@ function getMemoryEntries(userId, guildId, limit = 10) {
   ).all(userId, guildId, limit);
 }
 
+function getUserFacts(userId, guildId, limit = 5) {
+  return db.prepare(
+    "SELECT content, confidence FROM memory_entries WHERE user_id = ? AND guild_id = ? AND source = 'etch' AND type = 'fact' ORDER BY updated_at DESC LIMIT ?"
+  ).all(userId, guildId, limit);
+}
+
+function getExtractedEntities(userId, guildId, limit = 20) {
+  return db.prepare(
+    "SELECT content, confidence, type FROM memory_entries WHERE user_id = ? AND guild_id = ? AND source = 'extracted' ORDER BY confidence DESC, last_seen_at DESC LIMIT ?"
+  ).all(userId, guildId, limit);
+}
+
 function getMemoryByType(userId, guildId, type, limit = 5) {
   return db.prepare(
     'SELECT * FROM memory_entries WHERE user_id = ? AND guild_id = ? AND type = ? ORDER BY confidence DESC, last_seen_at DESC LIMIT ?'
@@ -861,6 +873,8 @@ module.exports = {
   incrementStoryUse,
   addMemoryEntry,
   getMemoryEntries,
+  getUserFacts,
+  getExtractedEntities,
   getMemoryByType,
   deleteUserMemoryEntries,
   decayMemoryEntries,
