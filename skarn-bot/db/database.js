@@ -314,26 +314,6 @@ function markFollowUpSent(id) {
   db.prepare("UPDATE follow_ups SET status = 'sent', sent_at = ? WHERE id = ?").run(Date.now(), id);
 }
 
-// ===== Intent Cache =====
-
-function getIntentCache(messageId) {
-  return db.prepare('SELECT * FROM intent_cache WHERE message_id = ?').get(messageId);
-}
-
-function setIntentCache(messageId, userId, intent, confidence) {
-  db.prepare(
-    'INSERT OR REPLACE INTO intent_cache (message_id, user_id, intent, confidence, created_at) VALUES (?, ?, ?, ?, ?)'
-  ).run(messageId, userId, intent, confidence, Date.now());
-}
-
-// ===== Message Edits =====
-
-function logMessageEdit(messageId) {
-  db.prepare(
-    'INSERT OR REPLACE INTO message_edits (original_message_id, edited_at) VALUES (?, ?)'
-  ).run(messageId, Date.now());
-}
-
 // ===== Relationship Milestones =====
 
 function addMilestone(userId, guildId, type, name, context) {
@@ -716,9 +696,6 @@ module.exports = {
   createFollowUp,
   getPendingFollowUps,
   markFollowUpSent,
-  getIntentCache,
-  setIntentCache,
-  logMessageEdit,
   addMilestone,
   getMilestones,
   addKnowledgeBase,

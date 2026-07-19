@@ -270,19 +270,6 @@ CREATE TABLE IF NOT EXISTS follow_ups (
   sent_at INTEGER
 );
 
-CREATE TABLE IF NOT EXISTS intent_cache (
-  message_id TEXT PRIMARY KEY,
-  user_id TEXT NOT NULL,
-  intent TEXT NOT NULL,
-  confidence REAL NOT NULL,
-  created_at INTEGER NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS message_edits (
-  original_message_id TEXT PRIMARY KEY,
-  edited_at INTEGER NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS relationship_milestones (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id TEXT NOT NULL,
@@ -295,7 +282,6 @@ CREATE TABLE IF NOT EXISTS relationship_milestones (
 
 CREATE INDEX IF NOT EXISTS idx_knowledge_user ON knowledge_graph(user_id, guild_id);
 CREATE INDEX IF NOT EXISTS idx_followups_user ON follow_ups(user_id, status, due_after);
-CREATE INDEX IF NOT EXISTS idx_intent_user ON intent_cache(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_milestones_user ON relationship_milestones(user_id, guild_id);
 
 -- ===== Response Learning =====
