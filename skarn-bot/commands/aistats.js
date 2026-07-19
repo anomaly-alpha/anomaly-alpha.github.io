@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getStats } = require('../lib/aiStats');
-const { getGuildConfig } = require('../db/database');
+const { getGuildConfig, getUserPreferences } = require('../db/database');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -10,6 +10,8 @@ module.exports = {
     const userId = interaction.user.id;
     const guildId = interaction.guild?.id;
     const stats = getStats(userId);
+    const prefs = getUserPreferences(userId, guildId);
+    const isOptedIn = prefs && prefs.proactive_opt_in === 1;
 
     const ignored = guildId ? (getGuildConfig(guildId, 'ignoredUsers') || []).includes(userId) : false;
 
@@ -21,6 +23,7 @@ module.exports = {
         { name: 'Remaining Replies', value: `${stats.remaining} / ${stats.cap}`, inline: true },
         { name: 'Resets At', value: resetsStr, inline: true },
         { name: 'Ignore Status', value: ignored ? 'On (skipped in AI channels)' : 'Off', inline: true },
+        { name: 'Opt-In Status', value: isOptedIn ? 'Opted In' : 'Opted Out', inline: true },
         { name: 'Messages Sent to Bot', value: `${stats.messagesSent}`, inline: true },
         { name: 'Responses Received', value: `${stats.responsesReceived}`, inline: true },
       )
