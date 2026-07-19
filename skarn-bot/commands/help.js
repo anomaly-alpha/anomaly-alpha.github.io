@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { getAll } = require('../features/activation/activationRegistry');
 
 const categories = {
   'Skarn Persona': {
@@ -114,6 +115,15 @@ const categories = {
       { name: '/removefriend', desc: 'Remove a friend' },
     ],
   },
+  'Knowledge': {
+    color: 0x2ecc71,
+    commands: [
+      { name: '/seed', desc: 'Fetch Wikipedia articles into vault' },
+      { name: '/vault', desc: 'Search the knowledge vault' },
+      { name: '/knowledge', desc: 'Look up a specific topic' },
+      { name: '/learn', desc: 'Teach Skarn something new' },
+    ],
+  },
   'Realm of Skarn': {
     color: 0xff6b35,
     commands: [
@@ -132,6 +142,43 @@ const categories = {
   },
 };
 
+function getHelpContent(category) {
+  if (category) {
+    const cat = categories[category];
+    if (!cat) return { content: `Unknown category: ${category}`, flags: 64 };
+    const list = cat.commands.map(c => `\`${c.name}\`\n└ ${c.desc}`).join('\n\n');
+    return { embeds: [new EmbedBuilder().setTitle(category).setDescription(list).setColor(cat.color)], flags: 64 };
+  }
+
+  const overview = Object.entries(categories).map(([name, cat]) => {
+    const count = cat.commands.length;
+    const cmdNames = cat.commands.slice(0, 4).map(c => `\`${c.name}\``).join(' ');
+    const extra = count > 4 ? ` +${count - 4} more` : '';
+    return `**${name}** ${cmdNames}${extra}`;
+  }).join('\n');
+
+  const total = Object.values(categories).reduce((sum, cat) => sum + cat.commands.length, 0);
+
+  const embed = new EmbedBuilder()
+    .setTitle('Skarn Commands')
+    .setDescription(`${total} commands across ${Object.keys(categories).length} categories\n\n${overview}`)
+    .setColor(0x00e5ff)
+    .setFooter({ text: 'Use /help category:"Name" for details' });
+
+  const activations = getAll();
+  const cmdActivations = activations.filter(function(a) { return a.type === 'command'; });
+  if (cmdActivations.length > 0) {
+    const activationLines = cmdActivations.map(function(a) {
+      var permNote = a.requiredPermissions && a.requiredPermissions.length > 0 ? ' *(needs ' + a.requiredPermissions.join(', ') + ')*' : '';
+      var guildNote = a.guildOnly ? ' *(server only)*' : '';
+      return '`' + a.phrase + '` — ' + a.description + permNote + guildNote;
+    }).join('\n');
+    embed.addFields({ name: '\uD83D\uDD11 Keyword Triggers', value: activationLines });
+  }
+
+  return { embeds: [embed], flags: 64 };
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('help')
@@ -145,33 +192,18 @@ module.exports = {
         )),
   async execute(interaction) {
     const selected = interaction.options.getString('category');
-
-    if (selected) {
-      const cat = categories[selected];
-      const list = cat.commands.map(c => `\`${c.name}\`\n└ ${c.desc}`).join('\n\n');
-      const embed = new EmbedBuilder()
-        .setTitle(selected)
-        .setDescription(list)
-        .setColor(cat.color);
-      return interaction.reply({ embeds: [embed], flags: 64 });
-    }
-
-    // Show all categories overview
-    const overview = Object.entries(categories).map(([name, cat]) => {
-      const count = cat.commands.length;
-      const cmdNames = cat.commands.slice(0, 4).map(c => `\`${c.name}\``).join(' ');
-      const extra = count > 4 ? ` +${count - 4} more` : '';
-      return `**${name}** ${cmdNames}${extra}`;
-    }).join('\n');
-
-    const total = Object.values(categories).reduce((sum, cat) => sum + cat.commands.length, 0);
-
-    const embed = new EmbedBuilder()
-      .setTitle('Skarn Commands')
-      .setDescription(`${total} commands across ${Object.keys(categories).length} categories\n\n${overview}`)
-      .setColor(0x00e5ff)
-      .setFooter({ text: 'Use /help category:"Name" for details' });
-
-    await interaction.reply({ embeds: [embed], flags: 64 });
+    await interaction.reply(getHelpContent(selected));
+  },
+  async handleActivation(message, args) {
+    const result = getHelpContent(args.category);
+    await message.reply(result);
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn help',
+    description: 'Show available commands',
+    guildOnly: false,
+    requiredPermissions: [],
+    parseArgs: function(content) { const rest = content.slice('skarn help'.length).trim(); return { category: rest || null }; },
   },
 };

@@ -232,4 +232,17 @@ function seedKnowledgeBase() {
   });
 }
 
-module.exports = { seedKnowledgeBase, seedFallbackTopics, fetchWikipediaTopics };
+async function fetchSingleTopic(topic) {
+  const url = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(topic)}&prop=extracts&exintro=true&explaintext=true&format=json`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const data = await res.json();
+  const pages = data.query?.pages || {};
+  const page = Object.values(pages)[0];
+  if (!page || page.missing !== undefined) return null;
+  const normalizedTopic = page.title.toLowerCase().replace(/_/g, ' ');
+  addKnowledgeBase(normalizedTopic, page.extract, 'wikipedia', 0.9);
+  return { topic: normalizedTopic, summary: page.extract, source: 'wikipedia' };
+}
+
+module.exports = { seedKnowledgeBase, seedFallbackTopics, fetchWikipediaTopics, fetchSingleTopic };
