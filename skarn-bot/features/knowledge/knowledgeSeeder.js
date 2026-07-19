@@ -148,6 +148,7 @@ async function fetchWikipediaTopics() {
   // Fetch page 1 (0-499)
   try {
     const res1 = await fetch(`${WIKI_MOST_VIEWED}&pvimlimit=500`);
+    if (!res1.ok) throw new Error(`HTTP ${res1.status}`);
     const data1 = await res1.json();
     titles.push(...(data1.query?.mostviewed || []));
   } catch (e) {
@@ -158,6 +159,7 @@ async function fetchWikipediaTopics() {
   // Fetch page 2 (500-999)
   try {
     const res2 = await fetch(`${WIKI_MOST_VIEWED}&pvimlimit=500&pvoffset=500`);
+    if (!res2.ok) throw new Error(`HTTP ${res2.status}`);
     const data2 = await res2.json();
     titles.push(...(data2.query?.mostviewed || []));
   } catch (e) {
@@ -175,6 +177,7 @@ async function fetchWikipediaTopics() {
     try {
       const url = `${WIKI_SUMMARY}&titles=${encodeURIComponent(batch.join('|'))}`;
       const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
       const pages = data.query?.pages || {};
       for (const page of Object.values(pages)) {
@@ -198,14 +201,14 @@ function seedFallbackTopics() {
     try {
       addKnowledgeBase(t.topic, t.summary, t.source, t.confidence);
       count++;
-    } catch {}
+    } catch (e) {
+      console.log(`[Knowledge] Fallback seed failed for ${t.topic}: ${e.message}`);
+    }
   }
   return count;
 }
 
 function seedKnowledgeBase() {
-  const fallbackCount = seedFallbackTopics();
-
   const lastSeed = getAppState('last_wikipedia_seed');
   if (lastSeed) {
     const hoursSince = (Date.now() - parseInt(lastSeed, 10)) / (1000 * 60 * 60);
@@ -215,6 +218,7 @@ function seedKnowledgeBase() {
     }
   }
 
+  const fallbackCount = seedFallbackTopics();
   console.log(`[Knowledge] Seeded ${fallbackCount} fallback topics, fetching Wikipedia...`);
   fetchWikipediaTopics().then(wikiCount => {
     setAppState('last_wikipedia_seed', Date.now().toString());
