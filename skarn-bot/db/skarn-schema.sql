@@ -520,3 +520,18 @@ CREATE TABLE IF NOT EXISTS reaction_roles (
   role_id TEXT NOT NULL,
   UNIQUE(message_id, emoji)
 );
+
+-- ===== Daily News =====
+
+CREATE TABLE IF NOT EXISTS daily_news (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  headline TEXT NOT NULL,
+  snippet TEXT,
+  url TEXT,
+  source TEXT,
+  category TEXT NOT NULL,
+  fetched_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_daily_news_fetched ON daily_news(fetched_at);
+CREATE INDEX IF NOT EXISTS idx_daily_news_category ON daily_news(category);
