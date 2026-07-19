@@ -45,6 +45,16 @@ async function handleMention(message, client) {
   const cleanMsg = message.content.replace(/<@!?\d+>/g, '').trim();
   if (!cleanMsg) return;
 
+  // Hostile content detection — 3 strikes = 1 hour silence
+  const { isHostile, recordStrike, isSilenced } = require('../safety/hostileDetector');
+  if (isHostile(cleanMsg)) {
+    recordStrike(userId);
+    if (isSilenced(userId)) {
+      console.log('[Safety] ' + userId + ' silenced (3 strikes)');
+      return;
+    }
+  }
+
   // Reaction-only check — skip AI for casual/sharing messages (10% chance)
   const sentiment = analyzeSentiment(cleanMsg);
   if (shouldReactOnly('casual')) {

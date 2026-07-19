@@ -14,8 +14,8 @@ function findAbsentRegulars(guildId) {
 
 function shouldSendCheckIn(userId, guildId) {
   const prefs = getUserPreferences(userId, guildId);
-  // Opt-in required: only send if proactive_opt_out is explicitly 0 (= "not opted out")
-  if (!prefs || prefs.proactive_opt_out !== 0) return false;
+  // Opt-in required: only send if user has explicitly opted in
+  if (!prefs || prefs.proactive_opt_in !== 1) return false;
 
   // Only send if we haven't sent one in the last 3 days
   const recent = db.prepare(
@@ -34,9 +34,9 @@ function generateCheckIn(userId) {
 }
 
 function canInteract(userId, guildId) {
-  // Returns true if user has opted in (proactive_opt_out = 0)
+  // Returns true if user has opted in (proactive_opt_in = 1)
   const prefs = getUserPreferences(userId, guildId);
-  return prefs && prefs.proactive_opt_out === 0;
+  return prefs && prefs.proactive_opt_in === 1;
 }
 
 module.exports = { findAbsentRegulars, shouldSendCheckIn, generateCheckIn, canInteract };

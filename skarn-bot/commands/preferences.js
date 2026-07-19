@@ -44,8 +44,8 @@ module.exports = {
       return interaction.reply({ content: `Invalid value for **${setting}**. Valid: ${validator.join(', ')}.`, flags: 64 });
     }
 
-    const keyMap = { proactive: 'proactive_opt_out', nickname: 'nickname', tone: 'preferred_tone', timezone: 'timezone' };
-    const dbValue = setting === 'proactive' ? (value === 'off' ? 1 : 0) : value;
+    const keyMap = { proactive: 'proactive_opt_in', nickname: 'nickname', tone: 'preferred_tone', timezone: 'timezone' };
+    const dbValue = setting === 'proactive' ? (value === 'on' ? 1 : 0) : value;
 
     setUserPreference(interaction.user.id, interaction.guild.id, keyMap[setting], dbValue);
 

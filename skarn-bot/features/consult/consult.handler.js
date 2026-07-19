@@ -39,6 +39,13 @@ async function execute(interaction) {
 
   try {
     const message = interaction.options.getString('message');
+    const { isHostile, recordStrike, isSilenced } = require('../safety/hostileDetector');
+    if (isHostile(message)) {
+      recordStrike(interaction.user.id);
+      if (isSilenced(interaction.user.id)) {
+        return interaction.editReply('im not doing this.');
+      }
+    }
     const beforeSentiment = analyzeSentiment(message);
 
     // Store user message
@@ -123,6 +130,12 @@ async function execute(interaction) {
 
     // Auto-extract memory from conversation (non-blocking)
     extractMemory(interaction.user.id, interaction.guild.id, message, reply, interaction.channel.id).catch(() => {});
+
+    // Follow-up detection (non-blocking)
+    const { detectFollowUps } = require('../intelligence/followUpEngine');
+    detectFollowUps(interaction.user.id, interaction.guild.id, interaction.channel.id, message).catch(
+      function(e) { console.error('[Consult] Follow-up detection failed:', e.message); }
+    );
   } catch (error) {
     flagForApology(interaction.user.id);
     console.error('Consult error:', error);

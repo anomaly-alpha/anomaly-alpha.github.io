@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { db } = require('./db/database');
+const { db, pruneRateLimits, pruneExpiredFlags, pruneSentimentBuffers, pruneBanterChains, pruneCallbacks, decayMemoryEntries } = require('./db/database');
 
 // ===== Skarn Persona System =====
 const { onMessageReceived } = require('./features/channelState/stateTracker');
@@ -19,6 +19,7 @@ const { clearFlags } = require('./features/etiquette/etiquetteEngine');
 const { recordMessage, recordResponse, canRespond } = require('./lib/aiStats');
 const { startScheduler } = require('./lib/weatherScheduler');
 const { seedKnowledgeBase } = require('./features/knowledge/knowledgeSeeder');
+const { runDecay } = require('./features/relationship/relationshipTracker');
 
 const client = new Client({
   intents: [
@@ -130,6 +131,13 @@ client.once('clientReady', () => {
     cleanChains();
     clearFlags();
     cleanWarmth();
+    runDecay();
+    decayMemoryEntries();
+    pruneRateLimits();
+    pruneExpiredFlags();
+    pruneSentimentBuffers();
+    pruneBanterChains();
+    pruneCallbacks();
   }, 10 * 60 * 1000);
 
   // ===== Daily maintenance jobs =====
@@ -139,11 +147,14 @@ client.once('clientReady', () => {
   const DAILY_INTERVAL = 24 * 60 * 60 * 1000;
 
   setInterval(async () => {
-    console.log('[Daily] Starting profile updates...');
+    console.log('[Daily] Starting maintenance...');
     await updateAllProfiles();
-
+    await summarizeOldThreads();
+    var cutoff = Date.now() - 90 * 24 * 60 * 60 * 1000;
+    db.prepare('DELETE FROM conversation_messages WHERE created_at < ?').run(cutoff);
+    db.prepare('DELETE FROM conversation_summaries WHERE covers_to < ?').run(cutoff);
     console.log('[Daily] Maintenance complete.');
-  }, DAILY_INTERVAL);
+  }, 24 * 60 * 60 * 1000);
 });
 
 // ===== Slash command handler =====
@@ -184,7 +195,7 @@ client.on('guildMemberAdd', async member => {
         .setColor(0x00e5ff)
         .setTimestamp();
       await channel.send({ embeds: [embed] });
-    } catch {}
+    } catch (e) { console.error('[Bot] Caught:', e.message); }
   }
 
   // Auto role
@@ -192,7 +203,7 @@ client.on('guildMemberAdd', async member => {
     try {
       const role = await member.guild.roles.fetch(settings.autoRole);
       if (role) await member.roles.add(role);
-    } catch {}
+    } catch (e) { console.error('[Bot] Caught:', e.message); }
   }
 });
 
@@ -247,7 +258,7 @@ client.on('messageCreate', async message => {
           recordResponse(message.author.id);
           return;
         }
-      } catch {}
+      } catch (e) { console.error('[Bot] Caught:', e.message); }
     }
   }
 
@@ -317,7 +328,7 @@ client.on('messageCreate', async message => {
       if (logChannel && logChannel.id !== message.channel.id) {
         // Log deleted/edited messages handled by separate events
       }
-    } catch {}
+    } catch (e) { console.error('[Bot] Caught:', e.message); }
   }
 
   // ===== Auto funny replies =====
@@ -381,7 +392,7 @@ client.on('messageDelete', async message => {
       .setColor(0xff6b35)
       .setTimestamp();
     await logChannel.send({ embeds: [embed] });
-  } catch {}
+  } catch (e) { console.error('[Bot] Caught:', e.message); }
 });
 
 client.on('messageUpdate', async (oldMessage, newMessage) => {
@@ -398,7 +409,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
       .setColor(0xf39c12)
       .setTimestamp();
     await logChannel.send({ embeds: [embed] });
-  } catch {}
+  } catch (e) { console.error('[Bot] Caught:', e.message); }
 });
 
 client.login(process.env.DISCORD_TOKEN);
