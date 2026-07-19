@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { deleteUserConversation } = require('../db/database');
+const { deleteUserConversation, deleteUserMemoryEntries } = require('../db/database');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -14,6 +14,7 @@ module.exports = {
     }
 
     deleteUserConversation(targetUser.id, interaction.guild.id);
+    deleteUserMemoryEntries(targetUser.id, interaction.guild.id);
 
     await interaction.reply({
       content: targetUser.id === interaction.user.id

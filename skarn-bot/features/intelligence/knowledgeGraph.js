@@ -1,11 +1,13 @@
 const getOpenAIClient = require('../../ai/client');
-const { db, addKnowledge, getKnowledge } = require('../../db/database');
+const { addMemoryEntry, getMemoryByType, decayMemoryEntries } = require('../../db/database');
+const { selectModel } = require('./modelRouter');
 
 async function extractAndStore(userId, guildId, userMessage, aiResponse) {
-  // Batch of user + AI messages for efficient extraction
+  if (!userMessage || userMessage.length < 50) return;
+
   const openai = getOpenAIClient();
   const completion = await openai.chat.completions.create({
-    model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+    model: selectModel(userMessage, false),
     messages: [{
       role: 'user',
       content: `Extract entities from this conversation. Return JSON array: [{type, name, context, confidence}]
@@ -24,33 +26,29 @@ AI: "${aiResponse.slice(0, 300)}"`
     const entities = JSON.parse(match[0]);
     for (const e of entities) {
       if (e.type && e.name && e.name.length < 100) {
-        addKnowledge(userId, guildId, e.type, e.name.toLowerCase(), e.context || '', Math.min(1, e.confidence || 0.5));
+        addMemoryEntry(userId, guildId, 'extracted', e.type, e.name.toLowerCase(), Math.min(1, e.confidence || 0.5), e.context || null);
       }
     }
   } catch { /* silent */ }
 }
 
 function formatKnowledge(userId, guildId) {
-  const entities = getKnowledge(userId, guildId);
-  if (!entities || entities.length === 0) return '';
+  const interests = getMemoryByType(userId, guildId, 'interest', 5);
+  const projects = getMemoryByType(userId, guildId, 'project', 3);
+  const events = getMemoryByType(userId, guildId, 'event', 3);
 
-  const interests = entities.filter(e => e.entity_type === 'interest').slice(0, 5);
-  const projects = entities.filter(e => e.entity_type === 'project').slice(0, 3);
-  const events = entities.filter(e => e.entity_type === 'event').slice(0, 3);
+  if (!interests.length && !projects.length && !events.length) return '';
 
   const parts = [];
-  if (interests.length > 0) parts.push(`Interests: ${interests.map(e => e.entity_name).join(', ')}`);
-  if (projects.length > 0) parts.push(`Projects: ${projects.map(e => `${e.entity_name} (${e.context || 'mentioned'})`).join('; ')}`);
-  if (events.length > 0) parts.push(`Life events: ${events.map(e => e.context || e.entity_name).join('; ')}`);
+  if (interests.length > 0) parts.push(`Interests: ${interests.map(e => e.content).join(', ')}`);
+  if (projects.length > 0) parts.push(`Projects: ${projects.map(e => `${e.content} (${e.context || 'mentioned'})`).join('; ')}`);
+  if (events.length > 0) parts.push(`Life events: ${events.map(e => e.context || e.content).join('; ')}`);
 
   return parts.join('\n');
 }
 
 function runKnowledgeDecay() {
-  db.prepare(
-    `UPDATE knowledge_graph SET confidence = confidence * 0.95 WHERE last_seen_at < ?`
-  ).run(Date.now() - 30 * 24 * 60 * 60 * 1000);
-  db.prepare('DELETE FROM knowledge_graph WHERE confidence < 0.2').run();
+  decayMemoryEntries();
 }
 
 module.exports = { extractAndStore, formatKnowledge, runKnowledgeDecay };

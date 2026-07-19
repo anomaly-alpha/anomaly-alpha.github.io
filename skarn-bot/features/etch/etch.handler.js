@@ -1,4 +1,4 @@
-const { addUserMemory } = require('../../db/database');
+const { addMemoryEntry } = require('../../db/database');
 
 const CONFIRMATIONS = [
   'Etched. It\'s part of the stone now.',
@@ -8,7 +8,7 @@ const CONFIRMATIONS = [
 
 async function execute(interaction) {
   const fact = interaction.options.getString('fact');
-  addUserMemory(interaction.user.id, interaction.guild.id, fact);
+  addMemoryEntry(interaction.user.id, interaction.guild.id, 'etch', 'fact', fact, 1.0, null);
   const reply = CONFIRMATIONS[Math.floor(Math.random() * CONFIRMATIONS.length)];
   await interaction.reply({ content: reply, flags: 64 });
 }
