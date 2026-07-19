@@ -231,7 +231,7 @@ client.on('messageCreate', async function(message) {
     if (dmMatch) {
       if (dmMatch.type === 'command' && dmMatch.handler) {
         if (!dmMatch.activation.guildOnly) {
-          try { await dmMatch.handler(message, dmMatch.args); } catch (e) { message.reply({ content: e.message, flags: 64 }); }
+          try { await dmMatch.handler(message, dmMatch.args); } catch (e) { message.reply({ content: e.message }); }
           return;
         }
       } else if (dmMatch.type === 'ai') {
@@ -265,7 +265,7 @@ client.on('messageCreate', async function(message) {
     try {
       require('./db/database').setUserPreference(message.author.id, message.guild.id, 'proactive_opt_in', isOptIn ? '1' : '0');
       await message.reply(isOptIn ? "You're in. I'll check in now and then." : "Opted out. No proactive messages.");
-    } catch (e) { await message.reply({ content: 'Something went wrong.', flags: 64 }); }
+    } catch (e) { await message.reply({ content: 'Something went wrong.' }); }
     return;
   }
   
@@ -274,7 +274,7 @@ client.on('messageCreate', async function(message) {
       const aiChannels = require('./db/database').getGuildConfig ? require('./db/database').getGuildConfig(message.guild.id, 'aiChannels') : [];
       const enabled = aiChannels && aiChannels.includes(message.channel.id);
       await message.reply(enabled ? 'AI chat is **enabled** in this channel.' : 'AI chat is **disabled** in this channel.');
-    } catch (e) { await message.reply({ content: 'Error checking chat mode.', flags: 64 }); }
+    } catch (e) { await message.reply({ content: 'Error checking chat mode.' }); }
     return;
   }
   
@@ -283,7 +283,7 @@ client.on('messageCreate', async function(message) {
       const prefs = require('./db/database').getUserPreferences ? require('./db/database').getUserPreferences(message.author.id, message.guild.id) : {};
       const optedIn = prefs && prefs.proactive_opt_in === 1;
       await message.reply('Opt-in: ' + (optedIn ? 'ON' : 'OFF') + ' | Use `/aistats` for detailed stats.');
-    } catch (e) { await message.reply({ content: 'Error checking status.', flags: 64 }); }
+    } catch (e) { await message.reply({ content: 'Error checking status.' }); }
     return;
   }
 
@@ -301,12 +301,12 @@ client.on('messageCreate', async function(message) {
           if (!member) return;
           const missing = match.activation.requiredPermissions.filter(function(p) { return !member.permissions.has(p); });
           if (missing.length > 0) {
-            await message.reply({ content: 'You need the ' + missing.join(', ') + ' permission(s) to use this command.', flags: 64 });
+            await message.reply({ content: 'You need the ' + missing.join(', ') + ' permission(s) to use this command.' });
             return;
           }
         }
         try { await match.handler(message, match.args); } catch (err) {
-          await message.reply({ content: err.message || 'Command failed.', flags: 64 });
+          await message.reply({ content: err.message || 'Command failed.' });
         }
         return;
       }

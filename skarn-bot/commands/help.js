@@ -168,12 +168,24 @@ function getHelpContent(category) {
   const activations = getAll();
   const cmdActivations = activations.filter(function(a) { return a.type === 'command'; });
   if (cmdActivations.length > 0) {
-    const activationLines = cmdActivations.map(function(a) {
+    const MAX_FIELD_LEN = 1024;
+    var fieldGroup = [];
+    var current = '';
+    for (const a of cmdActivations) {
       var permNote = a.requiredPermissions && a.requiredPermissions.length > 0 ? ' *(needs ' + a.requiredPermissions.join(', ') + ')*' : '';
       var guildNote = a.guildOnly ? ' *(server only)*' : '';
-      return '`' + a.phrase + '` — ' + a.description + permNote + guildNote;
-    }).join('\n');
-    embed.addFields({ name: '\uD83D\uDD11 Keyword Triggers', value: activationLines });
+      var line = '`' + a.phrase + '` — ' + a.description + permNote + guildNote;
+      if (current.length + line.length + 1 > MAX_FIELD_LEN) {
+        fieldGroup.push(current);
+        current = line;
+      } else {
+        current = current ? current + '\n' + line : line;
+      }
+    }
+    if (current) fieldGroup.push(current);
+    for (var i = 0; i < fieldGroup.length; i++) {
+      embed.addFields({ name: '\uD83D\uDD11 Keyword Triggers' + (fieldGroup.length > 1 ? ' (' + (i + 1) + '/' + fieldGroup.length + ')' : ''), value: fieldGroup[i] });
+    }
   }
 
   return { embeds: [embed] };
