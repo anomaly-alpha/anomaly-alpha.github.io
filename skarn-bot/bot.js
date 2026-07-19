@@ -278,7 +278,8 @@ client.on('messageCreate', async message => {
       const usagePart = stats.messagesSent === 0
         ? `you haven't used any replies yet — ${stats.cap} available this hour.`
         : `${stats.remaining} replies left this hour, resets at ${resetsStr}.`;
-      await message.reply(`${optPart}. ${usagePart}`);
+      const ctaPart = isOptedIn ? "" : " say 'skarn opt in' for proactive check-ins.";
+      await message.reply(`${optPart}. ${usagePart}${ctaPart}`);
       return;
     }
   }
