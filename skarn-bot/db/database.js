@@ -14,6 +14,9 @@ const db = new Database(DB_PATH);
 // Run schema on startup
 db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
 
+// Migration v1: reset stale opt-in defaults (legacy rows from before opt-in system)
+db.prepare("UPDATE user_preferences SET proactive_opt_out = 1 WHERE proactive_opt_out = 0").run();
+
 // ===== User Memory =====
 
 function getUserMemory(userId, guildId, limit = 5) {
@@ -279,7 +282,7 @@ function getUserPreferences(userId, guildId) {
   const row = db.prepare('SELECT * FROM user_preferences WHERE user_id = ? AND guild_id = ?').get(userId, guildId);
   if (row) return row;
   db.prepare(
-    'INSERT INTO user_preferences (user_id, guild_id) VALUES (?, ?)'
+    'INSERT INTO user_preferences (user_id, guild_id, proactive_opt_out) VALUES (?, ?, 1)'
   ).run(userId, guildId);
   return db.prepare('SELECT * FROM user_preferences WHERE user_id = ? AND guild_id = ?').get(userId, guildId);
 }
