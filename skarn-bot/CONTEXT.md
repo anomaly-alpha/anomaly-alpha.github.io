@@ -84,6 +84,182 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 >
 > **Drift — historical function names**: The existing glossary previously described `buildContext()` as "merging the previous `collectContext()` and `assembleContext()`" — those functions no longer exist anywhere in the codebase. The historical note cannot be verified by reading current code.
 
+## 6. Memory systems — what's separate and why
+
+The codebase maintains **6 distinct memory stores**, each with a different scope, write path, and read path. This separation is deliberate in some cases and accidental (fragmentation) in others.
+
+### 6.1 The six stores
+
+| # | Store | Tables | Written by | Read by | Scope | Purpose |
+|---|-------|--------|------------|---------|-------|---------|
+| 1 | **Legacy user memory** | `user_memory` | **Nothing (stale)** | 19 command files via `getUserMemory()` + `relationshipTracker.js` for baseline familiarity | Per-user-per-guild | Pre-unification memory. Reads still happen; writes were migrated to `memory_entries`. **Active fragmentation.** |
+| 2 | **Unified memory entries** | `memory_entries` | `etch.handler.js` (source='etch'), `knowledgeGraph.js` (source='extracted') | `promptContext.js` via `getMemoryEntries()` for AI context, `knowledgeGraph.js` via `getMemoryByType()` for formatKnowledge | Per-user-per-guild per-type-per-content | The current write target for all persistent memory. Replaced `user_memory` on the write path only. |
+| 3 | **Legacy knowledge graph** | `knowledge_graph` | `addKnowledge()` — **dead export, never called** | `modelRouter.js` via `getKnowledge()` → `checkKnowledgeMatch()` for model selection | Per-user-per-guild per-entity | Currently stale — nothing writes new entities. Knowledge extraction (`knowledgeGraph.js`) writes to `memory_entries` instead. |
+| 4 | **Conversation graph** | `conversation_threads`, `conversation_messages`, `conversation_summaries`, `conversation_fts` | `database.js` — `insertMessage()`, `createThread()`, `insertSummary()` + FTS5 index | Feature handlers via `getRecentMessages()`, `getThreadMessages()`, `getOlderSummaries()`, `searchConversations()` | Per-thread, indexed by user/guild/channel | Full conversation history with full-text search. Separate from extracted memory. |
+| 5 | **Realm NPC memory** | `realm_npc_memory` | Realm system NPC interaction handlers | Realm system only | Per-NPC-per-user-per-guild | In-fiction NPC memory. Never bleeds to persona or system prompt. |
+| 6 | **Emotional context** | `user_emotional_context` | `emotionalIntelligence.js` via `setUserEmotion()` | `getEmotionDirective()` for tone guidance in system prompt | Per-user-per-guild | Per-user emotion state. Advisory only — drives tone, not gating. |
+| 7 | **Knowledge base** | `knowledge_base`, `knowledge_fts` | `knowledgeSeeder.js`, `/learn` command via `addKnowledgeBase()` | `searchKnowledgeBase()`, knowledge commands | Global (all users) | Seeded Wikipedia topics + user-taught facts. Completely separate from per-user memory. |
+
+### 6.2 Fragmentation state
+
+The migration from separate stores (`user_memory` + `knowledge_graph`) to a unified store (`memory_entries`) was **partially executed**:
+
+- **Write path migrated**: both `/etch` and knowledge graph extraction write to `memory_entries`. `addUserMemory()` and `addKnowledge()` are dead exports.
+- **Read path NOT migrated**: 19 commands still call `getUserMemory()` (reads from `user_memory`), and `modelRouter.js` calls `getKnowledge()` (reads from `knowledge_graph`). These read stale data.
+- **Impact**: Users who `/etch` facts will not see them reflected in commands that read `user_memory` — their etch data lives in `memory_entries` but is invisible to the 19 commands. The AI context system (`promptContext.js`) correctly reads from `memory_entries` and will surface the data during AI conversation.
+
+> **Drift — CONTEXT.md previously claimed `user_memory` table is dead**: That note was partially correct about writes (nothing writes to it) but wrong about reads — `getUserMemory()` is still actively called by 19 command files and `relationshipTracker.js`. The table has **stale data** rather than being fully dead.
+
+> **Drift — CONTEXT.md previously claimed `knowledge_graph` is still active**: Only on the read side. `getKnowledge()` is called by `modelRouter.js`, but `addKnowledge()` is never called. Knowledge graph extraction (`knowledgeGraph.js`) writes to `memory_entries`, not `knowledge_graph`. The table is stale.
+
+### 6.3 Design rule: no store merging
+
+The 7 stores listed above are intentionally kept separate:
+
+- **Memory vs conversation graph**: `memory_entries` stores extracted/persistent facts; `conversation_*` stores raw message history. They serve different purposes (fact retrieval vs. conversation context) and have different query patterns (fact lookups vs. time-ordered message history with FTS).
+- **Per-user memory vs. global knowledge base**: `memory_entries` is scoped `(user_id, guild_id)`; `knowledge_base` is global. They have no overlap in content or access patterns.
+- **NPC memory vs. persona memory**: `realm_npc_memory` lives inside the Realm game system and is never injected into Skarn's general system prompt. It is consumed only by Realm NPC interactions.
+- **Emotional context vs. memory**: `user_emotional_context` tracks transient emotional state. It is overwritten on each mood check, not accumulated. It is not a memory store in the archival sense.
+- **Fragmentation is NOT a design choice**: The `user_memory`/`memory_entries`/`knowledge_graph` split is an artifact of an incomplete migration. These should be consolidated — the stores serve the same logical purpose.
+
+## 7. Guardrails that are load-bearing, not decorative
+
+The following guardrails actively shape bot behavior. Each is documented here with its mechanism, file path, and why removing it would change observable behavior.
+
+### 7.1 Content-safety in role lines
+
+**File**: `persona/roles.js`
+
+The `realm` role line restricts to "fantasy adventure fiction" with explicit bans: "no gratuitous gore, no romance or dating-style content." The `realm_combat` role likewise permits "fantasy violence only — no gratuitous gore." These are not advisory — the role lines are injected into the system prompt of every Realm AI call. Removing them would allow the AI to generate content outside these bounds.
+
+Other role lines also encode implicit safety: `roast` says "never cruel — target the bit, not the person's real vulnerabilities"; `insult` says "clearly playful, never mean-spirited or targeting protected traits"; `homework`/`recipe`/`code` say "be accurate and clear first, in-voice second."
+
+### 7.2 Hostile content detection (3-strike + silence)
+
+**File**: `features/safety/hostileDetector.js`
+
+11 regex patterns match hostile language (`shut up`, `stupid bot`, `f*ck you`, `you're useless`, `bad bot`, `worthless`, `kill yourself`, `go die`, etc.). Strikes are tracked per-user in a 1-hour sliding window via `app_flags`. At 3 strikes, `isSilenced()` returns `true`, and the user is blocked from AI interactions until the window expires. The silence is enforced via `lib/gates.js` `checkHostile()` which is called in the command execution path.
+
+Removing this guardrail would allow hostile users to continue consuming AI resources and potentially trigger negative feedback loops in the persona system.
+
+### 7.3 Emotion detection (advisory, not gating)
+
+**File**: `features/wisdom/emotionalIntelligence.js`
+
+Keyword + sentiment-based emotion detection maps user text to happy/sad/anxious/angry/stressed states. Stored in `user_emotional_context`. `getEmotionDirective()` returns a tone guidance string injected into the AI system prompt (e.g., "They seem frustrated. Don't match the anger. Be steady and let them vent.").
+
+This is advisory — it does not block or gate AI responses. Removal would make Skarn's tone less responsive to user emotional state but would not break functionality.
+
+### 7.4 Reaction-only mode (10% chance)
+
+**File**: `features/authenticity/reactionController.js`
+
+`shouldReactOnly()` returns true with 10% probability for casual intents (`casual`, `sharing`, `banter`, `greeting`). When true, the bot sends only an emoji reaction instead of an AI-generated text reply. This reduces AI call costs for low-stakes messages and adds a natural "busy" behavior.
+
+Without it, every casual message would trigger an AI call, increasing cost and making the bot feel overly responsive.
+
+### 7.5 Sleep mode
+
+**File**: `bot.js` lines 64–74
+
+`isSleepTime()` checks the current hour against `SLEEP_START`/`SLEEP_END` config (default: 1 AM – 7 AM UTC). During sleep hours, the bot skips mention handling and interjections. Controlled by environment variables, defaults to active.
+
+Removal would cause the bot to respond 24/7, increasing cost for servers with low nighttime activity and potentially disrupting users who expect quiet hours.
+
+### 7.6 State decay (Dormant from decay only)
+
+**File**: `features/channelState/stateDecay.js`
+
+The decay pass runs on a timer and is the **only** code path that sets a channel to `Dormant`. Channels with no messages for 6+ hours transition from their current state to `Dormant`. Charged/Weathering states revert to Attentive after 30 minutes of no activity.
+
+This invariant is explicit in the code comments: "this is the ONLY place Dormant is ever assigned" (`stateDecay.js` line 18). Removing the decay pass would leave channels stuck in whatever state they last reached, and no channel would ever return to Dormant.
+
+### 7.7 Attention gate (probability-based)
+
+**File**: `features/discordNative/attentionGate.js`
+
+`shouldRespond()` uses a stacking probability model: recency boost (2 min), channel warmth (30 s), question detection (+0.6), message count escalation (0–1.0), channel activity decay, sentiment boost (+0.4 for angry/stressed/sad), and a fallback AI YES/NO call. It also respects user opt-in: only opted-in users receive proactive messages.
+
+This is the primary gate for non-reply, non-mention AI responses. Disabling it would make the bot respond to every message in monitored channels, dramatically increasing AI call volume.
+
+## 8. Known trade-offs, accepted deliberately
+
+The following architectural trade-offs are consciously accepted rather than accidental. Each is documented with the rationale and the condition under which it should be revisited.
+
+| Trade-off | Why accepted | What would change this |
+|-----------|-------------|----------------------|
+| `user_memory` ↔ `memory_entries` ↔ `knowledge_graph` fragmentation (3 tables, 2 stale, 2 dead import paths) | Partial migration — etch and knowledge extraction moved to `memory_entries` but 19 commands still read from `user_memory` and `modelRouter.js` reads from `knowledge_graph`. Fixing requires updating 19 command files to call `getMemoryEntries()` and redirecting `modelRouter.js` to use `getMemoryByType()`. | When the 19 command files and `modelRouter.js` are migrated to `memory_entries` as their read source. |
+| In-memory Maps for reaction and search cooldowns (`reactionSystem.js` line 6, `search.js` line 13) | These are ephemeral cooldowns — losing them on restart has no consequence (no user-facing data loss). SQLite-backed cooldowns exist for longer-lived throttles (mention, interjection, active listen). | If cooldown data must survive restart (e.g., to prevent abuse across bot restarts) or if the in-memory approach misses multi-instance deployments. |
+| Plaintext conversation storage (`conversation_messages.content`) | No threat model assumes database compromise. The bot operates in trusted server environments. | If the bot is deployed to environments requiring encryption-at-rest or if compliance (GDPR data minimization) demands it. |
+| No timezone-aware scheduling (UTC only) | Simplicity — `SLEEP_TIMEZONE` is an integer UTC offset applied arithmetically. No DST, no per-user timezone support (except `user_preferences.timezone` which is stored but unused). | If per-user scheduling (reminders, follow-ups at user-local times) becomes a requirement. |
+| `roleTokenBudgets.consult` = 400 | Original budget set before context injection was added to the system prompt. The effective budget is shared between the role response and the growing context lines. | If user feedback consistently shows truncated consult responses, or when token-use monitoring confirms the budget is regularly exceeded. |
+| `socraticLine` accepted by `buildSystemPrompt()` but never populated by `buildContext()` | The Advice tier described in ADR-001 was never implemented. The parameter exists as dead surface area in the API. | If the Advice tier is implemented (detecting advice-seeking patterns = "should I", "what should" and injecting a socratic directive). |
+| 19 commands read from `user_memory` (stale) instead of `memory_entries` (current) | Historical — the migration of the read path was not completed when the write path was migrated. The 19 command files embed `getUserMemory()` calls in their handler logic. | When all 19 command files are updated to call `getMemoryEntries()` instead and the `user_memory` table is either removed or populated from `memory_entries`. |
+
+## 9. Cross-cutting bugs already found and fixed once
+
+The following bugs have been found, fixed, and could recur. They are documented here with their root cause and the invariant that prevents recurrence.
+
+### 9.1 Double-write races on in-memory-then-persisted state machines
+
+**Root cause**: Several state machines read from a fast in-memory cache, mutate, then persist to SQLite. If two events arrive concurrently for the same entity (e.g., two messages from the same user in the same channel), both read the same baseline, compute their delta, and write — the second write overwrites the first's delta.
+
+**Fix**: Serialize state transitions per key via SQLite transaction or compare-and-swap (`UPDATE ... WHERE last_seen_at = ?`).
+
+**Invariant**: Any state machine that is read-mutate-write should either (a) use a SQLite transaction, (b) use a conditional update that verifies the baseline hasn't changed, or (c) be scoped such that concurrent writes for the same key are impossible by design.
+
+**What to watch for**: `database.js` dynamic update functions (`updateChannelState`, `updateRelationshipField`, `upsertUserProfile`, `upsertAttentionState`) all read-then-write without transactions. Adding new read-mutate-write paths should include serialization.
+
+### 9.2 Concurrent-message double-processing
+
+**Root cause**: The `messageCreate` handler (`bot.js` line 277) fires multiple state-tracking functions via `Promise.allSettled`. If the same message triggers both the mention handler and an interjection or reaction path, the AI invocation logic is entered twice for the same message content.
+
+**Fix**: Add a processed-message dedup set (volatile, last N message IDs) at the top of `messageCreate`.
+
+**Invariant**: Every inbound message should be processed at most once by any AI-invocation path. A message-ID dedup set (or recent-message cache) prevents re-entry.
+
+**What to watch for**: If AI responses start doubling for the same user message, check whether the dedup was removed or the set size was reduced.
+
+### 9.3 State computed on message arrival should never represent silence (Dormant)
+
+**Root cause**: Early versions of the channel state machine set `Dormant` when a message arrived after a long gap. This created an incorrect cycle: message → set Dormant → decay pass sees Dormant and does nothing → next message also sees Dormant. Dormant should represent "no messages at all," not "messages arrived after silence."
+
+**Fix**: `Dormant` is now only assigned by `stateDecay.js` (`runDecayPass`), never by `stateTracker.js` or any message handler.
+
+**Invariant**: No code path outside `runDecayPass()` in `stateDecay.js` may set a channel state to `Dormant`. All message-triggered state transitions must go to Attentive or Charged, never directly to Dormant.
+
+### 9.4 SQLite prepared statement `.apply()` vs `.run(...vals)` spread
+
+**Root cause**: Dynamic SQL generation in `database.js` builds prepared statements at runtime with spread arguments: `.run(...values, userId, gid, channelId)`. The spread passed an array to `.run()`, but better-sqlite3's `.run()` expects positional arguments, not an array. Older code used `.apply(stmt, vals)` which worked but was fragile.
+
+**Fix**: Converted all dynamic SQL call sites to use `.run(...vals)` spread consistently.
+
+**Invariant**: Every place in `database.js` that builds a dynamic `UPDATE ... SET` query must use `.run(...values, ...keys)` spread arguments, not `.apply()`. The 5 dynamic query builders (`updateChannelState`, `updateRelationshipField`, `upsertUserProfile`, `upsertAttentionState` update, `upsertAttentionState` insert) all follow the spread pattern.
+
+### 9.5 Dead code in gates.js (signature mismatch)
+
+**File**: `lib/gates.js` line 16, `features/safety/hostileDetector.js` line 47
+
+**Root cause**: `gates.js` `checkHostile(userId, guildId)` accepts a `guildId` parameter and passes it to `isSilenced(userId, guildId)`, but `isSilenced()` in `hostileDetector.js` only takes a single `userId` parameter — the `guildId` is silently dropped. The function still works correctly because the strike tracking is per-user (not per-guild), but the signature is misleading.
+
+**Fix**: Either remove the `guildId` parameter from `checkHostile()` or add guild-scoped strike tracking to `hostileDetector.js`.
+
+**Invariant**: Any gate function in `lib/gates.js` must match the parameter signature of the underlying check function. Mismatched parameters that are silently dropped should be removed or implemented.
+
+### 9.6 `user_memory` ↔ `memory_entries` fragmentation (currently active)
+
+**File**: `db/database.js` lines 31–45 (user_memory reads) vs. `features/etch/etch.handler.js` line 11 (memory_entries writes)
+
+**Root cause**: When `memory_entries` was created as the unified memory table, the write path was migrated (`/etch` → `addMemoryEntry()`) but the read path was not — 19 command files still call `getUserMemory()` which reads from the stale `user_memory` table. Additionally, `modelRouter.js` calls `getKnowledge()` which reads from the stale `knowledge_graph` table, while knowledge extraction (`knowledgeGraph.js`) writes to `memory_entries`.
+
+**Status**: **Active** — not yet fixed. This is the only bug on this list that is currently live.
+
+**Impact**: User etch data is written to `memory_entries` but the 19 commands that read memory for AI context use `user_memory`, which has no new data. The AI context system (`promptContext.js`) correctly reads from `memory_entries`, so the fragmentation only affects the 19 standalone commands, not the AI conversation flow.
+
+**Fix needed**: Update all 19 command files to replace `getUserMemory(...)` with `getMemoryEntries(...)`, and update `modelRouter.js` to use `getMemoryByType()` from `memory_entries` instead of `getKnowledge()` from `knowledge_graph`.
+
+---
+
 ## Domain Glossary
 
 ### Persona
