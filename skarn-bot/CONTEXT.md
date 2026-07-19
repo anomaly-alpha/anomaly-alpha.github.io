@@ -258,6 +258,45 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 **Fix needed**: Update all 19 command files to replace `getUserMemory(...)` with `getMemoryEntries(...)`, and update `modelRouter.js` to use `getMemoryByType()` from `memory_entries` instead of `getKnowledge()` from `knowledge_graph`.
 
+## 10. Environment variables in use
+
+The following environment variables are consumed by the codebase. Variables are listed with their requirement level, code-level default (if any), and what they control.
+
+| Variable | Required | Default | Controls |
+|----------|----------|---------|----------|
+| `DISCORD_TOKEN` | Yes | — | Discord bot authentication (`bot.js` line 471: `client.login()`) |
+| `CLIENT_ID` | Yes | — | Discord application ID (used in slash command registration) |
+| `OPENAI_API_KEY` | For AI | — | OpenAI API key for all AI calls (`ai/client.js` line 7) |
+| `GOOGLE_CSE_KEY` | For `/search` | — | Google Custom Search Engine API key (`features/search/searchEngine.js` line 18) |
+| `GOOGLE_CSE_CX` | For `/search` | — | Google Custom Search Engine CX (search engine ID, `features/search/searchEngine.js` line 19) |
+| `SLEEP_START` | No | `1` | Sleep mode start hour (UTC+offset). Set with `SLEEP_END=0` to disable sleep. (`bot.js` line 64) |
+| `SLEEP_END` | No | `7` | Sleep mode end hour (UTC+offset) (`bot.js` line 65) |
+| `SLEEP_TIMEZONE` | No | `0` | UTC offset applied arithmetically to sleep hours. Integer, not DST-aware. (`bot.js` line 66) |
+| `AI_MODEL` | No | `gpt-3.5-turbo` | Default OpenAI model for all AI calls (`features/intelligence/modelRouter.js` line 9) |
+| `AI_MODEL_COMPLEX` | No | falls back to `AI_MODEL` | Model used for long/question/complex queries and knowledge-matched queries (`modelRouter.js` lines 4, 7) |
+
+> **Note**: `AI_MODEL` and `AI_MODEL_COMPLEX` are **not present in `.env.example`** — they must be added manually or by copying from this table. They are consumed only by `features/intelligence/modelRouter.js`; the deprecated `/ask` and `/summarize` commands hardcode `gpt-3.5-turbo` and ignore both variables.
+>
+> **Note**: `SLEEP_START` / `SLEEP_END` defaults (1 and 7) match `.env.example`. The actual deployment (`.env`) sets both to `0` to disable sleep. This is an environment-specific choice, not a code default mismatch.
+
+## 11. Open questions / not yet decided
+
+The following architectural and configuration decisions are unresolved. Each is documented with the observed code behaviour and the question that needs a deliberate answer.
+
+1. **`user_memory` ↔ `memory_entries` fragmentation (most critical)** — The write path was migrated to `memory_entries` (`etch.handler.js`), but 19 command files still read from `user_memory` via `getUserMemory()`. The AI context system reads correctly from `memory_entries`, so the bug only affects standalone commands. This is the most impactful unresolved fragmentation because users who `/etch` facts will not see them reflected in commands that query `user_memory`. The fix is mechanical (replace 19 call sites + redirect `modelRouter.js`) but requires a coordinated change across multiple files.
+
+2. **`knowledge_graph` ↔ `memory_entries` fragmentation** — `knowledgeGraph.js` writes extracted entities to `memory_entries` (source='extracted'), but `modelRouter.js` reads from `knowledge_graph` via `getKnowledge()` to check for knowledge matches. This is a second fragmentation bug: extracted entities are never seen by the model router, which uses `checkKnowledgeMatch()` to decide whether to use the complex model. The read path (`modelRouter.js`) and write path (`knowledgeGraph.js`) are operating on different tables.
+
+3. **`roleTokenBudgets.consult` = 400 (spec called for 900, never increased)** — The budget was set before context injection was added to the system prompt. Spec documents (e.g., `2026-07-18-persona-depth.md`) describe a 900-token budget. The effective budget is shared between the role response and the growing context lines. No token-usage monitoring exists to confirm whether the current budget is regularly exceeded.
+
+4. **No test framework configured** — 6 test files exist in `tests/` but no test runner is configured in `package.json`. There is no `npm test` script, no test framework dependency, and no CI pipeline. The tests cannot be executed without manual setup. This creates a documentation-vs-reality gap: the presence of test files suggests a testing story that does not exist.
+
+5. **`ROLE_NATURE` duplication — three files, must stay in sync** — `roles`, `roleTokenBudgets`, and `ROLE_NATURE` are three separate objects in `persona/roles.js` that duplicate the same set of role keys. Adding a new role requires editing all three. Keys can drift out of sync — `search` and `realm_npc` appear in `roles` and `roleTokenBudgets` but are absent from `ROLE_NATURE`, meaning they have no nature classification assigned. No guard (test, lint rule, or code generation) prevents further drift.
+
+6. **In-memory cooldown Maps — exceptions to the "all state in SQLite" rule** — `features/discordNative/reactionSystem.js` (line 6) and `commands/search.js` (line 13) maintain ephemeral cooldowns in in-memory `Map` objects rather than SQLite tables. These are explicitly accepted trade-offs (lost on restart with no user-facing impact), but they contradict the documented "all state in SQLite" convention and would need redesign for multi-instance deployments.
+
+7. **`socraticLine` in `buildSystemPrompt()` signature but never populated by `buildContext()`** — `socraticLine` is accepted as a parameter by `buildSystemPrompt()` (`persona/identity.js` line 58) but is **never** generated by `buildContext()` (`features/promptContext.js` returns no `socraticLine` in its result). The Advice tier described in ADR-001 (tiered-context-assembly with socratic questioning for advice-seeking patterns like "should I", "what should") has no corresponding implementation. The parameter is dead surface area in the API.
+
 ---
 
 ## Domain Glossary
