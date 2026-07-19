@@ -236,6 +236,116 @@ function upsertUserProfile(userId, guildId, data) {
   }
 }
 
+// ===== Knowledge Graph =====
+
+const KNOWLEDGE_DECAY = 0.95;
+const KNOWLEDGE_DECAY_DAYS = 30;
+const KNOWLEDGE_MIN_CONFIDENCE = 0.2;
+
+function addKnowledge(userId, guildId, entityType, entityName, context, confidence) {
+  confidence = confidence ?? 0.5;
+  const now = Date.now();
+  const existing = db.prepare(
+    'SELECT id, confidence FROM knowledge_graph WHERE user_id = ? AND guild_id = ? AND entity_type = ? AND entity_name = ?'
+  ).get(userId, guildId, entityType, entityName);
+  if (existing) {
+    const newConf = Math.min(1, existing.confidence + 0.1);
+    db.prepare(
+      'UPDATE knowledge_graph SET confidence = ?, context = ?, last_seen_at = ? WHERE id = ?'
+    ).run(newConf, context ?? existing.context, now, existing.id);
+  } else {
+    db.prepare(
+      'INSERT INTO knowledge_graph (user_id, guild_id, entity_type, entity_name, context, confidence, first_seen_at, last_seen_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+    ).run(userId, guildId, entityType, entityName, context ?? null, confidence, now, now);
+  }
+}
+
+function getKnowledge(userId, guildId) {
+  return db.prepare(
+    'SELECT * FROM knowledge_graph WHERE user_id = ? AND guild_id = ? ORDER BY confidence DESC'
+  ).all(userId, guildId);
+}
+
+function decayKnowledge() {
+  const cutoff = Date.now() - KNOWLEDGE_DECAY_DAYS * 24 * 60 * 60 * 1000;
+  db.prepare('UPDATE knowledge_graph SET confidence = confidence * ? WHERE last_seen_at < ?').run(KNOWLEDGE_DECAY, cutoff);
+  db.prepare('DELETE FROM knowledge_graph WHERE confidence < ?').run(KNOWLEDGE_MIN_CONFIDENCE);
+  return db.prepare('SELECT changes()').get();
+}
+
+// ===== User Preferences =====
+
+function getUserPreferences(userId, guildId) {
+  const row = db.prepare('SELECT * FROM user_preferences WHERE user_id = ? AND guild_id = ?').get(userId, guildId);
+  if (row) return row;
+  db.prepare(
+    'INSERT INTO user_preferences (user_id, guild_id) VALUES (?, ?)'
+  ).run(userId, guildId);
+  return db.prepare('SELECT * FROM user_preferences WHERE user_id = ? AND guild_id = ?').get(userId, guildId);
+}
+
+function setUserPreference(userId, guildId, key, value) {
+  const validKeys = ['proactive_opt_out', 'preferred_tone', 'max_response_length', 'allow_nickname', 'nickname', 'timezone'];
+  if (!validKeys.includes(key)) return;
+  // Upsert: ensure row exists first
+  getUserPreferences(userId, guildId);
+  db.prepare(`UPDATE user_preferences SET ${key} = ? WHERE user_id = ? AND guild_id = ?`).run(value, userId, guildId);
+}
+
+// ===== Follow Ups =====
+
+function createFollowUp(userId, guildId, channelId, topic, context, dueAfter) {
+  const result = db.prepare(
+    'INSERT INTO follow_ups (user_id, guild_id, channel_id, topic, context, created_at, due_after) VALUES (?, ?, ?, ?, ?, ?, ?)'
+  ).run(userId, guildId, channelId, topic, context ?? null, Date.now(), Date.now() + dueAfter);
+  return { id: result.lastInsertRowid };
+}
+
+function getPendingFollowUps() {
+  return db.prepare(
+    "SELECT * FROM follow_ups WHERE due_after < ? AND status = 'pending'"
+  ).all(Date.now());
+}
+
+function markFollowUpSent(id) {
+  db.prepare("UPDATE follow_ups SET status = 'sent', sent_at = ? WHERE id = ?").run(Date.now(), id);
+}
+
+// ===== Intent Cache =====
+
+function getIntentCache(messageId) {
+  return db.prepare('SELECT * FROM intent_cache WHERE message_id = ?').get(messageId);
+}
+
+function setIntentCache(messageId, userId, intent, confidence) {
+  db.prepare(
+    'INSERT OR REPLACE INTO intent_cache (message_id, user_id, intent, confidence, created_at) VALUES (?, ?, ?, ?, ?)'
+  ).run(messageId, userId, intent, confidence, Date.now());
+}
+
+// ===== Message Edits =====
+
+function logMessageEdit(messageId) {
+  db.prepare(
+    'INSERT OR REPLACE INTO message_edits (original_message_id, edited_at) VALUES (?, ?)'
+  ).run(messageId, Date.now());
+}
+
+// ===== Relationship Milestones =====
+
+function addMilestone(userId, guildId, type, name, context) {
+  const result = db.prepare(
+    'INSERT INTO relationship_milestones (user_id, guild_id, milestone_type, milestone_name, achieved_at, context) VALUES (?, ?, ?, ?, ?, ?)'
+  ).run(userId, guildId, type, name, Date.now(), context ?? null);
+  return { id: result.lastInsertRowid };
+}
+
+function getMilestones(userId, guildId) {
+  return db.prepare(
+    'SELECT * FROM relationship_milestones WHERE user_id = ? AND guild_id = ? ORDER BY achieved_at DESC'
+  ).all(userId, guildId);
+}
+
 // ===== Pruning =====
 
 function pruneOldMessages(cutoffMs) {
@@ -331,4 +441,17 @@ module.exports = {
   deleteUserConversation,
   searchConversations,
   getConversationStats,
+  addKnowledge,
+  getKnowledge,
+  decayKnowledge,
+  getUserPreferences,
+  setUserPreference,
+  createFollowUp,
+  getPendingFollowUps,
+  markFollowUpSent,
+  getIntentCache,
+  setIntentCache,
+  logMessageEdit,
+  addMilestone,
+  getMilestones,
 };

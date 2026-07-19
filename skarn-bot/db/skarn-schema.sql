@@ -228,3 +228,71 @@ CREATE VIRTUAL TABLE IF NOT EXISTS conversation_fts USING fts5(
   guild_id UNINDEXED,
   role UNINDEXED
 );
+
+-- ===== Knowledge Graph =====
+
+CREATE TABLE IF NOT EXISTS knowledge_graph (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  entity_type TEXT NOT NULL,
+  entity_name TEXT NOT NULL,
+  context TEXT,
+  confidence REAL DEFAULT 0.5,
+  first_seen_at INTEGER NOT NULL,
+  last_seen_at INTEGER NOT NULL,
+  UNIQUE(user_id, guild_id, entity_type, entity_name)
+);
+
+CREATE TABLE IF NOT EXISTS user_preferences (
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  proactive_opt_out INTEGER DEFAULT 0,
+  preferred_tone TEXT DEFAULT 'match',
+  max_response_length TEXT DEFAULT 'auto',
+  allow_nickname INTEGER DEFAULT 0,
+  nickname TEXT,
+  timezone TEXT,
+  PRIMARY KEY (user_id, guild_id)
+);
+
+CREATE TABLE IF NOT EXISTS follow_ups (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  topic TEXT NOT NULL,
+  context TEXT,
+  created_at INTEGER NOT NULL,
+  due_after INTEGER NOT NULL,
+  status TEXT DEFAULT 'pending',
+  sent_at INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS intent_cache (
+  message_id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  intent TEXT NOT NULL,
+  confidence REAL NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS message_edits (
+  original_message_id TEXT PRIMARY KEY,
+  edited_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS relationship_milestones (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  milestone_type TEXT NOT NULL,
+  milestone_name TEXT NOT NULL,
+  achieved_at INTEGER NOT NULL,
+  context TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_knowledge_user ON knowledge_graph(user_id, guild_id);
+CREATE INDEX IF NOT EXISTS idx_followups_user ON follow_ups(user_id, status, due_after);
+CREATE INDEX IF NOT EXISTS idx_intent_user ON intent_cache(user_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_milestones_user ON relationship_milestones(user_id, guild_id);
