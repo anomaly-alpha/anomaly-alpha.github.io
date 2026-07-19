@@ -4,7 +4,7 @@ const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { canCall, recordCall } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
-const { searchWeb, cleanCache } = require('./searchEngine');
+const { searchWeb } = require('./searchEngine');
 
 const COOLDOWN_MS = 5 * 1000;
 const cooldowns = new Map();
@@ -83,6 +83,7 @@ async function execute(interaction) {
     });
 
     let reply = completion.choices[0].message.content;
+    if (!reply) reply = 'Could not parse the results.';
     reply = postProcess(reply, ROLE_NATURE.search);
 
     // Step 5: Build result embed
