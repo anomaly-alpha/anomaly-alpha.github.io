@@ -14,8 +14,17 @@ const db = new Database(DB_PATH);
 // Run schema on startup
 db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
 
-// Migration v1: reset stale opt-in defaults (legacy rows from before opt-in system)
-db.prepare("UPDATE user_preferences SET proactive_opt_out = 1 WHERE proactive_opt_out = 0").run();
+// Migration: add proactive_opt_in column if missing (safe to run every startup)
+try {
+  db.prepare('ALTER TABLE user_preferences ADD COLUMN proactive_opt_in INTEGER DEFAULT 0').run();
+  // Flip existing values: old proactive_opt_out=0 → proactive_opt_in=1
+  db.prepare("UPDATE user_preferences SET proactive_opt_in = CASE WHEN proactive_opt_out = 0 THEN 1 ELSE 0 END").run();
+} catch (e) {
+  if (!e.message.includes('duplicate column')) {
+    // Real error, not harmless "column already exists"
+    console.error('[DB] Schema migration failed:', e.message);
+  }
+}
 
 // ===== User Memory =====
 
