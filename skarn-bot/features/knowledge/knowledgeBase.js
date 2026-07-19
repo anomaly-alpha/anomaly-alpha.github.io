@@ -3,7 +3,7 @@ const { db } = require('../../db/database');
 function searchKnowledge(query) {
   const words = query.toLowerCase()
     .replace(/[^a-z0-9\s]/g, '').split(/\s+/)
-    .filter(w => w.length > 3);
+    .filter(w => w.length > 0);
   if (words.length === 0) return null;
   const ftsQuery = words.join(' AND ');
   try {
