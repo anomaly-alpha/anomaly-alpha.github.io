@@ -283,6 +283,13 @@ client.on('messageCreate', async function(message) {
     Promise.resolve().then(function() { return require('./features/warmth/warmthManager').maybeActiveListen ? require('./features/warmth/warmthManager').maybeActiveListen(message) : null; }).catch(function() {}),
     Promise.resolve().then(function() { return require('./features/humor/comedyTiming').extendBanterChain ? require('./features/humor/comedyTiming').extendBanterChain(message) : null; }).catch(function() {}),
     Promise.resolve().then(function() { return require('./features/humor/comedyTiming').recordSetup ? require('./features/humor/comedyTiming').recordSetup(message) : null; }).catch(function() {}),
+    Promise.resolve().then(function() {
+      var _db = require('./db/database');
+      var _aiChannels = _db.getGuildConfig ? _db.getGuildConfig(message.guild.id, 'aiChannels') : [];
+      if (_aiChannels && _aiChannels.includes(message.channel.id) && _db.incrementMsgCount) {
+        _db.incrementMsgCount(message.author.id, message.guild.id, message.channel.id);
+      }
+    }).catch(function() {}),
   ]);
 
   // Step 4: Fast-path skippers (return immediately)
@@ -392,10 +399,10 @@ client.on('messageCreate', async function(message) {
         } catch (e) {}
       }
       
-      // Chat gate
+      // Attention gate
       try {
-        var chatGate = require('./features/discordNative/chatGate');
-        if (chatGate.shouldRespond && await chatGate.shouldRespond(message, client)) {
+        var attentionGate = require('./features/discordNative/attentionGate');
+        if (attentionGate.shouldRespond && await attentionGate.shouldRespond(message, client)) {
           await handleMention(message);
           return;
         }
