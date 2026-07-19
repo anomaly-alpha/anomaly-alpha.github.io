@@ -230,18 +230,6 @@ function upsertUserProfile(userId, guildId, data) {
   }
 }
 
-// ===== Knowledge Graph =====
-
-const KNOWLEDGE_DECAY = 0.95;
-const KNOWLEDGE_DECAY_DAYS = 30;
-const KNOWLEDGE_MIN_CONFIDENCE = 0.2;
-
-function decayKnowledge() {
-  const cutoff = Date.now() - KNOWLEDGE_DECAY_DAYS * 24 * 60 * 60 * 1000;
-  db.prepare('UPDATE knowledge_graph SET confidence = confidence * ? WHERE last_seen_at < ?').run(KNOWLEDGE_DECAY, cutoff);
-  db.prepare('DELETE FROM knowledge_graph WHERE confidence < ?').run(KNOWLEDGE_MIN_CONFIDENCE);
-  return db.prepare('SELECT changes()').get();
-}
 
 // ===== User Preferences =====
 
@@ -806,7 +794,7 @@ module.exports = {
   deleteUserConversation,
   searchConversations,
   getConversationStats,
-  decayKnowledge,
+
   getUserPreferences,
   setUserPreference,
   getGuildConfig,

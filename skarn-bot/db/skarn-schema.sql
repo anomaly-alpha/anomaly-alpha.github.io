@@ -1,12 +1,4 @@
 -- New tables only. Existing JSON data (config, levels, friends) untouched.
-CREATE TABLE IF NOT EXISTS user_memory (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id TEXT NOT NULL,
-  guild_id TEXT NOT NULL,
-  fact_text TEXT NOT NULL,
-  created_at INTEGER NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS channel_state (
   channel_id TEXT PRIMARY KEY,
   guild_id TEXT NOT NULL,
@@ -229,21 +221,6 @@ CREATE VIRTUAL TABLE IF NOT EXISTS conversation_fts USING fts5(
   role UNINDEXED
 );
 
--- ===== Knowledge Graph =====
-
-CREATE TABLE IF NOT EXISTS knowledge_graph (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id TEXT NOT NULL,
-  guild_id TEXT NOT NULL,
-  entity_type TEXT NOT NULL,
-  entity_name TEXT NOT NULL,
-  context TEXT,
-  confidence REAL DEFAULT 0.5,
-  first_seen_at INTEGER NOT NULL,
-  last_seen_at INTEGER NOT NULL,
-  UNIQUE(user_id, guild_id, entity_type, entity_name)
-);
-
 CREATE TABLE IF NOT EXISTS user_preferences (
   user_id TEXT NOT NULL,
   guild_id TEXT NOT NULL,
@@ -280,7 +257,6 @@ CREATE TABLE IF NOT EXISTS relationship_milestones (
   context TEXT
 );
 
-CREATE INDEX IF NOT EXISTS idx_knowledge_user ON knowledge_graph(user_id, guild_id);
 CREATE INDEX IF NOT EXISTS idx_followups_user ON follow_ups(user_id, status, due_after);
 CREATE INDEX IF NOT EXISTS idx_milestones_user ON relationship_milestones(user_id, guild_id);
 

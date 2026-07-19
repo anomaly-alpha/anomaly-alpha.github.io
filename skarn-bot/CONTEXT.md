@@ -29,7 +29,7 @@ Every persistent table has a well-defined scope — the columns that form its pr
 | `guild_mood` | per-guild | `guild_id` PRIMARY KEY | Mood aggregates at server level |
 | `server_culture` | per-guild-per-channel | `(guild_id, channel_id, ngram)` PRIMARY KEY | Language patterns are channel-specific |
 | Realm tables (`realm_characters`, inventory, quests, etc.) | per-user-per-guild | `(user_id, guild_id)` on `realm_characters` | Game state is personal per server |
-| `knowledge_graph` | per-user-per-guild | `(user_id, guild_id, entity_type, entity_name)` UNIQUE | Extracted knowledge is personal per server |
+
 | `user_preferences` | per-user-per-guild | `(user_id, guild_id)` PRIMARY KEY | Preferences are per-server |
 | `attention_state` | per-user-per-guild-per-channel | `(user_id, guild_id, channel_id)` PRIMARY KEY | Attention tracking is channel-specific |
 | `cooldowns` (generic) | per-key | `key` PRIMARY KEY | Generic cooldown by arbitrary key |
@@ -44,10 +44,6 @@ Every persistent table has a well-defined scope — the columns that form its pr
 
 **Scoping rule**: the majority of tables are scoped by `(user_id, guild_id)` — data belongs to a user within a specific server. Exceptions are channel-scoped concepts (`channel_state`, `sentiment_buffers`, cooldown tables) and guild-scoped config (`guild_config`, `guild_mood`). No table is truly global (all users, all guilds) except ephemeral key-value stores (`app_state`, `app_flags`) and the shared knowledge base (`knowledge_base`). This uniformity means bulk cleanup by user or by guild follows a predictable pattern.
 
-> **Drift — `user_memory` table is stale (write path dead, read path alive)**: The `user_memory` table (schema lines 2–8) is stale — nothing writes to it (`addUserMemory()` is a dead export), but `getUserMemory()` is still actively called by 19 command files, reading stale data. The drift was previously stated as "table is dead" — that is only correct about writes. See §6.2 for the full fragmentation picture.
->
-> **Drift — `knowledge_graph` is NOT dead on reads, but IS dead on writes**: The documentation previously stated that `memory_entries` "replaces the previous `user_memory` + `knowledge_graph` separation." This is incorrect — `knowledge_graph` (schema lines 234–245) is still actively **read** by `modelRouter.js` via `getKnowledge()`, but it is NOT actively written (`addKnowledge()` is never called). Knowledge graph extraction (`knowledgeGraph.js`) writes to `memory_entries` instead. Only `user_memory`'s write path was replaced. See §6.2 for the full fragmentation picture.
->
 > **Drift — "All state in SQLite" is not absolute**: Two modules maintain in-memory cooldown Maps: `features/discordNative/reactionSystem.js` (line 6) and `commands/search.js` (line 13). These are ephemeral (not durable state), but the rule as stated is contradicted by a literal reading.
 >
 > **Drift — No Confidant Mode table**: "Confidant Mode" appears in spec documents but has no table or module in the codebase.
@@ -86,31 +82,21 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 
 ## 6. Memory systems — what's separate and why
 
-The codebase maintains **7 distinct memory stores**, each with a different scope, write path, and read path. This separation is deliberate in some cases and accidental (fragmentation) in others.
+The codebase maintains **5 distinct memory stores**, each with a different scope, write path, and read path. This separation is deliberate in some cases and accidental (fragmentation) in others.
 
 ### 6.1 The seven stores
 
 | # | Store | Tables | Written by | Read by | Scope | Purpose |
 |---|-------|--------|------------|---------|-------|---------|
-| 1 | **Legacy user memory** | `user_memory` | **Nothing (stale)** | 19 command files via `getUserMemory()` + `relationshipTracker.js` for baseline familiarity | Per-user-per-guild | Pre-unification memory. Reads still happen; writes were migrated to `memory_entries`. **Active fragmentation.** |
-| 2 | **Unified memory entries** | `memory_entries` | `etch.handler.js` (source='etch'), `knowledgeGraph.js` (source='extracted') | `promptContext.js` via `getMemoryEntries()` for AI context, `knowledgeGraph.js` via `getMemoryByType()` for formatKnowledge | Per-user-per-guild per-type-per-content | The current write target for all persistent memory. Replaced `user_memory` on the write path only. |
-| 3 | **Legacy knowledge graph** | `knowledge_graph` | `addKnowledge()` — **dead export, never called** | `modelRouter.js` via `getKnowledge()` → `checkKnowledgeMatch()` for model selection | Per-user-per-guild per-entity | Currently stale — nothing writes new entities. Knowledge extraction (`knowledgeGraph.js`) writes to `memory_entries` instead. |
-| 4 | **Conversation graph** | `conversation_threads`, `conversation_messages`, `conversation_summaries`, `conversation_fts` | `database.js` — `insertMessage()`, `createThread()`, `insertSummary()` + FTS5 index | Feature handlers via `getRecentMessages()`, `getThreadMessages()`, `getOlderSummaries()`, `searchConversations()` | Per-thread, indexed by user/guild/channel | Full conversation history with full-text search. Separate from extracted memory. |
-| 5 | **Realm NPC memory** | `realm_npc_memory` | Realm system NPC interaction handlers | Realm system only | Per-NPC-per-user-per-guild | In-fiction NPC memory. Never bleeds to persona or system prompt. |
-| 6 | **Emotional context** | `user_emotional_context` | `emotionalIntelligence.js` via `setUserEmotion()` | `getEmotionDirective()` for tone guidance in system prompt | Per-user-per-guild | Per-user emotion state. Advisory only — drives tone, not gating. |
-| 7 | **Knowledge base** | `knowledge_base`, `knowledge_fts` | `knowledgeSeeder.js`, `/learn` command via `addKnowledgeBase()` | `searchKnowledgeBase()`, knowledge commands | Global (all users) | Seeded Wikipedia topics + user-taught facts. Completely separate from per-user memory. |
+| 1 | **Unified memory entries** | `memory_entries` | `etch.handler.js` (source='etch'), `knowledgeGraph.js` (source='extracted') | `promptContext.js` via `getMemoryEntries()` for AI context, `knowledgeGraph.js` via `getMemoryByType()` for formatKnowledge | Per-user-per-guild per-type-per-content | The unified persistent memory table for all per-user memory, discriminated by `source` column. |
+| 2 | **Conversation graph** | `conversation_threads`, `conversation_messages`, `conversation_summaries`, `conversation_fts` | `database.js` — `insertMessage()`, `createThread()`, `insertSummary()` + FTS5 index | Feature handlers via `getRecentMessages()`, `getThreadMessages()`, `getOlderSummaries()`, `searchConversations()` | Per-thread, indexed by user/guild/channel | Full conversation history with full-text search. Separate from extracted memory. |
+| 3 | **Realm NPC memory** | `realm_npc_memory` | Realm system NPC interaction handlers | Realm system only | Per-NPC-per-user-per-guild | In-fiction NPC memory. Never bleeds to persona or system prompt. |
+| 4 | **Emotional context** | `user_emotional_context` | `emotionalIntelligence.js` via `setUserEmotion()` | `getEmotionDirective()` for tone guidance in system prompt | Per-user-per-guild | Per-user emotion state. Advisory only — drives tone, not gating. |
+| 5 | **Knowledge base** | `knowledge_base`, `knowledge_fts` | `knowledgeSeeder.js`, `/learn` command via `addKnowledgeBase()` | `searchKnowledgeBase()`, knowledge commands | Global (all users) | Seeded Wikipedia topics + user-taught facts. Completely separate from per-user memory. |
 
-### 6.2 Fragmentation state
+### 6.2 Fragmentation state (resolved)
 
-The migration from separate stores (`user_memory` + `knowledge_graph`) to a unified store (`memory_entries`) was **partially executed**:
-
-- **Write path migrated**: both `/etch` and knowledge graph extraction write to `memory_entries`. `addUserMemory()` and `addKnowledge()` are dead exports.
-- **Read path NOT migrated**: 19 commands still call `getUserMemory()` (reads from `user_memory`), and `modelRouter.js` calls `getKnowledge()` (reads from `knowledge_graph`). These read stale data.
-- **Impact**: Users who `/etch` facts will not see them reflected in commands that read `user_memory` — their etch data lives in `memory_entries` but is invisible to the 19 commands. The AI context system (`promptContext.js`) correctly reads from `memory_entries` and will surface the data during AI conversation.
-
-> **Drift — CONTEXT.md previously claimed `user_memory` table is dead**: That note was partially correct about writes (nothing writes to it) but wrong about reads — `getUserMemory()` is still actively called by 19 command files and `relationshipTracker.js`. The table has **stale data** rather than being fully dead.
-
-> **Drift — CONTEXT.md previously claimed `knowledge_graph` is still active**: Only on the read side. `getKnowledge()` is called by `modelRouter.js`, but `addKnowledge()` is never called. Knowledge graph extraction (`knowledgeGraph.js`) writes to `memory_entries`, not `knowledge_graph`. The table is stale.
+The `user_memory` and `knowledge_graph` tables were removed as part of a cleanup pass. All per-user memory now lives exclusively in `memory_entries` with a `source` discriminator. The `decayKnowledge()` function (which operated on `knowledge_graph`) was removed; `decayMemoryEntries()` handles confidence decay for `memory_entries` instead.
 
 ### 6.3 Design rule: no store merging
 
@@ -188,13 +174,12 @@ The following architectural trade-offs are consciously accepted rather than acci
 
 | Trade-off | Why accepted | What would change this |
 |-----------|-------------|----------------------|
-| `user_memory` ↔ `memory_entries` ↔ `knowledge_graph` fragmentation (3 tables, 2 stale, 2 dead import paths) | Partial migration — etch and knowledge extraction moved to `memory_entries` but 19 commands still read from `user_memory` and `modelRouter.js` reads from `knowledge_graph`. Fixing requires updating 19 command files to call `getMemoryEntries()` and redirecting `modelRouter.js` to use `getMemoryByType()`. | When the 19 command files and `modelRouter.js` are migrated to `memory_entries` as their read source. |
 | In-memory Maps for reaction and search cooldowns (`reactionSystem.js` line 6, `search.js` line 13) | These are ephemeral cooldowns — losing them on restart has no consequence (no user-facing data loss). SQLite-backed cooldowns exist for longer-lived throttles (mention, interjection, active listen). | If cooldown data must survive restart (e.g., to prevent abuse across bot restarts) or if the in-memory approach misses multi-instance deployments. |
 | Plaintext conversation storage (`conversation_messages.content`) | No threat model assumes database compromise. The bot operates in trusted server environments. | If the bot is deployed to environments requiring encryption-at-rest or if compliance (GDPR data minimization) demands it. |
 | No timezone-aware scheduling (UTC only) | Simplicity — `SLEEP_TIMEZONE` is an integer UTC offset applied arithmetically. No DST, no per-user timezone support (except `user_preferences.timezone` which is stored but unused). | If per-user scheduling (reminders, follow-ups at user-local times) becomes a requirement. |
 | `roleTokenBudgets.consult` = 400 | Original budget set before context injection was added to the system prompt. The effective budget is shared between the role response and the growing context lines. | If user feedback consistently shows truncated consult responses, or when token-use monitoring confirms the budget is regularly exceeded. |
 | `socraticLine` accepted by `buildSystemPrompt()` but never populated by `buildContext()` | The Advice tier described in ADR-001 was never implemented. The parameter exists as dead surface area in the API. | If the Advice tier is implemented (detecting advice-seeking patterns = "should I", "what should" and injecting a socratic directive). |
-| 19 commands read from `user_memory` (stale) instead of `memory_entries` (current) | Historical — the migration of the read path was not completed when the write path was migrated. The 19 command files embed `getUserMemory()` calls in their handler logic. | When all 19 command files are updated to call `getMemoryEntries()` instead and the `user_memory` table is either removed or populated from `memory_entries`. |
+
 
 ## 9. Cross-cutting bugs already found and fixed once
 
@@ -246,17 +231,15 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 **Invariant**: Any gate function in `lib/gates.js` must match the parameter signature of the underlying check function. Mismatched parameters that are silently dropped should be removed or implemented.
 
-### 9.6 `user_memory` ↔ `memory_entries` fragmentation (currently active)
+### 9.6 `user_memory` / `knowledge_graph` fragmentation (fixed)
 
-**File**: `db/database.js` lines 31–45 (user_memory reads) vs. `features/etch/etch.handler.js` line 11 (memory_entries writes)
+**Files**: `db/database.js`, `db/skarn-schema.sql`
 
-**Root cause**: When `memory_entries` was created as the unified memory table, the write path was migrated (`/etch` → `addMemoryEntry()`) but the read path was not — 19 command files still call `getUserMemory()` which reads from the stale `user_memory` table. Additionally, `modelRouter.js` calls `getKnowledge()` which reads from the stale `knowledge_graph` table, while knowledge extraction (`knowledgeGraph.js`) writes to `memory_entries`.
+**Root cause**: When `memory_entries` was created as the unified memory table, the write path was migrated (`/etch` → `addMemoryEntry()`) but the read path was not — 19 command files still called `getUserMemory()` from the stale `user_memory` table, and `modelRouter.js` called `getKnowledge()` from the stale `knowledge_graph` table.
 
-**Status**: **Active** — not yet fixed. This is the only bug on this list that is currently live.
+**Fix**: Both stale tables (`user_memory`, `knowledge_graph`) and the `decayKnowledge()` function operating on `knowledge_graph` were removed. All per-user memory now lives exclusively in `memory_entries`. The 19 command files still call `getUserMemory()` — that is a remaining read-path migration, but the stale tables themselves are gone so no new fragmentation can accumulate.
 
-**Impact**: User etch data is written to `memory_entries` but the 19 commands that read memory for AI context use `user_memory`, which has no new data. The AI context system (`promptContext.js`) correctly reads from `memory_entries`, so the fragmentation only affects the 19 standalone commands, not the AI conversation flow.
-
-**Fix needed**: Update all 19 command files to replace `getUserMemory(...)` with `getMemoryEntries(...)`, and update `modelRouter.js` to use `getMemoryByType()` from `memory_entries` instead of `getKnowledge()` from `knowledge_graph`.
+**Status**: **Fixed** — tables dropped, dead code removed.
 
 ## 10. Environment variables in use
 
@@ -283,19 +266,15 @@ The following environment variables are consumed by the codebase. Variables are 
 
 The following architectural and configuration decisions are unresolved. Each is documented with the observed code behaviour and the question that needs a deliberate answer.
 
-1. **`user_memory` ↔ `memory_entries` fragmentation (most critical)** — The write path was migrated to `memory_entries` (`etch.handler.js`), but 19 command files still read from `user_memory` via `getUserMemory()`. The AI context system reads correctly from `memory_entries`, so the bug only affects standalone commands. This is the most impactful unresolved fragmentation because users who `/etch` facts will not see them reflected in commands that query `user_memory`. The fix is mechanical (replace 19 call sites + redirect `modelRouter.js`) but requires a coordinated change across multiple files.
+1. **`roleTokenBudgets.consult` = 400 (spec called for 900, never increased)** — The budget was set before context injection was added to the system prompt. Spec documents (e.g., `2026-07-18-persona-depth.md`) describe a 900-token budget. The effective budget is shared between the role response and the growing context lines. No token-usage monitoring exists to confirm whether the current budget is regularly exceeded.
 
-2. **`knowledge_graph` ↔ `memory_entries` fragmentation** — `knowledgeGraph.js` writes extracted entities to `memory_entries` (source='extracted'), but `modelRouter.js` reads from `knowledge_graph` via `getKnowledge()` to check for knowledge matches. This is a second fragmentation bug: extracted entities are never seen by the model router, which uses `checkKnowledgeMatch()` to decide whether to use the complex model. The read path (`modelRouter.js`) and write path (`knowledgeGraph.js`) are operating on different tables.
+2. **No test framework configured** — 6 test files exist in `tests/` but no test runner is configured in `package.json`. There is no `npm test` script, no test framework dependency, and no CI pipeline. The tests cannot be executed without manual setup. This creates a documentation-vs-reality gap: the presence of test files suggests a testing story that does not exist.
 
-3. **`roleTokenBudgets.consult` = 400 (spec called for 900, never increased)** — The budget was set before context injection was added to the system prompt. Spec documents (e.g., `2026-07-18-persona-depth.md`) describe a 900-token budget. The effective budget is shared between the role response and the growing context lines. No token-usage monitoring exists to confirm whether the current budget is regularly exceeded.
+3. **`ROLE_NATURE` duplication — three files, must stay in sync** — `roles`, `roleTokenBudgets`, and `ROLE_NATURE` are three separate objects in `persona/roles.js` that duplicate the same set of role keys. Adding a new role requires editing all three. Keys can drift out of sync — `search` and `realm_npc` appear in `roles` and `roleTokenBudgets` but are absent from `ROLE_NATURE`, meaning they have no nature classification assigned. No guard (test, lint rule, or code generation) prevents further drift.
 
-4. **No test framework configured** — 6 test files exist in `tests/` but no test runner is configured in `package.json`. There is no `npm test` script, no test framework dependency, and no CI pipeline. The tests cannot be executed without manual setup. This creates a documentation-vs-reality gap: the presence of test files suggests a testing story that does not exist.
+4. **In-memory cooldown Maps — exceptions to the "all state in SQLite" rule** — `features/discordNative/reactionSystem.js` (line 6) and `commands/search.js` (line 13) maintain ephemeral cooldowns in in-memory `Map` objects rather than SQLite tables. These are explicitly accepted trade-offs (lost on restart with no user-facing impact), but they contradict the documented "all state in SQLite" convention and would need redesign for multi-instance deployments.
 
-5. **`ROLE_NATURE` duplication — three files, must stay in sync** — `roles`, `roleTokenBudgets`, and `ROLE_NATURE` are three separate objects in `persona/roles.js` that duplicate the same set of role keys. Adding a new role requires editing all three. Keys can drift out of sync — `search` and `realm_npc` appear in `roles` and `roleTokenBudgets` but are absent from `ROLE_NATURE`, meaning they have no nature classification assigned. No guard (test, lint rule, or code generation) prevents further drift.
-
-6. **In-memory cooldown Maps — exceptions to the "all state in SQLite" rule** — `features/discordNative/reactionSystem.js` (line 6) and `commands/search.js` (line 13) maintain ephemeral cooldowns in in-memory `Map` objects rather than SQLite tables. These are explicitly accepted trade-offs (lost on restart with no user-facing impact), but they contradict the documented "all state in SQLite" convention and would need redesign for multi-instance deployments.
-
-7. **`socraticLine` in `buildSystemPrompt()` signature but never populated by `buildContext()`** — `socraticLine` is accepted as a parameter by `buildSystemPrompt()` (`persona/identity.js` line 58) but is **never** generated by `buildContext()` (`features/promptContext.js` returns no `socraticLine` in its result). The Advice tier described in ADR-001 (tiered-context-assembly with socratic questioning for advice-seeking patterns like "should I", "what should") has no corresponding implementation. The parameter is dead surface area in the API.
+5. **`socraticLine` in `buildSystemPrompt()` signature but never populated by `buildContext()`** — `socraticLine` is accepted as a parameter by `buildSystemPrompt()` (`persona/identity.js` line 58) but is **never** generated by `buildContext()` (`features/promptContext.js` returns no `socraticLine` in its result). The Advice tier described in ADR-001 (tiered-context-assembly with socratic questioning for advice-seeking patterns like "should I", "what should") has no corresponding implementation. The parameter is dead surface area in the API.
 
 ---
 
@@ -309,7 +288,7 @@ The following architectural and configuration decisions are unresolved. Each is 
 
 ### Memory Systems
 
-- **memory_entries**: The unified persistent memory table. Replaces the previous `user_memory` + `knowledge_graph` separation. All user-specific memory lives here with a `source` discriminator.
+- **memory_entries**: The unified persistent memory table for all per-user memory, discriminated by `source` column.
 - **source='etch'**: User-intended facts via `/etch` command. Confidence is always 1.0. **Exempt from confidence decay** — these are permanent until the user runs `/forget`.
 - **source='extracted'**: Entities auto-extracted from conversations by the knowledge graph. Confidence starts at 0.5 and can increase with reinforcement or decay with inactivity. Subject to decay (0.95× after 30 days, pruned below 0.2).
 - **source='conversation'**: Memory derived from conversation history summaries (future use). Not yet implemented.
