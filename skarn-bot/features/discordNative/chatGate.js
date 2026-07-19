@@ -1,8 +1,11 @@
 const getOpenAIClient = require('../../ai/client');
 
 async function shouldRespond(content) {
-  if (!content || content.length < 20) return false;
+  if (!content) return false;
+  // Always respond to questions or messages addressing Skarn by name
   if (content.includes('?') || content.includes('skarn')) return true;
+  // Skip very short messages (no signals to respond to)
+  if (content.length < 20) return false;
 
   try {
     const openai = getOpenAIClient();

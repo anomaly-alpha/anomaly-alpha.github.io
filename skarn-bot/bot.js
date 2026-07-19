@@ -316,10 +316,7 @@ client.on('messageCreate', async message => {
       if (!canInteract(message.author.id, message.guild?.id)) return;
       if (!canRespond(message.author.id)) return;
 
-      // Gate: skip very short messages
-      if (msg.length < 20) return;
-
-      // Gate: AI decides for non-obvious messages
+      // Gate: AI decides (heuristic bypass: questions, "skarn" → always respond)
       const { shouldRespond } = require('./features/discordNative/chatGate');
       if (!await shouldRespond(msg)) return;
 
