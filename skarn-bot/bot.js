@@ -101,6 +101,10 @@ client.once('clientReady', () => {
   // Weather scheduler
   startScheduler(client);
 
+  // Proactive scheduler (follow-ups, absence detection)
+  const { startProactiveScheduler } = require('./features/proactive/scheduler');
+  startProactiveScheduler(client);
+
   // Sleep mode check
   setInterval(() => {
     if (isSleepTime() && !isAsleep) {
