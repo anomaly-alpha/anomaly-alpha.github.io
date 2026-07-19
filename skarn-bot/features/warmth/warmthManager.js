@@ -2,7 +2,7 @@ const Sentiment = require('sentiment');
 const sentiment = new Sentiment();
 const path = require('path');
 const fs = require('fs');
-const { getRelationship, checkActiveListenCooldown, setActiveListenCooldown, getFlag, setFlag, deleteFlag } = require('../../db/database');
+const { db, getRelationship, checkActiveListenCooldown, setActiveListenCooldown, getFlag, setFlag, deleteFlag, getGuildConfig } = require('../../db/database');
 
 // ===== In-memory state =====
 const repeatBuffer = new Map();    // "userId:guildId" → { topics[], windowStart }
@@ -13,17 +13,16 @@ let aiCacheLoadedAt = 0;
 const CACHE_TTL = 5 * 60 * 1000;
 
 function refreshAiChannels() {
+  aiChannelSet = new Set();
   try {
-    const configPath = path.join(__dirname, '..', '..', 'data', 'config.json');
-    if (fs.existsSync(configPath)) {
-      const cfg = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-      aiChannelSet = new Set();
-      for (const guildId in cfg) {
-        const chans = cfg[guildId]?.aiChannels || [];
-        for (const cid of chans) aiChannelSet.add(cid);
+    var rows = db.prepare('SELECT DISTINCT guild_id FROM guild_config WHERE key = ?').all('aiChannels');
+    for (var r of rows) {
+      var chans = getGuildConfig(r.guild_id, 'aiChannels');
+      if (Array.isArray(chans)) {
+        for (var cid of chans) aiChannelSet.add(cid);
       }
-      aiCacheLoadedAt = Date.now();
     }
+    aiCacheLoadedAt = Date.now();
   } catch {
     // Config unavailable — skip
   }

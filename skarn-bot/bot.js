@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { db, pruneRateLimits, pruneExpiredFlags, pruneSentimentBuffers, pruneBanterChains, pruneCallbacks, decayMemoryEntries, getUserPreferences, setUserPreference } = require('./db/database');
+const { db, pruneRateLimits, pruneExpiredFlags, pruneSentimentBuffers, pruneBanterChains, pruneCallbacks, decayMemoryEntries, getUserPreferences, setUserPreference, getGuildConfig, setGuildConfig } = require('./db/database');
 
 // ===== Skarn Persona System =====
 const { onMessageReceived } = require('./features/channelState/stateTracker');
@@ -182,13 +182,12 @@ client.on('interactionCreate', async interaction => {
 // ===== Welcome + AutoRole =====
 client.on('guildMemberAdd', async member => {
   const guildId = member.guild.id;
-  const config = loadJSON('config.json');
-  const settings = config[guildId] || {};
 
   // Welcome message
-  if (settings.welcomeChannel) {
+  const welcomeChannel = getGuildConfig(guildId, 'welcomeChannel');
+  if (welcomeChannel) {
     try {
-      const channel = await member.guild.channels.fetch(settings.welcomeChannel);
+      const channel = await member.guild.channels.fetch(welcomeChannel);
       const embed = new EmbedBuilder()
         .setTitle('Welcome!')
         .setDescription(`Welcome to **${member.guild.name}**, ${member}! You are member #${member.guild.memberCount}.`)
@@ -200,9 +199,10 @@ client.on('guildMemberAdd', async member => {
   }
 
   // Auto role
-  if (settings.autoRole) {
+  const autoRole = getGuildConfig(guildId, 'autoRole');
+  if (autoRole) {
     try {
-      const role = await member.guild.roles.fetch(settings.autoRole);
+      const role = await member.guild.roles.fetch(autoRole);
       if (role) await member.roles.add(role);
     } catch (e) { console.error('[Bot] Caught:', e.message); }
   }
@@ -264,8 +264,7 @@ client.on('messageCreate', async message => {
       return;
     }
     if (/^(skarn\s+)?chat\s*mode\b/.test(msg)) {
-      const cfg = loadJSON('config.json');
-      const aiChans = cfg[message.guild?.id]?.aiChannels || [];
+      const aiChans = getGuildConfig(message.guild?.id, 'aiChannels') || [];
       const isEnabled = aiChans.includes(message.channel.id);
       await message.reply(isEnabled ? "this channel has auto chat mode on. i'll chime in when i have something to say." : "auto chat mode is off in this channel.");
       return;
@@ -290,8 +289,7 @@ client.on('messageCreate', async message => {
 
   // Reply-to-bot routing in AI channels
   if (message.reference?.messageId && process.env.AI_MODEL) {
-    const cfg = loadJSON('config.json');
-    const aiChans = cfg[message.guild?.id]?.aiChannels || [];
+    const aiChans = getGuildConfig(message.guild?.id, 'aiChannels') || [];
     if (aiChans.includes(message.channel.id)) {
       try {
         const refMsg = await message.channel.messages.fetch(message.reference.messageId);
@@ -306,15 +304,13 @@ client.on('messageCreate', async message => {
 
   // Ignore check — skipped for mentions and replies (handled above)
   if (process.env.AI_MODEL) {
-    const cfg = loadJSON('config.json');
-    const ignored = cfg[message.guild?.id]?.ignoredUsers || [];
+    const ignored = getGuildConfig(message.guild?.id, 'ignoredUsers') || [];
     if (ignored.includes(message.author.id)) return;
   }
 
   // AI channel auto-respond with smart gating (heuristics + AI decides)
   if (process.env.AI_MODEL) {
-    const cfg = loadJSON('config.json');
-    const aiChans = cfg[message.guild?.id]?.aiChannels || [];
+    const aiChans = getGuildConfig(message.guild?.id, 'aiChannels') || [];
     if (aiChans.includes(message.channel.id)) {
       const { canInteract } = require('./features/proactive/absenceDetector');
       if (!canInteract(message.author.id, message.guild?.id)) return;
@@ -370,11 +366,11 @@ client.on('messageCreate', async message => {
   }
 
   // Logging
-  const config = loadJSON('config.json');
-  const settings = config[message.guild?.id] || {};
-  if (settings.logChannel && settings.logMessages) {
+  const logChanId = getGuildConfig(message.guild?.id, 'logChannel');
+  const logMessages = getGuildConfig(message.guild?.id, 'logMessages');
+  if (logChanId && logMessages) {
     try {
-      const logChannel = await message.guild.channels.fetch(settings.logChannel);
+      const logChannel = await message.guild.channels.fetch(logChanId);
       if (logChannel && logChannel.id !== message.channel.id) {
         // Log deleted/edited messages handled by separate events
       }
@@ -430,11 +426,10 @@ client.on('messageCreate', async message => {
 // ===== Logging: message delete/edit =====
 client.on('messageDelete', async message => {
   if (message.author?.bot) return;
-  const config = loadJSON('config.json');
-  const settings = config[message.guild?.id] || {};
-  if (!settings.logChannel) return;
+  const logChanId = getGuildConfig(message.guild?.id, 'logChannel');
+  if (!logChanId) return;
   try {
-    const logChannel = await message.guild.channels.fetch(settings.logChannel);
+    const logChannel = await message.guild.channels.fetch(logChanId);
     const embed = new EmbedBuilder()
       .setTitle('Message Deleted')
       .setDescription(`**Author:** ${message.author}\n**Channel:** ${message.channel}\n**Content:** ${message.content || '(no content)'}`)
@@ -447,11 +442,10 @@ client.on('messageDelete', async message => {
 client.on('messageUpdate', async (oldMessage, newMessage) => {
   if (oldMessage.author?.bot) return;
   if (oldMessage.content === newMessage.content) return;
-  const config = loadJSON('config.json');
-  const settings = config[oldMessage.guild?.id] || {};
-  if (!settings.logChannel) return;
+  const logChanId = getGuildConfig(oldMessage.guild?.id, 'logChannel');
+  if (!logChanId) return;
   try {
-    const logChannel = await oldMessage.guild.channels.fetch(settings.logChannel);
+    const logChannel = await oldMessage.guild.channels.fetch(logChanId);
     const embed = new EmbedBuilder()
       .setTitle('Message Edited')
       .setDescription(`**Author:** ${oldMessage.author}\n**Channel:** ${oldMessage.channel}\n**Before:** ${oldMessage.content}\n**After:** ${newMessage.content}`)

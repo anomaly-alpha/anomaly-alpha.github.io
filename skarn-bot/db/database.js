@@ -690,6 +690,19 @@ function pruneCallbacks(olderThanMs = 3600000) {
   db.prepare('DELETE FROM callbacks WHERE created_at < ?').run(cutoff);
 }
 
+// ===== Guild Config =====
+
+function getGuildConfig(guildId, key) {
+  const row = db.prepare('SELECT value FROM guild_config WHERE guild_id = ? AND key = ?').get(guildId, key);
+  if (!row) return null;
+  try { return JSON.parse(row.value); } catch { return row.value; }
+}
+
+function setGuildConfig(guildId, key, value) {
+  const strVal = typeof value === 'object' ? JSON.stringify(value) : String(value);
+  db.prepare('INSERT OR REPLACE INTO guild_config (guild_id, key, value) VALUES (?, ?, ?)').run(guildId, key, strVal);
+}
+
 module.exports = {
   db,
   getUserMemory,
@@ -727,6 +740,8 @@ module.exports = {
   decayKnowledge,
   getUserPreferences,
   setUserPreference,
+  getGuildConfig,
+  setGuildConfig,
   createFollowUp,
   getPendingFollowUps,
   markFollowUpSent,

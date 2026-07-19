@@ -1,10 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
-
-const configFile = path.join(__dirname, '..', 'data', 'config.json');
-function loadConfig() { if (!fs.existsSync(configFile)) return {}; return JSON.parse(fs.readFileSync(configFile, 'utf8')); }
-function saveConfig(data) { const dir = path.dirname(configFile); if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(configFile, JSON.stringify(data, null, 2)); }
+const { getGuildConfig, setGuildConfig } = require('../db/database');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -21,23 +16,20 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
   async execute(interaction) {
     const mode = interaction.options.getString('mode');
-    const config = loadConfig();
     const guildId = interaction.guild.id;
-
-    if (!config[guildId]) config[guildId] = {};
-    config[guildId].aiChannels = config[guildId].aiChannels || [];
-
     const channelId = interaction.channel.id;
 
+    let channels = getGuildConfig(guildId, 'aiChannels') || [];
+
     if (mode === 'on') {
-      if (!config[guildId].aiChannels.includes(channelId)) {
-        config[guildId].aiChannels.push(channelId);
+      if (!channels.includes(channelId)) {
+        channels.push(channelId);
+        setGuildConfig(guildId, 'aiChannels', channels);
       }
-      saveConfig(config);
-      await interaction.reply(`AI chat enabled in <#${channelId}>. I'll respond to all messages here.`);
+      await interaction.reply(`AI chat enabled in <#${channelId}>. I'll chime in when I have something to say.`);
     } else {
-      config[guildId].aiChannels = config[guildId].aiChannels.filter(id => id !== channelId);
-      saveConfig(config);
+      channels = channels.filter(id => id !== channelId);
+      setGuildConfig(guildId, 'aiChannels', channels);
       await interaction.reply(`AI chat disabled in <#${channelId}>.`);
     }
   },
