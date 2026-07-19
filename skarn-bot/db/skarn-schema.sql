@@ -296,3 +296,18 @@ CREATE INDEX IF NOT EXISTS idx_knowledge_user ON knowledge_graph(user_id, guild_
 CREATE INDEX IF NOT EXISTS idx_followups_user ON follow_ups(user_id, status, due_after);
 CREATE INDEX IF NOT EXISTS idx_intent_user ON intent_cache(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_milestones_user ON relationship_milestones(user_id, guild_id);
+
+-- ===== Response Learning =====
+
+CREATE TABLE IF NOT EXISTS response_learning (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  before_sentiment REAL NOT NULL,
+  after_sentiment REAL NOT NULL,
+  diff REAL NOT NULL,
+  classification TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_response_learning_user ON response_learning(user_id, guild_id, created_at);

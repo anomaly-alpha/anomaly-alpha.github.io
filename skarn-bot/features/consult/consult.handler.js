@@ -10,8 +10,11 @@ const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/c
 const { getRelationship } = require('../../db/database');
 const { flagForApology } = require('../etiquette/etiquetteEngine');
 const { extractMemory } = require('../memory/memoryExtractor');
+const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
+const { trackResponse } = require('../intelligence/responseLearner');
 const { storeMessage } = require('../conversation/messageStore');
 const { assembleContext } = require('../conversation/contextAssembler');
+const { shouldEdit, scheduleEdit } = require('../authenticity/messageEditor');
 
 const RATE_LIMIT_MSG = 'Even a Warmaster paces himself. Give it a moment.';
 
@@ -34,6 +37,7 @@ async function execute(interaction) {
 
   try {
     const message = interaction.options.getString('message');
+    const beforeSentiment = analyzeSentiment(message);
 
     // Store user message
     storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'user', message, { threadType: 'consult' });
@@ -72,6 +76,10 @@ async function execute(interaction) {
     // Store assistant response
     storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'assistant', reply, { threadType: 'consult' });
 
+    // Track response sentiment shift (non-blocking)
+    const afterSentiment = analyzeSentiment(reply);
+    trackResponse(interaction.user.id, interaction.guild.id, beforeSentiment, afterSentiment);
+
     const isPunchlineMsg = isPunchline(reply, interaction.channel.id, interaction.user.id);
 
     await new Promise(resolve => setTimeout(resolve, estimateDelay(reply)));
@@ -82,9 +90,11 @@ async function execute(interaction) {
 
     const chunks = splitMessage(reply, 400);
     if (chunks.length === 1) {
-      await interaction.editReply(chunks[0]);
+      const replyMsg = await interaction.editReply(chunks[0]);
+      if (shouldEdit()) scheduleEdit(replyMsg, reply);
     } else {
-      await interaction.editReply(chunks[0]);
+      const replyMsg = await interaction.editReply(chunks[0]);
+      if (shouldEdit()) scheduleEdit(replyMsg, reply);
       const tail = await maybeBurst(chunks.slice(1), interaction.channel);
       for (const chunk of tail) {
         await interaction.followUp(chunk);

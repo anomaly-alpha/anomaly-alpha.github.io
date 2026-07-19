@@ -13,6 +13,7 @@ const { getRelationship } = require('../../db/database');
 const { flagForApology } = require('../etiquette/etiquetteEngine');
 const { extractMemory } = require('../memory/memoryExtractor');
 const { detectFollowUps } = require('../intelligence/followUpEngine');
+const { trackResponse } = require('../intelligence/responseLearner');
 const { storeMessage } = require('../conversation/messageStore');
 const { assembleContext } = require('../conversation/contextAssembler');
 
@@ -92,6 +93,10 @@ async function handleMention(message, client) {
 
     // Store assistant response
     storeMessage(userId, message.guild.id, channelId, 'assistant', reply, { threadType: 'channel' });
+
+    // Track response sentiment shift (non-blocking)
+    const afterSentiment = analyzeSentiment(reply);
+    trackResponse(userId, message.guild.id, sentiment, afterSentiment);
 
     // Detect time-bound statements and unanswered questions (non-blocking)
     detectFollowUps(userId, message.guild.id, channelId, cleanMsg);
