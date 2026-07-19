@@ -133,9 +133,9 @@ async function execute(interaction) {
 
     // Follow-up detection (non-blocking)
     const { detectFollowUps } = require('../intelligence/followUpEngine');
-    detectFollowUps(interaction.user.id, interaction.guild.id, interaction.channel.id, message).catch(
-      function(e) { console.error('[Consult] Follow-up detection failed:', e.message); }
-    );
+    try { detectFollowUps(interaction.user.id, interaction.guild.id, interaction.channel.id, message); } catch (e) {
+      console.error('[Consult] Follow-up detection failed:', e.message);
+    }
   } catch (error) {
     flagForApology(interaction.user.id);
     console.error('Consult error:', error);
