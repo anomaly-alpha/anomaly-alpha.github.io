@@ -1,6 +1,7 @@
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { canCall, recordCall } = require('../../lib/rateLimit');
+const { canRespond } = require('../../lib/aiStats');
 const getOpenAIClient = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
@@ -40,6 +41,11 @@ async function handleMention(message, client) {
   // Rate limit check
   if (!canCall(userId)) {
     await message.reply('Even a Warmaster paces himself. Give it a moment.');
+    return;
+  }
+
+  // Hourly cap check — silently drop if user hit 50/hr
+  if (!canRespond(userId)) {
     return;
   }
 
@@ -150,6 +156,16 @@ async function handleMention(message, client) {
     for (const chunk of tail) {
       await message.channel.send(chunk);
     }
+
+    // Update attention state
+    try {
+      var db = require('../../db/database');
+      db.resetMsgCount(userId, guildId || '', channelId);
+      db.upsertAttentionState(userId, guildId || '', channelId, {
+        last_bot_reply_at: Date.now(),
+        last_bot_channel_msg_at: Date.now(),
+      });
+    } catch (e) { /* non-critical */ }
 
     // Auto-extract memory from conversation (non-blocking)
     extractMemory(userId, guildId, cleanMsg, reply, channelId).catch(() => {});
