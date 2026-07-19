@@ -3,7 +3,7 @@ const { canCall, recordCall } = require('../../lib/rateLimit');
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
 const getOpenAIClient = require('../../ai/client');
-const { collectContext } = require('../promptContext');
+const { buildContext } = require('../promptContext');
 
 const FALLBACK_REPLIES = ['bruh moment 😔', 'based', 'i saw that 👀', 'interesting...', 'noted 📝', 'wait what', 'i am confusion', 'fr'];
 
@@ -41,7 +41,7 @@ async function maybeInterject(message, client) {
   setInterjectionCooldown(channelId);
 
   try {
-    const ctx = collectContext(message.author.id, message.guild.id, message.channel.id);
+    const ctx = buildContext(message.author.id, message.guild.id, message.channel.id);
     const systemPrompt = buildSystemPrompt({
       roleLine: 'You are reacting to a message in passing. One short line, in character. No emoji overload. Just a quick reaction. Be natural — like a server member glancing up and saying something.',
       ...ctx,

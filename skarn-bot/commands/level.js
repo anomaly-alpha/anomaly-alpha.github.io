@@ -1,13 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
-
-const levelsFile = path.join(__dirname, '..', 'data', 'levels.json');
-
-function loadLevels() {
-  if (!fs.existsSync(levelsFile)) return {};
-  return JSON.parse(fs.readFileSync(levelsFile, 'utf8'));
-}
+const db = require('../db/database').db;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,9 +8,7 @@ module.exports = {
     .addUserOption(option => option.setName('user').setDescription('The user to check')),
   async execute(interaction) {
     const user = interaction.options.getUser('user') || interaction.user;
-    const guildId = interaction.guild.id;
-    const levels = loadLevels();
-    const userData = levels[guildId]?.[user.id] || { xp: 0, level: 0 };
+    const userData = db.prepare('SELECT * FROM user_levels WHERE guild_id = ? AND user_id = ?').get(interaction.guild.id, user.id) || { xp: 0, level: 0 };
 
     const xpForNext = (userData.level + 1) * 100;
     const progress = Math.min((userData.xp / xpForNext) * 100, 100);

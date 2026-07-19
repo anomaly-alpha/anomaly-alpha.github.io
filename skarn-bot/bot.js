@@ -2,6 +2,7 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
+const { db } = require('./db/database');
 
 // ===== Skarn Persona System =====
 const { onMessageReceived } = require('./features/channelState/stateTracker');
@@ -278,11 +279,10 @@ client.on('messageCreate', async message => {
 
     const xp = Math.floor(Math.random() * 11) + 15;
     const guildId = message.guild.id;
-    const levels = loadJSON('levels.json');
-    if (!levels[guildId]) levels[guildId] = {};
-    if (!levels[guildId][message.author.id]) levels[guildId][message.author.id] = { xp: 0, level: 0 };
+    var levelRow = db.prepare('SELECT * FROM user_levels WHERE guild_id = ? AND user_id = ?').get(guildId, message.author.id);
+    if (!levelRow) { levelRow = { xp: 0, level: 0 }; }
 
-    const userData = levels[guildId][message.author.id];
+    const userData = levelRow;
     userData.xp += xp;
 
     const xpForNext = (userData.level + 1) * 100;
@@ -292,8 +292,8 @@ client.on('messageCreate', async message => {
       message.channel.send(`🎉 ${message.author} leveled up to **Level ${userData.level}**!`);
 
       // Assign level role if configured
-      const configData = loadJSON('config.json');
-      const levelRoles = configData[guildId]?.levelRoles || {};
+      const configRow = db.prepare('SELECT value FROM guild_config WHERE guild_id = ? AND key = ?').get(guildId, 'levelRoles');
+      const levelRoles = configRow ? JSON.parse(configRow.value) : {};
       if (levelRoles[userData.level]) {
         try {
           const role = await message.guild.roles.fetch(levelRoles[userData.level]);
@@ -305,7 +305,7 @@ client.on('messageCreate', async message => {
       }
     }
 
-    saveJSON('levels.json', levels);
+    db.prepare('INSERT OR REPLACE INTO user_levels (guild_id, user_id, xp, level) VALUES (?, ?, ?, ?)').run(guildId, message.author.id, userData.xp, userData.level);
   }
 
   // Logging
@@ -344,8 +344,7 @@ client.on('messageCreate', async message => {
 
   // !friends
   if (commandName === 'friends') {
-    const friendsFile = path.join(__dirname, 'data', 'friends.json');
-    const friendsData = fs.existsSync(friendsFile) ? JSON.parse(fs.readFileSync(friendsFile, 'utf8')) : [];
+    const friendsData = db.prepare('SELECT * FROM friends').all();
     const search = args.join(' ').toLowerCase();
     if (search) {
       const matches = friendsData.filter(f => f.name.toLowerCase().includes(search) || f.code.toLowerCase().includes(search));

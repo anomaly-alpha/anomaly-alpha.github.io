@@ -2,7 +2,7 @@ const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { canCall, recordCall } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
-const { collectContext } = require('../promptContext');
+const { buildContext } = require('../promptContext');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { estimateDelay } = require('../authenticity/typingController');
 const { shouldReactOnly, pickReaction } = require('../authenticity/reactionController');
@@ -16,7 +16,6 @@ const { detectFollowUps } = require('../intelligence/followUpEngine');
 const { trackResponse } = require('../intelligence/responseLearner');
 const { selectModel, checkKnowledgeMatch } = require('../intelligence/modelRouter');
 const { storeMessage } = require('../conversation/messageStore');
-const { assembleContext } = require('../conversation/contextAssembler');
 const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
 const { updateEmotion } = require('../wisdom/emotionalIntelligence');
 
@@ -53,9 +52,8 @@ async function handleMention(message, client) {
     return;
   }
 
-  // Store user message and assemble conversation context
+  // Store user message
   storeMessage(userId, message.guild.id, channelId, 'user', cleanMsg, { threadType: 'channel' });
-  const conversationContext = assembleContext(userId, message.guild.id, channelId);
 
   const rel = getRelationship(userId, message.guild.id);
   const interactionCount = rel ? rel.interaction_count : 0;
@@ -64,15 +62,15 @@ async function handleMention(message, client) {
   updateEmotion(userId, message.guild.id, cleanMsg);
 
   try {
-    const ctx = collectContext(userId, message.guild.id, channelId, {
+    const ctx = buildContext(userId, message.guild.id, channelId, {
       roleNature: 'casual',
       userContent: cleanMsg,
       interactionCount,
     });
     const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
 
-    let contextualMessage = conversationContext
-      ? `Conversation context:\n${conversationContext}\n\nCurrent message: ${cleanMsg}`
+    var contextualMessage = ctx.conversationLine
+      ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${cleanMsg}`
       : cleanMsg;
 
     recordCall(userId);

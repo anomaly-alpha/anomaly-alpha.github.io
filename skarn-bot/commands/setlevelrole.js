@@ -1,10 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
-
-const configFile = path.join(__dirname, '..', 'data', 'config.json');
-function loadConfig() { if (!fs.existsSync(configFile)) return {}; return JSON.parse(fs.readFileSync(configFile, 'utf8')); }
-function saveConfig(data) { const dir = path.dirname(configFile); if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(configFile, JSON.stringify(data, null, 2)); }
+const db = require('../db/database').db;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -16,14 +11,13 @@ module.exports = {
   async execute(interaction) {
     const level = interaction.options.getInteger('level');
     const role = interaction.options.getRole('role');
-    const config = loadConfig();
     const guildId = interaction.guild.id;
 
-    if (!config[guildId]) config[guildId] = {};
-    if (!config[guildId].levelRoles) config[guildId].levelRoles = {};
+    const configRow = db.prepare('SELECT value FROM guild_config WHERE guild_id = ? AND key = ?').get(guildId, 'levelRoles');
+    const levelRoles = configRow ? JSON.parse(configRow.value) : {};
 
-    config[guildId].levelRoles[level] = role.id;
-    saveConfig(config);
+    levelRoles[level] = role.id;
+    db.prepare('INSERT OR REPLACE INTO guild_config (guild_id, key, value) VALUES (?, ?, ?)').run(guildId, 'levelRoles', JSON.stringify(levelRoles));
 
     const embed = new EmbedBuilder()
       .setTitle('Level Role Set')

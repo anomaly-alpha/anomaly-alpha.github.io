@@ -2,7 +2,7 @@ const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { canCall, recordCall } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
-const { collectContext } = require('../promptContext');
+const { buildContext } = require('../promptContext');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { estimateDelay } = require('../authenticity/typingController');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
@@ -14,7 +14,6 @@ const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
 const { trackResponse } = require('../intelligence/responseLearner');
 const { selectModel, checkKnowledgeMatch } = require('../intelligence/modelRouter');
 const { storeMessage } = require('../conversation/messageStore');
-const { assembleContext } = require('../conversation/contextAssembler');
 const { shouldEdit, scheduleEdit } = require('../authenticity/messageEditor');
 const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
 const { updateEmotion } = require('../wisdom/emotionalIntelligence');
@@ -45,18 +44,15 @@ async function execute(interaction) {
     // Store user message
     storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'user', message, { threadType: 'consult' });
 
-    // Assemble context with conversation history
-    const conversationContext = assembleContext(interaction.user.id, interaction.guild.id, interaction.channel.id);
-
-    const ctx = collectContext(interaction.user.id, interaction.guild.id, interaction.channel.id, {
+    const ctx = buildContext(interaction.user.id, interaction.guild.id, interaction.channel.id, {
       roleNature: 'casual',
       userContent: message,
       interactionCount,
     });
     const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
 
-    let contextualMessage = conversationContext
-      ? `Conversation context:\n${conversationContext}\n\nCurrent message: ${message}`
+    var contextualMessage = ctx.conversationLine
+      ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${message}`
       : message;
 
     // Detect and track user emotion
