@@ -7,14 +7,17 @@ const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../disco
 const { estimateDelay } = require('../authenticity/typingController');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
 const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
-const { getRelationship } = require('../../db/database');
+const { getRelationship, addStory } = require('../../db/database');
 const { flagForApology } = require('../etiquette/etiquetteEngine');
 const { extractMemory } = require('../memory/memoryExtractor');
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
 const { trackResponse } = require('../intelligence/responseLearner');
+const { selectModel, checkKnowledgeMatch } = require('../intelligence/modelRouter');
 const { storeMessage } = require('../conversation/messageStore');
 const { assembleContext } = require('../conversation/contextAssembler');
 const { shouldEdit, scheduleEdit } = require('../authenticity/messageEditor');
+const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
+const { updateEmotion } = require('../wisdom/emotionalIntelligence');
 
 const RATE_LIMIT_MSG = 'Even a Warmaster paces himself. Give it a moment.';
 
@@ -52,16 +55,30 @@ async function execute(interaction) {
     });
     const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
 
-    const contextualMessage = conversationContext
+    let contextualMessage = conversationContext
       ? `Conversation context:\n${conversationContext}\n\nCurrent message: ${message}`
       : message;
+
+    // Detect and track user emotion
+    updateEmotion(interaction.user.id, interaction.guild.id, message);
 
     recordCall(interaction.user.id);
     extendBanterChain(interaction.user.id, interaction.guild.id, interaction.channel.id);
 
+    const hasKnowledgeMatch = checkKnowledgeMatch(interaction.user.id, interaction.guild.id, message);
+
+    // Story engine: check if user message triggers a story topic
+    const storyTopic = findStoryTopic(message);
+    if (storyTopic) {
+      const existingStory = getExistingStory(storyTopic);
+      if (existingStory) {
+        contextualMessage += `\n\n[Skarn recalls a tale about ${storyTopic}: "${existingStory}"]`;
+      }
+    }
+
     const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
-      model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+      model: selectModel(message, hasKnowledgeMatch),
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: contextualMessage },
@@ -79,6 +96,13 @@ async function execute(interaction) {
     // Track response sentiment shift (non-blocking)
     const afterSentiment = analyzeSentiment(reply);
     trackResponse(interaction.user.id, interaction.guild.id, beforeSentiment, afterSentiment);
+
+    // Extract and store any new story from the AI reply (non-blocking)
+    const extractedStory = extractStoryFromReply(reply);
+    if (extractedStory) {
+      const storyTopic = findStoryTopic(reply) || 'general';
+      addStory(storyTopic, extractedStory);
+    }
 
     const isPunchlineMsg = isPunchline(reply, interaction.channel.id, interaction.user.id);
 

@@ -9,13 +9,16 @@ const { shouldReactOnly, pickReaction } = require('../authenticity/reactionContr
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
 const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
-const { getRelationship } = require('../../db/database');
+const { getRelationship, addStory } = require('../../db/database');
 const { flagForApology } = require('../etiquette/etiquetteEngine');
 const { extractMemory } = require('../memory/memoryExtractor');
 const { detectFollowUps } = require('../intelligence/followUpEngine');
 const { trackResponse } = require('../intelligence/responseLearner');
+const { selectModel, checkKnowledgeMatch } = require('../intelligence/modelRouter');
 const { storeMessage } = require('../conversation/messageStore');
 const { assembleContext } = require('../conversation/contextAssembler');
+const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
+const { updateEmotion } = require('../wisdom/emotionalIntelligence');
 
 const COOLDOWN_MS = 1 * 1000; // 1 second per user per channel
 const cooldowns = new Map(); // `${userId}:${channelId}` -> timestamp
@@ -65,6 +68,9 @@ async function handleMention(message, client) {
   const rel = getRelationship(userId, message.guild.id);
   const interactionCount = rel ? rel.interaction_count : 0;
 
+  // Detect and track user emotion
+  updateEmotion(userId, message.guild.id, cleanMsg);
+
   try {
     const ctx = collectContext(userId, message.guild.id, channelId, {
       roleNature: 'casual',
@@ -73,7 +79,7 @@ async function handleMention(message, client) {
     });
     const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
 
-    const contextualMessage = conversationContext
+    let contextualMessage = conversationContext
       ? `Conversation context:\n${conversationContext}\n\nCurrent message: ${cleanMsg}`
       : cleanMsg;
 
@@ -81,9 +87,24 @@ async function handleMention(message, client) {
     extendBanterChain(userId, message.guild.id, channelId);
     cooldowns.set(key, Date.now());
 
+    const hasKnowledgeMatch = checkKnowledgeMatch(userId, message.guild.id, cleanMsg);
+
+    // Story engine: check if user message triggers a story topic
+    const storyTopic = findStoryTopic(cleanMsg);
+    let storyContext = '';
+    if (storyTopic) {
+      const existingStory = getExistingStory(storyTopic);
+      if (existingStory) {
+        storyContext = `\n\n[Skarn recalls a tale about ${storyTopic}: "${existingStory}"]`;
+      }
+    }
+    if (storyContext) {
+      contextualMessage += storyContext;
+    }
+
     const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
-      model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+      model: selectModel(cleanMsg, hasKnowledgeMatch),
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: contextualMessage },
@@ -101,6 +122,13 @@ async function handleMention(message, client) {
     // Track response sentiment shift (non-blocking)
     const afterSentiment = analyzeSentiment(reply);
     trackResponse(userId, message.guild.id, sentiment, afterSentiment);
+
+    // Extract and store any new story from the AI reply (non-blocking)
+    const extractedStory = extractStoryFromReply(reply);
+    if (extractedStory) {
+      const storyTopic = findStoryTopic(reply) || 'general';
+      addStory(storyTopic, extractedStory);
+    }
 
     // Detect time-bound statements and unanswered questions (non-blocking)
     detectFollowUps(userId, message.guild.id, channelId, cleanMsg);
