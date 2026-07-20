@@ -1,19 +1,30 @@
 const { db } = require('../db/database');
 
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
-const RATE_LIMIT_MAX_CALLS = 10;
-const RATE_LIMIT_MSG = 'Even a Warmaster paces himself. Give it a moment.';
+const RATE_LIMIT_MAX_CALLS = 50;
 
-function canCall(userId) {
+function getUsage(userId, bucket) {
+  bucket = bucket || 'command';
   const cutoff = Date.now() - RATE_LIMIT_WINDOW_MS;
   const count = db.prepare(
-    'SELECT COUNT(*) as count FROM rate_limits WHERE user_id = ? AND timestamp > ?'
-  ).get(userId, cutoff);
-  return count.count < RATE_LIMIT_MAX_CALLS;
+    'SELECT COUNT(*) as count FROM rate_limits WHERE user_id = ? AND bucket = ? AND timestamp > ?'
+  ).get(userId, bucket, cutoff);
+  return { current: count.count, max: RATE_LIMIT_MAX_CALLS };
 }
 
-function recordCall(userId) {
-  db.prepare('INSERT INTO rate_limits (user_id, timestamp) VALUES (?, ?)').run(userId, Date.now());
+function canCall(userId, bucket) {
+  var usage = getUsage(userId, bucket);
+  return usage.current < usage.max;
 }
 
-module.exports = { canCall, recordCall, RATE_LIMIT_MSG };
+function recordCall(userId, bucket) {
+  bucket = bucket || 'command';
+  db.prepare('INSERT INTO rate_limits (user_id, bucket, timestamp) VALUES (?, ?, ?)').run(userId, bucket, Date.now());
+}
+
+function getRateLimitMessage(userId, bucket) {
+  var usage = getUsage(userId, bucket);
+  return 'Even a Warmaster paces himself. (' + usage.current + '/' + usage.max + ') Give it a moment.';
+}
+
+module.exports = { canCall, recordCall, getUsage, getRateLimitMessage };
