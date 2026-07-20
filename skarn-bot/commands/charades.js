@@ -2,7 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 const getOpenAIClient = require('../ai/client');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
-const { canCall, recordCall } = require('../lib/rateLimit');
+const { canCall, recordCall, getRateLimitMessage } = require('../lib/rateLimit');
 const { getChannelState, getUserFacts } = require('../db/database');
 const { getStateLine } = require('../features/channelState/stateTracker');
 
@@ -31,7 +31,7 @@ module.exports = {
     if (!process.env.OPENAI_API_KEY) return interaction.reply({ content: 'AI not configured.', flags: 64 });
 
     if (!canCall(interaction.user.id)) {
-      return interaction.reply({ content: 'Even a Warmaster paces himself. Give it a moment.', flags: 64 });
+      return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64 });
     }
 
     await interaction.deferReply();

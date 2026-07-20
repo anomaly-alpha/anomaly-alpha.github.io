@@ -7,9 +7,13 @@ function ensureAiConfigured() {
 }
 
 function checkCanCall(userId) {
-  const { canCall } = require('../lib/rateLimit');
-  if (!canCall(userId)) {
-    throw new Error('You are being rate limited. Please wait before using AI commands.');
+  const { getRateLimitMessage } = require('../lib/rateLimit');
+  const msg = getRateLimitMessage(userId);
+  try {
+    const { canCall } = require('../lib/rateLimit');
+    if (!canCall(userId)) throw new Error(msg);
+  } catch (e) {
+    throw new Error(msg);
   }
 }
 

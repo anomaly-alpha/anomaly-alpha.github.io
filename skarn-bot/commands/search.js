@@ -4,8 +4,7 @@ const handler = require('../features/search/search.handler');
 const { EmbedBuilder } = require('discord.js');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
-const { canCall, recordCall } = require('../lib/rateLimit');
-const getOpenAIClient = require('../ai/client');
+const { canCall, recordCall, getRateLimitMessage } = require('../lib/rateLimit');const getOpenAIClient = require('../ai/client');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../features/discordNative/postProcess');
 const { searchWeb } = require('../features/search/searchEngine');
 
@@ -38,7 +37,7 @@ module.exports = {
     }
 
     if (!canCall(message.author.id)) {
-      return message.reply({ content: 'Even a Warmaster paces himself. Give it a moment.' });
+      return message.reply({ content: getRateLimitMessage(message.author.id) });
     }
 
     const query = args.query;
