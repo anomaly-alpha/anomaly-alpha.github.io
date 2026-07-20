@@ -117,7 +117,7 @@ async function execute(interaction) {
     }
 
     var usage = getUsage(interaction.user.id, 'chat');
-    reply = reply + '\n\n-# (' + usage.current + '/' + usage.max + ')';
+    reply = reply + ' -# (' + usage.current + '/' + usage.max + ')';
 
     const chunks = splitMessage(reply, 400);
     if (chunks.length === 1) {
