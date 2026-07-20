@@ -344,10 +344,11 @@ CREATE INDEX IF NOT EXISTS idx_memory_decay ON memory_entries(last_seen_at, conf
 CREATE TABLE IF NOT EXISTS rate_limits (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id TEXT NOT NULL,
+  bucket TEXT NOT NULL DEFAULT 'command',
   timestamp INTEGER NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_rate_limits_user ON rate_limits(user_id, timestamp);
+CREATE INDEX IF NOT EXISTS idx_rate_limits_user ON rate_limits(user_id, bucket, timestamp);
 
 -- ===== Cooldowns =====
 
