@@ -1,6 +1,6 @@
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
-const { canCall, recordCall, getRateLimitMessage } = require('../../lib/rateLimit');
+const { canCall, recordCall, getRateLimitMessage, getUsage } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
@@ -115,6 +115,9 @@ async function execute(interaction) {
     if (isPunchlineMsg) {
       await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
     }
+
+    var usage = getUsage(interaction.user.id, 'chat');
+    reply = reply + '\n\n— (' + usage.current + '/' + usage.max + ')';
 
     const chunks = splitMessage(reply, 400);
     if (chunks.length === 1) {

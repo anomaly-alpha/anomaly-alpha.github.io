@@ -1,6 +1,6 @@
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
-const { canCall, recordCall, getRateLimitMessage } = require('../../lib/rateLimit');
+const { canCall, recordCall, getRateLimitMessage, getUsage } = require('../../lib/rateLimit');
 const { canRespond } = require('../../lib/aiStats');
 const getOpenAIClient = require('../../ai/client');
 const { buildContext } = require('../promptContext');
@@ -149,6 +149,9 @@ async function handleMention(message, client) {
     if (isPunchlineMsg) {
       await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
     }
+
+    var usage = getUsage(userId, 'chat');
+    reply = reply + '\n\n— (' + usage.current + '/' + usage.max + ')';
 
     const chunks = splitMessage(reply, 1900);
     await message.reply(chunks[0]);
