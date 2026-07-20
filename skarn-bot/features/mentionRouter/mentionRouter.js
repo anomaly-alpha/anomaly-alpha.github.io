@@ -151,7 +151,7 @@ async function handleMention(message, client) {
     }
 
     var usage = getUsage(userId, 'chat');
-    reply = reply + ' -# (' + usage.current + '/' + usage.max + ')';
+    if (usage.current >= 40) reply = reply + ' -# (' + usage.current + '/' + usage.max + ')';
 
     const chunks = splitMessage(reply, 1900);
     await message.reply(chunks[0]);
