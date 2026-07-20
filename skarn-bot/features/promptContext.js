@@ -9,6 +9,7 @@ const { getGratitudeDirective, getFirstOfDayLine, getMilestoneLine, getApologyLi
 const { searchKnowledge, formatKnowledgeSnippet } = require('./knowledge/knowledgeBase');
 const { getEmotionDirective } = require('./wisdom/emotionalIntelligence');
 const { getRecentNews } = require('./news/newsFetcher');
+const { getChannelActivity } = require('./channelContext/channelContext');
 
 function buildContext(userId, guildId, channelId, opts) {
   opts = opts || {};
@@ -105,6 +106,8 @@ function buildContext(userId, guildId, channelId, opts) {
     }
   }
 
+  const channelLine = getChannelActivity(guildId, channelId, userId);
+
   return {
     newsLine: newsLine,
     stateLine: stateLine, moodLine: moodLine, relationshipLine: relationshipLine,
@@ -114,6 +117,7 @@ function buildContext(userId, guildId, channelId, opts) {
     milestoneLine: milestoneLine, apologyLine: apologyLine, emotionalLine: emotionalLine,
     conversationLine: [conversationLine, profileLine].filter(Boolean).join('\n\n'),
     knowledgeLine: [knowledgeLine, kbLine].filter(Boolean).join('\n'),
+    channelLine: channelLine,
   };
 }
 
