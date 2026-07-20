@@ -1,5 +1,14 @@
 const { db } = require('../db/database');
 
+// Auto-migration: add bucket column if missing (production databases created before this feature)
+try {
+  db.prepare("SELECT bucket FROM rate_limits LIMIT 0").get();
+} catch {
+  db.prepare("ALTER TABLE rate_limits ADD COLUMN bucket TEXT NOT NULL DEFAULT 'command'").run();
+  try { db.prepare("DROP INDEX IF EXISTS idx_rate_limits_user").run(); } catch {}
+  try { db.prepare("CREATE INDEX IF NOT EXISTS idx_rate_limits_user ON rate_limits(user_id, bucket, timestamp)").run(); } catch {}
+}
+
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_CALLS = 50;
 
