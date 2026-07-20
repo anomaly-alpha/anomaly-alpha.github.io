@@ -192,31 +192,32 @@ Located at `docs/plan/2026-05-28/deepseek-v4-flash-free/` with INDEX.md.
 
 ### skarn-bot docs structure
 
-Plans, specs, reports, ADRs, and prompts live under `skarn-bot/docs/` organized by type then date:
+Plans, specs, reports, ADRs, and prompts live under `skarn-bot/docs/` organized by type, then date, then model:
 
 ```
 skarn-bot/docs/
 ├── adr/                           # Architecture Decision Records (sequential)
 │   └── 0001-tiered-context-assembly.md
-├── compose/                       # Compose workflow artifacts
-│   ├── plans/YYYY-MM-DD/          # Implementation plans
-│   ├── specs/YYYY-MM-DD/          # Design specs
-│   └── reports/YYYY-MM-DD/        # Audit reports, findings
-├── plans/YYYY-MM-DD/              # Legacy implementation plans
-├── specs/YYYY-MM-DD/              # Legacy design specs
-├── reports/YYYY-MM-DD/            # Legacy final reports
-└── prompts/                       # Model prompts (not date-dependent)
+├── plans/
+│   └── YYYY-MM-DD/
+│       └── <model>/               # Implementation plans
+├── specs/
+│   └── YYYY-MM-DD/
+│       └── <model>/               # Design specs
+├── reports/
+│   └── YYYY-MM-DD/
+│       └── <model>/               # Audit reports, findings
+└── prompts/
+    └── <model>/                   # Model prompts (not date-dependent)
 ```
 
-Each date folder contains one or more files from that day's planning/design/review cycle. The filename after the date prefix describes the topic (e.g., `wisdom-knowledge-plan.md`).
+Type suffixes (`-plan`, `-spec`, `-design`) and model suffixes (`-sonnet-5-medium`) are stripped from filenames since both are encoded in the directory path.
 
 ### skarn-bot conventions
 
-- **skarn-bot plans**: saved to `skarn-bot/docs/plans/YYYY-MM-DD/`
-- **skarn-bot specs**: saved to `skarn-bot/docs/specs/YYYY-MM-DD/`
-- **Compose specs**: saved to `skarn-bot/docs/compose/specs/YYYY-MM-DD/`
-- **Compose plans**: saved to `skarn-bot/docs/compose/plans/YYYY-MM-DD/`
-- **Compose reports**: saved to `skarn-bot/docs/compose/reports/YYYY-MM-DD/`
-- **skarn-bot prompts**: saved to `skarn-bot/docs/prompts/` (no date prefix)
+- **skarn-bot plans**: saved to `skarn-bot/docs/plans/YYYY-MM-DD/<model>/`
+- **skarn-bot specs**: saved to `skarn-bot/docs/specs/YYYY-MM-DD/<model>/`
+- **skarn-bot reports**: saved to `skarn-bot/docs/reports/YYYY-MM-DD/<model>/`
+- **skarn-bot prompts**: saved to `skarn-bot/docs/prompts/<model>/`
 - ADRs go to `skarn-bot/docs/adr/` as `NNNN-title.md`
 - All skarn-bot work is committed to this repo's main branch and pushed to GitHub Pages alongside the web app
