@@ -40,5 +40,15 @@
   "checkpoint": {
     "thresholds": ["40%", "60%", "80%"]
   },
+  "lsp": {
+    "typescript": {
+      "command": ["typescript-language-server", "--stdio"],
+      "extensions": ["ts", "tsx", "js", "jsx"]
+    },
+    "json": {
+      "command": ["vscode-json-languageserver", "--stdio"],
+      "extensions": ["json", "jsonc"]
+    }
+  },
   "$schema": "https://mimo.xiaomi.com/mimocode/config.json"
 }
