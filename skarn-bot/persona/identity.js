@@ -65,7 +65,6 @@ function buildSystemPrompt({
   if (relationshipLine) parts.push(relationshipLine);
   if (cultureLine) parts.push(cultureLine);
   if (memoryLine) parts.push(memoryLine);
-  if (conversationLine) parts.push(conversationLine);
   if (warmthLine) parts.push(warmthLine);
   if (patienceLine) parts.push(patienceLine);
   if (callbackLine) parts.push(callbackLine);
@@ -76,8 +75,9 @@ function buildSystemPrompt({
   if (wisdomLine) parts.push(wisdomLine);
   if (emotionalLine) parts.push(emotionalLine);
   if (knowledgeLine) parts.push(knowledgeLine);
-  if (channelLine) parts.push(channelLine);
   if (additionalContext) parts.push(additionalContext);
+  if (conversationLine) parts.push(conversationLine);
+  if (channelLine) parts.push(channelLine);
   return parts.join('\n\n');
 }
 
