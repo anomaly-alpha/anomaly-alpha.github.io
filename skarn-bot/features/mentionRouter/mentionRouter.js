@@ -1,6 +1,6 @@
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
-const { canCall, recordCall } = require('../../lib/rateLimit');
+const { canCall, recordCall, getRateLimitMessage } = require('../../lib/rateLimit');
 const { canRespond } = require('../../lib/aiStats');
 const getOpenAIClient = require('../../ai/client');
 const { buildContext } = require('../promptContext');
@@ -39,8 +39,8 @@ async function handleMention(message, client) {
   const channelId = message.channel.id;
 
   // Rate limit check
-  if (!canCall(userId)) {
-    await message.reply('Even a Warmaster paces himself. Give it a moment.');
+  if (!canCall(userId, 'chat')) {
+    await message.reply(getRateLimitMessage(userId, 'chat'));
     return;
   }
 
@@ -91,7 +91,7 @@ async function handleMention(message, client) {
       ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${cleanMsg}`
       : cleanMsg;
 
-    recordCall(userId);
+    recordCall(userId, 'chat');
     extendBanterChain(userId, guildId, channelId);
 
     const hasKnowledgeMatch = checkKnowledgeMatch(userId, guildId, cleanMsg);

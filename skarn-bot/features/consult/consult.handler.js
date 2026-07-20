@@ -1,6 +1,6 @@
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
-const { canCall, recordCall } = require('../../lib/rateLimit');
+const { canCall, recordCall, getRateLimitMessage } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
@@ -19,8 +19,6 @@ const { shouldEdit, scheduleEdit } = require('../authenticity/messageEditor');
 const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
 const { updateEmotion } = require('../wisdom/emotionalIntelligence');
 
-const RATE_LIMIT_MSG = 'Even a Warmaster paces himself. Give it a moment.';
-
 const AI_ERRORS = [
   'The connection is frayed. Try again.',
   'Even the Warmaster\'s reach has limits. Try in a moment.',
@@ -29,8 +27,8 @@ const AI_ERRORS = [
 
 async function execute(interaction) {
   // Rate limit check
-  if (!canCall(interaction.user.id)) {
-    return interaction.reply({ content: RATE_LIMIT_MSG, flags: 64 });
+  if (!canCall(interaction.user.id, 'chat')) {
+    return interaction.reply({ content: getRateLimitMessage(interaction.user.id, 'chat'), flags: 64 });
   }
 
   await interaction.deferReply();
@@ -66,7 +64,7 @@ async function execute(interaction) {
     // Detect and track user emotion
     updateEmotion(interaction.user.id, interaction.guild.id, message);
 
-    recordCall(interaction.user.id);
+    recordCall(interaction.user.id, 'chat');
     extendBanterChain(interaction.user.id, interaction.guild.id, interaction.channel.id);
 
     const hasKnowledgeMatch = checkKnowledgeMatch(interaction.user.id, interaction.guild.id, message);
