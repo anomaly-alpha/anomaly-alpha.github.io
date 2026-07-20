@@ -209,6 +209,7 @@ CREATE TABLE IF NOT EXISTS user_profile (
 CREATE INDEX IF NOT EXISTS idx_conv_msg_thread ON conversation_messages(thread_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_conv_msg_user ON conversation_messages(user_id, guild_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_conv_thread_user ON conversation_threads(user_id, guild_id, archived_at);
+CREATE INDEX IF NOT EXISTS idx_conv_msg_channel_time ON conversation_messages(channel_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_conv_summary_thread ON conversation_summaries(thread_id);
 
 -- ===== Full-Text Search =====
