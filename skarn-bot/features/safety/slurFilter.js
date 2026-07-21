@@ -151,15 +151,13 @@ async function checkOutput(text, userId) {
     var line = count < STRIKE_LIMIT ? getDeEscalationLine() : null;
     return { allowed: false, line: line, gate: 2, reason: match.category || 'slur', strikes: count };
   }
-  // Gate 3: checkModeration
+  // Gate 3: checkModeration (advisory only — don't record strikes against user for AI's reply)
   var modResult = await checkModeration(text);
   if (modResult.flagged) {
-    var count2 = recordStrike(userId);
-    var line2 = count2 < STRIKE_LIMIT ? getDeEscalationLine() : null;
     var categories = Object.keys(modResult.categories).filter(function (k) {
       return modResult.categories[k];
     });
-    return { allowed: false, line: line2, gate: 3, reason: categories.join(',') || 'flagged', strikes: count2 };
+    return { allowed: false, line: null, gate: 3, reason: categories.join(',') || 'flagged' };
   }
   return { allowed: true };
 }

@@ -148,7 +148,10 @@ async function handleMention(message, client) {
     var filterResult = await checkOutput(reply, userId);
     if (!filterResult.allowed) {
       storeMessage(userId, guildId, channelId, 'assistant', '[BLOCKED]', { threadType: 'channel' });
-      if (filterResult.line) {
+      if (filterResult.gate === 3) {
+        console.error('[MentionRouter] Reply blocked by moderation gate:', filterResult.reason);
+        return; // silently drop
+      } else if (filterResult.line) {
         await message.reply(filterResult.line);
       } else {
         await message.reply(getDeEscalationLine());

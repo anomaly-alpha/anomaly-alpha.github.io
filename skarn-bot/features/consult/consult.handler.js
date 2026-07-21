@@ -117,7 +117,11 @@ async function execute(interaction) {
     var filterResult = await checkOutput(reply, interaction.user.id);
     if (!filterResult.allowed) {
       storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'assistant', '[BLOCKED]', { threadType: 'consult' });
-      if (filterResult.line) {
+      if (filterResult.gate === 3) {
+        // Moderation API false positive — silently regenerate
+        console.error('[Consult] Reply blocked by moderation gate:', filterResult.reason);
+        await interaction.editReply(AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)]);
+      } else if (filterResult.line) {
         await interaction.editReply(filterResult.line);
       } else {
         await interaction.editReply(getDeEscalationLine());
