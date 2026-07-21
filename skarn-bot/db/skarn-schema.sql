@@ -537,3 +537,51 @@ CREATE TABLE IF NOT EXISTS slur_filter (
   is_active INTEGER NOT NULL DEFAULT 1,
   created_at INTEGER NOT NULL
 );
+
+-- ===== Chronicle & Omen — signal capture =====
+CREATE TABLE IF NOT EXISTS server_signals (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  guild_id TEXT NOT NULL,
+  channel_id TEXT,
+  signal_type TEXT NOT NULL,
+  summary_text TEXT NOT NULL,
+  source_user_id TEXT,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_server_signals_guild ON server_signals(guild_id, created_at);
+
+CREATE TABLE IF NOT EXISTS chronicle_entries (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  guild_id TEXT NOT NULL,
+  content TEXT NOT NULL,
+  period_start INTEGER NOT NULL,
+  period_end INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_chronicle_guild ON chronicle_entries(guild_id, created_at);
+
+CREATE TABLE IF NOT EXISTS server_omens (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  guild_id TEXT NOT NULL,
+  omen_text TEXT NOT NULL,
+  embedding TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'unresolved',
+  fulfillment_text TEXT,
+  created_at INTEGER NOT NULL,
+  resolved_at INTEGER
+);
+CREATE INDEX IF NOT EXISTS idx_server_omens_guild ON server_omens(guild_id, status);
+
+CREATE TABLE IF NOT EXISTS memory_optout (
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  chronicle_optout INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (user_id, guild_id)
+);
+
+CREATE TABLE IF NOT EXISTS realm_omens (
+  omen_id INTEGER PRIMARY KEY,
+  guild_id TEXT NOT NULL,
+  fulfilled_at INTEGER NOT NULL,
+  callback_text TEXT NOT NULL
+);
