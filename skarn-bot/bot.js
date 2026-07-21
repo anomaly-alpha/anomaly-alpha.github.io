@@ -187,6 +187,7 @@ client.once('clientReady', () => {
     pruneSentimentBuffers();
     pruneBanterChains();
     pruneCallbacks();
+    pruneReactionCounters();
   }, 10 * 60 * 1000);
 
   // ===== Daily maintenance jobs =====
@@ -204,6 +205,39 @@ client.once('clientReady', () => {
     db.prepare('DELETE FROM conversation_summaries WHERE covers_to < ?').run(cutoff);
     console.log('[Daily] Maintenance complete.');
   }, 24 * 60 * 60 * 1000);
+
+  // ===== Chronicle & Omen — signal capture + jobs =====
+  var { initReactionTracking, pruneReactionCounters } = require('./features/serverMemory/signalCapture');
+  var { runChronicleJob } = require('./features/serverMemory/chronicle/chronicleJob');
+  var { runOmenJob } = require('./features/serverMemory/omen/omenJob');
+  var { pruneSignals } = require('./features/serverMemory/signalStore');
+
+  initReactionTracking(client);
+
+  // Prune reaction counters hourly
+  setInterval(pruneReactionCounters, 60 * 60 * 1000);
+
+  // Daily signal pruning (30-day retention)
+  setInterval(function() {
+    var cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+    pruneSignals(cutoff);
+  }, 24 * 60 * 60 * 1000);
+
+  // Chronicle: run daily (job checks 7-day gap internally)
+  setInterval(function() {
+    runChronicleJob(client).catch(function(err) { console.error('[Chronicle] Job error:', err.message); });
+  }, 24 * 60 * 60 * 1000);
+
+  // Omen: run daily (posting + callback matching)
+  setInterval(function() {
+    runOmenJob(client).catch(function(err) { console.error('[Omen] Job error:', err.message); });
+  }, 24 * 60 * 60 * 1000);
+
+  // Initial runs on startup (1 minute delay to let client settle)
+  setTimeout(function() {
+    runChronicleJob(client).catch(function() {});
+    runOmenJob(client).catch(function() {});
+  }, 60000);
 });
 
 // ===== Slash command handler =====
