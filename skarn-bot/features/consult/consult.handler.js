@@ -3,7 +3,7 @@ const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { canCall, recordCall, getRateLimitMessage, getUsage } = require('../../lib/rateLimit');
 const getOpenAIClient = require('../../ai/client');
 const { buildContext } = require('../promptContext');
-const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
+const { splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { estimateDelay } = require('../authenticity/typingController');
 const { simulateTyping } = require('../discordNative/typingSim');
 const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
@@ -111,9 +111,7 @@ async function execute(interaction) {
     });
 
     let reply = completion.choices[0].message.content;
-    reply = postProcess(reply, ROLE_NATURE.consult);
-
-    // Post-generation gate check (Gates 2+3)
+    // Slur filter check (runs on raw AI output — no post-processing needed)
     var filterResult = await checkOutput(reply, interaction.user.id);
     if (!filterResult.allowed) {
       storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'assistant', '[BLOCKED]', { threadType: 'consult' });

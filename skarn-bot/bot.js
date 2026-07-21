@@ -99,8 +99,11 @@ client.once('clientReady', () => {
 
   // Weekly growth evaluation
   const { evaluateGrowth } = require('./features/wisdom/growthTracker');
+  const { generateLoreBatch } = require('./features/wisdom/storyEngine');
   setInterval(evaluateGrowth, 7 * 24 * 60 * 60 * 1000);
-  evaluateGrowth(); // also run once on startup
+  evaluateGrowth();
+  setInterval(generateLoreBatch, 60 * 60 * 1000);
+  generateLoreBatch();
 
   // Rotating status
   const statuses = [

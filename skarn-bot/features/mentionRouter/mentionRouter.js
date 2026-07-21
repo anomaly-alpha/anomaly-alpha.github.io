@@ -4,7 +4,7 @@ const { canCall, recordCall, getRateLimitMessage, getUsage } = require('../../li
 const { canRespond } = require('../../lib/aiStats');
 const getOpenAIClient = require('../../ai/client');
 const { buildContext } = require('../promptContext');
-const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
+const { splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { estimateDelay } = require('../authenticity/typingController');
 const { simulateTyping } = require('../discordNative/typingSim');
 const { shouldReactOnly, pickReaction } = require('../authenticity/reactionController');
@@ -142,9 +142,8 @@ async function handleMention(message, client) {
     });
 
     let reply = completion.choices[0].message.content;
-    reply = postProcess(reply, ROLE_NATURE.consult);
 
-    // Post-generation gate check (Gates 2+3)
+    // Slur filter check (runs on raw AI output — no post-processing needed)
     var filterResult = await checkOutput(reply, userId);
     if (!filterResult.allowed) {
       storeMessage(userId, guildId, channelId, 'assistant', '[BLOCKED]', { threadType: 'channel' });
