@@ -196,8 +196,10 @@ async function seedSlurFilter() {
     var after = getPatternCount();
     var added = after - before;
     console.log('[SlurFilter] Seeded: ' + before + ' -> ' + after + ' entries (+' + added + ' new)');
+    return { before: before, after: after, added: added };
   } catch (e) {
     console.error('[SlurFilter] Seed error:', e.message);
+    return { before: 0, after: 0, added: 0, error: e.message };
   }
 }
 
