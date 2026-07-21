@@ -1,4 +1,4 @@
-const db = require('../../../db/database');
+const { db } = require('../../../db/database');
 
 function insertEntry(guildId, content, periodStart, periodEnd) {
   return db.prepare(
@@ -20,10 +20,11 @@ function getLatestEntryPeriod(guildId) {
 }
 
 function getEntries(guildId, page, pageSize) {
-  const offset = (page - 1) * pageSize;
+  const p = page || 0;
+  const s = pageSize || 10;
   return db.prepare(
     'SELECT * FROM chronicle_entries WHERE guild_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?'
-  ).all(guildId, pageSize, offset);
+  ).all(guildId, s, p * s);
 }
 
 module.exports = {

@@ -1,4 +1,4 @@
-const db = require('../../db/database');
+const { db } = require('../../db/database');
 
 function insertSignal(guildId, channelId, signalType, summaryText, sourceUserId) {
   return db.prepare(
@@ -8,7 +8,7 @@ function insertSignal(guildId, channelId, signalType, summaryText, sourceUserId)
 
 function getSignalsSince(guildId, since) {
   return db.prepare(
-    'SELECT * FROM server_signals WHERE guild_id = ? AND created_at >= ? ORDER BY created_at DESC'
+    'SELECT * FROM server_signals WHERE guild_id = ? AND created_at >= ? ORDER BY created_at ASC'
   ).all(guildId, since);
 }
 
@@ -36,19 +36,6 @@ function setOptOut(userId, guildId, optOut) {
   ).run(userId, guildId, optOut ? 1 : 0);
 }
 
-function getGuildConfig(guildId, key) {
-  const row = db.prepare(
-    'SELECT value FROM guild_config WHERE guild_id = ? AND key = ?'
-  ).get(guildId, key);
-  return row ? row.value : null;
-}
-
-function setGuildConfig(guildId, key, value) {
-  db.prepare(
-    'INSERT OR REPLACE INTO guild_config (guild_id, key, value) VALUES (?, ?, ?)'
-  ).run(guildId, key, value);
-}
-
 module.exports = {
   insertSignal,
   getSignalsSince,
@@ -56,6 +43,4 @@ module.exports = {
   pruneSignals,
   isOptedOut,
   setOptOut,
-  getGuildConfig,
-  setGuildConfig,
 };

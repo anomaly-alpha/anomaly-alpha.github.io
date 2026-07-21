@@ -1,4 +1,4 @@
-const db = require('../../../db/database');
+const { db } = require('../../../db/database');
 
 function insertOmen(guildId, omenText, embedding) {
   return db.prepare(
@@ -8,7 +8,7 @@ function insertOmen(guildId, omenText, embedding) {
 
 function getUnresolvedOmens(guildId) {
   return db.prepare(
-    "SELECT * FROM server_omens WHERE guild_id = ? AND status = 'unresolved' ORDER BY created_at DESC"
+    "SELECT * FROM server_omens WHERE guild_id = ? AND status = 'unresolved' ORDER BY created_at ASC"
   ).all(guildId);
 }
 
@@ -29,10 +29,11 @@ function getOmenById(id) {
 }
 
 function getFulfilledOmens(guildId, page, pageSize) {
-  const offset = (page - 1) * pageSize;
+  const p = page || 0;
+  const s = pageSize || 10;
   return db.prepare(
-    "SELECT * FROM server_omens WHERE guild_id = ? AND status = 'fulfilled' ORDER BY created_at DESC LIMIT ? OFFSET ?"
-  ).all(guildId, pageSize, offset);
+    "SELECT * FROM server_omens WHERE guild_id = ? AND status = 'fulfilled' ORDER BY resolved_at DESC LIMIT ? OFFSET ?"
+  ).all(guildId, s, p * s);
 }
 
 function insertRealmOmen(omenId, guildId, callbackText) {
@@ -42,9 +43,10 @@ function insertRealmOmen(omenId, guildId, callbackText) {
 }
 
 function getRecentRealmOmens(guildId, limit) {
+  const l = limit || 3;
   return db.prepare(
     'SELECT * FROM realm_omens WHERE guild_id = ? ORDER BY fulfilled_at DESC LIMIT ?'
-  ).all(guildId, limit);
+  ).all(guildId, l);
 }
 
 module.exports = {
