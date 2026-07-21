@@ -61,17 +61,25 @@ function checkDatabase(text) {
   return null;
 }
 
-// ===== Gate 3: checkModeration(text) =====
+// ===== Gate 3: LLM-based output check (context-aware, no false positives for casual chat) =====
 
-async function checkModeration(text) {
+var SANITIZE_PROMPT = 'You are a content safety checker for a Discord chat bot. Read the following message and decide if it contains actual harmful content that should be blocked.\n\nReturn JSON: {"block": false, "reason": null}\n\nOnly set block:true for: slurs, hate speech, explicit gore, self-harm instructions, harassment. Do NOT block: casual mentions of violence ("killed it", "hit", "die"), swearing ("fuck", "shit"), venting, or figurative language.\n\nMessage: ';
+
+async function checkLLM(text) {
   try {
     var client = getOpenAIClient();
-    var response = await client.moderations.create({ input: text });
-    var result = response.results[0];
-    return { flagged: result.flagged, categories: result.categories };
+    var response = await client.chat.completions.create({
+      model: 'gpt-4.1-mini',
+      messages: [{ role: 'user', content: SANITIZE_PROMPT + text }],
+      max_tokens: 50,
+      temperature: 0,
+      response_format: { type: 'json_object' },
+    });
+    var parsed = JSON.parse(response.choices[0].message.content);
+    return { flagged: parsed.block, reason: parsed.reason || null };
   } catch (e) {
-    console.error('[SlurFilter] Moderation API error:', e.message);
-    return { flagged: false, categories: [] };
+    console.error('[SlurFilter] LLM check error:', e.message);
+    return { flagged: false, reason: null };
   }
 }
 
@@ -151,13 +159,11 @@ async function checkOutput(text, userId) {
     var line = count < STRIKE_LIMIT ? getDeEscalationLine() : null;
     return { allowed: false, line: line, gate: 2, reason: match.category || 'slur', strikes: count };
   }
-  // Gate 3: checkModeration (advisory only — don't record strikes against user for AI's reply)
-  var modResult = await checkModeration(text);
-  if (modResult.flagged) {
-    var categories = Object.keys(modResult.categories).filter(function (k) {
-      return modResult.categories[k];
-    });
-    return { allowed: false, line: null, gate: 3, reason: categories.join(',') || 'flagged' };
+  // Gate 3: LLM-based contextual check
+  var llmResult = await checkLLM(text);
+  if (llmResult.flagged) {
+    console.error('[SlurFilter] Reply blocked by LLM gate:', llmResult.reason);
+    return { allowed: false, line: null, gate: 3, reason: llmResult.reason || 'flagged' };
   }
   return { allowed: true };
 }
