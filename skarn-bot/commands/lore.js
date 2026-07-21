@@ -17,6 +17,6 @@ module.exports = {
     // Update used count
     try { db.prepare("UPDATE skarn_stories SET used_count = used_count + 1, last_used_at = ? WHERE id = ?").run(Date.now(), story.id); } catch (e) {}
 
-    return interaction.reply({ content: story.story_text, flags: 64 });
+    return interaction.reply(story.story_text);
   },
 };
