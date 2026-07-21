@@ -1,9 +1,14 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { resetStats } = require('../lib/aiStats');
+const { getStrikes } = require('../features/safety/slurFilter');
+const { deleteFlag } = require('../db/database');
 
 function getAistatsresetResponse(userId) {
   resetStats(userId);
-  return { content: 'Stats reset. Your hourly cap and counters are cleared.', flags: 64 };
+  var strikes = getStrikes(userId);
+  var hadStrikes = strikes.count > 0 || strikes.silencedUntil > 0;
+  deleteFlag('strike_' + userId);
+  return { content: 'Stats reset. Hourly cap, counters' + (hadStrikes ? ', and strikes' : '') + ' cleared.', flags: 64 };
 }
 
 module.exports = {
@@ -12,7 +17,10 @@ module.exports = {
     .setDescription('Reset your AI chat stats and hourly cap'),
   async execute(interaction) {
     resetStats(interaction.user.id);
-    await interaction.reply({ content: 'Stats reset. Your hourly cap and counters are cleared.', flags: 64 });
+    var strikes = getStrikes(interaction.user.id);
+    var hadStrikes = strikes.count > 0 || strikes.silencedUntil > 0;
+    deleteFlag('strike_' + interaction.user.id);
+    await interaction.reply({ content: 'Stats reset. Hourly cap, counters' + (hadStrikes ? ', and strikes' : '') + ' cleared.', flags: 64 });
   },
   async handleActivation(message, args) {
     const result = getAistatsresetResponse(message.author.id);
