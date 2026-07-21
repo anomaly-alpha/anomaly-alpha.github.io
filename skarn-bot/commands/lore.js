@@ -14,9 +14,27 @@ module.exports = {
       return interaction.reply({ content: 'The ashes are quiet. No tales come to mind.', flags: 64 });
     }
 
-    // Update used count
     try { db.prepare("UPDATE skarn_stories SET used_count = used_count + 1, last_used_at = ? WHERE id = ?").run(Date.now(), story.id); } catch (e) {}
+    return interaction.reply({ content: story.story_text, flags: 64 });
+  },
+  async handleActivation(message, args) {
+    var story = db.prepare(
+      "SELECT * FROM skarn_stories WHERE source IN ('canonical', 'auto_lore') ORDER BY random() LIMIT 1"
+    ).get();
 
-    return interaction.reply(story.story_text);
+    if (!story) {
+      return message.reply('The ashes are quiet. No tales come to mind.');
+    }
+
+    try { db.prepare("UPDATE skarn_stories SET used_count = used_count + 1, last_used_at = ? WHERE id = ?").run(Date.now(), story.id); } catch (e) {}
+    return message.channel.send(story.story_text);
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn lore',
+    description: 'Skarn shares a random piece of his history',
+    guildOnly: false,
+    requiredPermissions: [],
+    parseArgs: function() { return {}; },
   },
 };
