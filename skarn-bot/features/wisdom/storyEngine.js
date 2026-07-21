@@ -66,7 +66,7 @@ async function generateLoreBatch() {
       model: process.env.AI_MODEL || 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.8,
-      max_tokens: 4000,
+      max_completion_tokens: 4000,
     });
     var text = response.choices[0].message.content.replace(/```json|```/g, '').trim();
     var stories = JSON.parse(text);
