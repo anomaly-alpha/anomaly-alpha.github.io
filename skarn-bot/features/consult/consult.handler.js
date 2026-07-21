@@ -66,11 +66,6 @@ async function execute(interaction) {
       message, roles.consult, 'casual', null, { isSkipListCommand: false }
     );
 
-    if (pipelineResult && pipelineResult.safetyBlocked) {
-      await interaction.editReply(getDeEscalationLine());
-      return;
-    }
-
     if (pipelineResult && !pipelineResult.skipped) {
       systemPrompt = pipelineResult.systemPrompt;
       contextualMessage = pipelineResult.contextualMessage;

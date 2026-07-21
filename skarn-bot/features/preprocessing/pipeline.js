@@ -20,11 +20,6 @@ async function runPipeline(userId, guildId, channelId, messageText, roleLine, ro
   }
   if (!analysis) return null; // fall through
 
-  // Safety gate from analyzer
-  if (analysis.safetyFlags.length > 0) {
-    return { safetyBlocked: true, safetyFlags: analysis.safetyFlags };
-  }
-
   // Stage 2: Retrieve
   var ctx = await retrieveContext(userId, guildId, channelId, analysis, messageText);
 

@@ -96,11 +96,6 @@ async function handleMention(message, client) {
       cleanMsg, roles.consult, 'casual', null, { isSkipListCommand: false }
     );
 
-    if (pipelineResult && pipelineResult.safetyBlocked) {
-      await message.reply(getDeEscalationLine());
-      return;
-    }
-
     if (pipelineResult && !pipelineResult.skipped) {
       systemPrompt = pipelineResult.systemPrompt;
       contextualMessage = pipelineResult.contextualMessage;
