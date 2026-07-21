@@ -64,6 +64,7 @@ const ROLE_NATURE = {
   meme: 'casual',
   fortune: 'casual',
   improv: 'casual',
+  search: 'casual',
 
   story: 'moderate',
   song: 'moderate',

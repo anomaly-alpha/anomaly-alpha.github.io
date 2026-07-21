@@ -36,14 +36,19 @@ async function execute(interaction) {
   const rel = getRelationship(interaction.user.id, interaction.guild.id);
   const interactionCount = rel ? rel.interaction_count : 0;
 
+  const { isHostile, recordStrike, isSilenced, getDeEscalationLine, checkOutput } = require('../safety/slurFilter');
+  if (isSilenced(interaction.user.id)) {
+    return interaction.editReply(getDeEscalationLine());
+  }
+
   try {
     const message = interaction.options.getString('message');
-    const { isHostile, recordStrike, isSilenced } = require('../safety/hostileDetector');
     if (isHostile(message)) {
-      recordStrike(interaction.user.id);
-      if (isSilenced(interaction.user.id)) {
-        return interaction.editReply('im not doing this.');
+      var state = recordStrike(interaction.user.id);
+      if (state >= 3) {
+        return interaction.editReply(getDeEscalationLine());
       }
+      return interaction.editReply(getDeEscalationLine());
     }
     const beforeSentiment = analyzeSentiment(message);
 
@@ -91,6 +96,18 @@ async function execute(interaction) {
 
     let reply = completion.choices[0].message.content;
     reply = postProcess(reply, ROLE_NATURE.consult);
+
+    // Post-generation gate check (Gates 2+3)
+    var filterResult = await checkOutput(reply, interaction.user.id);
+    if (!filterResult.allowed) {
+      storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'assistant', '[BLOCKED]', { threadType: 'consult' });
+      if (filterResult.line) {
+        await interaction.editReply(filterResult.line);
+      } else {
+        await interaction.editReply(getDeEscalationLine());
+      }
+      return;
+    }
 
     // Store assistant response
     storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'assistant', reply, { threadType: 'consult' });

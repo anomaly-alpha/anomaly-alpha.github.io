@@ -53,14 +53,19 @@ async function handleMention(message, client) {
   const cleanMsg = message.content.replace(/<@!?\d+>/g, '').trim();
   if (!cleanMsg) return;
 
-  // Hostile content detection — 3 strikes = 1 hour silence
-  const { isHostile, recordStrike, isSilenced } = require('../safety/hostileDetector');
+  // Hostile content detection — 3 strikes = silence with de-escalation
+  const { isHostile, recordStrike, isSilenced, getDeEscalationLine, checkOutput } = require('../safety/slurFilter');
   if (isHostile(cleanMsg)) {
-    recordStrike(userId);
-    if (isSilenced(userId)) {
-      console.log('[Safety] ' + userId + ' silenced (3 strikes)');
-      return;
+    var state = recordStrike(userId);
+    if (state >= 3) {
+      return message.reply(getDeEscalationLine());
     }
+    return message.reply(getDeEscalationLine());
+  }
+
+  // Pre-generation silence check
+  if (isSilenced(userId)) {
+    return;
   }
 
   // Reaction-only check — skip AI for casual/sharing messages (10% chance)
@@ -122,6 +127,18 @@ async function handleMention(message, client) {
 
     let reply = completion.choices[0].message.content;
     reply = postProcess(reply, ROLE_NATURE.consult);
+
+    // Post-generation gate check (Gates 2+3)
+    var filterResult = await checkOutput(reply, userId);
+    if (!filterResult.allowed) {
+      storeMessage(userId, guildId, channelId, 'assistant', '[BLOCKED]', { threadType: 'channel' });
+      if (filterResult.line) {
+        await message.reply(filterResult.line);
+      } else {
+        await message.reply(getDeEscalationLine());
+      }
+      return;
+    }
 
     // Store assistant response
     storeMessage(userId, guildId, channelId, 'assistant', reply, { threadType: 'channel' });

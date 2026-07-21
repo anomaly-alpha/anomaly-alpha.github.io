@@ -35,6 +35,17 @@ function getDeadpanBudget(baseBudget, userId, channelId) {
 
 function extendBanterChain(userId, guildId, channelId) {
   upsertBanterChain(userId, guildId, channelId, JSON.stringify({ last_active: Date.now() }));
+
+  // Update in-memory map for deadpan budget
+  const key = `${userId}:${channelId}`;
+  const now = Date.now();
+  const existing = banterChains.get(key);
+  if (existing && now - existing.lastAt < 10 * 60 * 1000) {
+    existing.count++;
+    existing.lastAt = now;
+  } else {
+    banterChains.set(key, { count: 1, lastAt: now });
+  }
 }
 
 function recordSetup(channelId, userId, content) {

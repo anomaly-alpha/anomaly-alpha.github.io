@@ -18,7 +18,7 @@ function checkCanCall(userId) {
 }
 
 function checkHostile(userId, guildId) {
-  const { isSilenced } = require('../features/safety/hostileDetector');
+  const { isSilenced } = require('../features/safety/slurFilter');
   if (isSilenced(userId, guildId)) {
     throw new Error('You are temporarily silenced due to hostile behavior.');
   }

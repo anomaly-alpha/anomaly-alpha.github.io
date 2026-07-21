@@ -10,6 +10,7 @@ const { searchKnowledge, formatKnowledgeSnippet } = require('./knowledge/knowled
 const { getEmotionDirective } = require('./wisdom/emotionalIntelligence');
 const { getRecentNews } = require('./news/newsFetcher');
 const { getChannelActivity } = require('./channelContext/channelContext');
+const { buildSafetyLine } = require('./safety/slurFilter');
 
 function buildContext(userId, guildId, channelId, opts) {
   opts = opts || {};
@@ -107,6 +108,7 @@ function buildContext(userId, guildId, channelId, opts) {
   }
 
   const channelLine = getChannelActivity(guildId, channelId, userId);
+  const safetyLine = buildSafetyLine();
 
   return {
     newsLine: newsLine,
@@ -118,6 +120,7 @@ function buildContext(userId, guildId, channelId, opts) {
     conversationLine: [conversationLine, profileLine].filter(Boolean).join('\n\n'),
     knowledgeLine: [knowledgeLine, kbLine].filter(Boolean).join('\n'),
     channelLine: channelLine,
+    safetyLine: safetyLine,
   };
 }
 

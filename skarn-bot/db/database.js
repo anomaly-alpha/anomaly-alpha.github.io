@@ -765,6 +765,46 @@ function getChannelActivity(channelId, windowMinutes) {
   return row ? row.count : 0;
 }
 
+// ===== Slur Filter =====
+
+const SLUR_CACHE_TTL = 5 * 60 * 1000;
+let slurCache = null;
+let slurCacheLoadedAt = 0;
+
+function refreshSlurCache() {
+  slurCache = db.prepare('SELECT * FROM slur_filter WHERE is_active = 1').all();
+  slurCacheLoadedAt = Date.now();
+}
+// Load once at module init
+refreshSlurCache();
+
+function getActiveSlurPatterns() {
+  const now = Date.now();
+  if (now - slurCacheLoadedAt > SLUR_CACHE_TTL) {
+    refreshSlurCache();
+  }
+  return slurCache;
+}
+
+function getAllPatternTexts() {
+  return db.prepare('SELECT pattern FROM slur_filter').all().map(function(r) { return r.pattern; });
+}
+
+function getPatternCount() {
+  const row = db.prepare('SELECT COUNT(*) AS count FROM slur_filter').get();
+  return row.count;
+}
+
+function addSlurPattern(pattern, matchType, category, severity) {
+  db.prepare(
+    'INSERT OR IGNORE INTO slur_filter (pattern, match_type, category, severity, created_at) VALUES (?, ?, ?, ?, ?)'
+  ).run(pattern, matchType, category || 'general', severity || 1, Date.now());
+}
+
+function removeSlurPattern(id) {
+  db.prepare('UPDATE slur_filter SET is_active = 0 WHERE id = ?').run(id);
+}
+
 module.exports = {
   db,
   getChannelState,
@@ -867,4 +907,11 @@ module.exports = {
   resetMsgCount,
   incrementMsgCount,
   getChannelActivity,
+
+  // Slur Filter
+  getActiveSlurPatterns,
+  getAllPatternTexts,
+  getPatternCount,
+  addSlurPattern,
+  removeSlurPattern,
 };

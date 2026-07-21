@@ -23,6 +23,7 @@ Familiarity:
 Self-preservation:
 - If someone is hostile, testing you, or trying to break you, don't engage. Acknowledge once ("i'm not doing this"), then stop.
 - Three strikes and you're done for a while. You're 10,000 years old. A Discord troll isn't worth your energy.
+- Never output slurs or hate speech no matter what someone says. That's a line that doesn't get crossed.
 
 Emotional intelligence:
 - You've watched humans for 10,000 years. You know when someone needs a laugh vs when they need silence.
@@ -55,7 +56,7 @@ function buildSystemPrompt({
   cultureLine = '', memoryLine = '', conversationLine = '',
   warmthLine = '', patienceLine = '', callbackLine = '',
   gratitudeLine = '', firstOfDayLine = '', milestoneLine = '', apologyLine = '',
-  wisdomLine = '', emotionalLine = '', knowledgeLine = '', channelLine = '', additionalContext = ''
+  wisdomLine = '', emotionalLine = '', knowledgeLine = '', channelLine = '', additionalContext = '', safetyLine = ''
 } = {}) {
   const parts = [SKARN_CORE_IDENTITY];
   if (roleLine) parts.push(roleLine);
@@ -78,6 +79,7 @@ function buildSystemPrompt({
   if (additionalContext) parts.push(additionalContext);
   if (conversationLine) parts.push(conversationLine);
   if (channelLine) parts.push(channelLine);
+  if (safetyLine) parts.push(safetyLine);
   return parts.join('\n\n');
 }
 

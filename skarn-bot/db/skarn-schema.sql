@@ -526,3 +526,14 @@ CREATE TABLE IF NOT EXISTS attention_state (
   last_user_msg_at          INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (user_id, guild_id, channel_id)
 );
+
+-- ===== Slur Filter =====
+CREATE TABLE IF NOT EXISTS slur_filter (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  pattern TEXT NOT NULL,
+  match_type TEXT NOT NULL CHECK(match_type IN ('exact', 'substring', 'regex')),
+  category TEXT NOT NULL DEFAULT 'general',
+  severity INTEGER NOT NULL DEFAULT 1,
+  is_active INTEGER NOT NULL DEFAULT 1,
+  created_at INTEGER NOT NULL
+);

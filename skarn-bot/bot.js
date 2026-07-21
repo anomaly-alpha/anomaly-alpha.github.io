@@ -15,7 +15,6 @@ const { updateCulture } = require('./features/culture/cultureTracker');
 const { updateWarmth, maybeActiveListen, cleanWarmth, refreshAiChannels } = require('./features/warmth/warmthManager');
 const { updateCallbacks, cleanCallbacks } = require('./features/humor/callbackEngine');
 const { extendBanterChain, cleanChains, recordSetup } = require('./features/humor/comedyTiming');
-const { clearFlags } = require('./features/etiquette/etiquetteEngine');
 const { recordMessage, recordResponse, canRespond, getStats } = require('./lib/aiStats');
 const { startScheduler } = require('./lib/weatherScheduler');
 const { seedKnowledgeBase } = require('./features/knowledge/knowledgeSeeder');
@@ -85,6 +84,14 @@ client.once('clientReady', () => {
 
   // Seed knowledge base
   seedKnowledgeBase();
+
+  // Initial seed + weekly slur filter expansion
+  require('./features/safety/slurFilter').seedSlurFilter();
+  setInterval(function() {
+    require('./features/safety/slurFilter').seedSlurFilter();
+  }, 7 * 24 * 60 * 60 * 1000);
+
+  console.log('[SlurFilter] Gate 1 active — safety instruction in system prompt');
 
   // Scan command files for activation phrases
   require('./features/activation/activationRegistry').scanCommands();
@@ -161,7 +168,7 @@ client.once('clientReady', () => {
     runDecayPass();
     cleanCallbacks();
     cleanChains();
-    clearFlags();
+    require('./features/safety/slurFilter').pruneExpiredStrikes();
     cleanWarmth();
     runDecay();
     decayMemoryEntries();

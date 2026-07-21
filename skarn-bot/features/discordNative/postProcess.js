@@ -1,32 +1,4 @@
-const ROLE_NATURE = {
-  consult: 'casual',
-  roast: 'casual',
-  compliment: 'casual',
-  insult: 'casual',
-  pickup: 'casual',
-  joke: 'casual',
-  meme: 'casual',
-  fortune: 'casual',
-  improv: 'casual',
-  search: 'casual',
-
-  story: 'moderate',
-  song: 'moderate',
-  debate: 'moderate',
-  adventure: 'moderate',
-  realm: 'moderate',
-  realm_combat: 'moderate',
-  realm_npc: 'moderate',
-
-  homework: 'serious',
-  recipe: 'serious',
-  code: 'serious',
-  aitrivia: 'serious',
-  vein: 'serious',
-  charades: 'serious',
-  wouldyourather: 'serious',
-  unpopularopinion: 'serious',
-};
+const { ROLE_NATURE } = require('../../persona/roles');
 
 const CASUAL_ABBREVIATIONS = [' fr', ' ngl', ' tbh', ' imo', ' ngl tbh'];
 const CASUAL_EMOJIS = ['💀', '😭', '🔥', '💯', '🗿', '👀', '😂', '🤌'];
