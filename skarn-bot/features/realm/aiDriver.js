@@ -1,4 +1,4 @@
-const { getOpenAIClient } = require('../../ai/client');
+const getOpenAIClient = require('../../ai/client');
 const { buildSystemPrompt } = require('../../persona/identity');
 const { selectModel } = require('../../features/intelligence/modelRouter');
 const { roles, roleTokenBudgets } = require('../../persona/roles');

@@ -1,7 +1,7 @@
 var { getSignalsSince, countSignalsSince } = require('../signalStore');
 var { insertEntry, getLatestEntryPeriod } = require('./chronicleStore');
 var { buildSystemPrompt } = require('../../../persona/identity');
-var { getOpenAIClient } = require('../../../ai/client');
+var getOpenAIClient = require('../../../ai/client');
 var { selectModel } = require('../../intelligence/modelRouter');
 var { roles, roleTokenBudgets } = require('../../../persona/roles');
 
