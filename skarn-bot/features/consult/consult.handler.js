@@ -55,16 +55,37 @@ async function execute(interaction) {
     // Store user message
     storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'user', message, { threadType: 'consult' });
 
-    const ctx = buildContext(interaction.user.id, interaction.guild.id, interaction.channel.id, {
-      roleNature: 'casual',
-      userContent: message,
-      interactionCount,
-    });
-    const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
+    const { runPipeline } = require('../preprocessing/pipeline');
 
-    var contextualMessage = ctx.conversationLine
-      ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${message}`
-      : message;
+    var systemPrompt;
+    var contextualMessage;
+    var pipelineResult;
+
+    pipelineResult = await runPipeline(
+      interaction.user.id, interaction.guild.id, interaction.channel.id,
+      message, roles.consult, 'casual', null, { isSkipListCommand: false }
+    );
+
+    if (pipelineResult && pipelineResult.safetyBlocked) {
+      await interaction.editReply(getDeEscalationLine());
+      return;
+    }
+
+    if (pipelineResult && !pipelineResult.skipped) {
+      systemPrompt = pipelineResult.systemPrompt;
+      contextualMessage = pipelineResult.contextualMessage;
+    } else {
+      // Fall through to existing flow
+      const ctx = buildContext(interaction.user.id, interaction.guild.id, interaction.channel.id, {
+        roleNature: 'casual',
+        userContent: message,
+        interactionCount,
+      });
+      systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
+      contextualMessage = ctx.conversationLine
+        ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${message}`
+        : message;
+    }
 
     // Detect and track user emotion
     updateEmotion(interaction.user.id, interaction.guild.id, message);
@@ -85,7 +106,7 @@ async function execute(interaction) {
 
     const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
-      model: selectModel(message, hasKnowledgeMatch),
+      model: selectModel(message, hasKnowledgeMatch, pipelineResult ? pipelineResult.analysis.complexityScore : undefined),
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: contextualMessage },
@@ -150,7 +171,7 @@ async function execute(interaction) {
     }
 
     // Auto-extract memory from conversation (non-blocking)
-    extractMemory(interaction.user.id, interaction.guild.id, message, reply, interaction.channel.id).catch(() => {});
+    extractMemory(interaction.user.id, interaction.guild.id, message, reply, pipelineResult ? pipelineResult.analysis : null).catch(() => {});
 
     // Follow-up detection (non-blocking)
     const { detectFollowUps } = require('../intelligence/followUpEngine');

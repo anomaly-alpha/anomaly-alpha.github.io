@@ -85,16 +85,37 @@ async function handleMention(message, client) {
   updateEmotion(userId, guildId, cleanMsg);
 
   try {
-    const ctx = buildContext(userId, guildId, channelId, {
-      roleNature: 'casual',
-      userContent: cleanMsg,
-      interactionCount,
-    });
-    const systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
+    const { runPipeline } = require('../preprocessing/pipeline');
 
-    var contextualMessage = ctx.conversationLine
-      ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${cleanMsg}`
-      : cleanMsg;
+    var systemPrompt;
+    var contextualMessage;
+    var pipelineResult;
+
+    pipelineResult = await runPipeline(
+      userId, guildId, channelId,
+      cleanMsg, roles.consult, 'casual', null, { isSkipListCommand: false }
+    );
+
+    if (pipelineResult && pipelineResult.safetyBlocked) {
+      await message.reply(getDeEscalationLine());
+      return;
+    }
+
+    if (pipelineResult && !pipelineResult.skipped) {
+      systemPrompt = pipelineResult.systemPrompt;
+      contextualMessage = pipelineResult.contextualMessage;
+    } else {
+      // Fall through to existing flow
+      const ctx = buildContext(userId, guildId, channelId, {
+        roleNature: 'casual',
+        userContent: cleanMsg,
+        interactionCount,
+      });
+      systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
+      contextualMessage = ctx.conversationLine
+        ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${cleanMsg}`
+        : cleanMsg;
+    }
 
     recordCall(userId, 'chat');
     extendBanterChain(userId, guildId, channelId);
@@ -116,7 +137,7 @@ async function handleMention(message, client) {
 
     const openai = getOpenAIClient();
     const completion = await openai.chat.completions.create({
-      model: selectModel(cleanMsg, hasKnowledgeMatch),
+      model: selectModel(cleanMsg, hasKnowledgeMatch, pipelineResult ? pipelineResult.analysis.complexityScore : undefined),
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: contextualMessage },
@@ -188,7 +209,7 @@ async function handleMention(message, client) {
     } catch (e) { /* non-critical */ }
 
     // Auto-extract memory from conversation (non-blocking)
-    extractMemory(userId, guildId, cleanMsg, reply, channelId).catch(() => {});
+    extractMemory(userId, guildId, cleanMsg, reply, pipelineResult ? pipelineResult.analysis : null).catch(() => {});
   } catch (error) {
     flagForApology(userId);
     console.error('Mention reply error:', error);
