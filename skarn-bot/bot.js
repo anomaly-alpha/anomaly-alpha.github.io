@@ -260,10 +260,13 @@ client.on('messageCreate', async function(message) {
   // Step 1: Skip bots
   if (message.author.bot) return;
 
+  // Step 2: Skip messages starting with * or + (prefix markers)
+  if (message.content.startsWith('*') || message.content.startsWith('+')) return;
+
   const handleMention = require('./features/mentionRouter/mentionRouter').handleMention;
   const lookup = require('./features/activation/activationRegistry').lookup;
 
-  // Step 2: DM handling
+  // Step 3: DM handling
   if (!message.guild) {
     // Auto opt-in
     try {
@@ -289,7 +292,7 @@ client.on('messageCreate', async function(message) {
     return;
   }
 
-  // Step 3: State tracking batch (non-blocking)
+  // Step 4: State tracking batch (non-blocking)
   Promise.allSettled([
     Promise.resolve().then(function() { return require('./features/channelState/stateTracker').onMessageReceived ? require('./features/channelState/stateTracker').onMessageReceived(message) : null; }).catch(function() {}),
     Promise.resolve().then(function() { return require('./features/relationship/relationshipTracker').updateRelationship ? require('./features/relationship/relationshipTracker').updateRelationship(message) : null; }).catch(function() {}),
@@ -308,7 +311,7 @@ client.on('messageCreate', async function(message) {
     }).catch(function() {}),
   ]);
 
-  // Step 4: Fast-path skippers (return immediately)
+  // Step 5: Fast-path skippers (return immediately)
   const c = message.content.toLowerCase().trim();
   
   if (c.startsWith('skarn opt in') || c.startsWith('skarn opt out')) {
@@ -338,7 +341,7 @@ client.on('messageCreate', async function(message) {
     return;
   }
 
-  // Step 5: Activation phrase registry
+  // Step 6: Activation phrase registry
   if (c.startsWith('skarn') || c.startsWith('!')) {
     const match = lookup(message.content);
     if (match) {
@@ -374,13 +377,13 @@ client.on('messageCreate', async function(message) {
     }
   }
 
-  // Step 6: @mention → AI
+  // Step 7: @mention → AI
   if (message.mentions.has(client.user)) {
     await handleMention(message);
     return;
   }
 
-  // Step 7: Passive reactions (sleep-aware)
+  // Step 8: Passive reactions (sleep-aware)
   var isSleeping = false;
   var SLEEP_START = process.env.SLEEP_START;
   var SLEEP_END = process.env.SLEEP_END;
@@ -396,7 +399,7 @@ client.on('messageCreate', async function(message) {
     try { require('./features/discordNative/reactionSystem').maybeReact(message); } catch (e) {}
   }
 
-  // Step 8: AI channel auto-respond
+  // Step 9: AI channel auto-respond
   try {
     var aiChannels = require('./db/database').getGuildConfig ? require('./db/database').getGuildConfig(message.guild.id, 'aiChannels') : [];
     if (aiChannels && aiChannels.includes(message.channel.id)) {
@@ -426,7 +429,7 @@ client.on('messageCreate', async function(message) {
     }
   } catch (e) {}
 
-  // Step 9: XP gain + Record message
+  // Step 10: XP gain + Record message
   try {
     var xpKey = 'xp:' + message.guild.id + ':' + message.author.id;
     var db = require('./db/database');
@@ -446,7 +449,7 @@ client.on('messageCreate', async function(message) {
     }
   } catch (e) {}
 
-  // Step 10: Passive interjection (if not sleeping)
+  // Step 11: Passive interjection (if not sleeping)
   if (!isSleeping) {
     try { require('./features/presence/interjectionEngine').maybeInterject(message); } catch (e) {}
   }
