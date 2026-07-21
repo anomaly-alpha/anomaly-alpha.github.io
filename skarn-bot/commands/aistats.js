@@ -1,6 +1,17 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getStats } = require('../lib/aiStats');
 const { getGuildConfig, getUserPreferences } = require('../db/database');
+const { getStrikes } = require('../features/safety/slurFilter');
+
+function getStrikeStatus(userId) {
+  var strikes = getStrikes(userId);
+  if (strikes.silencedUntil > Date.now()) {
+    var remaining = Math.ceil((strikes.silencedUntil - Date.now()) / 60000);
+    return 'Silenced (' + remaining + 'm remaining)';
+  }
+  if (strikes.count > 0) return strikes.count + ' / 3 strikes';
+  return 'None';
+}
 
 function getAistatsResponse(userId, guildId, user) {
   const stats = getStats(userId);
@@ -19,6 +30,7 @@ function getAistatsResponse(userId, guildId, user) {
         { name: 'Opt-In Status', value: isOptedIn ? 'Opted In' : 'Opted Out', inline: true },
         { name: 'Messages Sent to Bot', value: `${stats.messagesSent}`, inline: true },
         { name: 'Responses Received', value: `${stats.responsesReceived}`, inline: true },
+        { name: 'Strike Status', value: getStrikeStatus(userId), inline: true },
       )
       .setColor(0x00e5ff)
       .setThumbnail(user.displayAvatarURL())],
@@ -50,6 +62,7 @@ module.exports = {
         { name: 'Opt-In Status', value: isOptedIn ? 'Opted In' : 'Opted Out', inline: true },
         { name: 'Messages Sent to Bot', value: `${stats.messagesSent}`, inline: true },
         { name: 'Responses Received', value: `${stats.responsesReceived}`, inline: true },
+        { name: 'Strike Status', value: getStrikeStatus(interaction.user.id), inline: true },
       )
       .setColor(0x00e5ff)
       .setThumbnail(interaction.user.displayAvatarURL());
