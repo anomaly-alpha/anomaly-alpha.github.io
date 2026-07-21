@@ -3,7 +3,7 @@ const { db } = require('../../../db/database');
 function insertOmen(guildId, omenText, embedding) {
   return db.prepare(
     'INSERT INTO server_omens (guild_id, omen_text, embedding, created_at) VALUES (?, ?, ?, ?)'
-  ).run(guildId, omenText, embedding, Date.now());
+  ).run(guildId, omenText, JSON.stringify(embedding), Date.now());
 }
 
 function getUnresolvedOmens(guildId) {
