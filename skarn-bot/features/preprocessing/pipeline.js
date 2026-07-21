@@ -11,9 +11,14 @@ async function runPipeline(userId, guildId, channelId, messageText, roleLine, ro
   if (opts.isSkipListCommand) return null;
   if (!messageText || messageText.length < 10) return null;
 
-  // Stage 1: Analyze
+  // Stage 1: Analyze (with retry)
   var analysis = await analyzeMessage(userId, guildId, channelId, messageText, roleNature);
-  if (!analysis) return null; // fall through to existing flow
+  if (!analysis) {
+    // One retry with 100ms backoff
+    await new Promise(function(resolve) { setTimeout(resolve, 100); });
+    analysis = await analyzeMessage(userId, guildId, channelId, messageText, roleNature);
+  }
+  if (!analysis) return null; // fall through
 
   // Safety gate from analyzer
   if (analysis.safetyFlags.length > 0) {
