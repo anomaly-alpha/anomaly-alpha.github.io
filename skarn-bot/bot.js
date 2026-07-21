@@ -82,8 +82,9 @@ client.once('clientReady', () => {
   const hasCx = !!process.env.GOOGLE_CSE_CX;
   console.log(`Search backend: Google CSE ${hasKey && hasCx ? '✓ ready' : '✗ not configured (will use DDG fallback)'}`);
 
-  // Seed knowledge base
+  // Seed knowledge base & canonical lore
   seedKnowledgeBase();
+  require('./db/database').seedSkarnLore();
 
   // Initial seed + weekly slur filter expansion
   require('./features/safety/slurFilter').seedSlurFilter();
@@ -95,6 +96,11 @@ client.once('clientReady', () => {
 
   // Scan command files for activation phrases
   require('./features/activation/activationRegistry').scanCommands();
+
+  // Weekly growth evaluation
+  const { evaluateGrowth } = require('./features/wisdom/growthTracker');
+  setInterval(evaluateGrowth, 7 * 24 * 60 * 60 * 1000);
+  evaluateGrowth(); // also run once on startup
 
   // Rotating status
   const statuses = [

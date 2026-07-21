@@ -19,12 +19,15 @@ function findStoryTopic(text) {
 
 function getExistingStory(topic) {
   const stories = getStoriesByTopic(topic);
-  if (stories && stories.length > 0) {
-    const story = stories[Math.floor(Math.random() * stories.length)];
-    incrementStoryUse(story.id);
-    return story.story_text;
-  }
-  return null;
+  if (!stories || stories.length === 0) return null;
+
+  // Prefer canonical stories (hand-curated lore) over AI-generated
+  const canonical = stories.filter(s => s.source === 'canonical');
+  const pool = canonical.length > 0 ? canonical : stories;
+
+  const story = pool[Math.floor(Math.random() * pool.length)];
+  incrementStoryUse(story.id);
+  return story.story_text;
 }
 
 function extractStoryFromReply(reply) {

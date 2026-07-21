@@ -11,6 +11,8 @@ const { getEmotionDirective } = require('./wisdom/emotionalIntelligence');
 const { getRecentNews } = require('./news/newsFetcher');
 const { getChannelActivity } = require('./channelContext/channelContext');
 const { buildSafetyLine } = require('./safety/slurFilter');
+const { getSocraticQuestion } = require('./wisdom/socraticEngine');
+const { getGrowthLine } = require('./wisdom/growthTracker');
 
 function buildContext(userId, guildId, channelId, opts) {
   opts = opts || {};
@@ -20,6 +22,11 @@ function buildContext(userId, guildId, channelId, opts) {
 
   // Tiered: lightweight for short/no-question, full for substantive
   const isFullTier = userContent.length >= 50 || userContent.indexOf('?') !== -1;
+
+  const socraticLine = getSocraticQuestion(userContent);
+  if (socraticLine && !isFullTier) {
+    isFullTier = true;
+  }
 
   // === Directive lines (always included) ===
   const channelState = getChannelState(channelId, guildId);
@@ -109,8 +116,20 @@ function buildContext(userId, guildId, channelId, opts) {
 
   const channelLine = getChannelActivity(guildId, channelId, userId);
   const safetyLine = buildSafetyLine();
+  const growthLine = getGrowthLine(userId, guildId);
+
+  var followUpLine = '';
+  try {
+    var pending = db.prepare(
+      "SELECT topic FROM follow_ups WHERE user_id = ? AND guild_id = ? AND status = 'pending' AND due_after < ? ORDER BY due_after ASC LIMIT 1"
+    ).get(userId, guildId, Date.now());
+    if (pending) {
+      followUpLine = 'You were curious about something they said earlier: "' + pending.topic + '". Ask naturally if it fits.';
+    }
+  } catch (e) { /* follow-up query failed, skip */ }
 
   return {
+    growthLine: growthLine,
     newsLine: newsLine,
     stateLine: stateLine, moodLine: moodLine, relationshipLine: relationshipLine,
     cultureLine: cultureLine, memoryLine: memoryLine,
@@ -121,6 +140,8 @@ function buildContext(userId, guildId, channelId, opts) {
     knowledgeLine: [knowledgeLine, kbLine].filter(Boolean).join('\n'),
     channelLine: channelLine,
     safetyLine: safetyLine,
+    socraticLine: socraticLine,
+    followUpLine: followUpLine,
   };
 }
 
