@@ -1,5 +1,6 @@
 const { getCharacter, saveCharacter, getDiscoveredLocations, getInventory, getKillStats } = require('./realmStore');
 const { RACE_BONUSES, CLASS_STATS, xpForLevel, hpForLevel } = require('./realmConfig');
+const { logSignal } = require('../serverMemory/signalCapture');
 
 const STAT_MAP = {
   str: 'strength', dex: 'dexterity', con: 'constitution',
@@ -137,6 +138,7 @@ function addXp(userId, guildId, amount) {
     hp_current: finalHpCurrent,
   };
   if (levelsGained > 0) {
+    logSignal(guildId, null, 'realm_milestone', char.name + ' reached level ' + level, userId);
     patch.constitution = char.constitution + levelsGained;
     patch[STAT_MAP[classData.primary]] = char[STAT_MAP[classData.primary]] + levelsGained;
     if (classData.secondary !== 'con') {

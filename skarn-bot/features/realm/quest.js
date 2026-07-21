@@ -1,4 +1,5 @@
 const realmStore = require('./realmStore');
+const { logSignal } = require('../serverMemory/signalCapture');
 
 const MAX_ACTIVE_QUESTS = 3;
 
@@ -81,6 +82,7 @@ function checkQuestProgress(userId, guildId, eventType, target) {
       realmStore.updateQuest(userId, guildId, quest.quest_id, {
         status: 'completed',
       });
+      logSignal(guildId, null, 'realm_milestone', 'Quest completed: ' + quest.title, userId);
       let rewards;
       try {
         rewards = JSON.parse(quest.rewards);

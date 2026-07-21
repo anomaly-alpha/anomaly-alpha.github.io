@@ -2,6 +2,7 @@ const { getCharacter, saveCharacter, getInventory, logKill } = require('./realmS
 const { ENEMY_SCALING, CLASS_STATS } = require('./realmConfig');
 const { generateCombatNarration } = require('./aiDriver');
 const { canCall, recordCall, canGuildCall, incrementGuildDaily } = require('./realmRateLimit');
+const { logSignal } = require('../serverMemory/signalCapture');
 
 // ===== In-Memory Combat Store =====
 
@@ -210,6 +211,7 @@ async function processCombatRound(userId, guildId, playerAction, isDefending) {
 
     // Log kill
     logKill(userId, guildId, combat.enemy.name, combat.enemy.level, combat.locationId, xpGained, goldGained);
+    logSignal(guildId, null, 'realm_milestone', combat.enemy.name + ' defeated', userId);
 
     // Award gold
     saveCharacter(userId, guildId, { gold: char.gold + goldGained });
