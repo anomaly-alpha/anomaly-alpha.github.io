@@ -23,6 +23,7 @@ Analyze the following Discord message and return valid JSON only.
 
 Message: `;
 
+// userId, guildId, channelId, roleNature reserved for future scope-tracking/analytics
 async function analyzeMessage(userId, guildId, channelId, messageText, roleNature) {
   if (!messageText || messageText.length < 10) return null;
 
