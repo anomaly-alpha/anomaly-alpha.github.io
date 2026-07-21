@@ -152,14 +152,7 @@ function getDeEscalationLine() {
 // ===== Combined output check: checkOutput(text, userId) =====
 
 async function checkOutput(text, userId) {
-  // Gate 2: checkDatabase
-  var match = checkDatabase(text);
-  if (match) {
-    var count = recordStrike(userId);
-    var line = count < STRIKE_LIMIT ? getDeEscalationLine() : null;
-    return { allowed: false, line: line, gate: 2, reason: match.category || 'slur', strikes: count };
-  }
-  // Gate 3: LLM-based contextual check
+  // Gate 3: LLM-based contextual check (disabled: Gate 2 DB check removed due to false positives in production)
   var llmResult = await checkLLM(text);
   if (llmResult.flagged) {
     console.error('[SlurFilter] Reply blocked by LLM gate:', llmResult.reason);
