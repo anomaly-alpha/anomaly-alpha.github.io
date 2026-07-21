@@ -19,19 +19,19 @@ function initReactionTracking(client) {
     if (getChannelState && getChannelState(channel.id) === 'Weathering') return;
 
     var key = message.guild.id + ':' + channel.id + ':' + message.id;
-    var existing = reactionCounters.get(key);
-    if (existing) {
-      existing.count++;
-      if (existing.count === REACTION_THRESHOLD) {
-        var summary = (message.content || '').substring(0, 200);
-        var authorId = message.author ? message.author.id : null;
-        if (authorId && isOptedOut(authorId, message.guild.id)) {
-          authorId = null; // anonymize per [S6]
-        }
-        insertSignal(message.guild.id, channel.id, 'reaction_spike', summary, authorId);
+    var entry = reactionCounters.get(key);
+    if (!entry) {
+      entry = { count: 0, firstReactionAt: Date.now() };
+      reactionCounters.set(key, entry);
+    }
+    entry.count++;
+    if (entry.count === REACTION_THRESHOLD) {
+      var summary = (message.content || '').substring(0, 200);
+      var authorId = message.author ? message.author.id : null;
+      if (authorId && isOptedOut(authorId, message.guild.id)) {
+        authorId = null;
       }
-    } else {
-      reactionCounters.set(key, { count: 1, firstReactionAt: Date.now() });
+      insertSignal(message.guild.id, channel.id, 'reaction_spike', summary, authorId);
     }
   });
 }
