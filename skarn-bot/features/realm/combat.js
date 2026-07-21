@@ -238,10 +238,7 @@ async function processCombatRound(userId, guildId, playerAction, isDefending) {
       narration = await generateCombatNarration(
         char,
         combat.enemy,
-        playerAction,
-        playerDamage,
-        combat.enemy.hp,
-        combat.history.slice(-4)
+        [playerAction, ...combat.history.slice(-3)]
       );
       // Filter out meta-text the AI sometimes generates
       if (narration && /warmaster|didn't respond|apolog|sorry|can't|unable|error|failed/i.test(narration)) {

@@ -55,7 +55,7 @@ async function handleNpcInteraction(userId, guildId, npc, character, playerChoic
     npc.role = 'enemy';
   }
 
-  const dialogue = await aiDriver.generateNpcDialogue(npc, character, memory);
+  const dialogue = await aiDriver.generateNpcDialogue(npc, character, memory, guildId);
 
   let sentiment = 0;
   const choice = playerChoice.toLowerCase();
