@@ -63,7 +63,6 @@ npm start
 ### AI Chat
 | Command | Description |
 |---------|-------------|
-| `/ask` | Ask AI anything |
 | `/aichat` | Toggle AI in a channel |
 | `@Skarn` | Mention bot for AI reply |
 
@@ -196,10 +195,6 @@ npm start
 #### `/consult` (Recommended)
 - **Parameters:** `message` (required)
 - **Response:** In-character reply from Skarn with memory and mood awareness
-
-#### `/ask` (Deprecated — use `/consult`)
-- **Parameters:** `question` (required)
-- **Response:** AI answer to your question
 
 #### `/aichat`
 - **Parameters:** `mode` (on/off)

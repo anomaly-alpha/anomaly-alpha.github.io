@@ -52,7 +52,6 @@ const categories = {
   'AI Utility': {
     color: 0x2ecc71,
     commands: [
-      { name: '/ask', desc: 'Ask Skarn anything' },
       { name: '/homework', desc: 'Homework helper' },
       { name: '/recipe', desc: 'Recipe finder' },
       { name: '/code', desc: 'Code helper' },

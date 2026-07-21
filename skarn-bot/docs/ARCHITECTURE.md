@@ -76,7 +76,7 @@ Layer 4: Post-processing  features/discordNative/postProcess.js  Probabilistic t
 Layer 5: Behaviors        features/{warmth,humor,etiquette,wisdom}/  Memory, timing, warmth
 ```
 
-Every AI call (except deprecated `/ask` and `/summarize`) goes through all 5 layers.
+Every AI call (except `/summarize`) goes through all 5 layers.
 
 ## Vertical Slice Architecture
 

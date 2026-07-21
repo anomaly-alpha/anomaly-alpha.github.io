@@ -60,9 +60,9 @@ if (fs.existsSync(commandsPath)) {
 
 // ===== Sleep mode (save usage hours) =====
 // Bot sleeps during off-hours. Set SLEEP_START=0 and SLEEP_END=0 to disable.
-const SLEEP_START = parseInt(process.env.SLEEP_START) || 1;  // 1 AM
-const SLEEP_END = parseInt(process.env.SLEEP_END) || 7;      // 7 AM
-const SLEEP_TIMEZONE = parseInt(process.env.SLEEP_TIMEZONE) || 0; // UTC offset
+const SLEEP_START = process.env.SLEEP_START !== undefined ? parseInt(process.env.SLEEP_START) : 1;
+const SLEEP_END = process.env.SLEEP_END !== undefined ? parseInt(process.env.SLEEP_END) : 7;
+const SLEEP_TIMEZONE = process.env.SLEEP_TIMEZONE !== undefined ? parseInt(process.env.SLEEP_TIMEZONE) : 0;
 
 function isSleepTime() {
   const now = new Date();

@@ -10,10 +10,10 @@ The codebase follows a **vertical slice architecture**: each feature lives in `f
 
 Two modules serve as shared layers that cut across all features:
 
-- **`buildSystemPrompt()`** (`persona/identity.js`): The single function that assembles `SKARN_CORE_IDENTITY` + the command's role line (from `persona/roles.js`) + dynamic context lines (from `features/promptContext.js`) into the system prompt for every AI call. No command builds its own system prompt (except legacy commands `/ask` and `/summarize` — see drift note below).
+- **`buildSystemPrompt()`** (`persona/identity.js`): The single function that assembles `SKARN_CORE_IDENTITY` + the command's role line (from `persona/roles.js`) + dynamic context lines (from `features/promptContext.js`) into the system prompt for every AI call. No command builds its own system prompt (except `/summarize` — see drift note below).
 - **Activation registry** (`features/activation/activationRegistry.js`): A central mapping of keyword phrases to command handlers, built at startup by scanning every command file's `activation` export. Provides text-based command invocation (e.g. `skarn weather`) as an alternative to slash commands. Two routing types: `'command'` (runs the slash handler directly) and `'ai'` (routes to the AI mention handler with an injected directive).
 
-> **Drift**: `/ask` (`commands/ask.js`) and `/summarize` (`commands/summarize.js`) are marked deprecated in README.md but remain fully implemented. Both bypass `buildSystemPrompt()`, the persona system, and the shared AI client (`ai/client.js`) — each has its own inline system prompt and creates its own OpenAI instance. Both hardcode `model: 'gpt-3.5-turbo'` rather than using `selectModel()` from the model router. `/summarize` even uses its own rate limiting path. These commands are orthogonal to the vertical-slice pattern described here.
+> **Drift**: `/summarize` (`commands/summarize.js`) is marked deprecated in README.md but remains fully implemented. It bypasses `buildSystemPrompt()`, the persona system, and the shared AI client (`ai/client.js`) — it has its own inline system prompt and creates its own OpenAI instance. It hardcodes `model: 'gpt-3.5-turbo'` rather than using `selectModel()` from the model router, and uses its own rate limiting path. This command is orthogonal to the vertical-slice pattern described here.
 
 ## 3. Scoping conventions
 
@@ -68,7 +68,7 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 ## 5. Persona and role conventions
 
 - **`SKARN_CORE_IDENTITY`** (`persona/identity.js` lines 1–51): The invariant core persona — a multi-paragraph character definition that every AI call starts with. Never modified at runtime. Defines Skarn's voice (casual Discord native), familiarity scale, emotional intelligence heuristics, and self-preservation rules.
-- **`roles.js`** (`persona/roles.js`): Exports three parallel objects: `roles` (27 role instruction strings), `roleTokenBudgets` (100–1000 token budgets per role), and `ROLE_NATURE` (classification: casual / moderate / serious). Every AI command has exactly one role in `roles`; no command inlines its own role string (except deprecated `/ask` and `/summarize`).
+- **`roles.js`** (`persona/roles.js`): Exports three parallel objects: `roles` (27 role instruction strings), `roleTokenBudgets` (100–1000 token budgets per role), and `ROLE_NATURE` (classification: casual / moderate / serious). Every AI command has exactly one role in `roles`; no command inlines its own role string (except `/summarize`).
 - **`roleTokenBudgets`**: Assigns a max token ceiling per role. Range: 100 (roast, compliment, insult, pickup, meme) to 1000 (realm). This controls how much the AI is allowed to generate per invocation. These budgets are consumed by each feature's OpenAI call independently — there is no shared token tracking across calls.
 - **`ROLE_NATURE` classification**: Three categories — `casual` (banter, jokes, insults), `moderate` (storytelling, adventure, debate), `serious` (homework, code, recipe). Drives context-assembly tiering in `buildContext()`: `isFullTier` is based on message length and question detection, not directly on `ROLE_NATURE`. The nature value is passed as `opts.roleNature` but is not used to toggle tiering — it is available for features to read.
 - **Temperature conventions**: Temperature is set per-call in each feature's OpenAI invocation, not derived from `ROLE_NATURE` or centralized in `roles.js`. A loose pattern is visible across the codebase: factual tasks (homework, code, vein, summarizer, knowledgeGraph) use 0.2–0.3; general conversation (consult, mentionRouter, search, interjectionEngine) uses 0.8–0.85; creative tasks (joke, insult, pickup, meme, wouldyourather, unpopularopinion) use 0.95–1.0. The shared AI client (`ai/client.js`) provides only the OpenAI singleton — it sets no default temperature or model.
@@ -258,7 +258,7 @@ The following environment variables are consumed by the codebase. Variables are 
 | `AI_MODEL` | No | `gpt-3.5-turbo` | Default OpenAI model for all AI calls (`features/intelligence/modelRouter.js` line 9) |
 | `AI_MODEL_COMPLEX` | No | falls back to `AI_MODEL` | Model used for long/question/complex queries and knowledge-matched queries (`modelRouter.js` lines 4, 7) |
 
-> **Note**: `AI_MODEL` and `AI_MODEL_COMPLEX` are **not present in `.env.example`** — they must be added manually or by copying from this table. They are consumed only by `features/intelligence/modelRouter.js`; the deprecated `/ask` and `/summarize` commands hardcode `gpt-3.5-turbo` and ignore both variables.
+> **Note**: `AI_MODEL` and `AI_MODEL_COMPLEX` are **not present in `.env.example`** — they must be added manually or by copying from this table. They are consumed only by `features/intelligence/modelRouter.js`; the `/summarize` command hardcodes `gpt-3.5-turbo` and ignores both variables.
 >
 > **Note**: `OPENAI_API_KEY` is also **not present in `.env.example`**, despite being required for all AI features. Add it manually when deploying.
 >
