@@ -1,5 +1,4 @@
 const OpenAI = require('openai');
-const { getCrisisResponse } = require('../features/safety/crisisResponse');
 const { getSafeMessage } = require('../features/safety/safeMessages');
 
 var SELF_HARM_CATS = ['self-harm', 'self-harm/intent', 'self-harm/instructions'];
@@ -80,4 +79,5 @@ async function moderatedChatCompletion(params) {
   }
 }
 
-module.exports = { getOpenAIClient, moderatedChatCompletion };
+module.exports = getOpenAIClient;
+module.exports.moderatedChatCompletion = moderatedChatCompletion;
