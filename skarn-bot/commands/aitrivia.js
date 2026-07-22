@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const getOpenAIClient = require('../ai/client');
+const { moderatedChatCompletion } = require('../ai/client');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
 const { canCall, recordCall, getRateLimitMessage } = require('../lib/rateLimit');
@@ -57,20 +57,26 @@ module.exports = {
         : '';
       const systemPrompt = buildSystemPrompt({ roleLine: roles.aitrivia, stateLine, memoryLine });
 
-      const openai = getOpenAIClient();
-      const completion = await openai.chat.completions.create({
+      var result = await moderatedChatCompletion({
         model: process.env.AI_MODEL || 'gpt-3.5-turbo',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `${TRIVIA_FORMAT}\n\nGenerate a ${difficulty} trivia question about: ${topic}. Return ONLY the JSON, no markdown, no code blocks.` },
         ],
-        max_completion_tokens: roleTokenBudgets.aitrivia,
+        max_tokens: roleTokenBudgets.aitrivia,
         temperature: 0.9,
+        userId: interaction.user.id,
       });
+
+      if (!result.success) {
+        if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
+        await interaction.editReply({ content: result.safeMessage, flags: 64 });
+        return;
+      }
 
       recordCall(interaction.user.id);
 
-      let content = completion.choices[0].message.content.trim();
+      let content = result.completion.choices[0].message.content.trim();
       content = content.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();
 
       let trivia;
