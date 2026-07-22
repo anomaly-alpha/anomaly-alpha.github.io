@@ -27,7 +27,7 @@ module.exports = {
           { role: 'user', content: 'Tell this story in your own words, as only you can:\n\n' + story.story_text },
         ],
         max_tokens: 600,
-        temperature: 0.85,
+        temperature: 0.7,
         userId: interaction.user.id,
       });
 
@@ -65,7 +65,7 @@ module.exports = {
           { role: 'user', content: 'Tell this story in your own words, as only you can:\n\n' + story.story_text },
         ],
         max_tokens: 600,
-        temperature: 0.85,
+        temperature: 0.7,
         userId: message.author.id,
       });
 
