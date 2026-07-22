@@ -32,10 +32,10 @@ const roles = {
 
 const roleTokenBudgets = {
   chronicle: 500,
-  consult: 400,
+  consult: 600,
   vein: 400,
-  story: 400,
-  adventure: 400,
+  story: 600,
+  adventure: 600,
   roast: 100,
   compliment: 100,
   insult: 100,
