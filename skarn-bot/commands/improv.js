@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const getOpenAIClient = require('../ai/client');
+const { moderatedChatCompletion } = require('../ai/client');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
 const { canCall, recordCall, getRateLimitMessage } = require('../lib/rateLimit');
@@ -35,20 +35,26 @@ module.exports = {
         : '';
       const systemPrompt = buildSystemPrompt({ roleLine: roles.improv, stateLine, memoryLine });
 
-      const openai = getOpenAIClient();
-      const completion = await openai.chat.completions.create({
+      var result = await moderatedChatCompletion({
         model: process.env.AI_MODEL || 'gpt-3.5-turbo',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Scenario: ${scenario}\n\nYou start the scene:` },
         ],
-        max_completion_tokens: roleTokenBudgets.improv,
+        max_tokens: roleTokenBudgets.improv,
         temperature: 0.95,
+        userId: interaction.user.id,
       });
+
+      if (!result.success) {
+        if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
+        await interaction.editReply({ content: result.safeMessage, flags: 64 });
+        return;
+      }
 
       recordCall(interaction.user.id);
 
-      const reply = completion.choices[0].message.content;
+      const reply = result.completion.choices[0].message.content;
       const embed = new EmbedBuilder()
         .setTitle('Improv Scene')
         .setDescription(`**Scenario:** ${scenario}\n\n**Skarn:** ${reply}`)

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const getOpenAIClient = require('../ai/client');
+const { moderatedChatCompletion } = require('../ai/client');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
 const { ensureAiConfigured, checkCanCall } = require('../lib/gates');
@@ -51,22 +51,23 @@ module.exports = {
           : '';
         const systemPrompt = buildSystemPrompt({ roleLine: roles.meme, stateLine, memoryLine });
 
-        const openai = getOpenAIClient();
-        const completion = await openai.chat.completions.create({
+        var result = await moderatedChatCompletion({
           model: process.env.AI_MODEL || 'gpt-3.5-turbo',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: `Meme about: ${topic}` },
           ],
-          max_completion_tokens: roleTokenBudgets.meme,
+          max_tokens: roleTokenBudgets.meme,
           temperature: 1.0,
+          userId: interaction.user.id,
         });
 
-        recordCall(interaction.user.id);
-
-        title = `${completion.choices[0].message.content} — ${topic}`;
+        if (result.success) {
+          recordCall(interaction.user.id);
+          title = `${result.completion.choices[0].message.content} — ${topic}`;
+        }
       } catch {
-        // AI failed, use random meme
+        // AI failed or was blocked, use random meme
       }
     }
 
