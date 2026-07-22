@@ -21,7 +21,7 @@ async function moderateInput(text) {
     }
     if (r.flagged) {
       // Allow violence through — Skarn talks about battles in-character
-      var ALLOWED_VIOLENCE = ['violence', 'violence/graphic'];
+      var ALLOWED_VIOLENCE = ['violence', 'violence/graphic', 'harassment'];
       var hasBlockedCat = false;
       for (var cat in r.categories) {
         if (r.categories[cat] && ALLOWED_VIOLENCE.indexOf(cat) === -1 && SELF_HARM_CATS.indexOf(cat) === -1) {
@@ -79,7 +79,7 @@ async function moderatedChatCompletion(params) {
       }
       if (r.flagged) {
         // Allow violence through — Skarn tells battle stories
-        var ALLOWED_OUT = ['violence', 'violence/graphic'];
+        var ALLOWED_OUT = ['violence', 'violence/graphic', 'harassment'];
         var hasBlockedOut = false;
         for (var cat in r.categories) {
           if (r.categories[cat] && ALLOWED_OUT.indexOf(cat) === -1 && SELF_HARM_CATS.indexOf(cat) === -1) {

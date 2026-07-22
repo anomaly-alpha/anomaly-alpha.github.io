@@ -1,7 +1,6 @@
 var CATEGORY_MESSAGES = {
   hate: "I don't do hate. Try again with something worth saying.",
   'hate/threatening': "I don't do hate. Try again with something worth saying.",
-  harassment: 'That crosses a line. Let\'s keep it respectful.',
   sexual: 'I can\'t process that request.',
   'sexual/minors': 'I can\'t process that request.',
 };

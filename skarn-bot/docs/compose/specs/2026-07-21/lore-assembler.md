@@ -71,7 +71,19 @@ function buildSystemPrompt({
 | `features/promptContext.js` | Add `loreLine` import and injection |
 | `persona/identity.js` | Add `loreLine` to `buildSystemPrompt()` signature |
 
-## [S5] Non-goals
+## [S5] Token budget adjustments
+
+Increase `roleTokenBudgets` for conversation-heavy roles to accommodate the larger system prompt from lore injection (+100-200 tokens):
+
+| Role | Current | New |
+|------|---------|-----|
+| consult | 400 | 600 |
+| story | 400 | 600 |
+| adventure | 400 | 600 |
+
+Other roles unchanged — casual roles (roast, compliment, etc.) don't get lore injection, and serious roles (homework, code) have their own token needs.
+
+## [S6] Non-goals
 
 - No new database tables (reuses `skarn_stories` + `app_flags`)
 - No per-user lore tracking (same stories for everyone, dedup is global)
