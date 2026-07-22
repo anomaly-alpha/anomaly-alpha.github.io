@@ -43,13 +43,19 @@ async function moderatedChatCompletion(params) {
 
   try {
     var c = getOpenAIClient();
-    var completion = await c.chat.completions.create({
+    var apiParams = {
       model: params.model,
       messages: params.messages,
       max_completion_tokens: params.max_tokens,
       temperature: params.temperature,
       moderation: { model: 'omni-moderation-latest' },
-    });
+    };
+    // Pass through extra OpenAI params (response_format, stop, etc.)
+    var KNOWN = ['model', 'messages', 'max_tokens', 'temperature', 'userId'];
+    for (var key in params) {
+      if (KNOWN.indexOf(key) === -1) apiParams[key] = params[key];
+    }
+    var completion = await c.chat.completions.create(apiParams);
 
     var outputMod = completion.moderation && completion.moderation.output;
     if (outputMod && outputMod.results && outputMod.results.length > 0) {
