@@ -1,4 +1,4 @@
-var getOpenAIClient = require('../../ai/client');
+var { moderatedChatCompletion } = require('../../ai/client');
 var { addMemoryEntry } = require('../../db/database');
 
 async function postProcessConversation(userId, guildId, channelId, userMessage, aiResponse, analysis) {
@@ -12,9 +12,8 @@ async function postProcessConversation(userId, guildId, channelId, userMessage, 
     analysisContext += 'Known entities: ' + analysis.entities.map(function(e) { return e.value; }).join(', ');
   }
 
-  var openai = getOpenAIClient();
   try {
-    var response = await openai.chat.completions.create({
+    var result = await moderatedChatCompletion({
       model: 'gpt-4.1-mini',
       messages: [{
         role: 'user',
@@ -26,9 +25,10 @@ async function postProcessConversation(userId, guildId, channelId, userMessage, 
       }],
       max_tokens: 200,
       temperature: 0.2,
+      userId: userId,
     });
-
-    var text = response.choices[0].message.content;
+    if (!result.success) return;
+    var text = result.completion.choices[0].message.content;
     var match = text.match(/\[[\s\S]*?\]/);
     if (!match) return;
     var entities = JSON.parse(match[0]);

@@ -1,4 +1,4 @@
-const getOpenAIClient = require('../../ai/client');
+const { moderatedChatCompletion } = require('../../ai/client');
 
 var ANALYSIS_PROMPT = `You are a message analyzer for Skarn, a Discord AI persona.
 Analyze the following Discord message and return valid JSON only.
@@ -27,19 +27,18 @@ Message: `;
 async function analyzeMessage(userId, guildId, channelId, messageText, roleNature) {
   if (!messageText || messageText.length < 10) return null;
 
-  var openai = getOpenAIClient();
   try {
-    var response = await openai.chat.completions.create({
+    var result = await moderatedChatCompletion({
       model: 'gpt-4.1-mini',
       messages: [
         { role: 'user', content: ANALYSIS_PROMPT + messageText }
       ],
       max_tokens: 300,
       temperature: 0.1,
-      response_format: { type: 'json_object' },
+      userId: userId,
     });
-
-    var text = response.choices[0].message.content;
+    if (!result.success) return null;
+    var text = result.completion.choices[0].message.content;
     var parsed = JSON.parse(text);
 
     // Validate required fields with defaults

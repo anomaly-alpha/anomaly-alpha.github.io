@@ -1,7 +1,7 @@
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { canCall, recordCall, getRateLimitMessage, getUsage } = require('../../lib/rateLimit');
-const getOpenAIClient = require('../../ai/client');
+const { moderatedChatCompletion } = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { estimateDelay } = require('../authenticity/typingController');
@@ -36,7 +36,7 @@ async function execute(interaction) {
   const rel = getRelationship(interaction.user.id, interaction.guild.id);
   const interactionCount = rel ? rel.interaction_count : 0;
 
-  const { isHostile, recordStrike, isSilenced, getDeEscalationLine, checkOutput } = require('../safety/slurFilter');
+  const { isHostile, recordStrike, isSilenced, getDeEscalationLine } = require('../safety/slurFilter');
   if (isSilenced(interaction.user.id)) {
     return interaction.editReply(getDeEscalationLine());
   }
@@ -85,7 +85,6 @@ async function execute(interaction) {
     // Detect and track user emotion
     updateEmotion(interaction.user.id, interaction.guild.id, message);
 
-    recordCall(interaction.user.id, 'chat');
     extendBanterChain(interaction.user.id, interaction.guild.id, interaction.channel.id);
 
     const hasKnowledgeMatch = checkKnowledgeMatch(interaction.user.id, interaction.guild.id, message);
@@ -99,33 +98,23 @@ async function execute(interaction) {
       }
     }
 
-    const openai = getOpenAIClient();
-    const completion = await openai.chat.completions.create({
+    var result = await moderatedChatCompletion({
       model: selectModel(message, hasKnowledgeMatch, pipelineResult ? pipelineResult.analysis.complexityScore : undefined),
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: contextualMessage },
       ],
-      max_completion_tokens: getDeadpanBudget(roleTokenBudgets.consult, interaction.user.id, interaction.channel.id),
+      max_tokens: getDeadpanBudget(roleTokenBudgets.consult, interaction.user.id, interaction.channel.id),
       temperature: 0.8,
+      userId: interaction.user.id,
     });
-
-    let reply = completion.choices[0].message.content;
-    // Slur filter check (runs on raw AI output — no post-processing needed)
-    var filterResult = await checkOutput(reply, interaction.user.id);
-    if (!filterResult.allowed) {
-      storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'assistant', '[BLOCKED]', { threadType: 'consult' });
-      if (filterResult.gate === 3) {
-        // Moderation API false positive — silently regenerate
-        console.error('[Consult] Reply blocked by moderation gate:', filterResult.reason);
-        await interaction.editReply(AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)]);
-      } else if (filterResult.line) {
-        await interaction.editReply(filterResult.line);
-      } else {
-        await interaction.editReply(getDeEscalationLine());
-      }
+    if (!result.success) {
+      if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
+      await interaction.editReply({ content: result.safeMessage, flags: 64 });
       return;
     }
+    recordCall(interaction.user.id, 'chat');
+    var reply = result.completion.choices[0].message.content;
 
     // Store assistant response
     storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'assistant', reply, { threadType: 'consult' });

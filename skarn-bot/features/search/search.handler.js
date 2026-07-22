@@ -2,7 +2,7 @@ const { EmbedBuilder } = require('discord.js');
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { canCall, recordCall, getRateLimitMessage } = require('../../lib/rateLimit');
-const getOpenAIClient = require('../../ai/client');
+const { moderatedChatCompletion } = require('../../ai/client');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { searchWeb } = require('./searchEngine');
 const { checkCooldown, setCooldown } = require('../../db/database');
@@ -35,7 +35,6 @@ async function execute(interaction) {
   try {
     // Step 1: Web search
     const searchResult = await searchWeb(query);
-    recordCall(interaction.user.id);
 
     if (searchResult.source === 'error') {
       return interaction.editReply('The search came up empty. Might be a connection issue.');
@@ -60,18 +59,23 @@ async function execute(interaction) {
     });
 
     // Step 4: OpenAI call
-    const openai = getOpenAIClient();
-    const completion = await openai.chat.completions.create({
+    var result = await moderatedChatCompletion({
       model: process.env.AI_MODEL || 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: 'Based on the search results above, answer: ' + query },
       ],
-      max_completion_tokens: roleTokenBudgets.search,
+      max_tokens: roleTokenBudgets.search,
       temperature: 0.85,
+      userId: interaction.user.id,
     });
-
-    let reply = completion.choices[0].message.content;
+    if (!result.success) {
+      if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
+      await interaction.editReply({ content: result.safeMessage, flags: 64 });
+      return;
+    }
+    recordCall(interaction.user.id);
+    var reply = result.completion.choices[0].message.content;
     if (!reply) reply = 'Could not parse the results.';
     reply = postProcess(reply, ROLE_NATURE.search);
 

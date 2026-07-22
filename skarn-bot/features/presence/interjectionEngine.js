@@ -2,7 +2,7 @@ const { getRelationship, checkInterjectionCooldown, setInterjectionCooldown } = 
 const { canCall, recordCall } = require('../../lib/rateLimit');
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
-const getOpenAIClient = require('../../ai/client');
+const { moderatedChatCompletion } = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 
 const FALLBACK_REPLIES = ['bruh moment 😔', 'based', 'i saw that 👀', 'interesting...', 'noted 📝', 'wait what', 'i am confusion', 'fr'];
@@ -47,19 +47,23 @@ async function maybeInterject(message, client) {
       ...ctx,
     });
 
-    recordCall(message.author.id);
-    const openai = getOpenAIClient();
-    const completion = await openai.chat.completions.create({
+    var result = await moderatedChatCompletion({
       model: process.env.AI_MODEL || 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: message.content },
       ],
-      max_completion_tokens: 100,
+      max_tokens: 100,
       temperature: 0.85,
+      userId: message.author.id,
     });
-
-    const reply = completion.choices[0].message.content;
+    if (!result.success) {
+      if (result.crisis) { await message.reply(FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)]); return; }
+      await message.reply(result.safeMessage);
+      return;
+    }
+    recordCall(message.author.id);
+    const reply = result.completion.choices[0].message.content;
     if (reply) await message.reply(reply);
   } catch {
     await message.reply(FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)]);

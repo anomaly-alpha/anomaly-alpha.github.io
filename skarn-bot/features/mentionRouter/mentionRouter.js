@@ -2,7 +2,7 @@ const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { canCall, recordCall, getRateLimitMessage, getUsage } = require('../../lib/rateLimit');
 const { canRespond } = require('../../lib/aiStats');
-const getOpenAIClient = require('../../ai/client');
+const { moderatedChatCompletion } = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { estimateDelay } = require('../authenticity/typingController');
@@ -54,7 +54,7 @@ async function handleMention(message, client) {
   if (!cleanMsg) return;
 
   // Hostile content detection — 3 strikes = silence with de-escalation
-  const { isHostile, recordStrike, isSilenced, getDeEscalationLine, checkOutput } = require('../safety/slurFilter');
+  const { isHostile, recordStrike, isSilenced, getDeEscalationLine } = require('../safety/slurFilter');
   if (isHostile(cleanMsg)) {
     var state = recordStrike(userId);
     if (state >= 3) {
@@ -112,7 +112,6 @@ async function handleMention(message, client) {
         : cleanMsg;
     }
 
-    recordCall(userId, 'chat');
     extendBanterChain(userId, guildId, channelId);
 
     const hasKnowledgeMatch = checkKnowledgeMatch(userId, guildId, cleanMsg);
@@ -130,33 +129,23 @@ async function handleMention(message, client) {
       contextualMessage += storyContext;
     }
 
-    const openai = getOpenAIClient();
-    const completion = await openai.chat.completions.create({
+    var result = await moderatedChatCompletion({
       model: selectModel(cleanMsg, hasKnowledgeMatch, pipelineResult ? pipelineResult.analysis.complexityScore : undefined),
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: contextualMessage },
       ],
-      max_completion_tokens: getDeadpanBudget(roleTokenBudgets.consult, userId, channelId),
+      max_tokens: getDeadpanBudget(roleTokenBudgets.consult, userId, channelId),
       temperature: 0.85,
+      userId: userId,
     });
-
-    let reply = completion.choices[0].message.content;
-
-    // Slur filter check (runs on raw AI output — no post-processing needed)
-    var filterResult = await checkOutput(reply, userId);
-    if (!filterResult.allowed) {
-      storeMessage(userId, guildId, channelId, 'assistant', '[BLOCKED]', { threadType: 'channel' });
-      if (filterResult.gate === 3) {
-        console.error('[MentionRouter] Reply blocked by moderation gate:', filterResult.reason);
-        return; // silently drop
-      } else if (filterResult.line) {
-        await message.reply(filterResult.line);
-      } else {
-        await message.reply(getDeEscalationLine());
-      }
+    if (!result.success) {
+      if (result.crisis) { return; }
+      await message.reply(result.safeMessage);
       return;
     }
+    recordCall(userId, 'chat');
+    var reply = result.completion.choices[0].message.content;
 
     // Store assistant response
     storeMessage(userId, guildId, channelId, 'assistant', reply, { threadType: 'channel' });

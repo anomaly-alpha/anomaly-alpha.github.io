@@ -4,7 +4,7 @@ const handler = require('../features/search/search.handler');
 const { EmbedBuilder } = require('discord.js');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
-const { canCall, recordCall, getRateLimitMessage } = require('../lib/rateLimit');const getOpenAIClient = require('../ai/client');
+const { canCall, recordCall, getRateLimitMessage } = require('../lib/rateLimit');const { moderatedChatCompletion } = require('../ai/client');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../features/discordNative/postProcess');
 const { searchWeb } = require('../features/search/searchEngine');
 
@@ -48,7 +48,6 @@ module.exports = {
     try {
       const searchResult = await searchWeb(query);
       cooldowns.set(key, Date.now());
-      recordCall(message.author.id);
 
       if (searchResult.source === 'error') {
         return message.reply('The search came up empty. Might be a connection issue.');
@@ -69,18 +68,23 @@ module.exports = {
         additionalContext: searchContext,
       });
 
-      const openai = getOpenAIClient();
-      const completion = await openai.chat.completions.create({
+      var result = await moderatedChatCompletion({
         model: process.env.AI_MODEL || 'gpt-3.5-turbo',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Based on the search results above, answer: ' + query },
         ],
-        max_completion_tokens: roleTokenBudgets.search,
+        max_tokens: roleTokenBudgets.search,
         temperature: 0.85,
+        userId: message.author.id,
       });
-
-      let reply = completion.choices[0].message.content;
+      if (!result.success) {
+        if (result.crisis) { await message.reply(FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)]); return; }
+        await message.reply(result.safeMessage);
+        return;
+      }
+      recordCall(message.author.id);
+      let reply = result.completion.choices[0].message.content;
       if (!reply) reply = 'Could not parse the results.';
       reply = postProcess(reply, ROLE_NATURE.search);
 

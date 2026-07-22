@@ -3,7 +3,7 @@ const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { getChannelState } = require('../../db/database');
 const { getStateLine } = require('../channelState/stateTracker');
 const { canCall, recordCall, getRateLimitMessage } = require('../../lib/rateLimit');
-const getOpenAIClient = require('../../ai/client');
+const { moderatedChatCompletion } = require('../../ai/client');
 
 const AI_ERRORS = [
   'The connection is frayed. Try again.',
@@ -84,20 +84,23 @@ async function execute(interaction) {
       memoryLine: '',
     });
 
-    recordCall(interaction.user.id);
-
-    const openai = getOpenAIClient();
-    const completion = await openai.chat.completions.create({
+    var result = await moderatedChatCompletion({
       model: process.env.AI_MODEL || 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: `Summarize this conversation from #${targetChannel.name}:\n\n${truncated}` },
       ],
-      max_completion_tokens: roleTokenBudgets.vein,
+      max_tokens: roleTokenBudgets.vein,
       temperature: 0.3,
+      userId: interaction.user.id,
     });
-
-    const summary = completion.choices[0].message.content;
+    if (!result.success) {
+      if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
+      await interaction.editReply({ content: result.safeMessage, flags: 64 });
+      return;
+    }
+    recordCall(interaction.user.id);
+    const summary = result.completion.choices[0].message.content;
 
     // Split if over 2000 chars
     if (summary.length <= 2000) {
