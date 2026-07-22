@@ -10,7 +10,7 @@ function getCrisisResponse() {
       "",
       "Please reach out to one of them. They're better at this than I am.",
     ].join('\n'),
-    flags: 64,
+    flags: 64, // ephemeral — user privacy
   };
 }
 
