@@ -328,3 +328,74 @@ Expected: `Short message lore: empty (correct)`
 git add -A
 git commit -m "fix: verify lore assembler end-to-end pipeline"
 ```
+
+---
+
+### Task 5: Increase token budgets for conversation roles
+
+**Covers:** [S5]
+
+**Files:**
+- Modify: `skarn-bot/persona/roles.js:32-61` (update roleTokenBudgets)
+
+**Interfaces:**
+- Consumes: None
+- Produces: Updated token budgets for consult, story, adventure roles
+
+- [ ] **Step 1: Update token budgets**
+
+In `persona/roles.js`, update the `roleTokenBudgets` object:
+
+```js
+const roleTokenBudgets = {
+  chronicle: 500,
+  consult: 600,    // was 400 — +200 for lore injection
+  vein: 400,
+  story: 600,      // was 400 — +200 for lore injection
+  adventure: 600,  // was 400 — +200 for lore injection
+  roast: 100,
+  compliment: 100,
+  insult: 100,
+  pickup: 100,
+  song: 400,
+  joke: 150,
+  fortune: 300,
+  homework: 500,
+  recipe: 400,
+  code: 500,
+  debate: 500,
+  meme: 100,
+  aitrivia: 300,
+  charades: 200,
+  wouldyourather: 150,
+  unpopularopinion: 150,
+  improv: 500,
+  realm: 1000,
+  realm_combat: 800,
+  realm_npc: 600,
+  search: 600,
+  omen: 100,
+  omen_fulfill: 200,
+};
+```
+
+- [ ] **Step 2: Verify module loads**
+
+Run:
+```bash
+cd skarn-bot && node -e "const { roleTokenBudgets } = require('./persona/roles'); console.log('consult:', roleTokenBudgets.consult); console.log('story:', roleTokenBudgets.story); console.log('adventure:', roleTokenBudgets.adventure);"
+```
+
+Expected:
+```
+consult: 600
+story: 600
+adventure: 600
+```
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add skarn-bot/persona/roles.js
+git commit -m "feat: increase token budgets for conversation roles to accommodate lore injection"
+```
