@@ -46,22 +46,22 @@ module.exports = {
         channels.push(channelId);
         setGuildConfig(guildId, 'aiChannels', channels);
       }
-      await interaction.reply(`AI chat enabled in <#${channelId}>. I'll chime in when I have something to say.`);
+      await interaction.reply({ content: `AI chat enabled in <#${channelId}>. I'll chime in when I have something to say.`, allowedMentions: { parse: ['users'] } });
     } else {
       channels = channels.filter(id => id !== channelId);
       setGuildConfig(guildId, 'aiChannels', channels);
-      await interaction.reply(`AI chat disabled in <#${channelId}>.`);
+      await interaction.reply({ content: `AI chat disabled in <#${channelId}>.`, allowedMentions: { parse: ['users'] } });
     }
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('ManageChannels')) {
-      return message.reply({ content: 'You need the Manage Channels permission to use this command.' });
+      return message.reply({ content: 'You need the Manage Channels permission to use this command.', allowedMentions: { parse: ['users'] } });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.' });
+      return message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
     }
     const result = getAichatResponse(args, message);
-    await message.reply(result);
+    await message.reply({ content: result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

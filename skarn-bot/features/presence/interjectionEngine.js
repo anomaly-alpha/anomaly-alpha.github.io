@@ -34,7 +34,7 @@ async function maybeInterject(message, client) {
   if (Math.random() > chance) return;
 
   if (!canCall(message.author.id)) {
-    await message.reply(FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)]);
+    await message.reply({ content: FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)], allowedMentions: { parse: ['users'] } });
     return;
   }
 
@@ -58,15 +58,15 @@ async function maybeInterject(message, client) {
       userId: message.author.id,
     });
     if (!result.success) {
-      if (result.crisis) { await message.reply(FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)]); return; }
-      await message.reply(result.safeMessage);
+      if (result.crisis) { await message.reply({ content: FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)], allowedMentions: { parse: ['users'] } }); return; }
+      await message.reply({ content: result.safeMessage, allowedMentions: { parse: ['users'] } });
       return;
     }
     recordCall(message.author.id);
     const reply = result.completion.choices[0].message.content;
-    if (reply) await message.reply(reply);
+    if (reply) await message.reply({ content: reply, allowedMentions: { parse: ['users'] } });
   } catch {
-    await message.reply(FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)]);
+    await message.reply({ content: FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)], allowedMentions: { parse: ['users'] } });
   }
 }
 

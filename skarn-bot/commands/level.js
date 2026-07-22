@@ -49,11 +49,11 @@ module.exports = {
       .setColor(0x00e5ff)
       .setThumbnail(user.displayAvatarURL());
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = getLevelResponse(args, message);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

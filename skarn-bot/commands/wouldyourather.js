@@ -17,10 +17,10 @@ module.exports = {
     .setName('wouldyourather')
     .setDescription('AI generates a "Would You Rather" question'),
   async execute(interaction) {
-    if (!process.env.OPENAI_API_KEY) return interaction.reply({ content: 'AI not configured.', flags: 64 });
+    if (!process.env.OPENAI_API_KEY) return interaction.reply({ content: 'AI not configured.', flags: 64, allowedMentions: { parse: ['users'] } });
 
     if (!canCall(interaction.user.id)) {
-      return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64 });
+      return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     await interaction.deferReply();
@@ -45,8 +45,8 @@ module.exports = {
       });
 
       if (!result.success) {
-        if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
-        await interaction.editReply({ content: result.safeMessage, flags: 64 });
+        if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }
+        await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
         return;
       }
 
@@ -67,7 +67,7 @@ module.exports = {
         new ButtonBuilder().setCustomId('wyr_b').setLabel('B').setStyle(ButtonStyle.Secondary),
       );
 
-      const msg = await interaction.editReply({ embeds: [embed], components: [row] });
+      const msg = await interaction.editReply({ embeds: [embed], components: [row], allowedMentions: { parse: ['users'] } });
 
       const filter = i => i.user.id === interaction.user.id;
       const collector = interaction.channel.createMessageComponentCollector({ filter, time: 30000, max: 1 });
@@ -84,9 +84,9 @@ module.exports = {
       console.error('WouldYouRather error:', error);
       const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
       if (interaction.deferred) {
-        await interaction.editReply(errorMsg);
+        await interaction.editReply({ content: errorMsg, allowedMentions: { parse: ['users'] } });
       } else {
-        await interaction.reply({ content: errorMsg, flags: 64 });
+        await interaction.reply({ content: errorMsg, flags: 64, allowedMentions: { parse: ['users'] } });
       }
     }
   },

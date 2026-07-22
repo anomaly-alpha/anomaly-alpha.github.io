@@ -144,7 +144,7 @@ async function maybeActiveListen(message, client) {
   try {
     // Brief delay so it feels like Skarn is reading
     await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
-    await message.channel.send(cue);
+    await message.channel.send({ content: cue, allowedMentions: { parse: ['users'] } });
     setActiveListenCooldown(channelId);
   } catch {
     // Permission issue — silently ignore

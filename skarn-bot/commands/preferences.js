@@ -70,15 +70,15 @@ module.exports = {
 
     const validator = validValues[setting];
     if (!validator) {
-      return interaction.reply({ content: `Unknown setting: ${setting}.`, flags: 64 });
+      return interaction.reply({ content: `Unknown setting: ${setting}.`, flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     if (typeof validator === 'function') {
       if (!validator(value)) {
-        return interaction.reply({ content: `Invalid value for **${setting}**.`, flags: 64 });
+        return interaction.reply({ content: `Invalid value for **${setting}**.`, flags: 64, allowedMentions: { parse: ['users'] } });
       }
     } else if (!validator.includes(value)) {
-      return interaction.reply({ content: `Invalid value for **${setting}**. Valid: ${validator.join(', ')}.`, flags: 64 });
+      return interaction.reply({ content: `Invalid value for **${setting}**. Valid: ${validator.join(', ')}.`, flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     const keyMap = { proactive: 'proactive_opt_in', nickname: 'nickname', tone: 'preferred_tone', timezone: 'timezone' };
@@ -90,11 +90,12 @@ module.exports = {
     await interaction.reply({
       content: `Set **${setting}** to \`${value}\`.${extra}`,
       flags: 64,
+      allowedMentions: { parse: ['users'] },
     });
   },
   async handleActivation(message, args) {
     const result = getPreferencesResponse(args, message.author.id, message.guild?.id);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

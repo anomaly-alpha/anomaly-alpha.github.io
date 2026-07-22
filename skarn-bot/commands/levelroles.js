@@ -52,7 +52,7 @@ module.exports = {
     // Remove a level role
     if (removeLevel) {
       if (!levelRoles[removeLevel]) {
-        return interaction.reply({ content: `No role set for Level ${removeLevel}.`, flags: 64 });
+        return interaction.reply({ content: `No role set for Level ${removeLevel}.`, flags: 64, allowedMentions: { parse: ['users'] } });
       }
       const roleId = levelRoles[removeLevel];
       delete levelRoles[removeLevel];
@@ -62,13 +62,14 @@ module.exports = {
       return interaction.reply({
         content: `Removed **${role?.name || 'Unknown Role'}** from Level ${removeLevel}.`,
         flags: 64,
+        allowedMentions: { parse: ['users'] },
       });
     }
 
     // View all level roles
     const entries = Object.entries(levelRoles).sort((a, b) => a[0] - b[0]);
     if (entries.length === 0) {
-      return interaction.reply({ content: 'No level roles configured. Use `/setlevelrole` to add one.', flags: 64 });
+      return interaction.reply({ content: 'No level roles configured. Use `/setlevelrole` to add one.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     const list = entries.map(([level, roleId]) => `**Level ${level}** → <@&${roleId}>`).join('\n');
@@ -79,17 +80,17 @@ module.exports = {
       .setColor(0x00e5ff)
       .setFooter({ text: 'Use /setlevelrole to add, /levelroles remove:<level> to remove' });
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('Administrator')) {
-      return message.reply({ content: 'You need Administrator permission to use this command.' });
+      return message.reply({ content: 'You need Administrator permission to use this command.', allowedMentions: { parse: ['users'] } });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.' });
+      return message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
     }
     const result = getLevelrolesResponse(args, message);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

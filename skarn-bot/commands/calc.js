@@ -17,17 +17,17 @@ module.exports = {
     const expr = interaction.options.getString('expression');
     try {
       const result = getCalcResponse({ expression: expr });
-      await interaction.reply(result);
+      await interaction.reply({ content: result, allowedMentions: { parse: ['users'] } });
     } catch {
-      await interaction.reply({ content: 'Invalid math expression.', flags: 64 });
+      await interaction.reply({ content: 'Invalid math expression.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
   },
   async handleActivation(message, args) {
     try {
       const result = getCalcResponse(args);
-      await message.reply(result);
+      await message.reply({ content: result, allowedMentions: { parse: ['users'] } });
     } catch (err) {
-      await message.reply({ content: err.message || 'Invalid math expression.' });
+      await message.reply({ content: err.message || 'Invalid math expression.', allowedMentions: { parse: ['users'] } });
     }
   },
   activation: {

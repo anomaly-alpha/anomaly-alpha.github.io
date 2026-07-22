@@ -5,6 +5,6 @@ module.exports = {
     .setName('hello')
     .setDescription('Greets you'),
   async execute(interaction) {
-    await interaction.reply(`Hey ${interaction.user.username}! 👋`);
+    await interaction.reply({ content: `Hey ${interaction.user.username}! 👋`, allowedMentions: { parse: ['users'] } });
   },
 };

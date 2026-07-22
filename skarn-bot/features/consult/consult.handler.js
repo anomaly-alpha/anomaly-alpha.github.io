@@ -28,7 +28,7 @@ const AI_ERRORS = [
 async function execute(interaction) {
   // Rate limit check
   if (!canCall(interaction.user.id, 'chat')) {
-    return interaction.reply({ content: getRateLimitMessage(interaction.user.id, 'chat'), flags: 64 });
+    return interaction.reply({ content: getRateLimitMessage(interaction.user.id, 'chat'), flags: 64, allowedMentions: { parse: ['users'] } });
   }
 
   await interaction.deferReply();
@@ -38,7 +38,7 @@ async function execute(interaction) {
 
   const { isHostile, recordStrike, isSilenced, getDeEscalationLine } = require('../safety/slurFilter');
   if (isSilenced(interaction.user.id)) {
-    return interaction.editReply(getDeEscalationLine());
+    return interaction.editReply({ content: getDeEscalationLine(), allowedMentions: { parse: ['users'] } });
   }
 
   try {
@@ -46,9 +46,9 @@ async function execute(interaction) {
     if (isHostile(message)) {
       var state = recordStrike(interaction.user.id);
       if (state >= 3) {
-        return interaction.editReply(getDeEscalationLine());
+        return interaction.editReply({ content: getDeEscalationLine(), allowedMentions: { parse: ['users'] } });
       }
-      return interaction.editReply(getDeEscalationLine());
+      return interaction.editReply({ content: getDeEscalationLine(), allowedMentions: { parse: ['users'] } });
     }
     const beforeSentiment = analyzeSentiment(message);
 
@@ -109,8 +109,8 @@ async function execute(interaction) {
       userId: interaction.user.id,
     });
     if (!result.success) {
-      if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
-      await interaction.editReply({ content: result.safeMessage, flags: 64 });
+      if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }
+      await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
       return;
     }
     recordCall(interaction.user.id, 'chat');
@@ -145,14 +145,14 @@ async function execute(interaction) {
 
     const chunks = splitMessage(reply, 400);
     if (chunks.length === 1) {
-      const replyMsg = await interaction.editReply(chunks[0]);
+      const replyMsg = await interaction.editReply({ content: chunks[0], allowedMentions: { parse: ['users'] } });
       if (shouldEdit()) scheduleEdit(replyMsg, reply);
     } else {
-      const replyMsg = await interaction.editReply(chunks[0]);
+      const replyMsg = await interaction.editReply({ content: chunks[0], allowedMentions: { parse: ['users'] } });
       if (shouldEdit()) scheduleEdit(replyMsg, reply);
       const tail = await maybeBurst(chunks.slice(1), interaction.channel);
       for (const chunk of tail) {
-        await interaction.followUp(chunk);
+        await interaction.followUp({ content: chunk, allowedMentions: { parse: ['users'] } });
       }
     }
 
@@ -169,9 +169,9 @@ async function execute(interaction) {
     console.error('Consult error:', error);
     const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
     if (interaction.deferred) {
-      await interaction.editReply(errorMsg);
+      await interaction.editReply({ content: errorMsg, allowedMentions: { parse: ['users'] } });
     } else {
-      await interaction.reply({ content: errorMsg, flags: 64 });
+      await interaction.reply({ content: errorMsg, flags: 64, allowedMentions: { parse: ['users'] } });
     }
   }
 }

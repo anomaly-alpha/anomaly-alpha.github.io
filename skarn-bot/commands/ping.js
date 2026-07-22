@@ -5,10 +5,10 @@ module.exports = {
     .setName('ping')
     .setDescription('Replies with Pong!'),
   async execute(interaction) {
-    await interaction.reply('Pong!');
+    await interaction.reply({ content: 'Pong!', allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
-    await message.reply('Pong!');
+    await message.reply({ content: 'Pong!', allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

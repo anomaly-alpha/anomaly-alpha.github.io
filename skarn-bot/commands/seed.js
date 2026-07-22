@@ -10,10 +10,8 @@ module.exports = {
     await interaction.deferReply({ flags: 64 });
     const result = await seedSlurFilter();
     if (result.error) {
-      return interaction.editReply('Seed failed: ' + result.error);
+      return interaction.editReply({ content: 'Seed failed: ' + result.error, allowedMentions: { parse: ['users'] } });
     }
-    return interaction.editReply(
-      '**Slur filter expanded:** ' + result.before + ' → ' + result.after + ' entries (+' + result.added + ' new)'
-    );
+    return interaction.editReply({ content: '**Slur filter expanded:** ' + result.before + ' → ' + result.after + ' entries (+' + result.added + ' new)', allowedMentions: { parse: ['users'] } });
   },
 };

@@ -19,6 +19,6 @@ module.exports = {
       option.setName('question').setDescription('Your question').setRequired(true)),
   async execute(interaction) {
     const response = responses[Math.floor(Math.random() * responses.length)];
-    await interaction.reply(`🎱 **${interaction.options.getString('question')}**\n${response}`);
+    await interaction.reply({ content: `🎱 **${interaction.options.getString('question')}**\n${response}`, allowedMentions: { parse: ['users'] } });
   },
 };

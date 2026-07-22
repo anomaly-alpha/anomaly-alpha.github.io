@@ -56,17 +56,17 @@ module.exports = {
 
     try {
       const result = await getWeatherResponse({ subcommand, location, style });
-      await interaction.editReply(result);
+      await interaction.editReply({ ...result, allowedMentions: { parse: ['users'] } });
     } catch {
-      await interaction.editReply({ content: `Could not fetch weather for "${location}".`, flags: 64 });
+      await interaction.editReply({ content: `Could not fetch weather for "${location}".`, flags: 64, allowedMentions: { parse: ['users'] } });
     }
   },
   async handleActivation(message, args) {
     try {
       const result = await getWeatherResponse(args);
-      await message.reply(result);
+      await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
     } catch (err) {
-      await message.reply({ content: err.message || `Could not fetch weather for "${args.location}".` });
+      await message.reply({ content: err.message || `Could not fetch weather for "${args.location}".`, allowedMentions: { parse: ['users'] } });
     }
   },
   activation: {

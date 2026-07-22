@@ -65,7 +65,7 @@ async function processGuild(guildId, client) {
         var embedding = await embedText(text);
         insertOmen(guildId, text, embedding);
         var channel = client.channels.cache.get(channelId);
-        if (channel) await channel.send('*' + text + '*');
+        if (channel) await channel.send({ content: '*' + text + '*', allowedMentions: { parse: ['users'] } });
         omens = getUnresolvedOmens(guildId); // refresh
       }
     }
@@ -94,7 +94,7 @@ async function processGuild(guildId, client) {
         }
 
         var channel = client.channels.cache.get(channelId);
-        if (channel) await channel.send('> *' + omen.omen_text + '*\n\n' + callbackText);
+        if (channel) await channel.send({ content: '> *' + omen.omen_text + '*\n\n' + callbackText, allowedMentions: { parse: ['users'] } });
         break;
       }
     }

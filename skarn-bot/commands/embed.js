@@ -25,6 +25,6 @@ module.exports = {
       .setFooter({ text: `Created by ${interaction.user.username}` })
       .setTimestamp();
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
 };

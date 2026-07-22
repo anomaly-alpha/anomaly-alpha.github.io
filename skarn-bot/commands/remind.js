@@ -11,7 +11,7 @@ function getRemindResponse(args, message) {
   setTimeout(async () => {
     try {
       const channel = await message.client.channels.fetch(message.channel.id);
-      await channel.send(`<@${message.author.id}> Reminder: **${text}**`);
+      await channel.send({ content: `<@${message.author.id}> Reminder: **${text}**`, allowedMentions: { parse: ['users'] } });
     } catch {}
   }, minutes * 60 * 1000);
 
@@ -34,18 +34,18 @@ module.exports = {
     setTimeout(async () => {
       try {
         const channel = await interaction.client.channels.fetch(interaction.channel.id);
-        await channel.send(`<@${interaction.user.id}> Reminder: **${message}**`);
+        await channel.send({ content: `<@${interaction.user.id}> Reminder: **${message}**`, allowedMentions: { parse: ['users'] } });
       } catch {}
     }, minutes * 60 * 1000);
 
-    await interaction.reply({ content: `I'll remind you in **${minutes}** minute(s): ${message}`, flags: 64 });
+    await interaction.reply({ content: `I'll remind you in **${minutes}** minute(s): ${message}`, flags: 64, allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     if (!args.minutes || !args.text) {
-      return message.reply({ content: 'Usage: `skarn remind <minutes> <message>` — e.g. `skarn remind 30 take out the trash` or `skarn remind 2h deploy check`' });
+      return message.reply({ content: 'Usage: `skarn remind <minutes> <message>` — e.g. `skarn remind 30 take out the trash` or `skarn remind 2h deploy check`', allowedMentions: { parse: ['users'] } });
     }
     const result = getRemindResponse(args, message);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

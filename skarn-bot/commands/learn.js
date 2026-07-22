@@ -18,13 +18,13 @@ module.exports = {
   async execute(interaction) {
     const topic = interaction.options.getString('topic').toLowerCase().trim();
     const summary = interaction.options.getString('summary').trim();
-    if (topic.length < 2) return interaction.reply({ content: 'Topic must be at least 2 characters.', flags: 64 });
+    if (topic.length < 2) return interaction.reply({ content: 'Topic must be at least 2 characters.', flags: 64, allowedMentions: { parse: ['users'] } });
     addKnowledgeBase(topic, summary, 'user_taught', 0.8);
-    await interaction.reply({ content: `📖 Got it! I'll remember that **${topic}** is: ${summary}`, flags: 64 });
+    await interaction.reply({ content: `📖 Got it! I'll remember that **${topic}** is: ${summary}`, flags: 64, allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = getLearnResponse(args);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

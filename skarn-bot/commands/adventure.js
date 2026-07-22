@@ -28,10 +28,10 @@ module.exports = {
       )),
   async execute(interaction) {
     const theme = interaction.options.getString('theme') || 'fantasy medieval';
-    if (!process.env.OPENAI_API_KEY) return interaction.reply({ content: 'AI not configured.', flags: 64 });
+    if (!process.env.OPENAI_API_KEY) return interaction.reply({ content: 'AI not configured.', flags: 64, allowedMentions: { parse: ['users'] } });
 
     if (!canCall(interaction.user.id)) {
-      return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64 });
+      return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     await interaction.deferReply();
@@ -56,8 +56,8 @@ module.exports = {
       });
 
       if (!result.success) {
-        if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
-        await interaction.editReply({ content: result.safeMessage, flags: 64 });
+        if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }
+        await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
         return;
       }
 
@@ -78,7 +78,7 @@ module.exports = {
         .setColor(0x00e5ff)
         .setFooter({ text: 'Click a button to choose your action' });
 
-      const msg = await interaction.editReply({ embeds: [embed], components: [row] });
+      const msg = await interaction.editReply({ embeds: [embed], components: [row], allowedMentions: { parse: ['users'] } });
 
       const filter = i => i.user.id === interaction.user.id;
       const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
@@ -87,7 +87,7 @@ module.exports = {
 
       collector.on('collect', async i => {
         if (!canCall(i.user.id)) {
-          await i.reply({ content: getRateLimitMessage(i.user.id), flags: 64 });
+          await i.reply({ content: getRateLimitMessage(i.user.id), flags: 64, allowedMentions: { parse: ['users'] } });
           return;
         }
 
@@ -136,15 +136,15 @@ module.exports = {
       });
 
       collector.on('end', () => {
-        interaction.editReply({ components: [] }).catch(() => {});
+        interaction.editReply({ components: [], allowedMentions: { parse: ['users'] } }).catch(() => {});
       });
     } catch (error) {
       console.error('Adventure error:', error);
       const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
       if (interaction.deferred) {
-        await interaction.editReply(errorMsg);
+        await interaction.editReply({ content: errorMsg, allowedMentions: { parse: ['users'] } });
       } else {
-        await interaction.reply({ content: errorMsg, flags: 64 });
+        await interaction.reply({ content: errorMsg, flags: 64, allowedMentions: { parse: ['users'] } });
       }
     }
   },

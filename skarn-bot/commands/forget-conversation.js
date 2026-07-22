@@ -10,7 +10,7 @@ module.exports = {
     const targetUser = interaction.options.getUser('user') || interaction.user;
 
     if (targetUser.id !== interaction.user.id && !interaction.member.permissions.has('Administrator')) {
-      return interaction.reply({ content: 'Only admins can clear other users\' history.', flags: 64 });
+      return interaction.reply({ content: 'Only admins can clear other users\' history.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     deleteUserConversation(targetUser.id, interaction.guild.id);
@@ -21,6 +21,7 @@ module.exports = {
         ? 'Your conversation history with Skarn has been deleted. Remembered facts are kept.'
         : `Conversation history for ${targetUser.username} has been deleted.`,
       flags: 64,
+      allowedMentions: { parse: ['users'] },
     });
   },
 };

@@ -81,6 +81,6 @@ module.exports = {
       .setImage(imageUrl)
       .setColor(0x00e5ff);
 
-    await interaction.editReply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
 };

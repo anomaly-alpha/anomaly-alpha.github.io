@@ -19,6 +19,6 @@ module.exports = {
         .setEmoji('📩'),
     );
 
-    await interaction.reply({ embeds: [embed], components: [row] });
+    await interaction.reply({ embeds: [embed], components: [row], allowedMentions: { parse: ['users'] } });
   },
 };

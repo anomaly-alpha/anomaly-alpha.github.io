@@ -27,7 +27,7 @@ module.exports = {
     const topic = interaction.options.getString('topic').toLowerCase();
     const result = getKnowledgeBase(topic);
     if (!result) {
-      return interaction.reply({ content: `I don't have anything stored about "${topic}". Try /learn to teach me.`, flags: 64 });
+      return interaction.reply({ content: `I don't have anything stored about "${topic}". Try /learn to teach me.`, flags: 64, allowedMentions: { parse: ['users'] } });
     }
     const sourceIcon = { wikipedia: '📚', user_taught: '👤', learned: '💡' }[result.source] || '💡';
     const embed = new EmbedBuilder()
@@ -35,11 +35,11 @@ module.exports = {
       .setDescription(result.summary)
       .setColor(0x00e5ff)
       .setFooter({ text: `Source: ${result.source} | Confidence: ${Math.round(result.confidence * 100)}%` });
-    await interaction.reply({ embeds: [embed], flags: 64 });
+    await interaction.reply({ embeds: [embed], flags: 64, allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = getKnowledgeResponse(args);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

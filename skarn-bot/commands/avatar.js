@@ -28,11 +28,11 @@ module.exports = {
       .setTitle(`${user.username}'s Avatar`)
       .setImage(user.displayAvatarURL({ size: 512 }))
       .setColor(0x00e5ff);
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = await getAvatarResponse(args, message);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

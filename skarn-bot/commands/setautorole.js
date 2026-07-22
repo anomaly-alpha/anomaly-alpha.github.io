@@ -17,21 +17,21 @@ module.exports = {
   async execute(interaction) {
     const role = interaction.options.getRole('role');
     setGuildConfig(interaction.guild.id, 'autoRole', role.id);
-    await interaction.reply({ content: `New members will automatically receive the **${role.name}** role.`, flags: 64 });
+    await interaction.reply({ content: `New members will automatically receive the **${role.name}** role.`, flags: 64, allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('Administrator')) {
-      return message.reply({ content: 'You need Administrator permission to use this command.' });
+      return message.reply({ content: 'You need Administrator permission to use this command.', allowedMentions: { parse: ['users'] } });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.' });
+      return message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
     }
     const role = message.mentions.roles.first();
     if (!role) {
-      return message.reply({ content: 'Please mention a role: `skarn setautorole @role`' });
+      return message.reply({ content: 'Please mention a role: `skarn setautorole @role`', allowedMentions: { parse: ['users'] } });
     }
     const result = getSetautoroleResponse({ role: role.id }, message);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

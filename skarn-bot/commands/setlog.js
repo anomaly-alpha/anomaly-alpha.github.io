@@ -18,21 +18,21 @@ module.exports = {
     const channel = interaction.options.getChannel('channel');
     setGuildConfig(interaction.guild.id, 'logChannel', channel.id);
     setGuildConfig(interaction.guild.id, 'logMessages', true);
-    await interaction.reply({ content: `Message logs will be sent to ${channel}.`, flags: 64 });
+    await interaction.reply({ content: `Message logs will be sent to ${channel}.`, flags: 64, allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('Administrator')) {
-      return message.reply({ content: 'You need Administrator permission to use this command.' });
+      return message.reply({ content: 'You need Administrator permission to use this command.', allowedMentions: { parse: ['users'] } });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.' });
+      return message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
     }
     const channel = message.mentions.channels.first();
     if (!channel) {
-      return message.reply({ content: 'Please mention a channel: `skarn setlog #channel`' });
+      return message.reply({ content: 'Please mention a channel: `skarn setlog #channel`', allowedMentions: { parse: ['users'] } });
     }
     const result = getSetlogResponse({ channel: channel.id }, message);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

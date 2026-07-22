@@ -9,10 +9,10 @@ module.exports = {
     .setName('coinflip')
     .setDescription('Flip a coin'),
   async execute(interaction) {
-    await interaction.reply(getCoinflipResponse());
+    await interaction.reply({ content: getCoinflipResponse(), allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
-    await message.reply(getCoinflipResponse());
+    await message.reply({ content: getCoinflipResponse(), allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

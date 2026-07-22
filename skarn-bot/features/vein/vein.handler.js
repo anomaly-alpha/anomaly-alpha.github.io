@@ -15,7 +15,7 @@ const MAX_MESSAGES = 500;
 
 async function execute(interaction) {
   if (!canCall(interaction.user.id)) {
-    return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64 });
+    return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64, allowedMentions: { parse: ['users'] } });
   }
 
   await interaction.deferReply();
@@ -28,7 +28,7 @@ async function execute(interaction) {
     // Permission check
     const permissions = targetChannel.permissionsFor(interaction.member);
     if (!permissions || !permissions.has('ViewChannel')) {
-      return interaction.editReply('That stone is not yours to read.');
+      return interaction.editReply({ content: 'That stone is not yours to read.', allowedMentions: { parse: ['users'] } });
     }
 
     // Fetch messages
@@ -55,7 +55,7 @@ async function execute(interaction) {
     const sorted = allMessages.reverse();
 
     if (sorted.length === 0) {
-      return interaction.editReply('No messages found in this timeframe.');
+      return interaction.editReply({ content: 'No messages found in this timeframe.', allowedMentions: { parse: ['users'] } });
     }
 
     // Build conversation text
@@ -65,7 +65,7 @@ async function execute(interaction) {
       .join('\n');
 
     if (conversation.length === 0) {
-      return interaction.editReply('No user messages found.');
+      return interaction.editReply({ content: 'No user messages found.', allowedMentions: { parse: ['users'] } });
     }
 
     const truncated = conversation.length > 12000
@@ -95,8 +95,8 @@ async function execute(interaction) {
       userId: interaction.user.id,
     });
     if (!result.success) {
-      if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
-      await interaction.editReply({ content: result.safeMessage, flags: 64 });
+      if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }
+      await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
       return;
     }
     recordCall(interaction.user.id);
@@ -104,23 +104,23 @@ async function execute(interaction) {
 
     // Split if over 2000 chars
     if (summary.length <= 2000) {
-      await interaction.editReply(summary);
+      await interaction.editReply({ content: summary, allowedMentions: { parse: ['users'] } });
     } else {
-      await interaction.editReply(summary.slice(0, 1997) + '...');
+      await interaction.editReply({ content: summary.slice(0, 1997) + '...', allowedMentions: { parse: ['users'] } });
       let remaining = summary.slice(1997);
       while (remaining.length > 0) {
         const chunk = remaining.slice(0, 2000);
         remaining = remaining.slice(2000);
-        await interaction.followUp(chunk);
+        await interaction.followUp({ content: chunk, allowedMentions: { parse: ['users'] } });
       }
     }
   } catch (error) {
     console.error('Vein error:', error);
     const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
     if (interaction.deferred) {
-      await interaction.editReply(errorMsg);
+      await interaction.editReply({ content: errorMsg, allowedMentions: { parse: ['users'] } });
     } else {
-      await interaction.reply({ content: errorMsg, flags: 64 });
+      await interaction.reply({ content: errorMsg, flags: 64, allowedMentions: { parse: ['users'] } });
     }
   }
 }

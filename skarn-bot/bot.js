@@ -80,7 +80,7 @@ client.once('clientReady', () => {
   console.log(`Sleep mode: ${SLEEP_START}:00 - ${SLEEP_END}:00 (UTC${SLEEP_TIMEZONE >= 0 ? '+' : ''}${SLEEP_TIMEZONE})`);
   const hasKey = !!process.env.GOOGLE_CSE_KEY;
   const hasCx = !!process.env.GOOGLE_CSE_CX;
-  console.log(`Search backend: Google CSE ${hasKey && hasCx ? '✓ ready' : '✗ not configured (will use DDG fallback)'}`);
+  console.log(`Search backend: Google CSE ${hasKey && hasCx ? 'âœ“ ready' : 'âœ— not configured (will use DDG fallback)'}`);
 
   // Seed knowledge base & canonical lore
   seedKnowledgeBase();
@@ -92,7 +92,7 @@ client.once('clientReady', () => {
     require('./features/safety/slurFilter').seedSlurFilter();
   }, 7 * 24 * 60 * 60 * 1000);
 
-  console.log('[SlurFilter] Gate 1 active — safety instruction in system prompt');
+  console.log('[SlurFilter] Gate 1 active â€” safety instruction in system prompt');
 
   // Scan command files for activation phrases
   require('./features/activation/activationRegistry').scanCommands();
@@ -107,9 +107,9 @@ client.once('clientReady', () => {
 
   // Rotating status
   const statuses = [
-    { type: 'Playing', text: 'with AI 🤖' },
+    { type: 'Playing', text: 'with AI ðŸ¤–' },
     { type: 'Listening', text: 'to commands' },
-    { type: 'Watching', text: 'the server 👀' },
+    { type: 'Watching', text: 'the server ðŸ‘€' },
     { type: 'Playing', text: 'Tetris' },
     { type: 'Listening', text: 'to your questions' },
     { type: 'Watching', text: 'you type...' },
@@ -137,7 +137,7 @@ client.once('clientReady', () => {
   setInterval(() => {
     if (isSleepTime() && !isAsleep) {
       isAsleep = true;
-      client.user.setActivity('💤 Sleeping — back at ' + SLEEP_END + ':00');
+      client.user.setActivity('ðŸ’¤ Sleeping â€” back at ' + SLEEP_END + ':00');
       console.log('Sleep mode: going offline');
     } else if (!isSleepTime() && isAsleep) {
       isAsleep = false;
@@ -206,7 +206,7 @@ client.once('clientReady', () => {
     console.log('[Daily] Maintenance complete.');
   }, 24 * 60 * 60 * 1000);
 
-  // ===== Chronicle & Omen — signal capture + jobs =====
+  // ===== Chronicle & Omen â€” signal capture + jobs =====
   var { initReactionTracking, pruneReactionCounters } = require('./features/serverMemory/signalCapture');
   var { runChronicleJob } = require('./features/serverMemory/chronicle/chronicleJob');
   var { runOmenJob } = require('./features/serverMemory/omen/omenJob');
@@ -244,7 +244,7 @@ client.once('clientReady', () => {
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
   if (isAsleep) {
-    return interaction.reply({ content: '💤 Skarn is sleeping. Back at ' + SLEEP_END + ':00.', flags: 64 });
+    return interaction.reply({ content: 'ðŸ’¤ Skarn is sleeping. Back at ' + SLEEP_END + ':00.', flags: 64, allowedMentions: { parse: ['users'] } });
   }
   const command = interaction.client.commands.get(interaction.commandName);
   if (!command) return;
@@ -252,11 +252,11 @@ client.on('interactionCreate', async interaction => {
     await command.execute(interaction);
   } catch (error) {
     console.error(error);
-    const reply = { content: 'Something went wrong.', flags: 64 };
+    const reply = { content: 'Something went wrong.', flags: 64, allowedMentions: { parse: ['users'] } };
     if (interaction.replied || interaction.deferred) {
-      await interaction.followUp(reply);
+      await interaction.followUp({ ...reply, allowedMentions: { parse: ['users'] } });
     } else {
-      await interaction.reply(reply);
+      await interaction.reply({ ...reply, allowedMentions: { parse: ['users'] } });
     }
   }
 });
@@ -276,7 +276,7 @@ client.on('guildMemberAdd', async member => {
         .setThumbnail(member.user.displayAvatarURL())
         .setColor(0x00e5ff)
         .setTimestamp();
-      await channel.send({ embeds: [embed] });
+      await channel.send({ embeds: [embed], allowedMentions: { parse: ['users'] } });
     } catch (e) { console.error('[Bot] Caught:', e.message); }
   }
 
@@ -312,7 +312,7 @@ client.on('messageCreate', async function(message) {
     if (dmMatch) {
       if (dmMatch.type === 'command' && dmMatch.handler) {
         if (!dmMatch.activation.guildOnly) {
-          try { await dmMatch.handler(message, dmMatch.args); } catch (e) { message.reply({ content: e.message }); }
+          try { await dmMatch.handler(message, dmMatch.args); } catch (e) { message.reply({ content: e.message, allowedMentions: { parse: ['users'] } }); }
           return;
         }
       } else if (dmMatch.type === 'ai') {
@@ -352,8 +352,8 @@ client.on('messageCreate', async function(message) {
     const isOptIn = c.startsWith('skarn opt in');
     try {
       require('./db/database').setUserPreference(message.author.id, message.guild.id, 'proactive_opt_in', isOptIn ? '1' : '0');
-      await message.reply(isOptIn ? "You're in. I'll check in now and then." : "Opted out. No proactive messages.");
-    } catch (e) { await message.reply({ content: 'Something went wrong.' }); }
+      await message.reply({ content: isOptIn ? "You're in. I'll check in now and then." : "Opted out. No proactive messages.", allowedMentions: { parse: ['users'] } });
+    } catch (e) { await message.reply({ content: 'Something went wrong.', allowedMentions: { parse: ['users'] } }); }
     return;
   }
   
@@ -361,8 +361,8 @@ client.on('messageCreate', async function(message) {
     try {
       const aiChannels = require('./db/database').getGuildConfig ? require('./db/database').getGuildConfig(message.guild.id, 'aiChannels') : [];
       const enabled = aiChannels && aiChannels.includes(message.channel.id);
-      await message.reply(enabled ? 'AI chat is **enabled** in this channel.' : 'AI chat is **disabled** in this channel.');
-    } catch (e) { await message.reply({ content: 'Error checking chat mode.' }); }
+      await message.reply({ content: enabled ? 'AI chat is **enabled** in this channel.' : 'AI chat is **disabled** in this channel.', allowedMentions: { parse: ['users'] } });
+    } catch (e) { await message.reply({ content: 'Error checking chat mode.', allowedMentions: { parse: ['users'] } }); }
     return;
   }
   
@@ -370,8 +370,8 @@ client.on('messageCreate', async function(message) {
     try {
       const prefs = require('./db/database').getUserPreferences ? require('./db/database').getUserPreferences(message.author.id, message.guild.id) : {};
       const optedIn = prefs && prefs.proactive_opt_in === 1;
-      await message.reply('Opt-in: ' + (optedIn ? 'ON' : 'OFF') + ' | Use `/aistats` for detailed stats.');
-    } catch (e) { await message.reply({ content: 'Error checking status.' }); }
+      await message.reply({ content: 'Opt-in: ' + (optedIn ? 'ON' : 'OFF') + ' | Use `/aistats` for detailed stats.', allowedMentions: { parse: ['users'] } });
+    } catch (e) { await message.reply({ content: 'Error checking status.', allowedMentions: { parse: ['users'] } }); }
     return;
   }
 
@@ -381,7 +381,7 @@ client.on('messageCreate', async function(message) {
     if (match) {
       if (match.type === 'command' && match.handler) {
         if (match.activation.guildOnly && !message.guild) {
-          await message.reply('This command can only be used in a server.');
+          await message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
           return;
         }
         if (match.activation.requiredPermissions && match.activation.requiredPermissions.length > 0) {
@@ -389,12 +389,12 @@ client.on('messageCreate', async function(message) {
           if (!member) return;
           const missing = match.activation.requiredPermissions.filter(function(p) { return !member.permissions.has(p); });
           if (missing.length > 0) {
-            await message.reply({ content: 'You need the ' + missing.join(', ') + ' permission(s) to use this command.' });
+            await message.reply({ content: 'You need the ' + missing.join(', ') + ' permission(s) to use this command.', allowedMentions: { parse: ['users'] } });
             return;
           }
         }
         try { await match.handler(message, match.args); } catch (err) {
-          await message.reply({ content: err.message || 'Command failed.' });
+          await message.reply({ content: err.message || 'Command failed.', allowedMentions: { parse: ['users'] } });
         }
         return;
       }
@@ -404,14 +404,14 @@ client.on('messageCreate', async function(message) {
         return;
       }
     }
-    // skarn keyword without matching phrase → route to AI (old step 20 fallback)
+    // skarn keyword without matching phrase â†’ route to AI (old step 20 fallback)
     if (/\bskarn\b/i.test(message.content)) {
       await handleMention(message);
       return;
     }
   }
 
-  // Step 7: @mention → AI
+  // Step 7: @mention â†’ AI
   if (message.mentions.has(client.user)) {
     await handleMention(message);
     return;
@@ -501,7 +501,7 @@ client.on('messageDelete', async message => {
       .setDescription(`**Author:** ${message.author}\n**Channel:** ${message.channel}\n**Content:** ${message.content || '(no content)'}`)
       .setColor(0xff6b35)
       .setTimestamp();
-    await logChannel.send({ embeds: [embed] });
+    await logChannel.send({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   } catch (e) { console.error('[Bot] Caught:', e.message); }
 });
 
@@ -517,7 +517,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
       .setDescription(`**Author:** ${oldMessage.author}\n**Channel:** ${oldMessage.channel}\n**Before:** ${oldMessage.content}\n**After:** ${newMessage.content}`)
       .setColor(0xf39c12)
       .setTimestamp();
-    await logChannel.send({ embeds: [embed] });
+    await logChannel.send({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   } catch (e) { console.error('[Bot] Caught:', e.message); }
 });
 

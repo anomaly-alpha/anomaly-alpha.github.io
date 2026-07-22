@@ -86,7 +86,7 @@ async function postWeatherReport(client, track) {
       return false;
     }
 
-    await channel.send({ embeds: [embed] });
+    await channel.send({ embeds: [embed], allowedMentions: { parse: ['users'] } });
     return true;
   } catch (error) {
     console.error(`Weather scheduler error for ${track.location}:`, error.message);

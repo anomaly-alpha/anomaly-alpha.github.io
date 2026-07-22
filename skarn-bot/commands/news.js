@@ -8,10 +8,10 @@ module.exports = {
   async execute(interaction) {
     const articles = getRecentNews(10);
     if (!articles || articles.length === 0) {
-      return interaction.reply({ content: 'no news articles cached yet. check back in a bit.', flags: 64 });
+      return interaction.reply({ content: 'no news articles cached yet. check back in a bit.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
     const embed = new EmbedBuilder()
-      .setTitle('📰 today\'s headlines')
+      .setTitle('ðŸ“° today\'s headlines')
       .setColor(0x00e5ff);
     for (const a of articles.slice(0, 5)) {
       embed.addFields({
@@ -21,15 +21,15 @@ module.exports = {
       });
     }
     embed.setFooter({ text: `${articles.length} articles cached` });
-    await interaction.reply({ embeds: [embed], flags: 64 });
+    await interaction.reply({ embeds: [embed], flags: 64, allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message) {
     const articles = getRecentNews(10);
     if (!articles || articles.length === 0) {
-      return message.reply('no news articles cached yet. check back in a bit.');
+      return message.reply({ content: 'no news articles cached yet. check back in a bit.', allowedMentions: { parse: ['users'] } });
     }
     const embed = new EmbedBuilder()
-      .setTitle('📰 today\'s headlines')
+      .setTitle('ðŸ“° today\'s headlines')
       .setColor(0x00e5ff);
     for (const a of articles.slice(0, 5)) {
       embed.addFields({
@@ -39,7 +39,7 @@ module.exports = {
       });
     }
     embed.setFooter({ text: `${articles.length} articles cached` });
-    await message.reply({ embeds: [embed] });
+    await message.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

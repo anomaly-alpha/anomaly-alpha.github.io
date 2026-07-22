@@ -25,7 +25,7 @@ module.exports = {
       new ButtonBuilder().setCustomId('giveaway_enter').setLabel('Enter Giveaway').setStyle(ButtonStyle.Success).setEmoji('🎉'),
     );
 
-    const msg = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true });
+    const msg = await interaction.reply({ embeds: [embed], components: [row], fetchReply: true, allowedMentions: { parse: ['users'] } });
 
     createGiveaway(interaction.guild.id, interaction.channel.id, prize, endTime, interaction.user.id, winnerCount);
 
@@ -56,7 +56,7 @@ module.exports = {
           .setColor(0x00e5ff);
 
         await freshMsg.edit({ embeds: [resultEmbed], components: [] });
-        await interaction.channel.send(`Congratulations ${winners.map(w => `<@${w}>`).join(', ')}! You won **${prize}**! 🎉`);
+        await interaction.channel.send({ content: `Congratulations ${winners.map(w => `<@${w}>`).join(', ')}! You won **${prize}**! 🎉`, allowedMentions: { parse: ['users'] } });
 
         // Mark ended in database
         const endedList = getEndedGiveaways();
@@ -66,7 +66,7 @@ module.exports = {
     }, minutes * 60 * 1000);
   },
   async handleActivation(message, args) {
-    await message.reply({ content: 'Please use the `/giveaway` slash command to start a giveaway.' });
+    await message.reply({ content: 'Please use the `/giveaway` slash command to start a giveaway.', allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

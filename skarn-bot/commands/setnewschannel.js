@@ -9,11 +9,11 @@ module.exports = {
       option.setName('channel').setDescription('Channel for news digest').setRequired(true)),
   async execute(interaction) {
     if (!interaction.member.permissions.has('Administrator')) {
-      return interaction.reply({ content: 'admin only.', flags: 64 });
+      return interaction.reply({ content: 'admin only.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
     const channel = interaction.options.getChannel('channel');
     setGuildConfig(interaction.guild.id, 'newsChannel', channel.id);
-    await interaction.reply({ content: `news digest will post in ${channel}.`, flags: 64 });
+    await interaction.reply({ content: `news digest will post in ${channel}.`, flags: 64, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

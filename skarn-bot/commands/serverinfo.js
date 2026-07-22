@@ -29,11 +29,11 @@ module.exports = {
         { name: 'Owner', value: `${await guild.fetchOwner().then(m => m.user.username)}`, inline: true },
       )
       .setColor(0x00e5ff);
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = await getServerInfoResponse(args, message);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

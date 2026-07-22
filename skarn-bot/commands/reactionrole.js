@@ -19,7 +19,7 @@ module.exports = {
       .setDescription(description)
       .setColor(0x00e5ff);
 
-    const msg = await interaction.reply({ embeds: [embed], fetchReply: true });
+    const msg = await interaction.reply({ embeds: [embed], fetchReply: true, allowedMentions: { parse: ['users'] } });
     await msg.react(emoji);
 
     // Store in database for persistence
@@ -39,7 +39,7 @@ module.exports = {
     });
   },
   async handleActivation(message, args) {
-    await message.reply({ content: 'Please use the `/reactionrole` slash command to set up reaction roles.' });
+    await message.reply({ content: 'Please use the `/reactionrole` slash command to set up reaction roles.', allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

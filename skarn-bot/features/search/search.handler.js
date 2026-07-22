@@ -19,12 +19,12 @@ async function execute(interaction) {
   // Cooldown check (5s per user per channel)
   const cooldownKey = 'search:' + interaction.guildId + ':' + interaction.user.id + ':' + interaction.channelId;
   if (checkCooldown(cooldownKey)) {
-    return interaction.reply({ content: 'Please wait 5 seconds between searches.', flags: 64 });
+    return interaction.reply({ content: 'Please wait 5 seconds between searches.', flags: 64, allowedMentions: { parse: ['users'] } });
   }
 
   // Rate limit check
   if (!canCall(interaction.user.id)) {
-    return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64 });
+    return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64, allowedMentions: { parse: ['users'] } });
   }
 
   const query = interaction.options.getString('query');
@@ -37,20 +37,20 @@ async function execute(interaction) {
     const searchResult = await searchWeb(query);
 
     if (searchResult.source === 'error') {
-      return interaction.editReply('The search came up empty. Might be a connection issue.');
+      return interaction.editReply({ content: 'The search came up empty. Might be a connection issue.', allowedMentions: { parse: ['users'] } });
     }
 
     results = searchResult.results;
     source = searchResult.source;
 
-    // No results — reply directly without LLM call
+    // No results â€” reply directly without LLM call
     if (results.length === 0) {
-      return interaction.editReply('Nothing came up for that. Try a different search.');
+      return interaction.editReply({ content: 'Nothing came up for that. Try a different search.', allowedMentions: { parse: ['users'] } });
     }
 
     // Step 2: Build search context line
     const searchContext = 'Web search results for "' + query + '":\n' +
-      results.map((r, i) => `${i + 1}. ${r.title} — ${r.snippet}`).join('\n');
+      results.map((r, i) => `${i + 1}. ${r.title} â€” ${r.snippet}`).join('\n');
 
     // Step 3: Build system prompt with search results as additional context
     const systemPrompt = buildSystemPrompt({
@@ -70,8 +70,8 @@ async function execute(interaction) {
       userId: interaction.user.id,
     });
     if (!result.success) {
-      if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
-      await interaction.editReply({ content: result.safeMessage, flags: 64 });
+      if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }
+      await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
       return;
     }
     recordCall(interaction.user.id);
@@ -89,12 +89,12 @@ async function execute(interaction) {
     // Step 6: Send response
     const chunks = splitMessage(reply, 400);
     if (chunks.length === 1) {
-      await interaction.editReply({ content: chunks[0], embeds: [embed] });
+      await interaction.editReply({ content: chunks[0], embeds: [embed], allowedMentions: { parse: ['users'] } });
     } else {
-      await interaction.editReply({ content: chunks[0], embeds: [embed] });
+      await interaction.editReply({ content: chunks[0], embeds: [embed], allowedMentions: { parse: ['users'] } });
       const tail = await maybeBurst(chunks.slice(1), interaction.channel);
       for (const chunk of tail) {
-        await interaction.followUp(chunk);
+        await interaction.followUp({ content: chunk, allowedMentions: { parse: ['users'] } });
       }
     }
   } catch (error) {
@@ -105,14 +105,14 @@ async function execute(interaction) {
         .setTitle('Search: ' + query)
         .setDescription(results.map((r, i) => `[${i + 1}. ${r.title}](${r.url})`).join('\n'))
         .setColor(0xff6b35)
-        .setFooter({ text: 'LLM unavailable — raw results' });
-      return interaction.editReply({ content: 'Got results but had trouble reading them. Here\'s what I found:', embeds: [embed] });
+        .setFooter({ text: 'LLM unavailable â€” raw results' });
+      return interaction.editReply({ content: 'Got results but had trouble reading them. Here\'s what I found:', embeds: [embed], allowedMentions: { parse: ['users'] } });
     }
     const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
     if (interaction.deferred) {
-      await interaction.editReply(errorMsg);
+      await interaction.editReply({ content: errorMsg, allowedMentions: { parse: ['users'] } });
     } else {
-      await interaction.reply({ content: errorMsg, flags: 64 });
+      await interaction.reply({ content: errorMsg, flags: 64, allowedMentions: { parse: ['users'] } });
     }
   }
 }

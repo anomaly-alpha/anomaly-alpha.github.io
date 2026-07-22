@@ -75,7 +75,7 @@ module.exports = {
       );
 
       if (matches.length === 0) {
-        return interaction.reply({ content: `No friends found matching "${search}".`, flags: 64 });
+        return interaction.reply({ content: `No friends found matching "${search}".`, flags: 64, allowedMentions: { parse: ['users'] } });
       }
 
       const list = matches.map(f => {
@@ -87,7 +87,7 @@ module.exports = {
         .setTitle(`Search: ${search}`)
         .setDescription(list)
         .setColor(0x00e5ff);
-      return interaction.reply({ embeds: [embed] });
+      return interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
     }
 
     const list = friends.map(f => `\`${f.code}\` **${f.name}** ${f.power}`).join('\n');
@@ -106,11 +106,11 @@ module.exports = {
       .setColor(0x00e5ff)
       .setFooter({ text: 'Use /friends search:"name" to find someone' });
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = getFriendsResponse(args);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

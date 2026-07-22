@@ -44,20 +44,20 @@ module.exports = {
       .setDescription(`Users will receive **${role.name}** at **Level ${level}**`)
       .setColor(0x2ecc71);
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('Administrator')) {
-      return message.reply({ content: 'You need Administrator permission to use this command.' });
+      return message.reply({ content: 'You need Administrator permission to use this command.', allowedMentions: { parse: ['users'] } });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.' });
+      return message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
     }
     if (!args.level || !args.role) {
-      return message.reply({ content: 'Usage: `skarn setlevelrole <level> @role`' });
+      return message.reply({ content: 'Usage: `skarn setlevelrole <level> @role`', allowedMentions: { parse: ['users'] } });
     }
     const result = getSetlevelroleResponse(args, message);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

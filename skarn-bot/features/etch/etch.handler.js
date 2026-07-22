@@ -10,7 +10,7 @@ async function execute(interaction) {
   const fact = interaction.options.getString('fact');
   addMemoryEntry(interaction.user.id, interaction.guild.id, 'etch', 'fact', fact, 1.0, null);
   const reply = CONFIRMATIONS[Math.floor(Math.random() * CONFIRMATIONS.length)];
-  await interaction.reply({ content: reply, flags: 64 });
+  await interaction.reply({ content: reply, flags: 64, allowedMentions: { parse: ['users'] } });
 }
 
 module.exports = { execute };

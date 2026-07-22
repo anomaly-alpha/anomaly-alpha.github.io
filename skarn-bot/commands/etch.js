@@ -15,7 +15,7 @@ module.exports = {
   async handleActivation(message, args) {
     addMemoryEntry(message.author.id, message.guild?.id, 'etch', 'fact', args.fact, 1.0, null);
     const reply = CONFIRMATIONS[Math.floor(Math.random() * CONFIRMATIONS.length)];
-    await message.reply({ content: reply });
+    await message.reply({ content: reply, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

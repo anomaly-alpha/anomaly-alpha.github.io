@@ -30,19 +30,19 @@ module.exports = {
     if (idx === -1) {
       ignored.push(userId);
       setGuildConfig(guildId, 'ignoredUsers', ignored);
-      await interaction.reply({ content: 'Skarn will now ignore you in AI chat channels. Use /aichatignore again to reverse.', flags: 64 });
+      await interaction.reply({ content: 'Skarn will now ignore you in AI chat channels. Use /aichatignore again to reverse.', flags: 64, allowedMentions: { parse: ['users'] } });
     } else {
       ignored.splice(idx, 1);
       setGuildConfig(guildId, 'ignoredUsers', ignored);
-      await interaction.reply({ content: 'Skarn will respond to you again in AI chat channels.', flags: 64 });
+      await interaction.reply({ content: 'Skarn will respond to you again in AI chat channels.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
   },
   async handleActivation(message, args) {
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.' });
+      return message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
     }
     const result = getAichatignoreResponse(message.author.id, message.guild.id);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

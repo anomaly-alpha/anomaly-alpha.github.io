@@ -25,7 +25,7 @@ module.exports = {
     const topUsers = db.prepare('SELECT user_id, xp, level FROM user_levels WHERE guild_id = ? ORDER BY level DESC, xp DESC LIMIT 10').all(interaction.guild.id);
 
     if (topUsers.length === 0) {
-      return interaction.reply({ content: 'No one has earned XP yet.', flags: 64 });
+      return interaction.reply({ content: 'No one has earned XP yet.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     const medals = ['🥇', '🥈', '🥉'];
@@ -39,11 +39,11 @@ module.exports = {
       .setDescription(list)
       .setColor(0x00e5ff);
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = getLeaderboardResponse(args, message);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

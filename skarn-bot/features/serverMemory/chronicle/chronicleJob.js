@@ -58,7 +58,7 @@ async function runChronicleJob(client) {
 
       var content = await generateChronicle(guild.id);
       if (content) {
-        await channel.send(content);
+        await channel.send({ content: content, allowedMentions: { parse: ['users'] } });
       }
     } catch (err) {
       console.error('[Chronicle] Error for guild ' + guild.id + ':', err.message);

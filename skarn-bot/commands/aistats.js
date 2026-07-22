@@ -67,11 +67,11 @@ module.exports = {
       .setColor(0x00e5ff)
       .setThumbnail(interaction.user.displayAvatarURL());
 
-    await interaction.reply({ embeds: [embed], flags: 64 });
+    await interaction.reply({ embeds: [embed], flags: 64, allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = getAistatsResponse(message.author.id, message.guild?.id, message.author);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

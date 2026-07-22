@@ -26,8 +26,8 @@ async function getHistoryResponse(args, message) {
     ).all(thread.thread_id);
 
     const embed = new EmbedBuilder()
-      .setTitle(`Conversation — ${new Date(thread.started_at).toLocaleDateString()}`)
-      .setDescription(`${thread.thread_type} channel • ${messages.length} messages`)
+      .setTitle(`Conversation â€” ${new Date(thread.started_at).toLocaleDateString()}`)
+      .setDescription(`${thread.thread_type} channel â€¢ ${messages.length} messages`)
       .setColor(0x00e5ff);
 
     const recentMsgs = messages.slice(-15);
@@ -46,8 +46,8 @@ async function getHistoryResponse(args, message) {
   }
 
   const embed = new EmbedBuilder()
-    .setTitle(`Conversation History — ${message.author.username}`)
-    .setDescription(`Last ${days} days • Use \`skarn history thread:N\` to view messages`)
+    .setTitle(`Conversation History â€” ${message.author.username}`)
+    .setDescription(`Last ${days} days â€¢ Use \`skarn history thread:N\` to view messages`)
     .setColor(0x00e5ff);
 
   for (let i = 0; i < threads.length; i++) {
@@ -59,7 +59,7 @@ async function getHistoryResponse(args, message) {
     const summary = thread.topic_summary || `*${thread.message_count} messages*`;
 
     embed.addFields({
-      name: `#${i + 1} — ${date} ${time} (${thread.thread_type})`,
+      name: `#${i + 1} â€” ${date} ${time} (${thread.thread_type})`,
       value: `${summary}\nTopics: ${tagStr}`,
       inline: false,
     });
@@ -80,7 +80,7 @@ module.exports = {
     const threadNum = interaction.options.getInteger('thread');
 
     if (targetUser.id !== interaction.user.id && !interaction.member.permissions.has('Administrator')) {
-      return interaction.reply({ content: 'Only admins can view other users\' history.', flags: 64 });
+      return interaction.reply({ content: 'Only admins can view other users\' history.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     await interaction.deferReply({ flags: 64 });
@@ -92,7 +92,7 @@ module.exports = {
     ).all(targetUser.id, interaction.guild.id, cutoff);
 
     if (threads.length === 0) {
-      return interaction.editReply('No conversation history found for that time period.');
+      return interaction.editReply({ content: 'No conversation history found for that time period.', allowedMentions: { parse: ['users'] } });
     }
 
     // If thread number specified, show messages from that thread
@@ -103,8 +103,8 @@ module.exports = {
       ).all(thread.thread_id);
 
       const embed = new EmbedBuilder()
-        .setTitle(`Conversation — ${new Date(thread.started_at).toLocaleDateString()}`)
-        .setDescription(`${thread.thread_type} channel • ${messages.length} messages`)
+        .setTitle(`Conversation â€” ${new Date(thread.started_at).toLocaleDateString()}`)
+        .setDescription(`${thread.thread_type} channel â€¢ ${messages.length} messages`)
         .setColor(0x00e5ff);
 
       // Show last 15 messages (embed field value limit)
@@ -122,13 +122,13 @@ module.exports = {
         embed.setFooter({ text: `Showing last 15 of ${messages.length} messages` });
       }
 
-      return interaction.editReply({ embeds: [embed] });
+      return interaction.editReply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
     }
 
     // Otherwise show thread list
     const embed = new EmbedBuilder()
-      .setTitle(`Conversation History — ${targetUser.username}`)
-      .setDescription(`Last ${days} days • Use \`/history thread:N\` to view messages`)
+      .setTitle(`Conversation History â€” ${targetUser.username}`)
+      .setDescription(`Last ${days} days â€¢ Use \`/history thread:N\` to view messages`)
       .setColor(0x00e5ff);
 
     for (let i = 0; i < threads.length; i++) {
@@ -140,23 +140,23 @@ module.exports = {
       const summary = thread.topic_summary || `*${thread.message_count} messages*`;
 
       embed.addFields({
-        name: `#${i + 1} — ${date} ${time} (${thread.thread_type})`,
+        name: `#${i + 1} â€” ${date} ${time} (${thread.thread_type})`,
         value: `${summary}\nTopics: ${tagStr}`,
         inline: false,
       });
     }
 
-    await interaction.editReply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.' });
+      return message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
     }
     try {
       const result = await getHistoryResponse(args, message);
-      await message.reply(result);
+      await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
     } catch (err) {
-      await message.reply({ content: err.message || 'Error fetching history.' });
+      await message.reply({ content: err.message || 'Error fetching history.', allowedMentions: { parse: ['users'] } });
     }
   },
   activation: {

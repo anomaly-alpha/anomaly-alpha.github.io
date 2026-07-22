@@ -35,7 +35,7 @@ module.exports = {
 
     const removed = db.prepare('SELECT * FROM friends WHERE LOWER(name) = LOWER(?)').get(name);
     if (!removed) {
-      return interaction.reply({ content: `**${name}** not found on the friends list.`, flags: 64 });
+      return interaction.reply({ content: `**${name}** not found on the friends list.`, flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     db.prepare('DELETE FROM friends WHERE LOWER(name) = LOWER(?)').run(name);
@@ -50,11 +50,11 @@ module.exports = {
       )
       .setColor(0xe74c3c);
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = getRemoveFriendResponse(args);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

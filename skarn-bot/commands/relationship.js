@@ -97,12 +97,12 @@ module.exports = {
       embed.setDescription(`Nickname: **${prefs.nickname}**`);
     }
 
-    await interaction.reply({ embeds: [embed], flags: 64 });
+    await interaction.reply({ embeds: [embed], flags: 64, allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
-    if (!message.guild) return message.reply({ content: 'This command can only be used in a server.' });
+    if (!message.guild) return message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
     const result = getRelationshipResponse(message.author.id, message.guild.id, message.author);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

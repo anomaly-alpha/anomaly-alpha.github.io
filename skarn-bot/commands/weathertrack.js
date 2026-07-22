@@ -87,25 +87,25 @@ module.exports = {
       const time = interaction.options.getString('time');
 
       if (!/^\d{2}:\d{2}$/.test(time)) {
-        return interaction.reply({ content: 'Invalid time format. Use HH:MM (24-hour, e.g. 08:00 or 14:30).', flags: 64 });
+        return interaction.reply({ content: 'Invalid time format. Use HH:MM (24-hour, e.g. 08:00 or 14:30).', flags: 64, allowedMentions: { parse: ['users'] } });
       }
 
       const [hours, minutes] = time.split(':').map(Number);
       if (hours > 23 || minutes > 59) {
-        return interaction.reply({ content: 'Invalid time. Hours must be 00-23, minutes 00-59.', flags: 64 });
+        return interaction.reply({ content: 'Invalid time. Hours must be 00-23, minutes 00-59.', flags: 64, allowedMentions: { parse: ['users'] } });
       }
 
       const exists = tracks.some(
         t => t.location.toLowerCase() === location.toLowerCase() && t.channelId === channel.id
       );
       if (exists) {
-        return interaction.reply({ content: `Already tracking **${location}** in <#${channel.id}>.`, flags: 64 });
+        return interaction.reply({ content: `Already tracking **${location}** in <#${channel.id}>.`, flags: 64, allowedMentions: { parse: ['users'] } });
       }
 
       tracks.push({ location, channelId: channel.id, time, lastPosted: '' });
       setGuildConfig(guildId, 'weatherTracks', tracks);
 
-      await interaction.reply(`Daily weather report scheduled: **${location}** in <#${channel.id}> at **${time}** EST.`);
+      await interaction.reply({ content: `Daily weather report scheduled: **${location}** in <#${channel.id}> at **${time}** EST.`, allowedMentions: { parse: ['users'] } });
     } else if (subcommand === 'remove') {
       const location = interaction.options.getString('location');
       const channel = interaction.options.getChannel('channel');
@@ -115,16 +115,16 @@ module.exports = {
       );
 
       if (idx === -1) {
-        return interaction.reply({ content: `No tracking found for **${location}** in <#${channel.id}>.`, flags: 64 });
+        return interaction.reply({ content: `No tracking found for **${location}** in <#${channel.id}>.`, flags: 64, allowedMentions: { parse: ['users'] } });
       }
 
       tracks.splice(idx, 1);
       setGuildConfig(guildId, 'weatherTracks', tracks);
 
-      await interaction.reply(`Stopped tracking **${location}** in <#${channel.id}>.`);
+      await interaction.reply({ content: `Stopped tracking **${location}** in <#${channel.id}>.`, allowedMentions: { parse: ['users'] } });
     } else if (subcommand === 'list') {
       if (tracks.length === 0) {
-        return interaction.reply({ content: 'No daily weather reports configured.', flags: 64 });
+        return interaction.reply({ content: 'No daily weather reports configured.', flags: 64, allowedMentions: { parse: ['users'] } });
       }
 
       const list = tracks.map(t => `**${t.location}** → <#${t.channelId}> at **${t.time}** EST`).join('\n');
@@ -133,19 +133,19 @@ module.exports = {
         .setDescription(list)
         .setColor(0x00e5ff);
 
-      await interaction.reply({ embeds: [embed], flags: 64 });
+      await interaction.reply({ embeds: [embed], flags: 64, allowedMentions: { parse: ['users'] } });
     }
   },
   async handleActivation(message, args) {
     if (!message.member?.permissions.has('ManageChannels')) {
-      return message.reply({ content: 'You need Manage Channels permission to use this command.' });
+      return message.reply({ content: 'You need Manage Channels permission to use this command.', allowedMentions: { parse: ['users'] } });
     }
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.' });
+      return message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
     }
     const subcommand = args.subcommand;
     const result = getWeathertrackResponse(subcommand, args, message);
-    await message.reply(result);
+    await message.reply(typeof result === 'string' ? { content: result, allowedMentions: { parse: ['users'] } } : { ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

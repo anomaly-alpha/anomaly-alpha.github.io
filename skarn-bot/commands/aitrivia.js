@@ -39,11 +39,11 @@ module.exports = {
     const difficulty = interaction.options.getString('difficulty') || 'medium';
 
     if (!process.env.OPENAI_API_KEY) {
-      return interaction.reply({ content: 'AI is not configured. Add OPENAI_API_KEY.', flags: 64 });
+      return interaction.reply({ content: 'AI is not configured. Add OPENAI_API_KEY.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     if (!canCall(interaction.user.id)) {
-      return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64 });
+      return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     await interaction.deferReply();
@@ -69,8 +69,8 @@ module.exports = {
       });
 
       if (!result.success) {
-        if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
-        await interaction.editReply({ content: result.safeMessage, flags: 64 });
+        if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }
+        await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
         return;
       }
 
@@ -83,7 +83,7 @@ module.exports = {
       try {
         trivia = JSON.parse(content);
       } catch {
-        await interaction.editReply({ content: 'Failed to generate question. Try again.', flags: 64 });
+        await interaction.editReply({ content: 'Failed to generate question. Try again.', flags: 64, allowedMentions: { parse: ['users'] } });
         return;
       }
 
@@ -110,7 +110,7 @@ module.exports = {
         rows.push(row);
       }
 
-      const msg = await interaction.editReply({ embeds: [embed], components: rows });
+      const msg = await interaction.editReply({ embeds: [embed], components: rows, allowedMentions: { parse: ['users'] } });
 
       const filter = i => i.user.id === interaction.user.id;
       const collector = interaction.channel.createMessageComponentCollector({ filter, time: 30000, max: 1 });
@@ -146,16 +146,16 @@ module.exports = {
               { name: 'Fun Fact', value: trivia.funFact || 'N/A' },
             )
             .setColor(0xf39c12);
-          interaction.editReply({ embeds: [timeEmbed], components: [] });
+          interaction.editReply({ embeds: [timeEmbed], components: [], allowedMentions: { parse: ['users'] } });
         }
       });
     } catch (error) {
       console.error('AI trivia error:', error);
       const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
       if (interaction.deferred) {
-        await interaction.editReply(errorMsg);
+        await interaction.editReply({ content: errorMsg, allowedMentions: { parse: ['users'] } });
       } else {
-        await interaction.reply({ content: errorMsg, flags: 64 });
+        await interaction.reply({ content: errorMsg, flags: 64, allowedMentions: { parse: ['users'] } });
       }
     }
   },

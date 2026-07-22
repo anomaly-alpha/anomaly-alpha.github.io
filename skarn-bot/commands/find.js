@@ -10,7 +10,7 @@ module.exports = {
     const query = interaction.options.getString('query');
 
     if (query.length < 2) {
-      return interaction.reply({ content: 'Search query must be at least 2 characters.', flags: 64 });
+      return interaction.reply({ content: 'Search query must be at least 2 characters.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     await interaction.deferReply({ flags: 64 });
@@ -18,7 +18,7 @@ module.exports = {
     const results = searchConversations(query, interaction.guild.id, 10);
 
     if (results.length === 0) {
-      return interaction.editReply(`No results found for "${query}".`);
+      return interaction.editReply({ content: `No results found for "${query}".`, allowedMentions: { parse: ['users'] } });
     }
 
     const embed = new EmbedBuilder()
@@ -42,6 +42,6 @@ module.exports = {
       embed.setFooter({ text: `Showing 5 of ${results.length} results` });
     }
 
-    await interaction.editReply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
 };

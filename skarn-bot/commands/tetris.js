@@ -4,11 +4,11 @@ const { TetrisGame, activeGames } = require('../games/tetris');
 function createControls(game, playerId) {
   const disabled = game.currentTurn !== playerId || game.players[playerId].lost;
   return new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('tetris_left').setLabel('◀').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
-    new ButtonBuilder().setCustomId('tetris_rotate').setLabel('🔄').setStyle(ButtonStyle.Primary).setDisabled(disabled),
-    new ButtonBuilder().setCustomId('tetris_right').setLabel('▶').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
-    new ButtonBuilder().setCustomId('tetris_down').setLabel('⬇').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
-    new ButtonBuilder().setCustomId('tetris_drop').setLabel('⏬').setStyle(ButtonStyle.Danger).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('tetris_left').setLabel('â—€').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('tetris_rotate').setLabel('ðŸ”„').setStyle(ButtonStyle.Primary).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('tetris_right').setLabel('â–¶').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('tetris_down').setLabel('â¬‡').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('tetris_drop').setLabel('â¬').setStyle(ButtonStyle.Danger).setDisabled(disabled),
   );
 }
 
@@ -26,22 +26,22 @@ module.exports = {
     const opponent = interaction.options.getUser('opponent');
 
     if (opponent.id === interaction.user.id) {
-      return interaction.reply({ content: "You can't challenge yourself.", flags: 64 });
+      return interaction.reply({ content: "You can't challenge yourself.", flags: 64, allowedMentions: { parse: ['users'] } });
     }
     if (opponent.bot) {
-      return interaction.reply({ content: "You can't challenge a bot.", flags: 64 });
+      return interaction.reply({ content: "You can't challenge a bot.", flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     const gameKey = [interaction.user.id, opponent.id].sort().join('_');
     if (activeGames.has(gameKey)) {
-      return interaction.reply({ content: 'A game is already in progress between you two.', flags: 64 });
+      return interaction.reply({ content: 'A game is already in progress between you two.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     const game = new TetrisGame(interaction.user.id, opponent.id);
     activeGames.set(gameKey, game);
 
     const embed = new EmbedBuilder()
-      .setTitle('Tetris — Head to Head')
+      .setTitle('Tetris â€” Head to Head')
       .setDescription(`${interaction.user.username} vs ${opponent.username}\n\n**${interaction.user.username}** goes first!`)
       .setColor(0x00e5ff);
 
@@ -52,16 +52,17 @@ module.exports = {
       content: `${interaction.user} challenged ${opponent} to Tetris!`,
       embeds: [embed],
       files: [p1Buffer],
+      allowedMentions: { parse: ['users'] },
     });
 
     // Send board to opponent via DM
     try {
       const dm = await opponent.createDM();
       const dmEmbed = new EmbedBuilder()
-        .setTitle('Tetris — Your Board')
+        .setTitle('Tetris â€” Your Board')
         .setDescription(`Game started with ${interaction.user.username}!`)
         .setColor(0x00e5ff);
-      await dm.send({ embeds: [dmEmbed], files: [p2Buffer] });
+      await dm.send({ embeds: [dmEmbed], files: [p2Buffer], allowedMentions: { parse: ['users'] } });
     } catch {
       // Can't DM opponent
     }
@@ -75,10 +76,11 @@ module.exports = {
       .setColor(0x00e5ff);
 
     const msg = await interaction.channel.send({
-      content: `${interaction.user} — use the buttons to play:`,
+      content: `${interaction.user} â€” use the buttons to play:`,
       embeds: [p1Embed],
       components: [controls],
       files: [p1Board],
+      allowedMentions: { parse: ['users'] },
     });
 
     const filter = i => {
@@ -90,7 +92,7 @@ module.exports = {
 
     collector.on('collect', async i => {
       if (i.user.id !== game.currentTurn) {
-        return i.reply({ content: "It's not your turn!", flags: 64 });
+        return i.reply({ content: "It's not your turn!", flags: 64, allowedMentions: { parse: ['users'] } });
       }
 
       const playerId = i.user.id;
@@ -112,7 +114,7 @@ module.exports = {
 
           const endEmbed = new EmbedBuilder()
             .setTitle('Game Over!')
-            .setDescription(`🏆 **${winner.username}** wins!\n\n${loser.username} topped out.`)
+            .setDescription(`ðŸ† **${winner.username}** wins!\n\n${loser.username} topped out.`)
             .addFields(
               { name: winner.username, value: `Score: ${game.players[winner.id].score}`, inline: true },
               { name: loser.username, value: `Score: ${game.players[loser.id].score}`, inline: true },
@@ -146,20 +148,21 @@ module.exports = {
           .setColor(0x00e5ff);
         const nextControls = createControls(game, nextPlayer);
         await interaction.channel.send({
-          content: `${nextUser} — your turn!`,
+          content: `${nextUser} â€” your turn!`,
           embeds: [nextEmbed],
           components: [nextControls],
           files: [nextBoard],
+          allowedMentions: { parse: ['users'] },
         });
       } catch {
-        // Interaction expired — safe to ignore
+        // Interaction expired â€” safe to ignore
       }
     });
 
     collector.on('end', (collected, reason) => {
       if (reason === 'time') {
         activeGames.delete(gameKey);
-        interaction.channel.send('Tetris game timed out (5 min limit).');
+        interaction.channel.send({ content: 'Tetris game timed out (5 min limit).', allowedMentions: { parse: ['users'] } });
       }
     });
   },

@@ -20,11 +20,11 @@ module.exports = {
     var strikes = getStrikes(interaction.user.id);
     var hadStrikes = strikes.count > 0 || strikes.silencedUntil > 0;
     deleteFlag('strike_' + interaction.user.id);
-    await interaction.reply({ content: 'Stats reset. Hourly cap, counters' + (hadStrikes ? ', and strikes' : '') + ' cleared.', flags: 64 });
+    await interaction.reply({ content: 'Stats reset. Hourly cap, counters' + (hadStrikes ? ', and strikes' : '') + ' cleared.', flags: 64, allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = getAistatsresetResponse(message.author.id);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

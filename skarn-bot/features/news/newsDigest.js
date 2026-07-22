@@ -20,7 +20,7 @@ async function postDigest(client) {
     if (!channelId) continue;
     try {
       const channel = await guild.channels.fetch(channelId);
-      if (channel) await channel.send({ embeds: [embed] });
+      if (channel) await channel.send({ embeds: [embed], allowedMentions: { parse: ['users'] } });
     } catch (e) {
       console.log(`[News] Digest failed for guild ${guildId}: ${e.message}`);
     }

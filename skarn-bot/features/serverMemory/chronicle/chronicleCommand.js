@@ -9,50 +9,50 @@ async function handleChronicle(interaction) {
 
   if (subcommand === 'show') {
     var entry = getRecentEntry(guildId);
-    if (!entry) return interaction.reply({ content: 'No chronicle entries yet. Realm history is still being written.', ephemeral: true });
-    return interaction.reply({ content: entry.content.substring(0, 1900), ephemeral: true });
+    if (!entry) return interaction.reply({ content: 'No chronicle entries yet. Realm history is still being written.', ephemeral: true, allowedMentions: { parse: ['users'] } });
+    return interaction.reply({ content: entry.content.substring(0, 1900), ephemeral: true, allowedMentions: { parse: ['users'] } });
   }
 
   if (subcommand === 'history') {
     var page = interaction.options.getInteger('page') || 0;
     var entries = getEntries(guildId, page);
-    if (!entries.length) return interaction.reply({ content: 'No more entries.', ephemeral: true });
+    if (!entries.length) return interaction.reply({ content: 'No more entries.', ephemeral: true, allowedMentions: { parse: ['users'] } });
     var formatted = entries.map(function(e, i) {
       return '**' + (page * 10 + i + 1) + '.** ' + new Date(e.created_at).toLocaleDateString() + '\n' + e.content.substring(0, 200) + '...';
     }).join('\n\n');
-    return interaction.reply({ content: formatted.substring(0, 1900), ephemeral: true });
+    return interaction.reply({ content: formatted.substring(0, 1900), ephemeral: true, allowedMentions: { parse: ['users'] } });
   }
 
   if (subcommand === 'generate') {
     var cooldownKey = 'chronicle_gen_' + guildId;
     var row = db.prepare('SELECT value FROM guild_config WHERE guild_id = ? AND key = ?').get(guildId, cooldownKey);
     if (row && (Date.now() - parseInt(row.value)) < 86400000) {
-      return interaction.reply({ content: 'Chronicle can only be force-generated once per 24 hours.', ephemeral: true });
+      return interaction.reply({ content: 'Chronicle can only be force-generated once per 24 hours.', ephemeral: true, allowedMentions: { parse: ['users'] } });
     }
     await interaction.deferReply();
     try {
       var content = await generateChronicle(guildId);
       if (content) {
         db.prepare('INSERT OR REPLACE INTO guild_config (guild_id, key, value) VALUES (?, ?, ?)').run(guildId, cooldownKey, String(Date.now()));
-        return interaction.editReply({ content: 'Chronicle generated:\n\n' + content.substring(0, 1900) });
+        return interaction.editReply({ content: 'Chronicle generated:\n\n' + content.substring(0, 1900), allowedMentions: { parse: ['users'] } });
       }
-      return interaction.editReply({ content: 'Not enough activity this week to generate a chronicle.' });
+      return interaction.editReply({ content: 'Not enough activity this week to generate a chronicle.', allowedMentions: { parse: ['users'] } });
     } catch (err) {
-      return interaction.editReply({ content: 'Failed to generate chronicle.' });
+      return interaction.editReply({ content: 'Failed to generate chronicle.', allowedMentions: { parse: ['users'] } });
     }
   }
 
   if (subcommand === 'setchannel') {
     var channel = interaction.options.getChannel('channel');
     db.prepare('INSERT OR REPLACE INTO guild_config (guild_id, key, value) VALUES (?, ?, ?)').run(guildId, 'chronicle_channel', channel.id);
-    return interaction.reply({ content: 'Chronicle channel set to ' + channel + '. Omens will default here unless a separate omen channel is configured.' });
+    return interaction.reply({ content: 'Chronicle channel set to ' + channel + '. Omens will default here unless a separate omen channel is configured.', allowedMentions: { parse: ['users'] } });
   }
 
   if (subcommand === 'optout') {
     var userId = interaction.user.id;
     var current = isOptedOut(userId, guildId);
     setOptOut(userId, guildId, !current);
-    return interaction.reply({ content: current ? 'You are now opted in - you may be named in future chronicles.' : 'You are now opted out - you will not be named in future chronicles.', ephemeral: true });
+    return interaction.reply({ content: current ? 'You are now opted in - you may be named in future chronicles.' : 'You are now opted out - you will not be named in future chronicles.', ephemeral: true, allowedMentions: { parse: ['users'] } });
   }
 }
 

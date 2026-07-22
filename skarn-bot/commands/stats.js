@@ -66,7 +66,7 @@ module.exports = {
     const targetUser = interaction.options.getUser('user') || interaction.user;
 
     if (targetUser.id !== interaction.user.id && !interaction.member.permissions.has('Administrator')) {
-      return interaction.reply({ content: 'Only admins can view other users\' stats.', flags: 64 });
+      return interaction.reply({ content: 'Only admins can view other users\' stats.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     await interaction.deferReply({ flags: 64 });
@@ -121,17 +121,17 @@ module.exports = {
       );
     }
 
-    await interaction.editReply({ embeds: [embed] });
+    await interaction.editReply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     if (!message.guild) {
-      return message.reply({ content: 'This command can only be used in a server.' });
+      return message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
     }
     try {
       const result = await getStatsResponse(args, message);
-      await message.reply(result);
+      await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
     } catch (err) {
-      await message.reply({ content: err.message || 'Error fetching stats.' });
+      await message.reply({ content: err.message || 'Error fetching stats.', allowedMentions: { parse: ['users'] } });
     }
   },
   activation: {

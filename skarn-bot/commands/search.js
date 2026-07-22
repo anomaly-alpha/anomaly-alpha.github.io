@@ -1,4 +1,4 @@
-// Thin wrapper — command definition and handler live in features/search/
+// Thin wrapper â€” command definition and handler live in features/search/
 const command = require('../features/search/search.command');
 const handler = require('../features/search/search.handler');
 const { EmbedBuilder } = require('discord.js');
@@ -33,11 +33,11 @@ module.exports = {
     const last = cooldowns.get(key) || 0;
     if (Date.now() - last < COOLDOWN_MS) {
       const remaining = Math.ceil((COOLDOWN_MS - (Date.now() - last)) / 1000);
-      return message.reply({ content: `Slow down. Wait ${remaining}s.` });
+      return message.reply({ content: `Slow down. Wait ${remaining}s.`, allowedMentions: { parse: ['users'] } });
     }
 
     if (!canCall(message.author.id)) {
-      return message.reply({ content: getRateLimitMessage(message.author.id) });
+      return message.reply({ content: getRateLimitMessage(message.author.id), allowedMentions: { parse: ['users'] } });
     }
 
     const query = args.query;
@@ -50,18 +50,18 @@ module.exports = {
       cooldowns.set(key, Date.now());
 
       if (searchResult.source === 'error') {
-        return message.reply('The search came up empty. Might be a connection issue.');
+        return message.reply({ content: 'The search came up empty. Might be a connection issue.', allowedMentions: { parse: ['users'] } });
       }
 
       results = searchResult.results;
       source = searchResult.source;
 
       if (results.length === 0) {
-        return message.reply('Nothing came up for that. Try a different search.');
+        return message.reply({ content: 'Nothing came up for that. Try a different search.', allowedMentions: { parse: ['users'] } });
       }
 
       const searchContext = 'Web search results for "' + query + '":\n' +
-        results.map((r, i) => `${i + 1}. ${r.title} — ${r.snippet}`).join('\n');
+        results.map((r, i) => `${i + 1}. ${r.title} â€” ${r.snippet}`).join('\n');
 
       const systemPrompt = buildSystemPrompt({
         roleLine: roles.search,
@@ -79,8 +79,8 @@ module.exports = {
         userId: message.author.id,
       });
       if (!result.success) {
-        if (result.crisis) { await message.reply(FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)]); return; }
-        await message.reply(result.safeMessage);
+        if (result.crisis) { await message.reply({ content: FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)], allowedMentions: { parse: ['users'] } }); return; }
+        await message.reply({ content: result.safeMessage, allowedMentions: { parse: ['users'] } });
         return;
       }
       recordCall(message.author.id);
@@ -96,12 +96,12 @@ module.exports = {
 
       const chunks = splitMessage(reply, 400);
       if (chunks.length === 1) {
-        await message.reply({ content: chunks[0], embeds: [embed] });
+        await message.reply({ content: chunks[0], embeds: [embed], allowedMentions: { parse: ['users'] } });
       } else {
-        const sent = await message.reply({ content: chunks[0], embeds: [embed] });
+        const sent = await message.reply({ content: chunks[0], embeds: [embed], allowedMentions: { parse: ['users'] } });
         const tail = await maybeBurst(chunks.slice(1), message.channel);
         for (const chunk of tail) {
-          await message.channel.send(chunk);
+          await message.channel.send({ content: chunk, allowedMentions: { parse: ['users'] } });
         }
       }
     } catch (error) {
@@ -111,11 +111,11 @@ module.exports = {
           .setTitle('Search: ' + query)
           .setDescription(results.map((r, i) => `[${i + 1}. ${r.title}](${r.url})`).join('\n'))
           .setColor(0xff6b35)
-          .setFooter({ text: 'LLM unavailable — raw results' });
-        return message.reply({ content: 'Got results but had trouble reading them. Here\'s what I found:', embeds: [embed] });
+          .setFooter({ text: 'LLM unavailable â€” raw results' });
+        return message.reply({ content: 'Got results but had trouble reading them. Here\'s what I found:', embeds: [embed], allowedMentions: { parse: ['users'] } });
       }
       const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
-      await message.reply(errorMsg);
+      await message.reply({ content: errorMsg, allowedMentions: { parse: ['users'] } });
     }
   },
   activation: {

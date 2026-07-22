@@ -8,7 +8,7 @@ module.exports = {
   execute: handler.execute,
   async handleActivation(message, args) {
     deleteUserMemoryEntries(message.author.id, message.guild?.id);
-    await message.reply({ content: 'The stone is wiped clean.' });
+    await message.reply({ content: 'The stone is wiped clean.', allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

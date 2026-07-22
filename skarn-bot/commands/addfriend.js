@@ -56,17 +56,17 @@ module.exports = {
 
     const count = db.prepare('SELECT COUNT(*) as count FROM friends').get();
     if (count.count >= MAX_FRIENDS) {
-      return interaction.reply({ content: `Friend list is full (${MAX_FRIENDS}/${MAX_FRIENDS}). Remove someone first.`, flags: 64 });
+      return interaction.reply({ content: `Friend list is full (${MAX_FRIENDS}/${MAX_FRIENDS}). Remove someone first.`, flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     const dupeCode = db.prepare('SELECT 1 FROM friends WHERE code = ?').get(code);
     if (dupeCode) {
-      return interaction.reply({ content: `Friend code \`${code}\` is already on the list.`, flags: 64 });
+      return interaction.reply({ content: `Friend code \`${code}\` is already on the list.`, flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     const dupeName = db.prepare('SELECT 1 FROM friends WHERE LOWER(name) = LOWER(?)').get(name);
     if (dupeName) {
-      return interaction.reply({ content: `**${name}** is already on the list.`, flags: 64 });
+      return interaction.reply({ content: `**${name}** is already on the list.`, flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     db.prepare('INSERT OR REPLACE INTO friends (code, name, power, note) VALUES (?, ?, ?, ?)').run(code, name, power, note || null);
@@ -82,11 +82,11 @@ module.exports = {
       )
       .setColor(0x2ecc71);
 
-    await interaction.reply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = getAddFriendResponse(args);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

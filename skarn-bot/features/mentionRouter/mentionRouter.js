@@ -40,7 +40,7 @@ async function handleMention(message, client) {
 
   // Rate limit check
   if (!canCall(userId, 'chat')) {
-    await message.reply(getRateLimitMessage(userId, 'chat'));
+    await message.reply({ content: getRateLimitMessage(userId, 'chat'), allowedMentions: { parse: ['users'] } });
     return;
   }
 
@@ -58,9 +58,9 @@ async function handleMention(message, client) {
   if (isHostile(cleanMsg)) {
     var state = recordStrike(userId);
     if (state >= 3) {
-      return message.reply(getDeEscalationLine());
+      return message.reply({ content: getDeEscalationLine(), allowedMentions: { parse: ['users'] } });
     }
-    return message.reply(getDeEscalationLine());
+    return message.reply({ content: getDeEscalationLine(), allowedMentions: { parse: ['users'] } });
   }
 
   // Pre-generation silence check
@@ -141,7 +141,7 @@ async function handleMention(message, client) {
     });
     if (!result.success) {
       if (result.crisis) { return; }
-      await message.reply(result.safeMessage);
+      await message.reply({ content: result.safeMessage, allowedMentions: { parse: ['users'] } });
       return;
     }
     recordCall(userId, 'chat');
@@ -178,10 +178,10 @@ async function handleMention(message, client) {
     if (usage.current >= 40) reply = reply + ' -# (' + usage.current + '/' + usage.max + ')';
 
     const chunks = splitMessage(reply, 1900);
-    await message.reply(chunks[0]);
+    await message.reply({ content: chunks[0], allowedMentions: { parse: ['users'] } });
     const tail = await maybeBurst(chunks.slice(1), message.channel);
     for (const chunk of tail) {
-      await message.channel.send(chunk);
+      await message.channel.send({ content: chunk, allowedMentions: { parse: ['users'] } });
     }
 
     // Update attention state
@@ -200,7 +200,7 @@ async function handleMention(message, client) {
     flagForApology(userId);
     console.error('Mention reply error:', error);
     const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
-    await message.reply(errorMsg);
+    await message.reply({ content: errorMsg, allowedMentions: { parse: ['users'] } });
   }
 }
 

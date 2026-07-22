@@ -209,11 +209,11 @@ module.exports = {
         )),
   async execute(interaction) {
     const selected = interaction.options.getString('category');
-    await interaction.reply({ ...getHelpContent(selected), flags: 64 });
+    await interaction.reply({ ...getHelpContent(selected), flags: 64, allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = getHelpContent(args.category);
-    await message.reply(result);
+    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

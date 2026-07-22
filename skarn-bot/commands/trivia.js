@@ -11,7 +11,7 @@ module.exports = {
       const res = await fetch('https://opentdb.com/api.php?amount=1&type=multiple');
       const data = await res.json();
       const q = data.results[0];
-      if (!q) return interaction.editReply('Failed to fetch question.');
+      if (!q) return interaction.editReply({ content: 'Failed to fetch question.', allowedMentions: { parse: ['users'] } });
 
       const answers = [...q.incorrect_answers, q.correct_answer].sort(() => Math.random() - 0.5);
       const correctIndex = answers.indexOf(q.correct_answer);
@@ -34,7 +34,7 @@ module.exports = {
         .setTitle('Trivia')
         .setDescription(q.question.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace('&#039;', "'"))
         .setColor(0x00e5ff);
-      await interaction.editReply({ embeds: [embed], components: rows });
+      await interaction.editReply({ embeds: [embed], components: rows, allowedMentions: { parse: ['users'] } });
 
       const filter = i => i.user.id === interaction.user.id;
       const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000, max: 1 });
@@ -48,15 +48,15 @@ module.exports = {
             await i.update({ content: `Wrong! The answer was: **${q.correct_answer}**`, components: [] });
           }
         } catch {
-          // Interaction expired — safe to ignore
+          // Interaction expired â€” safe to ignore
         }
       });
 
       collector.on('end', collected => {
-        if (collected.size === 0) interaction.editReply({ content: `Time's up! The answer was: **${q.correct_answer}**`, components: [] });
+        if (collected.size === 0) interaction.editReply({ content: `Time's up! The answer was: **${q.correct_answer}**`, components: [], allowedMentions: { parse: ['users'] } });
       });
     } catch {
-      await interaction.editReply('Failed to fetch trivia question.');
+      await interaction.editReply({ content: 'Failed to fetch trivia question.', allowedMentions: { parse: ['users'] } });
     }
   },
 };

@@ -19,10 +19,10 @@ module.exports = {
     .addStringOption(option => option.setName('ingredients').setDescription('Ingredients you have (e.g. chicken, rice, eggs)').setRequired(true)),
   async execute(interaction) {
     const ingredients = interaction.options.getString('ingredients');
-    if (!process.env.OPENAI_API_KEY) return interaction.reply({ content: 'AI not configured.', flags: 64 });
+    if (!process.env.OPENAI_API_KEY) return interaction.reply({ content: 'AI not configured.', flags: 64, allowedMentions: { parse: ['users'] } });
 
     if (!canCall(interaction.user.id)) {
-      return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64 });
+      return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     await interaction.deferReply();
@@ -47,8 +47,8 @@ module.exports = {
       });
 
       if (!result.success) {
-        if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64 }); return; }
-        await interaction.editReply({ content: result.safeMessage, flags: 64 });
+        if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }
+        await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
         return;
       }
 
@@ -61,14 +61,14 @@ module.exports = {
         .setColor(0x00e5ff)
         .setFooter({ text: `Ingredients: ${ingredients}` });
 
-      await interaction.editReply({ embeds: [embed] });
+      await interaction.editReply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
     } catch (error) {
       console.error('Recipe error:', error);
       const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
       if (interaction.deferred) {
-        await interaction.editReply(errorMsg);
+        await interaction.editReply({ content: errorMsg, allowedMentions: { parse: ['users'] } });
       } else {
-        await interaction.reply({ content: errorMsg, flags: 64 });
+        await interaction.reply({ content: errorMsg, flags: 64, allowedMentions: { parse: ['users'] } });
       }
     }
   },

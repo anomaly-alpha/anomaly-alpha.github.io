@@ -37,17 +37,17 @@ module.exports = {
     await interaction.deferReply();
     try {
       const result = await getTranslateResponse({ text, to });
-      await interaction.editReply(result);
+      await interaction.editReply({ content: result, allowedMentions: { parse: ['users'] } });
     } catch {
-      await interaction.editReply({ content: 'Translation failed.', flags: 64 });
+      await interaction.editReply({ content: 'Translation failed.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
   },
   async handleActivation(message, args) {
     try {
       const result = await getTranslateResponse(args);
-      await message.reply(result);
+      await message.reply({ content: result, allowedMentions: { parse: ['users'] } });
     } catch (err) {
-      await message.reply({ content: err.message || 'Translation failed.' });
+      await message.reply({ content: err.message || 'Translation failed.', allowedMentions: { parse: ['users'] } });
     }
   },
   activation: {

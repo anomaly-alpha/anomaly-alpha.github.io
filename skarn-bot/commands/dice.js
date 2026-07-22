@@ -14,11 +14,11 @@ module.exports = {
   async execute(interaction) {
     const sides = interaction.options.getInteger('sides') || 6;
     const result = getDiceResponse({ sides });
-    await interaction.reply(result);
+    await interaction.reply({ content: result, allowedMentions: { parse: ['users'] } });
   },
   async handleActivation(message, args) {
     const result = getDiceResponse(args);
-    await message.reply(result);
+    await message.reply({ content: result, allowedMentions: { parse: ['users'] } });
   },
   activation: {
     type: 'command',

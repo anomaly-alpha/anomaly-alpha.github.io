@@ -15,7 +15,7 @@ module.exports = {
     const options = interaction.options.getString('options').split(',').map(o => o.trim()).slice(0, 10);
 
     if (options.length < 2) {
-      await interaction.reply({ content: 'You need at least 2 options.', flags: 64 });
+      await interaction.reply({ content: 'You need at least 2 options.', flags: 64, allowedMentions: { parse: ['users'] } });
       return;
     }
 
@@ -25,7 +25,7 @@ module.exports = {
       .setDescription(description)
       .setColor(0x00e5ff);
 
-    const message = await interaction.reply({ embeds: [embed], fetchReply: true });
+    const message = await interaction.reply({ embeds: [embed], fetchReply: true, allowedMentions: { parse: ['users'] } });
     for (let i = 0; i < options.length; i++) {
       await message.react(reactions[i]);
     }
