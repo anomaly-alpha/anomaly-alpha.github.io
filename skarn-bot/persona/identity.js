@@ -91,16 +91,17 @@ function buildSystemPrompt({
   cultureLine = '', memoryLine = '', conversationLine = '',
   warmthLine = '', patienceLine = '', callbackLine = '',
   gratitudeLine = '', firstOfDayLine = '', milestoneLine = '', apologyLine = '',
-  wisdomLine = '', emotionalLine = '', knowledgeLine = '', channelLine = '', additionalContext = '', safetyLine = '', growthLine = '', followUpLine = ''
+  wisdomLine = '', emotionalLine = '', knowledgeLine = '', channelLine = '', additionalContext = '', safetyLine = '', growthLine = '', followUpLine = '', socraticLine = ''
 } = {}) {
   const parts = [SKARN_CORE_IDENTITY, SKARN_RULES];
   if (roleLine) parts.push(roleLine);
-  if (newsLine) parts.push(newsLine);
+  if (safetyLine) parts.push(safetyLine);
   if (stateLine) parts.push(stateLine);
   if (moodLine) parts.push(moodLine);
   if (relationshipLine) parts.push(relationshipLine);
   if (cultureLine) parts.push(cultureLine);
   if (memoryLine) parts.push(memoryLine);
+  if (emotionalLine) parts.push(emotionalLine);
   if (warmthLine) parts.push(warmthLine);
   if (patienceLine) parts.push(patienceLine);
   if (callbackLine) parts.push(callbackLine);
@@ -108,15 +109,15 @@ function buildSystemPrompt({
   if (firstOfDayLine) parts.push(firstOfDayLine);
   if (milestoneLine) parts.push(milestoneLine);
   if (apologyLine) parts.push(apologyLine);
-  if (wisdomLine) parts.push(wisdomLine);
-  if (emotionalLine) parts.push(emotionalLine);
-  if (knowledgeLine) parts.push(knowledgeLine);
-  if (additionalContext) parts.push(additionalContext);
-  if (conversationLine) parts.push(conversationLine);
-  if (channelLine) parts.push(channelLine);
-  if (safetyLine) parts.push(safetyLine);
   if (growthLine) parts.push(growthLine);
+  if (wisdomLine) parts.push(wisdomLine);
+  if (knowledgeLine) parts.push(knowledgeLine);
+  if (newsLine) parts.push(newsLine);
+  if (channelLine) parts.push(channelLine);
+  if (conversationLine) parts.push(conversationLine);
+  if (socraticLine) parts.push(socraticLine);
   if (followUpLine) parts.push(followUpLine);
+  if (additionalContext) parts.push(additionalContext);
   return parts.join('\n\n');
 }
 
