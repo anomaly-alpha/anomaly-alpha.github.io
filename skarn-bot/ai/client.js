@@ -68,6 +68,9 @@ async function moderatedChatCompletion(params) {
     } else if (outputMod && outputMod.error) {
       console.log('[Moderation] Output moderation error for user', params.userId, '— failing closed');
       return { success: false, safeMessage: getSafeMessage(null, true) };
+    } else {
+      console.log('[Moderation] Output moderation unavailable for user', params.userId, '— failing closed');
+      return { success: false, safeMessage: getSafeMessage(null, true) };
     }
 
     return { success: true, completion: completion };
