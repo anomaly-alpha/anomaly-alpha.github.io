@@ -289,9 +289,6 @@ npm start
 - **Parameters:** `channel` (optional), `timeframe` (optional: 1-24 hours), `focus` (optional)
 - **Response:** In-character summary from Skarn
 
-#### `/summarize` (Deprecated — use `/vein`)
-- **Parameters:** `channel` (optional), `timeframe` (optional: 1h to 1 week), `focus` (optional)
-- **Response:** AI summary of channel messages
 
 ---
 

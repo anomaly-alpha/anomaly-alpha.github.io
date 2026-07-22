@@ -56,7 +56,6 @@ const categories = {
       { name: '/recipe', desc: 'Recipe finder' },
       { name: '/code', desc: 'Code helper' },
       { name: '/debate', desc: 'AI debate partner' },
-      { name: '/summarize', desc: 'Summarize recent messages' },
       { name: '/translate', desc: 'Translate text' },
       { name: '/weather', desc: 'Weather lookup (current or Skarn-styled report)' },
       { name: '/weathertrack', desc: 'Schedule daily weather reports (Admin)' },
