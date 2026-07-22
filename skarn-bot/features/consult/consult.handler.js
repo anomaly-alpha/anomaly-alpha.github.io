@@ -26,12 +26,12 @@ const AI_ERRORS = [
 ];
 
 async function execute(interaction) {
+  await interaction.deferReply();
+
   // Rate limit check
   if (!canCall(interaction.user.id, 'chat')) {
-    return interaction.reply({ content: getRateLimitMessage(interaction.user.id, 'chat'), flags: 64, allowedMentions: { parse: ['users'] } });
+    return interaction.deleteReply();
   }
-
-  await interaction.deferReply();
 
   const rel = getRelationship(interaction.user.id, interaction.guild.id);
   const interactionCount = rel ? rel.interaction_count : 0;

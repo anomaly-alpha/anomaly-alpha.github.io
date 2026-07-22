@@ -18,14 +18,13 @@ module.exports = {
     .setDescription('AI improv — give a scenario and play along')
     .addStringOption(option => option.setName('scenario').setDescription('The scenario to improv').setRequired(true)),
   async execute(interaction) {
+    await interaction.deferReply();
     const scenario = interaction.options.getString('scenario');
-    if (!process.env.OPENAI_API_KEY) return interaction.reply({ content: 'AI not configured.', flags: 64, allowedMentions: { parse: ['users'] } });
+    if (!process.env.OPENAI_API_KEY) return interaction.deleteReply();
 
     if (!canCall(interaction.user.id)) {
-      return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64, allowedMentions: { parse: ['users'] } });
+      return interaction.deleteReply();
     }
-
-    await interaction.deferReply();
     try {
       const channelState = getChannelState(interaction.channel.id, interaction.guild.id);
       const stateLine = getStateLine(channelState.current_state);
