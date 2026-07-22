@@ -177,7 +177,7 @@ async function seedSlurFilter() {
       ],
       temperature: 0.7,
     });
-    var content = response.choices[0].message.content.trim();
+    var content = response.choices[0].message.content.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
     var patterns = JSON.parse(content);
     if (!Array.isArray(patterns)) throw new Error('Response was not an array');
     var before = getPatternCount();

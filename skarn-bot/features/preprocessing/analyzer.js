@@ -39,7 +39,9 @@ async function analyzeMessage(userId, guildId, channelId, messageText, roleNatur
     });
     if (!result.success) return null;
     var text = result.completion.choices[0].message.content;
-    var parsed = JSON.parse(text);
+    // Strip markdown code block wrappers if present
+    var cleaned = text.replace(/^```(?:json)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim();
+    var parsed = JSON.parse(cleaned);
 
     // Validate required fields with defaults
     return {
