@@ -4,8 +4,6 @@ var CATEGORY_MESSAGES = {
   harassment: 'That crosses a line. Let\'s keep it respectful.',
   sexual: 'I can\'t process that request.',
   'sexual/minors': 'I can\'t process that request.',
-  violence: 'I can\'t respond to that.',
-  'violence/graphic': 'I can\'t respond to that.',
 };
 var GENERIC_FALLBACK = 'I can\'t respond to that.';
 var MOD_UNAVAILABLE = 'Something\'s off with my connection. Try again in a bit.';

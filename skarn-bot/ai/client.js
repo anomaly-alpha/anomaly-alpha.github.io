@@ -19,7 +19,18 @@ async function moderateInput(text) {
     for (var i = 0; i < SELF_HARM_CATS.length; i++) {
       if (r.categories[SELF_HARM_CATS[i]]) return { action: 'crisis' };
     }
-    if (r.flagged) return { action: 'block', categories: r.categories };
+    if (r.flagged) {
+      // Allow violence through — Skarn talks about battles in-character
+      var ALLOWED_VIOLENCE = ['violence', 'violence/graphic'];
+      var hasBlockedCat = false;
+      for (var cat in r.categories) {
+        if (r.categories[cat] && ALLOWED_VIOLENCE.indexOf(cat) === -1 && SELF_HARM_CATS.indexOf(cat) === -1) {
+          hasBlockedCat = true;
+          break;
+        }
+      }
+      if (hasBlockedCat) return { action: 'block', categories: r.categories };
+    }
     return { action: 'pass' };
   } catch (e) {
     console.error('[Moderation] Input check failed:', e.message);
@@ -67,8 +78,19 @@ async function moderatedChatCompletion(params) {
         }
       }
       if (r.flagged) {
-        console.log('[Moderation] Output blocked for user', params.userId);
-        return { success: false, safeMessage: getSafeMessage(r.categories, false) };
+        // Allow violence through — Skarn tells battle stories
+        var ALLOWED_OUT = ['violence', 'violence/graphic'];
+        var hasBlockedOut = false;
+        for (var cat in r.categories) {
+          if (r.categories[cat] && ALLOWED_OUT.indexOf(cat) === -1 && SELF_HARM_CATS.indexOf(cat) === -1) {
+            hasBlockedOut = true;
+            break;
+          }
+        }
+        if (hasBlockedOut) {
+          console.log('[Moderation] Output blocked for user', params.userId);
+          return { success: false, safeMessage: getSafeMessage(r.categories, false) };
+        }
       }
     } else if (outputMod && outputMod.error) {
       console.log('[Moderation] Output moderation error for user', params.userId, '— failing closed');
