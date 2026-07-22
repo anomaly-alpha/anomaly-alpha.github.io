@@ -13,6 +13,7 @@ const { getChannelActivity } = require('./channelContext/channelContext');
 const { buildSafetyLine } = require('./safety/slurFilter');
 const { getSocraticQuestion } = require('./wisdom/socraticEngine');
 const { getGrowthLine } = require('./wisdom/growthTracker');
+const { getLoreLine } = require('./wisdom/loreAssembler');
 
 function buildContext(userId, guildId, channelId, opts) {
   opts = opts || {};
@@ -117,6 +118,7 @@ function buildContext(userId, guildId, channelId, opts) {
   const channelLine = getChannelActivity(guildId, channelId, userId);
   const safetyLine = buildSafetyLine();
   const growthLine = getGrowthLine(userId, guildId);
+  const loreLine = getLoreLine(userContent);
 
   var followUpLine = '';
   try {
@@ -142,6 +144,7 @@ function buildContext(userId, guildId, channelId, opts) {
     safetyLine: safetyLine,
     socraticLine: socraticLine,
     followUpLine: followUpLine,
+    loreLine: loreLine,
   };
 }
 
