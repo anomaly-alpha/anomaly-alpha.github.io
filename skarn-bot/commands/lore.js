@@ -24,7 +24,7 @@ module.exports = {
         model: process.env.AI_MODEL || 'gpt-3.5-turbo',
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: 'Tell this story in your own words, as only you can:\n\n' + story.story_text },
+          { role: 'user', content: 'Lightly polish this memory into a spoken story. Keep every detail — just make it flow like I\'m telling it aloud:\n\n' + story.story_text },
         ],
         max_tokens: 600,
         temperature: 0.7,
@@ -62,7 +62,7 @@ module.exports = {
         model: process.env.AI_MODEL || 'gpt-3.5-turbo',
         messages: [
           { role: 'system', content: systemPrompt },
-          { role: 'user', content: 'Tell this story in your own words, as only you can:\n\n' + story.story_text },
+          { role: 'user', content: 'Lightly polish this memory into a spoken story. Keep every detail — just make it flow like I\'m telling it aloud:\n\n' + story.story_text },
         ],
         max_tokens: 600,
         temperature: 0.7,
