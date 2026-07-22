@@ -30,7 +30,7 @@ async function tick(client) {
             if (member) {
               const channel = findActiveChannel(guild, user.user_id);
               if (channel) {
-                await channel.send({ content: generateCheckIn(user.user_id));, allowedMentions: { parse: ['users'] } })
+                await channel.send({ content: generateCheckIn(user.user_id), allowedMentions: { parse: ['users'] } });
                 recordProactiveMessage(user.user_id, guild.id, 'check-in');
               }
             }
