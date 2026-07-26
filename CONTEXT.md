@@ -25,7 +25,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 ### Mode System
 - **selectedModes** — Array of active category modes (`event`, `pvp`, `login`, `code`); defaults to `event`, `pvp`, `login` (code inactive by default)
 - **Forecast mode** — Layers on top of selectedModes. When active, a chart projects gem accumulation over custom timeframes using the current mode selections as baseline. Does NOT replace the card grid. Toggled via a "Forecast" button in the mode selector row.
-- **Forecaster implementation**: `initForecaster()` builds the panel and controls; `initForecastChart()` creates a dedicated Chart.js line chart instance (the 4th chart, separate from the 3 main charts). On first render it creates the chart; subsequent renders use `chart.update('none')`. Destroyed and recreated only when the forecaster panel is toggled off then on again. Controls include timeframe selector (1w/1m/3m/6m/1y), login consistency slider (100/75/50/25%), event participation toggle (Full/Partial/None), and promo codes per month (0/2/4/6/8). Produces 3 projection lines: conservative, expected, optimistic. Milestone panel shows projected dates to reach gem thresholds. State persisted in `gem_forecast` localStorage key, shareable via `?forecast=1M,100,full,4` URL params.
+- **Forecaster implementation**: `initForecaster()` builds the panel and controls; `initForecastChart()` creates a dedicated Chart.js line chart instance (the 4th chart, separate from the 3 main charts). On first render it creates the chart; subsequent renders use `chart.update('none')`. Destroyed and recreated only when the forecaster panel is toggled off then on again. Controls include timeframe selector (1w/1m/3m/6m/1y), login consistency slider (100/75/50/25%), event participation toggle (Full/Partial/None), and promo codes per month (0/2/4/6/8). Produces 3 projection lines: conservative, expected, optimistic. Milestone panel shows projected dates to reach gem thresholds. **Note: Forecaster HTML elements not yet added to index.html — JS functions exist but are unreachable (dead code).**
 
 ### Card Modal System
 - Every reward card has an **info icon** (`.gem-card__info-btn`) that opens a **card modal**
@@ -96,7 +96,7 @@ ADRs live in `docs/adr/`. Each records a hard-to-reverse decision with context, 
 
 ## Improvement Plans
 
-160 executable plans at `docs/plan/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plan/2026-05-28/deepseek-v4-flash-free/` and `docs/plan/2026-05-31/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
+160 executable plans at `docs/plan/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plan/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
 
 ## Constraints
 - Build step (npm run build) generates local Tailwind CSS. Output is committed. Works from file:// after build.

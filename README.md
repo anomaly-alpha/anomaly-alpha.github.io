@@ -80,10 +80,10 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (114 KB) — Main HTML + inline JSON configs (7 in `<head>`)
-├── script.js            (29 KB) — All JS: charts, filters, PvP, modals, countdowns (minified)
-├── styles.css           (33 KB) — CSS custom properties + BEM component classes (minified)
-├── tailwind.css         (12 KB) — Generated Tailwind utility classes (minified)
+├── index.html           (129 KB) — Main HTML + inline JSON configs (8 in `<head>`)
+├── script.js            (40 KB) — All JS: charts, filters, PvP, modals, countdowns (minified)
+├── styles.css           (40 KB) — CSS custom properties + BEM component classes (minified)
+├── tailwind.css         (14 KB) — Generated Tailwind utility classes (minified)
 ├── package.json         — Dev dependencies config (tailwindcss, csso, terser)
 ├── tailwind.config.js   — Tailwind config with color aliases + content paths
 ├── src/
