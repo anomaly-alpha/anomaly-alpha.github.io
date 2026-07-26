@@ -84,7 +84,7 @@ async function handleMention(message, client) {
   const interactionCount = rel ? rel.interaction_count : 0;
 
   // Detect and track user emotion
-  updateEmotion(userId, guildId, cleanMsg);
+  updateEmotion(userId, guildId, cleanMsg).catch(function() {});
 
   try {
     const { runPipeline } = require('../preprocessing/pipeline');

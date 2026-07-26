@@ -441,6 +441,44 @@ function setUserEmotion(userId, guildId, state) {
   ).run(userId, guildId, state, now);
 }
 
+// ===== Emotional Intelligence: History & Trends =====
+
+function logEmotionHistory(userId, guildId, emotion, sentiment) {
+  db.prepare(
+    'INSERT INTO emotion_history (user_id, guild_id, emotion, sentiment, created_at) VALUES (?, ?, ?, ?, ?)'
+  ).run(userId, guildId, emotion, sentiment, Date.now());
+  // Prune old entries (keep last 50 per user)
+  db.prepare(
+    'DELETE FROM emotion_history WHERE user_id = ? AND guild_id = ? AND id NOT IN (SELECT id FROM emotion_history WHERE user_id = ? AND guild_id = ? ORDER BY created_at DESC LIMIT 50)'
+  ).run(userId, guildId, userId, guildId);
+}
+
+function getEmotionTrend(userId, guildId, limit) {
+  return db.prepare(
+    'SELECT emotion, sentiment, created_at FROM emotion_history WHERE user_id = ? AND guild_id = ? ORDER BY created_at DESC LIMIT ?'
+  ).all(userId, guildId, limit || 10);
+}
+
+function getSentimentTrend(channelId, limit) {
+  return db.prepare(
+    `SELECT m.content, m.sentiment, m.created_at
+     FROM conversation_messages m
+     JOIN conversation_threads t ON m.thread_id = t.thread_id
+     WHERE m.channel_id = ? AND m.role = 'user'
+     ORDER BY m.created_at DESC LIMIT ?`
+  ).all(channelId, limit || 5);
+}
+
+function getServerClimate(guildId) {
+  var users = db.prepare(
+    'SELECT emotional_state, COUNT(*) as count FROM user_emotional_context WHERE guild_id = ? AND emotional_state != ? GROUP BY emotional_state ORDER BY count DESC'
+  ).all(guildId, 'neutral');
+  var total = db.prepare(
+    "SELECT COUNT(*) as count FROM user_emotional_context WHERE guild_id = ? AND emotional_state != 'neutral'"
+  ).get(guildId);
+  return { distribution: users, totalDistinct: total ? total.count : 0 };
+}
+
 // ===== Skarn Stories =====
 
 function addStory(topic, storyText, source) {
@@ -956,6 +994,10 @@ module.exports = {
   getKnowledgeBase,
   getUserEmotion,
   setUserEmotion,
+  logEmotionHistory,
+  getEmotionTrend,
+  getSentimentTrend,
+  getServerClimate,
   addStory,
   getStoriesByTopic,
   incrementStoryUse,

@@ -592,6 +592,17 @@ CREATE TABLE IF NOT EXISTS memory_optout (
   PRIMARY KEY (user_id, guild_id)
 );
 
+-- ===== Emotion History (trajectory tracking) =====
+CREATE TABLE IF NOT EXISTS emotion_history (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  emotion TEXT NOT NULL,
+  sentiment REAL NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_emotion_history_user ON emotion_history(user_id, guild_id, created_at);
+
 -- ===== Conversation Embeddings (RAG) =====
 CREATE TABLE IF NOT EXISTS conversation_embeddings (
   message_id INTEGER PRIMARY KEY,

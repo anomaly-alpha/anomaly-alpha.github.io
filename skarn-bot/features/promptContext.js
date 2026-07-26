@@ -7,7 +7,7 @@ const { getWarmthLine, getPatienceLine } = require('./warmth/warmthManager');
 const { getCallbackLine } = require('./humor/callbackEngine');
 const { getGratitudeDirective, getFirstOfDayLine, getMilestoneLine, getApologyLine } = require('./etiquette/etiquetteEngine');
 const { searchKnowledge, formatKnowledgeSnippet } = require('./knowledge/knowledgeBase');
-const { getEmotionDirective } = require('./wisdom/emotionalIntelligence');
+const { getEmotionDirective, getTrajectoryDirective, getMemoryEmotionLine, getEscalationDirective, getCalibrationDirective, getClimateLine } = require('./wisdom/emotionalIntelligence');
 const { getRecentNews } = require('./news/newsFetcher');
 const { getChannelActivity } = require('./channelContext/channelContext');
 const { buildSafetyLine } = require('./safety/slurFilter');
@@ -55,6 +55,12 @@ function buildContext(userId, guildId, channelId, opts) {
   const milestoneLine = familiarity >= 15 ? getMilestoneLine(userId, interactionCount) : '';
   const apologyLine = familiarity >= 15 ? getApologyLine(userId) : '';
   const emotionalLine = getEmotionDirective(userId, guildId);
+
+  // ===== Emotional Intelligence Upgrades =====
+  const trajectoryLine = getTrajectoryDirective(userId, guildId);
+  const memoryEmotionLine = getMemoryEmotionLine(userId, guildId);
+  const escalationLine = getEscalationDirective(channelId);
+  const climateLine = getClimateLine(guildId);
 
   const recentNews = getRecentNews(5);
   const newsLine = recentNews.length > 0
@@ -182,6 +188,7 @@ function buildContext(userId, guildId, channelId, opts) {
 
   // ===== Intelligence: Response Learning =====
   var guidanceLine = '';
+  var calibrationLine = '';
   try {
     var insights = getResponseInsights(userId, guildId);
     if (insights.sampleSize >= 5) {
@@ -191,6 +198,10 @@ function buildContext(userId, guildId, channelId, opts) {
       } else if (insights.missRate > 0.4 && insights.sampleSize >= 10) {
         guidanceLine += ' Consider varying your response style.';
       }
+    }
+    // Emotional calibration — adjust based on what works for THIS emotional state
+    if (insights.sampleSize >= 10) {
+      calibrationLine = getCalibrationDirective(userId, guildId, insights.hitRate, insights.missRate, insights.sampleSize);
     }
   } catch (e) { /* learning data unavailable */ }
 
@@ -229,6 +240,11 @@ function buildContext(userId, guildId, channelId, opts) {
     loreLine: loreLine,
     ragLine: ragLine,
     guidanceLine: guidanceLine,
+    calibrationLine: calibrationLine,
+    trajectoryLine: trajectoryLine,
+    memoryEmotionLine: memoryEmotionLine,
+    escalationLine: escalationLine,
+    climateLine: climateLine,
     serverWisdomLine: serverWisdomLine,
   };
 }

@@ -85,7 +85,7 @@ async function execute(interaction) {
     }
 
     // Detect and track user emotion
-    updateEmotion(interaction.user.id, interaction.guild.id, message);
+    updateEmotion(interaction.user.id, interaction.guild.id, message).catch(function() {});
 
     extendBanterChain(interaction.user.id, interaction.guild.id, interaction.channel.id);
 

@@ -50,10 +50,10 @@ async function shouldRespond(message, client) {
     probability += decay;
   } catch (e) { /* ignore */ }
 
-  // Sentiment boost — reuse existing emotion detection
+  // Sentiment boost — reuse existing emotion detection (async, non-blocking fallback)
   try {
     if (detectEmotion) {
-      var detected = detectEmotion(content);
+      var detected = await detectEmotion(content);
       if (['angry', 'stressed', 'sad'].includes(detected)) probability += 0.4;
       else if (detected === 'anxious') probability += 0.2;
     }
