@@ -13,7 +13,7 @@ const { getChannelActivity } = require('./channelContext/channelContext');
 const { buildSafetyLine } = require('./safety/slurFilter');
 const { getSocraticQuestion } = require('./wisdom/socraticEngine');
 const { getGrowthLine } = require('./wisdom/growthTracker');
-const { getLoreLine } = require('./wisdom/loreAssembler');
+const { getLoreLine, getDreamLine } = require('./wisdom/loreAssembler');
 const { buildExamplesLine } = require('../persona/examples');
 const { embedText, cosineSimilarity } = require('./intelligence/embeddings');
 const { getResponseInsights } = require('./intelligence/responseLearner');
@@ -220,6 +220,8 @@ function buildContext(userId, guildId, channelId, opts) {
     } catch (e) { /* server signals unavailable */ }
   }
 
+  const dreamLine = getDreamLine(userContent);
+
   const examplesLine = (familiarity === 0) ? buildExamplesLine(true) : buildExamplesLine(false);
 
   return {
@@ -238,6 +240,7 @@ function buildContext(userId, guildId, channelId, opts) {
     socraticLine: socraticLine,
     followUpLine: followUpLine,
     loreLine: loreLine,
+    dreamLine: dreamLine,
     ragLine: ragLine,
     guidanceLine: guidanceLine,
     calibrationLine: calibrationLine,

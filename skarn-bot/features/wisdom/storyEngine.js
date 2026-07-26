@@ -8,6 +8,11 @@ const TRIGGER_TOPICS = {
   technology: ['technology', 'invention', 'innovation', 'discovery', 'fire'],
   time: ['wait', 'patience', 'time', 'years', 'long', 'age'],
   power: ['power', 'strength', 'authority', 'leadership', 'rule'],
+  dreams: ['dream', 'sleep', 'nightmare', 'asleep', 'woke', 'waking'],
+  stillness: ['silence', 'quiet', 'still', 'peace', 'calm', 'alone'],
+  wonder: ['surprise', 'amazing', 'incredible', 'beautiful', 'strange'],
+  regret: ['regret', 'wish i had', 'if only', 'should have', 'mistake', 'sorry'],
+  humans: ['human', 'people', 'humanity', 'mortals', 'fragile'],
 };
 
 function findStoryTopic(text) {

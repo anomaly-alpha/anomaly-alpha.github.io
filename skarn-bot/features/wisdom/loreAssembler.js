@@ -100,4 +100,33 @@ function getLoreLine(message) {
   return formatLoreLine(selected);
 }
 
-module.exports = { getLoreLine, shouldInjectLore };
+// ===== Dream Line =====
+// A single quiet memory, randomly surfaced. Different from lore — more intimate, less triggered.
+
+function getDreamLine(message) {
+  // 30% chance on substantive messages, otherwise only if explicitly about dreams
+  var lower = (message || '').toLowerCase();
+  var explicitDream = lower.includes('do you dream') || lower.includes('skarn dream') || lower.includes('what do you dream');
+  if (!explicitDream && Math.random() > 0.3) return '';
+  if (!message || message.length < 3) return '';
+
+  var candidates = db.prepare(
+    "SELECT story_text FROM skarn_stories WHERE topic IN ('dreams', 'stillness', 'wonder', 'regret') ORDER BY RANDOM() LIMIT 1"
+  ).get();
+  if (!candidates) return '';
+
+  var flagKey = 'dream_used_' + candidates.story_text.substring(0, 20);
+  if (getFlag(flagKey)) return ''; // don't repeat the same dream in 24h
+
+  setFlag(flagKey, '1', 24 * 60 * 60 * 1000);
+
+  var frames = [
+    'A thought drifts through Skarn\'s mind, unbidden:',
+    'Skarn is quiet for a moment, then says, almost to himself:',
+    'A memory surfaces like a stone through dark water:',
+  ];
+  var frame = frames[Math.floor(Math.random() * frames.length)];
+  return frame + ' "' + candidates.story_text.replace(/"/g, "'") + '"';
+}
+
+module.exports = { getLoreLine, shouldInjectLore, getDreamLine };

@@ -1,38 +1,13 @@
-const { buildSystemPrompt } = require('../../persona/identity');
-const { roles, roleTokenBudgets } = require('../../persona/roles');
-const { canCall, recordCall, getRateLimitMessage, getUsage } = require('../../lib/rateLimit');
+const { canCall } = require('../../lib/rateLimit');
 const { canRespond } = require('../../lib/aiStats');
-const { moderatedChatCompletion } = require('../../ai/client');
-const { buildContext } = require('../promptContext');
-const { splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
-const { tools } = require('../tools/toolDefinitions');
-const { runTool } = require('../tools/toolRunner');
-const { estimateDelay } = require('../authenticity/typingController');
-const { simulateTyping } = require('../discordNative/typingSim');
-const { shouldReactOnly, pickReaction } = require('../authenticity/reactionController');
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
-const { getRecentContext, buildContextualPrompt } = require('../discordNative/contextInjector');
-const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
-const { getRelationship, addStory } = require('../../db/database');
-const { flagForApology } = require('../etiquette/etiquetteEngine');
-const { extractMemory } = require('../memory/memoryExtractor');
-const { detectFollowUps } = require('../intelligence/followUpEngine');
-const { trackResponse } = require('../intelligence/responseLearner');
-const { selectModel, checkKnowledgeMatch } = require('../intelligence/modelRouter');
-const { storeMessage } = require('../conversation/messageStore');
-const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
-const { updateEmotion } = require('../wisdom/emotionalIntelligence');
+const { shouldReactOnly, pickReaction } = require('../authenticity/reactionController');
+const { runPipeline } = require('../ai/sharedPipeline');
 
-const AI_ERRORS = [
-  'The connection is frayed. Try again.',
-  'Even the Warmaster\'s reach has limits. Try in a moment.',
-  'Signal lost. The boundary holds.',
-];
-
-async function handleMention(message, client) {
+async function handleMention(message) {
   if (message.author.bot) return;
 
-  // Respect opt-in: only respond if user has enabled interactions
+  // Respect opt-in
   const { canInteract } = require('../proactive/absenceDetector');
   const guildId = message.guild?.id ?? 'dm';
   if (!canInteract(message.author.id, guildId)) return;
@@ -40,202 +15,72 @@ async function handleMention(message, client) {
   const userId = message.author.id;
   const channelId = message.channel.id;
 
-  // Rate limit check
+  // Rate limit
   if (!canCall(userId, 'chat')) {
-    await message.reply({ content: getRateLimitMessage(userId, 'chat'), allowedMentions: { parse: ['users'] } });
+    await message.reply({ content: require('../../lib/rateLimit').getRateLimitMessage(userId, 'chat'), allowedMentions: { parse: ['users'] } });
     return;
   }
 
-  // Hourly cap check — silently drop if user hit 50/hr
-  if (!canRespond(userId)) {
-    return;
-  }
+  // Hourly cap
+  if (!canRespond(userId)) return;
 
-  // Clean message content (remove bot mention)
+  // Clean message (remove bot mention)
   const cleanMsg = message.content.replace(/<@!?\d+>/g, '').trim();
   if (!cleanMsg) return;
 
-  // Hostile content detection — 3 strikes = silence with de-escalation
+  // Hostile content check
   const { isHostile, recordStrike, isSilenced, getDeEscalationLine } = require('../safety/slurFilter');
   if (isHostile(cleanMsg)) {
-    var state = recordStrike(userId);
-    if (state >= 3) {
-      return message.reply({ content: getDeEscalationLine(), allowedMentions: { parse: ['users'] } });
-    }
+    recordStrike(userId);
     return message.reply({ content: getDeEscalationLine(), allowedMentions: { parse: ['users'] } });
   }
 
-  // Pre-generation silence check
-  if (isSilenced(userId)) {
-    return;
-  }
+  if (isSilenced(userId)) return;
 
-  // Reaction-only check — skip AI for casual/sharing messages (10% chance)
+  // Reaction-only check (10% chance for casual messages)
   const sentiment = analyzeSentiment(cleanMsg);
   if (shouldReactOnly('casual')) {
     await message.react(pickReaction(sentiment));
     return;
   }
 
-  // Store user message
-  storeMessage(userId, guildId, channelId, 'user', cleanMsg, { threadType: 'channel' });
+  await runPipeline(
+    userId,
+    guildId,
+    channelId,
+    cleanMsg,
+    {
+      channel: message.channel,
+      threadType: 'channel',
+      temperature: 0.85,
+      chunkSize: 1900,
+      roleName: 'consult',
+      beforeSentiment: sentiment,
 
-  const rel = getRelationship(userId, guildId);
-  const interactionCount = rel ? rel.interaction_count : 0;
-
-  // Detect and track user emotion
-  updateEmotion(userId, guildId, cleanMsg).catch(function() {});
-
-  try {
-    const { runPipeline } = require('../preprocessing/pipeline');
-
-    var systemPrompt;
-    var contextualMessage;
-    var pipelineResult;
-
-    pipelineResult = await runPipeline(
-      userId, guildId, channelId,
-      cleanMsg, roles.consult, 'casual', null, { isSkipListCommand: false }
-    );
-
-    if (pipelineResult && !pipelineResult.skipped) {
-      systemPrompt = pipelineResult.systemPrompt;
-      contextualMessage = pipelineResult.contextualMessage;
-    } else {
-      // Fall through to existing flow
-      const ctx = buildContext(userId, guildId, channelId, {
-        roleNature: 'casual',
-        userContent: cleanMsg,
-        interactionCount,
-      });
-      systemPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
-      contextualMessage = ctx.conversationLine
-        ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${cleanMsg}`
-        : cleanMsg;
+      sendReply: function(text) {
+        return message.reply({ content: text, allowedMentions: { parse: ['users'] } });
+      },
+      sendFollowUp: function(text) {
+        return message.channel.send({ content: text, allowedMentions: { parse: ['users'] } });
+      },
+      editReply: null,
+      canEdit: false,
+      onCrisis: async function() { /* silent return on crisis */ },
+      sendError: function(text) {
+        return message.reply({ content: text, allowedMentions: { parse: ['users'] } });
+      },
+      afterReply: async function() {
+        try {
+          const db = require('../../db/database');
+          db.resetMsgCount(userId, guildId || '', channelId);
+          db.upsertAttentionState(userId, guildId || '', channelId, {
+            last_bot_reply_at: Date.now(),
+            last_bot_channel_msg_at: Date.now(),
+          });
+        } catch (e) { /* non-critical */ }
+      },
     }
-
-    extendBanterChain(userId, guildId, channelId);
-
-    const hasKnowledgeMatch = checkKnowledgeMatch(userId, guildId, cleanMsg);
-
-    // Story engine: check if user message triggers a story topic
-    const storyTopic = findStoryTopic(cleanMsg);
-    let storyContext = '';
-    if (storyTopic) {
-      const existingStory = getExistingStory(storyTopic);
-      if (existingStory) {
-        storyContext = `\n\n[Skarn recalls a tale about ${storyTopic}: "${existingStory}"]`;
-      }
-    }
-    if (storyContext) {
-      contextualMessage += storyContext;
-    }
-
-    // ===== Tool-enabled AI call =====
-    var messages = [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: contextualMessage },
-    ];
-    var reply = '';
-    var maxTurns = 3; // prevent infinite loops
-    var turnCount = 0;
-
-    while (turnCount < maxTurns) {
-      turnCount++;
-      var result = await moderatedChatCompletion({
-        model: selectModel(cleanMsg, hasKnowledgeMatch, pipelineResult ? pipelineResult.analysis.complexityScore : undefined),
-        messages: messages,
-        max_tokens: getDeadpanBudget(roleTokenBudgets.consult, userId, channelId),
-        temperature: 0.85,
-        userId: userId,
-        // Only pass tools on the first turn
-        ...(turnCount === 1 ? { tools: tools, tool_choice: 'auto' } : {}),
-      });
-      if (!result.success) {
-        if (result.crisis) { return; }
-        await message.reply({ content: result.safeMessage, allowedMentions: { parse: ['users'] } });
-        return;
-      }
-
-      var choice = result.completion.choices[0].message;
-
-      // If no tool calls, we have our final text
-      if (!choice.tool_calls || choice.tool_calls.length === 0) {
-        reply = choice.content || '';
-        break;
-      }
-
-      // Handle tool calls
-      messages.push({ role: 'assistant', content: choice.content || null, tool_calls: choice.tool_calls });
-      for (var tc of choice.tool_calls) {
-        var toolResult = await runTool(tc, { guildId, channelId });
-        messages.push(toolResult);
-      }
-      // Let the model respond with the tool results incorporated
-    }
-
-    if (!reply) {
-      await message.reply({ content: 'The threads tangled. Try again?', allowedMentions: { parse: ['users'] } });
-      return;
-    }
-
-    recordCall(userId, 'chat');
-
-    // Store assistant response
-    storeMessage(userId, guildId, channelId, 'assistant', reply, { threadType: 'channel' });
-
-    // Track response sentiment shift (non-blocking)
-    const afterSentiment = analyzeSentiment(reply);
-    trackResponse(userId, guildId, sentiment, afterSentiment);
-
-    // Extract and store any new story from the AI reply (non-blocking)
-    const extractedStory = extractStoryFromReply(reply);
-    if (extractedStory) {
-      const storyTopic = findStoryTopic(reply) || 'general';
-      addStory(storyTopic, extractedStory);
-    }
-
-    // Detect time-bound statements and unanswered questions (non-blocking)
-    detectFollowUps(userId, guildId, channelId, cleanMsg);
-
-    const isPunchlineMsg = isPunchline(reply, channelId, userId);
-
-    await simulateTyping(message.channel, reply.length);
-
-    await new Promise(resolve => setTimeout(resolve, estimateDelay(reply)));
-
-    if (isPunchlineMsg) {
-      await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
-    }
-
-    var usage = getUsage(userId, 'chat');
-    if (usage.current >= 40) reply = reply + ' -# (' + usage.current + '/' + usage.max + ')';
-
-    const chunks = splitMessage(reply, 1900);
-    await message.reply({ content: chunks[0], allowedMentions: { parse: ['users'] } });
-    const tail = await maybeBurst(chunks.slice(1), message.channel);
-    for (const chunk of tail) {
-      await message.channel.send({ content: chunk, allowedMentions: { parse: ['users'] } });
-    }
-
-    // Update attention state
-    try {
-      var db = require('../../db/database');
-      db.resetMsgCount(userId, guildId || '', channelId);
-      db.upsertAttentionState(userId, guildId || '', channelId, {
-        last_bot_reply_at: Date.now(),
-        last_bot_channel_msg_at: Date.now(),
-      });
-    } catch (e) { /* non-critical */ }
-
-    // Auto-extract memory from conversation (non-blocking)
-    extractMemory(userId, guildId, cleanMsg, reply, pipelineResult ? pipelineResult.analysis : null).catch(() => {});
-  } catch (error) {
-    flagForApology(userId);
-    console.error('Mention reply error:', error);
-    const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
-    await message.reply({ content: errorMsg, allowedMentions: { parse: ['users'] } });
-  }
+  );
 }
 
 module.exports = { handleMention };
