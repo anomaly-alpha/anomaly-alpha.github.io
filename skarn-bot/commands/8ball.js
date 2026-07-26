@@ -1,24 +1,34 @@
 const { SlashCommandBuilder } = require('discord.js');
-
-const responses = [
-  'It is certain.', 'It is decidedly so.', 'Without a doubt.',
-  'Yes – definitely.', 'You may rely on it.', 'As I see it, yes.',
-  'Most likely.', 'Outlook good.', 'Yes.', 'Signs point to yes.',
-  'Reply hazy, try again.', 'Ask again later.',
-  'Better not tell you now.', 'Cannot predict now.',
-  'Concentrate and ask again.', 'Don\'t count on it.',
-  'My reply is no.', 'My sources say no.',
-  'Outlook not so good.', 'Very doubtful.',
-];
+const { buildSystemPrompt } = require('../persona/identity');
+const { roles, roleTokenBudgets } = require('../persona/roles');
+const { moderatedChatCompletion } = require('../ai/client');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('8ball')
-    .setDescription('Ask the magic 8-ball a question')
+    .setDescription('Ask the Abyss a question')
     .addStringOption(option =>
       option.setName('question').setDescription('Your question').setRequired(true)),
   async execute(interaction) {
-    const response = responses[Math.floor(Math.random() * responses.length)];
-    await interaction.reply({ content: `🎱 **${interaction.options.getString('question')}**\n${response}`, allowedMentions: { parse: ['users'] } });
+    await interaction.deferReply({ flags: 64 });
+    const question = interaction.options.getString('question');
+    const systemPrompt = buildSystemPrompt({ roleLine: roles.prophecy });
+    try {
+      var result = await moderatedChatCompletion({
+        model: process.env.AI_MODEL || 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: question },
+        ],
+        max_tokens: roleTokenBudgets.prophecy,
+        temperature: 0.8,
+        userId: interaction.user.id,
+      });
+      if (!result.success) throw new Error('AI failed');
+      var reply = result.completion.choices[0].message.content;
+      await interaction.editReply({ content: `🎱 **${question}**\n\n${reply}`, allowedMentions: { parse: ['users'] } });
+    } catch {
+      await interaction.editReply({ content: 'The Abyss is silent right now. Ask again later.', flags: 64, allowedMentions: { parse: ['users'] } });
+    }
   },
 };
