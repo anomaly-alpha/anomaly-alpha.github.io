@@ -12,7 +12,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Event** — Time-limited game events with ranking thresholds (500 gems: The Long Haul 300 top 5%, Earth's Defenders 200 top 10%)
 - **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout (3 cards: Restricted Arena + Open Arena + Alliance War; ~1,850 at Elite II rank 13 defaults)
 - **Login** — Daily/weekly/monthly login rewards with streak mechanics (1,393/week: 910 daily + 460 weekly + 23 monthly)
-- **Code** — Promotional codes distributed through official channels. Single source of truth: `data/codes.json`. Generated outputs: `data/generated/promo-codes.js` (loaded by main page) and `guide/code/index.html` chips (via injection markers). Active newest-first, expired by date descending. 28 active codes + 11 expired, variable rewards including gems, Hero Shop Tickets, and hero shards. Redeemed via verification code at redeem.invincible.ubisoft.barcelona. See [ADR-001](docs/adr/ADR-001-promo-code-single-source-of-truth.md).
+- **Code** — Promotional codes distributed through official channels. Single source of truth: `data/codes.json`. Generated outputs: `data/generated/promo-codes.js` (loaded by main page) and `guide/code/index.html` chips (via injection markers). Active newest-first, expired by date descending. 29 active codes + 11 expired, variable rewards including gems, Hero Shop Tickets, and hero shards. Redeemed via verification code at redeem.invincible.ubisoft.barcelona. See [ADR-001](docs/adr/ADR-001-promo-code-single-source-of-truth.md).
   - **Code age indicator** (not expiry): Active codes show age bands based on `dateAdded`: green <10 days, yellow 10-20, orange 20-30, red >30. No claim about actual remaining days — the game doesn't publish expiry dates. Expired codes use the authoritative `expiredDate` field.
 
 ### Key Terms
@@ -41,7 +41,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Hero Rank Up** — Separate from XP: requires hero duplicates or same-faction heroes. Progression: Rare → Rare+ → Elite → Elite+ → Exceptional → Exceptional+ → Epic → Epic+ → Legendary → Legendary+ → Seismic → Seismic+ → Omnipotent → Omnipotent+.
 
 ### Guide Pages (Topical Cluster)
-- `/guide/code/` — Promo code guide: 28 active codes with click-to-copy (`copyCode()`), redemption steps (verification code + redeem site), 5 tips
+- `/guide/code/` — Promo code guide: 29 active codes with click-to-copy (`copyCode()`), redemption steps (verification code + redeem site), 5 tips
 - `/guide/event/` — Event rewards guide: The Long Haul + Earth's Defenders strategies
 - `/guide/pvp/` — PvP guide: 14 leagues, payout tables, 3 arena modes, demotion zone
 - `/guide/login/` — Login rewards guide: daily/weekly/monthly breakdown with income table
@@ -51,7 +51,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 
 ## Architecture
 - Inline JSON configs in HTML `<head>` (no fetch, works from `file://`)
-- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME` — global config objects loaded from 6 inline `<script>` tags; `contributors-config` is a 7th tag rendered directly in HTML
+- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME` — global config objects loaded from 6 inline `<script>` tags; `contributors-config` is a 7th, `music-config` is an 8th
 - `getPvpPayout(arena, leagueId, rank)` — core PvP calculation function, reads per-league payout tables from `GAME.pvp.arenas` (restricted/open) and `GAME.pvp.multiverse` (6 grouped leagues for Alliance War)
 - Modal data lives in `REWARDS.cards[].modal` — loaded via `findCardById(id)` helper
 - `showCardModal(cardId)` / `closeCardModal()` — modal lifecycle
@@ -83,7 +83,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 CSS custom properties in `:root` with dark/light mode support (`:root.light-mode`). Categories: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, `--gem-purple`. Semantic: `--gem-star`, `--gem-gem`. Background, orb, alert, and shadow tokens also defined. Full reference: `docs/DESIGN_SYSTEM.md`.
 
 ### Organization Entity
-- **Anomaly Alpha** — The organization that publishes and maintains the site. Schema.org `Organization` type. Named "Anomaly Alpha" in JSON-LD publisher/provider fields across all pages. Previously used "Gem Rewards Calculator" as the organization name (changed Jul 2026). `og:site_name` remains "Gem Rewards Calculator" (site name, not publisher name).
+- **Anomaly Alpha** — The organization that publishes and maintains the site. Schema.org `Organization` type. Named "Anomaly Alpha" in JSON-LD publisher/provider fields across all pages. Previously used "Gem Rewards Calculator" as the organization name (changed Jul 2026). `og:site_name` currently "Gem Rewards Calculator" — planned to change to "Invincible GTG" in the SEO rewrite branch.
 - **Anomaly** — Person (founder/developer). Schema.org `Person` type at `/authors/anomaly/`. Not to be confused with the publishing Organization.
 
 ## Architecture Decision Records
