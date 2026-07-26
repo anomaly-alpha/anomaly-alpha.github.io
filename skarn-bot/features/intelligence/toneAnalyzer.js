@@ -53,7 +53,7 @@ async function analyzeTone(text) {
     const response = await client.chat.completions.create({
       model: process.env.AI_MODEL || 'gpt-4o-mini',
       messages: messages,
-      max_tokens: 100,
+      max_completion_tokens: 100,
       temperature: 0.1,
     });
 
