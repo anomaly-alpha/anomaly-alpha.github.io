@@ -133,6 +133,10 @@ client.once('clientReady', () => {
   const { startProactiveScheduler } = require('./features/proactive/scheduler');
   startProactiveScheduler(client);
 
+  // Reminder delivery (every 30 seconds)
+  const { processDueReminders } = require('./features/remind/remind.handler');
+  setInterval(() => processDueReminders(client), 30 * 1000);
+
   // Sleep mode check
   setInterval(() => {
     if (isSleepTime() && !isAsleep) {

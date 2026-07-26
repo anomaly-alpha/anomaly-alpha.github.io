@@ -5,6 +5,8 @@ const { canRespond } = require('../../lib/aiStats');
 const { moderatedChatCompletion } = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
+const { tools } = require('../tools/toolDefinitions');
+const { runTool } = require('../tools/toolRunner');
 const { estimateDelay } = require('../authenticity/typingController');
 const { simulateTyping } = require('../discordNative/typingSim');
 const { shouldReactOnly, pickReaction } = require('../authenticity/reactionController');
@@ -129,23 +131,55 @@ async function handleMention(message, client) {
       contextualMessage += storyContext;
     }
 
-    var result = await moderatedChatCompletion({
-      model: selectModel(cleanMsg, hasKnowledgeMatch, pipelineResult ? pipelineResult.analysis.complexityScore : undefined),
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: contextualMessage },
-      ],
-      max_tokens: getDeadpanBudget(roleTokenBudgets.consult, userId, channelId),
-      temperature: 0.85,
-      userId: userId,
-    });
-    if (!result.success) {
-      if (result.crisis) { return; }
-      await message.reply({ content: result.safeMessage, allowedMentions: { parse: ['users'] } });
+    // ===== Tool-enabled AI call =====
+    var messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: contextualMessage },
+    ];
+    var reply = '';
+    var maxTurns = 3; // prevent infinite loops
+    var turnCount = 0;
+
+    while (turnCount < maxTurns) {
+      turnCount++;
+      var result = await moderatedChatCompletion({
+        model: selectModel(cleanMsg, hasKnowledgeMatch, pipelineResult ? pipelineResult.analysis.complexityScore : undefined),
+        messages: messages,
+        max_tokens: getDeadpanBudget(roleTokenBudgets.consult, userId, channelId),
+        temperature: 0.85,
+        userId: userId,
+        // Only pass tools on the first turn
+        ...(turnCount === 1 ? { tools: tools, tool_choice: 'auto' } : {}),
+      });
+      if (!result.success) {
+        if (result.crisis) { return; }
+        await message.reply({ content: result.safeMessage, allowedMentions: { parse: ['users'] } });
+        return;
+      }
+
+      var choice = result.completion.choices[0].message;
+
+      // If no tool calls, we have our final text
+      if (!choice.tool_calls || choice.tool_calls.length === 0) {
+        reply = choice.content || '';
+        break;
+      }
+
+      // Handle tool calls
+      messages.push({ role: 'assistant', content: choice.content || null, tool_calls: choice.tool_calls });
+      for (var tc of choice.tool_calls) {
+        var toolResult = await runTool(tc, { guildId, channelId });
+        messages.push(toolResult);
+      }
+      // Let the model respond with the tool results incorporated
+    }
+
+    if (!reply) {
+      await message.reply({ content: 'The threads tangled. Try again?', allowedMentions: { parse: ['users'] } });
       return;
     }
+
     recordCall(userId, 'chat');
-    var reply = result.completion.choices[0].message.content;
 
     // Store assistant response
     storeMessage(userId, guildId, channelId, 'assistant', reply, { threadType: 'channel' });

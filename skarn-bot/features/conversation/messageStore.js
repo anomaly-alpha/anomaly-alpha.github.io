@@ -1,6 +1,7 @@
-const { getActiveThread, createThread, archiveThread, updateThreadActivity, updateThreadSentiment, insertMessage, getThreadMessages, db } = require('../../db/database');
+const { getActiveThread, createThread, archiveThread, updateThreadActivity, updateThreadSentiment, insertMessage, getThreadMessages, db, saveEmbedding } = require('../../db/database');
 const { analyzeSentiment } = require('./sentimentAnalyzer');
 const { extractTopics, estimateTokens } = require('./topicExtractor');
+const { embedText } = require('../intelligence/embeddings');
 
 const CHANNEL_INACTIVITY_MS = 30 * 60 * 1000; // 30 minutes for channels
 const DM_INACTIVITY_MS = 24 * 60 * 60 * 1000; // 24 hours for DMs
@@ -54,7 +55,7 @@ async function storeMessage(userId, guildId, channelId, role, content, opts = {}
   const tokensEst = estimateTokens(content);
   const isQuestion = content.includes('?');
 
-  insertMessage(thread.thread_id, userId, guildId, channelId, role, content, {
+  var msgResult = insertMessage(thread.thread_id, userId, guildId, channelId, role, content, {
     sentiment,
     topics,
     isQuestion,
@@ -63,6 +64,13 @@ async function storeMessage(userId, guildId, channelId, role, content, opts = {}
 
   updateThreadActivity(thread.thread_id);
   updateThreadSentiment(thread.thread_id, sentiment);
+
+  // Generate embedding for user messages (non-blocking — improves RAG over time)
+  if (role === 'user' && content.length >= 10 && msgResult) {
+    embedText(content).then(function(embedding) {
+      if (embedding) saveEmbedding(msgResult.lastInsertRowid, embedding);
+    }).catch(function() { /* embedding failed, skip */ });
+  }
 
   return thread;
 }

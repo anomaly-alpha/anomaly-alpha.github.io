@@ -527,6 +527,19 @@ CREATE TABLE IF NOT EXISTS attention_state (
   PRIMARY KEY (user_id, guild_id, channel_id)
 );
 
+-- ===== Lorebook (World Info) =====
+CREATE TABLE IF NOT EXISTS lorebook (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  guild_id TEXT NOT NULL,
+  keywords TEXT NOT NULL,
+  content TEXT NOT NULL,
+  category TEXT NOT NULL DEFAULT 'general',
+  priority INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_lorebook_guild ON lorebook(guild_id);
+
 -- ===== Slur Filter =====
 CREATE TABLE IF NOT EXISTS slur_filter (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -577,6 +590,14 @@ CREATE TABLE IF NOT EXISTS memory_optout (
   guild_id TEXT NOT NULL,
   chronicle_optout INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (user_id, guild_id)
+);
+
+-- ===== Conversation Embeddings (RAG) =====
+CREATE TABLE IF NOT EXISTS conversation_embeddings (
+  message_id INTEGER PRIMARY KEY,
+  embedding BLOB NOT NULL,
+  created_at INTEGER NOT NULL,
+  FOREIGN KEY (message_id) REFERENCES conversation_messages(id)
 );
 
 CREATE TABLE IF NOT EXISTS realm_omens (

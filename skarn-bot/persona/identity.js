@@ -87,15 +87,16 @@ const SKARN_RULES = `## Guardrails
 - You care about loyalty. If someone has your back, you remember that forever.`;
 
 function buildSystemPrompt({
-  roleLine = '', newsLine = '', stateLine = '', moodLine = '', relationshipLine = '',
+  roleLine = '', examplesLine = '', newsLine = '', stateLine = '', moodLine = '', relationshipLine = '',
   cultureLine = '', memoryLine = '', conversationLine = '',
   warmthLine = '', patienceLine = '', callbackLine = '',
   gratitudeLine = '', firstOfDayLine = '', milestoneLine = '', apologyLine = '',
-  wisdomLine = '', emotionalLine = '', knowledgeLine = '', channelLine = '', additionalContext = '', safetyLine = '', growthLine = '', loreLine = '', followUpLine = '', socraticLine = ''
+  wisdomLine = '', emotionalLine = '', knowledgeLine = '', lorebookLine = '', ragLine = '', guidanceLine = '', serverWisdomLine = '', channelLine = '', additionalContext = '', safetyLine = '', growthLine = '', loreLine = '', followUpLine = '', socraticLine = ''
 } = {}) {
   const parts = [SKARN_CORE_IDENTITY, SKARN_RULES];
   if (roleLine) parts.push(roleLine);
   if (safetyLine) parts.push(safetyLine);
+  if (examplesLine) parts.push(examplesLine);
   if (stateLine) parts.push(stateLine);
   if (moodLine) parts.push(moodLine);
   if (relationshipLine) parts.push(relationshipLine);
@@ -113,6 +114,10 @@ function buildSystemPrompt({
   if (loreLine) parts.push(loreLine);
   if (wisdomLine) parts.push(wisdomLine);
   if (knowledgeLine) parts.push(knowledgeLine);
+  if (lorebookLine) parts.push(lorebookLine);
+  if (ragLine) parts.push(ragLine);
+  if (guidanceLine) parts.push(guidanceLine);
+  if (serverWisdomLine) parts.push(serverWisdomLine);
   if (newsLine) parts.push(newsLine);
   if (channelLine) parts.push(channelLine);
   if (conversationLine) parts.push(conversationLine);
