@@ -58,25 +58,25 @@ let html = fs.readFileSync(codeGuidePath, 'utf8');
 const replacements = [
   // GUIDE_DESC
   [/<!--GUIDE_DESC_START-->[\s\S]*?<!--GUIDE_DESC_END-->/,
-    `<!--GUIDE_DESC_START-->\n    <meta name="description" content="See all ${activeCount} active promo codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for ${monthYear}.">\n<!--GUIDE_DESC_END-->`],
+    `<!--GUIDE_DESC_START-->\n    <meta name="description" content="New Invincible Guarding the Globe promo codes — tap to copy and redeem at the Ubisoft portal. ${activeCount} active codes with gems, hero shards & tickets. Updated ${monthYear}.">\n<!--GUIDE_DESC_END-->`],
 
   // GUIDE_OG_DESC
   [/<!--GUIDE_OG_DESC_START-->[\s\S]*?<!--GUIDE_OG_DESC_END-->/,
-    `<!--GUIDE_OG_DESC_START-->\n    <meta property="og:description" content="See all ${activeCount} active promo codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for ${monthYear}.">\n<!--GUIDE_OG_DESC_END-->`],
+    `<!--GUIDE_OG_DESC_START-->\n    <meta property="og:description" content="New Invincible Guarding the Globe promo codes — tap to copy and redeem at the Ubisoft portal. ${activeCount} active codes with gems, hero shards & tickets. Updated ${monthYear}.">\n<!--GUIDE_OG_DESC_END-->`],
 
   // GUIDE_OG_IMAGE_ALT
   [/<!--GUIDE_OG_IMAGE_ALT_START-->[\s\S]*?<!--GUIDE_OG_IMAGE_ALT_END-->/,
-    `<!--GUIDE_OG_IMAGE_ALT_START-->\n    <meta property="og:image:alt" content="Codes Guide — ${activeCount} ACTIVE PROMO CODES">\n<!--GUIDE_OG_IMAGE_ALT_END-->`],
+    `<!--GUIDE_OG_IMAGE_ALT_START-->\n    <meta property="og:image:alt" content="New Invincible GTG Codes — Active Promo Codes">\n<!--GUIDE_OG_IMAGE_ALT_END-->`],
 
   // GUIDE_TWITTER_DESC
   [/<!--GUIDE_TWITTER_DESC_START-->[\s\S]*?<!--GUIDE_TWITTER_DESC_END-->/,
-    `<!--GUIDE_TWITTER_DESC_START-->\n    <meta name="twitter:description" content="See all ${activeCount} active promo codes — tap to copy and redeem instantly at the Ubisoft portal. Worth 300 gems each. Updated for ${monthYear}.">\n<!--GUIDE_TWITTER_DESC_END-->`],
+    `<!--GUIDE_TWITTER_DESC_START-->\n    <meta name="twitter:description" content="New Invincible Guarding the Globe promo codes — tap to copy and redeem at the Ubisoft portal. ${activeCount} active codes with gems, hero shards & tickets. Updated ${monthYear}.">\n<!--GUIDE_TWITTER_DESC_END-->`],
 
   // GUIDE_ARTICLE_MODIFIED — removed: dateModified should only update on substantive content changes, not code list updates
 
   // GUIDE_LD_DESC (JSON-LD)
   [/"description": "__GUIDE_LD_DESC__",/,
-    `          "description": "Find active Invincible Guarding the Globe promo codes, codes, and reward codes. ${activeCount} active promo codes with gems, hero shards & tickets.",`],
+    `          "description": "New Invincible Guarding the Globe promo codes — ${activeCount} active codes with gems, hero shards & tickets. Tap to copy and redeem at the Ubisoft portal.",`],
 
   // GUIDE_TAB
   [/<!--GUIDE_TAB_START-->[\s\S]*?<!--GUIDE_TAB_END-->/,
@@ -94,11 +94,12 @@ const replacements = [
   [/<!--GUIDE_CODES_EXPIRED_START-->[\s\S]*?<!--GUIDE_CODES_EXPIRED_END-->/,
    `<!--GUIDE_CODES_EXPIRED_START-->\n${expiredChips}\n<!--GUIDE_CODES_EXPIRED_END-->`],
 
-  // Title, og:title, twitter:title — replace count + month in "[N Active [Mon YYYY]]"
-  [/(Invincible Guarding the Globe).*?— \d+[A-Za-z ]+\[[A-Z][a-z]{2} \d{4}\]/g, `$1 Promo Codes — ${activeCount} Active [${monthYear}]`],
+  // Title, og:title, twitter:title — replace with new "GTG" format
+  // Use negative lookbehind to avoid double-prepending "New"
+  [/(?<!New )(Invincible Guarding the Globe|Invincible GTG).*?— .*?\[[A-Z][a-z]{2} \d{4}\]/g, `New Invincible GTG Codes — All Active [${monthYear}]`],
 
   // JSON-LD headline — same pattern as title
-  [/("headline": "Invincible Guarding the Globe).*?— \d+[A-Za-z ]+\[[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `$1 Promo Codes — ${activeCount} Active [${monthYear}$2`],
+  [/("headline": "(?:(?!New ).)*?Invincible).*?— .*?\[[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `"headline": "New Invincible GTG Codes — All Active [${monthYear}]"$2`],
 
   // JSON-LD dateModified — removed: should only update on substantive content changes
 

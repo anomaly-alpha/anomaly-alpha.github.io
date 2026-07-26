@@ -1,14 +1,20 @@
 ---
 feature: seo-content-rewrite
-status: designed
+status: delivered
 updated: 2026-07-26
-branch: main
-commits:
+branch: fix/seo-rewrite
+commits: 8b12c8c..a4aa88a
 ---
 
 # SEO Content Rewrite — Capitalize on Main Terms
 
 ## Report
+
+**What was built** — Rewrote SEO elements across all 8 pages (titles, meta descriptions, OG/Twitter tags, H1s, structured data) plus terms/privacy branding, based on GSC 0726 export analysis. Key changes: homepage title shifts from "Gems Calculator" to "Codes, Gems & PvP Guide" (matching 86% traffic intent), code page gets "New" prefix for 19-30% CTR multiplier, all pages adopt "Invincible GTG" branding with "[Jul 2026]" freshness stamps. Script templates updated to fix "Worth 300 gems each" inaccuracy and add negative lookbehind to prevent double-prepend.
+
+**Verification** — `npm run build` passes. All 10 pages have "Invincible GTG" in apple-mobile-web-app-title and og:site_name. All titles contain "Invincible GTG". Code page auto-generation verified — no double-prepend after script fix.
+
+**Journey log** — Grill session resolved 8 decisions: og:site_name branding, freshness claim, H1 strategy, date stamp scope, H1 visual impact, title count format, code page H1, noindex pages. Negative lookbehind added to script regex after discovering double-prepend "New New" issue.
 
 ## [S1] Problem
 
@@ -209,13 +215,13 @@ Each page: update `<title>`, `<meta description>`, OG/Twitter tags, `<h1>`, stru
 
 ## Tasks
 
-- [ ] T1: Update `scripts/generate-codes.js` — new description templates for GUIDE_DESC, GUIDE_OG_DESC, GUIDE_TWITTER_DESC markers (covers: S2)
-- [ ] T2: Rewrite homepage SEO copy — title, meta desc, OG/Twitter, H1, subtitle, structured data `name`, apple-mobile-web-app-title, og:site_name (covers: S2)
-- [ ] T3: Rewrite code guide SEO copy — run `npm run update-codes` after T1, then edit static elements: title, H1, OG title, structured data headline, apple-mobile-web-app-title, og:site_name (covers: S2; depends: T1)
-- [ ] T4: Rewrite PvP guide SEO copy — title, meta desc, OG/Twitter, H1, structured data, apple-mobile-web-app-title, og:site_name (covers: S2)
-- [ ] T5: Rewrite event guide SEO copy (covers: S2)
-- [ ] T6: Rewrite login guide SEO copy (covers: S2)
-- [ ] T7: Rewrite beginners guide SEO copy (covers: S2)
-- [ ] T8: Rewrite FAQ SEO copy (covers: S2)
-- [ ] T9: Rewrite XP guide SEO copy (covers: S2)
-- [ ] T10: Build and verify — npm run build passes, all pages have updated titles (covers: S2; depends: T1-T9)
+- [x] T1: Update `scripts/generate-codes.js` — new description templates for GUIDE_DESC, GUIDE_OG_DESC, GUIDE_TWITTER_DESC markers (covers: S2)
+- [x] T2: Rewrite homepage SEO copy — title, meta desc, OG/Twitter, H1, subtitle, structured data `name`, apple-mobile-web-app-title, og:site_name (covers: S2)
+- [x] T3: Rewrite code guide SEO copy — run `npm run update-codes` after T1, then edit static elements: title, H1, OG title, structured data headline, apple-mobile-web-app-title, og:site_name (covers: S2; depends: T1)
+- [x] T4: Rewrite PvP guide SEO copy — title, meta desc, OG/Twitter, H1, structured data, apple-mobile-web-app-title, og:site_name (covers: S2)
+- [x] T5: Rewrite event guide SEO copy (covers: S2)
+- [x] T6: Rewrite login guide SEO copy (covers: S2)
+- [x] T7: Rewrite beginners guide SEO copy (covers: S2)
+- [x] T8: Rewrite FAQ SEO copy (covers: S2)
+- [x] T9: Rewrite XP guide SEO copy (covers: S2)
+- [x] T10: Build and verify — npm run build passes, all pages have updated titles (covers: S2; depends: T1-T9)
