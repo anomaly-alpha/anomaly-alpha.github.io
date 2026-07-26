@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { getStats, resetStats } = require('../lib/aiStats');
 const { getGuildConfig, getUserPreferences, deleteFlag } = require('../db/database');
 const { getStrikes } = require('../features/safety/slurFilter');
@@ -20,8 +20,7 @@ module.exports = {
     .addSubcommand(sub => sub.setName('view').setDescription('View your AI chat stats'))
     .addSubcommand(sub =>
       sub.setName('reset')
-        .setDescription('Reset your hourly cap, counters, and strikes')
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)),
+        .setDescription('Reset your hourly cap, counters, and strikes')),
   async execute(interaction) {
     const subcommand = interaction.options.getSubcommand();
 
