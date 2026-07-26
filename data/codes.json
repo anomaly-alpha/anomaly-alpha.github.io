@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-04",
+  "updated": "2026-07-26",
   "codes": [
     {
       "code": "JUL4TH",
@@ -124,6 +124,12 @@
       "tickets": 0,
       "reward": "1 x Kregg, 1 x Anissa",
       "dateAdded": "2026-05-20"
+    },
+    {
+      "code": "GLOB34",
+      "gems": 500,
+      "tickets": 0,
+      "dateAdded": "2026-05-19"
     },
     {
       "code": "LEXTV4",

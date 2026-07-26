@@ -33,6 +33,12 @@ window.__PROMO_CODES=[
     "dateAdded": "2026-05-20"
   },
   {
+    "code": "GLOB34",
+    "gems": 500,
+    "tickets": 0,
+    "dateAdded": "2026-05-19"
+  },
+  {
     "code": "ANISS4",
     "gems": 0,
     "tickets": 0,
