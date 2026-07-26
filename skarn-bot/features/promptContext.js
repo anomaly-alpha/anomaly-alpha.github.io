@@ -1,4 +1,4 @@
-const { getChannelState, getMemoryEntries, getRelationship, db } = require('../db/database');
+const { getChannelState, getMemoryEntries, getRelationship, db, findLoreForMessage, getRecentMessageEmbeddings } = require('../db/database');
 const { getStateLine } = require('./channelState/stateTracker');
 const { getRelationshipLine } = require('./relationship/relationshipTracker');
 const { getMoodLine } = require('./mood/moodManager');
@@ -14,6 +14,9 @@ const { buildSafetyLine } = require('./safety/slurFilter');
 const { getSocraticQuestion } = require('./wisdom/socraticEngine');
 const { getGrowthLine } = require('./wisdom/growthTracker');
 const { getLoreLine } = require('./wisdom/loreAssembler');
+const { buildExamplesLine } = require('../persona/examples');
+const { embedText, cosineSimilarity } = require('./intelligence/embeddings');
+const { getResponseInsights } = require('./intelligence/responseLearner');
 
 function buildContext(userId, guildId, channelId, opts) {
   opts = opts || {};
@@ -130,7 +133,86 @@ function buildContext(userId, guildId, channelId, opts) {
     }
   } catch (e) { /* follow-up query failed, skip */ }
 
+  // Lorebook (World Info) — keyword-triggered context
+  const loreMatches = guildId ? findLoreForMessage(userContent, guildId) : [];
+  const lorebookLine = loreMatches.length > 0
+    ? 'World knowledge that relates to this conversation:\n' + loreMatches.map(function(e) { return '[' + e.category + '] ' + e.content; }).join('\n')
+    : '';
+
+  // ===== Intelligence: Semantic RAG =====
+  var ragLine = '';
+  if (isFullTier && guildId && userContent.length >= 10) {
+    try {
+      var recentEmbeds = getRecentMessageEmbeddings(guildId, 60);
+      if (recentEmbeds.length >= 5) {
+        var msgIds = recentEmbeds.map(function(e) { return e.message_id; });
+        var msgTexts = recentEmbeds.map(function(e) { return e.content; });
+        var embeddings = recentEmbeds.map(function(e) { return e.embedding; });
+        embedText(userContent).then(function(queryEmbedding) {
+          if (!queryEmbedding) return;
+          var parsedEmbeds = embeddings.map(function(b) {
+            try { return JSON.parse(b.toString()); } catch { return null; }
+          }).filter(Boolean);
+          if (parsedEmbeds.length < 5) return;
+          var scored = parsedEmbeds.map(function(emb, i) {
+            return { sim: cosineSimilarity(queryEmbedding, emb), text: msgTexts[i], id: msgIds[i] };
+          }).filter(function(s) { return s.sim > 0.4; }).sort(function(a, b) { return b.sim - a.sim; }).slice(0, 3);
+          if (scored.length > 0) {
+            // Store for later — too early to use this turn, but cache for next
+            try {
+              var _db = require('../db/database').db;
+              _db.prepare('INSERT OR REPLACE INTO app_state (key, value, updated_at) VALUES (?, ?, ?)')
+                .run('rag_' + channelId, JSON.stringify(scored.map(function(s) { return s.text; })), Date.now());
+            } catch (e) {}
+          }
+        }).catch(function() {});
+      }
+    } catch (e) { /* RAG unavailable */ }
+    // Also check cached RAG from previous turn
+    try {
+      var cached = db.prepare('SELECT value FROM app_state WHERE key = ?').get('rag_' + channelId);
+      if (cached && cached.value) {
+        var cachedTexts = JSON.parse(cached.value);
+        if (cachedTexts.length > 0) {
+          ragLine = 'Related past conversations:\n' + cachedTexts.map(function(t) { return '• ' + t; }).join('\n');
+        }
+      }
+    } catch (e) { /* cache unavailable */ }
+  }
+
+  // ===== Intelligence: Response Learning =====
+  var guidanceLine = '';
+  try {
+    var insights = getResponseInsights(userId, guildId);
+    if (insights.sampleSize >= 5) {
+      guidanceLine = 'Response effectiveness: ' + insights.guidance;
+      if (insights.hitRate > 0.6) {
+        guidanceLine += ' Keep doing what you\'re doing.';
+      } else if (insights.missRate > 0.4 && insights.sampleSize >= 10) {
+        guidanceLine += ' Consider varying your response style.';
+      }
+    }
+  } catch (e) { /* learning data unavailable */ }
+
+  // ===== Intelligence: Server Wisdom =====
+  var serverWisdomLine = '';
+  if (isFullTier && guildId) {
+    try {
+      var recentSignals = db.prepare(
+        "SELECT summary_text, signal_type FROM server_signals WHERE guild_id = ? AND created_at > ? ORDER BY created_at DESC LIMIT 5"
+      ).all(guildId, Date.now() - 7 * 24 * 60 * 60 * 1000);
+      if (recentSignals.length >= 2) {
+        serverWisdomLine = 'Recent notable server events:\n' + recentSignals.map(function(s) {
+          return '• [' + s.signal_type + '] ' + s.summary_text;
+        }).join('\n');
+      }
+    } catch (e) { /* server signals unavailable */ }
+  }
+
+  const examplesLine = (familiarity === 0) ? buildExamplesLine(true) : buildExamplesLine(false);
+
   return {
+    examplesLine: examplesLine,
     growthLine: growthLine,
     newsLine: newsLine,
     stateLine: stateLine, moodLine: moodLine, relationshipLine: relationshipLine,
@@ -145,6 +227,9 @@ function buildContext(userId, guildId, channelId, opts) {
     socraticLine: socraticLine,
     followUpLine: followUpLine,
     loreLine: loreLine,
+    ragLine: ragLine,
+    guidanceLine: guidanceLine,
+    serverWisdomLine: serverWisdomLine,
   };
 }
 

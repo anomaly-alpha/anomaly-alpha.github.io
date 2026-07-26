@@ -161,6 +161,7 @@ function insertMessage(threadId, userId, guildId, channelId, role, content, opts
   const result = db.prepare(
     'INSERT INTO conversation_messages (thread_id, user_id, guild_id, channel_id, role, content, sentiment, topics, is_question, tokens_est, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
   ).run(threadId, userId, guildId, channelId, role, content, sentiment, JSON.stringify(topics), isQuestion ? 1 : 0, tokensEst, Date.now());
+  return result;
 
   // Index in FTS for search (best effort)
   try {
@@ -349,6 +350,33 @@ function getConversationStats(userId, guildId) {
   ).all(userId, guildId);
 
   return { totalMessages, firstMessage, questionCount, byChannel, topWords };
+}
+
+// ===== Conversation Embeddings (RAG) =====
+
+function saveEmbedding(messageId, embedding) {
+  try {
+    db.prepare('INSERT OR REPLACE INTO conversation_embeddings (message_id, embedding, created_at) VALUES (?, ?, ?)')
+      .run(messageId, Buffer.from(JSON.stringify(embedding)), Date.now());
+  } catch (e) {
+    console.error('[Embedding] Save failed:', e.message);
+  }
+}
+
+function getEmbedding(messageId) {
+  const row = db.prepare('SELECT embedding FROM conversation_embeddings WHERE message_id = ?').get(messageId);
+  if (!row) return null;
+  try { return JSON.parse(row.embedding.toString()); } catch { return null; }
+}
+
+function getRecentMessageEmbeddings(guildId, limit) {
+  return db.prepare(
+    `SELECT e.message_id, e.embedding, m.content, m.user_id, m.created_at, m.role
+     FROM conversation_embeddings e
+     JOIN conversation_messages m ON e.message_id = m.id
+     WHERE m.guild_id = ? AND m.role = 'user'
+     ORDER BY m.created_at DESC LIMIT ?`
+  ).all(guildId, limit || 100);
 }
 
 // ===== Knowledge Base =====
@@ -788,6 +816,62 @@ function getChannelActivity(channelId, windowMinutes) {
   return row ? row.count : 0;
 }
 
+// ===== Lorebook (World Info) =====
+
+const LOREBOOK_CACHE_TTL = 5 * 60 * 1000;
+let lorebookCache = null;
+let lorebookCacheLoadedAt = 0;
+
+function refreshLorebookCache() {
+  lorebookCache = db.prepare('SELECT * FROM lorebook ORDER BY priority DESC').all();
+  lorebookCacheLoadedAt = Date.now();
+}
+// Initial load
+refreshLorebookCache();
+
+function addLoreEntry(guildId, keywords, content, category, priority) {
+  const now = Date.now();
+  db.prepare('INSERT INTO lorebook (guild_id, keywords, content, category, priority, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)')
+    .run(guildId, keywords, content, category || 'general', priority || 0, now, now);
+  refreshLorebookCache();
+}
+
+function removeLoreEntry(id) {
+  db.prepare('DELETE FROM lorebook WHERE id = ?').run(id);
+  refreshLorebookCache();
+}
+
+function getLoreEntries(guildId) {
+  return db.prepare('SELECT * FROM lorebook WHERE guild_id = ? ORDER BY priority DESC').all(guildId);
+}
+
+function findLoreForMessage(message, guildId) {
+  if (!message) return [];
+  const lower = message.toLowerCase();
+  const words = lower.split(/\s+/).filter(w => w.length > 2);
+  const cleaned = lower.replace(/[^a-z0-9\s]/g, '');
+
+  // Refresh cache if expired
+  const now = Date.now();
+  if (now - lorebookCacheLoadedAt > LOREBOOK_CACHE_TTL) refreshLorebookCache();
+
+  if (!lorebookCache) return [];
+
+  const matches = [];
+  for (const entry of lorebookCache) {
+    if (entry.guild_id !== guildId) continue;
+    const kws = entry.keywords.split(',').map(k => k.trim().toLowerCase());
+    for (const kw of kws) {
+      if (cleaned.includes(kw) || words.includes(kw)) {
+        matches.push(entry);
+        break;
+      }
+    }
+  }
+
+  return matches.sort((a, b) => b.priority - a.priority).slice(0, 3);
+}
+
 // ===== Slur Filter =====
 
 const SLUR_CACHE_TTL = 5 * 60 * 1000;
@@ -931,6 +1015,17 @@ module.exports = {
   resetMsgCount,
   incrementMsgCount,
   getChannelActivity,
+
+  // Embeddings (RAG)
+  saveEmbedding,
+  getEmbedding,
+  getRecentMessageEmbeddings,
+
+  // Lorebook
+  addLoreEntry,
+  removeLoreEntry,
+  getLoreEntries,
+  findLoreForMessage,
 
   // Slur Filter
   getActiveSlurPatterns,

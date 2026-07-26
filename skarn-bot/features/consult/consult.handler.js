@@ -14,6 +14,8 @@ const { extractMemory } = require('../memory/memoryExtractor');
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
 const { trackResponse } = require('../intelligence/responseLearner');
 const { selectModel, checkKnowledgeMatch } = require('../intelligence/modelRouter');
+const { tools } = require('../tools/toolDefinitions');
+const { runTool } = require('../tools/toolRunner');
 const { storeMessage } = require('../conversation/messageStore');
 const { shouldEdit, scheduleEdit } = require('../authenticity/messageEditor');
 const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
@@ -98,23 +100,51 @@ async function execute(interaction) {
       }
     }
 
-    var result = await moderatedChatCompletion({
-      model: selectModel(message, hasKnowledgeMatch, pipelineResult ? pipelineResult.analysis.complexityScore : undefined),
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: contextualMessage },
-      ],
-      max_tokens: getDeadpanBudget(roleTokenBudgets.consult, interaction.user.id, interaction.channel.id),
-      temperature: 0.8,
-      userId: interaction.user.id,
-    });
-    if (!result.success) {
-      if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }
-      await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
+    // ===== Tool-enabled AI call =====
+    var messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: contextualMessage },
+    ];
+    var reply = '';
+    var maxTurns = 3;
+    var turnCount = 0;
+
+    while (turnCount < maxTurns) {
+      turnCount++;
+      var result = await moderatedChatCompletion({
+        model: selectModel(message, hasKnowledgeMatch, pipelineResult ? pipelineResult.analysis.complexityScore : undefined),
+        messages: messages,
+        max_tokens: getDeadpanBudget(roleTokenBudgets.consult, interaction.user.id, interaction.channel.id),
+        temperature: 0.8,
+        userId: interaction.user.id,
+        ...(turnCount === 1 ? { tools: tools, tool_choice: 'auto' } : {}),
+      });
+      if (!result.success) {
+        if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }
+        await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
+        return;
+      }
+
+      var choice = result.completion.choices[0].message;
+
+      if (!choice.tool_calls || choice.tool_calls.length === 0) {
+        reply = choice.content || '';
+        break;
+      }
+
+      messages.push({ role: 'assistant', content: choice.content || null, tool_calls: choice.tool_calls });
+      for (var tc of choice.tool_calls) {
+        var toolResult = await runTool(tc, { guildId: interaction.guild.id, channelId: interaction.channel.id });
+        messages.push(toolResult);
+      }
+    }
+
+    if (!reply) {
+      await interaction.editReply({ content: 'The threads tangled. Try again?', flags: 64, allowedMentions: { parse: ['users'] } });
       return;
     }
+
     recordCall(interaction.user.id, 'chat');
-    var reply = result.completion.choices[0].message.content;
 
     // Store assistant response
     storeMessage(interaction.user.id, interaction.guild.id, interaction.channel.id, 'assistant', reply, { threadType: 'consult' });
