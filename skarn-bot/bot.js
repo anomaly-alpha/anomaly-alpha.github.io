@@ -22,6 +22,16 @@ const { runDecay } = require('./features/relationship/relationshipTracker');
 const { fetchNews } = require('./features/news/newsFetcher');
 const { postDigest } = require('./features/news/newsDigest');
 
+// ===== Process-level error handling =====
+process.on('unhandledRejection', function(reason) {
+  console.error('[Process] Unhandled rejection:', reason && reason.stack ? reason.stack : reason);
+});
+process.on('uncaughtException', function(err) {
+  console.error('[Process] Uncaught exception:', err && err.stack ? err.stack : err);
+});
+
+var bot_recentMessageIds = new Set();
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -290,6 +300,15 @@ client.on('guildMemberAdd', async member => {
 client.on('messageCreate', async function(message) {
   // Step 1: Skip bots
   if (message.author.bot) return;
+
+  // Step 1.5: Dedup — process each message at most once (bounded, last 500)
+  var recentMessageIds = bot_recentMessageIds;
+  if (recentMessageIds.has(message.id)) return;
+  recentMessageIds.add(message.id);
+  if (recentMessageIds.size > 500) {
+    var oldest = recentMessageIds.values().next().value;
+    recentMessageIds.delete(oldest);
+  }
 
   // Step 2: Skip messages starting with * or + (prefix markers)
   if (message.content.startsWith('*') || message.content.startsWith('+')) return;
