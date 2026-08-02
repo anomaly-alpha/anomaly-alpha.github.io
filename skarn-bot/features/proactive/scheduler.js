@@ -32,9 +32,12 @@ async function tick(client) {
               if (channel) {
                 await channel.send({ content: generateCheckIn(user.user_id), allowedMentions: { parse: ['users'] } });
                 recordProactiveMessage(user.user_id, guild.id, 'check-in');
+              } else {
+                recordFailedAttempt(user.user_id, guild.id, 'check-in', 'no usable channel');
               }
             }
           } catch (e) {
+            recordFailedAttempt(user.user_id, guild.id, 'check-in', e.message);
             console.error(`[Proactive] Check-in failed for ${user.user_id}:`, e.message);
           }
         }
@@ -48,7 +51,7 @@ function hasDailyBudget(userId, guildId) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const count = db.prepare(
-    "SELECT COUNT(*) as count FROM follow_ups WHERE user_id = ? AND guild_id = ? AND status = 'sent' AND sent_at > ?"
+    "SELECT COUNT(*) as count FROM follow_ups WHERE user_id = ? AND guild_id = ? AND status IN ('sent', 'failed') AND sent_at > ?"
   ).get(userId, guildId, today.getTime());
   return count.count < DAILY_PROACTIVE_LIMIT;
 }
@@ -60,12 +63,26 @@ function recordProactiveMessage(userId, guildId, type) {
   ).run(userId, guildId, 'proactive', type, '', Date.now(), Date.now(), Date.now());
 }
 
+function recordFailedAttempt(userId, guildId, type, reason) {
+  const { db } = require('../../db/database');
+  db.prepare(
+    "INSERT INTO follow_ups (user_id, guild_id, channel_id, topic, context, created_at, due_after, status, sent_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'failed', ?)"
+  ).run(userId, guildId, 'proactive', type, reason, Date.now(), Date.now(), Date.now());
+}
+
 function findActiveChannel(guild, userId) {
-  // Try system channel, then general, then first text channel the user can see
-  if (guild.systemChannel) return guild.systemChannel;
-  const general = guild.channels.cache.find(c => c.name === 'general' && c.isTextBased());
-  if (general) return general;
-  return guild.channels.cache.find(c => c.isTextBased() && c.permissionsFor(userId)?.has('ViewChannel'));
+  // Prefer system channel, then general, then any text channel both the bot and user can use
+  const candidates = [guild.systemChannel, guild.channels.cache.find(c => c.name === 'general')];
+  for (const channel of candidates) {
+    if (isUsableForCheckIn(channel, guild, userId)) return channel;
+  }
+  return guild.channels.cache.find(c => isUsableForCheckIn(c, guild, userId));
+}
+
+function isUsableForCheckIn(channel, guild, userId) {
+  if (!channel || !channel.isTextBased()) return false;
+  const botPermissions = channel.permissionsFor(guild.members.me);
+  return channel.viewable && botPermissions?.has('SendMessages') && channel.permissionsFor(userId)?.has('ViewChannel');
 }
 
 module.exports = { startProactiveScheduler, tick };

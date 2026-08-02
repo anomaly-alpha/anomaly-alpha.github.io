@@ -7,8 +7,10 @@ const CACHE_MAX = 50;
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 const MAX_RESULTS = 5;
 const GOOGLE_CSE_URL = 'https://www.googleapis.com/customsearch/v1';
-const DDG_THROTTLE_MS = 3000;
+const DDG_THROTTLE_MS = 15000;
+const DDG_BLOCK_MS = 5 * 60 * 1000; // back off entirely for 5 min after DDG flags us
 let lastDdgCall = 0;
+let ddgBlockedUntil = 0;
 
 function normalizeQuery(query) {
   return query.toLowerCase().replace(/\s+/g, ' ').trim();
@@ -36,24 +38,35 @@ async function searchGoogle(query) {
 }
 
 async function searchDuckDuckGo(query) {
+  if (Date.now() < ddgBlockedUntil) return null;
+
   const now = Date.now();
   const elapsed = now - lastDdgCall;
   if (elapsed < DDG_THROTTLE_MS) {
     await new Promise(resolve => setTimeout(resolve, DDG_THROTTLE_MS - elapsed));
   }
 
-  const result = await search(query, { safeSearch: -1 });
-  lastDdgCall = Date.now();
-  return (result.results || []).slice(0, MAX_RESULTS).map(r => ({
-    title: r.title || '',
-    snippet: r.description || '',
-    url: r.url || '',
-  }));
+  try {
+    const result = await search(query, { safeSearch: -1 });
+    lastDdgCall = Date.now();
+    return (result.results || []).slice(0, MAX_RESULTS).map(r => ({
+      title: r.title || '',
+      snippet: r.description || '',
+      url: r.url || '',
+    }));
+  } catch (e) {
+    if (/anomaly|too quickly|rate\s*limit/i.test(e.message)) {
+      ddgBlockedUntil = Date.now() + DDG_BLOCK_MS;
+    }
+    throw e;
+  }
 }
 
 async function searchWikipedia(query) {
   const url = `${WIKIPEDIA_API}?action=opensearch&search=${encodeURIComponent(query)}&limit=${MAX_RESULTS}&format=json`;
-  const res = await fetch(url);
+  const res = await fetch(url, { headers: { 'User-Agent': 'skarn-bot/1.0 (Discord search fallback)' } });
+  if (!res.ok) return [];
+
   const data = await res.json();
 
   // opensearch returns [query, [titles...], [descriptions...], [urls...]]
