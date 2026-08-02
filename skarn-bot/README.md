@@ -29,103 +29,118 @@ AI_MODEL=gpt-3.5-turbo
 npm start
 ```
 
-## Quick Reference (75 Commands)
+## Quick Reference (77 Commands)
 
-### Skarn Persona (New)
-| Command | Description |
-|---------|-------------|
-| `/consult` | Speak with Skarn (in-character conversation) |
-| `/etch` | Tell Skarn something to remember about you |
-| `/forget` | Delete all facts Skarn remembers about you |
-| `/vein` | Summarize recent channel conversation |
-
-### General
-| Command | Description |
-|---------|-------------|
-| `/ping` | Check if bot is alive |
-| `/hello` | Get a greeting |
-| `/serverinfo` | Server stats |
-| `/userinfo` | Info about a user |
-| `/avatar` | Show user avatar |
-| `/help` | List all commands |
-
-### Fun
-| Command | Description |
-|---------|-------------|
-| `/coinflip` | Flip a coin |
-| `/dice` | Roll a dice |
-| `/8ball` | Magic 8-ball |
-| `/poll` | Create a poll |
-| `/meme` | Random meme with image |
-| `/trivia` | Classic trivia game |
-| `/giveaway` | Start a giveaway |
+Grouped by the same themes as `/help` — use `/help` in Discord for the live, always-current list.
 
 ### AI Chat
 | Command | Description |
 |---------|-------------|
-| `/aichat` | Toggle AI in a channel |
-| `@Skarn` | Mention bot for AI reply |
+| `/aichat` | Toggle AI auto-reply in a channel |
+| `/aichatignore` | Opt out of AI chat responses |
+| `/aistats` | View or reset AI stats |
+| `/advice` | Ask Skarn for his take on a dilemma |
+| `/consult` | Talk with Skarn — in-character conversation |
+| `/etch` | Tell Skarn something to remember |
+| `/find` | Search past conversations |
+| `/forget` | Delete facts Skarn remembers about you |
+| `/history` | View conversation history |
+| `/memory` | See what Skarn remembers about you |
+| `/preferences` | Manage interaction preferences |
+| `/relationship` | Relationship status |
+| `/stats` | Conversation stats |
+| `/vein` | Summarize the conversation so far |
+| `/vibe` | Server emotional climate |
 
-### AI Games
-| Command             | Description            |
-| ------------------- | ---------------------- |
-| `/aitrivia`         | AI trivia on any topic |
-| `/adventure`        | AI Dungeon Master game |
-| `/charades`         | Word guessing game     |
-| `/wouldyourather`   | Would You Rather       |
-| `/unpopularopinion` | Hot take voting        |
-| `/improv`           | AI improv comedy       |
+### Fun & Games
+| Command | Description |
+|---------|-------------|
+| `/8ball` | Magic 8-ball |
+| `/adventure` | AI Dungeon Master game |
+| `/aitrivia` | AI trivia on any topic |
+| `/charades` | Word guessing game |
+| `/coinflip` | Flip a coin |
+| `/compare` | Compare anything with AI |
+| `/compliment` | AI compliment |
+| `/debate` | AI debate partner |
+| `/dice` | Roll a dice |
+| `/fortune` | AI fortune teller |
+| `/giveaway` | Start a giveaway |
+| `/improv` | AI improv comedy |
+| `/insult` | Playful insult |
+| `/joke` | Custom AI joke |
+| `/lore` | Hear Skarn tell a story |
+| `/meme` | AI meme caption |
+| `/pickup` | Pickup line generator |
+| `/poll` | Create a poll |
+| `/roast` | Get roasted by AI |
+| `/song` | AI writes a song |
+| `/story` | Collaborative story |
+| `/tetris` | Head-to-head Tetris |
+| `/trivia` | Classic trivia game |
+| `/unpopularopinion` | Hot take voting |
+| `/whatdoesthefoxsay` | Ring-ding-ding-dingeringeding |
+| `/wouldyourather` | Would You Rather |
 
-### AI Creative
-| Command       | Description           |
-| ------------- | --------------------- |
-| `/song`       | AI writes a song      |
-| `/joke`       | Custom AI joke        |
-| `/fortune`    | AI fortune teller     |
-| `/story`      | Collaborative story   |
-| `/roast`      | Get roasted by AI     |
-| `/compliment` | AI compliment         |
-| `/insult`     | Playful insult        |
-| `/pickup`     | Pickup line generator |
+### Learning & Utility
+| Command | Description |
+|---------|-------------|
+| `/avatar` | Show user avatar |
+| `/code` | Code helper |
+| `/hello` | Get a greeting |
+| `/help` | Browse Skarn's commands |
+| `/homework` | Homework helper |
+| `/ping` | Check if bot is alive |
+| `/recipe` | Recipe finder |
+| `/remind` | Set a reminder |
+| `/search` | Search the web |
+| `/serverinfo` | Server stats |
+| `/translate` | Translate text |
+| `/userinfo` | Info about a user |
 
-### AI Utility
-| Command      | Description         |
-| ------------ | ------------------- |
-| `/homework`  | Homework helper     |
-| `/recipe`    | Recipe finder       |
-| `/code`      | Code helper         |
-| `/debate`    | AI debate partner   |
-| `/vein`      | Summarize channel (new) |
+### News & Weather
+| Command | Description |
+|---------|-------------|
+| `/news` | Show today's headlines |
+| `/setnewschannel` | Set news digest channel (Admin) |
+| `/weather` | Check the weather |
+| `/weathertrack` | Track weather for a location |
 
 ### Leveling
 | Command | Description |
 |---------|-------------|
-| `/level` | Check your level |
+| `/daily` | Daily reward |
 | `/leaderboard` | XP leaderboard |
-| `/setlevelrole` | Set role for level (Admin) |
+| `/level` | Check your level |
 | `/levelroles` | View level roles (Admin) |
+| `/setlevelrole` | Set role for level (Admin) |
 
 ### Server Setup
 | Command | Description |
 |---------|-------------|
-| `/setwelcome` | Set welcome channel (Admin) |
+| `/embed` | Create custom embed |
+| `/reactionrole` | Reaction role message (Admin) |
 | `/setautorole` | Set auto-role (Admin) |
 | `/setlog` | Set logging channel (Admin) |
-| `/reactionrole` | Reaction role message (Admin) |
+| `/setwelcome` | Set welcome channel (Admin) |
 | `/ticket` | Create ticket panel (Admin) |
-| `/embed` | Create custom embed |
 
-### Games
+### Realm of Skarn
 | Command | Description |
 |---------|-------------|
-| `/tetris` | Head-to-head Tetris |
+| `/chronicle` | Weekly realm history |
+| `/omen` | Prophecies |
+| `/realm` | Enter the Realm of Skarn — 11 subcommands (create, start, explore, stats, inventory, quests, rest, trade, delete, leaderboard, help) |
 
-### Friends
+### Friends & Knowledge
 | Command | Description |
 |---------|-------------|
-| `/friends` | View friend list |
 | `/addfriend` | Add a friend |
+| `/friends` | View friend list |
+| `/knowledge` | Look up a topic in the knowledge base |
+| `/lorebook` | Browse Skarn's lore |
 | `/removefriend` | Remove a friend |
+| `/vault` | Search the knowledge vault |
 
 ---
 
@@ -444,7 +459,7 @@ skarn-bot/
 ├── bot.js                  # Main bot + event handlers
 ├── deploy-commands.js      # Registers slash commands
 ├── rich-presence.js        # Discord Rich Presence (desktop)
-├── commands/               # 75 slash command files
+├── commands/               # 77 slash command files
 ├── games/
 │   └── tetris.js           # Tetris game engine
 ├── data/                   # Runtime data (gitignored)
