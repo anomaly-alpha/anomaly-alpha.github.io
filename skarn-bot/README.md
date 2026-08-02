@@ -481,6 +481,44 @@ Shows "Watching 😈 Servant of ... / Anomaly Alpha" with timer counting up from
 node rich-presence.js
 ```
 
+### Verification (manual, per project convention)
+
+No test framework — verify with syntax checks and inline smoke runs against a temp DB (a one-time `[DB] Migration 1 ... applied` log line on a fresh DB is expected):
+
+```bash
+node -c bot.js                                    # syntax check
+SKARN_DB_PATH=$(mktemp -d)/smoke.db node -e "
+require('./db/database');
+const { db } = require('./db/database');
+console.log('user_version', db.pragma('user_version', { simple: true }));
+const { applyBaselineFamiliarity } = require('./features/relationship/relationshipTracker');
+applyBaselineFamiliarity();
+console.log('baseline OK');
+"
+# Trade exploit regression (duplicate offer rejected, atomic transfer of 2 DIFFERENT items):
+SKARN_DB_PATH=$(mktemp -d)/trade.db node -e "
+require('./db/database');
+const store = require('./features/realm/realmStore');
+const { startTrade, addToTrade, confirmTrade } = require('./features/realm/economy');
+const S = { hp_current: 50, hp_max: 50, strength: 10, dexterity: 10, intelligence: 10, constitution: 10, wisdom: 10, charisma: 10, luck: 10 };
+store.saveCharacter('A', 'G', { name: 'A', race: 'human', class: 'warrior', level: 1, gold: 100, ...S });
+store.saveCharacter('B', 'G', { name: 'B', race: 'elf', class: 'mage', level: 1, gold: 100, ...S });
+store.addItem('A', 'G', 'sword1', 'Sword', 'weapon', 'a sword', 'rare');
+store.addItem('A', 'G', 'shield1', 'Shield', 'armor', 'a shield', 'rare');
+startTrade('A', 'G', 'B');
+const d1 = addToTrade('A', 'sword1', 0);
+const d2 = addToTrade('A', 'sword1', 0);
+console.log('dup rejected:', d1.ok && !d2.ok && d2.error === 'Item already in your offer');
+addToTrade('A', 'shield1', 0);
+confirmTrade('A');
+const done = confirmTrade('B');
+console.log('trade done:', done.ok && done.completed === true, '| A inv:', store.getInventory('A', 'G').length, '| B inv:', store.getInventory('B', 'G').length);
+"
+node bot.js                                          # boot check
+```
+
+Expected: `user_version 1`, `baseline OK`, `dup rejected: true`, `trade done: true 0 2`.
+
 ### Production (pm2)
 
 Both the bot and the Rich Presence process are supervised by pm2:
