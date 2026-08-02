@@ -11,6 +11,10 @@ if (DB_PATH !== ':memory:' && !fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { r
 
 const db = new Database(DB_PATH);
 
+// Enforce declared foreign keys + WAL journal (multi-process-safe, crash-safe)
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+
 // Run schema on startup
 db.exec(fs.readFileSync(SCHEMA_PATH, 'utf8'));
 
