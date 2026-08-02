@@ -11,9 +11,11 @@ const { seedKnowledgeBase } = require('./features/knowledge/knowledgeSeeder');
 // ===== Process-level error handling =====
 process.on('unhandledRejection', function(reason) {
   console.error('[Process] Unhandled rejection:', reason && reason.stack ? reason.stack : reason);
+  process.exit(1);
 });
 process.on('uncaughtException', function(err) {
   console.error('[Process] Uncaught exception:', err && err.stack ? err.stack : err);
+  process.exit(1);
 });
 
 var bot_recentMessageIds = new Set();

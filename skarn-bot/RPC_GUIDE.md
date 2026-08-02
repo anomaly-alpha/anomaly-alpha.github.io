@@ -50,8 +50,8 @@ rpc.login({ clientId }).catch(err => {
 # Install PM2
 npm install -g pm2
 
-# Start
-pm2 start rich-presence.js --name rpc
+# Start (both apps defined in ecosystem.config.js)
+pm2 start ecosystem.config.js
 
 # Save for auto-start
 pm2 save
@@ -63,11 +63,11 @@ pm2 startup
 **PM2 Commands:**
 | Command | Description |
 |---------|-------------|
-| `pm2 start rpc` | Start |
-| `pm2 stop rpc` | Stop |
-| `pm2 restart rpc` | Restart |
+| `pm2 start ecosystem.config.js` | Start |
+| `pm2 stop skarn-rpc` | Stop |
+| `pm2 restart skarn-rpc` | Restart |
 | `pm2 status` | Check status |
-| `pm2 logs rpc` | View logs |
+| `pm2 logs skarn-rpc` | View logs |
 
 ### Option B: Screen (Linux/Mac)
 
