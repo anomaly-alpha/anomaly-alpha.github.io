@@ -247,6 +247,14 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 > **Residual fixed 2026-08-02:** `applyBaselineFamiliarity()` (zero callers) still queried `user_memory`; re-pointed at `memory_entries` (source='etch').
 
+### 9.7 PostProcessor memory-type drift vs schema CHECK (fixed 2026-08-02)
+
+**Root cause**: `features/preprocessing/postProcessor.js` prompted the LLM to emit entity types `interest, project, person, preference, event` — but `memory_entries.type` has a CHECK constraint allowing only `('fact','interest','project','event','preference')` (`db/skarn-schema.sql`). `person` was never storable. When the model extracted a person (names are common), the INSERT violated the constraint, threw inside the single try/catch, and dropped the **entire batch** of extracted entities for that message — including valid siblings. Surfaced in production logs as `[PostProcessor] Error: CHECK constraint failed`.
+
+**Fix**: the prompt now advertises only the 5 storable types (people → `fact`), and the write loop whitelists types against `MEMORY_TYPES`, coercing any off-list LLM drift to `fact` instead of crashing. Data is preserved, never dropped.
+
+**Invariant**: every `addMemoryEntry` call site must pass a type inside `('fact','interest','project','event','preference')` — the schema CHECK is the source of truth. Any code path that derives a memory type from free-text LLM output must whitelist/coerce before insert.
+
 ## 10. Environment variables in use
 
 The following environment variables are consumed by the codebase. Variables are listed with their requirement level, code-level default (if any), and what they control.

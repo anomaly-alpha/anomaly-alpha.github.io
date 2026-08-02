@@ -1,5 +1,14 @@
+// ===== PostProcessor =====
+// Extracts storable entities from a conversation. Types MUST match the
+// memory_entries CHECK constraint (db/skarn-schema.sql): fact, interest,
+// project, event, preference. Off-list LLM drift is coerced to 'fact' so a
+// single bad entity can never crash the batch (schema drift fixed 2026-08-02).
+
 var { moderatedChatCompletion } = require('../../ai/client');
 var { addMemoryEntry } = require('../../db/database');
+
+// Allowed types — keep in sync with skarn-schema.sql CHECK constraint.
+var MEMORY_TYPES = ['fact', 'interest', 'project', 'event', 'preference'];
 
 async function postProcessConversation(userId, guildId, channelId, userMessage, aiResponse, analysis) {
   if (!userMessage || userMessage.length < 50) return;
@@ -18,7 +27,7 @@ async function postProcessConversation(userId, guildId, channelId, userMessage, 
       messages: [{
         role: 'user',
         content: 'Extract entities from this conversation. Return JSON array: [{type, name, context, confidence}]\n'
-          + 'Types: interest, project, person, preference, event\n'
+          + 'Types: interest, project, fact, preference, event (classify people and anything else as fact)\n'
           + (analysisContext ? 'Context: ' + analysisContext + '\n' : '')
           + 'User: "' + userMessage.slice(0, 300) + '"\n'
           + 'AI: "' + aiResponse.slice(0, 300) + '"'
@@ -35,7 +44,8 @@ async function postProcessConversation(userId, guildId, channelId, userMessage, 
     for (var i = 0; i < entities.length; i++) {
       var e = entities[i];
       if (e.type && e.name && e.name.length < 100) {
-        addMemoryEntry(userId, guildId, 'extracted', e.type, e.name.toLowerCase(), Math.min(1, e.confidence || 0.5), e.context || null);
+        var type = MEMORY_TYPES.indexOf(e.type) !== -1 ? e.type : 'fact';
+        addMemoryEntry(userId, guildId, 'extracted', type, e.name.toLowerCase(), Math.min(1, e.confidence || 0.5), e.context || null);
       }
     }
   } catch (e) {
