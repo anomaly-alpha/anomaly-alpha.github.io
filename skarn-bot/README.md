@@ -104,12 +104,12 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 | `/news` | Show today's headlines |
 | `/setnewschannel` | Set news digest channel (Admin) |
 | `/weather` | Check the weather |
-| `/weathertrack` | Track weather for a location |
+| `/weathertrack` | Manage daily weather reports |
 
 ### Leveling
 | Command | Description |
 |---------|-------------|
-| `/daily` | Daily reward |
+| `/daily` | Skarn's daily reading — the state of the realm |
 | `/leaderboard` | XP leaderboard |
 | `/level` | Check your level |
 | `/levelroles` | View level roles (Admin) |
@@ -138,7 +138,7 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 | `/addfriend` | Add a friend |
 | `/friends` | View friend list |
 | `/knowledge` | Look up a topic in the knowledge base |
-| `/lorebook` | Browse Skarn's lore |
+| `/lorebook` | Manage lorebook entries (Admin) |
 | `/removefriend` | Remove a friend |
 | `/vault` | Search the knowledge vault |
 
