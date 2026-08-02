@@ -120,4 +120,22 @@ const ROLE_NATURE = {
   unpopularopinion: 'serious',
 };
 
-module.exports = { roles, roleTokenBudgets, ROLE_NATURE };
+// ===== Reply targets (characters) =====
+// Distinct from roleTokenBudgets (tokens): replyTargets measure how long a
+// reply READS to the user; roleTokenBudgets measure what it COSTS. (spec [S11])
+const REPLIES_CHAR_DEFAULT = 200;
+const replyTargets = {
+  advice: 400,
+  homework: 400,
+  code: 400,
+  recipe: 400,
+  realm: 350,
+  realm_combat: 350,
+  realm_npc: 350,
+};
+
+function replyTargetFor(role) {
+  return replyTargets[role] || REPLIES_CHAR_DEFAULT;
+}
+
+module.exports = { roles, roleTokenBudgets, ROLE_NATURE, replyTargets, replyTargetFor, REPLIES_CHAR_DEFAULT };
