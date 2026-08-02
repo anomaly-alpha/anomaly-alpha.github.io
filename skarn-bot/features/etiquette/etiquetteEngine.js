@@ -1,4 +1,4 @@
-const { getFlag, setFlag, hasFlag, deleteFlag, getRelationship } = require('../../db/database');
+const { getFlag, setFlag, hasFlag, deleteFlag, getFlags, getRelationship } = require('../../db/database');
 
 const THANKS_PATTERNS = /\b(thanks|thank you|ty|tysm|thx|appreciate it|appreciate ya)\b/i;
 const MILESTONES = [50, 100, 250, 500, 1000];
@@ -20,9 +20,11 @@ function getFirstOfDayLine(userId, guildId) {
 }
 
 function getMilestoneLine(userId, interactionCount) {
+  const keys = MILESTONES.map(m => 'milestone_' + userId + '_' + m);
+  const flags = getFlags(keys);
   for (const m of MILESTONES) {
     const key = 'milestone_' + userId + '_' + m;
-    if (interactionCount >= m && !hasFlag(key)) {
+    if (interactionCount >= m && !flags[key]) {
       setFlag(key, '1');
       return "This is this person's " + m + "th command. If it feels natural, note it dryly. Don't force a celebration.";
     }

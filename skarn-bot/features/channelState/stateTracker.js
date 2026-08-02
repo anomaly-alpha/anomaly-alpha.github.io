@@ -1,8 +1,5 @@
-const Sentiment = require('sentiment');
 const { getChannelState, updateChannelState } = require('../../db/database');
-const { pushMessage, getMessages } = require('./sentimentBuffer');
-
-const sentiment = new Sentiment();
+const { pushMessage, getSentimentAverage } = require('./sentimentBuffer');
 
 // Thresholds (tune after observing real data)
 const CHARGED_THRESHOLD = 8;      // messages in window
@@ -21,10 +18,7 @@ function getStateLine(state) {
 }
 
 function computeSentimentAverage(channelId) {
-  const msgs = getMessages(channelId);
-  if (msgs.length === 0) return 0;
-  const scores = msgs.map(m => sentiment.analyze(m).comparative);
-  return scores.reduce((a, b) => a + b, 0) / scores.length;
+  return getSentimentAverage(channelId);
 }
 
 function onMessageReceived(message) {

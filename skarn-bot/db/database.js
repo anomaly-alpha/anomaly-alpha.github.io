@@ -652,6 +652,15 @@ function getFlag(key) {
   }
 }
 
+function getFlags(keys) {
+  if (!keys || keys.length === 0) return {};
+  var placeholders = keys.map(function() { return '?'; }).join(',');
+  var rows = db.prepare('SELECT flag_key, flag_value FROM app_flags WHERE flag_key IN (' + placeholders + ') AND (expires_at IS NULL OR expires_at > ?)').all(...keys, Date.now());
+  var out = {};
+  for (var i = 0; i < rows.length; i++) out[rows[i].flag_key] = rows[i].flag_value;
+  return out;
+}
+
 function deleteFlag(key) {
   try {
     db.prepare('DELETE FROM app_flags WHERE flag_key = ?').run(key);
@@ -971,6 +980,7 @@ module.exports = {
   pruneSentimentBuffers,
   setFlag,
   getFlag,
+  getFlags,
   deleteFlag,
   hasFlag,
   pruneExpiredFlags,
