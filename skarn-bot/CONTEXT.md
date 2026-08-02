@@ -2,7 +2,7 @@
 
 ## 1. Purpose of this file
 
-This file serves two roles: a **domain glossary** defining every table, subsystem, and concept in the Skarn bot codebase, and a **decisions record** documenting architectural conventions, scoping rules, and design rationale. The glossary is maintained by auditing code and docs; the decisions record captures conventions that are not always explicit in the code itself. Drift between docs and code is flagged inline rather than silently corrected.
+This file serves two roles: a **domain glossary** defining every table, subsystem, and concept in the Skarn bot codebase, and a **decisions record** documenting architectural conventions, scoping rules, and design rationale. The glossary is maintained by auditing code and docs; the decisions record captures conventions that are not always explicit in the code itself. Drift between docs and code is flagged inline rather than silently corrected. An **audit-fixes pass (2026-08-01)** was applied across the codebase (socratic tier, rate limiting, slur-filter gates, cooldown storage, handler dedup, test removal); resolved drifts below are marked accordingly.
 
 ## 2. Core architectural pattern
 
@@ -15,7 +15,7 @@ Two modules serve as shared layers that cut across all features:
 
 ## 3. Scoping conventions
 
-Every persistent table has a well-defined scope — the columns that form its primary key or unique constraint. This makes ownership and cleanup predictable. The following table covers every table in `db/skarn-schema.sql` and the subsystems they support:
+Every persistent table has a well-defined scope — the columns that form its primary key or unique constraint. This makes ownership and cleanup predictable. The following table covers most of the tables in `db/skarn-schema.sql` — **the list is incomplete** (`slur_filter` was dropped in the 2026-08-01 audit pass) — and the subsystems they support:
 
 | Subsystem | Scope | Key | Reason |
 |---|---|---|---|
@@ -42,39 +42,39 @@ Every persistent table has a well-defined scope — the columns that form its pr
 
 **Scoping rule**: the majority of tables are scoped by `(user_id, guild_id)` — data belongs to a user within a specific server. Exceptions are channel-scoped concepts (`channel_state`, `sentiment_buffers`, cooldown tables) and guild-scoped config (`guild_config`, `guild_mood`). No table is truly global (all users, all guilds) except ephemeral key-value stores (`app_state`, `app_flags`) and the shared knowledge base (`knowledge_base`). This uniformity means bulk cleanup by user or by guild follows a predictable pattern.
 
-> **Drift — "All state in SQLite" is not absolute**: Two modules maintain in-memory cooldown Maps: `features/discordNative/reactionSystem.js` (line 6) and `commands/search.js` (line 13). These are ephemeral (not durable state), but the rule as stated is contradicted by a literal reading.
+> **Resolved (2026-08-01) — "All state in SQLite" is now absolute**: The in-memory cooldown Maps in `features/discordNative/reactionSystem.js` and `commands/search.js` — along with the warmth, realm, and omen Maps — were all moved to SQLite-backed cooldowns (generic `cooldowns` table / `lib/rateLimit.js`). Zero in-memory Maps remain.
 >
 > **Drift — No Confidant Mode table**: "Confidant Mode" appears in spec documents but has no table or module in the codebase.
 
 ## 4. Rate limiting and cost control
 
-Rather than one global rate limiter, the bot uses **separate buckets per concern**, each with its own table (or in-memory Map) and ceiling:
+Rather than one global rate limiter, the bot uses **separate buckets per concern**, each with its own SQLite table and ceiling:
 
 | Bucket | Table / Mechanism | Window | Ceiling | Why separate |
 |---|---|---|---|---|
-| General AI calls | `rate_limits` | 10-minute sliding window | 10 per window | Prevents one user from exhausting the AI budget |
+| General AI calls | `rate_limits` via `lib/rateLimit.js` (atomic reserve) | 10-minute sliding window | 50 per window (`RATE_LIMIT_MAX_CALLS`) | Single atomic limiter; admission gate centralized in `moderatedChatCompletion()` |
 | Hourly AI cap | `ai_usage` | 1-hour rolling | 50 per hour | Guards against excessive per-user spend |
 | @mention responses | `mention_cooldowns` | 1 second | 1 per user per channel | Prevents ping-pong loops |
 | Random interjections | `interjection_cooldowns` | 5 minutes | 1 per channel | Avoids spammy presence |
 | Active listening cues | `active_listen_cooldowns` | 5 minutes | 1 per channel | Same spacing principle |
-| Reaction emoji | In-memory `Map` in `reactionSystem.js` | ~60 seconds | 1 per channel | Ephemeral — no durability needed |
+| Reaction emoji | `cooldowns` table (generic) via `checkCooldown()` | ~60 seconds | 1 per channel | SQLite-backed since 2026-08-01 |
 
-**Design rationale**: each major feature that triggers an AI call or outbound Discord action gets its own rate limit bucket. This prevents one feature's traffic (e.g. reaction spam) from starving another (e.g. AI replies). The general `rate_limits` table is the shared admission gate for all AI-bound calls; the per-feature cooldowns are lighter-weight checks that run before that gate is consulted. A consequence: adding a new feature that makes AI calls or sends outbound messages should always include a new cooldown table or check — reusing an existing bucket risks cascading throttles.
+**Design rationale**: each major feature that triggers an AI call or outbound Discord action gets its own rate limit bucket. This prevents one feature's traffic (e.g. reaction spam) from starving another (e.g. AI replies). The admission gate for all AI-bound calls is **centralized in `moderatedChatCompletion()`** (`ai/client.js`): it checks `isSilenced()` then atomically reserves a slot in `rate_limits` via `lib/rateLimit.js` before every call. The per-feature cooldowns are lighter-weight checks that run before that gate is consulted. A consequence: adding a new feature that makes AI calls or sends outbound messages should always include a new cooldown table or check — reusing an existing bucket risks cascading throttles.
 
-> **Drift**: The reaction cooldown (`reactionSystem.js`) and search cooldown (`commands/search.js`) are in-memory Maps, not SQLite-backed. These are the two exceptions to the "all state in SQLite" convention.
+> **Resolved (2026-08-01)**: The reaction cooldown (`reactionSystem.js`) and search cooldown (`commands/search.js`) — previously in-memory Maps — are now SQLite-backed via the generic `cooldowns` table. No exceptions to the "all state in SQLite" convention remain.
 
 ## 5. Persona and role conventions
 
 - **`SKARN_CORE_IDENTITY`** (`persona/identity.js` lines 1–51): The invariant core persona — a multi-paragraph character definition that every AI call starts with. Never modified at runtime. Defines Skarn's voice (casual Discord native), familiarity scale, emotional intelligence heuristics, and self-preservation rules.
-- **`roles.js`** (`persona/roles.js`): Exports three parallel objects: `roles` (27 role instruction strings), `roleTokenBudgets` (100–1000 token budgets per role), and `ROLE_NATURE` (classification: casual / moderate / serious). Every AI command has exactly one role in `roles`; no command inlines its own role string.
+- **`roles.js`** (`persona/roles.js`): Exports three parallel objects: `roles` (37 role instruction strings), `roleTokenBudgets` (100–1000 token budgets per role), and `ROLE_NATURE` (classification: casual / moderate / serious). Every AI command has exactly one role in `roles`; no command inlines its own role string.
 - **`roleTokenBudgets`**: Assigns a max token ceiling per role. Range: 100 (roast, compliment, insult, pickup, meme) to 1000 (realm). This controls how much the AI is allowed to generate per invocation. These budgets are consumed by each feature's OpenAI call independently — there is no shared token tracking across calls.
 - **`ROLE_NATURE` classification**: Three categories — `casual` (banter, jokes, insults), `moderate` (storytelling, adventure, debate), `serious` (homework, code, recipe). Drives context-assembly tiering in `buildContext()`: `isFullTier` is based on message length and question detection, not directly on `ROLE_NATURE`. The nature value is passed as `opts.roleNature` but is not used to toggle tiering — it is available for features to read.
 - **Temperature conventions**: Temperature is set per-call in each feature's OpenAI invocation, not derived from `ROLE_NATURE` or centralized in `roles.js`. A loose pattern is visible across the codebase: factual tasks (homework, code, vein, summarizer, knowledgeGraph) use 0.2–0.3; general conversation (consult, mentionRouter, search, interjectionEngine) uses 0.8–0.85; creative tasks (joke, insult, pickup, meme, wouldyourather, unpopularopinion) use 0.95–1.0. The shared AI client (`ai/client.js`) provides only the OpenAI singleton — it sets no default temperature or model.
 - **`ROLE_NATURE` duplication pattern**: `roles`, `roleTokenBudgets`, and `ROLE_NATURE` are three separate objects that duplicate the same set of keys. Adding a new role requires editing all three. Keys can drift out of sync — for example, `search` and `realm_npc` appear in `roles` and `roleTokenBudgets` but are absent from `ROLE_NATURE`, meaning they have no nature classification assigned.
 
-> **Drift — token budget drift**: `roleTokenBudgets.consult` is 400 in `roles.js`, while spec documents (e.g. `2026-07-18-persona-depth.md`) describe a 900-token budget for the consult role. The `roles.js` values should be treated as the source of truth — verify spec numbers against the code before trusting them.
+> **Resolved (2026-08-01) — token budget drift**: `roleTokenBudgets.consult` is now 600 in `roles.js` (raised from 400; spec documents described 900). The duplicate `chronicle` key was also removed. `roles.js` remains the source of truth — verify spec numbers against the code before trusting them.
 >
-> **Drift — socratic/advice tier not implemented**: `socraticLine` is accepted as a parameter by `buildSystemPrompt()` (`identity.js` line 58) but is **never populated** by `buildContext()` (`promptContext.js` returns no `socraticLine` in its result object at lines 108–117). The Advice tier described in ADR-001 (tiered-context-assembly) does not exist in the current codebase — no socratic directive is injected into any system prompt.
+> **Resolved (2026-08-01) — socratic/advice tier implemented**: `socraticLine` is now populated by `buildContext()` (`features/promptContext.js` calls `getSocraticQuestion()` and returns the line in its result object). `isFullTier` was changed from `const` to `let` so a socratic question promotes a message to full tier. The Advice tier described in ADR-001 (tiered-context-assembly) is live.
 >
 > **Drift — historical function names**: The existing glossary previously described `buildContext()` as "merging the previous `collectContext()` and `assembleContext()`" — those functions no longer exist anywhere in the codebase. The historical note cannot be verified by reading current code.
 
@@ -87,7 +87,7 @@ The codebase maintains **5 distinct memory stores**, each with a different scope
 | # | Store | Tables | Written by | Read by | Scope | Purpose |
 |---|-------|--------|------------|---------|-------|---------|
 | 1 | **Unified memory entries** | `memory_entries` | `etch.handler.js` (source='etch'), `knowledgeGraph.js` (source='extracted') | `promptContext.js` via `getMemoryEntries()` for AI context, `knowledgeGraph.js` via `getMemoryByType()` for formatKnowledge | Per-user-per-guild per-type-per-content | The unified persistent memory table for all per-user memory, discriminated by `source` column. |
-| 2 | **Conversation graph** | `conversation_threads`, `conversation_messages`, `conversation_summaries`, `conversation_fts` | `database.js` — `insertMessage()`, `createThread()`, `insertSummary()` + FTS5 index | Feature handlers via `getRecentMessages()`, `getThreadMessages()`, `getOlderSummaries()`, `searchConversations()` | Per-thread, indexed by user/guild/channel | Full conversation history with full-text search. Separate from extracted memory. |
+| 2 | **Conversation graph** | `conversation_threads`, `conversation_messages`, `conversation_summaries`, `conversation_fts` | `database.js` — `insertMessage()`, `createThread()`, `insertSummary()` (FTS insert relocated before the early return in `insertMessage()` — fixed 2026-08-01, `/find` works) | Context reads use **raw SQL in `promptContext.js`**; `getRecentMessages()`, `getOlderSummaries()` (and `getThreadMessages()`, `searchConversations()`) are now dead exports | Per-thread, indexed by user/guild/channel | Full conversation history with full-text search. Separate from extracted memory. |
 | 3 | **Realm NPC memory** | `realm_npc_memory` | Realm system NPC interaction handlers | Realm system only | Per-NPC-per-user-per-guild | In-fiction NPC memory. Never bleeds to persona or system prompt. |
 | 4 | **Emotional context** | `user_emotional_context` | `emotionalIntelligence.js` via `setUserEmotion()` | `getEmotionDirective()` for tone guidance in system prompt | Per-user-per-guild | Per-user emotion state. Advisory only — drives tone, not gating. |
 | 5 | **Knowledge base** | `knowledge_base`, `knowledge_fts` | `knowledgeSeeder.js`, `/learn` command via `addKnowledgeBase()` | `searchKnowledgeBase()`, knowledge commands | Global (all users) | Seeded Wikipedia topics + user-taught facts. Completely separate from per-user memory. |
@@ -120,9 +120,9 @@ Other role lines also encode implicit safety: `roast` says "never cruel — targ
 
 ### 7.2 Hostile content detection (3-strike + silence)
 
-**File**: `features/safety/hostileDetector.js`
+**File**: `features/safety/slurFilter.js` (replaced `hostileDetector.js`, which was deleted)
 
-10 regex patterns match hostile language (`shut up`, `stupid bot`, `f\*ck you`, `fuck you`, `you're useless`, `you are useless`, `bad bot`, `worthless`, `kill yourself`, `go die`). Strikes are tracked per-user in a 1-hour sliding window via `app_flags`. At 3 strikes, `isSilenced()` returns `true`, and the user is blocked from AI interactions until the window expires. The silence is enforced via `lib/gates.js` `checkHostile()` which is called in the command execution path.
+10 regex patterns match hostile language (`shut up`, `stupid bot`, `f\*ck you`, `fuck you`, `you're useless`, `you are useless`, `bad bot`, `worthless`, `kill yourself`, `go die`). Strikes are tracked per-user in a 10-minute sliding window via `app_flags` (key `strike_{userId}`). At 3 strikes, `isSilenced()` returns `true`, and the user is blocked from AI interactions until the window expires. The silence is enforced **centrally in `moderatedChatCompletion()`** (`ai/client.js`), which calls `isSilenced(userId)` before any AI call; consult and mention handlers additionally pre-check `isHostile()`/`recordStrike()`. (`checkHostile()` in `lib/gates.js` was deleted.)
 
 Removing this guardrail would allow hostile users to continue consuming AI resources and potentially trigger negative feedback loops in the persona system.
 
@@ -172,11 +172,11 @@ The following architectural trade-offs are consciously accepted rather than acci
 
 | Trade-off | Why accepted | What would change this |
 |-----------|-------------|----------------------|
-| In-memory Maps for reaction and search cooldowns (`reactionSystem.js` line 6, `search.js` line 13) | These are ephemeral cooldowns — losing them on restart has no consequence (no user-facing data loss). SQLite-backed cooldowns exist for longer-lived throttles (mention, interjection, active listen). | If cooldown data must survive restart (e.g., to prevent abuse across bot restarts) or if the in-memory approach misses multi-instance deployments. |
+| In-memory Maps for reaction and search cooldowns (`reactionSystem.js`, `search.js`) — **resolved 2026-08-01** | No longer applies: the reaction, warmth, realm, omen, and search cooldown Maps were all moved to SQLite-backed cooldowns. | (None — trade-off eliminated; the multi-instance redesign caveat is gone.) |
 | Plaintext conversation storage (`conversation_messages.content`) | No threat model assumes database compromise. The bot operates in trusted server environments. | If the bot is deployed to environments requiring encryption-at-rest or if compliance (GDPR data minimization) demands it. |
 | No timezone-aware scheduling (UTC only) | Simplicity — `SLEEP_TIMEZONE` is an integer UTC offset applied arithmetically. No DST, no per-user timezone support (except `user_preferences.timezone` which is stored but unused). | If per-user scheduling (reminders, follow-ups at user-local times) becomes a requirement. |
-| `roleTokenBudgets.consult` = 400 | Original budget set before context injection was added to the system prompt. The effective budget is shared between the role response and the growing context lines. | If user feedback consistently shows truncated consult responses, or when token-use monitoring confirms the budget is regularly exceeded. |
-| `socraticLine` accepted by `buildSystemPrompt()` but never populated by `buildContext()` | The Advice tier described in ADR-001 was never implemented. The parameter exists as dead surface area in the API. | If the Advice tier is implemented (detecting advice-seeking patterns = "should I", "what should" and injecting a socratic directive). |
+| `roleTokenBudgets.consult` = 600 (raised from 400, 2026-08-01) | Budget raised after context injection was added to the system prompt; `roles.js` is the source of truth. The effective budget is shared between the role response and the growing context lines. | If user feedback consistently shows truncated consult responses, or when token-use monitoring confirms the budget is regularly exceeded. |
+| `socraticLine` populated by `buildContext()` — **fixed 2026-08-01** | The Advice tier described in ADR-001 is now implemented: `buildContext()` populates `socraticLine` via `getSocraticQuestion()`, and `isFullTier` became `let` so a socratic question promotes to full tier. | If advice detection stops firing, check `getSocraticQuestion()` in `promptContext.js`. |
 
 
 ## 9. Cross-cutting bugs already found and fixed once
@@ -197,7 +197,7 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 **Root cause**: The `messageCreate` handler (`bot.js` line 277) fires multiple state-tracking functions via `Promise.allSettled`. If the same message triggers both the mention handler and an interjection or reaction path, the AI invocation logic is entered twice for the same message content.
 
-**Fix**: Add a processed-message dedup set (volatile, last N message IDs) at the top of `messageCreate`.
+**Fix**: A processed-message dedup set (volatile, last 500 message IDs) was added at the top of `messageCreate` (`bot.js` lines 161–165) — fixed 2026-08-01.
 
 **Invariant**: Every inbound message should be processed at most once by any AI-invocation path. A message-ID dedup set (or recent-message cache) prevents re-entry.
 
@@ -219,13 +219,13 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 **Invariant**: Every place in `database.js` that builds a dynamic `UPDATE ... SET` query must use `.run(...values, ...keys)` spread arguments, not `.apply()`. The 5 dynamic query builders (`updateChannelState`, `updateRelationshipField`, `upsertUserProfile`, `upsertAttentionState` update, `upsertAttentionState` insert) all follow the spread pattern.
 
-### 9.5 Dead code in gates.js (signature mismatch)
+### 9.5 Dead code in gates.js (signature mismatch) — fixed
 
-**File**: `lib/gates.js` line 16, `features/safety/hostileDetector.js` line 47
+**File**: `lib/gates.js` (was line 16), `features/safety/hostileDetector.js` (was line 47)
 
-**Root cause**: `gates.js` `checkHostile(userId, guildId)` accepts a `guildId` parameter and passes it to `isSilenced(userId, guildId)`, but `isSilenced()` in `hostileDetector.js` only takes a single `userId` parameter — the `guildId` is silently dropped. The function still works correctly because the strike tracking is per-user (not per-guild), but the signature is misleading.
+**Root cause**: `gates.js` `checkHostile(userId, guildId)` accepted a `guildId` parameter and passed it to `isSilenced(userId, guildId)`, but `isSilenced()` in `hostileDetector.js` only took a single `userId` parameter — the `guildId` was silently dropped. The function still worked because strike tracking is per-user (not per-guild), but the signature was misleading.
 
-**Fix**: Either remove the `guildId` parameter from `checkHostile()` or add guild-scoped strike tracking to `hostileDetector.js`.
+**Fix**: `gates.js` was trimmed (2026-08-01) to `ensureAiConfigured()` only — `checkHostile()` is gone, and hostile-checking moved into `features/safety/slurFilter.js` (`isHostile` / `recordStrike` / `isSilenced`), enforced centrally in `moderatedChatCompletion()`.
 
 **Invariant**: Any gate function in `lib/gates.js` must match the parameter signature of the underlying check function. Mismatched parameters that are silently dropped should be removed or implemented.
 
@@ -268,15 +268,15 @@ The following environment variables are consumed by the codebase. Variables are 
 
 The following architectural and configuration decisions are unresolved. Each is documented with the observed code behaviour and the question that needs a deliberate answer.
 
-1. **`roleTokenBudgets.consult` = 400 (spec called for 900, never increased)** — The budget was set before context injection was added to the system prompt. Spec documents (e.g., `2026-07-18-persona-depth.md`) describe a 900-token budget. The effective budget is shared between the role response and the growing context lines. No token-usage monitoring exists to confirm whether the current budget is regularly exceeded.
+1. **`roleTokenBudgets.consult` = 600 (resolved 2026-08-01; spec called for 900)** — The budget was raised from 400 to 600 but is still short of the 900 the spec described. `roles.js` is the source of truth. The effective budget is shared between the role response and the growing context lines. No token-usage monitoring exists to confirm whether the current budget is regularly exceeded.
 
-2. **No test framework configured** — 6 test files exist in `tests/` but no test runner is configured in `package.json`. There is no `npm test` script, no test framework dependency, and no CI pipeline. The tests cannot be executed without manual setup. This creates a documentation-vs-reality gap: the presence of test files suggests a testing story that does not exist.
+2. **No test story (resolved 2026-08-01)** — The `tests/` directory and its 6 test files were **removed by decision** (commit `8a736df`). There is no test framework, no `npm test` script, and no CI pipeline — the project is deliberately test-free and verified manually. The documentation-vs-reality gap no longer exists.
 
 3. **`ROLE_NATURE` duplication — three files historically, now partially fixed** — `roles`, `roleTokenBudgets`, and `ROLE_NATURE` are three separate objects in `persona/roles.js` that duplicate the same set of role keys. Adding a new role requires editing all three. The duplicate `ROLE_NATURE` in `features/discordNative/postProcess.js` was **removed** (fixed 2026-07-20) — it now imports from `persona/roles.js`. However `search` and `realm_npc` remain absent from `ROLE_NATURE` in `roles.js` (search was added 2026-07-20). No guard prevents further drift between the three exports in `roles.js`.
 
-4. **In-memory cooldown Maps — exceptions to the "all state in SQLite" rule** — `features/discordNative/reactionSystem.js` (line 6) and `commands/search.js` (line 13) maintain ephemeral cooldowns in in-memory `Map` objects rather than SQLite tables. These are explicitly accepted trade-offs (lost on restart with no user-facing impact), but they contradict the documented "all state in SQLite" convention and would need redesign for multi-instance deployments.
+4. **In-memory cooldown Maps — resolved 2026-08-01** — The in-memory cooldown Maps (`reactionSystem.js`, `commands/search.js`, plus warmth, realm, and omen) were moved to SQLite-backed cooldowns (commit `25de6df`). The "all state in SQLite" convention is now absolute — no in-memory Maps remain.
 
-5. **`socraticLine` in `buildSystemPrompt()` signature but never populated by `buildContext()`** — `socraticLine` is accepted as a parameter by `buildSystemPrompt()` (`persona/identity.js` line 58) but is **never** generated by `buildContext()` (`features/promptContext.js` returns no `socraticLine` in its result). The Advice tier described in ADR-001 (tiered-context-assembly with socratic questioning for advice-seeking patterns like "should I", "what should") has no corresponding implementation. The parameter is dead surface area in the API.
+5. **`socraticLine` populated by `buildContext()` — resolved 2026-08-01** — `socraticLine` is now generated by `buildContext()` (`features/promptContext.js` calls `getSocraticQuestion()` and returns the line in its result). The Advice tier described in ADR-001 (tiered-context-assembly with socratic questioning for advice-seeking patterns like "should I", "what should") is implemented. `isFullTier` was changed to `let` so a socratic question promotes a message to full tier.
 
 ## 12. Cross-cutting bugs found during code review (2026-07-20)
 
@@ -300,25 +300,27 @@ The following bugs were identified during a structural code review and should be
 
 **Invariant**: `ROLE_NATURE` must have exactly one canonical definition (in `persona/roles.js`). Every other file imports it.
 
-### 12.3 `clearFlags()` is a no-op
+### 12.3 `clearFlags()` was a no-op — removed entirely
 
-**Root cause**: `features/etiquette/etiquetteEngine.js` line 44 defines `function clearFlags() {}` — an empty function. It is called from `bot.js`'s 10-minute decay interval on line 164. The function body was never implemented. All apology flags and milestone flags use `app_flags` with TTL for automatic cleanup, so this causes no data leak — but it is dead code consuming a scheduled call.
+**Root cause**: `features/etiquette/etiquetteEngine.js` line 44 defined `function clearFlags() {}` — an empty function called from `bot.js`'s 10-minute decay interval. The function body was never implemented. All apology flags and milestone flags use `app_flags` with TTL for automatic cleanup, so this caused no data leak — but it was dead code consuming a scheduled call.
 
-**Status**: Not fixed (benign — TTL-based cleanup handles all flag expiry).
+**Status**: **Fixed (2026-08-01)** — `clearFlags()` was removed entirely, along with the test suite (commit `8a736df`); TTL-based cleanup handles all flag expiry.
 
 **Invariant**: Any function called from the decay interval should perform actual work or be removed.
 
-### 12.4 Duplicate rate limit implementation
+### 12.4 Duplicate rate limit implementation (resolved)
 
-**Root cause**: `lib/rateLimit.js` exports `canCall()` and `recordCall()`. `db/database.js` exports identically-named `canMakeCall()` and `recordCall()` with the same logic (10 calls per 10 minutes). The `lib/rateLimit` copy is used by `consult.handler.js` and `mentionRouter.js`; the `database.js` copy is unused in the AI call path. Two implementations that must be kept in sync.
+**Root cause**: `lib/rateLimit.js` exported `canCall()` and `recordCall()`. `db/database.js` used to export identically-named `canMakeCall()` and `recordCall()` with the same logic (10 calls per 10 minutes). The `lib/rateLimit` copy was used by `consult.handler.js` and `mentionRouter.js`; the `database.js` copy was unused in the AI call path. Two implementations that had to be kept in sync.
 
-**Status**: Not fixed (functional, but duplicated).
+**Status**: **Resolved (2026-08-01)** — `lib/rateLimit.js` is now the single implementation (atomic reserve, `RATE_LIMIT_MAX_CALLS` = 50); the `database.js` duplicates were removed (only `pruneRateLimits()` housekeeping remains), and the admission gate is centralized in `moderatedChatCompletion()`.
 
-### 12.5 Handler duplication — consult and mentionRouter
+### 12.5 Handler duplication — consult and mentionRouter (resolved)
 
-**Root cause**: `features/consult/consult.handler.js` and `features/mentionRouter/mentionRouter.js` share ~90% of their code: the same error pool, same story engine injection, same sentiment tracking, same context build → API call → post-process → store → track → send pipeline. The only substantive differences are: mentionRouter checks `canInteract` and `canRespond` (hourly cap), consult uses `interaction.deferReply()` and `interaction.editReply()` instead of `message.reply()`.
+**Root cause**: `features/consult/consult.handler.js` and `features/mentionRouter/mentionRouter.js` shared ~90% of their code: the same error pool, same story engine injection, same sentiment tracking, same context build → API call → post-process → store → track → send pipeline. The only substantive differences were: mentionRouter checks `canInteract` and `canRespond` (hourly cap), consult uses `interaction.deferReply()` and `interaction.editReply()` instead of `message.reply()`.
 
-**Status**: Not fixed. Changes to one handler must be manually mirrored in the other.
+**Fix**: Both handlers now delegate to the shared pipeline `features/ai/sharedPipeline.js` (`runPipeline()`); only the differences above remain in the handlers.
+
+**Status**: **Resolved (2026-08-01)** — changes are no longer manually mirrored.
 
 ### 12.6 Callback sampling not per-spec
 
@@ -326,44 +328,38 @@ The following bugs were identified during a structural code review and should be
 
 **Status**: Not fixed (the feature exists but is noisier than intended).
 
-## 13. Slur Filter System (2026-07-20)
+## 13. Slur Filter System (2026-07-20; gates 2–3 removed 2026-08-01)
 
-A three-gate censorship system preventing the AI from outputting slurs.
+A censorship system preventing the AI from outputting slurs. Originally three gates; **Gates 2 and 3 were deleted in the 2026-08-01 audit — only Gate 1 (prompt instruction) plus OpenAI moderation remain**.
 
-### Gate 1: Prompt Instruction
+### Gate 1: Prompt Instruction (only remaining gate)
 - `safetyLine` added to `buildSystemPrompt()` and `buildContext()`
 - Third bullet added to `SKARN_CORE_IDENTITY` Self-preservation section
 - Generated by `buildSafetyLine()` in `features/safety/slurFilter.js`
 - Always included (no tier gating)
 
-### Gate 2: Database Pattern Matching
-- New table `slur_filter` with `exact`, `substring`, `regex` match types
-- 5-minute in-memory cache in `getActiveSlurPatterns()` (same pattern as warmthManager)
-- Checked in `checkDatabase(text)` before post-processing
-- CRUD helpers: `addSlurPattern()`, `removeSlurPattern()` (soft-delete)
+### Gate 2: Database Pattern Matching (deleted 2026-08-01)
+- **Deleted**: the `slur_filter` table (`exact`, `substring`, `regex` match types), the 5-minute cache in `getActiveSlurPatterns()`, `checkDatabase(text)`, and the CRUD helpers `addSlurPattern()` / `removeSlurPattern()` (soft-delete) were all removed (commit `26b23e8`).
 
-### Gate 3: OpenAI Moderation API
-- Called via `client.moderations.create()` after post-processing
-- Returns `{ flagged, categories }` or `{ flagged: false }` on error (fail-open)
+### Gate 3: OpenAI Moderation API (retained, centralized)
+- Called via `client.moderations.create()` for both input and output moderation, centralized in `moderatedChatCompletion()` (`ai/client.js`)
+- Returns `{ flagged, categories }`; on moderation error the call fails **closed** (blocked), not fail-open
 
 ### Unified Strike System
-- Combined counter for hostile input AND flagged AI output
+- Counts hostile input (strikes are input-only now — flagged AI output no longer records a strike)
 - 3 strikes in 10-minute window -> 10-minute silence
-- Each hostile message during silence adds +2 minutes to timeout
 - Fresh start when silence expires
 - Strikes stored via `app_flags` (key: strike_{userId}), auto-expire cleanup
 - De-escalation lines: 5 static in-character phrases, no AI call
+- (The "+2 minutes per hostile message during silence" extension was removed as dead code, commit `5d43fca`)
 
-### LLM Seeding
-- No seed file in repo — patterns generated by LLM at runtime
-- Runs on startup + weekly timer
-- Existing patterns sent as context to avoid duplicates
-- Logs before/after counts
+### LLM Seeding (removed 2026-08-01)
+- **Deleted with Gate 2**: the runtime LLM pattern seeding (startup + weekly timer) seeded the `slur_filter` table, which no longer exists. No seeding code remains.
 
 ### Integration
-- Replaces `hostileDetector.js` (deleted) — patterns moved to `slurFilter.js`
-- Entry points: `checkOutput(text, userId)` in consult.handler.js and mentionRouter.js
-- Pre-generation check: `isSilenced(userId)` skips AI call entirely
+- Replaces `hostileDetector.js` (deleted) — hostile patterns moved to `slurFilter.js`
+- Hostile-input pre-checks (`isHostile()` / `recordStrike()` / `isSilenced()`) run in consult.handler.js and mentionRouter.js; moderation is centralized in `moderatedChatCompletion()`
+- Pre-generation check: `isSilenced(userId)` skips the AI call entirely (in `moderatedChatCompletion` and both handlers)
 
 ---
 
@@ -387,7 +383,7 @@ A three-gate censorship system preventing the AI from outputting slurs.
 
 ### State Persistence
 
-- **All state in SQLite**: Nearly all state persists to SQLite. Two exceptions exist: `features/discordNative/reactionSystem.js` and `commands/search.js` maintain ephemeral cooldowns in in-memory Maps (accepted trade-off — they are non-critical and losing them on restart is harmless). See §3 drift and §8.
+- **All state in SQLite**: All state persists to SQLite — the former in-memory cooldown Maps (`reactionSystem.js`, `commands/search.js`, warmth, realm, omen) were moved to SQLite-backed cooldowns in the 2026-08-01 audit, so there are no exceptions anymore.
 - **rate_limits**: Rolling window table for per-user API call rate limiting. Stores individual timestamps for the 10-minute sliding window.
 - **mention_cooldowns**: Per-user-per-channel cooldown for @mention responses (1s TTL).
 - **interjection_cooldowns**: Per-channel cooldown for random interjections (5min TTL).
@@ -414,7 +410,7 @@ A three-gate censorship system preventing the AI from outputting slurs.
 
 - **Emotional intelligence**: Keyword + sentiment-based emotion detection (happy/sad/anxious/angry/stressed). State stored in `user_emotional_context`. Generates tone directives for the AI system prompt.
 - **Story engine**: Topic-triggered story retrieval (war/loss/change/tech/time/power). Hybrid model: stories are AI-generated on first use, stored in `skarn_stories`, referenced on subsequent related topics.
-- **Socratic questioning**: Intended feature (ADR-001 Advice tier) — `socraticLine` is accepted as a parameter by `buildSystemPrompt()` but is never populated by `buildContext()`. Not currently implemented in the codebase.
+- **Socratic questioning**: Implemented feature (ADR-001 Advice tier) — `socraticLine` is populated by `buildContext()` via `getSocraticQuestion()` (`features/promptContext.js`), and `isFullTier` was changed to `let` so a socratic question promotes a message to full tier. Live since 2026-08-01.
 
 ### Realm of Skarn (RPG Subsystem)
 
@@ -427,7 +423,7 @@ A three-gate censorship system preventing the AI from outputting slurs.
 - **Inventory**: Weapons (35%), armor (35%), consumables (30%). 5 rarity tiers (common → legendary) with weighted random. Loot generation scales with danger level and luck stat. Paginated inventory view (25 per page).
 - **Economy**: Player-to-player trading (in-memory trade store, 5-minute timeout, SQLite transaction for atomic execution). Merchant selling with relationship-based price multiplier.
 - **AI driver**: Separate from main persona system. Has its own `buildContextPrompt()`, hardcodes `model: 'gpt-5.4-mini'`, and ignores the model router. Uses `roles.realm`, `roles.realm_combat`, and `roles.realm_npc` role lines. 30-second timeout on AI calls.
-- **Rate limiting**: Separate realm bucket — 30 calls per 30 minutes per user (in-memory), plus 1,000 calls per day per guild (SQLite via `realm_world_state`). Completely independent from the bot-wide 10/10 limit.
+- **Rate limiting**: Separate realm bucket — 30 calls per 30 minutes per user (`app_flags` via `features/realm/realmRateLimit.js`), plus 1,000 calls per day per guild (`realm_world_state`). Completely independent from the bot-wide rate limit (`RATE_LIMIT_MAX_CALLS` = 50 per 10 minutes via `lib/rateLimit.js`).
 - **Architecture**: Consistent vertical-slice pattern (commands/realm.js is thin wrapper → features/realm/realmCommand.js is the router). Data access through `realmStore.js` (not directly via `database.js`). Realm tables in `skarn-schema.sql`.
 
 ### Relationship & Server Awareness
