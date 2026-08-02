@@ -46,9 +46,9 @@ Dropdown options and the `/help` theme choices include only **non-empty** themes
 
 - `THEMES` — ordered theme metadata: slug, title, emoji, description, color
 - `THEME_MAP` — command name → theme slug (all 77), with `Other` fallback
-- `DESCRIPTION_OVERRIDES` — curated persona-voice descriptions for ~20 commands where `data.description` is too flat (etch, forget, vein, meme, roast, etc.)
-- `buildHelpPages(commands)` — takes `client.commands` (Collection) at interaction time; groups by theme, sorts alphabetically within theme, renders each page as an `EmbedBuilder`. Returns `{ pages, themeMeta }`
-- `getOverviewEmbed(commands)` — greeting + theme list with command counts + "how to talk to Skarn" hint + navigation hint
+- `DESCRIPTION_OVERRIDES` — curated persona-voice descriptions for 13 commands where `data.description` is too flat (etch, forget, vein, meme, roast, etc.)
+- `buildHelpPages(commands)` — takes `client.commands` (Collection) at interaction time; groups by theme, sorts alphabetically within theme, renders each page as an `EmbedBuilder`. Returns `{ pages, themeOptions, themeCounts }`
+- `getPageEmbed(page, pageNumber, totalPages, themeCounts)` — renders any page; the overview page (page.kind === 'overview') carries the greeting + theme list with command counts + how-to-talk-to-Skarn hint + navigation hint
 - `warnUnmappedCommands()` — startup check; logs a warning listing any command file whose name is missing from `THEME_MAP`
 
 Data flow: `bot.js` loads commands into `client.commands` (existing loop, unchanged) → help executes → reads `interaction.client.commands` live → `buildHelpPages` renders pages. No caching; every `/help` call reflects the current command set.

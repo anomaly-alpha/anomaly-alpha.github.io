@@ -64,15 +64,18 @@ module.exports = {
         .setDescription('Jump straight to a theme')
         .setRequired(false)
         .addChoices(
-          ...THEMES.map(function(t) { return { name: t.emoji + ' ' + t.title, value: t.slug }; }),
+          ...THEMES.filter(function(t) { return t.slug !== 'other'; }).map(function(t) { return { name: t.emoji + ' ' + t.title, value: t.slug }; }),
         );
     }),
   async execute(interaction) {
     const state = buildHelpPages(interaction.client.commands);
     let index = initialIndex(state.pages, interaction.options.getString('theme'));
     await interaction.reply({ ...renderAt(state, index), flags: 64 });
+    const reply = await interaction.fetchReply();
     const collector = interaction.channel.createMessageComponentCollector({
-      filter: function(i) { return i.user.id === interaction.user.id && ['help_prev', 'help_next', 'help_theme'].includes(i.customId); },
+      filter: function(i) {
+        return i.user.id === interaction.user.id && ['help_prev', 'help_next', 'help_theme'].includes(i.customId) && i.message.id === reply.id;
+      },
       time: TIMEOUT,
     });
     collector.on('collect', async function(i) {
@@ -91,7 +94,9 @@ module.exports = {
     let index = initialIndex(state.pages, args.theme);
     const reply = await message.reply(renderAt(state, index));
     const collector = message.channel.createMessageComponentCollector({
-      filter: function(i) { return i.user.id === message.author.id && ['help_prev', 'help_next', 'help_theme'].includes(i.customId); },
+      filter: function(i) {
+        return i.user.id === message.author.id && ['help_prev', 'help_next', 'help_theme'].includes(i.customId) && i.message.id === reply.id;
+      },
       time: TIMEOUT,
     });
     collector.on('collect', async function(i) {
