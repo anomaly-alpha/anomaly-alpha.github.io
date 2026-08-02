@@ -44,6 +44,8 @@ Every persistent table has a well-defined scope — the columns that form its pr
 
 > **Resolved (2026-08-01) — "All state in SQLite" is now absolute**: The in-memory cooldown Maps in `features/discordNative/reactionSystem.js` and `commands/search.js` — along with the warmth, realm, and omen Maps — were all moved to SQLite-backed cooldowns (generic `cooldowns` table / `lib/rateLimit.js`). Zero in-memory Maps remain.
 >
+> **Still in-memory (2026-08-02 audit):** `activeCombats` (`features/realm/combat.js`), `activeTrades` (`features/realm/economy.js`), `activeGames` (`games/tetris.js`), `banterChains`/`setups` (`features/humor/comedyTiming.js`). These are game sessions, intentionally volatile — lost on restart. The "zero in-memory Maps" claim refers to *cooldowns* specifically.
+>
 > **Drift — No Confidant Mode table**: "Confidant Mode" appears in spec documents but has no table or module in the codebase.
 
 ## 4. Rate limiting and cost control
@@ -240,6 +242,8 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 **Status**: **Fixed** — tables dropped, dead code removed.
 
+> **Residual fixed 2026-08-02:** `applyBaselineFamiliarity()` (zero callers) still queried `user_memory`; re-pointed at `memory_entries` (source='etch').
+
 ## 10. Environment variables in use
 
 The following environment variables are consumed by the codebase. Variables are listed with their requirement level, code-level default (if any), and what they control.
@@ -257,9 +261,9 @@ The following environment variables are consumed by the codebase. Variables are 
 | `AI_MODEL` | No | `gpt-3.5-turbo` | Default OpenAI model for all AI calls (`features/intelligence/modelRouter.js` line 9) |
 | `AI_MODEL_COMPLEX` | No | falls back to `AI_MODEL` | Model used for long/question/complex queries and knowledge-matched queries (`modelRouter.js` lines 4, 7) |
 
-> **Note**: `AI_MODEL` and `AI_MODEL_COMPLEX` are **not present in `.env.example`** — they must be added manually or by copying from this table. They are consumed by `features/intelligence/modelRouter.js`.
+> **Note**: `AI_MODEL` and `AI_MODEL_COMPLEX` **are documented in `.env.example`** (as commented-out optional defaults, matching the table above). They are consumed by `features/intelligence/modelRouter.js`.
 >
-> **Note**: `OPENAI_API_KEY` is also **not present in `.env.example`**, despite being required for all AI features. Add it manually when deploying.
+> **Note**: `OPENAI_API_KEY` **is documented in `.env.example`** (required for all AI features, per the table above).
 >
 > **Note**: When `GOOGLE_CSE_KEY` / `GOOGLE_CSE_CX` are not configured, the `/search` command falls back to DuckDuckGo (DDG) search via `features/search/searchEngine.js`.
 >
@@ -385,6 +389,7 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 ### State Persistence
 
 - **All state in SQLite**: All state persists to SQLite — the former in-memory cooldown Maps (`reactionSystem.js`, `commands/search.js`, warmth, realm, omen) were moved to SQLite-backed cooldowns in the 2026-08-01 audit, so there are no exceptions anymore.
+  > **Still in-memory (2026-08-02 audit):** `activeCombats` (`features/realm/combat.js`), `activeTrades` (`features/realm/economy.js`), `activeGames` (`games/tetris.js`), `banterChains`/`setups` (`features/humor/comedyTiming.js`). These are game sessions, intentionally volatile — lost on restart. The "zero in-memory Maps" claim refers to *cooldowns* specifically.
 - **rate_limits**: Rolling window table for per-user API call rate limiting. Stores individual timestamps for the 10-minute sliding window.
 - **mention_cooldowns**: Per-user-per-channel cooldown for @mention responses (1s TTL).
 - **interjection_cooldowns**: Per-channel cooldown for random interjections (5min TTL).

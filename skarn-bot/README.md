@@ -374,7 +374,7 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 #### `/friends`
 - **Parameters:** `search` (optional)
 - **Response:** Friend list with codes and power levels
-- **Storage:** `data/friends.json`
+- **Storage:** SQLite `friends` table
 
 #### `/addfriend`
 - **Parameters:** `code` (required), `name` (required), `power` (required), `note` (optional)
@@ -463,9 +463,7 @@ skarn-bot/
 ├── games/
 │   └── tetris.js           # Tetris game engine
 ├── data/                   # Runtime data (gitignored)
-│   ├── config.json         # Server settings
-│   ├── levels.json         # XP/level data
-│   └── friends.json        # Friend list
+│   └── skarn.db            # SQLite database (gitignored; backup via npm run backup)
 ├── .env                    # Secrets (never commit)
 ├── .env.example            # Template
 ├── .gitignore
