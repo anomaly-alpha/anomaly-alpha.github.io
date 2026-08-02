@@ -5,7 +5,6 @@ const { setFlag, getFlag, deleteFlag } = require('../../db/database');
 var STRIKE_WINDOW_MS = 10 * 60 * 1000;
 var STRIKE_LIMIT = 3;
 var SILENCE_DURATION_MS = 10 * 60 * 1000;
-var SILENCE_EXTENSION_MS = 2 * 60 * 1000;
 
 // ===== Hostile input patterns (migrated from hostileDetector.js) =====
 
