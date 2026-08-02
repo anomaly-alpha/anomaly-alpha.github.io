@@ -25,7 +25,7 @@ function buildContext(userId, guildId, channelId, opts) {
   const interactionCount = opts.interactionCount || 0;
 
   // Tiered: lightweight for short/no-question, full for substantive
-  const isFullTier = userContent.length >= 50 || userContent.indexOf('?') !== -1;
+  let isFullTier = userContent.length >= 50 || userContent.indexOf('?') !== -1;
 
   const socraticLine = getSocraticQuestion(userContent);
   if (socraticLine && !isFullTier) {
