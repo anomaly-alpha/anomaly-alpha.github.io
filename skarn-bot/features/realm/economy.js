@@ -148,21 +148,27 @@ function executeTrade(trade) {
     return { ok: false, error: 'Partner no longer has enough gold' };
   }
 
-  // Verify both offers against a single inventory read — fail closed, no partial transfer
+  // Verify both offers against a single inventory read - fail closed, no partial transfer
   function verifyOffer(fromId, char, offer) {
     const inventory = getInventory(fromId, guildId);
     for (const item of offer.items) {
       const invItem = inventory.find(i => i.item_id === item.itemId);
-      if (!invItem) return { ok: false, error: `${char.name} is missing ${item.name} — trade cancelled` };
-      if (invItem.equipped) return { ok: false, error: `${item.name} is equipped — trade cancelled` };
+      if (!invItem) return { ok: false, error: `${char.name} is missing ${item.name} - trade cancelled` };
+      if (invItem.equipped) return { ok: false, error: `${char.name} has ${item.name} equipped - trade cancelled` };
     }
     return { ok: true };
   }
 
   const initVerify = verifyOffer(initiator, initChar, initiatorOffer);
-  if (!initVerify.ok) return initVerify;
+  if (!initVerify.ok) {
+    activeTrades.delete(trade.id);
+    return initVerify;
+  }
   const partVerify = verifyOffer(partner, partChar, partnerOffer);
-  if (!partVerify.ok) return partVerify;
+  if (!partVerify.ok) {
+    activeTrades.delete(trade.id);
+    return partVerify;
+  }
 
   const atomicTrade = db.transaction(() => {
     for (const item of initiatorOffer.items) {
@@ -186,7 +192,12 @@ function executeTrade(trade) {
     }
   });
 
-  atomicTrade();
+  try {
+    atomicTrade();
+  } catch {
+    activeTrades.delete(trade.id);
+    return { ok: false, error: 'Trade failed - please try again.' };
+  }
 
   activeTrades.delete(trade.id);
 
