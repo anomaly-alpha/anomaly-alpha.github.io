@@ -70,10 +70,10 @@ function getRelationshipLine(userId, guildId) {
 }
 
 function applyBaselineFamiliarity() {
-  // Users with stored facts get familiarity baseline
+  // Users with stored etch facts get familiarity baseline (memory_entries replaced user_memory, CONTEXT.md §6.2)
   const users = db.prepare(
-    'SELECT user_id, guild_id, COUNT(*) as fact_count FROM user_memory GROUP BY user_id, guild_id'
-  ).all();
+    'SELECT user_id, guild_id, COUNT(*) as fact_count FROM memory_entries WHERE source = ? GROUP BY user_id, guild_id'
+  ).all('etch');
   for (const u of users) {
     const base = u.fact_count >= 5 ? 25 : 15;
     const rel = getRelationship(u.user_id, u.guild_id);

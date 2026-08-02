@@ -2,12 +2,12 @@ const Database = require('better-sqlite3');
 const fs = require('fs');
 const path = require('path');
 
-const DB_PATH = path.join(__dirname, '..', 'data', 'skarn.db');
+const DB_PATH = process.env.SKARN_DB_PATH || path.join(__dirname, '..', 'data', 'skarn.db');
 const SCHEMA_PATH = path.join(__dirname, 'skarn-schema.sql');
 
-// Ensure data directory exists
+// Ensure data directory exists (skip for in-memory / temp smoke DBs)
 const dataDir = path.dirname(DB_PATH);
-if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+if (DB_PATH !== ':memory:' && !fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
 const db = new Database(DB_PATH);
 
