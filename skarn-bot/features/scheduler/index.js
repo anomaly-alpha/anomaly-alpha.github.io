@@ -15,7 +15,7 @@ const { summarizeOldThreads } = require('../conversation/summarizer');
 const { updateAllProfiles } = require('../conversation/profileUpdater');
 const {
   decayMemoryEntries, cleanCooldowns, pruneRateLimits, pruneExpiredFlags,
-  pruneSentimentBuffers, pruneBanterChains, pruneCallbacks, db,
+  pruneOldMessages, pruneSentimentBuffers, pruneBanterChains, pruneCallbacks, db,
 } = require('../../db/database');
 const { initReactionTracking, pruneReactionCounters } = require('../serverMemory/signalCapture');
 const { runChronicleJob } = require('../serverMemory/chronicle/chronicleJob');
@@ -72,9 +72,7 @@ function startSchedulers(client) {
     console.log('[Daily] Starting maintenance...');
     await updateAllProfiles();
     await summarizeOldThreads();
-    var cutoff = Date.now() - 90 * 24 * 60 * 60 * 1000;
-    db.prepare('DELETE FROM conversation_messages WHERE created_at < ?').run(cutoff);
-    db.prepare('DELETE FROM conversation_summaries WHERE covers_to < ?').run(cutoff);
+    pruneOldMessages(90 * 24 * 60 * 60 * 1000);
     console.log('[Daily] Maintenance complete.');
   }, 24 * 60 * 60 * 1000);
 
