@@ -7,16 +7,9 @@ const { roles, roleTokenBudgets } = require('../persona/roles');
 const { moderatedChatCompletion } = require('../ai/client');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../features/discordNative/postProcess');
 const { searchWeb } = require('../features/search/searchEngine');
+const { getFlag, setFlag } = require('../db/database');
 
 const COOLDOWN_MS = 5 * 1000;
-const cooldowns = new Map();
-
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, ts] of cooldowns) {
-    if (now - ts > COOLDOWN_MS) cooldowns.delete(key);
-  }
-}, 30 * 1000);
 
 const AI_ERRORS = [
   'The connection is frayed. Try again.',
@@ -30,10 +23,10 @@ module.exports = {
   async handleActivation(message, args) {
     // Cooldown check
     const key = `${message.author.id}:${message.channel.id}`;
-    const last = cooldowns.get(key) || 0;
+    const last = Number(getFlag('search_cd:' + key) || 0);
     if (Date.now() - last < COOLDOWN_MS) {
       const remaining = Math.ceil((COOLDOWN_MS - (Date.now() - last)) / 1000);
-      return message.reply({ content: `Slow down. Wait ${remaining}s.`, allowedMentions: { parse: ['users'] } });
+      return message.reply({ content: 'Slow down. Wait ' + remaining + 's.', allowedMentions: { parse: ['users'] } });
     }
 
     const query = args.query;
@@ -43,7 +36,7 @@ module.exports = {
     let source = '';
     try {
       const searchResult = await searchWeb(query);
-      cooldowns.set(key, Date.now());
+      setFlag('search_cd:' + key, String(Date.now()), COOLDOWN_MS);
 
       if (searchResult.source === 'error') {
         return message.reply({ content: 'The search came up empty. Might be a connection issue.', allowedMentions: { parse: ['users'] } });

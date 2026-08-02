@@ -4,9 +4,6 @@ const path = require('path');
 const fs = require('fs');
 const { db, getRelationship, checkActiveListenCooldown, setActiveListenCooldown, getFlag, setFlag, deleteFlag, getGuildConfig } = require('../../db/database');
 
-// ===== In-memory state =====
-const repeatBuffer = new Map();    // "userId:guildId" → { topics[], windowStart }
-
 // ===== Cached AI channel set (avoids disk I/O on every message) =====
 let aiChannelSet = null;
 let aiCacheLoadedAt = 0;
@@ -85,17 +82,9 @@ function getWarmthLine(userId, guildId, roleNature) {
 }
 
 function getPatienceLine(userId, guildId, content) {
-  const key = `${userId}:${guildId}`;
-  if (!repeatBuffer.has(key)) {
-    repeatBuffer.set(key, { topics: [], windowStart: Date.now() });
-  }
-  const buf = repeatBuffer.get(key);
-  // Reset window every 30 min
-  if (Date.now() - buf.windowStart > 30 * 60 * 1000) {
-    buf.topics = [];
-    buf.windowStart = Date.now();
-  }
-  // Simple repeat detection: normalize and check for overlap
+  const key = 'warmth_repeat:' + userId + ':' + guildId;
+  const raw = getFlag(key);
+  const buf = raw ? JSON.parse(raw) : { topics: [], windowStart: Date.now() };
   const normalized = content.toLowerCase().trim();
   const similar = buf.topics.filter(t => {
     const longer = normalized.length > t.length ? normalized : t;
@@ -104,9 +93,9 @@ function getPatienceLine(userId, guildId, content) {
   });
   buf.topics.push(normalized);
   if (buf.topics.length > 10) buf.topics.shift();
-
+  setFlag(key, JSON.stringify(buf), 30 * 60 * 1000);
   if (similar.length >= 2) {
-    return "They're not getting it. Be clearer this time — drop the wit, give the answer straight.";
+    return "They're not getting it. Be clearer this time - drop the wit, give the answer straight.";
   }
   return '';
 }

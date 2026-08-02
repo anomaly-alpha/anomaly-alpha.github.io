@@ -1,6 +1,6 @@
 var { getUnresolvedOmens, insertOmen, fulfillOmen, expireOmen, insertRealmOmen } = require('./omenStore');
 var { getSignalsSince } = require('../signalStore');
-var { getGuildConfig, setGuildConfig } = require('../../../db/database');
+var { getGuildConfig, setGuildConfig, getFlag, setFlag } = require('../../../db/database');
 var { buildSystemPrompt } = require('../../../persona/identity');
 var getOpenAIClient = require('../../../ai/client');
 var { selectModel } = require('../../intelligence/modelRouter');
@@ -117,14 +117,13 @@ async function runOmenJob(client) {
 }
 
 // Manual fulfillment
-var fulfillCounters = new Map();
 var FULFILL_DAILY_LIMIT = 5;
 
 async function manualFulfill(guildId, description, userId) {
   // Check daily cap
   var today = new Date().toDateString();
   var counterKey = guildId + ':' + userId + ':' + today;
-  var count = fulfillCounters.get(counterKey) || 0;
+  var count = Number(getFlag('omen_fulfill:' + counterKey) || 0);
   if (count >= FULFILL_DAILY_LIMIT) return { matched: false, text: 'Daily fulfill limit reached (5/day).' };
 
   var omens = getUnresolvedOmens(guildId);
@@ -149,7 +148,7 @@ async function manualFulfill(guildId, description, userId) {
 
   var callbackText = await generateCallback(bestMatch.omen_text, description);
   fulfillOmen(bestMatch.id, callbackText);
-  fulfillCounters.set(counterKey, count + 1);
+  setFlag('omen_fulfill:' + counterKey, String(count + 1), 48 * 60 * 60 * 1000);
 
   // Realm effect if description mentions Realm content
   var desc = description.toLowerCase();

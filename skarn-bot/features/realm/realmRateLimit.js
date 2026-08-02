@@ -1,24 +1,28 @@
 const { getWorldState, setWorldState } = require('./realmStore');
+const { getFlag, setFlag } = require('../../db/database');
 const { REALM_RATE_LIMIT, REALM_DAILY_CALL_LIMIT } = require('./realmConfig');
-
-// Per-user rolling window: userId → [{ timestamp }]
-const userBuckets = new Map();
 
 // ===== Per-user rate limit (30 calls / 30 min) =====
 
+function _bucket(userId) {
+  const raw = getFlag('realm_bucket:' + userId);
+  return raw ? JSON.parse(raw) : [];
+}
+
 function canCall(userId) {
-  const bucket = userBuckets.get(userId) || [];
   const now = Date.now();
   const cutoff = now - REALM_RATE_LIMIT.windowMs;
-  const recent = bucket.filter(t => t > cutoff);
-  userBuckets.set(userId, recent);
+  const recent = _bucket(userId).filter(t => t > cutoff);
+  setFlag('realm_bucket:' + userId, JSON.stringify(recent), REALM_RATE_LIMIT.windowMs);
   return recent.length < REALM_RATE_LIMIT.maxCalls;
 }
 
 function recordCall(userId) {
-  const bucket = userBuckets.get(userId) || [];
-  bucket.push(Date.now());
-  userBuckets.set(userId, bucket);
+  const now = Date.now();
+  const cutoff = now - REALM_RATE_LIMIT.windowMs;
+  const bucket = _bucket(userId).filter(t => t > cutoff);
+  bucket.push(now);
+  setFlag('realm_bucket:' + userId, JSON.stringify(bucket), REALM_RATE_LIMIT.windowMs);
 }
 
 // ===== Per-guild daily limit (via realm_world_state) =====

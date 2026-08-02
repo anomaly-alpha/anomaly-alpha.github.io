@@ -1,9 +1,9 @@
 const Sentiment = require('sentiment');
+const { checkCooldown, setCooldown } = require('../../db/database');
 const sentiment = new Sentiment();
 
 const COOLDOWN_MS = 60 * 1000;
 const REACTION_CHANCE = 0.03;
-const cooldowns = new Map();
 
 const STANDARD_REACTIONS = ['💀', '😭', '🔥', '💯', '🗿', '👀'];
 
@@ -16,10 +16,8 @@ async function maybeReact(message, client, isAsleep) {
   if (score < -0.5) return;
 
   const channelId = message.channel.id;
-  const now = Date.now();
 
-  const lastReaction = cooldowns.get(channelId) || 0;
-  if (now - lastReaction < COOLDOWN_MS) return;
+  if (checkCooldown('reaction:' + channelId, COOLDOWN_MS)) return;
 
   if (Math.random() > REACTION_CHANCE) return;
 
@@ -42,7 +40,7 @@ async function maybeReact(message, client, isAsleep) {
 
   try {
     await message.react(emoji);
-    cooldowns.set(channelId, now);
+    setCooldown('reaction:' + channelId, COOLDOWN_MS);
   } catch {
     // Permission issue or emoji unavailable
   }
