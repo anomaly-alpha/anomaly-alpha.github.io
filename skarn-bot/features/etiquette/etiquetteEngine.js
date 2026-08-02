@@ -43,6 +43,4 @@ function getApologyLine(userId) {
   return "You may have given a bad answer last time. If relevant, acknowledge it briefly — 'my bad', 'i was off', 'let me try again'.";
 }
 
-function clearFlags() {}
-
-module.exports = { getGratitudeDirective, getFirstOfDayLine, getMilestoneLine, flagForApology, getApologyLine, clearFlags };
+module.exports = { getGratitudeDirective, getFirstOfDayLine, getMilestoneLine, flagForApology, getApologyLine };
