@@ -140,7 +140,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
 
       messages.push({ role: 'assistant', content: choice.content || null, tool_calls: choice.tool_calls });
       for (var tc of choice.tool_calls) {
-        var toolResult = await runTool(tc, { guildId, channelId });
+        var toolResult = await runTool(tc, { guildId, channelId, userId });
         messages.push(toolResult);
       }
     }

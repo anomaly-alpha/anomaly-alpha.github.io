@@ -28,19 +28,19 @@ async function runTool(toolCall, context) {
 
   const guildId = context.guildId || null;
   const channelId = context.channelId || null;
+  const requesterId = context.userId || null;
 
   switch (name) {
     case 'etch_memory': {
-      const { userId, fact } = parsed;
-      if (!userId || !fact) return { role: 'tool', tool_call_id: toolCall.id, content: 'Error: missing userId or fact' };
-      addMemoryEntry(userId, guildId, 'etch', 'fact', fact, 1.0, 'Saved by Skarn via tool use');
+      const { fact } = parsed;
+      if (!requesterId || !fact) return { role: 'tool', tool_call_id: toolCall.id, content: 'Error: missing fact' };
+      addMemoryEntry(requesterId, guildId, 'etch', 'fact', fact, 1.0, 'Saved by Skarn via tool use');
       return { role: 'tool', tool_call_id: toolCall.id, content: 'Fact saved.' };
     }
 
     case 'get_memory': {
-      const { userId } = parsed;
-      if (!userId) return { role: 'tool', tool_call_id: toolCall.id, content: 'Error: missing userId' };
-      const entries = getMemoryEntries(userId, guildId, 15);
+      if (!requesterId) return { role: 'tool', tool_call_id: toolCall.id, content: 'Error: missing user' };
+      const entries = getMemoryEntries(requesterId, guildId, 15);
       if (entries.length === 0) return { role: 'tool', tool_call_id: toolCall.id, content: 'No memories saved for this user.' };
       const etched = entries.filter(e => e.source === 'etch').map(e => `[etched] ${e.content}`);
       const extracted = entries.filter(e => e.source === 'extracted').map(e => `[${e.type}] ${e.content} (confidence: ${Math.round(e.confidence * 100)}%)`);
@@ -56,9 +56,9 @@ async function runTool(toolCall, context) {
     }
 
     case 'set_reminder': {
-      const { userId, message, duration } = parsed;
-      if (!userId || !message || !duration) {
-        return { role: 'tool', tool_call_id: toolCall.id, content: 'Error: missing userId, message, or duration' };
+      const { message, duration } = parsed;
+      if (!requesterId || !message || !duration) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Error: missing user, message, or duration' };
       }
       // Parse duration using the same logic as remind command
       const patterns = [
@@ -75,7 +75,7 @@ async function runTool(toolCall, context) {
       // Clamp: min 1 minute, max 1 year
       if (durationMs < 60 * 1000) durationMs = 60 * 1000;
       if (durationMs > 365 * 24 * 60 * 60 * 1000) durationMs = 365 * 24 * 60 * 60 * 1000;
-      createReminder(userId, channelId || userId, guildId, message, Date.now() + durationMs);
+      createReminder(requesterId, channelId || requesterId, guildId, message, Date.now() + durationMs);
       return { role: 'tool', tool_call_id: toolCall.id, content: 'Reminder set.' };
     }
 
