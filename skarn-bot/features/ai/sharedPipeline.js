@@ -8,7 +8,7 @@ const { moderatedChatCompletion } = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { splitMessage, maybeBurst } = require('../discordNative/postProcess');
 const { estimateDelay } = require('../authenticity/typingController');
-const { simulateTyping } = require('../discordNative/typingSim');
+const { simulateTyping, startTypingKeepalive } = require('../discordNative/typingSim');
 const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
 const { getRelationship, addStory } = require('../../db/database');
 const { extractMemory } = require('../memory/memoryExtractor');
@@ -49,6 +49,10 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
   var beforeSentiment = opts.beforeSentiment;
   var roleName = opts.roleName || 'consult';
   var channel = opts.channel;
+
+  // Typing indicator — visible for the ENTIRE thinking duration, not just the
+  // post-generation pause. Stopped in the finally block below.
+  var stopTyping = startTypingKeepalive(channel);
 
   // Store user message
   await storeMessage(userId, guildId, channelId, 'user', message, { threadType: threadType });
@@ -147,8 +151,9 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
 
     recordCall(userId, 'chat');
 
-    // Store assistant response
-    storeMessage(userId, guildId, channelId, 'assistant', reply, { threadType: threadType });
+    // Store assistant response — awaited so the reply is committed before the
+    // interaction ends; a fast follow-up must see Skarn's own last words.
+    await storeMessage(userId, guildId, channelId, 'assistant', reply, { threadType: threadType });
 
     // Track response sentiment shift (non-blocking)
     const afterSentiment = analyzeSentiment(reply);
@@ -167,7 +172,8 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
       detectFollowUps(userId, guildId, channelId, message);
     } catch (e) { /* non-critical */ }
 
-    // Typing simulation
+    // Typing simulation — keep the pre-send pacing (the keepalive already keeps
+    // the indicator visible; this adds the "drafting" beat before sending)
     if (channel) {
       await simulateTyping(channel, reply.length);
     }
@@ -218,6 +224,8 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     console.error('AI pipeline error:', error);
     const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
     await opts.sendError(errorMsg);
+  } finally {
+    stopTyping();
   }
 }
 

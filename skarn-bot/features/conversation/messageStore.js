@@ -51,19 +51,29 @@ async function storeMessage(userId, guildId, channelId, role, content, opts = {}
   const threadType = opts.threadType || 'channel';
   const thread = await findOrCreateThread(userId, guildId, channelId, threadType);
   const sentiment = analyzeSentiment(content);
-  const topics = await extractTopics(content);
   const tokensEst = estimateTokens(content);
   const isQuestion = content.includes('?');
 
+  // Commit the message immediately. Do NOT await extractTopics here — it is a live
+  // OpenAI call (1-2s) and this store runs on the reply path; awaiting it would delay
+  // the visible reply. Topics are backfilled in the background below.
   var msgResult = insertMessage(thread.thread_id, userId, guildId, channelId, role, content, {
     sentiment,
-    topics,
+    topics: ['general'],
     isQuestion,
     tokensEst,
   });
 
   updateThreadActivity(thread.thread_id);
   updateThreadSentiment(thread.thread_id, sentiment);
+
+  // Non-blocking: real topic extraction (OpenAI) — updates the row after commit
+  extractTopics(content).then(function(topics) {
+    if (msgResult) {
+      db.prepare('UPDATE conversation_messages SET topics = ? WHERE id = ?')
+        .run(JSON.stringify(topics), msgResult.lastInsertRowid);
+    }
+  }).catch(function() { /* topic extraction failed — keep ['general'] */ });
 
   // Generate embedding for user messages (non-blocking — improves RAG over time)
   if (role === 'user' && content.length >= 10 && msgResult) {

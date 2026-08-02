@@ -13,8 +13,8 @@ async function retrieveContext(userId, guildId, channelId, analysis, userContent
   // Conversation history — tiered by intent
   if (analysis.suggestedTier === 'full' || analysis.intent === 'question' || analysis.intent === 'advice') {
     var recent = db.prepare(
-      'SELECT m.* FROM conversation_messages m JOIN conversation_threads t ON m.thread_id = t.thread_id WHERE m.user_id = ? AND m.guild_id = ? AND m.channel_id = ? AND m.created_at > ? ORDER BY m.created_at DESC LIMIT 15'
-    ).all(userId, guildId, channelId, Date.now() - 365 * 24 * 60 * 60 * 1000).reverse();
+      'SELECT m.* FROM conversation_messages m JOIN conversation_threads t ON m.thread_id = t.thread_id WHERE m.guild_id = ? AND m.channel_id = ? AND (m.role = ? OR m.user_id = ?) AND m.created_at > ? ORDER BY m.created_at DESC LIMIT 15'
+    ).all(guildId, channelId, 'assistant', userId, Date.now() - 365 * 24 * 60 * 60 * 1000).reverse();
     if (recent.length > 0) {
       result.conversationLine = 'Recent conversation:\n' + recent.map(function(m) { return '[' + m.role + ']: ' + m.content; }).join('\n');
     }
@@ -29,8 +29,8 @@ async function retrieveContext(userId, guildId, channelId, analysis, userContent
     }
   } else {
     var recentLight = db.prepare(
-      'SELECT m.* FROM conversation_messages m JOIN conversation_threads t ON m.thread_id = t.thread_id WHERE m.user_id = ? AND m.guild_id = ? AND m.channel_id = ? AND m.created_at > ? ORDER BY m.created_at DESC LIMIT 3'
-    ).all(userId, guildId, channelId, Date.now() - 365 * 24 * 60 * 60 * 1000).reverse();
+      'SELECT m.* FROM conversation_messages m JOIN conversation_threads t ON m.thread_id = t.thread_id WHERE m.guild_id = ? AND m.channel_id = ? AND (m.role = ? OR m.user_id = ?) AND m.created_at > ? ORDER BY m.created_at DESC LIMIT 3'
+    ).all(guildId, channelId, 'assistant', userId, Date.now() - 365 * 24 * 60 * 60 * 1000).reverse();
     if (recentLight.length > 0) {
       result.conversationLine = 'Recent conversation:\n' + recentLight.map(function(m) { return '[' + m.role + ']: ' + m.content; }).join('\n');
     }

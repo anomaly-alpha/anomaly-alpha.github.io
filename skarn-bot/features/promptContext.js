@@ -74,8 +74,8 @@ function buildContext(userId, guildId, channelId, opts) {
 
   if (isFullTier) {
     var recent = db.prepare(
-      'SELECT m.* FROM conversation_messages m JOIN conversation_threads t ON m.thread_id = t.thread_id WHERE m.user_id = ? AND m.guild_id = ? AND m.channel_id = ? AND m.created_at > ? ORDER BY m.created_at DESC LIMIT 15'
-    ).all(userId, guildId, channelId, Date.now() - 365 * 24 * 60 * 60 * 1000).reverse();
+      'SELECT m.* FROM conversation_messages m JOIN conversation_threads t ON m.thread_id = t.thread_id WHERE m.guild_id = ? AND m.channel_id = ? AND (m.role = ? OR m.user_id = ?) AND m.created_at > ? ORDER BY m.created_at DESC LIMIT 15'
+    ).all(guildId, channelId, 'assistant', userId, Date.now() - 365 * 24 * 60 * 60 * 1000).reverse();
 
     if (recent.length > 0) {
       conversationLine = 'Recent conversation:\n' + recent.map(function(m) { return '[' + m.role + ']: ' + m.content; }).join('\n');
@@ -116,8 +116,8 @@ function buildContext(userId, guildId, channelId, opts) {
   } else {
     // Lightweight: just last 3 messages
     var recent = db.prepare(
-      'SELECT m.* FROM conversation_messages m JOIN conversation_threads t ON m.thread_id = t.thread_id WHERE m.user_id = ? AND m.guild_id = ? AND m.channel_id = ? AND m.created_at > ? ORDER BY m.created_at DESC LIMIT 3'
-    ).all(userId, guildId, channelId, Date.now() - 365 * 24 * 60 * 60 * 1000).reverse();
+      'SELECT m.* FROM conversation_messages m JOIN conversation_threads t ON m.thread_id = t.thread_id WHERE m.guild_id = ? AND m.channel_id = ? AND (m.role = ? OR m.user_id = ?) AND m.created_at > ? ORDER BY m.created_at DESC LIMIT 3'
+    ).all(guildId, channelId, 'assistant', userId, Date.now() - 365 * 24 * 60 * 60 * 1000).reverse();
 
     if (recent.length > 0) {
       conversationLine = 'Recent conversation:\n' + recent.map(function(m) { return '[' + m.role + ']: ' + m.content; }).join('\n');
