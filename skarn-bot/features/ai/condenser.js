@@ -7,6 +7,7 @@ const { moderatedChatCompletion } = require('../../ai/client');
 const { roles, ROLE_NATURE } = require('../../persona/roles');
 
 // ==== Constants ====
+const CONDENSER_ENABLED = true; // master switch (spec [S8])
 const CONDENSER_MODEL = 'gpt-4.1-mini';
 const CONDENSER_MAX_TOKENS = 140;
 const CONDENSER_TEMP = 0.3;
@@ -19,6 +20,7 @@ function hasFenceOrTable(text) {
 }
 
 async function condenseReply(text, target, role, userId, opts) {
+  if (!CONDENSER_ENABLED) return { reply: text };
   if (!text || typeof text !== 'string' || text.length === 0) return { reply: text };
   if (text.length <= target) return { reply: text }; // short-circuit — zero LLM call
   if (opts && opts.usedTool) return { reply: text }; // tool-driven replies stay intact
@@ -69,4 +71,4 @@ async function condenseReply(text, target, role, userId, opts) {
   }
 }
 
-module.exports = { condenseReply, CONDENSER_MODEL };
+module.exports = { condenseReply };
