@@ -1,6 +1,5 @@
 const { searchWeb } = require('../search/searchEngine');
 const { db } = require('../../db/database');
-const fetch = require('node-fetch');
 
 const NEWS_QUERY = 'tech and gaming news today';
 const MAX_ARTICLES = 10;
@@ -37,7 +36,7 @@ async function fetchRSS() {
   var allItems = [];
   for (var url of RSS_FEEDS) {
     try {
-      var res = await fetch(url, { headers: { 'User-Agent': 'SkarnBot/1.0' }, timeout: 8000 });
+      var res = await fetch(url, { headers: { 'User-Agent': 'SkarnBot/1.0' }, signal: AbortSignal.timeout(8000) });
       if (!res.ok) continue;
       var xml = await res.text();
       var items = parseRSSItems(xml);

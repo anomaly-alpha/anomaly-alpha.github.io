@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const { EmbedBuilder } = require('discord.js');
 const getOpenAIClient = require('../ai/client');
 const { db, getGuildConfig, setGuildConfig } = require('../db/database');

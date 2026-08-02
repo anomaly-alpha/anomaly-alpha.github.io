@@ -1,5 +1,4 @@
 const { addKnowledgeBase, getAppState, setAppState } = require('../../db/database');
-const fetch = require('node-fetch');
 
 const FALLBACK_TOPICS = [
   // ===== Science (18) =====

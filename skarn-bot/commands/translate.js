@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('discord.js');
-const fetch = require('node-fetch');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
 const { moderatedChatCompletion } = require('../ai/client');
