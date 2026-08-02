@@ -86,12 +86,6 @@ client.once('clientReady', () => {
   seedKnowledgeBase();
   require('./db/database').seedSkarnLore();
 
-  // Initial seed + weekly slur filter expansion
-  require('./features/safety/slurFilter').seedSlurFilter();
-  setInterval(function() {
-    require('./features/safety/slurFilter').seedSlurFilter();
-  }, 7 * 24 * 60 * 60 * 1000);
-
   console.log('[SlurFilter] Gate 1 active â€” safety instruction in system prompt');
 
   // Scan command files for activation phrases
@@ -181,7 +175,6 @@ client.once('clientReady', () => {
     runDecayPass();
     cleanCallbacks();
     cleanChains();
-    require('./features/safety/slurFilter').pruneExpiredStrikes();
     cleanWarmth();
     runDecay();
     decayMemoryEntries();

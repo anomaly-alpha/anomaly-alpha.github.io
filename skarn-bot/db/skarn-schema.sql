@@ -540,17 +540,6 @@ CREATE TABLE IF NOT EXISTS lorebook (
 );
 CREATE INDEX IF NOT EXISTS idx_lorebook_guild ON lorebook(guild_id);
 
--- ===== Slur Filter =====
-CREATE TABLE IF NOT EXISTS slur_filter (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  pattern TEXT NOT NULL,
-  match_type TEXT NOT NULL CHECK(match_type IN ('exact', 'substring', 'regex')),
-  category TEXT NOT NULL DEFAULT 'general',
-  severity INTEGER NOT NULL DEFAULT 1,
-  is_active INTEGER NOT NULL DEFAULT 1,
-  created_at INTEGER NOT NULL
-);
-
 -- ===== Chronicle & Omen — signal capture =====
 CREATE TABLE IF NOT EXISTS server_signals (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
