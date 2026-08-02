@@ -28,5 +28,8 @@
     "csso": "^5.0.5",
     "tailwindcss": "^3.4.17",
     "terser": "^5.46.2"
+  },
+  "dependencies": {
+    "chrome-launcher": "^1.2.1"
   }
 }
