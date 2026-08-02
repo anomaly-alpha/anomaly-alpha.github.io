@@ -138,13 +138,16 @@ function executeTrade(trade) {
   const initChar = getCharacter(initiator, guildId);
   const partChar = getCharacter(partner, guildId);
   if (!initChar || !partChar) {
+    activeTrades.delete(trade.id);
     return { ok: false, error: 'A player no longer exists' };
   }
 
   if (initChar.gold < initiatorOffer.gold) {
+    activeTrades.delete(trade.id);
     return { ok: false, error: 'Initiator no longer has enough gold' };
   }
   if (partChar.gold < partnerOffer.gold) {
+    activeTrades.delete(trade.id);
     return { ok: false, error: 'Partner no longer has enough gold' };
   }
 

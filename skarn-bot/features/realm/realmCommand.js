@@ -1,10 +1,10 @@
-const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require('discord.js');
 const { createCharacter, getCharacterSheet, addXp, heal } = require('./character');
 const { getLocation, getConnectedLocations, moveTo, parseChoices } = require('./world');
 const { rollEnemy, startCombat, processCombatRound, getCombatState } = require('./combat');
 const { generateLoot, equipBest, paginateItems } = require('./inventory');
 const { canAcceptQuest, createQuest, checkQuestProgress } = require('./quest');
-const { canTrade, startTrade } = require('./economy');
+const { canTrade, startTrade, addToTrade, confirmTrade, cancelTrade, getTradeState, handleTradeTimeout } = require('./economy');
 const { generateNpc, handleNpcInteraction } = require('./npc');
 const { generateBackstory, generateExploration, generateQuestHook } = require('./aiDriver');
 const realmStore = require('./realmStore');
@@ -654,6 +654,15 @@ async function handleRest(interaction) {
 
 // ===== trade =====
 
+function renderTradeStatus(initiator, partner) {
+  const state = getTradeState(initiator.id);
+  if (!state) return 'Trade no longer active.';
+  const offer = (s) => s.myOffer.items.length ? s.myOffer.items.map(i => i.name).join(', ') : 'nothing yet';
+  const mineConfirmed = state.myConfirmed ? '\u2705' : '\u23f3';
+  const theirsConfirmed = state.theirConfirmed ? '\u2705' : '\u23f3';
+  return `\u{1f91d} **${initiator.username}** offers: ${offer(state)}\n${mineConfirmed} confirmed \u00b7 ${theirsConfirmed} confirmed`;
+}
+
 async function handleTrade(interaction) {
   const partner = interaction.options.getUser('player');
   if (!partner) {
@@ -670,11 +679,89 @@ async function handleTrade(interaction) {
     return interaction.reply({ content: result.error, flags: EPHEMERAL, allowedMentions: { parse: ['users'] } });
   }
 
-  // Channel message for trade initiation
-  return interaction.reply({
-    content: `🤝 **${interaction.user.username}** initiated a trade with **${partner.username}**!`,
-    flags: EPHEMERAL,
+  const controls = new ActionRowBuilder().addComponents(
+    new ButtonBuilder().setCustomId('trade_add_item').setLabel('Add item').setStyle(ButtonStyle.Primary),
+    new ButtonBuilder().setCustomId('trade_confirm').setLabel('Confirm').setStyle(ButtonStyle.Success),
+    new ButtonBuilder().setCustomId('trade_cancel').setLabel('Cancel').setStyle(ButtonStyle.Danger),
+  );
+
+  const tradeMsg = await interaction.channel.send({
+    content: `\u{1f91d} **${interaction.user.username}** initiated a trade with **${partner.username}**!\nBoth players: add items, then Confirm.`,
+    components: [controls],
     allowedMentions: { parse: ['users'] },
+  });
+
+  const collector = tradeMsg.createMessageComponentCollector({
+    filter: i => i.user.id === interaction.user.id || i.user.id === partner.id,
+    time: 5 * 60 * 1000,
+  });
+
+  collector.on('collect', async i => {
+    const state = getTradeState(i.user.id);
+    if (!state) {
+      await i.update({ content: 'This trade is no longer active.', components: [], allowedMentions: { parse: ['users'] } });
+      return;
+    }
+
+    if (i.customId === 'trade_add_item') {
+      const inventory = realmStore.getInventory(i.user.id, interaction.guildId);
+      const options = inventory.slice(0, 25).map(item =>
+        new StringSelectMenuOptionBuilder().setLabel(`${item.name} (${item.rarity})`).setValue(String(item.item_id))
+      );
+      if (options.length === 0) {
+        await i.reply({ content: 'Your inventory is empty.', ephemeral: true });
+        return;
+      }
+      await i.reply({
+        content: 'Pick an item to offer:',
+        ephemeral: true,
+        components: [new ActionRowBuilder().addComponents(
+          new StringSelectMenuBuilder().setCustomId('trade_pick_item').setPlaceholder('Select an item').addOptions(options)
+        )],
+      });
+      const pickMsg = await i.fetchReply();
+      const pick = await pickMsg.awaitMessageComponent({
+        filter: m => m.user.id === i.user.id && m.customId === 'trade_pick_item',
+        time: 60000,
+      });
+      const added = addToTrade(i.user.id, pick.values[0], 0);
+      await pick.update({ content: added.ok ? `Added **${added.added}** to your offer.` : added.error, components: [] });
+      await tradeMsg.edit({ content: renderTradeStatus(interaction, partner), components: [controls] });
+      return;
+    }
+
+    if (i.customId === 'trade_confirm') {
+      const confirmed = confirmTrade(i.user.id);
+      if (!confirmed.ok) {
+        await i.update({ content: confirmed.error, components: [], allowedMentions: { parse: ['users'] } });
+        return;
+      }
+      if (confirmed.pending) {
+        await i.update({ content: `${i.user.username} confirmed. Waiting for the other player\u2026`, allowedMentions: { parse: ['users'] } });
+        return;
+      }
+      collector.stop('done');
+      const lines = [];
+      if (confirmed.initiatorItems.length) lines.push(`**${interaction.user.username}** receives: ${confirmed.initiatorItems.join(', ')}`);
+      if (confirmed.partnerItems.length) lines.push(`**${partner.username}** receives: ${confirmed.partnerItems.join(', ')}`);
+      if (confirmed.initiatorGold) lines.push(`${interaction.user.username} gold: +${confirmed.initiatorGold}`);
+      if (confirmed.partnerGold) lines.push(`${partner.username} gold: +${confirmed.partnerGold}`);
+      await tradeMsg.edit({ content: `\u2705 **Trade completed!**\n${lines.join('\n') || 'Nothing was exchanged.'}`, components: [], allowedMentions: { parse: ['users'] } });
+      return;
+    }
+
+    if (i.customId === 'trade_cancel') {
+      cancelTrade(i.user.id);
+      collector.stop('cancelled');
+      await tradeMsg.edit({ content: `${i.user.username} cancelled the trade.`, components: [], allowedMentions: { parse: ['users'] } });
+    }
+  });
+
+  collector.on('end', (collected, reason) => {
+    if (reason === 'time') {
+      handleTradeTimeout(interaction.user.id) || handleTradeTimeout(partner.id);
+      tradeMsg.edit({ content: 'Trade timed out.', components: [] }).catch(() => {});
+    }
   });
 }
 
