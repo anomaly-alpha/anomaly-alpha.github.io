@@ -657,10 +657,10 @@ async function handleRest(interaction) {
 function renderTradeStatus(initiator, partner) {
   const state = getTradeState(initiator.id);
   if (!state) return 'Trade no longer active.';
-  const offer = (s) => s.myOffer.items.length ? s.myOffer.items.map(i => i.name).join(', ') : 'nothing yet';
+  const items = (s) => s.items.length ? s.items.map(i => i.name).join(', ') : 'nothing yet';
   const mineConfirmed = state.myConfirmed ? '\u2705' : '\u23f3';
   const theirsConfirmed = state.theirConfirmed ? '\u2705' : '\u23f3';
-  return `\u{1f91d} **${initiator.username}** offers: ${offer(state)}\n${mineConfirmed} confirmed \u00b7 ${theirsConfirmed} confirmed`;
+  return `\u{1f91d} **${initiator.username}** offers: ${items(state.myOffer)} ${mineConfirmed}\n**${partner.username}** offers: ${items(state.theirOffer)} ${theirsConfirmed}`;
 }
 
 async function handleTrade(interaction) {
@@ -738,6 +738,7 @@ async function handleTrade(interaction) {
       }
       if (confirmed.pending) {
         await i.update({ content: `${i.user.username} confirmed. Waiting for the other player\u2026`, allowedMentions: { parse: ['users'] } });
+        await tradeMsg.edit({ content: renderTradeStatus(interaction, partner), components: [controls] });
         return;
       }
       collector.stop('done');
