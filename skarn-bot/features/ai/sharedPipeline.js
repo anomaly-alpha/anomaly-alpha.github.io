@@ -3,6 +3,8 @@
 
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
+const { condenseReply } = require('./condenser');
+const { replyTargetFor } = require('../../persona/roles');
 const { getUsage } = require('../../lib/rateLimit');
 const { moderatedChatCompletion } = require('../../ai/client');
 const { buildContext } = require('../promptContext');
@@ -103,12 +105,18 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
       }
     }
 
+    const target = replyTargetFor(roleName);
+    if (target > 0) {
+      systemPrompt += '\n\nAim for roughly ' + target + ' characters. Only go longer when you actually need to.';
+    }
+
     // ===== Tool-enabled AI call =====
     var messages = [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: contextualMessage },
     ];
     var reply = '';
+    var usedTool = false;
     var maxTurns = 3;
     var turnCount = 0;
 
@@ -140,6 +148,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
 
       messages.push({ role: 'assistant', content: choice.content || null, tool_calls: choice.tool_calls });
       for (var tc of choice.tool_calls) {
+        usedTool = true;
         var toolResult = await runTool(tc, { guildId, channelId, userId });
         messages.push(toolResult);
       }
@@ -148,6 +157,14 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     if (!reply) {
       await opts.sendError('The threads tangled. Try again?');
       return;
+    }
+
+    // Condense over-target replies before storing/sending (spec [S5]).
+    // Story extraction reads the draft so a condensed beat isn't lost.
+    const draft = reply;
+    const condensed = await condenseReply(reply, target, roleName, userId, { usedTool });
+    if (condensed && typeof condensed.reply === 'string') {
+      reply = condensed.reply;
     }
 
     // Store assistant response — awaited so the reply is committed before the
@@ -159,7 +176,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     trackResponse(userId, guildId, beforeSentiment !== undefined ? beforeSentiment : analyzeSentiment(message), afterSentiment);
 
     // Extract and store any new story from the AI reply (non-blocking)
-    const extractedStory = extractStoryFromReply(reply);
+    const extractedStory = extractStoryFromReply(draft);
     if (extractedStory) {
       const storyTopic = findStoryTopic(reply) || 'general';
       addStory(storyTopic, extractedStory);
