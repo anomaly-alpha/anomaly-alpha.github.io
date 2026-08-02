@@ -161,7 +161,6 @@ function insertMessage(threadId, userId, guildId, channelId, role, content, opts
   const result = db.prepare(
     'INSERT INTO conversation_messages (thread_id, user_id, guild_id, channel_id, role, content, sentiment, topics, is_question, tokens_est, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
   ).run(threadId, userId, guildId, channelId, role, content, sentiment, JSON.stringify(topics), isQuestion ? 1 : 0, tokensEst, Date.now());
-  return result;
 
   // Index in FTS for search (best effort)
   try {
@@ -171,6 +170,8 @@ function insertMessage(threadId, userId, guildId, channelId, role, content, opts
   } catch {
     // FTS may fail if not created yet — silently continue
   }
+
+  return result;
 }
 
 function getRecentMessages(userId, guildId, channelId, limit = 20, maxAgeMs = 7 * 24 * 60 * 60 * 1000) {
