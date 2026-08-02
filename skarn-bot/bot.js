@@ -333,13 +333,13 @@ client.on('messageCreate', async function(message) {
   // Step 4: State tracking batch (non-blocking)
   Promise.allSettled([
     Promise.resolve().then(function() { return require('./features/channelState/stateTracker').onMessageReceived ? require('./features/channelState/stateTracker').onMessageReceived(message) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/relationship/relationshipTracker').updateRelationship ? require('./features/relationship/relationshipTracker').updateRelationship(message) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/culture/cultureTracker').updateCulture ? require('./features/culture/cultureTracker').updateCulture(message) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/warmth/warmthManager').updateWarmth ? require('./features/warmth/warmthManager').updateWarmth(message) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/humor/callbackEngine').updateCallbacks ? require('./features/humor/callbackEngine').updateCallbacks(message) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/relationship/relationshipTracker').updateRelationship ? require('./features/relationship/relationshipTracker').updateRelationship(message.author.id, message.guild.id, 'message') : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/culture/cultureTracker').updateCulture ? require('./features/culture/cultureTracker').updateCulture(message.guild.id, message.channel.id, message.content) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/warmth/warmthManager').updateWarmth ? require('./features/warmth/warmthManager').updateWarmth(message.author.id, message.guild.id, message.content) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/humor/callbackEngine').updateCallbacks ? require('./features/humor/callbackEngine').updateCallbacks(message.channel.id, message.author.id, message.content) : null; }).catch(function() {}),
     Promise.resolve().then(function() { return require('./features/warmth/warmthManager').maybeActiveListen ? require('./features/warmth/warmthManager').maybeActiveListen(message) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/humor/comedyTiming').extendBanterChain ? require('./features/humor/comedyTiming').extendBanterChain(message) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/humor/comedyTiming').recordSetup ? require('./features/humor/comedyTiming').recordSetup(message) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/humor/comedyTiming').extendBanterChain ? require('./features/humor/comedyTiming').extendBanterChain(message.author.id, message.guild.id, message.channel.id) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return require('./features/humor/comedyTiming').recordSetup ? require('./features/humor/comedyTiming').recordSetup(message.channel.id, message.author.id, message.content) : null; }).catch(function() {}),
     Promise.resolve().then(function() {
       var _db = require('./db/database');
       var _aiChannels = _db.getGuildConfig ? _db.getGuildConfig(message.guild.id, 'aiChannels') : [];
