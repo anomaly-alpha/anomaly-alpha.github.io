@@ -109,6 +109,7 @@ function buildMatch(entry, remainder) {
 function getAll() {
   return [...registry.values()].map(function(e) {
     return {
+      command: e.command,
       phrase: e.activation.phrase,
       aliases: e.activation.aliases || [],
       description: e.activation.description || e.command,
