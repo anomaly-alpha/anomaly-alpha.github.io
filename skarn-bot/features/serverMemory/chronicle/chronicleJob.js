@@ -1,7 +1,7 @@
 var { getSignalsSince, countSignalsSince } = require('../signalStore');
 var { insertEntry, getLatestEntryPeriod } = require('./chronicleStore');
 var { buildSystemPrompt } = require('../../../persona/identity');
-var getOpenAIClient = require('../../../ai/client');
+var { moderatedChatCompletion } = require('../../../ai/client');
 var { selectModel } = require('../../intelligence/modelRouter');
 var { roles, roleTokenBudgets } = require('../../../persona/roles');
 
@@ -27,21 +27,23 @@ async function generateChronicle(guildId) {
   if (otherLines) promptParts.push('Other notable moments:\n' + otherLines);
   var userPrompt = promptParts.join('\n\n') + '\n\nWrite a chronicle entry for this week in Skarn\'s voice.';
 
-  var client = getOpenAIClient();
   var systemPrompt = buildSystemPrompt({ roleLine: roles.chronicle, stateLine: '' });
   var model = selectModel(userPrompt, false);
 
-  var response = await client.chat.completions.create({
+  var result = await moderatedChatCompletion({
+    userId: guildId,
+    bucket: 'chronicle',
     model: model,
     temperature: 0.8,
-    max_completion_tokens: roleTokenBudgets.chronicle,
+    max_tokens: roleTokenBudgets.chronicle,
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt },
     ],
   });
+  if (!result.success) throw new Error(result.safeMessage || 'AI request unavailable');
 
-  var content = response.choices[0].message.content;
+  var content = result.completion.choices[0].message.content;
   insertEntry(guildId, content, since, Date.now());
   return content;
 }

@@ -78,11 +78,11 @@ async function moderatedChatCompletion(params) {
     // Pass through extra OpenAI params (response_format, stop, tools, etc.)
     // WARNING: any param consumed internally by the gate (userId, bucket) MUST be in
     // KNOWN or it leaks into the OpenAI request and fails with "Unknown parameter".
-    var KNOWN = ['model', 'messages', 'max_tokens', 'temperature', 'userId', 'bucket'];
+    var KNOWN = ['model', 'messages', 'max_tokens', 'temperature', 'userId', 'bucket', 'signal'];
     for (var key in params) {
       if (KNOWN.indexOf(key) === -1) apiParams[key] = params[key];
     }
-    var completion = await c.chat.completions.create(apiParams);
+    var completion = await c.chat.completions.create(apiParams, params.signal ? { signal: params.signal } : undefined);
 
     var outputMod = completion.moderation && completion.moderation.output;
     if (outputMod && outputMod.results && outputMod.results.length > 0) {

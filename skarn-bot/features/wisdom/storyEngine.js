@@ -1,5 +1,5 @@
 const { addStory, getStoriesByTopic, incrementStoryUse, db } = require('../../db/database');
-const getOpenAIClient = require('../../ai/client');
+const { moderatedChatCompletion } = require('../../ai/client');
 
 const TRIGGER_TOPICS = {
   war: ['war', 'battle', 'fight', 'conflict', 'combat', 'siege'],
@@ -66,14 +66,16 @@ async function generateLoreBatch() {
   var summaries = existing.map(function(s) { return '[' + s.topic + '] ' + s.story_text.substring(0, 100); }).join('\n');
   var prompt = 'You are generating lore for Skarn, a 10,000-year-old demon retired from leading heaven\'s armies. Era: ' + era + '.\n\nExisting lore (reference these for consistency — reuse characters, locations, events):\n' + summaries + '\n\nGenerate 50 new JSON lore objects. Each: { "topic": "war|loss|change|technology|time|power|retirement", "story": "2-3 sentence story in first person, matching Skarn\'s dry ancient voice" }. Return ONLY a JSON array.';
   try {
-    var client = getOpenAIClient();
-    var response = await client.chat.completions.create({
+    var result = await moderatedChatCompletion({
+      userId: 'lore-batch',
+      bucket: 'story',
       model: process.env.AI_MODEL || 'gpt-3.5-turbo',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.8,
-      max_completion_tokens: 4000,
+      max_tokens: 4000,
     });
-    var text = response.choices[0].message.content.replace(/```json|```/g, '').trim();
+    if (!result.success) throw new Error(result.safeMessage || 'AI request unavailable');
+    var text = result.completion.choices[0].message.content.replace(/```json|```/g, '').trim();
     var stories = JSON.parse(text);
     if (!Array.isArray(stories)) throw new Error('Not an array');
     var before = db.prepare("SELECT COUNT(*) as c FROM skarn_stories").get().c;

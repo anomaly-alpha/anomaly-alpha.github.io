@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { fetchWeather, buildRawEmbed, generateSkarnSummary } = require('../lib/weatherScheduler');
 
-async function getWeatherResponse(args) {
+async function getWeatherResponse(args, guildId) {
   const { subcommand, location, style } = args;
   const data = await fetchWeather(location);
 
@@ -22,7 +22,7 @@ async function getWeatherResponse(args) {
 
   const embed = buildRawEmbed(location, data);
   if (style === 'skarn') {
-    const summary = await generateSkarnSummary(location, data);
+    const summary = await generateSkarnSummary(location, data, guildId);
     if (summary) embed.setDescription(summary);
   }
   return { embeds: [embed] };
@@ -55,7 +55,7 @@ module.exports = {
     await interaction.deferReply();
 
     try {
-      const result = await getWeatherResponse({ subcommand, location, style });
+      const result = await getWeatherResponse({ subcommand, location, style }, interaction.guildId);
       await interaction.editReply({ ...result, allowedMentions: { parse: ['users'] } });
     } catch {
       await interaction.editReply({ content: `Could not fetch weather for "${location}".`, flags: 64, allowedMentions: { parse: ['users'] } });
@@ -63,7 +63,7 @@ module.exports = {
   },
   async handleActivation(message, args) {
     try {
-      const result = await getWeatherResponse(args);
+      const result = await getWeatherResponse(args, message.guild ? message.guild.id : null);
       await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
     } catch (err) {
       await message.reply({ content: err.message || `Could not fetch weather for "${args.location}".`, allowedMentions: { parse: ['users'] } });

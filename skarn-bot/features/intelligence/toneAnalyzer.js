@@ -1,6 +1,5 @@
-const getOpenAIClient = require('../../ai/client');
+const { moderatedChatCompletion } = require('../../ai/client');
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
-const { assertUserGate, releaseCall } = require('../../lib/rateLimit');
 
 const EMOTION_KEYWORDS = {
   happy: ['happy', 'great', 'awesome', 'love', 'amazing', 'excited', 'wonderful', 'best'],
@@ -39,11 +38,7 @@ async function analyzeTone(text, userId) {
     return cached.result;
   }
 
-  const gateId = assertUserGate(userId);
-  if (!gateId) return fallbackAnalysis(text);
-
   try {
-    const client = getOpenAIClient();
     const messages = [
       { role: 'system', content: TONE_SYSTEM_PROMPT },
       // Few-shot examples
@@ -54,14 +49,17 @@ async function analyzeTone(text, userId) {
       { role: 'user', content: text },
     ];
 
-    const response = await client.chat.completions.create({
+    const gateResult = await moderatedChatCompletion({
+      userId: userId,
+      bucket: 'tone',
       model: process.env.AI_MODEL || 'gpt-4o-mini',
       messages: messages,
-      max_completion_tokens: 100,
+      max_tokens: 100,
       temperature: 0.1,
     });
+    if (!gateResult.success) throw new Error(gateResult.safeMessage || 'AI request unavailable');
 
-    const content = response.choices[0].message.content;
+    const content = gateResult.completion.choices[0].message.content;
     const parsed = JSON.parse(content);
 
     const result = {
@@ -84,7 +82,6 @@ async function analyzeTone(text, userId) {
     return result;
   } catch (e) {
     console.error('[ToneAnalyzer] AI analysis failed, using fallback:', e.message);
-    releaseCall(userId, 'command', gateId);
     return fallbackAnalysis(text);
   }
 }

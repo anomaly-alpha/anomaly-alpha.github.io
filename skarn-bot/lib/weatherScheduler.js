@@ -1,5 +1,5 @@
 const { EmbedBuilder } = require('discord.js');
-const getOpenAIClient = require('../ai/client');
+const { moderatedChatCompletion } = require('../ai/client');
 const { db, getGuildConfig, setGuildConfig } = require('../db/database');
 
 const WEATHER_TZ_OFFSET = -5; // UTC-5 (EST)
@@ -46,35 +46,37 @@ function buildRawEmbed(location, data) {
     .setTimestamp();
 }
 
-async function generateSkarnSummary(location, data) {
+async function generateSkarnSummary(location, data, guildId) {
   if (!process.env.AI_MODEL) return null;
 
   const current = data.current_condition[0];
   const weatherInfo = `Location: ${location}\nTemperature: ${current.temp_C}°C / ${current.temp_F}°F\nCondition: ${current.weatherDesc[0].value}\nHumidity: ${current.humidity}%\nWind: ${current.windspeedKmph} km/h ${current.winddir16Point}`;
 
   try {
-    const openai = getOpenAIClient();
-    const completion = await openai.chat.completions.create({
+    const result = await moderatedChatCompletion({
+      userId: guildId || 'weather-scheduler',
+      bucket: 'weather',
       model: process.env.AI_MODEL,
       messages: [
         { role: 'system', content: 'You are Skarn, a 10,000-year-old demon Warmaster. Summarize today\'s weather in 2-3 vivid sentences. Use metaphors from your ancient perspective. Mention key details: temp, condition, wind. Keep it under 300 characters. Don\'t say "As Skarn" or introduce yourself.' },
         { role: 'user', content: weatherInfo },
       ],
-      max_completion_tokens: 150,
+      max_tokens: 150,
       temperature: 0.85,
     });
-    return completion.choices[0].message.content;
+    if (!result.success) throw new Error(result.safeMessage || 'AI request unavailable');
+    return result.completion.choices[0].message.content;
   } catch {
     return null;
   }
 }
 
-async function postWeatherReport(client, track) {
+async function postWeatherReport(client, track, guildId) {
   try {
     const data = await fetchWeather(track.location);
     const embed = buildRawEmbed(track.location, data);
 
-    const summary = await generateSkarnSummary(track.location, data);
+    const summary = await generateSkarnSummary(track.location, data, guildId);
     if (summary) {
       embed.setDescription(summary);
     }
@@ -112,7 +114,7 @@ function startScheduler(client) {
 
       for (const track of tracks) {
         if (track.time === currentTime && track.lastPosted !== today) {
-          const success = await postWeatherReport(client, track);
+          const success = await postWeatherReport(client, track, guild_id);
           if (success) {
             track.lastPosted = today;
             modified = true;

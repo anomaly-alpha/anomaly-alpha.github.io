@@ -2,7 +2,7 @@ var { getUnresolvedOmens, insertOmen, fulfillOmen, expireOmen, insertRealmOmen }
 var { getSignalsSince } = require('../signalStore');
 var { getGuildConfig, setGuildConfig, getFlag, setFlag } = require('../../../db/database');
 var { buildSystemPrompt } = require('../../../persona/identity');
-var getOpenAIClient = require('../../../ai/client');
+var { moderatedChatCompletion } = require('../../../ai/client');
 var { selectModel } = require('../../intelligence/modelRouter');
 var { roles, roleTokenBudgets } = require('../../../persona/roles');
 var { embedText, cosineSimilarity } = require('../../intelligence/embeddings');
@@ -12,38 +12,42 @@ var OMEN_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000;
 var MATCH_THRESHOLD = 0.7;
 var MIN_OMEN_AGE_MS = 24 * 60 * 60 * 1000;
 
-async function generateOmen() {
-  var client = getOpenAIClient();
+async function generateOmen(guildId) {
   var systemPrompt = buildSystemPrompt({ roleLine: roles.omen, stateLine: '' });
   var model = selectModel('', false);
 
-  var response = await client.chat.completions.create({
+  var result = await moderatedChatCompletion({
+    userId: guildId,
+    bucket: 'omen',
     model: model,
     temperature: 0.9,
-    max_completion_tokens: roleTokenBudgets.omen,
+    max_tokens: roleTokenBudgets.omen,
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: 'Speak a prophecy about your realm.' },
     ],
   });
-  return response.choices[0].message.content;
+  if (!result.success) throw new Error(result.safeMessage || 'AI request unavailable');
+  return result.completion.choices[0].message.content;
 }
 
-async function generateCallback(omenText, signalText) {
-  var client = getOpenAIClient();
+async function generateCallback(omenText, signalText, guildId) {
   var systemPrompt = buildSystemPrompt({ roleLine: roles.omen_fulfill, stateLine: '' });
   var model = selectModel('', false);
 
-  var response = await client.chat.completions.create({
+  var result = await moderatedChatCompletion({
+    userId: guildId,
+    bucket: 'omen',
     model: model,
     temperature: 0.8,
-    max_completion_tokens: roleTokenBudgets.omen_fulfill,
+    max_tokens: roleTokenBudgets.omen_fulfill,
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: 'Prophecy: "' + omenText + '"\nWhat happened: "' + signalText + '"\nHow do these connect?' },
     ],
   });
-  return response.choices[0].message.content;
+  if (!result.success) throw new Error(result.safeMessage || 'AI request unavailable');
+  return result.completion.choices[0].message.content;
 }
 
 async function processGuild(guildId, client) {
@@ -61,7 +65,7 @@ async function processGuild(guildId, client) {
       if (lastOmen && (Date.now() - lastOmen.created_at) < (Math.random() * (maxInterval - minInterval) + minInterval)) {
         // Still within randomized window — skip
       } else {
-        var text = await generateOmen();
+        var text = await generateOmen(guildId);
         var embedding = await embedText(text);
         insertOmen(guildId, text, embedding);
         var channel = client.channels.cache.get(channelId);
@@ -85,7 +89,7 @@ async function processGuild(guildId, client) {
       var signalEmbedding = await embedText(signal.summary_text);
       var similarity = cosineSimilarity(omenEmbedding, signalEmbedding);
       if (similarity >= MATCH_THRESHOLD) {
-        var callbackText = await generateCallback(omen.omen_text, signal.summary_text);
+        var callbackText = await generateCallback(omen.omen_text, signal.summary_text, guildId);
         fulfillOmen(omen.id, callbackText);
         matched = true;
 
@@ -146,7 +150,7 @@ async function manualFulfill(guildId, description, userId) {
     return { matched: false, text: 'That\'s not the thread I meant.' };
   }
 
-  var callbackText = await generateCallback(bestMatch.omen_text, description);
+  var callbackText = await generateCallback(bestMatch.omen_text, description, guildId);
   fulfillOmen(bestMatch.id, callbackText);
   setFlag('omen_fulfill:' + counterKey, String(count + 1), 48 * 60 * 60 * 1000);
 

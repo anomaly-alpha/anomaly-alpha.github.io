@@ -161,7 +161,7 @@ async function handleCreate(interaction) {
 
   let backstory;
   try {
-    backstory = await generateBackstory({ name: charName, race: selectedRace, class: selectedClass }, bgAnswer);
+    backstory = await generateBackstory({ name: charName, race: selectedRace, class: selectedClass, user_id: userId }, bgAnswer);
     recordCall(userId);
     incrementGuildDaily(guildId);
   } catch {
