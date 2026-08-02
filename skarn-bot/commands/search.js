@@ -1,4 +1,4 @@
-// Thin wrapper â€” command definition and handler live in features/search/
+// Thin wrapper — command definition and handler live in features/search/
 const command = require('../features/search/search.command');
 const handler = require('../features/search/search.handler');
 const { EmbedBuilder } = require('discord.js');
@@ -50,7 +50,7 @@ module.exports = {
       }
 
       const searchContext = 'Web search results for "' + query + '":\n' +
-        results.map((r, i) => `${i + 1}. ${r.title} â€” ${r.snippet}`).join('\n');
+        results.map((r, i) => `${i + 1}. ${r.title} — ${r.snippet}`).join('\n');
 
       const systemPrompt = buildSystemPrompt({
         roleLine: roles.search,
@@ -99,7 +99,7 @@ module.exports = {
           .setTitle('Search: ' + query)
           .setDescription(results.map((r, i) => `[${i + 1}. ${r.title}](${r.url})`).join('\n'))
           .setColor(0xff6b35)
-          .setFooter({ text: 'LLM unavailable â€” raw results' });
+          .setFooter({ text: 'LLM unavailable — raw results' });
         return message.reply({ content: 'Got results but had trouble reading them. Here\'s what I found:', embeds: [embed], allowedMentions: { parse: ['users'] } });
       }
       const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];

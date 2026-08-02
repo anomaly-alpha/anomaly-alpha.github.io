@@ -76,13 +76,13 @@ client.once('clientReady', () => {
   console.log(`Sleep mode: ${SLEEP_START}:00 - ${SLEEP_END}:00 (UTC${SLEEP_TIMEZONE >= 0 ? '+' : ''}${SLEEP_TIMEZONE})`);
   const hasKey = !!process.env.GOOGLE_CSE_KEY;
   const hasCx = !!process.env.GOOGLE_CSE_CX;
-  console.log(`Search backend: Google CSE ${hasKey && hasCx ? 'âœ“ ready' : 'âœ— not configured (will use DDG fallback)'}`);
+  console.log(`Search backend: Google CSE ${hasKey && hasCx ? '✓ ready' : '✗ not configured (will use DDG fallback)'}`);
 
   // Seed knowledge base & canonical lore
   seedKnowledgeBase();
   require('./db/database').seedSkarnLore();
 
-  console.log('[SlurFilter] Gate 1 active â€” safety instruction in system prompt');
+  console.log('[SlurFilter] Gate 1 active — safety instruction in system prompt');
 
   // Scan command files for activation phrases
   require('./features/activation/activationRegistry').scanCommands();
@@ -97,7 +97,7 @@ client.once('clientReady', () => {
   setInterval(() => {
     if (isSleepTime() && !isAsleep) {
       isAsleep = true;
-      client.user.setActivity('ðŸ’¤ Sleeping â€” back at ' + SLEEP_END + ':00');
+      client.user.setActivity('💤 Sleeping — back at ' + SLEEP_END + ':00');
       console.log('Sleep mode: going offline');
     } else if (!isSleepTime() && isAsleep) {
       isAsleep = false;
@@ -111,7 +111,7 @@ client.once('clientReady', () => {
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
   if (isAsleep) {
-    return interaction.reply({ content: 'ðŸ’¤ Skarn is sleeping. Back at ' + SLEEP_END + ':00.', flags: 64, allowedMentions: { parse: ['users'] } });
+    return interaction.reply({ content: '💤 Skarn is sleeping. Back at ' + SLEEP_END + ':00.', flags: 64, allowedMentions: { parse: ['users'] } });
   }
   const command = interaction.client.commands.get(interaction.commandName);
   if (!command) return;
@@ -280,14 +280,14 @@ client.on('messageCreate', async function(message) {
         return;
       }
     }
-    // skarn keyword without matching phrase â†’ route to AI (old step 20 fallback)
+    // skarn keyword without matching phrase → route to AI (old step 20 fallback)
     if (/\bskarn\b/i.test(message.content)) {
       await handleMention(message);
       return;
     }
   }
 
-  // Step 7: @mention â†’ AI
+  // Step 7: @mention → AI
   if (message.mentions.has(client.user)) {
     await handleMention(message);
     return;

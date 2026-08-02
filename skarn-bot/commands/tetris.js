@@ -4,11 +4,11 @@ const { TetrisGame, activeGames } = require('../games/tetris');
 function createControls(game, playerId) {
   const disabled = game.currentTurn !== playerId || game.players[playerId].lost;
   return new ActionRowBuilder().addComponents(
-    new ButtonBuilder().setCustomId('tetris_left').setLabel('â—€').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
-    new ButtonBuilder().setCustomId('tetris_rotate').setLabel('ðŸ”„').setStyle(ButtonStyle.Primary).setDisabled(disabled),
-    new ButtonBuilder().setCustomId('tetris_right').setLabel('â–¶').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
-    new ButtonBuilder().setCustomId('tetris_down').setLabel('â¬‡').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
-    new ButtonBuilder().setCustomId('tetris_drop').setLabel('â¬').setStyle(ButtonStyle.Danger).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('tetris_left').setLabel('◀').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('tetris_rotate').setLabel('🔄').setStyle(ButtonStyle.Primary).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('tetris_right').setLabel('▶').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('tetris_down').setLabel('⬇').setStyle(ButtonStyle.Secondary).setDisabled(disabled),
+    new ButtonBuilder().setCustomId('tetris_drop').setLabel('⏬').setStyle(ButtonStyle.Danger).setDisabled(disabled),
   );
 }
 
@@ -41,7 +41,7 @@ module.exports = {
     activeGames.set(gameKey, game);
 
     const embed = new EmbedBuilder()
-      .setTitle('Tetris â€” Head to Head')
+      .setTitle('Tetris — Head to Head')
       .setDescription(`${interaction.user.username} vs ${opponent.username}\n\n**${interaction.user.username}** goes first!`)
       .setColor(0x00e5ff);
 
@@ -59,7 +59,7 @@ module.exports = {
     try {
       const dm = await opponent.createDM();
       const dmEmbed = new EmbedBuilder()
-        .setTitle('Tetris â€” Your Board')
+        .setTitle('Tetris — Your Board')
         .setDescription(`Game started with ${interaction.user.username}!`)
         .setColor(0x00e5ff);
       await dm.send({ embeds: [dmEmbed], files: [p2Buffer], allowedMentions: { parse: ['users'] } });
@@ -76,7 +76,7 @@ module.exports = {
       .setColor(0x00e5ff);
 
     const msg = await interaction.channel.send({
-      content: `${interaction.user} â€” use the buttons to play:`,
+      content: `${interaction.user} — use the buttons to play:`,
       embeds: [p1Embed],
       components: [controls],
       files: [p1Board],
@@ -114,7 +114,7 @@ module.exports = {
 
           const endEmbed = new EmbedBuilder()
             .setTitle('Game Over!')
-            .setDescription(`ðŸ† **${winner.username}** wins!\n\n${loser.username} topped out.`)
+            .setDescription(`🏆 **${winner.username}** wins!\n\n${loser.username} topped out.`)
             .addFields(
               { name: winner.username, value: `Score: ${game.players[winner.id].score}`, inline: true },
               { name: loser.username, value: `Score: ${game.players[loser.id].score}`, inline: true },
@@ -148,14 +148,14 @@ module.exports = {
           .setColor(0x00e5ff);
         const nextControls = createControls(game, nextPlayer);
         await interaction.channel.send({
-          content: `${nextUser} â€” your turn!`,
+          content: `${nextUser} — your turn!`,
           embeds: [nextEmbed],
           components: [nextControls],
           files: [nextBoard],
           allowedMentions: { parse: ['users'] },
         });
       } catch {
-        // Interaction expired â€” safe to ignore
+        // Interaction expired — safe to ignore
       }
     });
 
