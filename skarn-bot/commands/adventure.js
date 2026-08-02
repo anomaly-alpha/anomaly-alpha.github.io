@@ -2,7 +2,6 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 const { moderatedChatCompletion } = require('../ai/client');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
-const { canCall, recordCall, getRateLimitMessage } = require('../lib/rateLimit');
 const { getChannelState, getUserFacts } = require('../db/database');
 const { getStateLine } = require('../features/channelState/stateTracker');
 
@@ -31,9 +30,6 @@ module.exports = {
     const theme = interaction.options.getString('theme') || 'fantasy medieval';
     if (!process.env.OPENAI_API_KEY) return interaction.deleteReply();
 
-    if (!canCall(interaction.user.id)) {
-      return interaction.deleteReply();
-    }
     try {
       const channelState = getChannelState(interaction.channel.id, interaction.guild.id);
       const stateLine = getStateLine(channelState.current_state);
@@ -60,8 +56,6 @@ module.exports = {
         return;
       }
 
-      recordCall(interaction.user.id);
-
       const scene = result.completion.choices[0].message.content;
 
       const row = new ActionRowBuilder().addComponents(
@@ -85,11 +79,6 @@ module.exports = {
       const history = [{ role: 'assistant', content: scene }];
 
       collector.on('collect', async i => {
-        if (!canCall(i.user.id)) {
-          await i.reply({ content: getRateLimitMessage(i.user.id), flags: 64, allowedMentions: { parse: ['users'] } });
-          return;
-        }
-
         const choice = i.customId.replace('adv_', '');
         history.push({ role: 'user', content: `Choice ${choice}` });
 
@@ -110,8 +99,6 @@ module.exports = {
             await i.update({ content: result.safeMessage });
             return;
           }
-
-          recordCall(i.user.id);
 
           const nextScene = result.completion.choices[0].message.content;
           history.push({ role: 'assistant', content: nextScene });

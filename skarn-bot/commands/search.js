@@ -4,7 +4,7 @@ const handler = require('../features/search/search.handler');
 const { EmbedBuilder } = require('discord.js');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
-const { canCall, recordCall, getRateLimitMessage } = require('../lib/rateLimit');const { moderatedChatCompletion } = require('../ai/client');
+const { moderatedChatCompletion } = require('../ai/client');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../features/discordNative/postProcess');
 const { searchWeb } = require('../features/search/searchEngine');
 
@@ -34,10 +34,6 @@ module.exports = {
     if (Date.now() - last < COOLDOWN_MS) {
       const remaining = Math.ceil((COOLDOWN_MS - (Date.now() - last)) / 1000);
       return message.reply({ content: `Slow down. Wait ${remaining}s.`, allowedMentions: { parse: ['users'] } });
-    }
-
-    if (!canCall(message.author.id)) {
-      return message.reply({ content: getRateLimitMessage(message.author.id), allowedMentions: { parse: ['users'] } });
     }
 
     const query = args.query;
@@ -83,7 +79,6 @@ module.exports = {
         await message.reply({ content: result.safeMessage, allowedMentions: { parse: ['users'] } });
         return;
       }
-      recordCall(message.author.id);
       let reply = result.completion.choices[0].message.content;
       if (!reply) reply = 'Could not parse the results.';
       reply = postProcess(reply, ROLE_NATURE.search);

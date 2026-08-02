@@ -1,6 +1,7 @@
 var getOpenAIClient = require('../../ai/client');
 var db = require('../../db/database');
 var detectEmotion = require('../../features/wisdom/emotionalIntelligence').detectEmotion;
+var { assertUserGate, releaseCall } = require('../../lib/rateLimit');
 
 var RECENCY_MS = 120000;      // 2 min
 var CHANNEL_WARM_MS = 30000;  // 30s
@@ -53,7 +54,7 @@ async function shouldRespond(message, client) {
   // Sentiment boost — reuse existing emotion detection (async, non-blocking fallback)
   try {
     if (detectEmotion) {
-      var detected = await detectEmotion(content);
+      var detected = await detectEmotion(content, userId);
       if (['angry', 'stressed', 'sad'].includes(detected)) probability += 0.4;
       else if (detected === 'anxious') probability += 0.2;
     }
@@ -62,6 +63,8 @@ async function shouldRespond(message, client) {
   if (Math.random() < Math.min(probability, 1.0)) return true;
 
   // === Fallback: tiny AI YES/NO call ===
+  var gateId = assertUserGate(userId);
+  if (!gateId) return false;
   try {
     var openai = getOpenAIClient();
     var completion = await openai.chat.completions.create({
@@ -75,6 +78,7 @@ async function shouldRespond(message, client) {
     });
     return completion.choices[0].message.content.trim() === 'YES';
   } catch {
+    releaseCall(userId, 'command', gateId);
     return false;
   }
 }

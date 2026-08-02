@@ -1,15 +1,9 @@
-const { canCall } = require('../../lib/rateLimit');
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
 const { shouldEdit, scheduleEdit } = require('../authenticity/messageEditor');
 const { runPipeline } = require('../ai/sharedPipeline');
 
 async function execute(interaction) {
   await interaction.deferReply();
-
-  // Rate limit
-  if (!canCall(interaction.user.id, 'chat')) {
-    return interaction.deleteReply();
-  }
 
   // Silence + hostile checks (consult-specific entry)
   const { isHostile, recordStrike, isSilenced, getDeEscalationLine } = require('../safety/slurFilter');

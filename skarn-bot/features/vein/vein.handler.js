@@ -2,7 +2,6 @@ const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { getChannelState } = require('../../db/database');
 const { getStateLine } = require('../channelState/stateTracker');
-const { canCall, recordCall, getRateLimitMessage } = require('../../lib/rateLimit');
 const { moderatedChatCompletion } = require('../../ai/client');
 
 const AI_ERRORS = [
@@ -14,10 +13,6 @@ const AI_ERRORS = [
 const MAX_MESSAGES = 500;
 
 async function execute(interaction) {
-  if (!canCall(interaction.user.id)) {
-    return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64, allowedMentions: { parse: ['users'] } });
-  }
-
   await interaction.deferReply();
 
   try {
@@ -99,7 +94,6 @@ async function execute(interaction) {
       await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
       return;
     }
-    recordCall(interaction.user.id);
     const summary = result.completion.choices[0].message.content;
 
     // Split if over 2000 chars

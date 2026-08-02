@@ -2,8 +2,7 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { moderatedChatCompletion } = require('../ai/client');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
-const { ensureAiConfigured, checkCanCall } = require('../lib/gates');
-const { recordCall } = require('../lib/rateLimit');
+const { ensureAiConfigured } = require('../lib/gates');
 const { getChannelState, getUserFacts } = require('../db/database');
 const { getStateLine } = require('../features/channelState/stateTracker');
 
@@ -41,7 +40,6 @@ module.exports = {
     if (topic) {
       try {
         ensureAiConfigured();
-        checkCanCall(interaction.user.id);
 
         const channelState = getChannelState(interaction.channel.id, interaction.guild.id);
         const stateLine = getStateLine(channelState.current_state);
@@ -63,7 +61,6 @@ module.exports = {
         });
 
         if (result.success) {
-          recordCall(interaction.user.id);
           title = `${result.completion.choices[0].message.content} — ${topic}`;
         }
       } catch {

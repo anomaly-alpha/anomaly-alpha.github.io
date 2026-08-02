@@ -1,7 +1,6 @@
 const { EmbedBuilder } = require('discord.js');
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
-const { canCall, recordCall, getRateLimitMessage } = require('../../lib/rateLimit');
 const { moderatedChatCompletion } = require('../../ai/client');
 const { postProcess, splitMessage, maybeBurst, ROLE_NATURE } = require('../discordNative/postProcess');
 const { searchWeb } = require('./searchEngine');
@@ -20,11 +19,6 @@ async function execute(interaction) {
   const cooldownKey = 'search:' + interaction.guildId + ':' + interaction.user.id + ':' + interaction.channelId;
   if (checkCooldown(cooldownKey)) {
     return interaction.reply({ content: 'Please wait 5 seconds between searches.', flags: 64, allowedMentions: { parse: ['users'] } });
-  }
-
-  // Rate limit check
-  if (!canCall(interaction.user.id)) {
-    return interaction.reply({ content: getRateLimitMessage(interaction.user.id), flags: 64, allowedMentions: { parse: ['users'] } });
   }
 
   const query = interaction.options.getString('query');
@@ -74,7 +68,6 @@ async function execute(interaction) {
       await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
       return;
     }
-    recordCall(interaction.user.id);
     var reply = result.completion.choices[0].message.content;
     if (!reply) reply = 'Could not parse the results.';
     reply = postProcess(reply, ROLE_NATURE.search);

@@ -68,7 +68,7 @@ async function storeMessage(userId, guildId, channelId, role, content, opts = {}
   updateThreadSentiment(thread.thread_id, sentiment);
 
   // Non-blocking: real topic extraction (OpenAI) — updates the row after commit
-  extractTopics(content).then(function(topics) {
+  extractTopics(content, userId).then(function(topics) {
     if (msgResult) {
       db.prepare('UPDATE conversation_messages SET topics = ? WHERE id = ?')
         .run(JSON.stringify(topics), msgResult.lastInsertRowid);

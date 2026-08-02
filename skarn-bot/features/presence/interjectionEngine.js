@@ -1,5 +1,4 @@
 const { getRelationship, checkInterjectionCooldown, setInterjectionCooldown } = require('../../db/database');
-const { canCall, recordCall } = require('../../lib/rateLimit');
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { moderatedChatCompletion } = require('../../ai/client');
@@ -33,11 +32,6 @@ async function maybeInterject(message, client) {
 
   if (Math.random() > chance) return;
 
-  if (!canCall(message.author.id)) {
-    await message.reply({ content: FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)], allowedMentions: { parse: ['users'] } });
-    return;
-  }
-
   setInterjectionCooldown(channelId);
 
   try {
@@ -62,7 +56,6 @@ async function maybeInterject(message, client) {
       await message.reply({ content: result.safeMessage, allowedMentions: { parse: ['users'] } });
       return;
     }
-    recordCall(message.author.id);
     const reply = result.completion.choices[0].message.content;
     if (reply) await message.reply({ content: reply, allowedMentions: { parse: ['users'] } });
   } catch {

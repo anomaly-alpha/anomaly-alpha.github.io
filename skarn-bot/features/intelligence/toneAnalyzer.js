@@ -1,5 +1,6 @@
 const getOpenAIClient = require('../../ai/client');
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
+const { assertUserGate, releaseCall } = require('../../lib/rateLimit');
 
 const EMOTION_KEYWORDS = {
   happy: ['happy', 'great', 'awesome', 'love', 'amazing', 'excited', 'wonderful', 'best'],
@@ -27,7 +28,7 @@ const TONE_EXAMPLES = [
 const TONE_CACHE = new Map();
 const CACHE_TTL = 5 * 60 * 1000;
 
-async function analyzeTone(text) {
+async function analyzeTone(text, userId) {
   if (!text || text.length < 3) {
     return fallbackAnalysis(text);
   }
@@ -37,6 +38,9 @@ async function analyzeTone(text) {
   if (cached && Date.now() - cached.ts < CACHE_TTL) {
     return cached.result;
   }
+
+  const gateId = assertUserGate(userId);
+  if (!gateId) return fallbackAnalysis(text);
 
   try {
     const client = getOpenAIClient();
@@ -80,6 +84,7 @@ async function analyzeTone(text) {
     return result;
   } catch (e) {
     console.error('[ToneAnalyzer] AI analysis failed, using fallback:', e.message);
+    releaseCall(userId, 'command', gateId);
     return fallbackAnalysis(text);
   }
 }

@@ -3,7 +3,7 @@
 
 const { buildSystemPrompt } = require('../../persona/identity');
 const { roles, roleTokenBudgets } = require('../../persona/roles');
-const { recordCall, getUsage } = require('../../lib/rateLimit');
+const { getUsage } = require('../../lib/rateLimit');
 const { moderatedChatCompletion } = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { splitMessage, maybeBurst } = require('../discordNative/postProcess');
@@ -120,6 +120,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
         max_tokens: getDeadpanBudget(roleTokenBudgets[roleName] || roleTokenBudgets.consult, userId, channelId),
         temperature: temperature,
         userId: userId,
+        bucket: 'chat',
         ...(turnCount === 1 ? { tools: tools, tool_choice: 'auto' } : {}),
       });
       if (!result.success) {
@@ -148,8 +149,6 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
       await opts.sendError('The threads tangled. Try again?');
       return;
     }
-
-    recordCall(userId, 'chat');
 
     // Store assistant response — awaited so the reply is committed before the
     // interaction ends; a fast follow-up must see Skarn's own last words.

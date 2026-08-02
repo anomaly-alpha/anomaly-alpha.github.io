@@ -1,9 +1,13 @@
 const getOpenAIClient = require('../../ai/client');
+const { assertUserGate, releaseCall } = require('../../lib/rateLimit');
 
 const MODEL = process.env.AI_MODEL || 'gpt-3.5-turbo';
 
-async function extractTopics(text) {
+async function extractTopics(text, userId) {
   if (!text || text.length < 10) return ['general'];
+
+  const gateId = assertUserGate(userId);
+  if (!gateId) return ['general'];
 
   try {
     const openai = getOpenAIClient();
@@ -27,6 +31,7 @@ async function extractTopics(text) {
     }
   } catch {
     // Fallback to simple detection on API failure
+    releaseCall(userId, 'command', gateId);
   }
 
   return ['general'];

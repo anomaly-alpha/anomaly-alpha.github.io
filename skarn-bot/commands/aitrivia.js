@@ -2,7 +2,6 @@ const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Butt
 const { moderatedChatCompletion } = require('../ai/client');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
-const { canCall, recordCall, getRateLimitMessage } = require('../lib/rateLimit');
 const { getChannelState, getUserFacts } = require('../db/database');
 const { getStateLine } = require('../features/channelState/stateTracker');
 
@@ -43,10 +42,6 @@ module.exports = {
       return interaction.deleteReply();
     }
 
-    if (!canCall(interaction.user.id)) {
-      return interaction.deleteReply();
-    }
-
     try {
       const channelState = getChannelState(interaction.channel.id, interaction.guild.id);
       const stateLine = getStateLine(channelState.current_state);
@@ -72,8 +67,6 @@ module.exports = {
         await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
         return;
       }
-
-      recordCall(interaction.user.id);
 
       let content = result.completion.choices[0].message.content.trim();
       content = content.replace(/^```json\n?/, '').replace(/\n?```$/, '').trim();

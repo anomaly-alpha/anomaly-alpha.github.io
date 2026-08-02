@@ -2,7 +2,6 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { moderatedChatCompletion } = require('../ai/client');
 const { buildSystemPrompt } = require('../persona/identity');
 const { roles, roleTokenBudgets } = require('../persona/roles');
-const { canCall, recordCall, getRateLimitMessage } = require('../lib/rateLimit');
 const { getChannelState, getUserFacts } = require('../db/database');
 const { getStateLine } = require('../features/channelState/stateTracker');
 
@@ -20,9 +19,6 @@ module.exports = {
     await interaction.deferReply();
     if (!process.env.OPENAI_API_KEY) return interaction.deleteReply();
 
-    if (!canCall(interaction.user.id)) {
-      return interaction.deleteReply();
-    }
     try {
       const channelState = getChannelState(interaction.channel.id, interaction.guild.id);
       const stateLine = getStateLine(channelState.current_state);
@@ -51,8 +47,6 @@ module.exports = {
         await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
         return;
       }
-
-      recordCall(interaction.user.id);
 
       const fortune = result.completion.choices[0].message.content;
       const embed = new EmbedBuilder()

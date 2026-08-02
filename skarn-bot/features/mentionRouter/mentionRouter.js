@@ -1,4 +1,3 @@
-const { canCall } = require('../../lib/rateLimit');
 const { canRespond } = require('../../lib/aiStats');
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
 const { shouldReactOnly, pickReaction } = require('../authenticity/reactionController');
@@ -14,12 +13,6 @@ async function handleMention(message) {
 
   const userId = message.author.id;
   const channelId = message.channel.id;
-
-  // Rate limit
-  if (!canCall(userId, 'chat')) {
-    await message.reply({ content: require('../../lib/rateLimit').getRateLimitMessage(userId, 'chat'), allowedMentions: { parse: ['users'] } });
-    return;
-  }
 
   // Hourly cap
   if (!canRespond(userId)) return;

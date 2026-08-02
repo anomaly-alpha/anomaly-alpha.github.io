@@ -22,13 +22,22 @@ function getUsage(userId, bucket) {
 }
 
 function canCall(userId, bucket) {
-  var usage = getUsage(userId, bucket);
-  return usage.current < usage.max;
+  bucket = bucket || 'command';
+  const cutoff = Date.now() - RATE_LIMIT_WINDOW_MS;
+  const count = db.prepare(
+    'SELECT COUNT(*) as count FROM rate_limits WHERE user_id = ? AND bucket = ? AND timestamp > ?'
+  ).get(userId, bucket, cutoff);
+  if (count.count >= RATE_LIMIT_MAX_CALLS) return 0;
+  const info = db.prepare(
+    'INSERT INTO rate_limits (user_id, bucket, timestamp) VALUES (?, ?, ?)'
+  ).run(userId, bucket, Date.now());
+  return info.lastInsertRowid;
 }
 
-function recordCall(userId, bucket) {
-  bucket = bucket || 'command';
-  db.prepare('INSERT INTO rate_limits (user_id, bucket, timestamp) VALUES (?, ?, ?)').run(userId, bucket, Date.now());
+function releaseCall(userId, bucket, reservationId) {
+  if (!reservationId) return;
+  db.prepare('DELETE FROM rate_limits WHERE id = ? AND user_id = ? AND bucket = ?')
+    .run(reservationId, userId, bucket);
 }
 
 function getRateLimitMessage(userId, bucket) {
@@ -36,4 +45,9 @@ function getRateLimitMessage(userId, bucket) {
   return 'Even a Warmaster paces himself. (' + usage.current + '/' + usage.max + ') Give it a moment.';
 }
 
-module.exports = { canCall, recordCall, getUsage, getRateLimitMessage };
+function assertUserGate(userId, bucket) {
+  bucket = bucket || 'command';
+  return canCall(userId, bucket);
+}
+
+module.exports = { canCall, releaseCall, getUsage, getRateLimitMessage, assertUserGate };

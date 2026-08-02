@@ -4,10 +4,10 @@ const { analyzeTone } = require('../intelligence/toneAnalyzer');
 
 const EMOTION_WEIGHTS = { happy: 1, neutral: 0, sad: -1, anxious: -1, angry: -1, stressed: -1 };
 
-async function detectEmotion(text) {
+async function detectEmotion(text, userId) {
   if (!text) return 'neutral';
   try {
-    const tone = await analyzeTone(text);
+    const tone = await analyzeTone(text, userId);
     return tone.emotion;
   } catch (e) {
     return 'neutral';
@@ -17,7 +17,7 @@ async function detectEmotion(text) {
 async function updateEmotion(userId, guildId, text) {
   let emotion, intensity, subtext;
   try {
-    const tone = await analyzeTone(text);
+    const tone = await analyzeTone(text, userId);
     emotion = tone.emotion;
     intensity = tone.intensity;
     subtext = tone.subtext;
