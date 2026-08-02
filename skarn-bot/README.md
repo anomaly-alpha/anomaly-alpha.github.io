@@ -481,21 +481,15 @@ Shows "Watching 😈 Servant of ... / Anomaly Alpha" with timer counting up from
 node rich-presence.js
 ```
 
-Or run in background:
+### Production (pm2)
+
+Both the bot and the Rich Presence process are supervised by pm2:
+
 ```bash
-pm2 start rich-presence.js --name rpc
-pm2 save
+pm2 start ecosystem.config.js
+pm2 logs skarn-bot
+pm2 status
 ```
-
-### Rich Presence commands
-
-| Command | Description |
-|---------|-------------|
-| `pm2 start rpc` | Start |
-| `pm2 stop rpc` | Stop |
-| `pm2 restart rpc` | Restart |
-| `pm2 status` | Check status |
-| `pm2 logs rpc` | View logs |
 
 ### Platform-agnostic guide
 
