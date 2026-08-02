@@ -28,7 +28,7 @@ Consolidate the current 13 hardcoded categories into ~8 themes. Exact command gr
 |---|---|
 | AI Chat | consult, etch, memory, forget, vein, history, find, aichat, aichatignore, aistats, preferences, relationship, stats, vibe |
 | Fun & Games | song, joke, fortune, story, roast, compliment, insult, pickup, meme, advice, compare, debate, whatdoesthefoxsay, aitrivia, adventure, charades, wouldyourather, unpopularopinion, improv, tetris, trivia, coinflip, dice, 8ball, poll, giveaway, lore |
-| Learning & Utility | homework, recipe, code, translate, search, remind, ping, hello, serverinfo, userinfo, avatar |
+| Learning & Utility | homework, recipe, code, translate, search, remind, ping, hello, help, serverinfo, userinfo, avatar |
 | News & Weather | news, weather, weathertrack, setnewschannel |
 | Leveling | level, leaderboard, setlevelrole, levelroles, daily |
 | Server Setup | setwelcome, setautorole, setlog, reactionrole, ticket, embed |

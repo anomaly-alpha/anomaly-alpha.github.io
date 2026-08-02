@@ -363,7 +363,7 @@ git commit -m "feat: add auto-generated themed help pages module"
 
 ```js
 const {
-  SlashCommandBuilder, EmbedBuilder, ActionRowBuilder,
+  SlashCommandBuilder, ActionRowBuilder,
   StringSelectMenuBuilder, ButtonBuilder, ButtonStyle,
 } = require('discord.js');
 const { THEMES, buildHelpPages, getPageEmbed } = require('../features/help/helpPages');
@@ -384,7 +384,7 @@ function pageRow(pages, index) {
   return new ActionRowBuilder().addComponents(prev, next);
 }
 
-function disabledRows(state, index) {
+function disabledRows(state) {
   const select = new StringSelectMenuBuilder()
     .setCustomId('help_theme')
     .setPlaceholder('Jump to a theme…')
@@ -419,21 +419,6 @@ async function handleNav(interaction, state, index) {
   return index;
 }
 
-function attachCollector(channel, userId, state, onCollect, onEnd) {
-  const collector = channel.createMessageComponentCollector({
-    filter: function(i) { return i.user.id === userId; },
-    time: TIMEOUT,
-  });
-  let index = onCollect.index;
-  collector.on('collect', async function(i) {
-    index = await onCollect.handler(i, state, index);
-  });
-  collector.on('end', function() {
-    onEnd(index).catch(function() {});
-  });
-  return collector;
-}
-
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('help')
@@ -450,29 +435,31 @@ module.exports = {
     const state = buildHelpPages(interaction.client.commands);
     let index = initialIndex(state.pages, interaction.options.getString('theme'));
     await interaction.reply({ ...renderAt(state, index), flags: 64 });
-    attachCollector(
-      interaction.channel,
-      interaction.user.id,
-      state,
-      { index: index, handler: handleNav },
-      function() {
-        return interaction.editReply({ components: disabledRows(state, index) });
-      },
-    );
+    const collector = interaction.channel.createMessageComponentCollector({
+      filter: function(i) { return i.user.id === interaction.user.id; },
+      time: TIMEOUT,
+    });
+    collector.on('collect', async function(i) {
+      index = await handleNav(i, state, index);
+    });
+    collector.on('end', function() {
+      interaction.editReply({ components: disabledRows(state) }).catch(function() {});
+    });
   },
   async handleActivation(message, args) {
     const state = buildHelpPages(message.client.commands);
     let index = initialIndex(state.pages, args.theme);
     const reply = await message.reply(renderAt(state, index));
-    attachCollector(
-      message.channel,
-      message.author.id,
-      state,
-      { index: index, handler: handleNav },
-      function() {
-        return reply.edit({ components: disabledRows(state, index) });
-      },
-    );
+    const collector = message.channel.createMessageComponentCollector({
+      filter: function(i) { return i.user.id === message.author.id; },
+      time: TIMEOUT,
+    });
+    collector.on('collect', async function(i) {
+      index = await handleNav(i, state, index);
+    });
+    collector.on('end', function() {
+      reply.edit({ components: disabledRows(state) }).catch(function() {});
+    });
   },
   activation: {
     type: 'command',
@@ -490,7 +477,7 @@ module.exports = {
 };
 ```
 
-Note: `attachCollector` keeps the `index` in the returned collector object so the `end` handler reads the latest index; the `onCollect.index` seed is read once at call time. (If this indirection feels clumsy during implementation, a simple two-copy version — one collector in `execute`, one in `handleActivation` — is equally acceptable; the behavior must be identical.)
+Note: the `end` handler rebuilds all components disabled — it never depends on the current page index, so no stale-index bug is possible.
 
 - [ ] **Step 2: Verify syntax and module load**
 
@@ -675,7 +662,9 @@ Find the line `├── commands/               # 75 slash command files` (line
 
 - [ ] **Step 3: Verify**
 
-Run from `skarn-bot/`: `rg -n "75 Commands|75 slash" README.md; echo "exit: $?"` — expect no matches (exit 1 from rg is fine/expected). Then `rg -c "^\| /\`" README.md | head -1` is not needed; instead verify count: `rg -o "^\| /\`[a-z0-9]+" README.md | wc -l` should report 77 rows.
+Run from `skarn-bot/`: `node --check commands/help.js` is not needed here; instead verify the README:
+- `rg -n "75 Commands|75 slash" README.md || echo "clean"` — expected: `clean` (no stale "75" references)
+- `rg -n "Quick Reference" README.md` — expected: `## Quick Reference (77 Commands)`
 
 - [ ] **Step 4: Commit**
 
