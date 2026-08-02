@@ -72,11 +72,15 @@ module.exports = {
     let index = initialIndex(state.pages, interaction.options.getString('theme'));
     await interaction.reply({ ...renderAt(state, index), flags: 64 });
     const collector = interaction.channel.createMessageComponentCollector({
-      filter: function(i) { return i.user.id === interaction.user.id; },
+      filter: function(i) { return i.user.id === interaction.user.id && ['help_prev', 'help_next', 'help_theme'].includes(i.customId); },
       time: TIMEOUT,
     });
     collector.on('collect', async function(i) {
-      index = await handleNav(i, state, index);
+      try {
+        index = await handleNav(i, state, index);
+      } catch (e) {
+        if (e.code !== 10062) console.error('[Help] nav error:', e.message);
+      }
     });
     collector.on('end', function() {
       interaction.editReply({ components: disabledRows(state) }).catch(function() {});
@@ -87,11 +91,15 @@ module.exports = {
     let index = initialIndex(state.pages, args.theme);
     const reply = await message.reply(renderAt(state, index));
     const collector = message.channel.createMessageComponentCollector({
-      filter: function(i) { return i.user.id === message.author.id; },
+      filter: function(i) { return i.user.id === message.author.id && ['help_prev', 'help_next', 'help_theme'].includes(i.customId); },
       time: TIMEOUT,
     });
     collector.on('collect', async function(i) {
-      index = await handleNav(i, state, index);
+      try {
+        index = await handleNav(i, state, index);
+      } catch (e) {
+        if (e.code !== 10062) console.error('[Help] nav error:', e.message);
+      }
     });
     collector.on('end', function() {
       reply.edit({ components: disabledRows(state) }).catch(function() {});
