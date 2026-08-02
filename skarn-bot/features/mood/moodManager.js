@@ -6,6 +6,7 @@ const MOOD_LINES = {
   tired: "You've been busy. Responses are a bit shorter today. You're present but conserving energy.",
   amused: "Something about the conversation today has you amused. You're playing along.",
   focused: "The conversation has been substantive. You're keeping it direct and grounded.",
+  wrath: "The old fire is up. Patience held in check - controlled wrath. Shorter sentences, sharper edges, but the restraint stays.",
 };
 
 function evaluateMood(guildId) {
@@ -14,6 +15,7 @@ function evaluateMood(guildId) {
   const avgFamiliarity = stats.avg_familiarity || 0;
 
   if (totalInteractions === 0) return 'refreshed';
+  if (totalInteractions > 100 && avgFamiliarity < 10) return 'wrath';
   if (totalInteractions > 100) return 'tired';
   if (avgFamiliarity > 30 && totalInteractions > 50) return 'amused';
   if (avgFamiliarity < 15 && totalInteractions > 20) return 'focused';
