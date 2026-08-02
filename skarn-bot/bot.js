@@ -87,6 +87,9 @@ client.once('clientReady', () => {
   // Scan command files for activation phrases
   require('./features/activation/activationRegistry').scanCommands();
 
+  // Warn if any command has no help theme (shows under Other)
+  require('./features/help/helpPages').warnUnmappedCommands(client.commands);
+
   // Schedulers (growth, status rotation, weather, proactive, reminders, news, digest, decay, maintenance, chronicle/omen)
   require('./features/scheduler').startSchedulers(client);
 
