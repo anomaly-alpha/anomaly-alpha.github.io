@@ -11,7 +11,7 @@ if (DB_PATH !== ':memory:' && !fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { r
 
 const db = new Database(DB_PATH);
 
-// Enforce declared foreign keys + WAL journal (multi-process-safe, crash-safe)
+// Enforce declared foreign keys; WAL: faster crash recovery + concurrent read access
 db.pragma('journal_mode = WAL');
 db.pragma('foreign_keys = ON');
 
@@ -310,13 +310,19 @@ function pruneOldMessages(cutoffMs) {
 
 function deleteUserConversation(userId, guildId) {
   const threads = db.prepare('SELECT thread_id FROM conversation_threads WHERE user_id = ? AND guild_id = ?').all(userId, guildId);
-  for (const t of threads) {
-    db.prepare('DELETE FROM conversation_messages WHERE thread_id = ?').run(t.thread_id);
-    db.prepare('DELETE FROM conversation_summaries WHERE thread_id = ?').run(t.thread_id);
-    db.prepare('DELETE FROM conversation_fts WHERE thread_id = ?').run(t.thread_id);
-  }
-  db.prepare('DELETE FROM conversation_threads WHERE user_id = ? AND guild_id = ?').run(userId, guildId);
-  db.prepare('DELETE FROM user_profile WHERE user_id = ? AND guild_id = ?').run(userId, guildId);
+  const tx = db.transaction(() => {
+    for (const t of threads) {
+      db.prepare(
+        'DELETE FROM conversation_embeddings WHERE message_id IN (SELECT id FROM conversation_messages WHERE thread_id = ?)'
+      ).run(t.thread_id);
+      db.prepare('DELETE FROM conversation_messages WHERE thread_id = ?').run(t.thread_id);
+      db.prepare('DELETE FROM conversation_summaries WHERE thread_id = ?').run(t.thread_id);
+      db.prepare('DELETE FROM conversation_fts WHERE thread_id = ?').run(t.thread_id);
+    }
+    db.prepare('DELETE FROM conversation_threads WHERE user_id = ? AND guild_id = ?').run(userId, guildId);
+    db.prepare('DELETE FROM user_profile WHERE user_id = ? AND guild_id = ?').run(userId, guildId);
+  });
+  tx();
 }
 
 // ===== Full-Text Search =====
