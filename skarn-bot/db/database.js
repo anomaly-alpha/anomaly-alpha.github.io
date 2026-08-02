@@ -302,8 +302,18 @@ function getMilestones(userId, guildId) {
 
 function pruneOldMessages(cutoffMs) {
   const cutoff = Date.now() - cutoffMs;
+  const stale = db.prepare('SELECT id FROM conversation_messages WHERE created_at < ?').all(cutoff);
+  // Clear referencing rows first — FK enforcement throws otherwise
+  db.prepare('DELETE FROM conversation_embeddings WHERE message_id IN (SELECT id FROM conversation_messages WHERE created_at < ?)').run(cutoff);
   db.prepare('DELETE FROM conversation_messages WHERE created_at < ?').run(cutoff);
   db.prepare('DELETE FROM conversation_summaries WHERE covers_to < ?').run(cutoff);
+  // Keep FTS in sync — orphaned FTS rows break /find
+  const tx = db.transaction(() => {
+    for (const row of stale) {
+      db.prepare('DELETE FROM conversation_fts WHERE rowid = ?').run(row.id);
+    }
+  });
+  tx();
 }
 
 // ===== Privacy =====
@@ -771,7 +781,8 @@ function getFriendByCode(code) {
   return db.prepare('SELECT * FROM friends WHERE code = ?').get(code);
 }
 function searchFriends(query) {
-  return db.prepare('SELECT * FROM friends WHERE LOWER(name) LIKE ?').all('%' + query.toLowerCase() + '%');
+  const escaped = query.toLowerCase().replace(/[%_]/g, m => '\\' + m);
+  return db.prepare('SELECT * FROM friends WHERE LOWER(name) LIKE ? ESCAPE \'\\\'').all('%' + escaped + '%');
 }
 
 // ===== COOLDOWNS =====
