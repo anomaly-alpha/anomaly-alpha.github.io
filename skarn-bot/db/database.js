@@ -30,6 +30,10 @@ try {
 try { db.prepare("ALTER TABLE user_profile ADD COLUMN weekly_sentiment_history TEXT DEFAULT '[]'").run(); } catch (e) { if (!e.message.includes('duplicate column')) throw e; }
 try { db.prepare("ALTER TABLE user_profile ADD COLUMN weekly_topic_history TEXT DEFAULT '[]'").run(); } catch (e) { if (!e.message.includes('duplicate column')) throw e; }
 
+// Versioned migrations (user_version-tracked). Idempotent — safe every startup.
+const { runMigrations } = require('./migrations');
+runMigrations(db);
+
 // ===== Channel State =====
 
 function getChannelState(channelId, guildId) {
