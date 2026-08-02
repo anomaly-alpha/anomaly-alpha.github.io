@@ -61,21 +61,6 @@ const tools = [
       },
     },
   },
-  {
-    type: 'function',
-    function: {
-      name: 'add_knowledge',
-      description: 'Save a fact to the global knowledge base that you can reference in future conversations with anyone.',
-      parameters: {
-        type: 'object',
-        properties: {
-          topic: { type: 'string', description: 'The topic or subject' },
-          summary: { type: 'string', description: 'What to remember about this topic' },
-        },
-        required: ['topic', 'summary'],
-      },
-    },
-  },
 ];
 
 module.exports = { tools };

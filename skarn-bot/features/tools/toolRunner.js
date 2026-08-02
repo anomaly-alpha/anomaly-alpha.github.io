@@ -1,4 +1,4 @@
-const { addMemoryEntry, getMemoryEntries, addKnowledgeBase } = require('../../db/database');
+const { addMemoryEntry, getMemoryEntries } = require('../../db/database');
 const { createReminder } = require('../../db/database');
 
 // Routing functions for search (handles both Google CSE and DDG fallback)
@@ -77,13 +77,6 @@ async function runTool(toolCall, context) {
       if (durationMs > 365 * 24 * 60 * 60 * 1000) durationMs = 365 * 24 * 60 * 60 * 1000;
       createReminder(userId, channelId || userId, guildId, message, Date.now() + durationMs);
       return { role: 'tool', tool_call_id: toolCall.id, content: 'Reminder set.' };
-    }
-
-    case 'add_knowledge': {
-      const { topic, summary } = parsed;
-      if (!topic || !summary) return { role: 'tool', tool_call_id: toolCall.id, content: 'Error: missing topic or summary' };
-      addKnowledgeBase(topic, summary, 'skarn-tool', 0.7);
-      return { role: 'tool', tool_call_id: toolCall.id, content: `Knowledge saved under topic "${topic}".` };
     }
 
     default:
