@@ -96,12 +96,15 @@ function renderTheme(theme, commands, activationByCommand) {
   for (const entry of commands) {
     lines.push(renderCommandLine(entry.name, entry.command, activationByCommand));
   }
+  const budget = MAX_EMBED_DESC - theme.blurb.length - 2;
   const chunks = [];
   let current = '';
   for (const line of lines) {
-    if (current.length + line.length + 2 > MAX_EMBED_DESC) {
+    if (current && current.length + line.length + 2 > budget) {
       chunks.push(current);
       current = line;
+    } else if (!current && line.length > budget) {
+      chunks.push(line);
     } else {
       current = current ? current + '\n\n' + line : line;
     }
