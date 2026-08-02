@@ -178,13 +178,15 @@ const { condenseReply } = require('./features/ai/condenser');   // require AFTER
   const tool = await condenseReply('x'.repeat(300), 200, 'consult', 'u', { usedTool: true });
   console.log('tool unchanged:', tool.reply === 'x'.repeat(300));
   // long reply, gate mocked to fail -> must fall back to original (fail-open)
-  const gate = await condenseReply('realistic sentence '.repeat(10), 200, 'consult', 'u', {});
-  console.log('gate failure falls back to original:', gate.reply === 'realistic sentence '.repeat(10));
+  // NOTE: input must EXCEED the 200 target, else condenseReply short-circuits
+  // before the gate is reached and this assertion is vacuous.
+  const gate = await condenseReply('realistic sentence '.repeat(11), 200, 'consult', 'u', {});
+  console.log('gate failure falls back to original:', gate.reply === 'realistic sentence '.repeat(11));
 })();
 "
 ```
 
-Expected: `short unchanged: true`, `tool unchanged: true`, `gate failure falls back to original: true`. Note: the first two cases never touch the network; the third uses a mocked gate so it is deterministic and offline.
+Expected: `short unchanged: true`, `tool unchanged: true`, `gate failure falls back to original: true`. The 209-char third input exceeds the 200 target, so the mocked gate IS reached and the fail-open path is genuinely exercised — fully offline, no API key needed.
 
 - [ ] **Step 3: Commit**
 
@@ -192,9 +194,6 @@ Expected: `short unchanged: true`, `tool unchanged: true`, `gate failure falls b
 git add features/ai/condenser.js
 git commit -m "feat: add reply condenser with zero-call short-circuit and fail-open"
 ```
-
-(If the network/key is entirely absent, the third assertion is skipped — that's fine; the important one is that it never throws.)
-
 ### Task 3: Wire the condenser + source guidance into `sharedPipeline.js`
 
 **Covers:** [S4] (guidance line), [S5] (integration point), [S6] (data-flow), [S11] (memory/sentiment/story).
@@ -314,7 +313,7 @@ After the existing `node bot.js # boot check` line, add:
 
 ```bash
 node --check features/ai/condenser.js
-cd "/Users/prime/Sites/Gems/anomaly-alpha/skarn-bot" && node -e "..."   # run the block
+node -e "<paste the Step 1 block verbatim>"   # run from the skarn-bot dir
 ```
 
 Expected (all true): `condense long uses gate output: true`, `condense short unchanged: true`, `condense tool unchanged: true`. The mock returns 46 chars (>= 32-floor and < draft length, so it is accepted); the over-target draft is 218 chars (> 200 target, so no short-circuit); 'hi' short-circuits before any gate call; the tool reply is skipped by `usedTool`. Offline and deterministic — no API key needed, no assertion depends on a live model.
