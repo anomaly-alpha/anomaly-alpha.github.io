@@ -68,7 +68,7 @@ module.exports = {
         userId: message.author.id,
       });
       if (!result.success) {
-        if (result.crisis) { await message.reply({ content: FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)], allowedMentions: { parse: ['users'] } }); return; }
+        if (result.crisis) { await message.reply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, allowedMentions: { parse: ['users'] } }); return; }
         await message.reply({ content: result.safeMessage, allowedMentions: { parse: ['users'] } });
         return;
       }

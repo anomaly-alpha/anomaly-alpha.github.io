@@ -64,7 +64,7 @@ async function execute(interaction) {
       userId: interaction.user.id,
     });
     if (!result.success) {
-      if (result.crisis) { await interaction.editReply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }
+      if (result.crisis) { await interaction.editReply({ content: require('../safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }
       await interaction.editReply({ content: result.safeMessage, flags: 64, allowedMentions: { parse: ['users'] } });
       return;
     }
