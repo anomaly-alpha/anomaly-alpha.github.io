@@ -58,6 +58,10 @@ async function condenseReply(text, target, role, userId, opts) {
       // Too aggressive — prefer the safer original.
       return { reply: text };
     }
+    if (condensed.length >= text.length) {
+      // Never return text longer than the draft — fail open to the original.
+      return { reply: text };
+    }
     return { reply: condensed };
   } catch (e) {
     console.error('[Condenser] error:', e.message);
