@@ -178,7 +178,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     // Extract and store any new story from the AI reply (non-blocking)
     const extractedStory = extractStoryFromReply(draft);
     if (extractedStory) {
-      const storyTopic = findStoryTopic(reply) || 'general';
+      const storyTopic = findStoryTopic(draft) || 'general';
       addStory(storyTopic, extractedStory);
     }
 
