@@ -20,7 +20,8 @@ function countSignalsSince(guildId, since) {
 }
 
 function pruneSignals(olderThan) {
-  return db.prepare('DELETE FROM server_signals WHERE created_at < ?').run(olderThan);
+  db.prepare('DELETE FROM server_signals WHERE created_at < ?').run(olderThan);
+  db.prepare('DELETE FROM signal_embeddings WHERE signal_id NOT IN (SELECT id FROM server_signals)').run();
 }
 
 function isOptedOut(userId, guildId) {
