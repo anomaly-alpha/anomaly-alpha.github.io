@@ -5,7 +5,8 @@
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
-    "deploy": "node deploy-commands.js"
+    "deploy": "node deploy-commands.js",
+    "backup": "node scripts/backup-db.js"
   },
   "dependencies": {
     "better-sqlite3": "^12.11.1",
