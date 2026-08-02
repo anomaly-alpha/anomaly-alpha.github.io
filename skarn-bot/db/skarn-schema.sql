@@ -552,6 +552,12 @@ CREATE TABLE IF NOT EXISTS server_signals (
 );
 CREATE INDEX IF NOT EXISTS idx_server_signals_guild ON server_signals(guild_id, created_at);
 
+CREATE TABLE IF NOT EXISTS signal_embeddings (
+  signal_id INTEGER PRIMARY KEY,
+  embedding TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS chronicle_entries (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   guild_id TEXT NOT NULL,

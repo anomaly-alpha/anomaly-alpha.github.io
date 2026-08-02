@@ -1,6 +1,6 @@
 var { getUnresolvedOmens, insertOmen, fulfillOmen, expireOmen, insertRealmOmen } = require('./omenStore');
 var { getSignalsSince } = require('../signalStore');
-var { getGuildConfig, setGuildConfig, getFlag, setFlag } = require('../../../db/database');
+var { getGuildConfig, setGuildConfig, getFlag, setFlag, db } = require('../../../db/database');
 var { buildSystemPrompt } = require('../../../persona/identity');
 var { moderatedChatCompletion } = require('../../../ai/client');
 var { selectModel } = require('../../intelligence/modelRouter');
@@ -11,6 +11,11 @@ var MAX_UNRESOLVED = 10;
 var OMEN_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000;
 var MATCH_THRESHOLD = 0.7;
 var MIN_OMEN_AGE_MS = 24 * 60 * 60 * 1000;
+
+function getCachedEmbedding(signalId) {
+  var row = db.prepare('SELECT embedding FROM signal_embeddings WHERE signal_id = ?').get(signalId);
+  return row ? JSON.parse(row.embedding) : null;
+}
 
 async function generateOmen(guildId) {
   var systemPrompt = buildSystemPrompt({ roleLine: roles.omen, stateLine: '' });
@@ -86,7 +91,13 @@ async function processGuild(guildId, client) {
 
     for (var j = 0; j < signals.length; j++) {
       var signal = signals[j];
-      var signalEmbedding = await embedText(signal.summary_text);
+      var signalEmbedding = getCachedEmbedding(signal.id);
+      if (!signalEmbedding) {
+        signalEmbedding = await embedText(signal.summary_text);
+        db.prepare(
+          'INSERT OR REPLACE INTO signal_embeddings (signal_id, embedding, created_at) VALUES (?, ?, ?)'
+        ).run(signal.id, JSON.stringify(signalEmbedding), Date.now());
+      }
       var similarity = cosineSimilarity(omenEmbedding, signalEmbedding);
       if (similarity >= MATCH_THRESHOLD) {
         var callbackText = await generateCallback(omen.omen_text, signal.summary_text, guildId);
