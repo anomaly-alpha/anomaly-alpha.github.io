@@ -447,3 +447,8 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 - **Activation registry**: Central module (`features/activation/activationRegistry.js`) that maps keyword phrases to commands. Built at startup by scanning each command file's `activation` export. Two routing types: `'command'` (runs the slash command handler) and `'ai'` (routes to the AI mention handler with an injected directive).
 - **Fast-path skippers**: The four built-in keyword handlers (`skarn opt in`, `skarn opt out`, `skarn chat mode`, `skarn status`) that run inline before the activation registry and return immediately without AI.
 - **Activation phrase wins**: A registered activation phrase always takes priority over the @mention AI handler and AI channel auto-respond for messages it matches.
+
+### Help system
+
+- **Help themes**: The user-facing grouping of commands in `/help` (~8 named themes: AI Chat, Fun & Games, Learning & Utility, News & Weather, Leveling, Server Setup, Realm of Skarn, Friends & Knowledge, plus an `Other` fallback). A theme is a page in the paginated help menu, navigated via dropdown + prev/next buttons.
+- **Theme map**: Central name→theme assignment in `features/help/helpPages.js` (`THEME_MAP`). Unmapped commands land in `Other` and trigger a startup warning. `/help` auto-generates from `client.commands` at interaction time — the hardcoded category registry in the old `commands/help.js` was removed (2026-08-02) because it had drifted (4 phantom commands, 16 missing).
