@@ -73,11 +73,17 @@ function addToTrade(userId, itemId, gold) {
     if (!item) return { ok: false, error: 'Item not found' };
     if (item.equipped) return { ok: false, error: 'Cannot trade equipped items' };
 
+    if (offer.items.some(i => i.itemId === itemId)) {
+      return { ok: false, error: 'Item already in your offer' };
+    }
+
     offer.items.push({
       itemId: item.item_id,
       name: item.name,
       type: item.type,
+      description: item.description,
       rarity: item.rarity,
+      stats: item.stats,
       value: item.value,
     });
 
@@ -142,31 +148,31 @@ function executeTrade(trade) {
     return { ok: false, error: 'Partner no longer has enough gold' };
   }
 
-  for (const item of initiatorOffer.items) {
-    const inventory = getInventory(initiator, guildId);
-    const invItem = inventory.find(i => i.item_id === item.itemId);
-    if (!invItem) return { ok: false, error: `Initiator missing ${item.name}` };
-    if (invItem.equipped) return { ok: false, error: `${item.name} is equipped` };
+  // Verify both offers against a single inventory read — fail closed, no partial transfer
+  function verifyOffer(fromId, char, offer) {
+    const inventory = getInventory(fromId, guildId);
+    for (const item of offer.items) {
+      const invItem = inventory.find(i => i.item_id === item.itemId);
+      if (!invItem) return { ok: false, error: `${char.name} is missing ${item.name} — trade cancelled` };
+      if (invItem.equipped) return { ok: false, error: `${item.name} is equipped — trade cancelled` };
+    }
+    return { ok: true };
   }
 
-  for (const item of partnerOffer.items) {
-    const inventory = getInventory(partner, guildId);
-    const invItem = inventory.find(i => i.item_id === item.itemId);
-    if (!invItem) return { ok: false, error: `Partner missing ${item.name}` };
-    if (invItem.equipped) return { ok: false, error: `${item.name} is equipped` };
-  }
+  const initVerify = verifyOffer(initiator, initChar, initiatorOffer);
+  if (!initVerify.ok) return initVerify;
+  const partVerify = verifyOffer(partner, partChar, partnerOffer);
+  if (!partVerify.ok) return partVerify;
 
   const atomicTrade = db.transaction(() => {
     for (const item of initiatorOffer.items) {
-      const invItem = getInventory(initiator, guildId).find(i => i.item_id === item.itemId);
-      removeItem(initiator, guildId, item.itemId);
-      addItem(partner, guildId, invItem.item_id, invItem.name, invItem.type, invItem.description, invItem.rarity, invItem.stats ? JSON.parse(invItem.stats) : null, invItem.value);
+      if (!removeItem(initiator, guildId, item.itemId)) throw new Error(`Could not remove ${item.name}`);
+      addItem(partner, guildId, item.itemId, item.name, item.type, item.description, item.rarity, item.stats ? JSON.parse(item.stats) : null, item.value);
     }
 
     for (const item of partnerOffer.items) {
-      const invItem = getInventory(partner, guildId).find(i => i.item_id === item.itemId);
-      removeItem(partner, guildId, item.itemId);
-      addItem(initiator, guildId, invItem.item_id, invItem.name, invItem.type, invItem.description, invItem.rarity, invItem.stats ? JSON.parse(invItem.stats) : null, invItem.value);
+      if (!removeItem(partner, guildId, item.itemId)) throw new Error(`Could not remove ${item.name}`);
+      addItem(initiator, guildId, item.itemId, item.name, item.type, item.description, item.rarity, item.stats ? JSON.parse(item.stats) : null, item.value);
     }
 
     const initiatorGoldDelta = partnerOffer.gold - initiatorOffer.gold;
