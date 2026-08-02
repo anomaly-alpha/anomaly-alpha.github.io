@@ -2,25 +2,11 @@ require('dotenv').config();
 const { Client, GatewayIntentBits, Collection, EmbedBuilder } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { db, pruneRateLimits, pruneExpiredFlags, pruneSentimentBuffers, pruneBanterChains, pruneCallbacks, decayMemoryEntries, getUserPreferences, setUserPreference, getGuildConfig, setGuildConfig, cleanCooldowns } = require('./db/database');
+const { db, getUserPreferences, setUserPreference, getGuildConfig, setGuildConfig } = require('./db/database');
 
 // ===== Skarn Persona System =====
-const { onMessageReceived } = require('./features/channelState/stateTracker');
-const { runDecayPass } = require('./features/channelState/stateDecay');
 const { handleMention } = require('./features/mentionRouter/mentionRouter');
-const { maybeReact } = require('./features/discordNative/reactionSystem');
-const { updateRelationship } = require('./features/relationship/relationshipTracker');
-const { maybeInterject } = require('./features/presence/interjectionEngine');
-const { updateCulture } = require('./features/culture/cultureTracker');
-const { updateWarmth, maybeActiveListen, cleanWarmth, refreshAiChannels } = require('./features/warmth/warmthManager');
-const { updateCallbacks, cleanCallbacks } = require('./features/humor/callbackEngine');
-const { extendBanterChain, cleanChains, recordSetup } = require('./features/humor/comedyTiming');
-const { recordMessage, recordResponse, canRespond, getStats } = require('./lib/aiStats');
-const { startScheduler } = require('./lib/weatherScheduler');
 const { seedKnowledgeBase } = require('./features/knowledge/knowledgeSeeder');
-const { runDecay } = require('./features/relationship/relationshipTracker');
-const { fetchNews } = require('./features/news/newsFetcher');
-const { postDigest } = require('./features/news/newsDigest');
 
 // ===== Process-level error handling =====
 process.on('unhandledRejection', function(reason) {
@@ -101,45 +87,8 @@ client.once('clientReady', () => {
   // Scan command files for activation phrases
   require('./features/activation/activationRegistry').scanCommands();
 
-  // Weekly growth evaluation
-  const { evaluateGrowth } = require('./features/wisdom/growthTracker');
-  const { generateLoreBatch } = require('./features/wisdom/storyEngine');
-  setInterval(evaluateGrowth, 7 * 24 * 60 * 60 * 1000);
-  evaluateGrowth();
-  setInterval(generateLoreBatch, 60 * 60 * 1000);
-  generateLoreBatch();
-
-  // Rotating status
-  const statuses = [
-    { type: 'Playing', text: 'with AI ðŸ¤–' },
-    { type: 'Listening', text: 'to commands' },
-    { type: 'Watching', text: 'the server ðŸ‘€' },
-    { type: 'Playing', text: 'Tetris' },
-    { type: 'Listening', text: 'to your questions' },
-    { type: 'Watching', text: 'you type...' },
-    { type: 'Playing', text: '52 commands' },
-    { type: 'Listening', text: 'for mentions' },
-  ];
-  let statusIndex = 0;
-
-  function setStatus() {
-    const status = statuses[statusIndex];
-    client.user.setActivity(status.text, { type: status.type });
-    statusIndex = (statusIndex + 1) % statuses.length;
-  }
-  setStatus();
-  setInterval(setStatus, 30000); // Change every 30 seconds
-
-  // Weather scheduler
-  startScheduler(client);
-
-  // Proactive scheduler (follow-ups, absence detection)
-  const { startProactiveScheduler } = require('./features/proactive/scheduler');
-  startProactiveScheduler(client);
-
-  // Reminder delivery (every 30 seconds)
-  const { processDueReminders } = require('./features/remind/remind.handler');
-  setInterval(() => processDueReminders(client), 30 * 1000);
+  // Schedulers (growth, status rotation, weather, proactive, reminders, news, digest, decay, maintenance, chronicle/omen)
+  require('./features/scheduler').startSchedulers(client);
 
   // Sleep mode check
   setInterval(() => {
@@ -152,98 +101,6 @@ client.once('clientReady', () => {
       client.user.setActivity('');
       console.log('Sleep mode: waking up');
     }
-  }, 60000);
-
-  // Hourly news fetch
-  setInterval(() => {
-    fetchNews().then(count => {
-      if (count > 0) console.log(`[News] Fetched ${count} articles`);
-    }).catch(() => {});
-  }, 60 * 60 * 1000);
-
-  // Initial fetch on startup
-  fetchNews().then(count => {
-    console.log(`[News] Initial fetch: ${count} articles`);
-  }).catch(() => {});
-
-  // Daily digest at 6pm
-  function scheduleDigest() {
-    const now = new Date();
-    const target = new Date();
-    target.setHours(18, 0, 0, 0);
-    if (target <= now) target.setDate(target.getDate() + 1);
-    const delay = target - now;
-    setTimeout(() => {
-      postDigest(client).catch(() => {});
-      scheduleDigest(); // reschedule for next day
-    }, delay);
-  }
-  scheduleDigest();
-
-  // Skarn state decay (runs every 10 minutes, regardless of sleep mode)
-  setInterval(() => {
-    runDecayPass();
-    cleanCallbacks();
-    cleanChains();
-    cleanWarmth();
-    runDecay();
-    decayMemoryEntries();
-    cleanCooldowns();
-    pruneRateLimits();
-    pruneExpiredFlags();
-    pruneSentimentBuffers();
-    pruneBanterChains();
-    pruneCallbacks();
-    pruneReactionCounters();
-  }, 10 * 60 * 1000);
-
-  // ===== Daily maintenance jobs =====
-  const { summarizeOldThreads } = require('./features/conversation/summarizer');
-  const { updateAllProfiles } = require('./features/conversation/profileUpdater');
-
-  const DAILY_INTERVAL = 24 * 60 * 60 * 1000;
-
-  setInterval(async () => {
-    console.log('[Daily] Starting maintenance...');
-    await updateAllProfiles();
-    await summarizeOldThreads();
-    var cutoff = Date.now() - 90 * 24 * 60 * 60 * 1000;
-    db.prepare('DELETE FROM conversation_messages WHERE created_at < ?').run(cutoff);
-    db.prepare('DELETE FROM conversation_summaries WHERE covers_to < ?').run(cutoff);
-    console.log('[Daily] Maintenance complete.');
-  }, 24 * 60 * 60 * 1000);
-
-  // ===== Chronicle & Omen â€” signal capture + jobs =====
-  var { initReactionTracking, pruneReactionCounters } = require('./features/serverMemory/signalCapture');
-  var { runChronicleJob } = require('./features/serverMemory/chronicle/chronicleJob');
-  var { runOmenJob } = require('./features/serverMemory/omen/omenJob');
-  var { pruneSignals } = require('./features/serverMemory/signalStore');
-
-  initReactionTracking(client);
-
-  // Prune reaction counters hourly
-  setInterval(pruneReactionCounters, 60 * 60 * 1000);
-
-  // Daily signal pruning (30-day retention)
-  setInterval(function() {
-    var cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
-    pruneSignals(cutoff);
-  }, 24 * 60 * 60 * 1000);
-
-  // Chronicle: run daily (job checks 7-day gap internally)
-  setInterval(function() {
-    runChronicleJob(client).catch(function(err) { console.error('[Chronicle] Job error:', err.message); });
-  }, 24 * 60 * 60 * 1000);
-
-  // Omen: run daily (posting + callback matching)
-  setInterval(function() {
-    runOmenJob(client).catch(function(err) { console.error('[Omen] Job error:', err.message); });
-  }, 24 * 60 * 60 * 1000);
-
-  // Initial runs on startup (1 minute delay to let client settle)
-  setTimeout(function() {
-    runChronicleJob(client).catch(function() {});
-    runOmenJob(client).catch(function() {});
   }, 60000);
 });
 
