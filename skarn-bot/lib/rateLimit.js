@@ -45,9 +45,4 @@ function getRateLimitMessage(userId, bucket) {
   return 'Even a Warmaster paces himself. (' + usage.current + '/' + usage.max + ') Give it a moment.';
 }
 
-function assertUserGate(userId, bucket) {
-  bucket = bucket || 'command';
-  return canCall(userId, bucket);
-}
-
-module.exports = { canCall, releaseCall, getUsage, getRateLimitMessage, assertUserGate };
+module.exports = { canCall, releaseCall, getUsage, getRateLimitMessage };

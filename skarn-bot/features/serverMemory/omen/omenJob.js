@@ -150,17 +150,21 @@ async function manualFulfill(guildId, description, userId) {
     return { matched: false, text: 'That\'s not the thread I meant.' };
   }
 
-  var callbackText = await generateCallback(bestMatch.omen_text, description, guildId);
-  fulfillOmen(bestMatch.id, callbackText);
-  setFlag('omen_fulfill:' + counterKey, String(count + 1), 48 * 60 * 60 * 1000);
+  try {
+    var callbackText = await generateCallback(bestMatch.omen_text, description, guildId);
+    fulfillOmen(bestMatch.id, callbackText);
+    setFlag('omen_fulfill:' + counterKey, String(count + 1), 48 * 60 * 60 * 1000);
 
-  // Realm effect if description mentions Realm content
-  var desc = description.toLowerCase();
-  if (desc.indexOf('realm') !== -1 || desc.indexOf('quest') !== -1 || desc.indexOf('boss') !== -1 || desc.indexOf('defeat') !== -1 || desc.indexOf('explor') !== -1) {
-    insertRealmOmen(bestMatch.id, guildId, callbackText);
+    // Realm effect if description mentions Realm content
+    var desc = description.toLowerCase();
+    if (desc.indexOf('realm') !== -1 || desc.indexOf('quest') !== -1 || desc.indexOf('boss') !== -1 || desc.indexOf('defeat') !== -1 || desc.indexOf('explor') !== -1) {
+      insertRealmOmen(bestMatch.id, guildId, callbackText);
+    }
+
+    return { matched: true, text: '> *' + bestMatch.omen_text + '*\n\n' + callbackText };
+  } catch (err) {
+    return { matched: false, text: err.message };
   }
-
-  return { matched: true, text: '> *' + bestMatch.omen_text + '*\n\n' + callbackText };
 }
 
 module.exports = { runOmenJob, manualFulfill };
