@@ -143,14 +143,18 @@ async function runTool(toolCall, context) {
         return { role: 'tool', tool_call_id: toolCall.id, content: 'Stats need a server.' };
       }
       const { getStatsData } = require('../../commands/stats');
-      const data = getStatsData(context.userId, context.guildId);
-      const lines = [`Messages: ${data.total} · Questions: ${data.questions} · Threads: ${data.threads}`];
-      if (data.firstSeen) lines.push(`First conversation: ${data.firstSeen}`);
-      if (data.hasProfile) {
-        if (data.topTopics) lines.push(`Top topics: ${data.topTopics}`);
-        lines.push(`Engagement: ${data.engagement} · Mood trend: ${data.mood}`);
+      try {
+        const data = getStatsData(context.userId, context.guildId);
+        const lines = [`Messages: ${data.total} · Questions: ${data.questions} · Threads: ${data.threads}`];
+        if (data.firstSeen) lines.push(`First conversation: ${data.firstSeen}`);
+        if (data.hasProfile) {
+          if (data.topTopics) lines.push(`Top topics: ${data.topTopics}`);
+          lines.push(`Engagement: ${data.engagement} · Mood trend: ${data.mood}`);
+        }
+        return { role: 'tool', tool_call_id: toolCall.id, content: lines.join('\n') };
+      } catch (e) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Stats are unavailable right now — try again later.' };
       }
-      return { role: 'tool', tool_call_id: toolCall.id, content: lines.join('\n') };
     }
 
     default:
