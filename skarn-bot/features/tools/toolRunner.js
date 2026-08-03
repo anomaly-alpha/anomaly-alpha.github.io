@@ -1,7 +1,7 @@
 const { addMemoryEntry, getMemoryEntries } = require('../../db/database');
 const { createReminder } = require('../../db/database');
 
-// Routing functions for search (handles both Google CSE and DDG fallback)
+// Routing function for search (Tavily backend)
 async function searchUrl(query) {
   // Use the existing search engine if available
   try {
