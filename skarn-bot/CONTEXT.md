@@ -264,8 +264,7 @@ The following environment variables are consumed by the codebase. Variables are 
 | `DISCORD_TOKEN` | Yes | — | Discord bot authentication (`bot.js` line 471: `client.login()`) |
 | `CLIENT_ID` | Yes | — | Discord application ID (used in slash command registration) |
 | `OPENAI_API_KEY` | For AI | — | OpenAI API key for all AI calls (`ai/client.js` line 7) |
-| `GOOGLE_CSE_KEY` | For `/search` | — | Google Custom Search Engine API key (`features/search/searchEngine.js` line 18) |
-| `GOOGLE_CSE_CX` | For `/search` | — | Google Custom Search Engine CX (search engine ID, `features/search/searchEngine.js` line 19) |
+| `TAVILY_API_KEY` | For `/search` | — | Tavily API key (`features/search/searchEngine.js`) — free tier 1,000 credits/mo, basic search = 1 credit |
 | `SLEEP_START` | No | `1` | Sleep mode start hour (UTC+offset). Set with `SLEEP_END=0` to disable sleep. (`bot.js` line 64) |
 | `SLEEP_END` | No | `7` | Sleep mode end hour (UTC+offset) (`bot.js` line 65) |
 | `SLEEP_TIMEZONE` | No | `0` | UTC offset applied arithmetically to sleep hours. Integer, not DST-aware. (`bot.js` line 66) |
@@ -276,7 +275,7 @@ The following environment variables are consumed by the codebase. Variables are 
 >
 > **Note**: `OPENAI_API_KEY` **is documented in `.env.example`** (required for all AI features, per the table above).
 >
-> **Note**: When `GOOGLE_CSE_KEY` / `GOOGLE_CSE_CX` are not configured, the `/search` command falls back to DuckDuckGo (DDG) search via `features/search/searchEngine.js`.
+> **Note**: When `TAVILY_API_KEY` is not configured, the `/search` command and `search_web` tool fail closed with a clear "not configured" result via `features/search/searchEngine.js`. Since 2026-08-02 the provider chain is Tavily-only (Google CSE dead key 403, DDG anomaly-blocked, Wikipedia compound-query-empty all removed; `duck-duck-scrape` dependency dropped).
 >
 > **Note**: `SLEEP_START` / `SLEEP_END` defaults (1 and 7) match `.env.example`. The actual deployment (`.env`) sets both to `0` to disable sleep. This is an environment-specific choice, not a code default mismatch.
 
