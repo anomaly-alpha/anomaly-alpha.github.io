@@ -52,9 +52,9 @@ The overhauled pipeline:
         ▼
    dedupe by URL + normalized title across feeds
         ▼
-   upsert into daily_news (published_at = publishedAt, backfilled from fetched_at)
+   upsert into daily_news (published_at = publishedAt; migration wipes stale cache)
         ▼
-   prune >72h by published_at    (searchWeb only if every feed failed)
+   prune >72h by published_at    (no search fallback — dropped in grill Q3)
 ```
 
 **Scheduler:** `setInterval(fetchNews, 15min)` in `features/scheduler/index.js:50-53` (was 60min); boot fetch kept; digest stays at 18:00.
@@ -83,7 +83,7 @@ Exact URLs are captured in the implementation plan (plan task T1); the registry 
 3. **Dedupe** across all fetched feeds: skip items whose URL matches an already-seen URL, or whose normalized title (lowercased, first 60 chars) matches. This is an upgrade of the existing 40-char-title dedupe with a URL check.
 4. **Upsert** into `daily_news`: on new URL → INSERT with `published_at`; on existing URL → UPDATE snippet/headline (refresh). Bound by `MAX_ARTICLES = 200` (was 10).
 5. **Prune** `DELETE FROM daily_news WHERE published_at < now - 72h` (was 24h by fetched_at).
-6. **Search fallback** — only when *every* feed fails: `searchWeb(...)` once; if it returns results, store them with `category` from the failed query context. This keeps the "no articles at all" path from being empty on total network failure.
+6. **No search fallback** (grill Q3): with 36 feeds the all-fail case is effectively unreachable, and search results were the root-cause bug. If every feed fails, `fetchNews` returns 0 and readers see the fail-open strings. `newsFetcher.js` no longer imports `searchEngine` (the search command/tool keep their own `searchWeb` usage).
 
 **`getRecentNews(limit, category?)`** — `WHERE category = ?` when given, `ORDER BY published_at DESC LIMIT ?`. Existing callers pass no category → mixed, newest-first.
 
@@ -92,8 +92,8 @@ Exact URLs are captured in the implementation plan (plan task T1); the registry 
 `db/migrations.js` gains migration v2 `add_daily_news_published_at`:
 
 ```sql
+DELETE FROM daily_news;                        -- stale search-era cache; repopulated by next fetch (grill Q2)
 ALTER TABLE daily_news ADD COLUMN published_at INTEGER;
-UPDATE daily_news SET published_at = fetched_at WHERE published_at IS NULL;
 ```
 
 Idempotent via the existing `user_version` mechanism (migration framework at `db/migrations.js:14-25`). `db/skarn-schema.sql` (fresh installs) adds `published_at INTEGER` to the `CREATE TABLE IF NOT EXISTS daily_news` definition — fresh DBs get the column directly, existing DBs via the migration. Retention, cap, and indexes: `idx_daily_news_fetched` and `idx_daily_news_category` remain; ordering reads use `published_at` (a new index on `(category, published_at)` is optional — the table is ≤200 rows, so not required for V0).
@@ -101,9 +101,9 @@ Idempotent via the existing `user_version` mechanism (migration framework at `db
 ## [S7] Reader surfaces
 
 1. **`/news`** (`commands/news.js`) — add a `category` string option: tech / gaming / world / science / business (default: top-mixed). Raw mode lists up to 10 per category (was 5 mixed). Skarn AI mode picks top 3 from the chosen category + commentary (unchanged mechanism, `roles.search` + persona). Activation phrase `skarn news` gains `skarn news <category>` parsing. Empty-category guard: "No <category> news cached yet."
-2. **`get_news` tool** — schema (`features/tools/toolDefinitions.js`) gains optional `category` param with the 5 choices; runner arm (`features/tools/toolRunner.js`) passes it to `getRecentNews(5, category)`; on-demand `fetchNews(category)` when empty (keeps the existing freshness behavior, category-scoped). Privacy: no change (no user data involved).
+2. **`get_news` tool** — schema (`features/tools/toolDefinitions.js`) gains optional `category` param with the 5 choices; runner arm (`features/tools/toolRunner.js`) passes it to `getRecentNews(5, category)`; on empty category cache, triggers `fetchNews(category)` once then re-reads (grill Q5 — on-demand category fetch kept; the latency trade is accepted since a category fetch is only 2-11 feeds). Privacy: no change (no user data involved).
 3. **`postDigest`** (`features/news/newsDigest.js`) — top 5 mixed stories, each line category-labeled (e.g. `[tech] headline`). Same 18:00 schedule.
-4. **`promptContext.js:65`** — unchanged call; the AI prompt's news line automatically reflects the richer, fresher data. Skarn's "own style" comes from this line + the skarn AI mode: headlines are data, voice is persona.
+4. **`promptContext.js:65` — intent-gated news line (grill Q1):** the news line is injected only when the user's message looks news-related (a keyword check for "news", "headline", "happening", current-events terms — the same trigger pattern the socratic engine uses), and capped at **3** headlines. This keeps headline tokens off the hot path of every AI call and makes the injection relevant when it fires. Skarn's "own style" comes from this line + the skarn AI mode: headlines are data, voice is persona.
 
 ## [S8] Error handling & safety
 
@@ -120,8 +120,8 @@ The project is deliberately test-free (CONTEXT.md §11.2). Verify via `node --ch
 - `node --check` on all changed files (`newsFetcher.js`, `newsDigest.js`, `commands/news.js`, `toolDefinitions.js`, `toolRunner.js`, `db/migrations.js`).
 - **Parser smoke (offline, stubbed XML):** feed a canned RSS `<item>` block (with `<pubDate>`) and a canned Atom `<entry>` block (with `<published>`) into the parser; assert normalized `{title, snippet, link, publishedAt}` and that the RSS date parses (not `Date.now()`).
 - **Fetch smoke (offline, stubbed `fetchFeed`):** monkey-patch `fetchFeed` to return canned items (including one duplicate URL and one duplicate title across "feeds"); run `fetchNews()`; assert: dedupe removed both dupes, upsert inserted the rest, `published_at` populated, 72h prune removes a stubbed-old row, category filter (`getRecentNews(5, 'tech')`) returns only tech.
-- **Migration smoke:** run migrations against a temp DB; assert `user_version = 2` and `daily_news` has `published_at`; backfill sets it from `fetched_at`.
-- **Tool smoke:** `runTool('get_news', { category: 'science' })` with stubbed `getRecentNews` returns category-scoped lines.
+- **Migration smoke:** run migrations against a temp DB; assert `user_version = 2`, `daily_news` has `published_at`, and the stale cache was wiped (0 rows).
+- **Tool smoke:** `runTool('get_news', { category: 'science' })` with stubbed `getRecentNews`/`fetchNews` returns category-scoped lines; empty-category on-demand fetch path exercised.
 - **Live feed-fetch check:** `node -e "require('./features/news/newsFetcher').fetchNews().then(c => console.log(c))"` — the same call Railway will run — asserting >0 articles from the real feeds. (This machine ≠ Railway's IP; the definitive Railway check happens after deploy, but this catches dead feeds/parser bugs.)
 - **Boot check:** `node bot.js` boots without load errors.
 
@@ -148,9 +148,13 @@ Locked during brainstorming; do not silently reverse them (re-grill first if a l
 | Retention | **72h** by `published_at` (was 24h by fetched_at); cap **200** (was 10). |
 | Formats | Parse **both RSS `<item>` and Atom `<entry>`** (Verge/CNET are Atom); normalize to `{title, snippet, link, publishedAt}`. |
 | Ordering | Reads ordered by **`published_at` DESC** — real-time feel; undated items sort last with `publishedAt = now`. |
-| Search role | `searchWeb` demoted to **last-resort fallback** when every feed fails; the search command/tool are untouched. |
+| Search role | **Dropped entirely from the news path** (grill Q3) — with 36 feeds the all-fail case is effectively unreachable; search results were the root-cause bug. `newsFetcher.js` no longer imports `searchEngine`; the search command/tool are untouched. |
 | Railway resilience | **Per-feed isolation** (individual try/catch + 8s timeout + redirect follow); one blocked feed costs only that feed. |
-| Reader surfaces | `/news` gains `category` option (raw lists 10/cat, skarn mode top-3 from category); `get_news` tool gains optional `category`; digest lines category-labeled; promptContext news line unchanged but fresher. |
+| Reader surfaces | `/news` gains `category` option (raw lists 10/cat, skarn mode picks from newest 10 of category); `get_news` tool gains optional `category` + keeps on-demand category fetch on empty cache (grill Q5, latency trade accepted); digest lines category-labeled. |
+| Prompt news line | **Intent-gated, cap 3** (grill Q1) — `promptContext.js` injects top-3 headlines only when the message looks news-related (keyword check, like the socratic trigger); keeps cost off the hot path and the line relevant when it fires. |
+| Migration data | **Wipe `daily_news` in migration v2** (grill Q2) — it's a cache, not user data; the next 15-min fetch repopulates from real feeds. No stale search-result rows linger in the new cache. |
+| Dedupe | **URL then normalized-title-60** (grill Q4) — exact URL wins; title fallback (first 60 chars, lowercased, alphanumerics-only) catches syndicated copies across the 36 overlapping sources. |
+| Skarn AI mode | **Model picks from newest 10** of the category (grill Q6) — preserves Skarn's editorial judgment; same mechanism as today, category-scoped. |
 | AI style | Skarn's voice comes from the existing skarn AI mode + persona — headlines are data, voice is persona. |
 
 ---
