@@ -23,7 +23,7 @@ async function condenseReply(text, target, role, userId, opts) {
   if (!CONDENSER_ENABLED) return { reply: text };
   if (!text || typeof text !== 'string' || text.length === 0) return { reply: text };
   if (text.length <= target) return { reply: text }; // short-circuit — zero LLM call
-  if (opts && opts.usedTool) return { reply: text }; // tool-driven replies stay intact
+  if (opts && opts.usedTool && !opts.runCommandShort) return { reply: text }; // tool replies stay intact, except run_command turns (spec [S7])
   if (hasFenceOrTable(text)) return { reply: text };
 
   // Voice is load-bearing: inherit the exact role line + nature so the

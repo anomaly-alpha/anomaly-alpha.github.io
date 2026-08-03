@@ -117,6 +117,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     ];
     var reply = '';
     var usedTool = false;
+    var usedRunCommand = false;
     var maxTurns = 3;
     var turnCount = 0;
 
@@ -148,6 +149,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
 
       messages.push({ role: 'assistant', content: choice.content || null, tool_calls: choice.tool_calls });
       for (var tc of choice.tool_calls) {
+        if (tc.function.name === 'run_command') usedRunCommand = true;
         usedTool = true;
         var toolResult = await runTool(tc, { guildId, channelId, userId, sourceMessage: opts.sourceMessage, sourceInteraction: opts.sourceInteraction });
         messages.push(toolResult);
@@ -162,7 +164,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     // Condense over-target replies before storing/sending (spec [S5]).
     // Story extraction reads the draft so a condensed beat isn't lost.
     const draft = reply;
-    const condensed = await condenseReply(reply, target, roleName, userId, { usedTool });
+    const condensed = await condenseReply(reply, usedRunCommand ? 80 : target, roleName, userId, { usedTool, runCommandShort: usedRunCommand });
     if (condensed && typeof condensed.reply === 'string') {
       reply = condensed.reply;
     }
