@@ -159,6 +159,87 @@ async function runTool(toolCall, context) {
       }
     }
 
+    case 'run_command': {
+      const { buildFacade } = require('./messageAdapter');
+      let commandName = parsed.command ? String(parsed.command).trim().toLowerCase() : '';
+      const args = parsed.args ? String(parsed.args).trim() : '';
+      if (!commandName) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Error: missing command name.' };
+      }
+      // The model may echo the phrase ("skarn level") instead of the name ("level").
+      commandName = commandName.replace(/^skarn\s+/, '');
+      // No chat source (neither mention nor consult) — nothing to run against.
+      if (!context.sourceMessage && !context.sourceInteraction) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Command "' + commandName + '" needs a chat context to run.' };
+      }
+
+      let cmd;
+      try {
+        cmd = require('../../commands/' + commandName);
+      } catch (e) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Unknown command: ' + commandName + '.' };
+      }
+      const activation = cmd.activation;
+      if (!activation || activation.type !== 'command') {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Unknown command: ' + commandName + '.' };
+      }
+
+      const facade = buildFacade(context.sourceMessage || context.sourceInteraction, {
+        phrase: activation.phrase,
+        args: args,
+        guildId: guildId,
+        channelId: channelId,
+        userId: requesterId,
+      });
+
+      // Permission gate (spec [S6]): guildOnly + requiredPermissions, fail closed.
+      if (activation.guildOnly && (!facade.guild || !facade.member)) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Command "' + commandName + '" can only be used in a server.' };
+      }
+      const perms = activation.requiredPermissions || [];
+      const memberPerms = facade.member && facade.member.permissions;
+      if (perms.length > 0) {
+        if (!memberPerms) {
+          return { role: 'tool', tool_call_id: toolCall.id, content: 'You need ' + perms.join(' + ') + ' permission for "' + commandName + '".' };
+        }
+        const missing = perms.filter(function(p) { return !memberPerms.has(p); });
+        if (missing.length > 0) {
+          return { role: 'tool', tool_call_id: toolCall.id, content: 'You need ' + missing.join(' + ') + ' permission for "' + commandName + '".' };
+        }
+      }
+
+      try {
+        // Parse args through the command's parseArgs (graceful on failure).
+        let parsedArgs = {};
+        if (typeof activation.parseArgs === 'function') {
+          try {
+            parsedArgs = activation.parseArgs(activation.phrase + ' ' + args) || {};
+          } catch (e) {
+            parsedArgs = {};
+          }
+        }
+
+        // Single dispatch mode: handleActivation replies through the capturing facade.
+        // Never execute(interaction) — no nested AI from a tool (recursion guard).
+        const handler = cmd.handleActivation;
+        if (typeof handler !== 'function') {
+          return { role: 'tool', tool_call_id: toolCall.id, content: 'Command "' + commandName + '" cannot be run from chat yet.' };
+        }
+        await handler(facade, parsedArgs);
+
+        const replyText = facade.capture();
+        const suffix = '\n\nReply with at most one short in-character line — the command result is already posted above.';
+        return {
+          role: 'tool',
+          tool_call_id: toolCall.id,
+          content: (replyText || 'Command "' + commandName + '" executed.') + suffix,
+        };
+      } catch (e) {
+        console.error('[run_command] ' + commandName + ' failed:', e.message);
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Command "' + commandName + '" hit an error — try again or use the slash command.' };
+      }
+    }
+
     default:
       return { role: 'tool', tool_call_id: toolCall.id, content: `Unknown tool: ${name}` };
   }
