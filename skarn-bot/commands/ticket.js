@@ -21,4 +21,26 @@ module.exports = {
 
     await interaction.reply({ embeds: [embed], components: [row], allowedMentions: { parse: ['users'] } });
   },
+  async handleActivation(message) {
+    const embed = new EmbedBuilder()
+      .setTitle('Support Tickets')
+      .setDescription('Click the button below to create a support ticket. A staff member will assist you.')
+      .setColor(0x00e5ff);
+    const row = new ActionRowBuilder().addComponents(
+      new ButtonBuilder()
+        .setCustomId('ticket_create')
+        .setLabel('Create Ticket')
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji('📩'),
+    );
+    await message.reply({ embeds: [embed], components: [row], allowedMentions: { parse: ['users'] } });
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn ticket',
+    description: 'Create a support ticket panel',
+    guildOnly: true,
+    requiredPermissions: ['Administrator'],
+    parseArgs: function() { return {}; },
+  },
 };

@@ -70,4 +70,64 @@ module.exports = {
       await message.react(reactions[i]);
     }
   },
+  async handleActivation(message, args) {
+    const question = args.question;
+    let options = args.options;
+    if (!options) {
+      var recentTopics = [];
+      try {
+        var db = require('../db/database').db;
+        recentTopics = db.prepare(
+          "SELECT content FROM conversation_messages WHERE guild_id = ? ORDER BY created_at DESC LIMIT 10"
+        ).all(message.guild.id).map(function(m) { return m.content; });
+      } catch (e) {}
+      var ctx = recentTopics.length > 0 ? 'Recent server conversation: ' + recentTopics.join('; ').slice(0, 500) : '';
+      var systemPrompt = buildSystemPrompt({ roleLine: roles.pollsuggest });
+      var result = await moderatedChatCompletion({
+        model: process.env.AI_MODEL || 'gpt-4o-mini',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: 'Topic: "' + question + '"\n' + ctx + '\n\nSuggest 3-5 poll options. Return ONLY a JSON array of strings.' },
+        ],
+        max_tokens: roleTokenBudgets.pollsuggest,
+        temperature: 0.8,
+        userId: message.author.id,
+      });
+      if (result.success) {
+        try {
+          var parsed = JSON.parse(result.completion.choices[0].message.content.replace(/```json|```/g, '').trim());
+          if (Array.isArray(parsed) && parsed.length >= 2) {
+            options = parsed.join(', ');
+          } else {
+            options = 'Yes, No, Maybe';
+          }
+        } catch (e) {
+          options = 'Yes, No, Maybe';
+        }
+      } else {
+        options = 'Yes, No, Maybe';
+      }
+    }
+    const optionList = options.split(',').map(function(o) { return o.trim(); }).slice(0, 10);
+    if (optionList.length < 2) {
+      return message.reply({ content: 'You need at least 2 options.', allowedMentions: { parse: ['users'] } });
+    }
+    const description = optionList.map(function(opt, i) { return reactions[i] + ' ' + opt; }).join('\n');
+    const embed = new EmbedBuilder().setTitle(question).setDescription(description).setColor(0x00e5ff);
+    const sent = await message.reply({ embeds: [embed], fetchReply: true, allowedMentions: { parse: ['users'] } });
+    for (let i = 0; i < optionList.length; i++) {
+      await sent.react(reactions[i]);
+    }
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn poll',
+    description: 'Create a poll with reaction options',
+    parseArgs: function(content) {
+      const rest = content.slice('skarn poll'.length).trim();
+      const idx = rest.toLowerCase().indexOf('options:');
+      if (idx === -1) return { question: rest || null, options: null };
+      return { question: rest.slice(0, idx).trim() || null, options: rest.slice(idx + 'options:'.length).trim() || null };
+    },
+  },
 };

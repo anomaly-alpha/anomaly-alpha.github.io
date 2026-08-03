@@ -44,4 +44,36 @@ module.exports = {
 
     await interaction.editReply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
+  async handleActivation(message, args) {
+    const query = args.query;
+    if (!query || query.length < 2) {
+      return message.reply({ content: 'Search query must be at least 2 characters.', allowedMentions: { parse: ['users'] } });
+    }
+    const results = searchConversations(query, message.guild.id, 10);
+    if (results.length === 0) {
+      return message.reply({ content: `No results found for "${query}".`, allowedMentions: { parse: ['users'] } });
+    }
+    const embed = new EmbedBuilder()
+      .setTitle(`Search: "${query}"`)
+      .setDescription(`Found ${results.length} result${results.length === 1 ? '' : 's'}`)
+      .setColor(0x00e5ff);
+    for (const msg of results.slice(0, 5)) {
+      const date = new Date(msg.created_at).toLocaleDateString();
+      const time = new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const content = msg.content.length > 200 ? msg.content.substring(0, 200) + '...' : msg.content;
+      const role = msg.role === 'user' ? 'You' : 'Skarn';
+      embed.addFields({ name: `${date} ${time} — ${role}`, value: content, inline: false });
+    }
+    if (results.length > 5) {
+      embed.setFooter({ text: `Showing 5 of ${results.length} results` });
+    }
+    await message.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn find',
+    description: 'Search your past conversations with Skarn',
+    guildOnly: true,
+    parseArgs: function(content) { return { query: content.slice('skarn find'.length).trim() || null }; },
+  },
 };
