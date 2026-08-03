@@ -72,6 +72,9 @@ module.exports = {
   },
   async handleActivation(message, args) {
     const question = args.question;
+    if (!question) {
+      return message.reply({ content: 'Give me a question too — e.g. `poll: What\'s for lunch? options: pizza, sushi`', allowedMentions: { parse: ['users'] } });
+    }
     let options = args.options;
     if (!options) {
       var recentTopics = [];
