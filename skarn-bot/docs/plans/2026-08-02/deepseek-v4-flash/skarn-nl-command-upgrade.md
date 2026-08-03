@@ -46,20 +46,31 @@ Keep the 9 existing tool objects **byte-for-byte** as `coreTools`, then change t
 ```js
 const { getAll } = require('../activation/activationRegistry');
 
-// Commands already covered by dedicated tools — never offered via run_command.
-// (spec [S3] exclusion list: roll_dice, flip_coin, get_user_stats, get_weather,
-// get_news, etch_memory, set_reminder, get_memory, search_web)
-const TOOLED_COMMANDS = ['dice', 'coinflip', 'stats', 'weather', 'news', 'etch', 'remind', 'memory', 'search'];
+// Commands never offered via run_command — dedicated-tool commands (spec [S3]
+// exclusion list: roll_dice, flip_coin, get_user_stats, get_weather, get_news,
+// etch_memory, set_reminder, get_memory, search_web) PLUS 'lore': an AI-driven
+// command with an activation whose handler calls the LLM and posts via
+// channel.send — the model narrates in character instead of dispatching, keeping
+// run_command free of nested AI and of channel.send capture (code-review finding,
+// T4).
+const EXCLUDED_COMMANDS = ['dice', 'coinflip', 'stats', 'weather', 'news', 'etch', 'remind', 'memory', 'search', 'lore'];
 
 const coreTools = [ /* ...the existing 9 tool objects verbatim... */ ];
+
+// Single source of truth for the run_command command set — used by getTools() to
+// build the enum and by toolRunner's run_command case to validate the model's
+// command name before require (grill Q1 + code-review finding, T4).
+function getRunCommandNames() {
+  return getAll()
+    .filter(function(a) { return a.type === 'command' && EXCLUDED_COMMANDS.indexOf(a.command) === -1; })
+    .map(function(a) { return a.command; })
+    .sort();
+}
 
 // Built per call: the enum reflects the live activation registry, so a newly
 // activated command appears in the tool automatically (grill Q1).
 function getTools() {
-  const commands = getAll()
-    .filter(function(a) { return a.type === 'command' && TOOLED_COMMANDS.indexOf(a.command) === -1; })
-    .map(function(a) { return a.command; })
-    .sort();
+  const commands = getRunCommandNames();
   const runCommand = {
     type: 'function',
     function: {
@@ -78,7 +89,7 @@ function getTools() {
   return coreTools.concat(runCommand);
 }
 
-module.exports = { getTools };
+module.exports = { getTools, getRunCommandNames };
 ```
 
 Note: JSON Schema enums are plain strings — per-member descriptions are not representable; the tool-level description carries the examples instead.
@@ -339,6 +350,13 @@ Insert between the `get_user_stats` case and `default:` in `features/tools/toolR
         return { role: 'tool', tool_call_id: toolCall.id, content: 'Command "' + commandName + '" needs a chat context to run.' };
       }
 
+      // Validate against the shared run_command set before require (code-review
+      // finding, T4): rejects unknown names, tooled commands (search/weather/...)
+      // and AI-driven 'lore' at the runner level, not just in the schema enum.
+      const { getRunCommandNames } = require('./toolDefinitions');
+      if (getRunCommandNames().indexOf(commandName) === -1) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Unknown command: ' + commandName + '.' };
+      }
       let cmd;
       try {
         cmd = require('../../commands/' + commandName);
@@ -353,9 +371,6 @@ Insert between the `get_user_stats` case and `default:` in `features/tools/toolR
       const facade = buildFacade(context.sourceMessage || context.sourceInteraction, {
         phrase: activation.phrase,
         args: args,
-        guildId: guildId,
-        channelId: channelId,
-        userId: requesterId,
       });
 
       // Permission gate (spec [S6]): guildOnly + requiredPermissions, fail closed.
@@ -418,11 +433,14 @@ SKARN_DB_PATH=$(mktemp -d)/t4.db node -e "
 const { runTool } = require('./features/tools/toolRunner');
 const { db } = require('./db/database');
 const sent = [];
+const userObj = { username: 'Tester', displayAvatarURL: function() { return 'https://example.com/a.png'; } };
+// displayAvatarURL must live on member.user with a non-empty URL — discord.js
+// 14.27 EmbedBuilder.setThumbnail('') throws (code-review finding, T4).
 const makeMsg = function(perms) {
   return {
     author: { id: 'u1', username: 'Tester' },
-    guild: { id: 'g1', members: { cache: { get: function() { return { user: { username: 'Tester' }, displayAvatarURL: function() { return ''; } }; } } } },
-    member: { permissions: { has: function(p) { return (perms || []).indexOf(p) !== -1; } } },
+    guild: { id: 'g1', members: { cache: { get: function() { return { user: userObj }; } } } },
+    member: { permissions: { has: function(p) { return (perms || []).indexOf(p) !== -1; } }, user: userObj },
     channel: { id: 'c1' },
     mentions: { users: { first: function() { return null; } }, channels: { first: function() { return { id: 'c9' }; } }, roles: { first: function() { return null; } } },
     reply: async function(payload) { sent.push(payload); return { react: async function() {} }; },
@@ -1131,11 +1149,12 @@ the right command, executes it for real, and posts the result.
 
 ```bash
 SKARN_DB_PATH=$(mktemp -d)/nl.db node -e "
+require('./features/activation/activationRegistry').scanCommands();
 const { runTool } = require('./features/tools/toolRunner');
 const sent = [];
 const msg = {
   author: { id: 'u1', username: 'Tester' },
-  guild: { id: 'g1', members: { cache: { get: function() { return { user: { username: 'Tester' }, displayAvatarURL: function() { return ''; } }; } } } },
+  guild: { id: 'g1', members: { cache: { get: function() { return { user: { username: 'Tester', displayAvatarURL: function() { return 'https://example.com/a.png'; } } }; } } } },
   member: { permissions: { has: function(p) { return false; } } },
   channel: { id: 'c1' },
   mentions: { users: { first: function() { return null; } }, channels: { first: function() { return { id: 'c9' }; } }, roles: { first: function() { return null; } } },
@@ -1203,7 +1222,7 @@ const { runTool } = require('./features/tools/toolRunner');
 const sent = [];
 const msg = {
   author: { id: 'u1', username: 'Tester' },
-  guild: { id: 'g1', members: { cache: { get: function() { return { user: { username: 'Tester' }, displayAvatarURL: function() { return ''; } }; } } } },
+  guild: { id: 'g1', members: { cache: { get: function() { return { user: { username: 'Tester', displayAvatarURL: function() { return 'https://example.com/a.png'; } } }; } } } },
   member: { permissions: { has: function(p) { return p === 'Administrator'; } } },
   channel: { id: 'c1' },
   mentions: { users: { first: function() { return null; } }, channels: { first: function() { return { id: 'c9' }; } }, roles: { first: function() { return null; } } },
