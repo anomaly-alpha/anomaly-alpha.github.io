@@ -147,7 +147,7 @@ Locked during brainstorming; do not silently reverse them (re-grill first if a l
 | Cadence | Fetch **every 15 min** (was 60), boot fetch kept, digest stays 18:00. |
 | Retention | **72h** by `published_at` (was 24h by fetched_at); cap **200** (was 10). |
 | Formats | Parse **both RSS `<item>` and Atom `<entry>`** (Verge/CNET are Atom); normalize to `{title, snippet, link, publishedAt}`. |
-| Ordering | Reads ordered by **`published_at` DESC** — real-time feel; undated items sort last with `publishedAt = now`. |
+| Ordering | Reads ordered by **`published_at` DESC** — real-time feel; undated items get `publishedAt = now` so they appear at fetch time (note: under DESC this means they surface at the top on first fetch, then age down — "sort last" is not achievable with the now-fallback, implementation follows the mechanism). |
 | Search role | **Dropped entirely from the news path** (grill Q3) — with 38 feeds the all-fail case is effectively unreachable; search results were the root-cause bug. `newsFetcher.js` no longer imports `searchEngine`; the search command/tool are untouched. |
 | Railway resilience | **Per-feed isolation** (individual try/catch + 8s timeout + redirect follow); one blocked feed costs only that feed. |
 | Reader surfaces | `/news` gains `category` option (raw lists 10/cat, skarn mode picks from newest 10 of category); `get_news` tool gains optional `category` + keeps on-demand category fetch on empty cache (grill Q5, latency trade accepted); digest lines category-labeled. |
