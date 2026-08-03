@@ -62,15 +62,16 @@ function buildContext(userId, guildId, channelId, opts) {
   const escalationLine = getEscalationDirective(channelId);
   const climateLine = getClimateLine(guildId);
 
-  // News line is intent-gated (grill Q1): only injected when the user's message
-  // looks news-related, capped at 3 headlines — keeps tokens off the hot path.
-  const NEWS_INTENT_RE = /\b(news|headlines?|happening in the world|current events|top stories|what'?s (going on|up) in)\b/i;
+  // Always-on news awareness (spec [S8]): newest article per category, top 3 most
+  // recent overall — tech posts fastest, so one-per-category keeps it diversified.
   var newsLine = '';
-  if (userContent && NEWS_INTENT_RE.test(userContent)) {
-    const recentNews = getRecentNews(3);
-    if (recentNews.length > 0) {
-      newsLine = 'Today\'s headlines: ' + recentNews.map(function(n) { return n.headline; }).join(' | ');
-    }
+  const NEWS_CATEGORIES = ['tech', 'world', 'science', 'business', 'gaming'];
+  const perCategory = NEWS_CATEGORIES.map(function(c) { return getRecentNews(1, c)[0]; }).filter(Boolean);
+  const topNews = perCategory.sort(function(a, b) { return b.published_at - a.published_at; }).slice(0, 3);
+  if (topNews.length > 0) {
+    newsLine = 'Happening now: ' + topNews.map(function(n) {
+      return '[' + (n.category || 'mixed') + '] ' + n.headline;
+    }).join(' | ');
   }
 
   // === Conversation context (tiered) ===
