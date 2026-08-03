@@ -3,10 +3,13 @@
 
 const { getAll } = require('../activation/activationRegistry');
 
-// Commands already covered by dedicated tools — never offered via run_command.
-// (spec [S3] exclusion list: roll_dice, flip_coin, get_user_stats, get_weather,
-// get_news, etch_memory, set_reminder, get_memory, search_web)
-const TOOLED_COMMANDS = ['dice', 'coinflip', 'stats', 'weather', 'news', 'etch', 'remind', 'memory', 'search'];
+// Commands never offered via run_command — dedicated-tool commands (spec [S3]
+// exclusion list: roll_dice, flip_coin, get_user_stats, get_weather, get_news,
+// etch_memory, set_reminder, get_memory, search_web) PLUS 'lore': an AI-driven
+// command with an activation whose handler calls the LLM and posts via
+// channel.send — the model narrates in character instead of dispatching, keeping
+// run_command free of nested AI and of channel.send capture.
+const EXCLUDED_COMMANDS = ['dice', 'coinflip', 'stats', 'weather', 'news', 'etch', 'remind', 'memory', 'search', 'lore'];
 
 const coreTools = [
   {
@@ -132,13 +135,20 @@ const coreTools = [
   },
 ];
 
+// Single source of truth for the run_command command set — used by getTools() to
+// build the enum and by toolRunner's run_command case to validate the model's
+// command name before require.
+function getRunCommandNames() {
+  return getAll()
+    .filter(function(a) { return a.type === 'command' && EXCLUDED_COMMANDS.indexOf(a.command) === -1; })
+    .map(function(a) { return a.command; })
+    .sort();
+}
+
 // Built per call: the enum reflects the live activation registry, so a newly
 // activated command appears in the tool automatically (grill Q1).
 function getTools() {
-  const commands = getAll()
-    .filter(function(a) { return a.type === 'command' && TOOLED_COMMANDS.indexOf(a.command) === -1; })
-    .map(function(a) { return a.command; })
-    .sort();
+  const commands = getRunCommandNames();
   const runCommand = {
     type: 'function',
     function: {
@@ -157,4 +167,4 @@ function getTools() {
   return coreTools.concat(runCommand);
 }
 
-module.exports = { getTools };
+module.exports = { getTools, getRunCommandNames };

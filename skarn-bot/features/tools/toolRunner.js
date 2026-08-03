@@ -173,6 +173,13 @@ async function runTool(toolCall, context) {
         return { role: 'tool', tool_call_id: toolCall.id, content: 'Command "' + commandName + '" needs a chat context to run.' };
       }
 
+      // Validate against the shared run_command set before require: rejects
+      // unknown names, tooled commands (search/weather/...) and AI-driven 'lore'
+      // at the runner level, not just in the schema enum.
+      const { getRunCommandNames } = require('./toolDefinitions');
+      if (getRunCommandNames().indexOf(commandName) === -1) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Unknown command: ' + commandName + '.' };
+      }
       let cmd;
       try {
         cmd = require('../../commands/' + commandName);
@@ -187,9 +194,6 @@ async function runTool(toolCall, context) {
       const facade = buildFacade(context.sourceMessage || context.sourceInteraction, {
         phrase: activation.phrase,
         args: args,
-        guildId: guildId,
-        channelId: channelId,
-        userId: requesterId,
       });
 
       // Permission gate (spec [S6]): guildOnly + requiredPermissions, fail closed.
