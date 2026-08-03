@@ -80,7 +80,7 @@ module.exports = {
         .setTitle('Search: ' + query)
         .setDescription(results.map((r, i) => `[${i + 1}. ${r.title}](${r.url})`).join('\n'))
         .setColor(0x00e5ff)
-        .setFooter({ text: source === 'cache' ? 'Cached' : source === 'wikipedia' ? 'Wikipedia' : source === 'google' ? 'Google' : 'DuckDuckGo' });
+        .setFooter({ text: source === 'cache' ? 'Cached' : source === 'tavily' ? 'Tavily' : 'Search' });
 
       const chunks = splitMessage(reply, 400);
       if (chunks.length === 1) {
