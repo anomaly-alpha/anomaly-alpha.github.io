@@ -61,6 +61,66 @@ const tools = [
       },
     },
   },
+  {
+    type: 'function',
+    function: {
+      name: 'get_weather',
+      description: "Fetch current weather + 3-day forecast for a place. Use when the user asks about weather, temperature, conditions, or forecast — e.g. 'what's the weather in Tokyo', 'is it raining in Paris'. If no location given, ask which place.",
+      parameters: {
+        type: 'object',
+        properties: {
+          location: { type: 'string', description: 'City or place name, e.g. Tokyo or Paris' },
+        },
+        required: ['location'],
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'get_news',
+      description: "Fetch today's headlines. Use when the user asks what's in the news, 'any headlines', or 'what's happening'. If the cache is empty, triggers a fresh fetch before answering.",
+      parameters: {
+        type: 'object',
+        properties: {},
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'roll_dice',
+      description: "Roll a real die. Use for 'roll a d20', 'roll for initiative', 'roll the dice for me'. Returns the actual roll — do not invent one.",
+      parameters: {
+        type: 'object',
+        properties: {
+          sides: { type: 'integer', description: 'Number of sides (2-100, default 6)' },
+        },
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'flip_coin',
+      description: "Flip a real coin. Use for 'flip a coin', 'heads or tails'. Returns an actual result — do not invent one.",
+      parameters: {
+        type: 'object',
+        properties: {},
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'get_user_stats',
+      description: "Fetch the requesting user's conversation stats (message count, questions, threads, top topics, engagement). Use when someone asks 'what are my stats', 'how many messages have I sent'.",
+      parameters: {
+        type: 'object',
+        properties: {},
+      },
+    },
+  },
 ];
 
 module.exports = { tools };
