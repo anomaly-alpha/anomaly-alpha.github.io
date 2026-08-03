@@ -154,15 +154,15 @@ level, leaderboard, avatar, poll, server setup, the lorebook, omens, the
 chronicle, and more. He picks the right command, executes it for real, and posts
 the result, then adds a one-line in-character comment.
 
-| Example                                             |
-| --------------------------------------------------- |
-| `@Skarn what's my level?`                           |
-| `show me the leaderboard`                           |
-| `set the welcome channel to #welcome`               |
-| `run a poll: what's for lunch? options: pizza, sushi` |
-| `skarn ping`                                        |
-| `what are the omens right now?`                     |
-| `show me the server chronicle`                      |
+| Example                                                           |
+| ----------------------------------------------------------------- |
+| `@Skarn what's my level?`                                         |
+| `show me the leaderboard`                                         |
+| `set the welcome channel to #welcome`                             |
+| `run a poll: what's for lunch? options: pizza, sushi`             |
+| `skarn ping`                                                      |
+| `what are the omens right now?`                                   |
+| `show me the server chronicle`                                    |
 | `make an embed titled Welcome with a description about the rules` |
 
 - **Permission-gated:** admin commands (setwelcome, setlog, ticket, etc.) only run if
@@ -227,6 +227,7 @@ Say it naturally; he executes the real command and posts the result. Rows marked
 | `avatar` | `show my avatar` · `what's @kay's avatar?` |
 | `userinfo` | `show info about @kay` · `when did @kay join?` |
 | `serverinfo` | `show server info` · `how many members are here?` |
+| `whatdoesthefoxsay` | `what does the fox say?` · `make the fox noise` |
 
 #### Server setup — admin (🔑)
 
@@ -323,11 +324,8 @@ launch. Skarn knows them and will guide you.
 | `aitrivia` | `play AI trivia with me` | `Use /aitrivia — first question's coming.` |
 | `trivia` | `play trivia` | `Use /trivia — pick a category.` |
 
-### 11.5 The one slash-only command
-
-| Command | Why |
-| --- | --- |
-| `whatdoesthefoxsay` | A tiny random-fox-sound command with no natural-language path yet — use `/whatdoesthefoxsay` for now. |
+Every command in the bot now has a natural-language path — nothing is
+slash-only anymore.
 
 ---
 

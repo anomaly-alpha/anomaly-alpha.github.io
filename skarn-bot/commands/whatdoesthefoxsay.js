@@ -25,4 +25,19 @@ module.exports = {
       .setFooter({ text: '— Skarn, after 10,000 years of contemplation' });
     await interaction.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   },
+  async handleActivation(message) {
+    const sound = SOUNDS[Math.floor(Math.random() * SOUNDS.length)];
+    const embed = new EmbedBuilder()
+      .setTitle('🦊 The Fox')
+      .setDescription(sound)
+      .setColor(0xe91e8a)
+      .setFooter({ text: '— Skarn, after 10,000 years of contemplation' });
+    await message.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
+  },
+  activation: {
+    type: 'command',
+    phrase: 'skarn what does the fox say',
+    description: 'The most important question of our time',
+    parseArgs: function() { return {}; },
+  },
 };
