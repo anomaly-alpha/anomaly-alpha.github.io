@@ -29,3 +29,5 @@ module.exports = {
     parseArgs: function(content) { const n = parseInt(content.slice('skarn dice'.length).trim()); return { sides: (n >= 2 && n <= 100) ? n : 6 }; },
   },
 };
+
+module.exports.getDiceResponse = getDiceResponse;

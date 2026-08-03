@@ -23,3 +23,5 @@ module.exports = {
     parseArgs: function() { return {}; },
   },
 };
+
+module.exports.getCoinflipResponse = getCoinflipResponse;

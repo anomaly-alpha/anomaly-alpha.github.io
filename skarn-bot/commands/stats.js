@@ -1,57 +1,70 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { db } = require('../db/database');
 
-async function getStatsResponse(args, message) {
-  const targetUserId = message.author.id;
-  const guildId = message.guild.id;
-
+// Single source of truth for conversation stats. Shared by the slash handler,
+// the activation handler, and the get_user_stats AI tool (spec [S5.5]/[S11]).
+function getStatsData(userId, guildId) {
   const total = db.prepare(
     'SELECT COUNT(*) as count FROM conversation_messages WHERE user_id = ? AND guild_id = ?'
-  ).get(targetUserId, guildId);
+  ).get(userId, guildId);
 
   const questions = db.prepare(
     "SELECT COUNT(*) as count FROM conversation_messages WHERE user_id = ? AND guild_id = ? AND role = 'user' AND is_question = 1"
-  ).get(targetUserId, guildId);
+  ).get(userId, guildId);
 
   const firstMsg = db.prepare(
     'SELECT MIN(created_at) as first_seen FROM conversation_messages WHERE user_id = ? AND guild_id = ?'
-  ).get(targetUserId, guildId);
+  ).get(userId, guildId);
 
   const threads = db.prepare(
     'SELECT COUNT(*) as count FROM conversation_threads WHERE user_id = ? AND guild_id = ?'
-  ).get(targetUserId, guildId);
+  ).get(userId, guildId);
 
   const profile = db.prepare(
     'SELECT * FROM user_profile WHERE user_id = ? AND guild_id = ?'
-  ).get(targetUserId, guildId);
+  ).get(userId, guildId);
+
+  const topics = JSON.parse((profile && profile.top_topics) || '[]');
+  const hours = JSON.parse((profile && profile.peak_hours) || '[]');
+
+  return {
+    total: total.count,
+    questions: questions.count,
+    threads: threads.count,
+    firstSeen: firstMsg && firstMsg.first_seen ? new Date(firstMsg.first_seen).toLocaleDateString() : null,
+    topTopics: topics.slice(0, 3).map(t => `${t.topic} (${Math.round(t.weight * 100)}%)`).join(', '),
+    hours: hours,
+    engagement: profile && profile.engagement_score > 0.7 ? 'High' : profile && profile.engagement_score > 0.3 ? 'Medium' : 'Low',
+    mood: profile && profile.sentiment_trend > 0.1 ? 'Improving 😊' : profile && profile.sentiment_trend < -0.1 ? 'Declining 😕' : 'Stable 😐',
+    hasProfile: !!profile,
+  };
+}
+
+async function getStatsResponse(args, message) {
+  const targetUserId = message.author.id;
+  const guildId = message.guild.id;
+  const data = getStatsData(targetUserId, guildId);
 
   const embed = new EmbedBuilder()
     .setTitle(`Conversation Stats — ${message.author.username}`)
     .setColor(0x00e5ff);
 
   embed.addFields(
-    { name: 'Total Messages', value: `${total.count}`, inline: true },
-    { name: 'Questions Asked', value: `${questions.count}`, inline: true },
-    { name: 'Conversation Threads', value: `${threads.count}`, inline: true },
+    { name: 'Total Messages', value: `${data.total}`, inline: true },
+    { name: 'Questions Asked', value: `${data.questions}`, inline: true },
+    { name: 'Conversation Threads', value: `${data.threads}`, inline: true },
   );
 
-  if (firstMsg && firstMsg.first_seen) {
-    const date = new Date(firstMsg.first_seen).toLocaleDateString();
-    embed.addFields({ name: 'First Conversation', value: date, inline: true });
+  if (data.firstSeen) {
+    embed.addFields({ name: 'First Conversation', value: data.firstSeen, inline: true });
   }
 
-  if (profile) {
-    const topics = JSON.parse(profile.top_topics || '[]');
-    const hours = JSON.parse(profile.peak_hours || '[]');
-    const topicStr = topics.slice(0, 3).map(t => `${t.topic} (${Math.round(t.weight * 100)}%)`).join(', ');
-    const engagement = profile.engagement_score > 0.7 ? 'High' : profile.engagement_score > 0.3 ? 'Medium' : 'Low';
-    const mood = profile.sentiment_trend > 0.1 ? 'Improving 😊' : profile.sentiment_trend < -0.1 ? 'Declining 😕' : 'Stable 😐';
-
-    if (topicStr) embed.addFields({ name: 'Top Topics', value: topicStr, inline: false });
-    if (hours.length > 0) embed.addFields({ name: 'Most Active Hours (UTC)', value: hours.join(', '), inline: true });
+  if (data.hasProfile) {
+    if (data.topTopics) embed.addFields({ name: 'Top Topics', value: data.topTopics, inline: false });
+    if (data.hours.length > 0) embed.addFields({ name: 'Most Active Hours (UTC)', value: data.hours.join(', '), inline: true });
     embed.addFields(
-      { name: 'Engagement', value: engagement, inline: true },
-      { name: 'Mood Trend', value: mood, inline: true },
+      { name: 'Engagement', value: data.engagement, inline: true },
+      { name: 'Mood Trend', value: data.mood, inline: true },
     );
   }
   return { embeds: [embed] };
@@ -71,53 +84,28 @@ module.exports = {
 
     await interaction.deferReply({ flags: 64 });
 
-    const total = db.prepare(
-      'SELECT COUNT(*) as count FROM conversation_messages WHERE user_id = ? AND guild_id = ?'
-    ).get(targetUser.id, interaction.guild.id);
-
-    const questions = db.prepare(
-      "SELECT COUNT(*) as count FROM conversation_messages WHERE user_id = ? AND guild_id = ? AND role = 'user' AND is_question = 1"
-    ).get(targetUser.id, interaction.guild.id);
-
-    const firstMsg = db.prepare(
-      'SELECT MIN(created_at) as first_seen FROM conversation_messages WHERE user_id = ? AND guild_id = ?'
-    ).get(targetUser.id, interaction.guild.id);
-
-    const threads = db.prepare(
-      'SELECT COUNT(*) as count FROM conversation_threads WHERE user_id = ? AND guild_id = ?'
-    ).get(targetUser.id, interaction.guild.id);
-
-    const profile = db.prepare(
-      'SELECT * FROM user_profile WHERE user_id = ? AND guild_id = ?'
-    ).get(targetUser.id, interaction.guild.id);
+    const data = getStatsData(targetUser.id, interaction.guild.id);
 
     const embed = new EmbedBuilder()
       .setTitle(`Conversation Stats — ${targetUser.username}`)
       .setColor(0x00e5ff);
 
     embed.addFields(
-      { name: 'Total Messages', value: `${total.count}`, inline: true },
-      { name: 'Questions Asked', value: `${questions.count}`, inline: true },
-      { name: 'Conversation Threads', value: `${threads.count}`, inline: true },
+      { name: 'Total Messages', value: `${data.total}`, inline: true },
+      { name: 'Questions Asked', value: `${data.questions}`, inline: true },
+      { name: 'Conversation Threads', value: `${data.threads}`, inline: true },
     );
 
-    if (firstMsg && firstMsg.first_seen) {
-      const date = new Date(firstMsg.first_seen).toLocaleDateString();
-      embed.addFields({ name: 'First Conversation', value: date, inline: true });
+    if (data.firstSeen) {
+      embed.addFields({ name: 'First Conversation', value: data.firstSeen, inline: true });
     }
 
-    if (profile) {
-      const topics = JSON.parse(profile.top_topics || '[]');
-      const hours = JSON.parse(profile.peak_hours || '[]');
-      const topicStr = topics.slice(0, 3).map(t => `${t.topic} (${Math.round(t.weight * 100)}%)`).join(', ');
-      const engagement = profile.engagement_score > 0.7 ? 'High' : profile.engagement_score > 0.3 ? 'Medium' : 'Low';
-      const mood = profile.sentiment_trend > 0.1 ? 'Improving 😊' : profile.sentiment_trend < -0.1 ? 'Declining 😕' : 'Stable 😐';
-
-      if (topicStr) embed.addFields({ name: 'Top Topics', value: topicStr, inline: false });
-      if (hours.length > 0) embed.addFields({ name: 'Most Active Hours (UTC)', value: hours.join(', '), inline: true });
+    if (data.hasProfile) {
+      if (data.topTopics) embed.addFields({ name: 'Top Topics', value: data.topTopics, inline: false });
+      if (data.hours.length > 0) embed.addFields({ name: 'Most Active Hours (UTC)', value: data.hours.join(', '), inline: true });
       embed.addFields(
-        { name: 'Engagement', value: engagement, inline: true },
-        { name: 'Mood Trend', value: mood, inline: true },
+        { name: 'Engagement', value: data.engagement, inline: true },
+        { name: 'Mood Trend', value: data.mood, inline: true },
       );
     }
 
@@ -143,3 +131,5 @@ module.exports = {
     parseArgs: function(content) { return { user: content.slice('skarn stats'.length).trim() || null }; },
   },
 };
+
+module.exports.getStatsData = getStatsData;
