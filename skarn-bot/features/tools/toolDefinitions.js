@@ -1,7 +1,14 @@
 // JSON Schema function definitions for OpenAI tool calling.
 // Tools give Skarn the ability to perform actions during conversation.
 
-const tools = [
+const { getAll } = require('../activation/activationRegistry');
+
+// Commands already covered by dedicated tools — never offered via run_command.
+// (spec [S3] exclusion list: roll_dice, flip_coin, get_user_stats, get_weather,
+// get_news, etch_memory, set_reminder, get_memory, search_web)
+const TOOLED_COMMANDS = ['dice', 'coinflip', 'stats', 'weather', 'news', 'etch', 'remind', 'memory', 'search'];
+
+const coreTools = [
   {
     type: 'function',
     function: {
@@ -125,4 +132,29 @@ const tools = [
   },
 ];
 
-module.exports = { tools };
+// Built per call: the enum reflects the live activation registry, so a newly
+// activated command appears in the tool automatically (grill Q1).
+function getTools() {
+  const commands = getAll()
+    .filter(function(a) { return a.type === 'command' && TOOLED_COMMANDS.indexOf(a.command) === -1; })
+    .map(function(a) { return a.command; })
+    .sort();
+  const runCommand = {
+    type: 'function',
+    function: {
+      name: 'run_command',
+      description: 'Run any Skarn command by name. Use when the user asks for a command result — level, leaderboard, avatar, poll, setwelcome, embed, find, help, ping, lorebook, omen, chronicle, and more.',
+      parameters: {
+        type: 'object',
+        properties: {
+          command: { type: 'string', description: 'The command to run', enum: commands },
+          args: { type: 'string', description: 'Natural-language arguments for the command, e.g. a user mention, a channel mention, a question, or options. Omit when the command takes none.' },
+        },
+        required: ['command'],
+      },
+    },
+  };
+  return coreTools.concat(runCommand);
+}
+
+module.exports = { getTools };

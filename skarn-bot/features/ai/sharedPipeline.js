@@ -17,7 +17,7 @@ const { extractMemory } = require('../memory/memoryExtractor');
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
 const { trackResponse } = require('../intelligence/responseLearner');
 const { selectModel, checkKnowledgeMatch } = require('../intelligence/modelRouter');
-const { tools } = require('../tools/toolDefinitions');
+const { getTools } = require('../tools/toolDefinitions');
 const { runTool } = require('../tools/toolRunner');
 const { storeMessage } = require('../conversation/messageStore');
 const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
@@ -129,7 +129,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
         temperature: temperature,
         userId: userId,
         bucket: 'chat',
-        ...(turnCount === 1 ? { tools: tools, tool_choice: 'auto' } : {}),
+        ...(turnCount === 1 ? { tools: getTools(), tool_choice: 'auto' } : {}),
       });
       if (!result.success) {
         if (result.crisis) {
