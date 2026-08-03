@@ -26,6 +26,10 @@ async function handleLorebookActivation(message, args) {
     if (!args.id) {
       return message.reply({ content: 'Usage: `skarn lorebook remove <id>` (see `skarn lorebook list`)', allowedMentions: { parse: ['users'] } });
     }
+    const owns = getLoreEntries(guildId).some(function(e) { return e.id === args.id; });
+    if (!owns) {
+      return message.reply({ content: 'No lorebook entry #' + args.id + ' in this server.', allowedMentions: { parse: ['users'] } });
+    }
     removeLoreEntry(args.id);
     return message.reply({ content: `Lore entry **${args.id}** removed.`, allowedMentions: { parse: ['users'] } });
   }
@@ -46,7 +50,16 @@ async function handleLorebookActivation(message, args) {
   }
   for (const [cat, items] of Object.entries(byCategory)) {
     const lines = items.map(e => `**#${e.id}** [${e.priority}] \`${e.keywords}\` — ${e.content.slice(0, 80)}${e.content.length > 80 ? '…' : ''}`);
-    embed.addFields({ name: cat, value: lines.join('\n') });
+    let chunk = '';
+    for (const line of lines) {
+      if ((chunk + '\n' + line).length > 1000) {
+        embed.addFields({ name: cat, value: chunk });
+        chunk = line;
+      } else {
+        chunk = chunk ? chunk + '\n' + line : line;
+      }
+    }
+    if (chunk) embed.addFields({ name: cat, value: chunk });
   }
   return message.reply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
 }
@@ -67,10 +80,12 @@ module.exports = {
       const rest = content.slice('skarn lorebook'.length).trim();
       const subMatch = rest.match(/^(add|remove|list)\b/i);
       const sub = subMatch ? subMatch[1].toLowerCase() : 'list';
-      const kw = rest.match(/keywords?:?\s*["']?([^,;]+)/i);
-      const ct = rest.match(/content?:?\s*(.+)$/i);
+      const ctIdx = rest.toLowerCase().indexOf('content:');
+      const kwPart = ctIdx === -1 ? rest : rest.slice(0, ctIdx);
+      const ctPart = ctIdx === -1 ? null : rest.slice(ctIdx + 'content:'.length).trim();
+      const kw = kwPart.match(/keywords?:?\s*["']?([^,;]+)/i);
       const idMatch = rest.match(/(\d+)/);
-      return { sub: sub, keywords: kw ? kw[1].trim() : null, content: ct ? ct[1].trim() : null, id: idMatch ? parseInt(idMatch[1], 10) : null };
+      return { sub: sub, keywords: kw ? kw[1].trim() : null, content: ctPart || null, id: idMatch ? parseInt(idMatch[1], 10) : null };
     },
   },
 };
