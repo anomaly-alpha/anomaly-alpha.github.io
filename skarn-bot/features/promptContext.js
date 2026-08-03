@@ -62,10 +62,16 @@ function buildContext(userId, guildId, channelId, opts) {
   const escalationLine = getEscalationDirective(channelId);
   const climateLine = getClimateLine(guildId);
 
-  const recentNews = getRecentNews(5);
-  const newsLine = recentNews.length > 0
-    ? 'Today\'s headlines: ' + recentNews.map(function(n) { return n.headline; }).join(' | ')
-    : '';
+  // News line is intent-gated (grill Q1): only injected when the user's message
+  // looks news-related, capped at 3 headlines — keeps tokens off the hot path.
+  const NEWS_INTENT_RE = /\b(news|headlines?|happening in the world|current events|top stories|what'?s (going on|up) in)\b/i;
+  var newsLine = '';
+  if (userContent && NEWS_INTENT_RE.test(userContent)) {
+    const recentNews = getRecentNews(3);
+    if (recentNews.length > 0) {
+      newsLine = 'Today\'s headlines: ' + recentNews.map(function(n) { return n.headline; }).join(' | ');
+    }
+  }
 
   // === Conversation context (tiered) ===
   var conversationLine = '';

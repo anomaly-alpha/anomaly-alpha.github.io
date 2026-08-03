@@ -9,7 +9,7 @@ async function postDigest(client) {
   const embed = new EmbedBuilder()
     .setTitle('📰 evening news digest')
     .setDescription(articles.map((a, i) =>
-      `**${i + 1}.** ${a.headline}\n${a.snippet ? a.snippet.slice(0, 120) + '...' : ''}`
+      `**[${a.category || 'mixed'}] ${a.headline}**\n${a.snippet ? a.snippet.slice(0, 120) + '...' : ''}`
     ).join('\n\n'))
     .setColor(0x00e5ff)
     .setFooter({ text: 'skarn\'s daily news roundup' });
