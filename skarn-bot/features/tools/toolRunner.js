@@ -108,17 +108,19 @@ async function runTool(toolCall, context) {
 
     case 'get_news': {
       const { getRecentNews, fetchNews } = require('../news/newsFetcher');
+      const category = parsed.category || null;
       try {
-        let articles = getRecentNews(10);
+        let articles = getRecentNews(5, category);
         if (!articles || articles.length === 0) {
-          await fetchNews(); // on-demand refresh (spec [S11] News freshness)
-          articles = getRecentNews(10);
+          await fetchNews(category); // on-demand category refresh (grill Q5)
+          articles = getRecentNews(5, category);
         }
         if (!articles || articles.length === 0) {
-          return { role: 'tool', tool_call_id: toolCall.id, content: 'No news cached yet — check back in a bit.' };
+          const label = category ? category + ' news' : 'news';
+          return { role: 'tool', tool_call_id: toolCall.id, content: 'No ' + label + ' cached yet — check back in a bit.' };
         }
         const lines = articles.slice(0, 5).map(a =>
-          `• ${(a.headline || '').slice(0, 100)}${a.snippet ? ' — ' + a.snippet.slice(0, 150) + '…' : ''}`
+          `[${a.category || 'mixed'}] ${(a.headline || '').slice(0, 100)}${a.snippet ? ' — ' + a.snippet.slice(0, 150) + '…' : ''}`
         );
         return { role: 'tool', tool_call_id: toolCall.id, content: lines.join('\n') };
       } catch (e) {

@@ -82,7 +82,9 @@ const tools = [
       description: "Fetch today's headlines. Use when the user asks what's in the news, 'any headlines', or 'what's happening'. If the cache is empty, triggers a fresh fetch before answering.",
       parameters: {
         type: 'object',
-        properties: {},
+        properties: {
+          category: { type: 'string', description: 'News category: tech, gaming, world, science, or business. Omit for top mixed stories.', enum: ['tech', 'gaming', 'world', 'science', 'business'] },
+        },
       },
     },
   },
