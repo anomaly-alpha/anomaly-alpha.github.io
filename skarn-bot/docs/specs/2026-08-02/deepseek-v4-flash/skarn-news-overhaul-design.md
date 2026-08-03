@@ -44,7 +44,7 @@ A rewrite of the news vertical slice. `features/news/newsFetcher.js` owns fetch/
 The overhauled pipeline:
 
 ```
-36 validated RSS+Atom feeds (5 categories)
+38 validated RSS+Atom feeds (5 categories)
         │   parallel fetch (Promise.all, per-feed 8s timeout, redirect follow)
         ▼
    fetchFeed(url) → parse RSS <item> / Atom <entry> → {title, snippet, link, publishedAt}
@@ -59,9 +59,9 @@ The overhauled pipeline:
 
 **Scheduler:** `setInterval(fetchNews, 15min)` in `features/scheduler/index.js:50-53` (was 60min); boot fetch kept; digest stays at 18:00.
 
-## [S4] Feed registry (36 validated sources)
+## [S4] Feed registry (38 validated sources)
 
-The registry is a module-level constant in `features/news/newsFetcher.js` — a flat array of `{ category, name, url }` entries. **All 36 URLs were tested live 2026-08-02** (HTTP 200, real items, pubDate present); failed candidates (IGN 404, Reuters agency 404, Bloomberg 403, Economist 403, Fox 400) are excluded. Some feeds 301/302 → the fetcher must use `redirect: 'follow'` (Node `fetch` default, made explicit).
+The registry is a module-level constant in `features/news/newsFetcher.js` — a flat array of `{ category, name, url }` entries. **All 38 URLs were tested live 2026-08-02** (HTTP 200, real items, pubDate present); failed candidates (IGN 404, Reuters agency 404, Bloomberg 403, Economist 403, Fox 400) are excluded. Some feeds 301/302 → the fetcher must use `redirect: 'follow'` (Node `fetch` default, made explicit).
 
 | Category | Feeds (36) |
 |---|---|
@@ -83,7 +83,7 @@ Exact URLs are captured in the implementation plan (plan task T1); the registry 
 3. **Dedupe** across all fetched feeds: skip items whose URL matches an already-seen URL, or whose normalized title (lowercased, first 60 chars) matches. This is an upgrade of the existing 40-char-title dedupe with a URL check.
 4. **Upsert** into `daily_news`: on new URL → INSERT with `published_at`; on existing URL → UPDATE snippet/headline (refresh). Bound by `MAX_ARTICLES = 200` (was 10).
 5. **Prune** `DELETE FROM daily_news WHERE published_at < now - 72h` (was 24h by fetched_at).
-6. **No search fallback** (grill Q3): with 36 feeds the all-fail case is effectively unreachable, and search results were the root-cause bug. If every feed fails, `fetchNews` returns 0 and readers see the fail-open strings. `newsFetcher.js` no longer imports `searchEngine` (the search command/tool keep their own `searchWeb` usage).
+6. **No search fallback** (grill Q3): with 38 feeds the all-fail case is effectively unreachable, and search results were the root-cause bug. If every feed fails, `fetchNews` returns 0 and readers see the fail-open strings. `newsFetcher.js` no longer imports `searchEngine` (the search command/tool keep their own `searchWeb` usage).
 
 **`getRecentNews(limit, category?)`** — `WHERE category = ?` when given, `ORDER BY published_at DESC LIMIT ?`. Existing callers pass no category → mixed, newest-first.
 
@@ -111,7 +111,7 @@ Idempotent via the existing `user_version` mechanism (migration framework at `db
 - **Never throws into the scheduler:** `fetchNews` returns a count (0 on total failure) — existing call sites already `.catch(() => {})`.
 - **Fail-open reads:** empty cache / empty category → "No news cached yet" strings (existing behavior, category-aware wording).
 - **No new user-facing error strings** introduced; the digest/skarn fallback-to-raw path stays.
-- **Rate-limit note:** 36 parallel fetches every 15 min is ~3,500 requests/day against public RSS hosts. Feeds are designed for this cadence, but per-feed timeout (8s) + isolation means a 403/429 from one host doesn't cascade. CONTEXT.md §4's separate-buckets rule applies to AI calls, not plain HTTP fetches (same as wttr.in / search fallback today).
+- **Rate-limit note:** 38 parallel fetches every 15 min is ~3,500 requests/day against public RSS hosts. Feeds are designed for this cadence, but per-feed timeout (8s) + isolation means a 403/429 from one host doesn't cascade. CONTEXT.md §4's separate-buckets rule applies to AI calls, not plain HTTP fetches (same as wttr.in / search fallback today).
 
 ## [S9] Verification (project convention: no test framework — node -e smokes)
 
@@ -143,17 +143,17 @@ Locked during brainstorming; do not silently reverse them (re-grill first if a l
 |---|---|
 | Scope | **Multi-category real RSS** — not search results, not tech-only. |
 | Approach | **A — Full overhaul + migration**: RSS-primary, `published_at` column, category column, parallel fetch, 200/72h retention. |
-| Feed count | **36 validated sources** across 5 categories (tech 11, gaming 6, world 9, science 7, business 5). All URL-tested live 2026-08-02. |
+| Feed count | **38 validated sources** across 5 categories (tech 11, gaming 6, world 9, science 7, business 5). All URL-tested live 2026-08-02. |
 | Cadence | Fetch **every 15 min** (was 60), boot fetch kept, digest stays 18:00. |
 | Retention | **72h** by `published_at` (was 24h by fetched_at); cap **200** (was 10). |
 | Formats | Parse **both RSS `<item>` and Atom `<entry>`** (Verge/CNET are Atom); normalize to `{title, snippet, link, publishedAt}`. |
 | Ordering | Reads ordered by **`published_at` DESC** — real-time feel; undated items sort last with `publishedAt = now`. |
-| Search role | **Dropped entirely from the news path** (grill Q3) — with 36 feeds the all-fail case is effectively unreachable; search results were the root-cause bug. `newsFetcher.js` no longer imports `searchEngine`; the search command/tool are untouched. |
+| Search role | **Dropped entirely from the news path** (grill Q3) — with 38 feeds the all-fail case is effectively unreachable; search results were the root-cause bug. `newsFetcher.js` no longer imports `searchEngine`; the search command/tool are untouched. |
 | Railway resilience | **Per-feed isolation** (individual try/catch + 8s timeout + redirect follow); one blocked feed costs only that feed. |
 | Reader surfaces | `/news` gains `category` option (raw lists 10/cat, skarn mode picks from newest 10 of category); `get_news` tool gains optional `category` + keeps on-demand category fetch on empty cache (grill Q5, latency trade accepted); digest lines category-labeled. |
 | Prompt news line | **Intent-gated, cap 3** (grill Q1) — `promptContext.js` injects top-3 headlines only when the message looks news-related (keyword check, like the socratic trigger); keeps cost off the hot path and the line relevant when it fires. |
 | Migration data | **Wipe `daily_news` in migration v2** (grill Q2) — it's a cache, not user data; the next 15-min fetch repopulates from real feeds. No stale search-result rows linger in the new cache. |
-| Dedupe | **URL then normalized-title-60** (grill Q4) — exact URL wins; title fallback (first 60 chars, lowercased, alphanumerics-only) catches syndicated copies across the 36 overlapping sources. |
+| Dedupe | **URL then normalized-title-60** (grill Q4) — exact URL wins; title fallback (first 60 chars, lowercased, alphanumerics-only) catches syndicated copies across the 38 overlapping sources. |
 | Skarn AI mode | **Model picks from newest 10** of the category (grill Q6) — preserves Skarn's editorial judgment; same mechanism as today, category-scoped. |
 | AI style | Skarn's voice comes from the existing skarn AI mode + persona — headlines are data, voice is persona. |
 
