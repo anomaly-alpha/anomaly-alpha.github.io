@@ -46,7 +46,13 @@ In `skarn-bot/db/migrations.js`, append to the `MIGRATIONS` array (after the ver
     name: 'add_daily_news_published_at',
     up(db) {
       db.prepare('DELETE FROM daily_news').run(); // stale search-era cache; repopulated by next fetch (grill Q2)
-      db.prepare('ALTER TABLE daily_news ADD COLUMN published_at INTEGER').run();
+      // Column-existence check: on a FRESH DB the schema.sql already created
+      // published_at (database.js:19 exec's schema.sql before migrations run),
+      // so an unconditional ALTER would throw "duplicate column name".
+      const cols = db.prepare('PRAGMA table_info(daily_news)').all().map(c => c.name);
+      if (cols.indexOf('published_at') === -1) {
+        db.prepare('ALTER TABLE daily_news ADD COLUMN published_at INTEGER').run();
+      }
     },
   },
 ```
@@ -908,7 +914,7 @@ git commit -m "docs: document news overhaul smokes; mark implemented"
 - **Spec coverage:** [S6]→T1; [S3]/[S4]/[S5]/[S8]/[S11-formats+ordering+dedupe+search+resilience]→T2; [S3-cadence]/[S11-cadence]→T3; [S7.1]/[S11-reader+skarn-mode]→T4; [S7.2]/[S11-on-demand]→T5; [S7.3]/[S7.4]/[S11-prompt-line]→T6; [S9]/docs→T7. [S1] problem context captured in header; [S2] out-of-scope items encoded as Global Constraints (no search fallback, no search command changes, no user prefs). [S10] non-goals are untouched by design. Every spec section has a task; every Covers: ID resolves.
 - **Placeholders:** concrete code in every step; no "TBD". All smokes are offline + deterministic (fetch stubbed, temp DB) except the T2 Step 4 live feed check and the T7 boot check, which are explicitly live checks. One deliberate verify-then-adapt: T6 Step 2 notes the `buildContext` opts parameter name should be confirmed against the function signature before editing (the smoke then proves it).
 - **Type consistency:** `fetchNews(category?) -> count` and `getRecentNews(limit, category?)` defined in T2, consumed identically in T3 (scheduler, count), T4 (news command, `getRecentNews(10, category)`), T5 (tool, `getRecentNews(5, category)` + `fetchNews(category)`), T6 (digest `getRecentNews(5)`, prompt `getRecentNews(3)`). `FEEDS` export (38 entries) used in T2 Step 4. `category` values are the constant set `tech|gaming|world|science|business` across T2 (registry), T4 (command choices + parseArgs), T5 (schema enum + runner). `published_at` column name consistent across T1 (migration/schema), T2 (inserts/selects), T4/T5/T6 smokes.
-- **One risk checked:** the fresh-install migration path — schema.sql gets `published_at` AND migration v2 ALTERs the column. On a fresh DB, `CREATE TABLE IF NOT EXISTS` already includes the column, so migration v2's `ALTER TABLE ... ADD COLUMN` would fail with "duplicate column name". The T1 Step 3 fresh-path smoke would catch this — and the fix (if it occurs) is to make migration v2 conditional: check `PRAGMA table_info(daily_news)` for the column before ALTERing. This is the implementer's call; the smoke is the gate.
+- **One risk checked (resolved pre-execution):** the fresh-install migration path — `database.js:19` exec's the full schema.sql on every startup, so a fresh DB already has `published_at` from the CREATE TABLE, and migration v2's unconditional `ALTER ... ADD COLUMN` would throw "duplicate column name". Task 1 Step 1 now guards with a `PRAGMA table_info` column-existence check — idempotent for both fresh installs (column present → skip ALTER, wipe empty table) and legacy DBs (column missing → ALTER). The T1 Step 3 fresh-path smoke verifies the guard.
 
 ## Execution handoff
 
