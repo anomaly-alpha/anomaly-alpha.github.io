@@ -106,6 +106,7 @@ Current information Skarn doesn't know offhand.
 | `@Skarn search for the latest iPhone release date` |
 | `who won the game last night?`                     |
 | `skarn look up how to fix a leaking faucet`        |
+| `search for news about big walk`                   |
 
 Returns: search results fed back so Skarn can answer with current info.
 
@@ -255,11 +256,11 @@ Say it naturally; he executes the real command and posts the result. Rows marked
 
 #### Utility
 
-| Command | Say it like… |
-| --- | --- |
+| Command     | Say it like…                                                                |
+| ----------- | --------------------------------------------------------------------------- |
 | `translate` | `translate "bonjour" to English` · `how do you say good night in Japanese?` |
-| `forget` | `forget my memories` · `clear my conversation history` |
-| `help` | `what can you do?` · `show me the help menu` · `help with realm` |
+| `forget`    | `forget my memories` · `clear my conversation history`                      |
+| `help`      | `what can you do?` · `show me the help menu` · `help with realm`            |
 
 ### 11.2 Commands with dedicated tools
 
