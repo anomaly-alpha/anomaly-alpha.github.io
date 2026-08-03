@@ -44,6 +44,7 @@ async function handleMention(message) {
     cleanMsg,
     {
       channel: message.channel,
+      sourceMessage: message,
       threadType: 'channel',
       temperature: 0.85,
       chunkSize: 1900,

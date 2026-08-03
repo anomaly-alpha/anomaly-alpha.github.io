@@ -26,6 +26,7 @@ async function execute(interaction) {
     message,
     {
       channel: interaction.channel,
+      sourceInteraction: interaction,
       threadType: 'consult',
       temperature: 0.8,
       chunkSize: 400,
