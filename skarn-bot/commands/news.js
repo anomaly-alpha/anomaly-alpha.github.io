@@ -14,20 +14,32 @@ module.exports = {
         .addChoices(
           { name: 'Skarn (top 3 with commentary)', value: 'skarn' },
           { name: 'Raw (all headlines)', value: 'raw' },
+        ))
+    .addStringOption(option =>
+      option.setName('category')
+        .setDescription('News category (default: top mixed)')
+        .addChoices(
+          { name: 'Tech', value: 'tech' },
+          { name: 'Gaming', value: 'gaming' },
+          { name: 'World', value: 'world' },
+          { name: 'Science', value: 'science' },
+          { name: 'Business', value: 'business' },
         )),
   async execute(interaction) {
     const style = interaction.options.getString('style') || 'skarn';
-    const articles = getRecentNews(10);
+    const category = interaction.options.getString('category') || null;
+    const articles = getRecentNews(10, category);
 
     if (!articles || articles.length === 0) {
-      return interaction.reply({ content: 'No news articles cached yet. Check back in a bit.', flags: 64, allowedMentions: { parse: ['users'] } });
+      const label = category ? category + ' news' : 'news articles';
+      return interaction.reply({ content: 'No ' + label + ' cached yet. Check back in a bit.', flags: 64, allowedMentions: { parse: ['users'] } });
     }
 
     if (style === 'raw') {
       const embed = new EmbedBuilder()
-        .setTitle('📰 today\'s headlines')
+        .setTitle(category ? '📰 ' + category + ' headlines' : '📰 today\'s headlines')
         .setColor(0x00e5ff);
-      for (const a of articles.slice(0, 5)) {
+      for (const a of articles.slice(0, 10)) {
         embed.addFields({
           name: a.headline.slice(0, 100),
           value: a.snippet ? a.snippet.slice(0, 150) + '…' : 'no snippet',
@@ -57,9 +69,9 @@ module.exports = {
     } catch {
       // Fallback: raw display
       const embed = new EmbedBuilder()
-        .setTitle('📰 today\'s headlines')
+        .setTitle(category ? '📰 ' + category + ' headlines' : '📰 today\'s headlines')
         .setColor(0x00e5ff);
-      for (const a of articles.slice(0, 5)) {
+      for (const a of articles.slice(0, 10)) {
         embed.addFields({
           name: a.headline.slice(0, 100),
           value: a.snippet ? a.snippet.slice(0, 150) + '…' : 'no snippet',
@@ -68,15 +80,17 @@ module.exports = {
       await interaction.editReply({ embeds: [embed], allowedMentions: { parse: ['users'] } });
     }
   },
-  async handleActivation(message) {
-    const articles = getRecentNews(10);
+  async handleActivation(message, args) {
+    const category = (args && args.category) || null;
+    const articles = getRecentNews(10, category);
     if (!articles || articles.length === 0) {
-      return message.reply({ content: 'No news articles cached yet.', allowedMentions: { parse: ['users'] } });
+      const label = category ? category + ' news' : 'news articles';
+      return message.reply({ content: 'No ' + label + ' cached yet.', allowedMentions: { parse: ['users'] } });
     }
     const embed = new EmbedBuilder()
-      .setTitle('📰 today\'s headlines')
+      .setTitle(category ? '📰 ' + category + ' headlines' : '📰 today\'s headlines')
       .setColor(0x00e5ff);
-    for (const a of articles.slice(0, 5)) {
+    for (const a of articles.slice(0, 10)) {
       embed.addFields({
         name: a.headline.slice(0, 100),
         value: a.snippet ? a.snippet.slice(0, 150) + '…' : 'no snippet',
@@ -90,6 +104,10 @@ module.exports = {
     description: 'Show today\'s headlines',
     guildOnly: false,
     requiredPermissions: [],
-    parseArgs: function() { return {}; },
+    parseArgs: function(content) {
+      var rest = content.slice('skarn news'.length).trim();
+      var valid = ['tech', 'gaming', 'world', 'science', 'business'];
+      return valid.indexOf(rest) !== -1 ? { category: rest } : {};
+    },
   },
 };
