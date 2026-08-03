@@ -38,13 +38,14 @@ function payloadToText(payload) {
 function buildFacade(source, opts) {
   const phrase = opts.phrase;
   const args = opts.args || '';
-  const content = phrase + ' ' + args;
+  const content = [phrase, args].filter(Boolean).join(' ');
   const captured = { text: '' };
 
   // Mention path: inherit everything from the real message; shadow content + reply.
   if (source && source.author) {
     const facade = Object.create(source);
     facade.content = content;
+    facade.mentions = parseMentions(content);
     const origReply = source.reply.bind(source);
     facade.reply = async function(payload) {
       captured.text = payloadToText(payload);
@@ -64,6 +65,7 @@ function buildFacade(source, opts) {
     guild: interaction.guild,
     channel: interaction.channel,
     mentions: parseMentions(content),
+    // followUp requires the interaction to be deferred first (callers must defer).
     reply: async function(payload) {
       captured.text = payloadToText(payload);
       return interaction.followUp(payload);
