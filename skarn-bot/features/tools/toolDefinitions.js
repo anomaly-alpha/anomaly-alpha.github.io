@@ -94,7 +94,7 @@ const tools = [
       parameters: {
         type: 'object',
         properties: {
-          sides: { type: 'integer', description: 'Number of sides (2-100, default 6)' },
+          sides: { type: 'integer', description: 'Number of sides (2-100, default 6)', minimum: 2, maximum: 100, default: 6 },
         },
       },
     },
