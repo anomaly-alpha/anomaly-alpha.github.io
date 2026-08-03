@@ -145,9 +145,9 @@ async function fetchNews(category) {
     if (!item.title || !item.url) continue;
     if (seenUrl.has(item.url)) continue;
     var nt = normalizeTitle(item.title);
-    if (seenTitle.has(nt)) continue;
+    if (nt && seenTitle.has(nt)) continue; // non-Latin titles normalize to '' -> URL-only dedupe
     seenUrl.add(item.url);
-    seenTitle.add(nt);
+    if (nt) seenTitle.add(nt);
     unique.push(item);
   }
 
@@ -164,6 +164,7 @@ async function fetchNews(category) {
   }
   var capped = [];
   for (var cat of Object.keys(byCat)) {
+    byCat[cat].sort(function(a, b) { return b.publishedAt - a.publishedAt; });
     capped = capped.concat(byCat[cat].slice(0, MAX_PER_CATEGORY));
   }
   var upsert = db.transaction(function() {
