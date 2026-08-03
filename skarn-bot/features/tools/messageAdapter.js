@@ -64,6 +64,7 @@ function buildFacade(source, opts) {
     member: interaction.member,
     guild: interaction.guild,
     channel: interaction.channel,
+    client: interaction.client,
     mentions: parseMentions(content),
     // followUp requires the interaction to be deferred first (callers must defer).
     reply: async function(payload) {
