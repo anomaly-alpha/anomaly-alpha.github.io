@@ -79,6 +79,80 @@ async function runTool(toolCall, context) {
       return { role: 'tool', tool_call_id: toolCall.id, content: 'Reminder set.' };
     }
 
+    case 'get_weather': {
+      const { location } = parsed;
+      if (!location) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Which place? Give me a city name, e.g. Tokyo.' };
+      }
+      const { fetchWeather } = require('../../lib/weatherScheduler');
+      try {
+        const data = await fetchWeather(location);
+        const current = data.current_condition[0];
+        const forecast = (data.weather || []).slice(0, 3).map(d => {
+          const date = new Date(d.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+          return `${date}: ${d.mintempC}-${d.maxtempC}°C, ${d.hourly[4].weatherDesc[0].value}`;
+        }).join('; ');
+        const lines = [
+          `Location: ${location}`,
+          `Temperature: ${current.temp_C}°C / ${current.temp_F}°F`,
+          `Condition: ${current.weatherDesc[0].value}`,
+          `Humidity: ${current.humidity}%`,
+          `Wind: ${current.windspeedKmph} km/h ${current.winddir16Point}`,
+        ];
+        if (forecast) lines.push(`Forecast: ${forecast}`);
+        return { role: 'tool', tool_call_id: toolCall.id, content: lines.join('\n') };
+      } catch (e) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: `Weather service unreachable for "${location}". Try a city name, e.g. 'Tokyo'.` };
+      }
+    }
+
+    case 'get_news': {
+      const { getRecentNews, fetchNews } = require('../news/newsFetcher');
+      try {
+        let articles = getRecentNews(10);
+        if (!articles || articles.length === 0) {
+          await fetchNews(); // on-demand refresh (spec [S11] News freshness)
+          articles = getRecentNews(10);
+        }
+        if (!articles || articles.length === 0) {
+          return { role: 'tool', tool_call_id: toolCall.id, content: 'No news cached yet — check back in a bit.' };
+        }
+        const lines = articles.slice(0, 5).map(a =>
+          `• ${(a.headline || '').slice(0, 100)}${a.snippet ? ' — ' + a.snippet.slice(0, 150) + '…' : ''}`
+        );
+        return { role: 'tool', tool_call_id: toolCall.id, content: lines.join('\n') };
+      } catch (e) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'News is unreachable right now — try again later.' };
+      }
+    }
+
+    case 'roll_dice': {
+      const { getDiceResponse } = require('../../commands/dice');
+      let sides = parseInt(parsed.sides, 10);
+      if (!(sides >= 2 && sides <= 100)) sides = 6;
+      return { role: 'tool', tool_call_id: toolCall.id, content: getDiceResponse({ sides }) };
+    }
+
+    case 'flip_coin': {
+      const { getCoinflipResponse } = require('../../commands/coinflip');
+      return { role: 'tool', tool_call_id: toolCall.id, content: getCoinflipResponse() };
+    }
+
+    case 'get_user_stats': {
+      if (!context.guildId) {
+        return { role: 'tool', tool_call_id: toolCall.id, content: 'Stats need a server.' };
+      }
+      const { getStatsData } = require('../../commands/stats');
+      const data = getStatsData(context.userId, context.guildId);
+      const lines = [`Messages: ${data.total} · Questions: ${data.questions} · Threads: ${data.threads}`];
+      if (data.firstSeen) lines.push(`First conversation: ${data.firstSeen}`);
+      if (data.hasProfile) {
+        if (data.topTopics) lines.push(`Top topics: ${data.topTopics}`);
+        lines.push(`Engagement: ${data.engagement} · Mood trend: ${data.mood}`);
+      }
+      return { role: 'tool', tool_call_id: toolCall.id, content: lines.join('\n') };
+    }
+
     default:
       return { role: 'tool', tool_call_id: toolCall.id, content: `Unknown tool: ${name}` };
   }
