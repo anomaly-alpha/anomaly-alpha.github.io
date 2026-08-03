@@ -6,6 +6,7 @@
 const { db } = require('../../db/database');
 
 const MAX_ARTICLES = 200;
+const MAX_PER_CATEGORY = Math.floor(MAX_ARTICLES / 5); // 40 — every category survives the total cap
 const MAX_AGE_MS = 72 * 60 * 60 * 1000; // 72h by published_at
 const FEED_TIMEOUT_MS = 8000;
 const FETCH_UA = 'SkarnBot/1.0 (news-fetch)';
@@ -152,11 +153,21 @@ async function fetchNews(category) {
 
   if (unique.length === 0) return 0;
 
-  // Upsert + prune (spec [S5.4-5])
+  // Upsert + prune (spec [S5.4-5]). Per-category cap so the total 200-article
+  // cap cannot starve any category (tech-first registry order would otherwise
+  // fill the cap entirely within the tech block — spec [S1] criterion 3).
   var now = Date.now();
   var count = 0;
+  var byCat = {};
+  for (var item of unique) {
+    (byCat[item.category] = byCat[item.category] || []).push(item);
+  }
+  var capped = [];
+  for (var cat of Object.keys(byCat)) {
+    capped = capped.concat(byCat[cat].slice(0, MAX_PER_CATEGORY));
+  }
   var upsert = db.transaction(function() {
-    for (var item of unique.slice(0, MAX_ARTICLES)) {
+    for (var item of capped) {
       var existing = db.prepare('SELECT id FROM daily_news WHERE url = ?').get(item.url);
       if (existing) {
         db.prepare('UPDATE daily_news SET headline = ?, snippet = ?, source = ?, category = ?, published_at = ? WHERE id = ?')
