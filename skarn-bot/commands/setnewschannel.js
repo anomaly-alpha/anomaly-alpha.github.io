@@ -15,6 +15,20 @@ module.exports = {
     setGuildConfig(interaction.guild.id, 'newsChannel', channel.id);
     await interaction.reply({ content: `news digest will post in ${channel}.`, flags: 64, allowedMentions: { parse: ['users'] } });
   },
+  async handleActivation(message, args) {
+    if (!message.member?.permissions.has('Administrator')) {
+      return message.reply({ content: 'admin only.', allowedMentions: { parse: ['users'] } });
+    }
+    if (!message.guild) {
+      return message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
+    }
+    const channelId = args.channelId || (message.mentions.channels.first() ? message.mentions.channels.first().id : null);
+    if (!channelId) {
+      return message.reply({ content: 'Please mention a channel: `skarn setnewschannel #channel`', allowedMentions: { parse: ['users'] } });
+    }
+    setGuildConfig(message.guild.id, 'newsChannel', channelId);
+    await message.reply({ content: `news digest will post in <#${channelId}>.`, allowedMentions: { parse: ['users'] } });
+  },
   activation: {
     type: 'command',
     phrase: 'skarn setnewschannel',
