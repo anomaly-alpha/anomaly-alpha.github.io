@@ -554,6 +554,26 @@ global.fetch = async () => ({ ok: true, text: async () => '<rss><channel><item><
 
 Expected: `user_version 1`, `baseline OK`, `dup rejected: true`, `trade done: true 0 2`, `condense long uses gate output: true`, `condense short unchanged: true`, `condense tool unchanged: true`, `weather tool returns live data: true`, `dice tool returns a real roll: true`, `news parses + dedupes: true`.
 
+### run_command smoke
+
+```bash
+SKARN_DB_PATH=$(mktemp -d)/nl.db node -e "
+require('./features/activation/activationRegistry').scanCommands();
+const { runTool } = require('./features/tools/toolRunner');
+const sent = [];
+const msg = {
+  author: { id: 'u1', username: 'Tester' },
+  guild: { id: 'g1', members: { cache: { get: function() { return { user: { username: 'Tester', displayAvatarURL: function() { return 'https://example.com/a.png'; } } }; } } } },
+  member: { permissions: { has: function(p) { return false; } } },
+  channel: { id: 'c1' },
+  mentions: { users: { first: function() { return null; } }, channels: { first: function() { return { id: 'c9' }; } }, roles: { first: function() { return null; } } },
+  reply: async function(payload) { sent.push(payload); return { react: async function() {} }; },
+};
+runTool({ id: 'a', function: { name: 'run_command', arguments: JSON.stringify({ command: 'level' }) } }, { guildId: 'g1', channelId: 'c1', userId: 'u1', sourceMessage: msg })
+  .then(function(r) { console.log(r.content.includes('Level') ? 'run_command OK' : 'run_command FAILED: ' + r.content); });
+"
+```
+
 ### Production (pm2)
 
 Both the bot and the Rich Presence process are supervised by pm2:

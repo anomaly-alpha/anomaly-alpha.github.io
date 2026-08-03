@@ -4,7 +4,7 @@ Skarn can **do things** when you ask in plain language — no slash command need
 Ask with `@Skarn` (or just `skarn ...` in a server channel), and he'll recognize the
 request and call the matching tool, then answer in character with the real result.
 
-There are **9 tools** today. Everything below is an example *phrasing* — Skarn's
+There are **10 tools** today. Everything below is an example *phrasing* — Skarn's
 model understands natural language, so these are starters, not an exact script.
 
 > **How it works:** when you mention Skarn, he gets the tool list and decides
@@ -112,11 +112,11 @@ Returns: search results fed back so Skarn can answer with current info.
 
 Set a reminder for you. Duration formats: `30m`, `2h`, `1d`, and up to 1 year.
 
-| Example |
-|---|
+| Example                                                |
+| ------------------------------------------------------ |
 | `@Skarn remind me to take out the trash in 30 minutes` |
-| `remind me to call mom in 2 hours` |
-| `skarn set a reminder to submit the report tomorrow` |
+| `remind me to call mom in 2 hours`                     |
+| `skarn set a reminder to submit the report tomorrow`   |
 
 ---
 
@@ -144,6 +144,31 @@ Ask Skarn what he remembers about you.
 
 ---
 
+## 10. Any command, spoken — `run_command`
+
+Skarn can run **any** of his commands when you ask naturally — level, leaderboard,
+avatar, poll, server setup, the lorebook, omens, the chronicle, and more. He picks
+the right command, executes it for real, and posts the result.
+
+| Example                                             |
+| --------------------------------------------------- |
+| `@Skarn what's my level?`                           |
+| `show me the leaderboard`                           |
+| `set the welcome channel to #welcome`               |
+| `run a poll: what's for lunch? options: pizza, sushi` |
+| `skarn ping`                                        |
+| `what are the omens right now?`                     |
+| `show me the server chronicle`                      |
+| `make an embed titled Welcome with a description about the rules` |
+
+- **Permission-gated:** admin commands (setwelcome, setlog, ticket, etc.) only run if
+  you have the required permission — otherwise Skarn says so.
+- **Chat-first commands:** AI-driven commands (roast, joke, code, recipe...) don't need
+  the tool — Skarn just answers in character. Interactive games (realm, tetris,
+  adventure, trivia) stay slash-launched; he'll point you to them.
+
+---
+
 ## Tips
 
 - **Mention or prefix:** `@Skarn <request>` or `skarn <request>` both work.
@@ -161,4 +186,6 @@ Ask Skarn what he remembers about you.
 *Tools defined in `features/tools/toolDefinitions.js`, executed in
 `features/tools/toolRunner.js`, offered on turn 1 of the shared AI pipeline
 (`features/ai/sharedPipeline.js`). Spec:
-`docs/specs/2026-08-02/deepseek-v4-flash/skarn-tool-invocation-design.md`.*
+`docs/specs/2026-08-02/deepseek-v4-flash/skarn-tool-invocation-design.md`.
+NL-command upgrade (10th tool, run_command):
+`docs/specs/2026-08-02/deepseek-v4-flash/skarn-nl-command-upgrade-design.md`.*
