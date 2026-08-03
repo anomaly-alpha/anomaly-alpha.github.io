@@ -49,7 +49,7 @@ function startSchedulers(client) {
 
   setInterval(() => {
     fetchNews().then(count => { if (count > 0) console.log('[News] Fetched ' + count + ' articles'); }).catch(() => {});
-  }, 60 * 60 * 1000);
+  }, 15 * 60 * 1000);
   fetchNews().then(count => { console.log('[News] Initial fetch: ' + count + ' articles'); }).catch(() => {});
 
   function scheduleDigest() {
