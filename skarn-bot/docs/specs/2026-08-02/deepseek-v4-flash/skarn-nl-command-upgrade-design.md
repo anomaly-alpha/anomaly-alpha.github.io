@@ -143,20 +143,22 @@ way for command handlers to reply. Change:
    result (never throw).
 3. Build the invocation string `activation.phrase + ' ' + args` and run `parseArgs` (existing or new)
    to produce structured `args`.
-4. **Preferred dispatch:** if the command exports a pure `getXResponse(args, message)`-style
-   function, call it, send the returned payload via `message.channel.send(payload)` (or
-   `reply(payload)` for the mention path), and return a **text summary** of the result to the model
-   (title/values extracted where cheap).
-5. **Fallback dispatch:** otherwise call `handleActivation(message, args)` (command replies itself
-   through the capturing facade) and return the **captured reply text** as the tool result.
+4. **Dispatch (single mode):** call `handleActivation(message, args)` on the capturing facade — the
+   command replies itself and the facade records the payload text. (The spec draft's separate
+   "getXResponse preferred dispatch" was folded into this: `getXResponse`-style pure functions are
+   already called *by* the commands' own `handleActivation`, and the capture delivers the same text
+   to the model through one consistent path.)
+5. Return the **captured reply text** as the tool result, suffixed with the reply-length instruction
+   (see [S7]).
 6. Wrap the whole case in try/catch; any thrown error becomes a graceful tool-result error string
    (e.g. missing required args, handler error), so the pipeline never sees an uncaught throw.
 
-**Recursion guard:** `run_command` only ever reaches the *deterministic* path of a command (its
-activation handler). HYB commands' activation handlers are deterministic (e.g. `skarn news` posts
-raw headlines; the AI-commentary mode is a slash-only option). No tool dispatch may trigger a nested
-AI call. Enforced by construction: dispatch goes through `handleActivation`/`getXResponse`, never
-`execute(interaction)`.
+**Recursion guard:** `run_command` dispatches through `handleActivation`, never `execute(interaction)`.
+HYB commands' activation handlers are deterministic (e.g. `skarn news` posts raw headlines; the
+AI-commentary mode is a slash-only option). **Single approved exception (grill P2):** `poll`'s
+blank-options AI suggestion flow — identical to the slash version's LLM suggestion — runs inside the
+NL `handleActivation`. Every other command's activation handler is deterministic; omen `fulfill` and
+chronicle `generate` (both LLM-backed) reply with a slash-command hint instead.
 
 ## [S6] Activation completion + permission gating
 
@@ -255,7 +257,7 @@ cheaper intent test than today's regex.
 | DM + guildOnly | fail closed, graceful result |
 | Handler throws (DB locked, etc.) | try/catch in `run_command` → graceful error result, never out of `runTool` |
 | AI-driven command in enum by mistake | excluded by construction: only `type:'command'` activations are enum-able |
-| Nested AI from a tool | impossible by construction: dispatch never calls `execute(interaction)` |
+| Nested AI from a tool | impossible by construction (dispatch never calls `execute(interaction)`); single approved exception: poll blank-options AI suggestion (grill P2) |
 
 Out of scope: Discord scheduled-event API; per-command individual tool schemas; persona-directive
 routing for AI-driven commands; changes to the interactive game systems.
