@@ -8,7 +8,7 @@ const { getCallbackLine } = require('./humor/callbackEngine');
 const { getGratitudeDirective, getFirstOfDayLine, getMilestoneLine, getApologyLine } = require('./etiquette/etiquetteEngine');
 const { searchKnowledge, formatKnowledgeSnippet } = require('./knowledge/knowledgeBase');
 const { getEmotionDirective, getTrajectoryDirective, getMemoryEmotionLine, getEscalationDirective, getCalibrationDirective, getClimateLine } = require('./wisdom/emotionalIntelligence');
-const { getRecentNews } = require('./news/newsFetcher');
+const { getRecentNews, CATEGORIES } = require('./news/newsFetcher');
 const { getChannelActivity } = require('./channelContext/channelContext');
 const { buildSafetyLine } = require('./safety/slurFilter');
 const { getSocraticQuestion } = require('./wisdom/socraticEngine');
@@ -65,8 +65,7 @@ function buildContext(userId, guildId, channelId, opts) {
   // Always-on news awareness (spec [S8]): newest article per category, top 3 most
   // recent overall — tech posts fastest, so one-per-category keeps it diversified.
   var newsLine = '';
-  const NEWS_CATEGORIES = ['tech', 'world', 'science', 'business', 'gaming'];
-  const perCategory = NEWS_CATEGORIES.map(function(c) { return getRecentNews(1, c)[0]; }).filter(Boolean);
+  const perCategory = CATEGORIES.map(function(c) { return getRecentNews(1, c)[0]; }).filter(Boolean);
   const topNews = perCategory.sort(function(a, b) { return b.published_at - a.published_at; }).slice(0, 3);
   if (topNews.length > 0) {
     newsLine = 'Happening now: ' + topNews.map(function(n) {

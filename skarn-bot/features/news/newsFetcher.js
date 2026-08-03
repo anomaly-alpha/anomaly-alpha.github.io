@@ -59,6 +59,8 @@ const FEEDS = [
   { category: 'business', name: 'Forbes Business', url: 'https://www.forbes.com/business/feed/' },
 ];
 
+const CATEGORIES = [...new Set(FEEDS.map(function(f) { return f.category; }))];
+
 // ===== Parsing (RSS <item> + Atom <entry>, spec [S5.2]/[S11] Formats) =====
 
 function tagContent(block, tag) {
@@ -193,4 +195,4 @@ function getRecentNews(limit = 10, category) {
   return db.prepare('SELECT * FROM daily_news ORDER BY published_at DESC LIMIT ?').all(limit);
 }
 
-module.exports = { fetchNews, getRecentNews, FEEDS };
+module.exports = { fetchNews, getRecentNews, FEEDS, CATEGORIES };
