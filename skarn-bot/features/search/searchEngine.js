@@ -1,86 +1,44 @@
-const { search } = require('duck-duck-scrape');
-const WIKIPEDIA_API = 'https://en.wikipedia.org/w/api.php';
+const TAVILY_URL = 'https://api.tavily.com/search';
 
 // ===== LRU cache =====
 const cache = new Map(); // normalizedQuery → { results, cachedAt }
 const CACHE_MAX = 50;
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 const MAX_RESULTS = 5;
-const GOOGLE_CSE_URL = 'https://www.googleapis.com/customsearch/v1';
-const DDG_THROTTLE_MS = 15000;
-const DDG_BLOCK_MS = 5 * 60 * 1000; // back off entirely for 5 min after DDG flags us
-let lastDdgCall = 0;
-let ddgBlockedUntil = 0;
 
 function normalizeQuery(query) {
   return query.toLowerCase().replace(/\s+/g, ' ').trim();
 }
 
-async function searchGoogle(query) {
-  const key = process.env.GOOGLE_CSE_KEY;
-  const cx = process.env.GOOGLE_CSE_CX;
-  if (!key || !cx) return null;
+async function searchTavily(query) {
+  const key = process.env.TAVILY_API_KEY;
+  if (!key) return { results: [], source: 'error', error: 'Tavily API key not configured' };
 
-  const url = `${GOOGLE_CSE_URL}?key=${key}&cx=${cx}&q=${encodeURIComponent(query)}`;
-  const res = await fetch(url);
-  const data = await res.json();
+  const res = await fetch(TAVILY_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + key,
+    },
+    body: JSON.stringify({
+      query: query,
+      max_results: MAX_RESULTS,
+      search_depth: 'basic', // 1 API credit
+    }),
+  });
 
   if (!res.ok) {
-    if (res.status === 403 || res.status === 429) return null;
-    throw new Error(data.error?.message || `Google CSE returned ${res.status}`);
+    // 401 bad key, 429 rate limit, 432 plan limit, 433 paygo limit — all fail closed
+    return { results: [], source: 'error', error: 'Tavily returned ' + res.status };
   }
-
-  return (data.items || []).slice(0, MAX_RESULTS).map(r => ({
-    title: r.title || '',
-    snippet: r.snippet || '',
-    url: r.link || '',
-  }));
-}
-
-async function searchDuckDuckGo(query) {
-  if (Date.now() < ddgBlockedUntil) return null;
-
-  const now = Date.now();
-  const elapsed = now - lastDdgCall;
-  if (elapsed < DDG_THROTTLE_MS) {
-    await new Promise(resolve => setTimeout(resolve, DDG_THROTTLE_MS - elapsed));
-  }
-
-  try {
-    const result = await search(query, { safeSearch: -1 });
-    lastDdgCall = Date.now();
-    return (result.results || []).slice(0, MAX_RESULTS).map(r => ({
-      title: r.title || '',
-      snippet: r.description || '',
-      url: r.url || '',
-    }));
-  } catch (e) {
-    if (/anomaly|too quickly|rate\s*limit/i.test(e.message)) {
-      ddgBlockedUntil = Date.now() + DDG_BLOCK_MS;
-    }
-    throw e;
-  }
-}
-
-async function searchWikipedia(query) {
-  const url = `${WIKIPEDIA_API}?action=opensearch&search=${encodeURIComponent(query)}&limit=${MAX_RESULTS}&format=json`;
-  const res = await fetch(url, { headers: { 'User-Agent': 'skarn-bot/1.0 (Discord search fallback)' } });
-  if (!res.ok) return [];
 
   const data = await res.json();
-
-  // opensearch returns [query, [titles...], [descriptions...], [urls...]]
-  if (!Array.isArray(data) || data.length < 4) return [];
-
-  const titles = data[1] || [];
-  const descriptions = data[2] || [];
-  const urls = data[3] || [];
-
-  return titles.map((title, i) => ({
-    title,
-    snippet: descriptions[i] || '',
-    url: urls[i] || '',
+  const results = (data.results || []).map(r => ({
+    title: r.title || '',
+    snippet: r.content || '',
+    url: r.url || '',
   }));
+  return { results, source: 'tavily' };
 }
 
 async function searchWeb(query) {
@@ -94,29 +52,25 @@ async function searchWeb(query) {
     return { results: cached.results, source: 'cache' };
   }
 
-  // Fresh search: Google CSE → DuckDuckGo → Wikipedia (reliable fallback)
-  let results = null;
-  let source = '';
-  try { results = await searchGoogle(query); source = 'google'; } catch (e) { console.log(`[Search] Google CSE error: ${e.message}`); }
-  if (!results || results.length === 0) {
-    try { results = await searchDuckDuckGo(query); source = 'duckduckgo'; } catch (e) { console.log(`[Search] DuckDuckGo error: ${e.message}`); }
+  let result;
+  try {
+    result = await searchTavily(query);
+  } catch (e) {
+    console.log(`[Search] Tavily error: ${e.message}`);
+    return { results: [], source: 'error', error: 'Tavily search failed' };
   }
-  if (!results || results.length === 0) {
-    try { results = await searchWikipedia(query); source = 'wikipedia'; } catch (e) { console.log(`[Search] Wikipedia error: ${e.message}`); }
-  }
-  if (!results || results.length === 0) {
-    console.log(`[Search] All backends failed for query: ${query}`);
-    return { results: [], source: 'error', error: 'All search backends failed' };
+  if (result.source === 'error') {
+    console.log(`[Search] Tavily failed for query: ${query} (${result.error})`);
+    return result;
   }
 
   // Store in cache
-  cache.set(key, { results, cachedAt: Date.now() });
+  cache.set(key, { results: result.results, cachedAt: Date.now() });
   if (cache.size > CACHE_MAX) {
     const oldest = cache.keys().next().value;
     cache.delete(oldest);
   }
-
-  return { results, source };
+  return result;
 }
 
 function cleanCache() {
