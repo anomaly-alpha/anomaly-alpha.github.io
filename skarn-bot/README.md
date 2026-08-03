@@ -540,9 +540,19 @@ const { runTool } = require('./features/tools/toolRunner');
   console.log('dice tool returns a real roll:', r.content.includes('d6'));
 })();
 "
+# News fetcher (offline; fetch stubbed, temp DB): parsing, dedupe, categories
+SKARN_DB_PATH=$(mktemp -d)/news.db node -e "
+const nf = require('./features/news/newsFetcher');
+global.fetch = async () => ({ ok: true, text: async () => '<rss><channel><item><title>Alpha</title><link>https://a.com/1</link><description>d</description><pubDate>Sat, 02 Aug 2026 12:00:00 GMT</pubDate></item><item><title>Alpha</title><link>https://a.com/1</link><description>dup</description><pubDate>Sat, 02 Aug 2026 12:00:00 GMT</pubDate></item></channel></rss>' });
+(async () => {
+  const count = await nf.fetchNews('tech');
+  const rows = nf.getRecentNews(10, 'tech');
+  console.log('news parses + dedupes:', count === 1 && rows.length === 1 && rows[0].headline === 'Alpha');
+})();
+"
 ```
 
-Expected: `user_version 1`, `baseline OK`, `dup rejected: true`, `trade done: true 0 2`, `condense long uses gate output: true`, `condense short unchanged: true`, `condense tool unchanged: true`, `weather tool returns live data: true`, `dice tool returns a real roll: true`.
+Expected: `user_version 1`, `baseline OK`, `dup rejected: true`, `trade done: true 0 2`, `condense long uses gate output: true`, `condense short unchanged: true`, `condense tool unchanged: true`, `weather tool returns live data: true`, `dice tool returns a real roll: true`, `news parses + dedupes: true`.
 
 ### Production (pm2)
 

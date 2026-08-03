@@ -19,12 +19,12 @@ model understands natural language, so these are starters, not an exact script.
 Live current conditions + 3-day forecast for a place. If you don't say where,
 Skarn will ask which place.
 
-| Example |
-|---|
-| `@Skarn what's the weather in Tokyo?` |
-| `skarn is it raining in Paris?` |
+| Example                                          |
+| ------------------------------------------------ |
+| `@Skarn what's the weather in Tokyo?`            |
+| `skarn is it raining in Paris?`                  |
 | `what's the forecast for New York this weekend?` |
-| `how hot is it in Dubai right now?` |
+| `how hot is it in Dubai right now?`              |
 
 Returns: temperature (°C/°F), condition, humidity, wind, and a 3-day forecast.
 
@@ -35,14 +35,17 @@ Returns: temperature (°C/°F), condition, humidity, wind, and a 3-day forecast.
 Today's headlines. Skarn reads the cached news feed and refreshes it on demand
 if it's empty.
 
-| Example |
-|---|
-| `@Skarn what's in the news?` |
-| `any headlines today?` |
+| Example                          |
+| -------------------------------- |
+| `@Skarn what's in the news?`     |
+| `any headlines today?`           |
 | `what's happening in the world?` |
-| `skarn give me the top stories` |
+| `skarn give me the top stories`  |
 
 Returns: up to 5 headline + snippet lines.
+
+News covers 5 categories — tech, gaming, world, science, business — and you can ask for a
+specific one: "what's the gaming news?", "any science headlines?", "tech news?".
 
 ---
 
@@ -50,12 +53,12 @@ Returns: up to 5 headline + snippet lines.
 
 A **real** roll (d2–d100, default d6) — Skarn doesn't invent the number.
 
-| Example |
-|---|
+| Example                                |
+| -------------------------------------- |
 | `@Skarn can you roll the dice for me?` |
-| `roll a d20 for me` |
-| `skarn roll for initiative` |
-| `give me a d100 roll` |
+| `roll a d20 for me`                    |
+| `skarn roll for initiative`            |
+| `give me a d100 roll`                  |
 
 Returns: e.g. `🎲 Rolled a 17 (d20)`.
 
@@ -65,10 +68,10 @@ Returns: e.g. `🎲 Rolled a 17 (d20)`.
 
 A **real** coin flip — heads or tails.
 
-| Example |
-|---|
-| `@Skarn flip a coin` |
-| `heads or tails?` |
+| Example                      |
+| ---------------------------- |
+| `@Skarn flip a coin`         |
+| `heads or tails?`            |
 | `skarn, coin flip — call it` |
 
 Returns: `🪙 Heads!` or `🪙 Tails!`.
@@ -95,11 +98,11 @@ up another user's.
 
 Current information Skarn doesn't know offhand.
 
-| Example |
-|---|
+| Example                                            |
+| -------------------------------------------------- |
 | `@Skarn search for the latest iPhone release date` |
-| `who won the game last night?` |
-| `skarn look up how to fix a leaking faucet` |
+| `who won the game last night?`                     |
+| `skarn look up how to fix a leaking faucet`        |
 
 Returns: search results fed back so Skarn can answer with current info.
 
@@ -121,11 +124,11 @@ Set a reminder for you. Duration formats: `30m`, `2h`, `1d`, and up to 1 year.
 
 Save a fact about you so Skarn remembers it permanently (until you forget it).
 
-| Example |
-|---|
+| Example                                        |
+| ---------------------------------------------- |
 | `@Skarn remember that my birthday is July 4th` |
-| `skarn, remember I'm allergic to peanuts` |
-| `note this: I work from home on Fridays` |
+| `skarn, remember I'm allergic to peanuts`      |
+| `note this: I work from home on Fridays`       |
 
 ---
 
