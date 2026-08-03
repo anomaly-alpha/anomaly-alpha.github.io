@@ -6,7 +6,7 @@ async function searchUrl(query) {
   // Use the existing search engine if available
   try {
     const { searchWeb } = require('../search/searchEngine');
-    const results = await searchWeb(query, 3);
+    const { results } = await searchWeb(query);
     if (results && results.length > 0) {
       return results.map(r => `• ${r.title}: ${r.snippet}`).join('\n');
     }
