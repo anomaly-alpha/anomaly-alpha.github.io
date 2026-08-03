@@ -10,6 +10,20 @@ const MIGRATIONS = [
       db.prepare('CREATE INDEX IF NOT EXISTS idx_giveaways_ends ON giveaways(ends_at, ended)').run();
     },
   },
+  {
+    version: 2,
+    name: 'add_daily_news_published_at',
+    up(db) {
+      db.prepare('DELETE FROM daily_news').run(); // stale search-era cache; repopulated by next fetch (grill Q2)
+      // Column-existence check: on a FRESH DB the schema.sql already created
+      // published_at (database.js:19 exec's schema.sql before migrations run),
+      // so an unconditional ALTER would throw "duplicate column name".
+      const cols = db.prepare('PRAGMA table_info(daily_news)').all().map(c => c.name);
+      if (cols.indexOf('published_at') === -1) {
+        db.prepare('ALTER TABLE daily_news ADD COLUMN published_at INTEGER').run();
+      }
+    },
+  },
 ];
 
 function runMigrations(db) {

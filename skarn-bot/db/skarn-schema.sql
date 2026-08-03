@@ -508,7 +508,8 @@ CREATE TABLE IF NOT EXISTS daily_news (
   url TEXT,
   source TEXT,
   category TEXT NOT NULL,
-  fetched_at INTEGER NOT NULL
+  fetched_at INTEGER NOT NULL,
+  published_at INTEGER
 );
 
 CREATE INDEX IF NOT EXISTS idx_daily_news_fetched ON daily_news(fetched_at);
