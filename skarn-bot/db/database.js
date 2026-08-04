@@ -337,10 +337,15 @@ function deleteUserConversation(userId, guildId) {
 
 // ===== Full-Text Search =====
 
+// FTS5 treats many characters as operators; strip them so user queries
+// can't throw "fts5: syntax error" (e.g. "c# tips", "a > b", "x:y").
+function sanitizeFtsQuery(query) {
+  return query.replace(/['"()*^$~`#|<>=&@:+\-]/g, '').trim();
+}
+
 function searchConversations(query, guildId, limit = 10) {
   if (!query || query.length < 2) return [];
-  // Escape special FTS5 characters
-  const safe = query.replace(/['"()*^$~`]/g, '').trim();
+  const safe = sanitizeFtsQuery(query);
   if (!safe) return [];
   return db.prepare(
     `SELECT c.id, c.content, c.role, c.user_id, c.created_at, c.thread_id
@@ -432,7 +437,7 @@ function addKnowledgeBase(topic, summary, source, confidence) {
 
 function searchKnowledgeBase(query) {
   if (!query || query.length < 2) return [];
-  const safe = query.replace(/['"()*^$~`]/g, '').trim();
+  const safe = sanitizeFtsQuery(query);
   if (!safe) return [];
   return db.prepare(
     `SELECT k.* FROM knowledge_fts f
