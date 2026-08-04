@@ -1,5 +1,5 @@
 {
-  "updated": "2026-07-26",
+  "updated": "2026-08-04",
   "codes": [
     {
       "code": "JUL4TH",
@@ -129,7 +129,16 @@
       "code": "GLOB34",
       "gems": 500,
       "tickets": 0,
+      "expired": true,
+      "expiredDate": "2026-07-29",
       "dateAdded": "2026-05-19"
+    },
+    {
+      "code": "RAID26",
+      "gems": 0,
+      "tickets": 0,
+      "reward": "5x GDA Behavioral Suppressant pieces, 5x GDA Synapse Breaker pieces",
+      "dateAdded": "2026-08-04"
     },
     {
       "code": "LEXTV4",

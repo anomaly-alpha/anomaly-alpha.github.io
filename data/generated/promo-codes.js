@@ -1,5 +1,12 @@
 window.__PROMO_CODES=[
   {
+    "code": "RAID26",
+    "gems": 0,
+    "tickets": 0,
+    "reward": "5x GDA Behavioral Suppressant pieces, 5x GDA Synapse Breaker pieces",
+    "dateAdded": "2026-08-04"
+  },
+  {
     "code": "JUL4TH",
     "gems": 250,
     "tickets": 0,
@@ -31,12 +38,6 @@ window.__PROMO_CODES=[
     "tickets": 0,
     "reward": "1 x Kregg, 1 x Anissa",
     "dateAdded": "2026-05-20"
-  },
-  {
-    "code": "GLOB34",
-    "gems": 500,
-    "tickets": 0,
-    "dateAdded": "2026-05-19"
   },
   {
     "code": "ANISS4",
