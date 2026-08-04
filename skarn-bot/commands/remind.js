@@ -4,6 +4,16 @@ const handler = require('../features/remind/remind.handler');
 module.exports = {
   data: command.data,
   execute: handler.execute,
+  async handleActivation(message, args) {
+    await handler.setReminder({
+      userId: message.author.id,
+      channelId: message.channel?.id || message.author.id,
+      guildId: message.guild?.id || null,
+      message: args.message,
+      when: args.when,
+      reply: function(payload) { return message.reply(payload); },
+    });
+  },
   activation: {
     type: 'command',
     phrase: 'skarn remind me',

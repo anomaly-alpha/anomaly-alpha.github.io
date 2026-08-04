@@ -38,13 +38,11 @@ function formatDuration(ms) {
   return `${Math.round(ms / 86400000)} days`;
 }
 
-async function execute(interaction) {
-  const message = interaction.options.getString('message');
-  const when = interaction.options.getString('when');
+async function setReminder({ userId, channelId, guildId, message, when, reply }) {
   const durationMs = parseDuration(when);
 
   if (durationMs < 60 * 1000) {
-    return interaction.reply({
+    return reply({
       content: "I need a longer timeframe — at least 1 minute. Try something like `30m`, `2 hours`, or `1 day`.",
       flags: 64,
       allowedMentions: { parse: ['users'] },
@@ -52,7 +50,7 @@ async function execute(interaction) {
   }
 
   if (durationMs > 365 * 24 * 60 * 60 * 1000) {
-    return interaction.reply({
+    return reply({
       content: "That's too far out. I can't remember things more than a year ahead — I'm old, not immortal.",
       flags: 64,
       allowedMentions: { parse: ['users'] },
@@ -60,10 +58,7 @@ async function execute(interaction) {
   }
 
   const remindAt = Date.now() + durationMs;
-  const channelId = interaction.channel?.id || interaction.user.id;
-  const guildId = interaction.guild?.id || null;
-
-  createReminder(interaction.user.id, channelId, guildId, message, remindAt);
+  createReminder(userId, channelId, guildId, message, remindAt);
 
   const embed = new EmbedBuilder()
     .setTitle('⏰ Reminder Set')
@@ -72,7 +67,18 @@ async function execute(interaction) {
     .setColor(0x00e5ff)
     .setTimestamp(new Date(remindAt));
 
-  await interaction.reply({ embeds: [embed], flags: 64, allowedMentions: { parse: ['users'] } });
+  await reply({ embeds: [embed], flags: 64, allowedMentions: { parse: ['users'] } });
+}
+
+async function execute(interaction) {
+  return setReminder({
+    userId: interaction.user.id,
+    channelId: interaction.channel?.id || interaction.user.id,
+    guildId: interaction.guild?.id || null,
+    message: interaction.options.getString('message'),
+    when: interaction.options.getString('when'),
+    reply: function(payload) { return interaction.reply(payload); },
+  });
 }
 
 async function processDueReminders(client) {
@@ -96,4 +102,4 @@ async function processDueReminders(client) {
   }
 }
 
-module.exports = { execute, processDueReminders };
+module.exports = { execute, setReminder, processDueReminders };
