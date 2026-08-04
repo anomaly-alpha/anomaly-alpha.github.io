@@ -99,32 +99,34 @@ function startScheduler(client) {
   let lastCheckedMinute = '';
 
   setInterval(async () => {
-    const now = getESTTime();
-    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    const today = formatDate(now);
+    try {
+      const now = getESTTime();
+      const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      const today = formatDate(now);
 
-    if (currentTime === lastCheckedMinute) return;
-    lastCheckedMinute = currentTime;
+      if (currentTime === lastCheckedMinute) return;
+      lastCheckedMinute = currentTime;
 
-    const guilds = db.prepare("SELECT DISTINCT guild_id FROM guild_config WHERE key = 'weatherTracks'").all();
+      const guilds = db.prepare("SELECT DISTINCT guild_id FROM guild_config WHERE key = 'weatherTracks'").all();
 
-    for (const { guild_id } of guilds) {
-      const tracks = getGuildConfig(guild_id, 'weatherTracks') || [];
-      let modified = false;
+      for (const { guild_id } of guilds) {
+        const tracks = getGuildConfig(guild_id, 'weatherTracks') || [];
+        let modified = false;
 
-      for (const track of tracks) {
-        if (track.time === currentTime && track.lastPosted !== today) {
-          const success = await postWeatherReport(client, track, guild_id);
-          if (success) {
-            track.lastPosted = today;
-            modified = true;
+        for (const track of tracks) {
+          if (track.time === currentTime && track.lastPosted !== today) {
+            const success = await postWeatherReport(client, track, guild_id);
+            if (success) {
+              track.lastPosted = today;
+              modified = true;
+            }
+            await new Promise(r => setTimeout(r, 2000));
           }
-          await new Promise(r => setTimeout(r, 2000));
         }
-      }
 
-      if (modified) setGuildConfig(guild_id, 'weatherTracks', tracks);
-    }
+        if (modified) setGuildConfig(guild_id, 'weatherTracks', tracks);
+      }
+    } catch (e) { console.error('[Weather] Tick error:', e.message); }
   }, 60000);
 }
 

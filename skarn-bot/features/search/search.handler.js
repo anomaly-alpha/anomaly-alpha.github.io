@@ -20,6 +20,7 @@ async function execute(interaction) {
   if (checkCooldown(cooldownKey)) {
     return interaction.reply({ content: 'Please wait 5 seconds between searches.', flags: 64, allowedMentions: { parse: ['users'] } });
   }
+  setCooldown(cooldownKey, COOLDOWN_MS);
 
   const query = interaction.options.getString('query');
   await interaction.deferReply();

@@ -5,6 +5,10 @@ const { runPipeline } = require('../ai/sharedPipeline');
 async function execute(interaction) {
   await interaction.deferReply();
 
+  if (!interaction.guild) {
+    return interaction.editReply({ content: 'The Warmaster\'s counsel is best given among your people. Use this in a server.', flags: 64, allowedMentions: { parse: ['users'] } });
+  }
+
   // Silence + hostile checks (consult-specific entry)
   const { isHostile, recordStrike, isSilenced, getDeEscalationLine } = require('../safety/slurFilter');
   if (isSilenced(interaction.user.id)) {

@@ -82,6 +82,9 @@ module.exports = {
         .setDescription('View raw messages or Skarn summary')
         .addChoices({ name: 'Raw messages', value: 'raw' }, { name: 'Skarn summary', value: 'skarn' })),
   async execute(interaction) {
+    if (!interaction.guild || !interaction.member) {
+      return interaction.reply({ content: 'This command can only be used in a server.', flags: 64, allowedMentions: { parse: ['users'] } });
+    }
     const targetUser = interaction.options.getUser('user') || interaction.user;
     const days = interaction.options.getInteger('days') || 7;
     const threadNum = interaction.options.getInteger('thread');
@@ -203,6 +206,10 @@ module.exports = {
     description: 'View conversation history',
     guildOnly: true,
     requiredPermissions: [],
-    parseArgs: function(content) { return { user: content.slice('skarn history'.length).trim() || null }; },
+    parseArgs: function(content) {
+      const rest = content.slice('skarn history'.length).trim();
+      const threadMatch = rest.match(/thread:(\d+)/i);
+      return { thread: threadMatch ? threadMatch[1] : null };
+    },
   },
 };

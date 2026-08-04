@@ -25,7 +25,7 @@ module.exports = {
     // Store in database for persistence
     addReactionRole(interaction.guild.id, interaction.channel.id, msg.id, emoji, role.id);
 
-    const filter = (reaction, user) => reaction.emoji.name === emoji && !user.bot;
+    const filter = (reaction, user) => (reaction.emoji.id ? emoji.includes(reaction.emoji.id) : reaction.emoji.name === emoji) && !user.bot;
     const collector = msg.createReactionCollector({ filter });
 
     collector.on('collect', async (reaction, user) => {

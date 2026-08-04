@@ -23,10 +23,20 @@ const { runOmenJob } = require('../serverMemory/omen/omenJob');
 const { pruneSignals } = require('../serverMemory/signalStore');
 
 function startSchedulers(client) {
-  setInterval(evaluateGrowth, 7 * 24 * 60 * 60 * 1000);
-  evaluateGrowth();
-  setInterval(generateLoreBatch, 60 * 60 * 1000);
-  generateLoreBatch();
+  function safeRun(fn, name) {
+    return function() {
+      try {
+        var result = fn();
+        if (result && typeof result.catch === 'function') {
+          result.catch(function(e) { console.error('[' + name + '] Job error:', e.message); });
+        }
+      } catch (e) { console.error('[' + name + '] Job error:', e.message); }
+    };
+  }
+  setInterval(safeRun(evaluateGrowth, 'Growth'), 7 * 24 * 60 * 60 * 1000);
+  safeRun(evaluateGrowth, 'Growth')();
+  setInterval(safeRun(generateLoreBatch, 'Lore'), 60 * 60 * 1000);
+  safeRun(generateLoreBatch, 'Lore')();
 
   const statuses = [
     { type: 'Playing', text: 'with AI' }, { type: 'Listening', text: 'to commands' },
@@ -45,7 +55,7 @@ function startSchedulers(client) {
 
   startScheduler(client);
   startProactiveScheduler(client);
-  setInterval(() => processDueReminders(client), 30 * 1000);
+  setInterval(() => { processDueReminders(client).catch(e => console.error('[Reminder] Tick error:', e.message)); }, 30 * 1000);
 
   setInterval(() => {
     fetchNews().then(count => { if (count > 0) console.log('[News] Fetched ' + count + ' articles'); }).catch(() => {});
@@ -63,17 +73,21 @@ function startSchedulers(client) {
   scheduleDigest();
 
   setInterval(() => {
-    runDecayPass(); cleanCallbacks(); cleanChains(); cleanWarmth(); runDecay();
-    decayMemoryEntries(); cleanCooldowns(); pruneRateLimits(); pruneExpiredFlags();
-    pruneSentimentBuffers(); pruneBanterChains(); pruneCallbacks(); pruneReactionCounters();
+    try {
+      runDecayPass(); cleanCallbacks(); cleanChains(); cleanWarmth(); runDecay();
+      decayMemoryEntries(); cleanCooldowns(); pruneRateLimits(); pruneExpiredFlags();
+      pruneSentimentBuffers(); pruneBanterChains(); pruneCallbacks(); pruneReactionCounters();
+    } catch (e) { console.error('[Maintenance] Job error:', e.message); }
   }, 10 * 60 * 1000);
 
-  setInterval(async () => {
-    console.log('[Daily] Starting maintenance...');
-    await updateAllProfiles();
-    await summarizeOldThreads();
-    pruneOldMessages(90 * 24 * 60 * 60 * 1000);
-    console.log('[Daily] Maintenance complete.');
+  setInterval(() => {
+    (async () => {
+      console.log('[Daily] Starting maintenance...');
+      await updateAllProfiles();
+      await summarizeOldThreads();
+      pruneOldMessages(90 * 24 * 60 * 60 * 1000);
+      console.log('[Daily] Maintenance complete.');
+    })().catch(function(e) { console.error('[Daily] Maintenance error:', e.message); });
   }, 24 * 60 * 60 * 1000);
 
   initReactionTracking(client);

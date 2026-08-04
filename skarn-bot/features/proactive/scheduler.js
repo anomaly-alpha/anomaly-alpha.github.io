@@ -9,7 +9,7 @@ const RANDOM_THOUGHT_CHANCE = 0.03;
 let tickCounter = 0;
 
 function startProactiveScheduler(client) {
-  setInterval(() => tick(client), TICK_INTERVAL);
+  setInterval(() => { tick(client).catch(e => console.error('[Proactive] Tick error:', e.message)); }, TICK_INTERVAL);
 }
 
 async function tick(client) {

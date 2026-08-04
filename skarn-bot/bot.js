@@ -8,6 +8,15 @@ const { db, getUserPreferences, setUserPreference, getGuildConfig, setGuildConfi
 const { handleMention } = require('./features/mentionRouter/mentionRouter');
 const { seedKnowledgeBase } = require('./features/knowledge/knowledgeSeeder');
 
+// A rejection from the AI mention pipeline must never take down the whole bot
+async function safeHandleMention(message) {
+  try {
+    await safeHandleMention(message);
+  } catch (e) {
+    console.error('[Bot] Mention handler error:', e.message);
+  }
+}
+
 // ===== Process-level error handling =====
 process.on('unhandledRejection', function(reason) {
   console.error('[Process] Unhandled rejection:', reason && reason.stack ? reason.stack : reason);
@@ -194,12 +203,12 @@ client.on('messageCreate', async function(message) {
         }
       } else if (dmMatch.type === 'ai') {
         message.content = dmMatch.aiContent;
-        await handleMention(message);
+        await safeHandleMention(message);
         return;
       }
     }
     // Fall through to AI
-    await handleMention(message);
+    await safeHandleMention(message);
     return;
   }
 
@@ -277,20 +286,20 @@ client.on('messageCreate', async function(message) {
       }
       if (match.type === 'ai') {
         message.content = match.aiContent;
-        await handleMention(message);
+        await safeHandleMention(message);
         return;
       }
     }
     // skarn keyword without matching phrase → route to AI (old step 20 fallback)
     if (/\bskarn\b/i.test(message.content)) {
-      await handleMention(message);
+      await safeHandleMention(message);
       return;
     }
   }
 
   // Step 7: @mention → AI
   if (message.mentions.has(client.user)) {
-    await handleMention(message);
+    await safeHandleMention(message);
     return;
   }
 
@@ -323,7 +332,7 @@ client.on('messageCreate', async function(message) {
         try {
           var refMsg = await message.channel.messages.fetch(message.reference.messageId);
           if (refMsg.author.id === client.user.id) {
-            await handleMention(message);
+            await safeHandleMention(message);
             return;
           }
         } catch (e) {}
@@ -333,7 +342,7 @@ client.on('messageCreate', async function(message) {
       try {
         var attentionGate = require('./features/discordNative/attentionGate');
         if (attentionGate.shouldRespond && await attentionGate.shouldRespond(message, client)) {
-          await handleMention(message);
+          await safeHandleMention(message);
           return;
         }
       } catch (e) {}
@@ -383,6 +392,8 @@ client.on('messageDelete', async message => {
 });
 
 client.on('messageUpdate', async (oldMessage, newMessage) => {
+  // oldMessage is null when the message wasn't cached (no Partials configured)
+  if (!oldMessage || !newMessage) return;
   if (oldMessage.author?.bot) return;
   if (oldMessage.content === newMessage.content) return;
   const logChanId = getGuildConfig(oldMessage.guild?.id, 'logChannel');

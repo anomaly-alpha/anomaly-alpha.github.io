@@ -15,6 +15,10 @@ const MAX_MESSAGES = 500;
 async function execute(interaction) {
   await interaction.deferReply();
 
+  if (!interaction.guild || !interaction.member) {
+    return interaction.editReply({ content: 'The Vein can only be read in a server.', flags: 64, allowedMentions: { parse: ['users'] } });
+  }
+
   try {
     const targetChannel = interaction.options.getChannel('channel') || interaction.channel;
     const hours = interaction.options.getInteger('timeframe') || 2;
