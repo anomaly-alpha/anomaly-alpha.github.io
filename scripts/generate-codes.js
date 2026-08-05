@@ -95,11 +95,11 @@ const replacements = [
    `<!--GUIDE_CODES_EXPIRED_START-->\n${expiredChips}\n<!--GUIDE_CODES_EXPIRED_END-->`],
 
   // Title, og:title, twitter:title — replace with new "GTG" format
-  // Use negative lookbehind to avoid double-prepending "New"
-  [/(?<!New )(Invincible Guarding the Globe|Invincible GTG).*?— .*?\[[A-Z][a-z]{2} \d{4}\]/g, `New Invincible GTG Codes — All Active [${monthYear}]`],
+  // Match an optional existing "New " prefix (consume it, don't block) so the [Month Year] still refreshes
+  [/(?:\bNew\s+)?(Invincible Guarding the Globe|Invincible GTG).*?— .*?\[[A-Z][a-z]{2} \d{4}\]/g, `New Invincible GTG Codes — All Active [${monthYear}]`],
 
   // JSON-LD headline — same pattern as title
-  [/("headline": "(?:(?!New ).)*?Invincible).*?— .*?\[[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `"headline": "New Invincible GTG Codes — All Active [${monthYear}]"$2`],
+  [/("headline": "(?:\bNew\s+)?Invincible).*?— .*?\[[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `"headline": "New Invincible GTG Codes — All Active [${monthYear}]"$2`],
 
   // JSON-LD dateModified — removed: should only update on substantive content changes
 
