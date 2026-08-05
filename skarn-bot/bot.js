@@ -11,7 +11,7 @@ const { seedKnowledgeBase } = require('./features/knowledge/knowledgeSeeder');
 // A rejection from the AI mention pipeline must never take down the whole bot
 async function safeHandleMention(message) {
   try {
-    await safeHandleMention(message);
+    await handleMention(message);
   } catch (e) {
     console.error('[Bot] Mention handler error:', e.message);
   }
