@@ -1,4 +1,4 @@
-const { getChannelState, getMemoryEntries, getRelationship, db, findLoreForMessage, getRecentMessageEmbeddings } = require('../db/database');
+const { getChannelState, getMemoryEntries, getRelationship, db, findLoreForMessage, getRecentMessageEmbeddings, getRecentAssistantOrUserMessages, getOlderSummaries, getServerBuzz } = require('../db/database');
 const { getStateLine } = require('./channelState/stateTracker');
 const { getRelationshipLine } = require('./relationship/relationshipTracker');
 const { getMoodLine } = require('./mood/moodManager');
@@ -79,26 +79,20 @@ function buildContext(userId, guildId, channelId, opts) {
   var kbLine = '';
 
   if (isFullTier) {
-    var recent = db.prepare(
-      'SELECT m.* FROM conversation_messages m JOIN conversation_threads t ON m.thread_id = t.thread_id WHERE m.guild_id = ? AND m.channel_id = ? AND (m.role = ? OR m.user_id = ?) AND m.created_at > ? ORDER BY m.created_at DESC LIMIT 15'
-    ).all(guildId, channelId, 'assistant', userId, Date.now() - 365 * 24 * 60 * 60 * 1000).reverse();
+    var recent = getRecentAssistantOrUserMessages(userId, guildId, channelId, 15, 365 * 24 * 60 * 60 * 1000);
 
     if (recent.length > 0) {
       conversationLine = 'Recent conversation:\n' + recent.map(function(m) { return '[' + m.role + ']: ' + m.content; }).join('\n');
     }
 
-    var summaries = db.prepare(
-      'SELECT s.* FROM conversation_summaries s JOIN conversation_threads t ON s.thread_id = t.thread_id WHERE t.user_id = ? AND t.guild_id = ? AND t.channel_id = ? ORDER BY s.covers_to DESC LIMIT 2'
-    ).all(userId, guildId, channelId);
+    var summaries = getOlderSummaries(userId, guildId, channelId, 2);
 
     if (summaries.length > 0) {
       conversationLine += '\n\nEarlier conversations:\n' + summaries.map(function(s) { return s.summary_text; }).join('\n---\n');
     }
 
     // Server buzz
-    var buzz = db.prepare(
-      'SELECT content FROM conversation_messages WHERE guild_id = ? AND created_at > ? AND role = ? ORDER BY created_at DESC LIMIT 10'
-    ).all(guildId, Date.now() - 7 * 24 * 60 * 60 * 1000, 'user');
+    var buzz = getServerBuzz(guildId, Date.now() - 7 * 24 * 60 * 60 * 1000, 10);
 
     if (buzz.length >= 5) {
       var topics = [...new Set(buzz.map(function(m) { return m.content.split(' ').slice(0, 5).join(' '); }))].slice(0, 3);
@@ -121,9 +115,7 @@ function buildContext(userId, guildId, channelId, opts) {
     kbLine = knowledge ? formatKnowledgeSnippet(knowledge) : '';
   } else {
     // Lightweight: just last 3 messages
-    var recent = db.prepare(
-      'SELECT m.* FROM conversation_messages m JOIN conversation_threads t ON m.thread_id = t.thread_id WHERE m.guild_id = ? AND m.channel_id = ? AND (m.role = ? OR m.user_id = ?) AND m.created_at > ? ORDER BY m.created_at DESC LIMIT 3'
-    ).all(guildId, channelId, 'assistant', userId, Date.now() - 365 * 24 * 60 * 60 * 1000).reverse();
+    var recent = getRecentAssistantOrUserMessages(userId, guildId, channelId, 3, 365 * 24 * 60 * 60 * 1000);
 
     if (recent.length > 0) {
       conversationLine = 'Recent conversation:\n' + recent.map(function(m) { return '[' + m.role + ']: ' + m.content; }).join('\n');
