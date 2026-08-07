@@ -5,11 +5,11 @@ const rpc = new RPC.Client({ transport: 'ipc' });
 
 rpc.on('ready', () => {
   console.log('Rich Presence connected!');
-  console.log('Status: 😈 Servant of ... / Anomaly Alpha');
+  console.log('Status: <+HUSH> ONLINE / <+HUSH> AWAITING SIGNAL');
 
   rpc.setActivity({
-    details: '😈 Servant of ...',
-    state: 'Anomaly Alpha',
+    details: '<+HUSH> ONLINE',
+    state: '<+HUSH> AWAITING SIGNAL',
     largeImageKey: 'skarn_logo',
     largeImageText: 'Skarn Bot',
     instance: false,
