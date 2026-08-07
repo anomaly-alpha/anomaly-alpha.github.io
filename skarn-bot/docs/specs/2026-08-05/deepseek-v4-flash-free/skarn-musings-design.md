@@ -39,6 +39,10 @@ Key properties:
   `next_musing_at`; when due, it fires and draws the next time.
 - **AI-generated per musing** (fresh `moderatedChatCompletion` call with a new
   `musing` role line), not a curated pool.
+- **Grounded, not generic**: each musing pairs one real recent event (a news
+  headline from the news cache) with one real memory from Skarn's story archive
+  (`skarn_stories`), and ends with a quiet open question — a door the user is
+  invited to walk through (see [S6]).
 - **Sparse and organic**: weighted random interval centered on 48h, clamped to
   [24h, 96h]; a fire also schedules the next, so bursts are impossible.
 - **Inherits all existing gates**: `isSleepTime()`, `aiChannels` config, admission
@@ -104,29 +108,71 @@ Per-guild calendar state lives in `app_state`:
 
 ## [S6] Content generation & persona
 
-- **New role line**: add `roles.musing` in `persona/roles.js` (and a
-  `ROLE_NATURE.musing = 'casual'` entry if required by convention; token budget
-  `roleTokenBudgets.musing = 150`). The line is short and maps to the wisdom
-  voice. Example intent:
-  > "Skarn speaks a single quiet observation to the channel — something he noticed
-  > or remembered, in his voice. One breath. No advice, no questions, no
-  > 'remember to', no lecturing. Speak into the void."
+A musing is **grounded, not generic**: it pairs one real recent event with one
+real memory from Skarn's history, then asks the model to speak the thread between
+them — ending with a quiet hook that invites a mortal to ask.
+
+### [S6.1] Recent-event seed (the "search")
+
+- Pull from the existing news cache (`getRecentNews(category?)` in
+  `features/news/newsFetcher.js` — daily_news, up to 200 fresh articles across 5
+  categories: tech/gaming/world/science/business) — NOT a live network fetch.
+- Selection: among headlines published in the last `NEWS_SEED_MS` (48h), prefer
+  categories weighted toward world/business/science/tech (skip pure gaming spam
+  at the top when alternatives exist); pick one uniformly.
+- If no recent headline exists (cache empty/stale), fall back to the newest
+  headline regardless of age; if still none, skip the fire (no seed → no musing;
+  weak seed would produce a weak musing).
+
+### [S6.2] History memory (the "ground")
+
+- Map the headline to Skarn's archive via `findStoryTopic(headline)` +
+  `getExistingStory(topic)` (`features/wisdom/storyEngine.js`) — canonical >
+  auto_lore > AI-generated, exactly the existing lore system. This pulls a REAL
+  memory from his 10,000 years that thematically echoes today's event
+  (war/humans/loss/technology/time/power/regret/dreams…).
+- If `findStoryTopic` returns null (no keyword match), fall back to a uniformly
+  random `skarn_stories` canonical/auto_lore entry. `getExistingStory` already
+  increments usage stats, so the archive self-tunes toward variety.
+
+### [S6.3] Composition
+
+- **New role line**: add `roles.musing` in `persona/roles.js` (+
+  `ROLE_NATURE.musing = 'casual'` if the convention requires; token budget
+  `roleTokenBudgets.musing = 180`). Maps to the wisdom voice with a *hook* —
+  example intent:
+  > "Skarn notices a recent event (headline below) and it brushes against one of
+  > his memories (story below). Speak a short reflection — a single breath in his
+  > voice. Not an essay, not advice, no 'remember to', no lecturing (the guard in
+  > the identity still stands). Let the recent and the ancient touch. End with one
+  > quiet line that leaves a mortal wondering — a door left open for a question.
+  > Three sentences max."
 - **System prompt**: `buildSystemPrompt({ roleLine, ...ctx })` exactly like
-  `interjectionEngine.js:38-42` — reuses core identity + safety line + role line,
-  so every anti-drift guard still applies.
-- **Context**: use `buildContext(...)` like the interjection engine. Cost control
-  note: full context on a 48h cadence is a small, acceptable spend (≤1 call per
-  guild per 2 days). No context slicing needed at this cadence.
-- **User prompt**: minimal. The engine does not need a user message; pass a bare
-  directive string (e.g. `"Share a musing."`) as the user turn so the call shape
-  matches the client's expectations.
-- **Call**: `moderatedChatCompletion({ model: AI_MODEL, messages, max_tokens: 100,
+  `interjectionEngine.js:38-42` — identity + safety line + role line, reuse all
+  anti-drift guards. Optionally append `ctx.loreLine`/`ctx.dreamLine` so the
+  musing can stand on even more of his own voice (already surfaced infra).
+- **Context**: `buildContext(...)` like the interjection engine; full context on a
+  48h cadence is acceptable spend.
+- **User prompt** (the assembled seed):
+  ```
+  Recent event: <headline> — <snippet>
+  Memory from my years: <story_text>
+  ```
+- **Call**: `moderatedChatCompletion({ model: AI_MODEL, messages, max_tokens: 120,
   temperature: 0.9, userId: 'musing:' + guildId })`. Do NOT pass `null`: the
   admission gate feeds `userId` into `isSilenced()` (`ai/client.js:49`) and
   `canCall()` (`:52`); a null id would pollute `rate_limits.user_id` and
   false-match strike lookups. The pseudo-user key also gives each guild its own
   rate bucket for free (bounded to the 48h cadence anyway).
 - **Post**: `channel.send({ content: musing, allowedMentions: { parse: [] } })`.
+
+### [S6.4] Hook-to-conversation
+
+The role line ends the musing with a door (a dangling observation, a "wonder I
+can't shake", a question left in the air) — never a directive. If a member then
+asks Skarn about it (mention/slash/AI channel), the normal pipeline answers using
+the same `loreLine`/memory context — musings deliberately *want* follow-up; the
+anti-lecture rule keeps them from *demanding* it.
 
 ## [S7] Gating & safety
 
@@ -160,6 +206,8 @@ Consumes:
 - `persona/identity.js`: `buildSystemPrompt`
 - `persona/roles.js`: `roles`, `roleTokenBudgets` (new `musing` entry)
 - `features/promptContext.js`: `buildContext`
+- `features/news/newsFetcher.js`: `getRecentNews` (recent-event seed)
+- `features/wisdom/storyEngine.js`: `findStoryTopic`, `getExistingStory` (history ground)
 - `ai/client.js`: `moderatedChatCompletion`
 - Sleep: a **local `isSleepTime()` helper inside musingEngine** reading
   `SLEEP_START` / `SLEEP_END` / `SLEEP_TIMEZONE` env vars, mirroring
@@ -183,6 +231,8 @@ Produces:
 | Channel goes quiet *after* the draw but before send | Harmless: last message < 30 min at send time → treat as busy (re-check at send) and reschedule |
 | AI call fails / blocked by rate limit | Reschedule, log, no fallback text |
 | Crisis moderation response | Same as failure — reschedule, no fallback |
+| News cache empty / stale | No seed → skip fire; no weak musing about nothing (reschedule) |
+| History lookup misses (`findStoryTopic` null, storyEngine returns null) | Fall back to a uniformly random `skarn_stories` row; if archive is empty, skip fire |
 | Sleep mode active | Entire tick skipped; next fire naturally defers |
 | Fresh restart | `musing_next` persists in `app_state`; no duplication (check `now >= next` before fire) |
 | Bot restarts mid-interval | Timestamp survives; fire at most once per window (guard by `>=` not `>` on equal ms) |
@@ -200,7 +250,13 @@ Project convention: no test framework; `node --check` + `node -e` smokes with
    `last_message_at = now` → `maybeMuse` does NOT send; seed idle
    (`Dormant` + last message > 30 min ago) → sends.
 4. Guards smoke: guild with no aiChannels → no send; sleep → no send.
-5. Full-boot smoke: `SKARN_DB_PATH=$(mktemp -d)/smoke.db node -e
+5. Seed smoke: stub `getRecentNews` (one headline) + `getExistingStory` (one
+   memory) + a stubbed `moderatedChatCompletion`; assert the assembled user
+   prompt contains BOTH the news seed and the history text, and one
+   `channel.send`.
+6. No-seed smoke: `getRecentNews` returns empty → `maybeMuse` skips without an
+   AI call (no weak seed fires).
+7. Full-boot smoke: `SKARN_DB_PATH=$(mktemp -d)/smoke.db node -e
    "require('./features/scheduler')"` — expect clean load (existing log lines only).
 
 ## [S12] Docs updates
