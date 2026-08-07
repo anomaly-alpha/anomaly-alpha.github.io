@@ -1,7 +1,7 @@
 const { getCharacter, saveCharacter, getInventory, logKill } = require('./realmStore');
 const { ENEMY_SCALING, CLASS_STATS } = require('./realmConfig');
 const { generateCombatNarration } = require('./aiDriver');
-const { canCall, recordCall, canGuildCall, incrementGuildDaily } = require('./realmRateLimit');
+const { tryReserve } = require('./realmRateLimit');
 const { logSignal } = require('../serverMemory/signalCapture');
 
 // ===== In-Memory Combat Store =====
@@ -235,7 +235,7 @@ async function processCombatRound(userId, guildId, playerAction, isDefending) {
 
   // Generate AI narration (rate-limited)
   let narration = null;
-  if (canCall(userId) && canGuildCall(guildId)) {
+  if (tryReserve(userId, guildId)) {
     try {
       narration = await generateCombatNarration(
         char,
@@ -246,8 +246,6 @@ async function processCombatRound(userId, guildId, playerAction, isDefending) {
       if (narration && /warmaster|didn't respond|apolog|sorry|can't|unable|error|failed/i.test(narration)) {
         narration = null;
       }
-      recordCall(userId);
-      incrementGuildDaily(guildId);
     } catch {
       narration = null;
     }

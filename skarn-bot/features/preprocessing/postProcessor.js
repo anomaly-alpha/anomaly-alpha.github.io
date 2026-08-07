@@ -40,7 +40,12 @@ async function postProcessConversation(userId, guildId, channelId, userMessage, 
     var text = result.completion.choices[0].message.content;
     var match = text.match(/\[[\s\S]*?\]/);
     if (!match) return;
-    var entities = JSON.parse(match[0]);
+    var entities;
+    try {
+      entities = JSON.parse(match[0]);
+    } catch (err) {
+      entities = JSON.parse(match[0].replace(/,\s*([\]}])/g, '$1'));
+    }
     for (var i = 0; i < entities.length; i++) {
       var e = entities[i];
       if (e.type && e.name && e.name.length < 100) {

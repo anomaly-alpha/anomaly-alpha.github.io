@@ -182,6 +182,7 @@ async function fetchNews(category) {
       count++;
     }
     db.prepare('DELETE FROM daily_news WHERE published_at < ?').run(now - MAX_AGE_MS);
+    db.prepare('DELETE FROM daily_news WHERE id NOT IN (SELECT id FROM daily_news ORDER BY published_at DESC LIMIT ?)').run(MAX_ARTICLES);
   });
   upsert();
 

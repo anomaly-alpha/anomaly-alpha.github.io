@@ -27,7 +27,8 @@ async function updateEmotion(userId, guildId, text) {
     subtext = '';
   }
 
-  const sentiment = intensity > 0 ? (emotion === 'happy' ? intensity : -intensity) : analyzeSentiment(text);
+  const weight = EMOTION_WEIGHTS[emotion] || 0;
+  const sentiment = intensity > 0 ? intensity * weight : analyzeSentiment(text);
   setUserEmotion(userId, guildId, emotion);
   logEmotionHistory(userId, guildId, emotion, sentiment);
 

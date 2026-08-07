@@ -16,8 +16,8 @@ function evaluateMood(guildId) {
 
   if (totalInteractions === 0) return 'refreshed';
   if (totalInteractions > 100 && avgFamiliarity < 10) return 'wrath';
-  if (totalInteractions > 100) return 'tired';
   if (avgFamiliarity > 30 && totalInteractions > 50) return 'amused';
+  if (totalInteractions > 100) return 'tired';
   if (avgFamiliarity < 15 && totalInteractions > 20) return 'focused';
   return 'neutral';
 }

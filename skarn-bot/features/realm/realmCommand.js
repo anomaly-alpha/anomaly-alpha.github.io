@@ -8,7 +8,7 @@ const { canTrade, startTrade, addToTrade, confirmTrade, cancelTrade, getTradeSta
 const { generateNpc, handleNpcInteraction } = require('./npc');
 const { generateBackstory, generateExploration, generateQuestHook } = require('./aiDriver');
 const realmStore = require('./realmStore');
-const { canCall, recordCall, canGuildCall, incrementGuildDaily } = require('./realmRateLimit');
+const { tryReserve } = require('./realmRateLimit');
 const { RACE_BONUSES, CLASS_STATS } = require('./realmConfig');
 const { checkCooldown, setCooldown } = require('../../db/database');
 
@@ -64,6 +64,14 @@ function buildCombatEmbed(enemy, playerHp, playerMaxHp) {
 async function handleCreate(interaction) {
   const userId = interaction.user.id;
   const guildId = interaction.guildId;
+
+  if (!interaction.channel) {
+    return interaction.reply({
+      content: 'This command must be used in a server channel.',
+      flags: EPHEMERAL,
+      allowedMentions: { parse: ['users'] },
+    });
+  }
 
   const existing = realmStore.getCharacter(userId, guildId);
   if (existing) {
@@ -153,7 +161,7 @@ async function handleCreate(interaction) {
   await bgMsg.first().delete().catch(() => {});
 
   // Step 5: AI Backstory
-  if (!canCall(userId) || !canGuildCall(guildId)) {
+  if (!tryReserve(userId, guildId)) {
     return interaction.editReply({ content: 'The realm is overwhelmed. Try again in a moment.', allowedMentions: { parse: ['users'] } });
   }
 
@@ -162,8 +170,6 @@ async function handleCreate(interaction) {
   let backstory;
   try {
     backstory = await generateBackstory({ name: charName, race: selectedRace, class: selectedClass, user_id: userId }, bgAnswer);
-    recordCall(userId);
-    incrementGuildDaily(guildId);
   } catch {
     backstory = `${charName} arrived at the Abyssal Gate with nothing but a blade and a burning will to survive.`;
   }
@@ -228,7 +234,7 @@ async function handleExplore(interaction) {
     const location = getLocation(char.current_location);
     if (!location) return interaction.editReply({ content: 'Unknown location. Try `/realm start` again.', allowedMentions: { parse: ['users'] } });
 
-    if (!canCall(userId) || !canGuildCall(guildId)) {
+    if (!tryReserve(userId, guildId)) {
       return interaction.editReply({ content: 'The realm is overwhelmed. Try again in a moment.', allowedMentions: { parse: ['users'] } });
     }
 
@@ -238,8 +244,6 @@ async function handleExplore(interaction) {
     const sceneHistory = []; // tracks turns for AI context
     const rawText = await generateExploration(char, location, quest, sceneHistory);
     sceneHistory.push({ role: 'assistant', content: rawText });
-    recordCall(userId);
-    incrementGuildDaily(guildId);
 
     const { narrative, choices } = parseChoices(rawText);
     const choiceTexts = choices.map(c => c.text);
@@ -323,7 +327,7 @@ async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceT
 
     checkQuestProgress(userId, guildId, 'explore', matchedLoc.id);
 
-    if (!canCall(userId) || !canGuildCall(guildId)) {
+    if (!tryReserve(userId, guildId)) {
       return i.editReply({ content: 'The realm is overwhelmed. Try again.', allowedMentions: { parse: ['users'] } });
     }
 
@@ -331,8 +335,6 @@ async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceT
     try {
       const raw = await generateExploration(updatedChar, moveResult.location, quest, sceneHistory);
       sceneHistory.push({ role: 'assistant', content: raw });
-      recordCall(userId);
-      incrementGuildDaily(guildId);
 
       const parsed = parseChoices(raw);
       choiceTexts.length = 0;
@@ -351,11 +353,9 @@ async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceT
     let text = `**${npc.name}:** "${npcResult.dialogue}"`;
 
     if (npc.role === 'quest_giver' && canAcceptQuest(userId, guildId)) {
-      if (canCall(userId) && canGuildCall(guildId)) {
+      if (tryReserve(userId, guildId)) {
         try {
           const hookText = await generateQuestHook(npc, currentChar, currentLocation);
-          recordCall(userId);
-          incrementGuildDaily(guildId);
 
           const titleMatch = hookText.match(/Title:\s*(.+)/i);
           const descMatch = hookText.match(/Description:\s*(.+)/i);
@@ -394,14 +394,12 @@ async function handleExploreChoice(i, userId, guildId, key, char, quest, choiceT
     await i.editReply({ embeds: [combatEmbed], components: [buildCombatButtons()], allowedMentions: { parse: ['users'] } });
   } else {
     // Free action — new scene
-    if (!canCall(userId) || !canGuildCall(guildId)) {
+    if (!tryReserve(userId, guildId)) {
       return i.editReply({ content: 'The realm is overwhelmed. Try again.', allowedMentions: { parse: ['users'] } });
     }
 
     try {
       const raw = await generateExploration(currentChar, currentLocation, quest, [{ role: 'user', content: choiceText }]);
-      recordCall(userId);
-      incrementGuildDaily(guildId);
 
       const parsed = parseChoices(raw);
       choiceTexts.length = 0;
@@ -466,10 +464,8 @@ async function handleCombatButton(i, userId, guildId, key, collector, interactio
       try {
         const updatedChar = realmStore.getCharacter(userId, guildId);
         const location = getLocation(updatedChar.current_location);
-        if (!location || !canCall(userId) || !canGuildCall(guildId)) return;
+        if (!location || !tryReserve(userId, guildId)) return;
         const raw = await generateExploration(updatedChar, location, null, null);
-        recordCall(userId);
-        incrementGuildDaily(guildId);
         const parsed = parseChoices(raw);
         const embed = buildExploreEmbed(location, parsed.narrative || raw, updatedChar);
         const components = buildExplorationButtons(parsed.choices);
@@ -495,10 +491,8 @@ async function handleCombatButton(i, userId, guildId, key, collector, interactio
       try {
         const updatedChar = realmStore.getCharacter(userId, guildId);
         const location = getLocation(updatedChar.current_location);
-        if (!location || !canCall(userId) || !canGuildCall(guildId)) return;
+        if (!location || !tryReserve(userId, guildId)) return;
         const raw = await generateExploration(updatedChar, location, null, null);
-        recordCall(userId);
-        incrementGuildDaily(guildId);
         const parsed = parseChoices(raw);
         const embed = buildExploreEmbed(location, parsed.narrative || raw, updatedChar);
         const components = buildExplorationButtons(parsed.choices);
@@ -567,14 +561,18 @@ async function handleInventory(interaction) {
   });
 
   collector.on('collect', async i => {
-    if (i.customId === 'inv_next' && paginated.hasNext) page++;
-    else if (i.customId === 'inv_prev' && paginated.hasPrev) page--;
+    try {
+      if (i.customId === 'inv_next' && paginated.hasNext) page++;
+      else if (i.customId === 'inv_prev' && paginated.hasPrev) page--;
 
-    const freshItems = realmStore.getInventory(interaction.user.id, interaction.guildId);
-    const p = paginateItems(freshItems, page);
-    Object.assign(paginated, p);
+      const freshItems = realmStore.getInventory(interaction.user.id, interaction.guildId);
+      const p = paginateItems(freshItems, page);
+      Object.assign(paginated, p);
 
-    await i.update({ embeds: [buildInventoryEmbed(paginated)], components: buildInventoryButtons(paginated) });
+      await i.update({ embeds: [buildInventoryEmbed(paginated)], components: buildInventoryButtons(paginated) });
+    } catch (err) {
+      console.error('[REALM] inventory collector error:', err.message);
+    }
   });
 
   collector.on('end', () => {
@@ -804,12 +802,16 @@ async function handleDelete(interaction) {
   });
 
   collector.on('collect', async i => {
-    if (i.customId === 'del_confirm') {
-      realmStore.deleteCharacterCascade(interaction.user.id, interaction.guildId);
-      await i.update({ content: `**${char.name}** has been deleted.`, components: [] });
-      await interaction.channel.send({ content: `🪦 **${char.name}** has been deleted from the Realm.`, allowedMentions: { parse: ['users'] } });
-    } else {
-      await i.update({ content: 'Deletion cancelled.', components: [] });
+    try {
+      if (i.customId === 'del_confirm') {
+        realmStore.deleteCharacterCascade(interaction.user.id, interaction.guildId);
+        await i.update({ content: `**${char.name}** has been deleted.`, components: [] });
+        await interaction.channel.send({ content: `🪦 **${char.name}** has been deleted from the Realm.`, allowedMentions: { parse: ['users'] } });
+      } else {
+        await i.update({ content: 'Deletion cancelled.', components: [] });
+      }
+    } catch (err) {
+      console.error('[REALM] delete collector error:', err.message);
     }
   });
 

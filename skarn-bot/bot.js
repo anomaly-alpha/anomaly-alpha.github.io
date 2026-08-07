@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { Client, GatewayIntentBits, Collection, EmbedBuilder } = require('discord.js');
+const { Client, GatewayIntentBits, Collection, EmbedBuilder, Partials } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 const { db, getUserPreferences, setUserPreference, getGuildConfig, setGuildConfig } = require('./db/database');
@@ -36,7 +36,8 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.DirectMessages,
-  ]
+  ],
+  partials: [Partials.Channel],
 });
 
 // ===== Data helpers =====
@@ -58,9 +59,13 @@ const commandsPath = path.join(__dirname, 'commands');
 if (fs.existsSync(commandsPath)) {
   const commandFiles = fs.readdirSync(commandsPath).filter(f => f.endsWith('.js'));
   for (const file of commandFiles) {
-    const command = require(path.join(commandsPath, file));
-    if ('data' in command && 'execute' in command) {
-      client.commands.set(command.data.name, command);
+    try {
+      const command = require(path.join(commandsPath, file));
+      if ('data' in command && 'execute' in command) {
+        client.commands.set(command.data.name, command);
+      }
+    } catch (e) {
+      console.error(`[Bot] Failed to load command ${file}:`, e.message);
     }
   }
 }
@@ -267,7 +272,8 @@ client.on('messageCreate', async function(message) {
     if (match) {
       if (match.type === 'command' && match.handler) {
         if (match.activation.guildOnly && !message.guild) {
-          await message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } });
+          try { await message.reply({ content: 'This command can only be used in a server.', allowedMentions: { parse: ['users'] } }); }
+          catch (e) { console.error('[Bot] guildOnly reply failed:', e.message); }
           return;
         }
         if (match.activation.requiredPermissions && match.activation.requiredPermissions.length > 0) {
@@ -275,7 +281,8 @@ client.on('messageCreate', async function(message) {
           if (!member) return;
           const missing = match.activation.requiredPermissions.filter(function(p) { return !member.permissions.has(p); });
           if (missing.length > 0) {
-            await message.reply({ content: 'You need the ' + missing.join(', ') + ' permission(s) to use this command.', allowedMentions: { parse: ['users'] } });
+            try { await message.reply({ content: 'You need the ' + missing.join(', ') + ' permission(s) to use this command.', allowedMentions: { parse: ['users'] } }); }
+            catch (e) { console.error('[Bot] permission reply failed:', e.message); }
             return;
           }
         }
@@ -409,4 +416,7 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
   } catch (e) { console.error('[Bot] Caught:', e.message); }
 });
 
-client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN).catch(e => {
+  console.error('[Bot] Login failed:', e.message);
+  process.exit(1);
+});

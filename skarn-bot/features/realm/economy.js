@@ -244,8 +244,11 @@ function sellToMerchant(userId, guildId, itemId, relationship) {
   const multiplier = relationship === 'friendly' ? 1.1 : 1.0;
   const goldEarned = Math.floor(baseValue * multiplier);
 
-  removeItem(userId, guildId, itemId);
-  saveCharacter(userId, guildId, { gold: char.gold + goldEarned });
+  // removeItem returns false if the item is already gone — never credit gold twice
+  if (!removeItem(userId, guildId, itemId)) return { ok: false, error: 'Item not found' };
+  const freshChar = getCharacter(userId, guildId);
+  if (!freshChar) return { ok: false, error: 'No character found' };
+  saveCharacter(userId, guildId, { gold: freshChar.gold + goldEarned });
 
   return {
     ok: true,

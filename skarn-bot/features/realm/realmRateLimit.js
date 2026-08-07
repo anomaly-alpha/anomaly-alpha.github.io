@@ -9,20 +9,10 @@ function _bucket(userId) {
   return raw ? JSON.parse(raw) : [];
 }
 
-function canCall(userId) {
+function _userBucketCurrent(userId) {
   const now = Date.now();
   const cutoff = now - REALM_RATE_LIMIT.windowMs;
-  const recent = _bucket(userId).filter(t => t > cutoff);
-  setFlag('realm_bucket:' + userId, JSON.stringify(recent), REALM_RATE_LIMIT.windowMs);
-  return recent.length < REALM_RATE_LIMIT.maxCalls;
-}
-
-function recordCall(userId) {
-  const now = Date.now();
-  const cutoff = now - REALM_RATE_LIMIT.windowMs;
-  const bucket = _bucket(userId).filter(t => t > cutoff);
-  bucket.push(now);
-  setFlag('realm_bucket:' + userId, JSON.stringify(bucket), REALM_RATE_LIMIT.windowMs);
+  return _bucket(userId).filter(t => t > cutoff);
 }
 
 // ===== Per-guild daily limit (via realm_world_state) =====
@@ -32,28 +22,32 @@ function _dailyKey() {
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
 }
 
-function getGuildDailyCount(guildId) {
+function _guildDailyCount(guildId) {
   const state = getWorldState('daily_ai_calls', guildId);
   if (!state || state.date !== _dailyKey()) return 0;
   return state.count || 0;
 }
 
-function incrementGuildDaily(guildId) {
-  const today = _dailyKey();
-  const state = getWorldState('daily_ai_calls', guildId);
-  const count = (state && state.date === today) ? state.count + 1 : 1;
-  setWorldState('daily_ai_calls', guildId, { date: today, count });
-  return count;
-}
+// ===== Atomic reserve =====
+// Checks BOTH ceilings and records both in one synchronous call (no await
+// inside), so concurrent realm actions can never overrun the limits.
+// Reservation is consumed even if the AI call after it fails — the AI call is
+// about to happen, and strictness protects the documented cost budget.
 
-function canGuildCall(guildId) {
-  return getGuildDailyCount(guildId) < REALM_DAILY_CALL_LIMIT;
+function tryReserve(userId, guildId) {
+  const bucket = _userBucketCurrent(userId);
+  if (bucket.length >= REALM_RATE_LIMIT.maxCalls) return false;
+
+  const today = _dailyKey();
+  const guildCount = _guildDailyCount(guildId);
+  if (guildCount >= REALM_DAILY_CALL_LIMIT) return false;
+
+  bucket.push(Date.now());
+  setFlag('realm_bucket:' + userId, JSON.stringify(bucket), REALM_RATE_LIMIT.windowMs);
+  setWorldState('daily_ai_calls', guildId, { date: today, count: guildCount + 1 });
+  return true;
 }
 
 module.exports = {
-  canCall,
-  recordCall,
-  getGuildDailyCount,
-  incrementGuildDaily,
-  canGuildCall,
+  tryReserve,
 };

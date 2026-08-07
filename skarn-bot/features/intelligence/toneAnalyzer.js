@@ -60,7 +60,7 @@ async function analyzeTone(text, userId) {
     if (!gateResult.success) throw new Error(gateResult.safeMessage || 'AI request unavailable');
 
     const content = gateResult.completion.choices[0].message.content;
-    const parsed = JSON.parse(content);
+    const parsed = JSON.parse(content.replace(/```json|```/g, '').trim());
 
     const result = {
       emotion: parsed.emotion || 'neutral',
