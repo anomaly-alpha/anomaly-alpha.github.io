@@ -112,7 +112,7 @@ A musing is **grounded, not generic**: it pairs one real recent event with one
 real memory from Skarn's history, then asks the model to speak the thread between
 them — ending with a quiet hook that invites a mortal to ask.
 
-### [S6.1] Recent-event seed (the "search")
+### [S6.1] Recent-event seed (the world now)
 
 - Pull from the existing news cache (`getRecentNews(category?)` in
   `features/news/newsFetcher.js` — daily_news, up to 200 fresh articles across 5
@@ -121,21 +121,43 @@ them — ending with a quiet hook that invites a mortal to ask.
   categories weighted toward world/business/science/tech (skip pure gaming spam
   at the top when alternatives exist); pick one uniformly.
 - If no recent headline exists (cache empty/stale), fall back to the newest
-  headline regardless of age; if still none, skip the fire (no seed → no musing;
-  weak seed would produce a weak musing).
+  headline regardless of age; if still none, the world leg is omitted — the
+  musing still fires on the remaining legs (a diad is better than silence).
 
-### [S6.2] History memory (the "ground")
+### [S6.2] History memory (the ground)
 
 - Map the headline to Skarn's archive via `findStoryTopic(headline)` +
   `getExistingStory(topic)` (`features/wisdom/storyEngine.js`) — canonical >
-  auto_lore > AI-generated, exactly the existing lore system. This pulls a REAL
+  auto_lore > generated, exactly the existing lore system. This pulls a REAL
   memory from his 10,000 years that thematically echoes today's event
   (war/humans/loss/technology/time/power/regret/dreams…).
 - If `findStoryTopic` returns null (no keyword match), fall back to a uniformly
   random `skarn_stories` canonical/auto_lore entry. `getExistingStory` already
   increments usage stats, so the archive self-tunes toward variety.
 
-### [S6.3] Composition
+### [S6.3] Guild-local seed (the server now)
+
+Skarn remembers what *happens in this server* — the tripod leg that makes a
+musing feel personal, not like a news bot. Added when available, best-first:
+
+1. **Chronicle** — `getRecentEntry(guildId)` (`serverMemory/chronicle/chronicleStore.js`):
+   the latest AI-written summary of the guild's own recent days. Strongest
+   "Skarn has been watching us" effect.
+2. **Signals** — `getSignalsSince(guildId, since)` (`serverMemory/signalStore.js`):
+   notable reaction/event micro-moments if the chronicle is missing/stale.
+3. **Conversation recall** — `getServerBuzz(guildId, since, 10)`
+   (`db/conversation.js`): recent user-message topics. **Privacy rule**: the
+   local leg is paraphrased — the AI is instructed to summarize the *topic*,
+   never quote a verbatim user message, never name individual users.
+
+The musing prompt takes the pair-or-tripod:
+`Recent news: <headline>` + `Memory from my years: <story>` +
+(when available) `This server lately: <chronicle|signal|paraphrased topic>`.
+Each leg may resolve or omit independently — a musing is always better grounded
+than forced; the diad (news+lore) is the guaranteed baseline, the tripod is the
+rich case.
+
+### [S6.4] Composition
 
 - **New role line**: add `roles.musing` in `persona/roles.js` (+
   `ROLE_NATURE.musing = 'casual'` if the convention requires; token budget
@@ -166,7 +188,7 @@ them — ending with a quiet hook that invites a mortal to ask.
   rate bucket for free (bounded to the 48h cadence anyway).
 - **Post**: `channel.send({ content: musing, allowedMentions: { parse: [] } })`.
 
-### [S6.4] Hook-to-conversation
+### [S6.5] Hook-to-conversation
 
 The role line ends the musing with a door (a dangling observation, a "wonder I
 can't shake", a question left in the air) — never a directive. If a member then
@@ -174,7 +196,71 @@ asks Skarn about it (mention/slash/AI channel), the normal pipeline answers usin
 the same `loreLine`/memory context — musings deliberately *want* follow-up; the
 anti-lecture rule keeps them from *demanding* it.
 
-## [S7] Gating & safety
+## [S7] Command & natural-language invocation
+
+The ambient timer is only half the feature: a member should be able to *ask* for
+a musing directly, and Skarn should be able to *offer* one unprompted. Both paths
+share the same content assembly ([S6]) — only the trigger and reply channel differ.
+
+### [S7.1] Slash command
+
+- `commands/musing.js` — thin-wrapper vertical slice (mirror `commands/lore.js`):
+  `data: new SlashCommandBuilder().setName('musing')`, `execute(interaction)`
+  delegates to the engine's `museForGuild(guild, channel, userId)`.
+- **Quiet gate does NOT apply to the command**: the user invoked it, so they are
+  present by definition — post into the invoking channel directly via
+  `interaction.reply`/`editReply`.
+- **Sleep mode does not block the command** either: a user asked; answering is
+  fine (mirrors how the mention handler answers during sleep). The ambient timer
+  still obeys sleep — command and timer have different guardrails.
+- Seeds: identical tripod assembly ([S6.1–3]) so a commanded musing is just as
+  grounded as an ambient one.
+- `userId` for the AI call = `interaction.user.id` (real caller, the existing
+  convention per `commands/lore.js:31`) — the caller's own rate budget applies.
+
+### [S7.2] Activation phrase
+
+Follow the same file's pattern (`commands/lore.js:88-95`):
+
+```
+activation: {
+  type: 'command',                 // runs handler directly, no AI re-route
+  phrase: 'skarn musing',
+  aliases: ['skarn muse', 'skarn reflect', 'skarn contemplate'],
+  description: 'Skarn shares a grounded, in-voice reflection',
+  guildOnly: false,
+  requiredPermissions: [],
+  parseArgs: () => ({}),
+}
+```
+
+`handleActivation(message, args)` reuses the same `museForGuild` content path and
+replies in-channel.
+
+### [S7.3] Natural-language invocation — free via the existing NL-command tool
+
+No new routing needed. `features/tools/toolDefinitions.js` builds the
+`run_command` tool enum **dynamically** from `activationRegistry.getAll()`
+filtered to `type: 'command'`. Because musing registers `type: 'command'`
+([S7.2]) and is not on the excluded-commands list, the model can invoke it from
+natural language — "what's on your mind, Skarn?", "share a reflection" →
+`run_command(musing)` → `handleActivation` → captured reply (CONTEXT.md §2,
+NL-command upgrade). Musing is single-turn, so it qualifies (unlike realm/tetris).
+
+### [S7.4] Ambient/commanded interplay
+
+- **Cost gates**: ambient uses `musing:{guildId}`; commanded uses the caller's
+  real id against the bot-wide limiter. Neither bypasses `moderatedChatCompletion`.
+- **Double-fire avoidance**: after a command musing, set `musing_next:{guildId}`
+  to `now + 24h` (same write as the tick) so a guild that just got one on demand
+  won't get an ambient one the same day.
+- **Failure**: command failure replies in-voice and does NOT touch `musing_next`;
+  ambient failure path is unaffected.
+- **Shared internals**: ambient `maybeMuse(guild, client)` and command
+  `museForGuild(guild, channel, senderId)` both call one `generateSeed()` + one
+  `generateMusing()` — no duplicated content assembly.
+
+## [S8] Gating & safety
 
 Order of checks in the tick (cheap → expensive):
 
@@ -192,13 +278,13 @@ Order of checks in the tick (cheap → expensive):
 No per-user opt-in: musings are guild-ambient (like the digests and lore jobs), and
 the channel set is already admin-controlled via `/aichat`.
 
-## [S8] Persistence
+## [S9] Persistence
 
 - `app_state` rows (`musing_next:{guildId}`) — read/write via existing
   `getAppState` / `setAppState` (`db/ops.js:84-89`, re-exported by `db/database.js`).
 - No schema change, no migration, no new table.
 
-## [S9] Interfaces
+## [S10] Interfaces
 
 Consumes:
 
@@ -216,12 +302,15 @@ Consumes:
 
 Produces:
 
-- `features/presence/musingEngine.js` exporting `startMusingScheduler(client)` and
-  (for smokes) `maybeMuse(guild, client)`
+- `features/presence/musingEngine.js` exporting `startMusingScheduler(client)`,
+  `maybeMuse(guild, client)` (ambient, for scheduler + smokes), and
+  `museForGuild(guild, channel, senderId)` (command path, shared internals)
+- `commands/musing.js`: slash command (`/musing`) + activation block
+  ([S7.1–2]) delegating to `museForGuild`
 - `features/scheduler/index.js`: one new `setInterval(safeRun(...), 10 * 60 * 1000)`
   registration + initial call
 
-## [S10] Edge cases
+## [S11] Edge cases
 
 | Case | Behavior |
 |---|---|
@@ -237,7 +326,7 @@ Produces:
 | Fresh restart | `musing_next` persists in `app_state`; no duplication (check `now >= next` before fire) |
 | Bot restarts mid-interval | Timestamp survives; fire at most once per window (guard by `>=` not `>` on equal ms) |
 
-## [S11] Verification
+## [S12] Verification
 
 Project convention: no test framework; `node --check` + `node -e` smokes with
 `SKARN_DB_PATH=$(mktemp -d)/...`.
@@ -256,10 +345,16 @@ Project convention: no test framework; `node --check` + `node -e` smokes with
    `channel.send`.
 6. No-seed smoke: `getRecentNews` returns empty → `maybeMuse` skips without an
    AI call (no weak seed fires).
-7. Full-boot smoke: `SKARN_DB_PATH=$(mktemp -d)/smoke.db node -e
+7. Command smoke: stub `museForGuild` inputs (a guild + a fake channel with
+   `send` spy) → assert one send, and `musing_next:{guildId}` advanced to
+   ≥ `now + 24h` (the double-fire guard from [S7.4]).
+8. Activation smoke: `require('./commands/musing')` → `activation.phrase ===
+   'skarn musing'`, `type === 'command'`; registration into the registry does
+   not throw (registry includes it).
+9. Full-boot smoke: `SKARN_DB_PATH=$(mktemp -d)/smoke.db node -e
    "require('./features/scheduler')"` — expect clean load (existing log lines only).
 
-## [S12] Docs updates
+## [S13] Docs updates
 
 - `skarn-bot/CONTEXT.md`: add musing engine to the proactive/presence glossary +
   §2 architecture note (new ambient-speech subsystem).
