@@ -127,7 +127,7 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 75 com
 ### Realm of Skarn (RPG)
 | Module | File | Responsibility |
 |--------|------|----------------|
-| Command router | `features/realm/realmCommand.js` | 11 subcommands (create/explore/combat/inventory/etc.) |
+| Command router | `features/realm/realmCommand.js` (router) + `features/realm/handlers/` (per-subcommand UI handlers) | 11 subcommands (create/explore/combat/inventory/etc.) |
 | AI driver | `features/realm/aiDriver.js` | Separate AI context builder, 5 generators (backstory, exploration, combat narration, NPC dialogue, quest hooks) |
 | Character | `features/realm/character.js` | Character creation, XP/leveling, healing |
 | Combat | `features/realm/combat.js` | Turn-based combat engine (attack/defend/flee), enemy rolling |
