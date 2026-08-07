@@ -156,7 +156,7 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 75 com
 ### Data Layer
 | Module | File | Responsibility |
 |--------|------|----------------|
-| Database | `db/database.js` | 60+ exported functions, all SQLite access |
+| Database | `db/` | Facade `db/database.js` + domain modules (`memory`, `conversation`, `relationship`, `channel`, `ops`, `humor`, `stories`) + `db/db.js` connection |
 | Schema | `db/skarn-schema.sql` | 30+ tables (run on startup via CREATE IF NOT EXISTS) |
 
 ## State Machine: Channel Mood
@@ -276,7 +276,7 @@ See `docs/DATABASE.md` for the full table reference.
 | `isSilenced()` guildId parameter silently dropped | `gates.js` vs `hostileDetector.js` | Misleading signature, no actual bug |
 | Duplicate `canCall()`/`recordCall()` | `lib/rateLimit.js` and `database.js` | Two implementations of same rate limit logic |
 | `mentionRouter.js` / `consult.handler.js` near-duplicate | Both handlers | ~180 lines of nearly identical AI call logic |
-| Database god module | `db/database.js` (870 lines) | 60+ functions, violates vertical-slice separation |
+| Database god module (fixed 2026-08-04) | `db/database.js` → `db/` domain modules | `db/database.js` is now a facade over `db/{db,memory,conversation,relationship,channel,ops,humor,stories}.js`; 111 exports preserved, zero call-site changes |
 | Callback sampling is random | `callbackEngine.js` | 10% random, not gated by sentiment or reactions (per spec) |
 
 ## Environment Variables

@@ -8,6 +8,8 @@ This file serves two roles: a **domain glossary** defining every table, subsyste
 
 The codebase follows a **vertical slice architecture**: each feature lives in `features/<name>/` and owns its commands, handler, and data. For example, `features/etch/etch.handler.js` handles the `/etch` command and writes to `memory_entries`. A command's Discord.js integration (the `.js` file in `commands/`) is a thin wrapper that delegates to its feature handler.
 
+> **Resolved (2026-08-04) — `db/` god-module decomposition**: `db/database.js` (which hosted all SQLite access behind one module) was split into domain modules — `db/db.js` (shared connection + the 5 dynamic-update builders + `getChannelState` create-on-miss + sentiment-buffer pair + prunes), `db/memory.js`, `db/conversation.js`, `db/relationship.js`, `db/channel.js`, `db/ops.js`, `db/humor.js`, `db/stories.js` — with `db/database.js` rebuilt as a thin re-export facade (`Object.assign` over all of them). Every `require('.../db/database')` call site works unchanged; the export surface (111 names) is byte-identical. The invariants below (§9.1 read-modify-write, §9.4 `.run(...vals)` spread) still hold — the dynamic builders live in `db/db.js`.
+
 Two modules serve as shared layers that cut across all features:
 
 - **`buildSystemPrompt()`** (`persona/identity.js`): The single function that assembles `SKARN_CORE_IDENTITY` + the command's role line (from `persona/roles.js`) + dynamic context lines (from `features/promptContext.js`) into the system prompt for every AI call. No command builds its own system prompt.
@@ -93,7 +95,7 @@ The codebase maintains **5 distinct memory stores**, each with a different scope
 | # | Store | Tables | Written by | Read by | Scope | Purpose |
 |---|-------|--------|------------|---------|-------|---------|
 | 1 | **Unified memory entries** | `memory_entries` | `etch.handler.js` (source='etch'), `knowledgeGraph.js` (source='extracted') | `promptContext.js` via `getMemoryEntries()` for AI context, `knowledgeGraph.js` via `getMemoryByType()` for formatKnowledge | Per-user-per-guild per-type-per-content | The unified persistent memory table for all per-user memory, discriminated by `source` column. |
-| 2 | **Conversation graph** | `conversation_threads`, `conversation_messages`, `conversation_summaries`, `conversation_fts` | `database.js` — `insertMessage()`, `createThread()`, `insertSummary()` (FTS insert relocated before the early return in `insertMessage()` — fixed 2026-08-01, `/find` works) | Context reads use **raw SQL in `promptContext.js`**; `getRecentMessages()`, `getOlderSummaries()` (and `getThreadMessages()`, `searchConversations()`) are now dead exports | Per-thread, indexed by user/guild/channel | Full conversation history with full-text search. Separate from extracted memory. |
+| 2 | **Conversation graph** | `conversation_threads`, `conversation_messages`, `conversation_summaries`, `conversation_fts` | `db/conversation.js` — `insertMessage()`, `createThread()`, `insertSummary()` (FTS insert relocated before the early return in `insertMessage()` — fixed 2026-08-01, `/find` works) | Context reads use **raw SQL in `promptContext.js`**; `getRecentMessages()`, `getOlderSummaries()` (and `getThreadMessages()`, `searchConversations()`) are now dead exports | Per-thread, indexed by user/guild/channel | Full conversation history with full-text search. Separate from extracted memory. |
 | 3 | **Realm NPC memory** | `realm_npc_memory` | Realm system NPC interaction handlers | Realm system only | Per-NPC-per-user-per-guild | In-fiction NPC memory. Never bleeds to persona or system prompt. |
 | 4 | **Emotional context** | `user_emotional_context` | `emotionalIntelligence.js` via `setUserEmotion()` | `getEmotionDirective()` for tone guidance in system prompt | Per-user-per-guild | Per-user emotion state. Advisory only — drives tone, not gating. |
 | 5 | **Knowledge base** | `knowledge_base`, `knowledge_fts` | `knowledgeSeeder.js`, `/learn` command via `addKnowledgeBase()` | `searchKnowledgeBase()`, knowledge commands | Global (all users) | Seeded Wikipedia topics + user-taught facts. Completely separate from per-user memory. |
@@ -197,7 +199,7 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 **Invariant**: Any state machine that is read-mutate-write should either (a) use a SQLite transaction, (b) use a conditional update that verifies the baseline hasn't changed, or (c) be scoped such that concurrent writes for the same key are impossible by design.
 
-**What to watch for**: `database.js` dynamic update functions (`updateChannelState`, `updateRelationshipField`, `upsertUserProfile`, `upsertAttentionState`) all read-then-write without transactions. Adding new read-mutate-write paths should include serialization.
+**What to watch for**: `db/db.js` dynamic update functions (`updateChannelState`, `updateRelationshipField`, `upsertUserProfile`, `upsertAttentionState`) all read-then-write without transactions. Adding new read-mutate-write paths should include serialization.
 
 ### 9.2 Concurrent-message double-processing
 
@@ -219,11 +221,11 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 ### 9.4 SQLite prepared statement `.apply()` vs `.run(...vals)` spread
 
-**Root cause**: Dynamic SQL generation in `database.js` builds prepared statements at runtime with spread arguments: `.run(...values, userId, gid, channelId)`. The spread passed an array to `.run()`, but better-sqlite3's `.run()` expects positional arguments, not an array. Older code used `.apply(stmt, vals)` which worked but was fragile.
+**Root cause**: Dynamic SQL generation in `db/db.js` builds prepared statements at runtime with spread arguments: `.run(...values, userId, gid, channelId)`. The spread passed an array to `.run()`, but better-sqlite3's `.run()` expects positional arguments, not an array. Older code used `.apply(stmt, vals)` which worked but was fragile.
 
 **Fix**: Converted all dynamic SQL call sites to use `.run(...vals)` spread consistently.
 
-**Invariant**: Every place in `database.js` that builds a dynamic `UPDATE ... SET` query must use `.run(...values, ...keys)` spread arguments, not `.apply()`. The 5 dynamic query builders (`updateChannelState`, `updateRelationshipField`, `upsertUserProfile`, `upsertAttentionState` update, `upsertAttentionState` insert) all follow the spread pattern.
+**Invariant**: Every place in `db/db.js` that builds a dynamic `UPDATE ... SET` query must use `.run(...values, ...keys)` spread arguments, not `.apply()`. The 5 dynamic query builders (`updateChannelState`, `updateRelationshipField`, `upsertUserProfile`, `upsertAttentionState` update, `upsertAttentionState` insert) all follow the spread pattern.
 
 ### 9.5 Dead code in gates.js (signature mismatch) — fixed
 
@@ -237,7 +239,7 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 ### 9.6 `user_memory` / `knowledge_graph` fragmentation (fixed)
 
-**Files**: `db/database.js`, `db/skarn-schema.sql`
+**Files**: `db/memory.js` (formerly `db/database.js`), `db/skarn-schema.sql`
 
 **Root cause**: When `memory_entries` was created as the unified memory table, the write path was migrated (`/etch` → `addMemoryEntry()`) but the read path was not — 19 command files still called `getUserMemory()` from the stale `user_memory` table, and `modelRouter.js` called `getKnowledge()` from the stale `knowledge_graph` table.
 
