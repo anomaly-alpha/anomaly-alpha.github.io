@@ -43,8 +43,29 @@ Key properties:
   [24h, 96h]; a fire also schedules the next, so bursts are impossible.
 - **Inherits all existing gates**: `isSleepTime()`, `aiChannels` config, admission
   gate + rate limits on the AI call.
+- **Quiet-channel gate**: musings only land in channels that are *idle* — state
+  `Dormant`/`Attentive` (never `Charged`/`Weathering`) AND no user message in the
+  last `MUSING_QUIET_MS` (30 min). A musing never interrupts a live talk.
 
-## [S3] Scheduling & cadence
+## [S3] Anti-interruption guard (grill Q: musing during active conversation)
+
+The mustiking target **must not be a channel where anyone is mid-conversation**.
+`Attentive` alone is insufficient: `stateTracker.js:47-56` sets `Attentive` for
+*any* user traffic (only ≥8 msgs/5min escalates to `Charged`, and `Dormant`
+requires 6h of decay). The reliable signal is `channel_state.last_message_at`
+(written on every user message, `stateTracker.js:60`; bot messages are ignored
+at `:25`).
+
+**Gate**: candidate channel qualifies only when ALL hold:
+1. `getChannelState(channelId, guildId).current_state ∈ {'Dormant','Attentive'}`
+2. `now - last_message_at >= MUSING_QUIET_MS` (constant, default 30 min)
+3. text-capable, client can send (see [S5])
+
+If the guild's quiet candidate set is empty → skip this tick and reschedule the
+normal draw (no musing is better than a rude one). No fallback to non-quiet
+channels, ever.
+
+## [S4] Scheduling & cadence
 
 Per-guild calendar state lives in `app_state`:
 
@@ -62,22 +83,26 @@ Per-guild calendar state lives in `app_state`:
   feature starts quiet, then behaves normally.
 - **Guild enumeration**: iterate `client.guilds.cache.values()` like
   `proactive/scheduler.js:23`. Skip guilds with no `aiChannels` configured.
+- **Quiet-candidate check inside the tick**: a due guild still fires nothing if
+  its quiet candidate set (per [S3]) is empty — it reschedules instead.
 - **No per-channel cooldown needed**: the per-guild next-fire timestamp is the
   gate. A channel may receive at most one musing per fire cycle by construction.
 
-## [S4] Channel targeting
+## [S5] Channel targeting
 
 - Source: `getGuildConfig(guildId, 'aiChannels')` (same accessor
   `bot.js:232/253/331` and `warmthManager.js:15-17` use).
 - Empty / unset list → skip guild entirely (no message, no reschedule churn —
   just leave the row; it fires when channels get configured).
-- Selection: uniform random among the guild's *usable* text channels in the list —
-  filter to channels present in `guild.channels.cache`, `isTextBased()`, and where
-  the client can send (`permissionsFor(client.user.id)?.has('SendMessages')`).
-- If the random pick is unusable, fall back to the first usable one; if none are
-  usable, skip the fire but still reschedule (avoid hot-looping a dead guild).
+- Candidate set: aiChannels entries that also pass the [S3] quiet gate (state
+  Dormant/Attentive + ≥ `MUSING_QUIET_MS` idle) AND are usable — present in
+  `guild.channels.cache`, `isTextBased()`, and where the client can send
+  (`permissionsFor(client.user.id)?.has('SendMessages')`).
+- Selection: uniform random among the quiet, usable candidate set.
+- If the candidate set is empty (all busy / all dead) → skip the fire and
+  reschedule the next draw; never fall back to a non-quiet channel.
 
-## [S5] Content generation & persona
+## [S6] Content generation & persona
 
 - **New role line**: add `roles.musing` in `persona/roles.js` (and a
   `ROLE_NATURE.musing = 'casual'` entry if required by convention; token budget
@@ -103,30 +128,31 @@ Per-guild calendar state lives in `app_state`:
   rate bucket for free (bounded to the 48h cadence anyway).
 - **Post**: `channel.send({ content: musing, allowedMentions: { parse: [] } })`.
 
-## [S6] Gating & safety
+## [S7] Gating & safety
 
 Order of checks in the tick (cheap → expensive):
 
 1. `isSleepTime()` → skip (mirror interjection `bot.js:381`).
 2. Guild has a `musing_next` row and `now >= next` → else skip.
 3. Guild has ≥1 usable `aiChannels` channel → else skip.
-4. **15% skip-draw** (elongation) → if hit, reschedule and return.
-5. AI call via `moderatedChatCompletion` (shared admission gate).
-6. On `!result.success` or crisis → reschedule normally, log `[Musing]`, no
+4. Guild has ≥1 channel passing the [S3] quiet guard → else skip + reschedule.
+5. **15% skip-draw** (elongation) → if hit, reschedule and return.
+6. AI call via `moderatedChatCompletion` (shared admission gate).
+7. On `!result.success` or crisis → reschedule normally, log `[Musing]`, no
    fallback static lines (a musing is ambient; a canned line would read as spam).
-7. `channel.send` wrapped in try/catch → reschedule regardless of send failure
+8. `channel.send` wrapped in try/catch → reschedule regardless of send failure
    (never crash the tick; the `safeRun` wrapper is the last line of defense).
 
 No per-user opt-in: musings are guild-ambient (like the digests and lore jobs), and
 the channel set is already admin-controlled via `/aichat`.
 
-## [S7] Persistence
+## [S8] Persistence
 
 - `app_state` rows (`musing_next:{guildId}`) — read/write via existing
   `getAppState` / `setAppState` (`db/ops.js:84-89`, re-exported by `db/database.js`).
 - No schema change, no migration, no new table.
 
-## [S8] Interfaces
+## [S9] Interfaces
 
 Consumes:
 
@@ -147,19 +173,21 @@ Produces:
 - `features/scheduler/index.js`: one new `setInterval(safeRun(...), 10 * 60 * 1000)`
   registration + initial call
 
-## [S9] Edge cases
+## [S10] Edge cases
 
 | Case | Behavior |
 |---|---|
 | Guild with no `aiChannels` | Skipped; no reschedule needed (row left until channels appear) |
 | All configured channels unusable (deleted/left) | Skip fire, reschedule; next draw may pick different channels |
+| All configured channels busy (state Charged/Weathering OR last message < 30 min) | Quiet gate ([S3]) rejects all → skip fire, reschedule the normal draw. No musing while anyone talks |
+| Channel goes quiet *after* the draw but before send | Harmless: last message < 30 min at send time → treat as busy (re-check at send) and reschedule |
 | AI call fails / blocked by rate limit | Reschedule, log, no fallback text |
 | Crisis moderation response | Same as failure — reschedule, no fallback |
 | Sleep mode active | Entire tick skipped; next fire naturally defers |
 | Fresh restart | `musing_next` persists in `app_state`; no duplication (check `now >= next` before fire) |
 | Bot restarts mid-interval | Timestamp survives; fire at most once per window (guard by `>=` not `>` on equal ms) |
 
-## [S10] Verification
+## [S11] Verification
 
 Project convention: no test framework; `node --check` + `node -e` smokes with
 `SKARN_DB_PATH=$(mktemp -d)/...`.
@@ -168,11 +196,14 @@ Project convention: no test framework; `node --check` + `node -e` smokes with
 2. Draw-function smoke: seed `musing_next` in the past, call `maybeMuse` with a
    stubbed `moderatedChatCompletion` + stubbed channel, assert: one `channel.send`,
    `musing_next` advanced, and the new value is ≥ 24h in the future.
-3. Guards smoke: guild with no aiChannels → no send; sleep → no send.
-4. Full-boot smoke: `SKARN_DB_PATH=$(mktemp -d)/smoke.db node -e
+3. Quiet-gate smoke: seed a channel with `current_state='Charged'` +
+   `last_message_at = now` → `maybeMuse` does NOT send; seed idle
+   (`Dormant` + last message > 30 min ago) → sends.
+4. Guards smoke: guild with no aiChannels → no send; sleep → no send.
+5. Full-boot smoke: `SKARN_DB_PATH=$(mktemp -d)/smoke.db node -e
    "require('./features/scheduler')"` — expect clean load (existing log lines only).
 
-## [S11] Docs updates
+## [S12] Docs updates
 
 - `skarn-bot/CONTEXT.md`: add musing engine to the proactive/presence glossary +
   §2 architecture note (new ambient-speech subsystem).
