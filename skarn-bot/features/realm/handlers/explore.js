@@ -8,7 +8,7 @@ const { generateNpc, handleNpcInteraction } = require('../npc');
 const { generateExploration, generateQuestHook } = require('../aiDriver');
 const realmStore = require('../realmStore');
 const { tryReserve } = require('../realmRateLimit');
-const { checkCooldown, setCooldown } = require('../../db/database');
+const { checkCooldown, setCooldown } = require('../../../db/database');
 const { randomError, EPHEMERAL } = require('./ui');
 
 // ===== Build Helpers =====
