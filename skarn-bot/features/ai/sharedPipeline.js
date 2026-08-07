@@ -9,8 +9,7 @@ const { getUsage } = require('../../lib/rateLimit');
 const { moderatedChatCompletion } = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { splitMessage, maybeBurst } = require('../discordNative/postProcess');
-const { estimateDelay } = require('../authenticity/typingController');
-const { simulateTyping, startTypingKeepalive } = require('../discordNative/typingSim');
+const { startTypingKeepalive, getTypingDelay } = require('../discordNative/typingSim');
 const { getDeadpanBudget, extendBanterChain, isPunchline } = require('../humor/comedyTiming');
 const { getRelationship, addStory } = require('../../db/database');
 const { extractMemory } = require('../memory/memoryExtractor');
@@ -190,13 +189,12 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
       detectFollowUps(userId, guildId, channelId, message);
     } catch (e) { /* non-critical */ }
 
-    // Typing simulation — keep the pre-send pacing (the keepalive already keeps
-    // the indicator visible; this adds the "drafting" beat before sending)
+    // One human-pacing delay, length-scaled. The keepalive already keeps the
+    // indicator visible for the whole thinking duration (typingSim.js).
+    await new Promise(resolve => setTimeout(resolve, getTypingDelay(reply.length)));
     if (channel) {
-      await simulateTyping(channel, reply.length);
+      await channel.sendTyping().catch(function() { /* permission — skip */ });
     }
-
-    await new Promise(resolve => setTimeout(resolve, estimateDelay(reply)));
 
     const isPunchlineMsg = isPunchline(reply, channelId, userId);
     if (isPunchlineMsg) {

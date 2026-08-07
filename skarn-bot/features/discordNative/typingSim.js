@@ -4,16 +4,6 @@ function getTypingDelay(responseLength) {
   return 2000 + Math.random() * 2000;
 }
 
-async function simulateTyping(channel, responseLength) {
-  try {
-    await channel.sendTyping();
-    const delay = getTypingDelay(responseLength);
-    await new Promise(resolve => setTimeout(resolve, delay));
-  } catch {
-    // Permission issue — skip silently
-  }
-}
-
 // Discord's typing indicator expires ~10s after the last sendTyping. Keep it alive
 // for the whole thinking duration: ping immediately, then refresh on a timer.
 // Returns a stop() function; call it when the reply is sent or the pipeline exits.
@@ -32,4 +22,4 @@ function startTypingKeepalive(channel) {
   };
 }
 
-module.exports = { simulateTyping, startTypingKeepalive };
+module.exports = { getTypingDelay, startTypingKeepalive };
