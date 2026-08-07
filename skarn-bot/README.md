@@ -481,10 +481,12 @@ node rich-presence.js
 
 ### Verification (manual, per project convention)
 
-No test framework — verify with syntax checks and inline smoke runs against a temp DB (a one-time `[DB] Migration 1 ... applied` log line on a fresh DB is expected):
+No test framework — verify with `npm run smoke` (runs every suite in `scripts/smokes/` against its own temp DB; a one-time `[DB] Migration 1 ... applied` log line on a fresh DB is expected) plus syntax checks and a `node bot.js` boot check. Individual blocks below remain for copy-paste debugging.
 
 ```bash
 node -c bot.js                                    # syntax check
+# Gate coverage audit — fails if any direct OpenAI chat call bypasses moderatedChatCompletion():
+npm run audit:gate
 SKARN_DB_PATH=$(mktemp -d)/smoke.db node -e "
 require('./db/database');
 const { db } = require('./db/database');

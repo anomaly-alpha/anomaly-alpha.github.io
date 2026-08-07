@@ -6,7 +6,10 @@
   "scripts": {
     "start": "node bot.js",
     "deploy": "node deploy-commands.js",
-    "backup": "node scripts/backup-db.js"
+    "backup": "node scripts/backup-db.js",
+    "audit:gate": "node scripts/audit-ai-gate.js && SKARN_DB_PATH=$(mktemp -d)/gate.db node scripts/smoke-gate.js",
+    "smoke": "node scripts/run-smokes.js",
+    "audit:docs": "node scripts/audit-docs.js"
   },
   "dependencies": {
     "better-sqlite3": "^12.11.1",
