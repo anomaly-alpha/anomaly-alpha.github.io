@@ -1,5 +1,9 @@
 # Skarn Bot — Architecture
 
+> **Derived overview (2026-08-04):** this file is a high-level diagram, not the spec.
+> When it disagrees with `CONTEXT.md`, CONTEXT.md wins — and file a correction here.
+> Drift fixes tracked by `npm run audit:docs` (scripts/audit-docs.js).
+
 ## System Overview
 
 Skarn is a Discord.js v14 bot with an LLM-powered AI persona ("Skarn, the Warmaster of the Abyss"). It runs on Node.js, stores state in SQLite, and calls OpenAI for every AI feature. The bot has ~75 slash commands spanning AI conversation, games, server management, fun, and utilities.
@@ -120,7 +124,7 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 75 com
 | Consult handler | `features/consult/` | `/consult` command handler |
 | Model router | `features/intelligence/modelRouter.js` | Selects AI_MODEL vs AI_MODEL_COMPLEX |
 | Knowledge graph | `features/intelligence/knowledgeGraph.js` | Entity extraction from conversations |
-| Rate limiter | `lib/rateLimit.js` | 10 calls per 10 minutes per user (SQLite-backed) |
+| Rate limiter | `lib/rateLimit.js` | 50 calls per 10 minutes per user (`RATE_LIMIT_MAX_CALLS`, `lib/rateLimit.js:13`) |
 | AI stats | `lib/aiStats.js` | Hourly per-user cap (50/hr) |
 | Gates | `lib/gates.js` | Hostile user check, activation gates |
 
@@ -151,7 +155,7 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 75 com
 | Activation registry | `features/activation/activationRegistry.js` | Text command routing ("skarn weather") |
 | Proactive scheduler | `features/proactive/scheduler.js` | Follow-ups, absence check-ins |
 | Interjection engine | `features/presence/interjectionEngine.js` | AI-driven proactive interjections |
-| Hostile detector | `features/safety/hostileDetector.js` | 3-strike silence for hostile users |
+| Hostile content | `features/safety/slurFilter.js` | 10 regex patterns, 3 strikes in 10-min window → 10-min silence (input-only; enforced centrally in `moderatedChatCompletion()`) |
 
 ### Data Layer
 | Module | File | Responsibility |
@@ -191,8 +195,8 @@ Dormant is **only** set by `stateDecay.js` `runDecayPass()` — never by message
 
 | Guardrail | Mechanism | Effect |
 |-----------|-----------|--------|
-| Hostile content | 10 regex patterns, 3 strikes in 1h → silence | Blocks AI calls for hostile users |
-| Rate limit | 10 calls per 10 min per user (SQLite) | Prevents abuse across all AI commands |
+| Hostile content | 10 regex patterns, 3 strikes in 10 min → silence | Blocks AI calls for hostile users |
+| Rate limit | 50 calls per 10 min per user (SQLite, `RATE_LIMIT_MAX_CALLS`) | Prevents abuse across all AI commands |
 | Hourly cap | 50 per hour per user | Controls cost |
 | Mention cooldown | 1s per user per channel (SQLite) | Prevents ping-pong loops |
 | Sleep mode | Configurable UTC hours; skips AI responses | Reduces cost during quiet hours |
@@ -200,10 +204,10 @@ Dormant is **only** set by `stateDecay.js` `runDecayPass()` — never by message
 | Opt-in required | `proactive_opt_in` column defaults to 0 | Users must opt in for proactive messages |
 | Role line safety | Explicit bans in role lines (gore, romance) | Content safety baked into system prompt |
 | Slur filter Gate 1 | System prompt instruction (safetyLine) + identity edit | Reduces likelihood of AI-generated slurs |
-| Slur filter Gate 2 | SQLite pattern matching (exact/substring/regex) with 5-min cache | Catches known slurs deterministically |
+| Slur filter Gate 1 | System prompt safety line + OpenAI moderation (fail-closed) | Gate 2 DB patterns deleted 2026-08-01 (CONTEXT.md §13) |
 | Slur filter Gate 3 | OpenAI Moderation API | Catches novel slurs and context-dependent hate speech |
-| Unified strike system | 3 strikes in 10 min -> 10 min silence; extensions add +2 min | Combined hostile input + flagged output safety |
-| Realm rate limit | 30 calls/30min/user (in-memory) + 1000/day/guild | Separate cap for RPG subsystem |
+| Unified strike system | 3 strikes in 10-min window → 10-min silence; input-only strikes; de-escalation lines are static (no AI call) | Combined hostile input + flagged output safety |
+| Realm rate limit | 30 calls/30min/user (SQLite via `app_flags`) + 1000/day/guild (`realm_world_state`) | Separate cap for RPG subsystem |
 | Realm combat timeout | 5-minute in-memory timer, 10% gold penalty | Prevents abandoned combat resource leaks |
 | Realm trade timeout | 5-minute in-memory timer, automatic cancellation | Prevents abandoned trade negotiation |
 
@@ -215,9 +219,9 @@ The persona system uses a **tiered `buildContext()`** function in `features/prom
 |------|---------|---------|------------|
 | **Lightweight** | Messages < 50 chars, no `?` | All directive lines + last 3 messages | ~1,000 |
 | **Full** | Messages ≥ 50 chars or contains `?` | All directive lines + 15 messages + 2 summaries + profile + knowledge + server buzz | ~3,000 |
-| **Advice** (not implemented) | Matches "should I"/"what should" | Full + socratic directive | ~3,100 |
+| **Advice** (implemented 2026-08-01) | Matches "should I"/"what should" | Full + socratic directive | ~3,100 |
 
-The Advice tier is documented in ADR-001 and the `socraticLine` parameter is accepted by `buildSystemPrompt()` (in `persona/identity.js`) but **never populated** — `promptContext.js` returns no `socraticLine`. The feature is unimplemented dead surface area.
+The Advice tier is implemented (2026-08-01): `buildContext()` (`features/promptContext.js:30-33`) calls `getSocraticQuestion()` (`features/wisdom/socraticEngine.js`, 18 trigger phrasings) and promotes the message to full tier. See CONTEXT.md §5 (socraticLine).
 
 ## Realm of Skarn — RPG Architecture
 
@@ -233,8 +237,8 @@ realmCommand.js router
     │
     ├─► Character creation: 5-step wizard (name → race → class → background → AI backstory)
     │
-    ├─► Exploration: aiDriver.js → OpenAI (hardcoded gpt-5.4-mini) → parseChoices() → buttons
-    │     All AI generation uses realm's own buildContextPrompt(), NOT promptContext.js
+    ├─► Exploration: aiDriver.js → OpenAI (model via selectModel) → parseChoices() → buttons
+    │     All AI generation uses realm's own buildRealmContext() (NOT promptContext.js)
     │
     ├─► Combat: damage calculated by code, AI narrates only
     │     HP persists per-round → prevents mid-fight restart exploit
@@ -250,9 +254,9 @@ realmCommand.js router
 ### Realm Key Design Decisions
 
 - **Damage by code, narration by AI** — combat outcomes are deterministic, AI only adds flavor text (invariant in `combat.js:134-152`)
-- **Separate AI driver** — `aiDriver.js` ignores the persona system's `promptContext.js`, has its own `buildContextPrompt()`, hardcodes `model: 'gpt-5.4-mini'`, and uses 30-second timeouts
-- **Separate rate limiting** — 30 calls/30min/user (in-memory) + 1000 calls/day/guild (SQLite), completely independent from the bot-wide 10/10 limit
-- **In-memory state for active systems** — combat (5-min timeout) and trades (5-min timeout) use in-memory Maps, consistent with the main bot's cooldown pattern
+- **Separate AI driver** — `aiDriver.js` has its own `buildRealmContext()`, passes `bucket: 'realm'` to the central gate, uses 30-second timeouts, and routes model choice through `selectModel()` (`modelRouter.js`) like the rest of the bot (was previously documented as hardcoded `gpt-5.4-mini` — corrected 2026-08-04).
+- **Separate rate limiting** — 30 calls/30min/user (SQLite via `app_flags`) + 1000 calls/day/guild (`realm_world_state`), completely independent from the bot-wide 50/10-min limit (`RATE_LIMIT_MAX_CALLS`)
+- **In-memory state for active systems** — combat (5-min timeout) and trades (5-min timeout) use in-memory Maps, intentionally volatile live-game sessions (combat/trade/tetris) per CONTEXT.md §2
 - **Atomic trades** — item/gold transfers wrapped in `db.transaction()` for consistency
 - **`awaitMessages` in character creation** — 5-step wizard uses `interaction.channel.awaitMessages()` which requires the user to type in the same channel; times out after 60s
 
@@ -273,7 +277,6 @@ See `docs/DATABASE.md` for the full table reference.
 | Duplicate ROLE_NATURE (fixed 2026-07-20) | `postProcess.js` vs `roles.js` | Drift risk — `search` was missing from canonical source |
 | Deadpan escalation (fixed 2026-07-20) | `comedyTiming.js` | `extendBanterChain()` wrote to SQLite only, never updated in-memory Map |
 | `clearFlags()` is a no-op | `etiquetteEngine.js` line 44 | Called every 10min decay cycle, does nothing |
-| `isSilenced()` guildId parameter silently dropped | `gates.js` vs `hostileDetector.js` | Misleading signature, no actual bug |
 | Duplicate `canCall()`/`recordCall()` | `lib/rateLimit.js` and `database.js` | Two implementations of same rate limit logic |
 | `mentionRouter.js` / `consult.handler.js` near-duplicate | Both handlers | ~180 lines of nearly identical AI call logic |
 | Database god module (fixed 2026-08-04) | `db/database.js` → `db/` domain modules | `db/database.js` is now a facade over `db/{db,memory,conversation,relationship,channel,ops,humor,stories}.js`; 111 exports preserved, zero call-site changes |
