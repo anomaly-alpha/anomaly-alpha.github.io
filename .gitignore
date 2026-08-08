@@ -8,3 +8,4 @@ lighthouse-reports/
 .mimocode/
 chrome/
 _dream_tmp*.py
+.compose/
