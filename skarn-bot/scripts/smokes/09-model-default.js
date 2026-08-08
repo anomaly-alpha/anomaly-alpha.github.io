@@ -14,5 +14,5 @@ delete process.env.AI_MODEL_COMPLEX;
 
 assert('default branch is gpt-5.4-mini', selectModel('hi', false, 0.2) === 'gpt-5.4-mini');
 assert('knowledge-match branch is gpt-5.4-mini', selectModel('x', true, 0.2) === 'gpt-5.4-mini');
-assert('long-question branch is gpt-5.4-mini', selectModel('this is a very long question that exceeds one hundred characters for sure? explain please', false, 0.2) === 'gpt-5.4-mini');
+assert('long-question branch is gpt-5.4-mini', selectModel('this is a very long question that definitely exceeds one hundred characters in length and needs a detailed explain please', false, 0.2) === 'gpt-5.4-mini');
 assert('complexity branch is gpt-5.4-mini', selectModel('hi', false, 0.9) === 'gpt-5.4-mini');
