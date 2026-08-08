@@ -88,6 +88,8 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 > **Resolved (2026-08-04):** ARCHITECTURE.md's stale claims (realm hardcoded model, Advice tier dead, 10/10 rate limit, hostileDetector + slur Gate 2) were corrected; `npm run audit:docs` (scripts/audit-docs.js) now guards them. ROLE_NATURE key alignment verified clean — 37/37/37 keys, `search` + `realm_npc` present.
 >
 > **Drift — historical function names**: The existing glossary previously described `buildContext()` as "merging the previous `collectContext()` and `assembleContext()`" — those functions no longer exist anywhere in the codebase. The historical note cannot be verified by reading current code.
+>
+> **Resolved (2026-08-08) — prompt assembly unified**: the thin `assembler.js`/`retriever.js` prompt path was retired — `buildContext()` (`features/promptContext.js`) + `buildSystemPrompt()` (`persona/identity.js`) is the single prompt source for every live conversational path. `formatKnowledge` is wired into `promptContext.js` (called to build `knowledgeLine`), so extracted projects/events reach AI context. `getRecentMessages`, `contextAssembler.js`, and `runKnowledgeDecay` were deleted (dead). `AI_MODEL`'s code-level fallback default is now `gpt-5.4-mini` (`features/intelligence/modelRouter.js` line 13).
 
 ## 6. Memory systems — what's separate and why
 
@@ -98,7 +100,7 @@ The codebase maintains **5 distinct memory stores**, each with a different scope
 | # | Store | Tables | Written by | Read by | Scope | Purpose |
 |---|-------|--------|------------|---------|-------|---------|
 | 1 | **Unified memory entries** | `memory_entries` | `etch.handler.js` (source='etch'), `knowledgeGraph.js` (source='extracted') | `promptContext.js` via `getMemoryEntries()` for AI context, `knowledgeGraph.js` via `getMemoryByType()` for formatKnowledge | Per-user-per-guild per-type-per-content | The unified persistent memory table for all per-user memory, discriminated by `source` column. |
-| 2 | **Conversation graph** | `conversation_threads`, `conversation_messages`, `conversation_summaries`, `conversation_fts` | `db/conversation.js` — `insertMessage()`, `createThread()`, `insertSummary()` (FTS insert relocated before the early return in `insertMessage()` — fixed 2026-08-01, `/find` works) | Context reads use `getRecentAssistantOrUserMessages`/`getOlderSummaries`/`getServerBuzz` from `db/database.js` (consolidated 2026-08-04); `getThreadMessages`/`searchConversations` remain live (summarizer/messageStore/find); `getRecentMessages` now has zero callers | Per-thread, indexed by user/guild/channel | Full conversation history with full-text search. Separate from extracted memory. |
+| 2 | **Conversation graph** | `conversation_threads`, `conversation_messages`, `conversation_summaries`, `conversation_fts` | `db/conversation.js` — `insertMessage()`, `createThread()`, `insertSummary()` (FTS insert relocated before the early return in `insertMessage()` — fixed 2026-08-01, `/find` works) | Context reads use `getRecentAssistantOrUserMessages`/`getOlderSummaries`/`getServerBuzz` from `db/database.js` (consolidated 2026-08-04); `getThreadMessages`/`searchConversations` remain live (summarizer/messageStore/find); `getRecentMessages` removed 2026-08-08 (dead) | Per-thread, indexed by user/guild/channel | Full conversation history with full-text search. Separate from extracted memory. |
 | 3 | **Realm NPC memory** | `realm_npc_memory` | Realm system NPC interaction handlers | Realm system only | Per-NPC-per-user-per-guild | In-fiction NPC memory. Never bleeds to persona or system prompt. |
 | 4 | **Emotional context** | `user_emotional_context` | `emotionalIntelligence.js` via `setUserEmotion()` | `getEmotionDirective()` for tone guidance in system prompt | Per-user-per-guild | Per-user emotion state. Advisory only — drives tone, not gating. |
 | 5 | **Knowledge base** | `knowledge_base`, `knowledge_fts` | `knowledgeSeeder.js`, `/learn` command via `addKnowledgeBase()` | `searchKnowledgeBase()`, knowledge commands | Global (all users) | Seeded Wikipedia topics + user-taught facts. Completely separate from per-user memory. |
@@ -277,7 +279,7 @@ The following environment variables are consumed by the codebase. Variables are 
 | `SLEEP_START` | No | `1` | Sleep mode start hour (UTC+offset). Set with `SLEEP_END=0` to disable sleep. (`bot.js` line 64) |
 | `SLEEP_END` | No | `7` | Sleep mode end hour (UTC+offset) (`bot.js` line 65) |
 | `SLEEP_TIMEZONE` | No | `0` | UTC offset applied arithmetically to sleep hours. Integer, not DST-aware. (`bot.js` line 66) |
-| `AI_MODEL` | No | `gpt-3.5-turbo` | Default OpenAI model for all AI calls (`features/intelligence/modelRouter.js` line 9) |
+| `AI_MODEL` | No | `gpt-5.4-mini` | Default OpenAI model for all AI calls (`features/intelligence/modelRouter.js` line 13) |
 | `AI_MODEL_COMPLEX` | No | falls back to `AI_MODEL` | Model used for long/question/complex queries and knowledge-matched queries (`modelRouter.js` lines 4, 7) |
 
 > **Note**: `AI_MODEL` and `AI_MODEL_COMPLEX` **are documented in `.env.example`** (as commented-out optional defaults, matching the table above). They are consumed by `features/intelligence/modelRouter.js`.
