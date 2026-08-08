@@ -5,11 +5,11 @@ const { getAll } = require('../activation/activationRegistry');
 
 // Commands never offered via run_command — dedicated-tool commands (spec [S3]
 // exclusion list: roll_dice, flip_coin, get_user_stats, get_weather, get_news,
-// etch_memory, set_reminder, get_memory, search_web) PLUS 'lore': an AI-driven
-// command with an activation whose handler calls the LLM and posts via
-// channel.send — the model narrates in character instead of dispatching, keeping
-// run_command free of nested AI and of channel.send capture.
-const EXCLUDED_COMMANDS = ['dice', 'coinflip', 'stats', 'weather', 'news', 'etch', 'remind', 'memory', 'search', 'lore'];
+// etch_memory, set_reminder, get_memory, search_web) PLUS 'lore' and 'musing':
+// AI-driven commands whose activation handlers call the LLM and post — the model
+// narrates in character instead of dispatching, keeping run_command free of nested
+// AI and of channel.send reply-capture ambiguity.
+const EXCLUDED_COMMANDS = ['dice', 'coinflip', 'stats', 'weather', 'news', 'etch', 'remind', 'memory', 'search', 'lore', 'musing'];
 
 const coreTools = [
   {
