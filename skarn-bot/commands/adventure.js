@@ -40,7 +40,7 @@ module.exports = {
       const systemPrompt = buildSystemPrompt({ roleLine: roles.adventure, stateLine, memoryLine });
 
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+        model: process.env.AI_MODEL || 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Start a new ${theme} adventure for ${interaction.user.username}. Describe the opening scene and give me 4 choices.` },
@@ -84,7 +84,7 @@ module.exports = {
 
         try {
           var result = await moderatedChatCompletion({
-            model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+            model: process.env.AI_MODEL || 'gpt-5.4-mini',
             messages: [
               { role: 'system', content: systemPrompt },
               ...history,

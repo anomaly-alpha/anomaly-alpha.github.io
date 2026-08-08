@@ -112,7 +112,7 @@ async function generatePool() {
   const result = await moderatedChatCompletion({
     userId: 'presence:cycler',
     bucket: 'presence',
-    model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+    model: process.env.AI_MODEL || 'gpt-5.4-mini',
     messages: [
       { role: 'system', content: roles.presence },
       { role: 'user', content: 'Return JSON {"phrases": ["...", "..."]} with exactly ' + POOL_SIZE + ' phrases, each 8 words or fewer, in Skarn\'s dry observing voice.' },

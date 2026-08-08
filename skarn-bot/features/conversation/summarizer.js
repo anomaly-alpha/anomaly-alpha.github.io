@@ -2,7 +2,7 @@ const { getThreadsNeedingSummary, getThreadMessages, insertSummary, updateThread
 const { moderatedChatCompletion } = require('../../ai/client');
 
 const SUMMARY_CUTOFF_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
-const MODEL = process.env.AI_MODEL || 'gpt-3.5-turbo';
+const MODEL = process.env.AI_MODEL || 'gpt-5.4-mini';
 
 async function summarizeOldThreads() {
   const threads = getThreadsNeedingSummary(SUMMARY_CUTOFF_MS);

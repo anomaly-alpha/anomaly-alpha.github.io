@@ -21,7 +21,7 @@ module.exports = {
     try {
       var systemPrompt = buildSystemPrompt({ roleLine: roles.lore });
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+        model: process.env.AI_MODEL || 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Lightly polish this memory into a spoken story. Keep every detail — just make it flow like I\'m telling it aloud:\n\n' + story.story_text },
@@ -59,7 +59,7 @@ module.exports = {
     try {
       var systemPrompt = buildSystemPrompt({ roleLine: roles.lore });
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+        model: process.env.AI_MODEL || 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Lightly polish this memory into a spoken story. Keep every detail — just make it flow like I\'m telling it aloud:\n\n' + story.story_text },

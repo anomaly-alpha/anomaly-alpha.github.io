@@ -66,7 +66,7 @@ async function shouldRespond(message, client) {
     var result = await moderatedChatCompletion({
       userId: userId,
       bucket: 'attention',
-      model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+      model: process.env.AI_MODEL || 'gpt-5.4-mini',
       messages: [{
         role: 'user',
         content: 'A Discord bot is watching a channel. Message: "' + content.slice(0, 200) + '". Would the bot have something relevant to say? Answer only YES or NO.'

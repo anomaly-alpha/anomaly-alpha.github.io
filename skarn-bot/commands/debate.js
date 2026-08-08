@@ -34,7 +34,7 @@ module.exports = {
       const botSide = sides[Math.floor(Math.random() * sides.length)];
 
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+        model: process.env.AI_MODEL || 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `Topic: ${topic}\nArgue ${botSide} this topic:` },
