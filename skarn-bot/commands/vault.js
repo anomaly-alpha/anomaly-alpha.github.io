@@ -17,10 +17,10 @@ module.exports = {
     }
     const top = results.slice(0, 5);
     const embed = new EmbedBuilder()
-      .setTitle(`ðŸ” vault search: ${query}`)
+      .setTitle(`🔍 vault search: ${query}`)
       .setColor(0x00e5ff);
     for (const r of top) {
-      const icon = { wikipedia: 'ðŸ“š', user_taught: 'ðŸ‘¤', learned: 'ðŸ’¡' }[r.source] || 'ðŸ’¡';
+      const icon = { wikipedia: '📚', user_taught: '👤', learned: '💡' }[r.source] || '💡';
       embed.addFields({
         name: `${icon} ${r.topic}`,
         value: r.summary.slice(0, 200) + (r.summary.length > 200 ? '...' : ''),
@@ -41,10 +41,10 @@ module.exports = {
     }
     const top = results.slice(0, 5);
     const embed = new EmbedBuilder()
-      .setTitle(`ðŸ” vault search: ${query}`)
+      .setTitle(`🔍 vault search: ${query}`)
       .setColor(0x00e5ff);
     for (const r of top) {
-      const icon = { wikipedia: 'ðŸ“š', user_taught: 'ðŸ‘¤', learned: 'ðŸ’¡' }[r.source] || 'ðŸ’¡';
+      const icon = { wikipedia: '📚', user_taught: '👤', learned: '💡' }[r.source] || '💡';
       embed.addFields({
         name: `${icon} ${r.topic}`,
         value: r.summary.slice(0, 200) + (r.summary.length > 200 ? '...' : ''),

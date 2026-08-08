@@ -40,19 +40,6 @@ const client = new Client({
   partials: [Partials.Channel],
 });
 
-// ===== Data helpers =====
-function loadJSON(file) {
-  const fp = path.join(__dirname, 'data', file);
-  if (!fs.existsSync(fp)) return {};
-  return JSON.parse(fs.readFileSync(fp, 'utf8'));
-}
-
-function saveJSON(file, data) {
-  const dir = path.join(__dirname, 'data');
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, file), JSON.stringify(data, null, 2));
-}
-
 // ===== Load slash commands =====
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');

@@ -154,12 +154,15 @@ function buildContext(userId, guildId, channelId, opts) {
         var embeddings = recentEmbeds.map(function(e) { return e.embedding; });
         embedText(userContent).then(function(queryEmbedding) {
           if (!queryEmbedding) return;
-          var parsedEmbeds = embeddings.map(function(b) {
-            try { return JSON.parse(b.toString()); } catch { return null; }
-          }).filter(Boolean);
-          if (parsedEmbeds.length < 5) return;
-          var scored = parsedEmbeds.map(function(emb, i) {
-            return { sim: cosineSimilarity(queryEmbedding, emb), text: msgTexts[i], id: msgIds[i] };
+          var parsed = [];
+          for (var i = 0; i < embeddings.length; i++) {
+            var emb = null;
+            try { emb = JSON.parse(embeddings[i].toString()); } catch (e) { emb = null; }
+            if (emb) parsed.push({ emb: emb, text: msgTexts[i], id: msgIds[i] });
+          }
+          if (parsed.length < 5) return;
+          var scored = parsed.map(function(p) {
+            return { sim: cosineSimilarity(queryEmbedding, p.emb), text: p.text, id: p.id };
           }).filter(function(s) { return s.sim > 0.4; }).sort(function(a, b) { return b.sim - a.sim; }).slice(0, 3);
           if (scored.length > 0) {
             // Store for later — too early to use this turn, but cache for next

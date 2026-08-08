@@ -1,16 +1,7 @@
 // ===== db: ops =====
 const { db } = require('./db');
 
-// ===== Cooldowns (mention/interjection/listen) =====
-
-function checkMentionCooldown(userId, channelId) {
-  const row = db.prepare('SELECT expires_at FROM mention_cooldowns WHERE user_id = ? AND channel_id = ?').get(userId, channelId);
-  return row && row.expires_at > Date.now();
-}
-
-function setMentionCooldown(userId, channelId, ttlMs = 1000) {
-  db.prepare('INSERT OR REPLACE INTO mention_cooldowns (user_id, channel_id, expires_at) VALUES (?, ?, ?)').run(userId, channelId, Date.now() + ttlMs);
-}
+// ===== Cooldowns (interjection/listen) =====
 
 function checkInterjectionCooldown(channelId) {
   const row = db.prepare('SELECT expires_at FROM interjection_cooldowns WHERE channel_id = ?').get(channelId);
@@ -229,8 +220,6 @@ function findLoreForMessage(message, guildId) {
 }
 
 module.exports = {
-  checkMentionCooldown,
-  setMentionCooldown,
   checkInterjectionCooldown,
   setInterjectionCooldown,
   checkActiveListenCooldown,
