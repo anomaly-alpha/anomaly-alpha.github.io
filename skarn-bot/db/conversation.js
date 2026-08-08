@@ -63,19 +63,8 @@ function insertMessage(threadId, userId, guildId, channelId, role, content, opts
   return result;
 }
 
-function getRecentMessages(userId, guildId, channelId, limit = 20, maxAgeMs = 7 * 24 * 60 * 60 * 1000) {
-  const cutoff = Date.now() - maxAgeMs;
-  return db.prepare(
-    `SELECT m.* FROM conversation_messages m
-     JOIN conversation_threads t ON m.thread_id = t.thread_id
-     WHERE m.user_id = ? AND m.guild_id = ? AND m.channel_id = ? AND m.created_at > ?
-     ORDER BY m.created_at DESC LIMIT ?`
-  ).all(userId, guildId, channelId, cutoff, limit).reverse();
-}
-
 // Matches the inline full-tier/lightweight queries in promptContext.js: includes
-// the user's own messages AND assistant replies (getRecentMessages above filters
-// only user_id — it cannot express the role OR clause without changing reads).
+// the user's own messages AND assistant replies.
 function getRecentAssistantOrUserMessages(userId, guildId, channelId, limit = 15, maxAgeMs = 365 * 24 * 60 * 60 * 1000) {
   const cutoff = Date.now() - maxAgeMs;
   return db.prepare(
@@ -237,7 +226,6 @@ module.exports = {
   updateThreadActivity,
   updateThreadSentiment,
   insertMessage,
-  getRecentMessages,
   getRecentAssistantOrUserMessages,
   getServerBuzz,
   insertSummary,

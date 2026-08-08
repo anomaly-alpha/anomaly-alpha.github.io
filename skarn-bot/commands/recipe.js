@@ -31,7 +31,7 @@ module.exports = {
       const systemPrompt = buildSystemPrompt({ roleLine: roles.recipe, stateLine, memoryLine });
 
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+        model: process.env.AI_MODEL || 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `I have: ${ingredients}. What can I make?` },

@@ -65,31 +65,21 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
   updateEmotion(userId, guildId, message).catch(function() {});
 
   try {
-    const { runPipeline: runPreprocessing } = require('../preprocessing/pipeline');
+    const { runMessageAnalysis } = require('../preprocessing/pipeline');
 
     var systemPrompt;
     var contextualMessage;
-    var pipelineResult;
+    var analysis = await runMessageAnalysis(userId, guildId, channelId, message, 'casual');
 
-    pipelineResult = await runPreprocessing(
-      userId, guildId, channelId,
-      message, roles[roleName] || roles.consult, 'casual', null, { isSkipListCommand: false }
-    );
-
-    if (pipelineResult && !pipelineResult.skipped) {
-      systemPrompt = pipelineResult.systemPrompt;
-      contextualMessage = pipelineResult.contextualMessage;
-    } else {
-      const ctx = buildContext(userId, guildId, channelId, {
-        roleNature: 'casual',
-        userContent: message,
-        interactionCount,
-      });
-      systemPrompt = buildSystemPrompt({ roleLine: roles[roleName] || roles.consult, ...ctx });
-      contextualMessage = ctx.conversationLine
-        ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${message}`
-        : message;
-    }
+    const ctx = buildContext(userId, guildId, channelId, {
+      roleNature: 'casual',
+      userContent: message,
+      interactionCount,
+    });
+    systemPrompt = buildSystemPrompt({ roleLine: roles[roleName] || roles.consult, ...ctx });
+    contextualMessage = ctx.conversationLine
+      ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${message}`
+      : message;
 
     extendBanterChain(userId, guildId, channelId);
 
@@ -123,7 +113,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     while (turnCount < maxTurns) {
       turnCount++;
       var result = await moderatedChatCompletion({
-        model: selectModel(message, hasKnowledgeMatch, pipelineResult ? pipelineResult.analysis.complexityScore : undefined),
+        model: selectModel(message, hasKnowledgeMatch, analysis ? analysis.complexityScore : undefined),
         messages: messages,
         max_tokens: getDeadpanBudget(roleTokenBudgets[roleName] || roleTokenBudgets.consult, userId, channelId),
         temperature: temperature,
@@ -231,7 +221,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     if (opts.afterReply) await opts.afterReply();
 
     // Auto-extract memory (non-blocking)
-    extractMemory(userId, guildId, message, reply, pipelineResult ? pipelineResult.analysis : null).catch(() => {});
+    extractMemory(userId, guildId, message, reply, analysis).catch(() => {});
   } catch (error) {
     try {
       const { flagForApology } = require('../etiquette/etiquetteEngine');

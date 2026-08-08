@@ -286,6 +286,6 @@ See `docs/DATABASE.md` for the full table reference.
 
 See `.env.example` for required vars. Key notes:
 - `OPENAI_API_KEY` is **required** for all AI features (not in `.env.example` — add manually)
-- `AI_MODEL` defaults to `gpt-3.5-turbo`; `AI_MODEL_COMPLEX` falls back to `AI_MODEL`
+- `AI_MODEL` defaults to `gpt-5.4-mini`; `AI_MODEL_COMPLEX` falls back to `AI_MODEL`
 - `TAVILY_API_KEY` enables web search via the Tavily API (single provider since 2026-08-02; free tier 1,000 credits/mo, basic search = 1 credit)
 - Sleep defaults to 1:00–7:00 UTC; set both to 0 to disable

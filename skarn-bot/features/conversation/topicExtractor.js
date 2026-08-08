@@ -1,6 +1,6 @@
 const { moderatedChatCompletion } = require('../../ai/client');
 
-const MODEL = process.env.AI_MODEL || 'gpt-3.5-turbo';
+const MODEL = process.env.AI_MODEL || 'gpt-5.4-mini';
 
 async function extractTopics(text, userId) {
   if (!text || text.length < 10) return ['general'];

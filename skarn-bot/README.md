@@ -20,7 +20,7 @@ Then fill in your values:
 DISCORD_TOKEN=your_bot_token
 CLIENT_ID=your_application_id
 OPENAI_API_KEY=your_openai_key
-AI_MODEL=gpt-3.5-turbo
+AI_MODEL=gpt-5.4-mini
 ```
 
 ## Running

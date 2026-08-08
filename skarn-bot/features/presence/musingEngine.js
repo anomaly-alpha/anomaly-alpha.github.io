@@ -83,7 +83,7 @@ async function generateMusing(guildId, senderId) {
   if (!userPrompt) return null;
 
   const result = await moderatedChatCompletion({
-    model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+    model: process.env.AI_MODEL || 'gpt-5.4-mini',
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt.trim() },

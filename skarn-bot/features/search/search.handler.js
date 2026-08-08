@@ -55,7 +55,7 @@ async function execute(interaction) {
 
     // Step 4: OpenAI call
     var result = await moderatedChatCompletion({
-      model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+      model: process.env.AI_MODEL || 'gpt-5.4-mini',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: 'Based on the search results above, answer: ' + query },

@@ -52,7 +52,7 @@ module.exports = {
       const systemPrompt = buildSystemPrompt({ roleLine: roles.aitrivia, stateLine, memoryLine });
 
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+        model: process.env.AI_MODEL || 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: `${TRIVIA_FORMAT}\n\nGenerate a ${difficulty} trivia question about: ${topic}. Return ONLY the JSON, no markdown, no code blocks.` },

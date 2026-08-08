@@ -69,7 +69,7 @@ async function generateLoreBatch() {
     var result = await moderatedChatCompletion({
       userId: 'lore-batch',
       bucket: 'story',
-      model: process.env.AI_MODEL || 'gpt-3.5-turbo',
+      model: process.env.AI_MODEL || 'gpt-5.4-mini',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.8,
       max_tokens: 4000,
