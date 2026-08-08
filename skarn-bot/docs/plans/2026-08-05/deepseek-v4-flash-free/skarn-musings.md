@@ -4,7 +4,7 @@
 
 **Goal:** Give Skarn ambient, grounded reflections — ~1 per guild / 2 days in quiet channels, plus a `/musing` command and natural-language invocation — each pairing a recent news event, a memory from his story archive, and the guild's own recent life.
 
-**Architecture:** A vertical-slice `features/presence/musingEngine.js` mirrors `interjectionEngine`. It exposes (a) `startMusingScheduler(client)` registered in `features/scheduler/index.js` on a 10-min tick, (b) `maybeMuse(guild, client)` (ambient path: sleep + per-guild timer + quiet-channel gate + skip-draw), and (c) a shared `generateMusing(guildId, senderId)` that assembles the seed tripod (news → story archive → guild-local chronicle/signals/buzz) and makes one `moderatedChatCompletion` call. The command path (`commands/musing.js`) and the NL-command tool both funnel through the same generator.
+**Architecture:** A vertical-slice `features/presence/musingEngine.js` mirrors `interjectionEngine`. It exposes (a) `startMusingScheduler(client)` registered in `features/scheduler/index.js` on a 10-min tick, (b) `maybeMuse(guild, client)` (ambient path: sleep + per-guild timer + quiet-channel gate + skip-draw), and (c) a shared `generateMusing(guildId, senderId)` that assembles the seed tripod (news → story archive → guild-local chronicle/signals/buzz) and makes one `moderatedChatCompletion` call. The command path (`commands/musing.js`) funnels through the same generator. **NL surface (grilled 2026-08-05):** `skarn musing` routes directly; musing is excluded from the `run_command` tool as nested-AI (same rule as `lore`) — free-form "share a reflection" flows through the ordinary AI mention handler instead.
 
 **Tech Stack:** Node.js (better-sqlite3), discord.js v14, OpenAI via `ai/client.js`. No new dependencies, no schema change, no test framework (smokes only, per project convention).
 
@@ -297,18 +297,22 @@ Append to `features/presence/musingEngine.js` (before `module.exports`):
 function pickQuietChannel(guild, client) {
   const cfg = getGuildConfig(guild.id, 'aiChannels');
   if (!Array.isArray(cfg) || cfg.length === 0) return null;
-  const now = Date.now();
   const quiet = [];
   for (const cid of cfg) {
     const chan = guild.channels.cache.get(cid);
     if (!chan || !chan.isTextBased()) continue;
     if (!chan.permissionsFor(client.user.id) || !chan.permissionsFor(client.user.id).has('SendMessages')) continue;
-    const state = getChannelState(cid, guild.id);
-    const quietState = state.current_state === 'Dormant' || state.current_state === 'Attentive';
-    const idle = now - (state.last_message_at || 0) >= MUSING_QUIET_MS;
-    if (quietState && idle) quiet.push(chan);
+    if (isChannelQuiet(chan)) quiet.push(chan);
   }
   return quiet.length > 0 ? quiet[Math.floor(Math.random() * quiet.length)] : null;
+}
+
+function isChannelQuiet(channel) {
+  if (!channel) return false;
+  const state = getChannelState(channel.id, channel.guild ? channel.guild.id : '');
+  const quietState = state.current_state === 'Dormant' || state.current_state === 'Attentive';
+  const idle = Date.now() - (state.last_message_at || 0) >= MUSING_QUIET_MS;
+  return quietState && idle;
 }
 
 function setNextMusing(guildId, ms) {
@@ -316,7 +320,11 @@ function setNextMusing(guildId, ms) {
 }
 
 function rescheduleDraw(guildId, now) {
-  setNextMusing(guildId, now + 48 * 60 * 60 * 1000 * (0.5 + Math.random())); // uniform 24–72h
+  // max(existing, drawn) — never pull a later scheduled fire earlier
+  // (grilled Q4; symmetric with the command path's max guard).
+  const existing = parseInt(getAppState('musing_next:' + guildId), 10) || 0;
+  const drawn = now + 48 * 60 * 60 * 1000 * (0.5 + Math.random()); // uniform 24–72h
+  setNextMusing(guildId, Math.max(existing, drawn));
 }
 
 async function maybeMuse(guild, client) {
@@ -328,14 +336,25 @@ async function maybeMuse(guild, client) {
   if (now < next) return false;                                       // [S8] 2
   const channel = pickQuietChannel(guild, client);
   if (!channel) { rescheduleDraw(guild.id, now); return false; }      // [S8] 3-4 (no quiet channel)
-  if (Math.random() < 0.15) { setNextMusing(guild.id, now + MIN_NEXT_MS); return false; } // [S8] 5 skip-draw
+  if (Math.random() < 0.15) { rescheduleDraw(guild.id, now); return false; } // [S8] 5 skip-draw
   const content = await generateMusing(guild.id, 'musing:' + guild.id);
   if (!content) { rescheduleDraw(guild.id, now); return false; }      // [S8] 6-7 (AI fail / crisis)
+  // [S3] Re-check before send (grilled): the LLM call took seconds — if a user
+  // message landed meanwhile, this channel is no longer quiet. Skip + reschedule.
+  if (!isChannelQuiet(channel, client.user.id)) { rescheduleDraw(guild.id, Date.now()); return false; }
   try {
     await channel.send({ content: content, allowedMentions: { parse: [] } });
   } catch (e) { console.error('[Musing] send error:', e.message); }
   rescheduleDraw(guild.id, now);
   return true;
+}
+
+function isChannelQuiet(channel, botId) {
+  if (!channel) return false;
+  const state = getChannelState(channel.id, channel.guild ? channel.guild.id : '');
+  const quietState = state.current_state === 'Dormant' || state.current_state === 'Attentive';
+  const idle = Date.now() - (state.last_message_at || 0) >= MUSING_QUIET_MS;
+  return quietState && idle;
 }
 
 function startMusingScheduler(client) {
@@ -357,7 +376,7 @@ Replace the `module.exports` line added in Task 2 with:
 ```js
 module.exports = {
   isSleepTime, generateMusing, assembleSeed, pickNewsSeed, pickHistorySeed, pickGuildSeed,
-  pickQuietChannel, setNextMusing, maybeMuse, startMusingScheduler,
+  isChannelQuiet, pickQuietChannel, setNextMusing, maybeMuse, startMusingScheduler,
 };
 ```
 
@@ -442,6 +461,38 @@ Expected: `FIRED: true SENDS: 1` and `NEXT >= 24h: true`
 > `48h × 1.4 ≈ 67h` (well inside the ≥24h assertion). Do NOT re-add the stub to
 > run multiple times; the smoke is single-shot by design.
 
+Run (pre-send re-check, grilled: the channel passes the gate at pick-time but a
+user message lands during the AI call → `maybeMuse` must NOT send and must
+reschedule):
+
+```bash
+SKARN_DB_PATH=$(mktemp -d)/musing4b.db node -e "
+Math.random = function() { return 0.9; };
+var db = require('./db/database');
+db.db.prepare(\"INSERT INTO skarn_stories (topic, story_text, source, created_at, used_count) VALUES ('technology','quiet','canonical',?,0)\").run(Date.now());
+db.setGuildConfig('g1', 'aiChannels', ['c1']);
+db.setAppState('musing_next:g1', String(Date.now() - 1000));
+var raw = db.db;
+raw.prepare(\"INSERT INTO channel_state (channel_id, guild_id, current_state, last_message_at, last_transition_at, recent_message_count, count_window_started_at) VALUES ('c1','g1','Dormant',?,?,0,?)\").run(Date.now() - 3600000, Date.now() - 3600000, Date.now() - 3600000);
+var ai = require('./ai/client');                 // stub BEFORE require
+ai.moderatedChatCompletion = async function() {
+  // a user message lands DURING the LLM call: flip last_message_at to now
+  raw.prepare('UPDATE channel_state SET last_message_at = ? WHERE channel_id = ?').run(Date.now(), 'c1');
+  return { success: true, completion: { choices: [{ message: { content: 'Quiet reflection.' } }] } };
+};
+var nf = require('./features/news/newsFetcher');
+nf.getRecentNews = function() { return []; };
+var m = require('./features/presence/musingEngine');   // require AFTER stubs
+var sends = 0;
+var fakeGuild = { id: 'g1', channels: { cache: new Map([['c1', { id: 'c1', guild: { id: 'g1' }, isTextBased: function() { return true; }, permissionsFor: function() { return { has: function() { return true; } }; }, send: async function() { sends++; } }]]) } };
+m.maybeMuse(fakeGuild, { user: { id: 'bot' } }).then(function(did) {
+  console.log('RECHECK SKIPPED SEND:', did === false && sends === 0);
+});
+"
+```
+
+Expected: `RECHECK SKIPPED SEND: true`
+
 - [ ] **Step 5: Commit**
 
 ```bash
@@ -457,10 +508,41 @@ git commit -m "feat: ambient musing scheduler with quiet-channel gate and per-gu
 
 **Files:**
 - Create: `commands/musing.js`
+- Modify: `features/tools/toolDefinitions.js` (add `musing` to `EXCLUDED_COMMANDS`)
 
 **Interfaces:**
 - Consumes: Task 2/3's `generateMusing(guildId, senderId)`, `setNextMusing(guildId, ms)`, `MIN_NEXT_MS` is internal (use 24h literal here or re-export — use `setNextMusing(guild.id, Date.now() + 24*60*60*1000)`)
-- Produces: slash command `/musing` (`execute`), `handleActivation(message, args)`, `activation` block (`type: 'command'`, phrase `skarn musing`) — auto-registered by `activationRegistry.scanCommands()` and auto-included in the `run_command` NL tool enum
+- Produces: slash command `/musing` (`execute`), `handleActivation(message, args)`, `activation` block (`type: 'command'`, phrase `skarn musing`) — auto-registered by `activationRegistry.scanCommands()`. **Deliberately excluded from the `run_command` NL tool** (grilled, see Step 1 note) — musing is nested-AI like `lore`, so the enum must not offer it.
+
+- [ ] **Step 0: Exclude musing from the run_command tool enum**
+
+In `features/tools/toolDefinitions.js`, the `EXCLUDED_COMMANDS` array (line 12) already
+excludes `lore` because its activation handler "calls the LLM and posts" — musing is
+the same shape (nested AI). Add it:
+
+```js
+const EXCLUDED_COMMANDS = ['dice', 'coinflip', 'stats', 'weather', 'news', 'etch', 'remind', 'memory', 'search', 'lore', 'musing'];
+```
+
+Also update the comment above the array to list `musing` beside `lore`:
+
+```js
+// (…existing comment…) PLUS 'lore' and 'musing': AI-driven commands whose
+// activations call the LLM and post via channel.send / message.reply — the
+// model narrates in character instead of dispatching, keeping run_command free
+// of nested AI and of reply capture ambiguity.
+```
+
+Verify:
+
+```bash
+SKARN_DB_PATH=$(mktemp -d)/musing5b.db node -e "
+var td = require('./features/tools/toolDefinitions');
+console.log('MUSING EXCLUDED:', td.getRunCommandNames().indexOf('musing') === -1);
+"
+```
+
+Expected: `MUSING EXCLUDED: true`
 
 - [ ] **Step 1: Create the command file**
 
@@ -469,6 +551,7 @@ Create `commands/musing.js` (mirror the structure of `commands/lore.js`):
 ```js
 const { SlashCommandBuilder } = require('discord.js');
 const { generateMusing, setNextMusing } = require('../features/presence/musingEngine');
+const { getAppState } = require('../db/database');
 
 const MIN_NEXT_MS = 24 * 60 * 60 * 1000; // double-fire guard: no ambient musing the same day
 
@@ -477,8 +560,10 @@ async function shareMusing(target, senderId, replyFn) {
   if (!content) {
     return replyFn({ content: "The words won't come. Try again in a moment.", allowedMentions: { parse: ['users'] } });
   }
-  // [S7.4] push the ambient timer out so a commanded musing isn't echoed by the tick
-  setNextMusing(target.guild.id, Date.now() + MIN_NEXT_MS);
+  // [S7.4] push the ambient timer out (max, never overwrite so the next fire
+  // comes sooner) — a commanded musing isn't echoed by the tick the same day.
+  const existing = parseInt(getAppState('musing_next:' + target.guild.id), 10) || 0;
+  setNextMusing(target.guild.id, Math.max(existing, Date.now() + MIN_NEXT_MS));
   return replyFn({ content: content, allowedMentions: { parse: ['users'] } });
 }
 
@@ -502,7 +587,7 @@ module.exports = {
   activation: {
     type: 'command',
     phrase: 'skarn musing',
-    aliases: ['skarn muse', 'skarn reflect', 'skarn contemplate'],
+    aliases: ['muse', 'reflect', 'contemplate'],
     description: 'Skarn shares a grounded, in-voice reflection',
     guildOnly: false,
     requiredPermissions: [],
@@ -510,6 +595,13 @@ module.exports = {
   },
 };
 ```
+
+> **Implementer note (aliases are description-only):** `activationRegistry.lookup`
+> matches ONLY `phrase` keys — `aliases` have no routing effect, they exist purely
+> for AI tool descriptions and metadata. Keep them bare intent words, not
+> `skarn muse` phrases (a `skarn muse` alias would look routable but never
+> trigger). Since musing is excluded from `run_command` (Step 0), the aliases
+> are informational only.
 
 - [ ] **Step 2: Verify — module shape + registration**
 
@@ -527,9 +619,9 @@ console.log('ALIASES:', JSON.stringify(cmd.activation.aliases));
 "
 ```
 
-Expected: `SLASH NAME: musing`, `ACTIVATION: skarn musing command`, `ALIASES: ["skarn muse","skarn reflect","skarn contemplate"]`
+Expected: `SLASH NAME: musing`, `ACTIVATION: skarn musing command`, `ALIASES: ["muse","reflect","contemplate"]`
 
-Run (activation registry picks it up — the NL `run_command` tool enum builds from this):
+Run (activation registry registers the phrase; `run_command` deliberately UNSET — Step 0):
 
 ```bash
 SKARN_DB_PATH=$(mktemp -d)/musing6.db node -e "
@@ -555,6 +647,7 @@ var cmd = require('./commands/musing');
 var db = require('./db/database');
 var guild = { id: 'g1' };
 var replies = [];
+db.setAppState('musing_next:g1', String(Date.now() + 10 * 24 * 60 * 60 * 1000)); // existing: +10 days
 cmd.handleActivation(
   { guild: guild, channel: { id: 'c1' }, author: { id: 'u1' },
     reply: async function(o) { replies.push(o.content); } },
@@ -562,18 +655,18 @@ cmd.handleActivation(
 ).then(function() {
   console.log('REPLIED:', replies.length === 1 && replies[0].indexOf('old wars') !== -1);
   var next = parseInt(db.getAppState('musing_next:g1'), 10);
-  console.log('DOUBLE-FIRE GUARD (>=24h):', next >= Date.now() + 24 * 60 * 60 * 1000);
+  console.log('GUARD = MAX (kept +10d):', next >= Date.now() + 9 * 24 * 60 * 60 * 1000);
 });
 "
 ```
 
-Expected: `REPLIED: true` and `DOUBLE-FIRE GUARD (>=24h): true`
+Expected: `REPLIED: true` and `GUARD = MAX (kept +10d): true`
 
 - [ ] **Step 4: Commit**
 
 ```bash
 git add skarn-bot/commands/musing.js
-git commit -m "feat: /musing slash command + skarn musing activation (NL-invocable via run_command tool)"
+git commit -m "feat: /musing slash command + skarn musing activation; exclude from run_command tool"
 ```
 
 ---
@@ -612,7 +705,7 @@ Add to the glossary (near the Proactive/presence entries):
 - **Musings**: Ambient in-voice reflections grounded in recent events + Skarn's
   story archive + the guild's own recent life, ending with a question-hook.
   Timer-driven (~1/guild/2 days, quiet channels only) and command-driven
-  (`/musing`, `skarn musing`, NL via the run_command tool).
+  (`/musing`, `skarn musing`; excluded from the run_command tool as nested-AI).
 ```
 
 - [ ] **Step 2: Full verification pass**

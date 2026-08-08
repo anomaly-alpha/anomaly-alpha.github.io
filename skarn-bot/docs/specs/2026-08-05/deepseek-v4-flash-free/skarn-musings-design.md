@@ -1,6 +1,6 @@
 # Skarn Musings — Design Spec
 
-**Status:** Brainstormed (2026-08-05, Q1–Q5 resolved, awaiting grill)
+**Status:** Grilled (2026-08-05, Q1–Q5 resolved: quiet-channel guard, tripod seeds + privacy rule, command + NL surface, run_command exclusion, pre-send re-check, max-guarded reschedule)
 
 **Model:** deepseek-v4-flash-free
 
@@ -226,7 +226,7 @@ Follow the same file's pattern (`commands/lore.js:88-95`):
 activation: {
   type: 'command',                 // runs handler directly, no AI re-route
   phrase: 'skarn musing',
-  aliases: ['skarn muse', 'skarn reflect', 'skarn contemplate'],
+  aliases: ['muse', 'reflect', 'contemplate'],
   description: 'Skarn shares a grounded, in-voice reflection',
   guildOnly: false,
   requiredPermissions: [],
@@ -234,18 +234,28 @@ activation: {
 }
 ```
 
+**Aliases are description-only, not routable slugs.** `activationRegistry.lookup()`
+matches exclusively the `phrase` key; `aliases` feed `getAll()` for AI tool
+descriptions. So the aliases are bare intent words for the NL `run_command` enum
+("share a muse, Skarn"), never `skarn <alias>` gateways — a `skarn muse` alias
+would look routable but silently never fire.
+
 `handleActivation(message, args)` reuses the same `museForGuild` content path and
 replies in-channel.
 
-### [S7.3] Natural-language invocation — free via the existing NL-command tool
+### [S7.3] Natural-language invocation — routed in-character, NOT via the tool
 
-No new routing needed. `features/tools/toolDefinitions.js` builds the
-`run_command` tool enum **dynamically** from `activationRegistry.getAll()`
-filtered to `type: 'command'`. Because musing registers `type: 'command'`
-([S7.2]) and is not on the excluded-commands list, the model can invoke it from
-natural language — "what's on your mind, Skarn?", "share a reflection" →
-`run_command(musing)` → `handleActivation` → captured reply (CONTEXT.md §2,
-NL-command upgrade). Musing is single-turn, so it qualifies (unlike realm/tetris).
+⚡ **Grilled 2026-08-05:** musing is **excluded from `run_command`**
+(`EXCLUDED_COMMANDS`, same rule as `lore`). Musing is nested-AI: its handler
+calls the LLM and posts — dispatching it through the tool would (a) cost 2 AI
+calls per request (the musing + the tool-result narration) and (b) reopen the
+reply-capture ambiguity the lore exclusion exists to prevent. The enum stays
+deterministic (`toolRunner.js:226` validates only non-AI commands).
+
+Free-form natural language still works: "what's on your mind, Skarn?" hits the
+mention handler and Skarn answers in character — with the same lore/memory
+context. The deterministic channel (`skarn musing` phrase, [S7.2]) is the
+reliable trigger.
 
 ### [S7.4] Ambient/commanded interplay
 
@@ -317,10 +327,11 @@ Produces:
 | Guild with no `aiChannels` | Skipped; no reschedule needed (row left until channels appear) |
 | All configured channels unusable (deleted/left) | Skip fire, reschedule; next draw may pick different channels |
 | All configured channels busy (state Charged/Weathering OR last message < 30 min) | Quiet gate ([S3]) rejects all → skip fire, reschedule the normal draw. No musing while anyone talks |
-| Channel goes quiet *after* the draw but before send | Harmless: last message < 30 min at send time → treat as busy (re-check at send) and reschedule |
+| Channel goes quiet *after* the draw but before send | Re-checked at send ([S3]) — if a user message landed during the LLM call, skip the post + reschedule (grilled Q2) |
+| Freshly configured channel (never seen by state tracker) | `getChannelState` auto-creates an `Attentive` row with `last_message_at = now` → excluded from the quiet set for its first `MUSING_QUIET_MS` — conservative-safe, no action needed |
 | AI call fails / blocked by rate limit | Reschedule, log, no fallback text |
 | Crisis moderation response | Same as failure — reschedule, no fallback |
-| News cache empty / stale | No seed → skip fire; no weak musing about nothing (reschedule) |
+| News cache empty / stale | News leg omitted — fires the diad (lore + guild-local) per [S6.1]; only skips when ALL seed legs are empty |
 | History lookup misses (`findStoryTopic` null, storyEngine returns null) | Fall back to a uniformly random `skarn_stories` row; if archive is empty, skip fire |
 | Sleep mode active | Entire tick skipped; next fire naturally defers |
 | Fresh restart | `musing_next` persists in `app_state`; no duplication (check `now >= next` before fire) |
@@ -343,8 +354,10 @@ Project convention: no test framework; `node --check` + `node -e` smokes with
    memory) + a stubbed `moderatedChatCompletion`; assert the assembled user
    prompt contains BOTH the news seed and the history text, and one
    `channel.send`.
-6. No-seed smoke: `getRecentNews` returns empty → `maybeMuse` skips without an
-   AI call (no weak seed fires).
+6. No-seed smoke: news cache empty (`getRecentNews` returns empty) with a story
+   still present → fires a **diad** (history-only musing, per [S6.1]); only when
+   ALL seed legs are empty (`getRecentNews` empty AND `storyEngine` empty AND no
+   guild-local data) does `maybeMuse` skip without an AI call.
 7. Command smoke: stub `museForGuild` inputs (a guild + a fake channel with
    `send` spy) → assert one send, and `musing_next:{guildId}` advanced to
    ≥ `now + 24h` (the double-fire guard from [S7.4]).
