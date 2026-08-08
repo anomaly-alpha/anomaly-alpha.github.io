@@ -22,6 +22,7 @@ const { runChronicleJob } = require('../serverMemory/chronicle/chronicleJob');
 const { runOmenJob } = require('../serverMemory/omen/omenJob');
 const { pruneSignals } = require('../serverMemory/signalStore');
 const { startPresenceCycler } = require('../presence/presenceCycler');
+const { startMusingScheduler } = require('../presence/musingEngine');
 
 function startSchedulers(client) {
   function safeRun(fn, name) {
@@ -43,6 +44,7 @@ function startSchedulers(client) {
 
   startScheduler(client);
   startProactiveScheduler(client);
+  startMusingScheduler(client);
   setInterval(() => { processDueReminders(client).catch(e => console.error('[Reminder] Tick error:', e.message)); }, 30 * 1000);
 
   setInterval(() => {
