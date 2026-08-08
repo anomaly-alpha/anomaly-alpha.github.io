@@ -21,6 +21,7 @@ const { initReactionTracking, pruneReactionCounters } = require('../serverMemory
 const { runChronicleJob } = require('../serverMemory/chronicle/chronicleJob');
 const { runOmenJob } = require('../serverMemory/omen/omenJob');
 const { pruneSignals } = require('../serverMemory/signalStore');
+const { startPresenceCycler } = require('../presence/presenceCycler');
 
 function startSchedulers(client) {
   function safeRun(fn, name) {
@@ -38,11 +39,7 @@ function startSchedulers(client) {
   setInterval(safeRun(generateLoreBatch, 'Lore'), 60 * 60 * 1000);
   safeRun(generateLoreBatch, 'Lore')();
 
-  // Streaming presence (type 1 requires a tv url or Discord rejects the activity)
-  client.user.setActivity('<+HUSH> ONLINE', {
-    type: 1, // ActivityType.Streaming
-    url: 'https://twitch.tv/skarn',
-  });
+  startPresenceCycler(client);
 
   startScheduler(client);
   startProactiveScheduler(client);
