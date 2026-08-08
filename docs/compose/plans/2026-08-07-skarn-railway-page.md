@@ -243,6 +243,7 @@ Complete file — self-contained, inline CSS only, no external assets, dark "aby
 
   <footer>
     Docs are markdown — click through to GitHub for the rendered view. Generated index refreshed via <code>npm run skarn-index</code>.
+    <br>Updated <span id="skarn-updated">Aug 7, 2026</span>
     <br><a href="https://github.com/anomaly-alpha/anomaly-alpha.github.io">anomaly-alpha/anomaly-alpha.github.io</a>
   </footer>
 </div>
@@ -261,6 +262,7 @@ curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8123/skarn-bot/    # e
 curl -s -o /dev/null -w "%{http_code}\n" http://localhost:8123/skarn-bot     # expect 200 (no trailing slash -> dir index)
 curl -s http://localhost:8123/skarn-bot/ | grep -c "<title>Skarn"            # expect 1
 curl -s http://localhost:8123/skarn-bot/ | grep -c "SKARN_INDEX_START"       # expect 1
+curl -s http://localhost:8123/skarn-bot/ | grep -c "Updated"                  # expect 1 (footer date)
 kill %1
 ```
 
@@ -365,6 +367,11 @@ if (!markerRe.test(page)) {
   process.exit(1);
 }
 page = page.replace(markerRe, block);
+// refresh the footer "Updated" date (mirrors scripts/generate-music.js)
+var today = new Date();
+var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+var dateLabel = MONTHS[today.getMonth()] + ' ' + today.getDate() + ', ' + today.getFullYear();
+page = page.replace(/(Updated\s+)(\w+\s+\d+,\s+\d{4})/, '$1' + dateLabel);
 fs.writeFileSync(PAGE_PATH, page, 'utf8');
 console.log('Updated skarn-bot/index.html with ' + files.length + ' docs links');
 ```
