@@ -71,6 +71,7 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 | `/joke` | Custom AI joke |
 | `/lore` | Hear Skarn tell a story |
 | `/meme` | AI meme caption |
+| `/musing` | Skarn shares a grounded reflection |
 | `/pickup` | Pickup line generator |
 | `/poll` | Create a poll |
 | `/roast` | Get roasted by AI |

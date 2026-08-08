@@ -137,7 +137,13 @@ async function maybeMuse(guild, client) {
   const key = 'musing_next:' + guild.id;
   const now = Date.now();
   let next = parseInt(getAppState(key), 10) || 0;
-  if (next === 0) { setNextMusing(guild.id, now + MIN_NEXT_MS); return false; } // first-time init
+  // First-time init: only for guilds that actually have aiChannels configured
+  // (per [S5], leave the row alone for everyone else — no pointless reschedule writes).
+  if (next === 0) {
+    const cfg = getGuildConfig(guild.id, 'aiChannels');
+    if (Array.isArray(cfg) && cfg.length > 0) setNextMusing(guild.id, now + MIN_NEXT_MS);
+    return false;
+  }
   if (now < next) return false;                                       // [S8] 2
   const channel = pickQuietChannel(guild, client);
   if (!channel) { rescheduleDraw(guild.id, now); return false; }      // [S8] 3-4 (no quiet channel)
