@@ -12,9 +12,9 @@ The codebase follows a **vertical slice architecture**: each feature lives in `f
 
 Two modules serve as shared layers that cut across all features:
 
-- **`buildSystemPrompt()`** (`persona/identity.js`): The single function that assembles `SKARN_CORE_IDENTITY` + the command's role line (from `persona/roles.js`) + dynamic context lines (from `features/promptContext.js`) into the system prompt for every AI call. No command builds its own system prompt.
+- **`buildSystemPrompt()`** (`persona/identity.js`): The single function that assembles `SKARN_CORE_IDENTITY` + the command's role line (from `persona/roles.js`) + dynamic context lines (from `features/promptContext.js`) into the system prompt for every **live conversational path** (mention/consult/interjection). No conversational path builds its own system prompt. **Exceptions — 10 non-conversational AI sites build their own or none:** `features/ai/condenser.js:35-42` (reply condenser), `features/intelligence/toneAnalyzer.js:52`, `features/presence/presenceCycler.js:117` (bare `roles.presence`), `lib/weatherScheduler.js:61`, `features/conversation/summarizer.js:29`, `features/conversation/topicExtractor.js:9`, `features/discordNative/attentionGate.js:66`, `features/preprocessing/analyzer.js:31`, `features/preprocessing/postProcessor.js:25`, `features/wisdom/storyEngine.js:69`.
 - **Activation registry** (`features/activation/activationRegistry.js`): A central mapping of keyword phrases to command handlers, built at startup by scanning every command file's `activation` export. Provides text-based command invocation (e.g. `skarn weather`) as an alternative to slash commands. Two routing types: `'command'` (runs the slash handler directly) and `'ai'` (routes to the AI mention handler with an injected directive).
-- **AI tool system** (`features/tools/toolDefinitions.js` + `toolRunner.js`): OpenAI function-calling tools offered to the model on turn 1 of the shared pipeline (`sharedPipeline.js:132`). The model *decides* when to call one; `runTool()` executes it and feeds the result back for the final in-character reply. Distinct from the activation registry: activation phrases are exact-prefix and deterministic (`skarn weather`), AI tools are model-decided and fuzzy ("what's the weather in Tokyo?" → `get_weather`). Live tools as of 2026-08-02: `etch_memory`, `get_memory`, `search_web`, `set_reminder`, `get_weather`, `get_news`, `roll_dice`, `flip_coin`, `get_user_stats` (9). Design spec: `docs/specs/2026-08-02/deepseek-v4-flash/skarn-tool-invocation-design.md`. **NL-command upgrade (2026-08-02, spec `docs/specs/2026-08-02/deepseek-v4-flash/skarn-nl-command-upgrade-design.md`):** a 10th tool `run_command` lets the model invoke *any* activation-registered command. Its command enum is **built dynamically from `activationRegistry.getAll()`** (filter `type:'command'`, excluding the 9 tooled commands) — a newly-activated command appears in the tool automatically. Execution goes through a **pseudo-message facade** (`features/tools/messageAdapter.js`): the real Discord message (mention path) or a synthesized facade (consult path) exposes `author`/`guild`/`member`/`mentions`/`reply()` so unmodified `handleActivation` handlers run; the facade's `reply()` **captures the reply text** so the tool result carries the real output. Permission gating reuses `activation.requiredPermissions` + `guildOnly` at the runner level (handler-level checks remain defense-in-depth). `run_command` dispatches through `handleActivation` — never `execute(interaction)` (no nested AI from a tool, with one approved exception: `poll`'s blank-options AI suggestion flow, identical to the slash version; omen `fulfill` and chronicle `generate` reply with a slash-command hint). Interactive multi-turn systems (realm, tetris, adventure, aitrivia, trivia) are excluded: the model guides users to the slash command; adventure gets organic in-chat roleplay. Tool result instructs a ≤1-line reply plus a tight condenser target (~80 chars) on `run_command` turns.
+- **AI tool system** (`features/tools/toolDefinitions.js` + `toolRunner.js`): OpenAI function-calling tools offered to the model on turn 1 of the shared pipeline (`sharedPipeline.js:122`). The model *decides* when to call one; `runTool()` executes it and feeds the result back for the final in-character reply. Distinct from the activation registry: activation phrases are exact-prefix and deterministic (`skarn weather`), AI tools are model-decided and fuzzy ("what's the weather in Tokyo?" → `get_weather`). Live tools as of 2026-08-02: `etch_memory`, `get_memory`, `search_web`, `set_reminder`, `get_weather`, `get_news`, `roll_dice`, `flip_coin`, `get_user_stats` (9). Design spec: `docs/specs/2026-08-02/deepseek-v4-flash/skarn-tool-invocation-design.md`. **NL-command upgrade (2026-08-02, spec `docs/specs/2026-08-02/deepseek-v4-flash/skarn-nl-command-upgrade-design.md`):** a 10th tool `run_command` lets the model invoke *any* activation-registered command. Its command enum is **built dynamically from `activationRegistry.getAll()`** (filter `type:'command'`, excluding the 9 tooled commands plus `lore` and `musing` — 11 total, `EXCLUDED_COMMANDS` in `toolDefinitions.js:12`) — a newly-activated command appears in the tool automatically. Execution goes through a **pseudo-message facade** (`features/tools/messageAdapter.js`): the real Discord message (mention path) or a synthesized facade (consult path) exposes `author`/`guild`/`member`/`mentions`/`reply()` so unmodified `handleActivation` handlers run; the facade's `reply()` **captures the reply text** so the tool result carries the real output. Permission gating reuses `activation.requiredPermissions` + `guildOnly` at the runner level (handler-level checks remain defense-in-depth). `run_command` dispatches through `handleActivation` — never `execute(interaction)` (no nested AI from a tool, with one approved exception: `poll`'s blank-options AI suggestion flow, identical to the slash version; omen `fulfill` and chronicle `generate` reply with a slash-command hint). Interactive multi-turn systems (realm, tetris, adventure, aitrivia, trivia) are excluded: the model guides users to the slash command; adventure gets organic in-chat roleplay. Tool result instructs a ≤1-line reply plus a tight condenser target (~80 chars) on `run_command` turns.
 - **Musing engine** (`features/presence/musingEngine.js`): Skarn's ambient reflections. Per-guild timer in `app_state` (`musing_next:{guildId}`, ~1 per 2 days, weighted 24-72h + 15% skip-draw). Ambient path (`maybeMuse`) targets quiet channels only (state Dormant/Attentive + >=30 min idle — anti-interruption guard); command path (`/musing`, `skarn musing`) posts wherever invoked and pushes the ambient timer +24h. Seed tripod: recent news (`daily_news`) + memory from `skarn_stories` (via `findStoryTopic`/`getExistingStory`) + guild-local (chronicle entry -> signals -> server buzz, paraphrased, never quoting users). One `moderatedChatCompletion` call per musing; ambient uses pseudo-user `musing:{guildId}`, command uses the caller. Shared generator `generateMusing(guildId, senderId)`.
 
 ## 3. Scoping conventions
@@ -38,7 +38,7 @@ Every persistent table has a well-defined scope — the columns that form its pr
 | `follow_ups` | per-user | `(user_id, status, due_after)` INDEX | Follow-ups belong to a user |
 | `user_profile` | per-user-per-guild | `(user_id, guild_id)` PRIMARY KEY | Profile is personal per server |
 | `user_emotional_context` | per-user-per-guild | `(user_id, guild_id)` PRIMARY KEY | Emotional state is personal per server |
-| `rate_limits` | per-user | `(user_id, timestamp)` INDEX | Rate limiting is per-user |
+| `rate_limits` | per-user-per-bucket | `(user_id, bucket, timestamp)` INDEX | Rate limiting is per-user per bucket |
 | `mention_cooldowns` | per-user-per-channel | `(user_id, channel_id)` PRIMARY KEY | Mention throttle is per-conversation |
 | `interjection_cooldowns` | per-channel | `channel_id` PRIMARY KEY | Interjection is per-conversation |
 | `active_listen_cooldowns` | per-channel | `channel_id` PRIMARY KEY | Active listening is per-conversation |
@@ -71,21 +71,21 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 
 ## 5. Persona and role conventions
 
-- **`SKARN_CORE_IDENTITY`** (`persona/identity.js` lines 1–51): The invariant core persona — a multi-paragraph character definition that every AI call starts with. Never modified at runtime. Defines Skarn's voice (casual Discord native), familiarity scale, emotional intelligence heuristics, and self-preservation rules. **Reauthored 2026-08-01 (wisdom layer)**: the 8 sections (Voice, Conversation depth, Self-preservation, Emotional intelligence, Memory, Wisdom, Growth, Values) were rewritten with wisdom baked in (economy of language, deliberate patience, observe-don't-label, restraint of certainty, kindness-not-softness), and two new sections were added — **Wisdom Through Millennia** (5 trait directives + anti-drift guardrails: no aphorisms, no therapy-speak, no excessive humility, no unsolicited lecturing, mood-modulated expression) and **Voice Examples** (2 distilled before/after pairs). The first three bedrock paragraphs are preserved verbatim. Philosopher names (Socrates, Marcus Aurelius, etc.) must never appear in the prompt — only their distilled behaviors.
+- **`SKARN_CORE_IDENTITY`** (`persona/identity.js` lines 1–80): The invariant core persona — a multi-paragraph character definition that every AI call starts with. Never modified at runtime. Defines Skarn's voice (casual Discord native), familiarity scale, emotional intelligence heuristics, and self-preservation rules. **Reauthored 2026-08-01 (wisdom layer)**: the 8 sections (Voice, Conversation depth, Self-preservation, Emotional intelligence, Memory, Wisdom, Growth, Values) were rewritten with wisdom baked in (economy of language, deliberate patience, observe-don't-label, restraint of certainty, kindness-not-softness), and two new sections were added — **Wisdom Through Millennia** (5 trait directives + anti-drift guardrails: no aphorisms, no therapy-speak, no excessive humility, no unsolicited lecturing, mood-modulated expression) and **Voice Examples** (2 distilled before/after pairs). The first three bedrock paragraphs are preserved verbatim. Philosopher names (Socrates, Marcus Aurelius, etc.) must never appear in the prompt — only their distilled behaviors.
 - **`SKARN_FOOTER`** (`persona/identity.js`): The last line pushed to every system prompt, before the user message. Updated 2026-08-01 to close on the wisdom voice ("Speak with fewer, sharper words… The restraint is the strength.").
-- **`roles.js`** (`persona/roles.js`): Exports three parallel objects: `roles` (37 role instruction strings), `roleTokenBudgets` (100–1000 token budgets per role), and `ROLE_NATURE` (classification: casual / moderate / serious). Every AI command has exactly one role in `roles`; no command inlines its own role string.
+- **`roles.js`** (`persona/roles.js`): Exports three parallel objects: `roles` (39 role instruction strings), `roleTokenBudgets` (100–1000 token budgets per role), and `ROLE_NATURE` (classification: casual / moderate / serious). Every AI command has exactly one role in `roles`; no command inlines its own role string.
 - **`roleTokenBudgets`**: Assigns a max token ceiling per role. Range: 100 (roast, compliment, insult, pickup, meme) to 1000 (realm). This controls how much the AI is allowed to generate per invocation. These budgets are consumed by each feature's OpenAI call independently — there is no shared token tracking across calls.
 - **Reply target vs token budget — units are distinct (resolved 2026-08-02, `skarn-reply-condenser-design.md`)**: a **reply target** is a `character` ceiling that measures how long a reply *reads* to the user (default 200 chars) — the UX goal the reply condenser steers to. `roleTokenBudget` is a `token` ceiling that defines what a reply *costs*. The two are orthogonal knobs: enforcing a tighter char target does not reduce a reply's token spend on its own (the condenser adds cost); raising the token budget does not let a reply get longer once the condenser enforces the char target.
 - **Reply condenser**: a gate-routed LLM pass (`features/ai/condenser.js`) that tightens an already-generated reply down to the role's character reply target, preserving intent and key points, short-circuiting with zero LLM call when a reply is already within target, and skipping structured content (tool-call replies, code fences/tables). Distinct from the **entity post-processor** (`preprocessing/postProcessor.js`, which extracts memory) and the **flavor pass** (`discordNative/postProcess.js`, /search only, which adds casual styling). Implemented 2026-08-02 (spec `docs/specs/2026-08-02/deepseek-v4-flash/skarn-reply-condenser-design.md`), wired into the shared pipeline's `runPipeline`.
 - **`ROLE_NATURE` classification**: Three categories — `casual` (banter, jokes, insults), `moderate` (storytelling, adventure, debate), `serious` (homework, code, recipe). Drives context-assembly tiering in `buildContext()`: `isFullTier` is based on message length and question detection, not directly on `ROLE_NATURE`. The nature value is passed as `opts.roleNature` but is not used to toggle tiering — it is available for features to read.
-- **Temperature conventions**: Temperature is set per-call in each feature's OpenAI invocation, not derived from `ROLE_NATURE` or centralized in `roles.js`. A loose pattern is visible across the codebase: factual tasks (homework, code, vein, summarizer, knowledgeGraph) use 0.2–0.3; general conversation (consult, mentionRouter, search, interjectionEngine) uses 0.8–0.85; creative tasks (joke, insult, pickup, meme, wouldyourather, unpopularopinion) use 0.95–1.0. The shared AI client (`ai/client.js`) provides only the OpenAI singleton — it sets no default temperature or model.
-- **`ROLE_NATURE` duplication pattern**: `roles`, `roleTokenBudgets`, and `ROLE_NATURE` are three separate objects that duplicate the same set of keys. Adding a new role requires editing all three. Keys can drift out of sync — for example, `search` and `realm_npc` appear in `roles` and `roleTokenBudgets` but are absent from `ROLE_NATURE`, meaning they have no nature classification assigned. **Resolved 2026-08-04:** `search` + `realm_npc` confirmed present in `ROLE_NATURE` — 37/37/37 keys aligned (see §11.3).
+- **Temperature conventions**: Temperature is set per-call in each feature's OpenAI invocation, not derived from `ROLE_NATURE` or centralized in `roles.js`. A loose pattern is visible across the codebase: factual tasks (homework, code, vein, summarizer) use 0.2–0.3 (knowledgeGraph makes no AI calls — read-only `formatKnowledge`); general conversation (consult, mentionRouter, search, interjectionEngine) uses 0.8–0.85; creative tasks (joke, insult, pickup, meme, wouldyourather, unpopularopinion) use 0.95–1.0. The shared AI client (`ai/client.js`) provides only the OpenAI singleton — it sets no default temperature or model.
+- **`ROLE_NATURE` duplication pattern**: `roles`, `roleTokenBudgets`, and `ROLE_NATURE` are three separate objects that duplicate the same set of keys. Adding a new role requires editing all three. Keys can drift out of sync — for example, `search` and `realm_npc` appear in `roles` and `roleTokenBudgets` but are absent from `ROLE_NATURE`, meaning they have no nature classification assigned. **Resolved 2026-08-04:** `search` + `realm_npc` confirmed present in `ROLE_NATURE` — 39/39/39 keys aligned (see §11.3).
 
 > **Resolved (2026-08-01) — token budget drift**: `roleTokenBudgets.consult` is now 600 in `roles.js` (raised from 400; spec documents described 900). The duplicate `chronicle` key was also removed. `roles.js` remains the source of truth — verify spec numbers against the code before trusting them.
 >
 > **Resolved (2026-08-01) — socratic/advice tier implemented**: `socraticLine` is now populated by `buildContext()` (`features/promptContext.js` calls `getSocraticQuestion()` and returns the line in its result object). `isFullTier` was changed from `const` to `let` so a socratic question promotes a message to full tier. The Advice tier described in ADR-001 (tiered-context-assembly) is live. **Extended 2026-08-01 (wisdom layer)**: `getSocraticQuestion()` in `features/wisdom/socraticEngine.js` now matches 18 trigger phrasings (added `help me think`, `i can't decide`/`i cant decide`, `what would you advise`, `talk me through it`, `i dont know what to do`) and its directive was softened to "Prefer the sharper question over the answer… Offer the answer only when asked twice." Note: trigger matches also promote the message to full-tier context (higher token cost per mention).
 >
-> **Resolved (2026-08-04):** ARCHITECTURE.md's stale claims (realm hardcoded model, Advice tier dead, 10/10 rate limit, hostileDetector + slur Gate 2) were corrected; `npm run audit:docs` (scripts/audit-docs.js) now guards them. ROLE_NATURE key alignment verified clean — 37/37/37 keys, `search` + `realm_npc` present.
+> **Resolved (2026-08-04):** ARCHITECTURE.md's stale claims (realm hardcoded model, Advice tier dead, 10/10 rate limit, hostileDetector + slur Gate 2) were corrected; `npm run audit:docs` (scripts/audit-docs.js) now guards them. ROLE_NATURE key alignment verified clean — 39/39/39 keys, `search` + `realm_npc` present.
 >
 > **Drift — historical function names**: The existing glossary previously described `buildContext()` as "merging the previous `collectContext()` and `assembleContext()`" — those functions no longer exist anywhere in the codebase. The historical note cannot be verified by reading current code.
 >
@@ -95,15 +95,15 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 
 The codebase maintains **5 distinct memory stores**, each with a different scope, write path, and read path. This separation is deliberate in some cases and accidental (fragmentation) in others.
 
-### 6.1 The seven stores
+### 6.1 The five stores
 
 | # | Store | Tables | Written by | Read by | Scope | Purpose |
 |---|-------|--------|------------|---------|-------|---------|
-| 1 | **Unified memory entries** | `memory_entries` | `etch.handler.js` (source='etch'), `knowledgeGraph.js` (source='extracted') | `promptContext.js` via `getMemoryEntries()` for AI context, `knowledgeGraph.js` via `getMemoryByType()` for formatKnowledge | Per-user-per-guild per-type-per-content | The unified persistent memory table for all per-user memory, discriminated by `source` column. |
+| 1 | **Unified memory entries** | `memory_entries` | `commands/etch.js` (source='etch'), `features/tools/toolRunner.js` (source='etch' via the `etch_memory` tool), `features/preprocessing/postProcessor.js` (source='extracted'), `features/wisdom/emotionalIntelligence.js` (source='extracted') | `promptContext.js` via `getMemoryEntries()` for AI context, `knowledgeGraph.js` via `getMemoryByType()` for formatKnowledge | Per-user-per-guild per-type-per-content | The unified persistent memory table for all per-user memory, discriminated by `source` column. |
 | 2 | **Conversation graph** | `conversation_threads`, `conversation_messages`, `conversation_summaries`, `conversation_fts` | `db/conversation.js` — `insertMessage()`, `createThread()`, `insertSummary()` (FTS insert relocated before the early return in `insertMessage()` — fixed 2026-08-01, `/find` works) | Context reads use `getRecentAssistantOrUserMessages`/`getOlderSummaries`/`getServerBuzz` from `db/database.js` (consolidated 2026-08-04); `getThreadMessages`/`searchConversations` remain live (summarizer/messageStore/find); `getRecentMessages` removed 2026-08-08 (dead) | Per-thread, indexed by user/guild/channel | Full conversation history with full-text search. Separate from extracted memory. |
 | 3 | **Realm NPC memory** | `realm_npc_memory` | Realm system NPC interaction handlers | Realm system only | Per-NPC-per-user-per-guild | In-fiction NPC memory. Never bleeds to persona or system prompt. |
 | 4 | **Emotional context** | `user_emotional_context` | `emotionalIntelligence.js` via `setUserEmotion()` | `getEmotionDirective()` for tone guidance in system prompt | Per-user-per-guild | Per-user emotion state. Advisory only — drives tone, not gating. |
-| 5 | **Knowledge base** | `knowledge_base`, `knowledge_fts` | `knowledgeSeeder.js`, `/learn` command via `addKnowledgeBase()` | `searchKnowledgeBase()`, knowledge commands | Global (all users) | Seeded Wikipedia topics + user-taught facts. Completely separate from per-user memory. |
+| 5 | **Knowledge base** | `knowledge_base`, `knowledge_fts` | `knowledgeSeeder.js` via `addKnowledgeBase()` (the only writer — no `/learn` command exists) | `searchKnowledgeBase()`, knowledge commands | Global (all users) | Seeded Wikipedia topics + user-taught facts. Completely separate from per-user memory. |
 
 ### 6.2 Fragmentation state (resolved)
 
@@ -111,13 +111,13 @@ The `user_memory` and `knowledge_graph` tables were removed as part of a cleanup
 
 ### 6.3 Design rule: no store merging
 
-The 7 stores listed above are intentionally kept separate:
+The 5 stores listed above are intentionally kept separate:
 
 - **Memory vs conversation graph**: `memory_entries` stores extracted/persistent facts; `conversation_*` stores raw message history. They serve different purposes (fact retrieval vs. conversation context) and have different query patterns (fact lookups vs. time-ordered message history with FTS).
 - **Per-user memory vs. global knowledge base**: `memory_entries` is scoped `(user_id, guild_id)`; `knowledge_base` is global. They have no overlap in content or access patterns.
 - **NPC memory vs. persona memory**: `realm_npc_memory` lives inside the Realm game system and is never injected into Skarn's general system prompt. It is consumed only by Realm NPC interactions.
 - **Emotional context vs. memory**: `user_emotional_context` tracks transient emotional state. It is overwritten on each mood check, not accumulated. It is not a memory store in the archival sense.
-- **Fragmentation is NOT a design choice**: The `user_memory`/`memory_entries`/`knowledge_graph` split is an artifact of an incomplete migration. These should be consolidated — the stores serve the same logical purpose.
+- **Fragmentation was NOT a design choice (historical — resolved)**: The `user_memory`/`memory_entries`/`knowledge_graph` split was an artifact of an incomplete migration. Post-migration it no longer exists: `user_memory` and `knowledge_graph` were dropped (2026-08-02, see §6.2) with zero remaining references, so there is nothing left to consolidate — `memory_entries` is the only per-user memory store.
 
 ## 7. Guardrails that are load-bearing, not decorative
 
@@ -157,9 +157,9 @@ Without it, every casual message would trigger an AI call, increasing cost and m
 
 ### 7.5 Sleep mode
 
-**File**: `bot.js` lines 64–74
+**File**: `bot.js` lines 75–85 (`isSleepTime()` at 79–85; the `isAsleep` timer at 87–121; interjection-local `isSleeping` at 314–324)
 
-`isSleepTime()` checks the current hour against `SLEEP_START`/`SLEEP_END` config (default: 1 AM – 7 AM UTC). During sleep hours, the bot skips mention handling and interjections. Controlled by environment variables, defaults to active.
+`isSleepTime()` checks the current hour against `SLEEP_START`/`SLEEP_END` config (default: 1 AM – 7 AM UTC). During sleep hours the bot **skips interjections** (via a separate local `isSleeping` at `bot.js:314–324`, which ignores `SLEEP_TIMEZONE`) and **slash commands** (`isAsleep`, `bot.js:128`); presence cycling also halts (`bot.js:113–121`). **Mention handling is not sleep-gated** — the @mention AI path (`bot.js:307–311`) runs unconditionally. Controlled by environment variables, defaults to active.
 
 Removal would cause the bot to respond 24/7, increasing cost for servers with low nighttime activity and potentially disrupting users who expect quiet hours.
 
@@ -169,13 +169,13 @@ Removal would cause the bot to respond 24/7, increasing cost for servers with lo
 
 The decay pass runs on a timer and is the **only** code path that sets a channel to `Dormant`. Channels with no messages for 6+ hours transition from their current state to `Dormant`. Charged/Weathering states revert to Attentive after 30 minutes of no activity.
 
-This invariant is explicit in the code comments: "this is the ONLY place Dormant is ever assigned" (`stateDecay.js` line 18). Removing the decay pass would leave channels stuck in whatever state they last reached, and no channel would ever return to Dormant.
+This invariant is explicit in the code comments: "this is the ONLY place Dormant is ever assigned" (`stateDecay.js` lines 18–19). Removing the decay pass would leave channels stuck in whatever state they last reached, and no channel would ever return to Dormant.
 
 ### 7.7 Attention gate (probability-based)
 
 **File**: `features/discordNative/attentionGate.js`
 
-`shouldRespond()` uses a stacking probability model: recency boost (2 min), channel warmth (30 s), question detection (+0.6), message count escalation (0–1.0), channel activity decay, sentiment boost (+0.4 for angry/stressed/sad), and a fallback AI YES/NO call. It also respects user opt-in: only opted-in users receive proactive messages.
+`shouldRespond()` uses a stacking probability model: recency boost (2 min), channel warmth (30 s), question detection (+0.6), message count escalation (0–1.0), channel activity decay, sentiment boost (+0.4 for angry/stressed/sad), and a fallback AI YES/NO call. The gate does **not** check `proactive_opt_in` — user opt-in for proactive messages is enforced upstream by `absenceDetector.canInteract()` (`features/proactive/absenceDetector.js`), called from the mention router (`mentionRouter.js:12`).
 
 This is the primary gate for non-reply, non-mention AI responses. Disabling it would make the bot respond to every message in monitored channels, dramatically increasing AI call volume.
 
@@ -208,13 +208,13 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 **Invariant**: Any state machine that is read-mutate-write should either (a) use a SQLite transaction, (b) use a conditional update that verifies the baseline hasn't changed, or (c) be scoped such that concurrent writes for the same key are impossible by design.
 
-**What to watch for**: `db/db.js` dynamic update functions (`updateChannelState`, `updateRelationshipField`, `upsertUserProfile`, `upsertAttentionState`) all read-then-write without transactions. Adding new read-mutate-write paths should include serialization.
+**What to watch for**: of the four `db/db.js` dynamic update functions, only `upsertUserProfile` and `upsertAttentionState` are true read-modify-write (read baseline, mutate, write back); `updateChannelState` and `updateRelationshipField` are single conditional `UPDATE`s (`db/db.js:58–74`), not read-modify-write. Adding new read-mutate-write paths should include serialization.
 
 ### 9.2 Concurrent-message double-processing
 
-**Root cause**: The `messageCreate` handler (`bot.js` line 277) fires multiple state-tracking functions via `Promise.allSettled`. If the same message triggers both the mention handler and an interjection or reaction path, the AI invocation logic is entered twice for the same message content.
+**Root cause**: The `messageCreate` handler (`bot.js` line 175) fires multiple state-tracking functions via `Promise.allSettled`. If the same message triggers both the mention handler and an interjection or reaction path, the AI invocation logic is entered twice for the same message content.
 
-**Fix**: A processed-message dedup set (volatile, last 500 message IDs) was added at the top of `messageCreate` (`bot.js` lines 161–165) — fixed 2026-08-01.
+**Fix**: A processed-message dedup set (volatile, last 500 message IDs) was added at the top of `messageCreate` (`bot.js` lines 179–186) — fixed 2026-08-01.
 
 **Invariant**: Every inbound message should be processed at most once by any AI-invocation path. A message-ID dedup set (or recent-message cache) prevents re-entry.
 
@@ -250,9 +250,9 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 **Files**: `db/memory.js` (formerly `db/database.js`), `db/skarn-schema.sql`
 
-**Root cause**: When `memory_entries` was created as the unified memory table, the write path was migrated (`/etch` → `addMemoryEntry()`) but the read path was not — 19 command files still called `getUserMemory()` from the stale `user_memory` table, and `modelRouter.js` called `getKnowledge()` from the stale `knowledge_graph` table.
+**Root cause**: When `memory_entries` was created as the unified memory table, the write path was migrated (`/etch` → `addMemoryEntry()`) but the read path was not — 19 command files still read from the stale `user_memory` table, and `modelRouter.js` called `getKnowledge()` from the stale `knowledge_graph` table.
 
-**Fix**: Both stale tables (`user_memory`, `knowledge_graph`) and the `decayKnowledge()` function operating on `knowledge_graph` were removed. All per-user memory now lives exclusively in `memory_entries`. The 19 command files still call `getUserMemory()` — that is a remaining read-path migration, but the stale tables themselves are gone so no new fragmentation can accumulate.
+**Fix**: Both stale tables (`user_memory`, `knowledge_graph`) and the `decayKnowledge()` function operating on `knowledge_graph` were removed. All per-user memory now lives exclusively in `memory_entries`. The read path is **fully migrated** — `getUserMemory()` has zero remaining references; reads go through `getMemoryEntries()` / `applyBaselineFamiliarity()` on `memory_entries` (see the residual note below).
 
 **Status**: **Fixed** — tables dropped, dead code removed.
 
@@ -272,15 +272,20 @@ The following environment variables are consumed by the codebase. Variables are 
 
 | Variable | Required | Default | Controls |
 |----------|----------|---------|----------|
-| `DISCORD_TOKEN` | Yes | — | Discord bot authentication (`bot.js` line 471: `client.login()`) |
+| `DISCORD_TOKEN` | Yes | — | Discord bot authentication (`bot.js` line 419: `client.login()`) |
 | `CLIENT_ID` | Yes | — | Discord application ID (used in slash command registration) |
-| `OPENAI_API_KEY` | For AI | — | OpenAI API key for all AI calls (`ai/client.js` line 7) |
+| `OPENAI_API_KEY` | For AI | — | OpenAI API key for all AI calls (`ai/client.js` line 9) |
 | `TAVILY_API_KEY` | For `/search` | — | Tavily API key (`features/search/searchEngine.js`) — free tier 1,000 credits/mo, basic search = 1 credit |
-| `SLEEP_START` | No | `1` | Sleep mode start hour (UTC+offset). Set with `SLEEP_END=0` to disable sleep. (`bot.js` line 64) |
-| `SLEEP_END` | No | `7` | Sleep mode end hour (UTC+offset) (`bot.js` line 65) |
-| `SLEEP_TIMEZONE` | No | `0` | UTC offset applied arithmetically to sleep hours. Integer, not DST-aware. (`bot.js` line 66) |
+| `SLEEP_START` | No | `1` | Sleep mode start hour (UTC+offset). Set with `SLEEP_END=0` to disable sleep. (`bot.js` line 75) |
+| `SLEEP_END` | No | `7` | Sleep mode end hour (UTC+offset) (`bot.js` line 76) |
+| `SLEEP_TIMEZONE` | No | `0` | UTC offset applied arithmetically to sleep hours. Integer, not DST-aware. (`bot.js` line 77) |
 | `AI_MODEL` | No | `gpt-5.4-mini` | Default OpenAI model for all AI calls (`features/intelligence/modelRouter.js` line 13) |
-| `AI_MODEL_COMPLEX` | No | falls back to `AI_MODEL` | Model used for long/question/complex queries and knowledge-matched queries (`modelRouter.js` lines 4, 7) |
+| `AI_MODEL_COMPLEX` | No | falls back to `AI_MODEL` | Model used for long/question/complex queries and knowledge-matched queries (`modelRouter.js` lines 4, 7, 11) |
+| `PRESENCE_POOL_SIZE` | No | `300` | Phrases the presence cycler batch-generates per pool (`features/presence/presenceCycler.js`) |
+| `PRESENCE_CYCLE_MS` | No | `120000` | How often the "Watching" presence text advances (ms) |
+| `PRESENCE_REFRESH_DAYS` | No | `7` | Presence pool regeneration interval (days) |
+| `REALM_DAILY_CALL_LIMIT` | No | `1000` | Realm per-guild daily AI-call ceiling (`features/realm/realmConfig.js:204`) |
+| `SKARN_DB_PATH` | No | `data/skarn.db` | SQLite database path (`db/db.js:9`); the smoke suites use it for temp-DB isolation |
 
 > **Note**: `AI_MODEL` and `AI_MODEL_COMPLEX` **are documented in `.env.example`** (as commented-out optional defaults, matching the table above). They are consumed by `features/intelligence/modelRouter.js`.
 >
@@ -289,6 +294,10 @@ The following environment variables are consumed by the codebase. Variables are 
 > **Note**: When `TAVILY_API_KEY` is not configured, the `/search` command and `search_web` tool fail closed with a clear "not configured" result via `features/search/searchEngine.js`. Since 2026-08-02 the provider chain is Tavily-only (Google CSE dead key 403, DDG anomaly-blocked, Wikipedia compound-query-empty all removed; `duck-duck-scrape` dependency dropped).
 >
 > **Note**: `SLEEP_START` / `SLEEP_END` defaults (1 and 7) match `.env.example`. The actual deployment (`.env`) sets both to `0` to disable sleep. This is an environment-specific choice, not a code default mismatch.
+>
+> **Note**: `AI_MODEL`'s code-level default is `gpt-5.4-mini` only via `modelRouter.js` (`selectModel()`, line 13). **~12 call sites bypass the router and hardcode `gpt-4o-mini` fallbacks**: `commands/advice.js:25`, `trivia.js:39`, `translate.js:53`, `8ball.js:18`, `news.js:58`, `daily.js:42`, `compare.js:20`, `poll.js:33` and `:90`, `history.js:123`, `vibe.js:41`, and `features/intelligence/toneAnalyzer.js:55`. The effective default therefore differs by call site.
+>
+> **Note**: `features/presence/presenceCycler.js` re-reads `SLEEP_START`/`SLEEP_END`/`SLEEP_TIMEZONE` via its own local `isSleepTime()` copy (mirroring `bot.js:79–85`) so the presence cycler also halts during sleep hours.
 
 ## 11. Open questions / not yet decided
 
@@ -296,9 +305,9 @@ The following architectural and configuration decisions are unresolved. Each is 
 
 1. **`roleTokenBudgets.consult` = 600 (resolved 2026-08-01; spec called for 900)** — The budget was raised from 400 to 600 but is still short of the 900 the spec described. `roles.js` is the source of truth. The effective budget is shared between the role response and the growing context lines. No token-usage monitoring exists to confirm whether the current budget is regularly exceeded.
 
-2. **No test story (resolved 2026-08-01)** — The `tests/` directory and its 6 test files were **removed by decision** (commit `8a736df`). There is no test framework, no `npm test` script, and no CI pipeline — the project is deliberately test-free and verified manually. The documentation-vs-reality gap no longer exists.
+2. **No test framework (resolved 2026-08-01)** — The `tests/` directory and its 6 test files were **removed by decision** (commit `8a736df`). There is no `npm test` script and no CI pipeline — but the project is **not** test-free: a smoke framework exists. `npm run smoke` (`scripts/run-smokes.js`) runs 10 suites under `scripts/smokes/` (`00-trivial` … `09-model-default`), each against an isolated temp database via `SKARN_DB_PATH`, and `npm run audit:docs` guards doc-vs-code claims. The documentation-vs-reality gap no longer exists.
 
-3. **`ROLE_NATURE` duplication — three files historically, now partially fixed** — `roles`, `roleTokenBudgets`, and `ROLE_NATURE` are three separate objects in `persona/roles.js` that duplicate the same set of role keys. Adding a new role requires editing all three. The duplicate `ROLE_NATURE` in `features/discordNative/postProcess.js` was **removed** (fixed 2026-07-20) — it now imports from `persona/roles.js`. However `search` and `realm_npc` remain absent from `ROLE_NATURE` in `roles.js` (search was added 2026-07-20). No guard prevents further drift between the three exports in `roles.js`. **Resolved 2026-08-04:** all three registries share the identical 37-key set; `search` and `realm_npc` are present in `ROLE_NATURE`. No guard yet prevents future drift (a startup assertion is a suggested follow-up).
+3. **`ROLE_NATURE` duplication — three files historically, now partially fixed** — `roles`, `roleTokenBudgets`, and `ROLE_NATURE` are three separate objects in `persona/roles.js` that duplicate the same set of role keys. Adding a new role requires editing all three. The duplicate `ROLE_NATURE` in `features/discordNative/postProcess.js` was **removed** (fixed 2026-07-20) — it now imports from `persona/roles.js`. However `search` and `realm_npc` remain absent from `ROLE_NATURE` in `roles.js` (search was added 2026-07-20). No guard prevents further drift between the three exports in `roles.js`. **Resolved 2026-08-04:** all three registries share the identical 39-key set; `search` and `realm_npc` are present in `ROLE_NATURE`. No guard yet prevents future drift (a startup assertion is a suggested follow-up).
 
 4. **In-memory cooldown Maps — resolved 2026-08-01** — The in-memory cooldown Maps (`reactionSystem.js`, `commands/search.js`, plus warmth, realm, and omen) were moved to SQLite-backed cooldowns (commit `25de6df`). The "all state in SQLite" convention is now absolute — no in-memory Maps remain. (Scoped to cooldowns — the game-session Maps named in §2 remain in-memory by design, lost on restart.)
 
@@ -354,11 +363,13 @@ The following bugs were identified during a structural code review and should be
 
 **Status**: Not fixed (the feature exists but is noisier than intended).
 
-## 13. Slur Filter System (2026-07-20; gates 2–3 removed 2026-08-01)
+> **Note (2026-08-08)**: the spec's "banter-toned questions" signal exists only as the dead helper `isBanterTone(content)` (`features/humor/callbackEngine.js` lines 8–11) — it has zero callers and was never wired in.
 
-A censorship system preventing the AI from outputting slurs. Originally three gates; **Gates 2 and 3 were deleted in the 2026-08-01 audit — only Gate 1 (prompt instruction) plus OpenAI moderation remain**.
+## 13. Slur Filter System (2026-07-20; Gate 2 removed 2026-08-01)
 
-### Gate 1: Prompt Instruction (only remaining gate)
+A censorship system preventing the AI from outputting slurs. Originally three gates; **Gate 2 (database pattern matching) was removed in the 2026-08-01 audit — Gate 1 (prompt instruction) and Gate 3 (OpenAI moderation) remain**.
+
+### Gate 1: Prompt Instruction (retained — Gates 1 + 3 remain)
 - `safetyLine` added to `buildSystemPrompt()` and `buildContext()`
 - Third bullet added to `SKARN_CORE_IDENTITY` Self-preservation section
 - Generated by `buildSafetyLine()` in `features/safety/slurFilter.js`
@@ -368,8 +379,9 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 - **Deleted**: the `slur_filter` table (`exact`, `substring`, `regex` match types), the 5-minute cache in `getActiveSlurPatterns()`, `checkDatabase(text)`, and the CRUD helpers `addSlurPattern()` / `removeSlurPattern()` (soft-delete) were all removed (commit `26b23e8`).
 
 ### Gate 3: OpenAI Moderation API (retained, centralized)
-- Called via `client.moderations.create()` for both input and output moderation, centralized in `moderatedChatCompletion()` (`ai/client.js`)
-- Returns `{ flagged, categories }`; on moderation error the call fails **closed** (blocked), not fail-open
+- **Input** moderation via `c.moderations.create({ model: 'omni-moderation-latest', ... })` inside `moderateInput()` (`ai/client.js:17`); **output** moderation via the `moderation` param on `chat.completions.create` (`ai/client.js:76`), read from `completion.moderation.output` (`ai/client.js:87`)
+- `moderateInput()` returns `{ action, categories?, unavailable? }` where `action` is `'crisis'` | `'block'` | `'pass'` (not `{ flagged, categories }`)
+- On moderation error the call fails **closed** (blocked), not fail-open
 
 ### Unified Strike System
 - Counts hostile input (strikes are input-only now — flagged AI output no longer records a strike)
@@ -427,28 +439,28 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 ### Context Assembly
 
 - **buildContext()**: Single function in `features/promptContext.js` that produces all context lines for the AI system prompt. Returns an object with context lines (e.g., stateLine, moodLine, relationshipLine, memoryLine, conversationLine, emotionalLine, knowledgeLine) for injection into the system prompt.
-- **Context lines**: Individual sections inside the system prompt: stateLine, moodLine, relationshipLine, cultureLine, memoryLine, warmthLine, patienceLine, callbackLine, gratitudeLine, firstOfDayLine, milestoneLine, apologyLine, emotionalLine, conversationLine, knowledgeLine, socraticLine.
+- **Context lines**: Individual sections inside the system prompt, each produced by `buildContext()` (`features/promptContext.js`): examplesLine, growthLine, newsLine, stateLine, moodLine, relationshipLine, cultureLine, memoryLine, warmthLine, patienceLine, callbackLine, gratitudeLine, firstOfDayLine, milestoneLine, apologyLine, emotionalLine, conversationLine, knowledgeLine, channelLine, safetyLine, socraticLine, followUpLine, loreLine, dreamLine, ragLine, guidanceLine, calibrationLine, trajectoryLine, memoryEmotionLine, escalationLine, climateLine, serverWisdomLine.
 - **News cache** (`daily_news` table, `features/news/newsFetcher.js`): scheduler-populated headline cache for the news command, the `get_news` AI tool, and the AI prompt context `newsLine`. **Overhauled 2026-08-02 (spec `docs/specs/2026-08-02/deepseek-v4-flash/skarn-news-overhaul-design.md`)**: 38 validated RSS+Atom feeds across 5 categories (tech/gaming/world/science/business), parallel per-feed-isolated fetch every 15 min, 200-article / 72h retention by `published_at`, dual RSS+Atom parsing, dedupe by URL+title. The `newsLine` in `promptContext.js` was **intent-gated** (injected only when the message looks news-related, capped at 3 headlines) until the NL-command upgrade (2026-08-02, spec `skarn-nl-command-upgrade-design.md`) made it **always-on**: newest article per category, top 3 most recent overall, format `[cat] headline`, no snippets (~50 tokens per AI call on mention/consult/interjection paths).
 
 ### Intelligence Systems
 
-- **Knowledge graph**: The `features/intelligence/knowledgeGraph.js` module that extracts structured entities from conversations using AI. Writes to `memory_entries` with `source='extracted'`.
-- **Knowledge base**: The general-purpose knowledge store (`knowledge_base` + `knowledge_fts` tables). Contains seeded Wikipedia topics and user-taught facts via `/learn`. Completely separate from per-user memory.
+- **Knowledge graph**: The `features/intelligence/knowledgeGraph.js` module that formats extracted memory entities into AI context (`formatKnowledge`, wired into `promptContext.js` as `knowledgeLine`). **Read-only** — it makes no AI calls and writes nothing; entities are extracted and written to `memory_entries` with `source='extracted'` by `features/preprocessing/postProcessor.js` and `features/wisdom/emotionalIntelligence.js`.
+- **Knowledge base**: The general-purpose knowledge store (`knowledge_base` + `knowledge_fts` tables). Contains seeded Wikipedia topics (written by `knowledgeSeeder.js` via `addKnowledgeBase()`). Completely separate from per-user memory.
 - **Model router**: Selects between `AI_MODEL` and `AI_MODEL_COMPLEX` based on message length, question detection, and knowledge graph match.
 - **Response learner**: Tracks before/after sentiment shifts per response to classify as hit/miss/neutral in `response_learning` table.
 
 ### Wisdom Systems
 
 - **Emotional intelligence**: Keyword + sentiment-based emotion detection (happy/sad/anxious/angry/stressed). State stored in `user_emotional_context`. Generates tone directives for the AI system prompt.
-- **Story engine**: Topic-triggered story retrieval (war/loss/change/tech/time/power). Hybrid model: stories are AI-generated on first use, stored in `skarn_stories`, referenced on subsequent related topics.
+- **Story engine**: Topic-triggered story retrieval — `TRIGGER_TOPICS` (`features/wisdom/storyEngine.js:3–13`) has 11 topics: war, loss, change, **technology** (the key is `technology`, not `tech`), time, power, dreams, stillness, wonder, regret, humans. Hybrid model: stories are AI-generated on first use, stored in `skarn_stories`, referenced on subsequent related topics.
 - **Socratic questioning**: Implemented feature (ADR-001 Advice tier) — `socraticLine` is populated by `buildContext()` via `getSocraticQuestion()` (`features/promptContext.js`), and `isFullTier` was changed to `let` so a socratic question promotes a message to full tier. Live since 2026-08-01. **Extended 2026-08-01 (wisdom layer)**: 18 trigger phrasings in `features/wisdom/socraticEngine.js`; directive prefers the sharper question and offers the answer only when asked twice.
 - **Wisdom layer (2026-08-01)**: The `SKARN_CORE_IDENTITY` reauthor + `SKARN_FOOTER` update in `persona/identity.js`. Grounded in distilled behaviors (question-over-answer, absorb-before-responding, read-the-terrain, confidence-needs-no-volume, hardship-as-material) — philosopher names are never in the prompt. Includes 5 trait directives (wiser/patient/knowledgeable/kind/intelligent) and anti-drift guardrails in the **Wisdom Through Millennia** section. Design spec: `docs/specs/2026-08-01/deepseek-v4-flash/skarn-wisdom-layer-design.md`.
 - **Guild mood** (`features/mood/moodManager.js`): Per-guild mood state in `guild_mood` (free-text `current_mood`). `evaluateMood()` reads 2h interaction stats and sets one of 6 moods — refreshed, neutral, tired, amused, focused, and **wrath** (added 2026-08-01: `totalInteractions > 100 && avgFamiliarity < 10`, checked before `tired` so high-volume low-familiarity servers read as controlled wrath). `getMoodLine()` injects the matching line into the prompt. Note: `avg_familiarity || 0` means data-less high-volume guilds also hit wrath.
 
 ### Realm of Skarn (RPG Subsystem)
 
-- **Realm of Skarn**: A persistent AI-driven RPG within Discord. 12 files under `features/realm/`, ~2,400 lines total.
-- **Character creation**: 5-step wizard (name → race → class → background → AI backstory) using button selection + `awaitMessages`. 5 races (human, elf, dwarf, demon, tiefling, dragonborn), 6 classes (warrior, mage, rogue, cleric, ranger, warlock). Max level 20.
+- **Realm of Skarn**: A persistent AI-driven RPG within Discord. 12 top-level files under `features/realm/` (1,936 lines total; ~2,835 including the 8 files in `features/realm/handlers/`).
+- **Character creation**: 5-step wizard (name → race → class → background → AI backstory) using button selection + `awaitMessages`. 6 races (human, elf, dwarf, demon, tiefling, dragonborn — `RACE_BONUSES` in `realmConfig.js:3–10`), 6 classes (warrior, mage, rogue, cleric, ranger, warlock). Max level 20.
 - **World**: 8 interconnected locations (Abyssal Gate → Shadow Market → Cursed Library → etc.), each with dangerLevel (1–5), connections, and NPC pools. Movement validated against connection graph.
 - **Combat**: Turn-based (attack/defend/flee). Damage calculated by code — AI only narrates. Enemy scaling per danger level. Weapon/armor stats from equipped items. Crits from luck stat. 5-minute in-memory combat timeout with 10% gold penalty.
 - **NPCs**: 16 NPC templates with roles (quest_giver, merchant, combat_npc, enemy, neutral), random personalities, sentiment tracking, and persistent NPC memory per player.
@@ -457,7 +469,7 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 - **Economy**: Player-to-player trading (in-memory trade store, 5-minute timeout, SQLite transaction for atomic execution). Merchant selling with relationship-based price multiplier.
 - **AI driver**: Separate from main persona system. Has its own `buildRealmContext()`, routes model choice through `selectModel()` (`modelRouter.js`; documented earlier as hardcoding `gpt-5.4-mini` — corrected 2026-08-04, see `docs/specs/2026-07-18/deepseek-v4-flash/realm-of-skarn-final.md` for the original intent). Uses `roles.realm`, `roles.realm_combat`, and `roles.realm_npc` role lines. 30-second timeout on AI calls.
 - **Rate limiting**: Separate realm bucket — 30 calls per 30 minutes per user (`app_flags` via `features/realm/realmRateLimit.js`), plus 1,000 calls per day per guild (`realm_world_state`). Completely independent from the bot-wide rate limit (`RATE_LIMIT_MAX_CALLS` = 50 per 10 minutes via `lib/rateLimit.js`).
-- **Architecture**: Consistent vertical-slice pattern (commands/realm.js is thin wrapper → features/realm/realmCommand.js is the router). Data access through `realmStore.js` (not directly via `database.js`). Realm tables in `skarn-schema.sql`.
+- **Architecture**: Consistent vertical-slice pattern (commands/realm.js is thin wrapper → features/realm/realmCommand.js is the router). Data access goes through `realmStore.js` (not directly via `database.js`) — with three direct `database.js` requires as exceptions: `realmStore.js:1`, `realmRateLimit.js:2`, and `handlers/explore.js:11`. Realm tables in `skarn-schema.sql`.
 
 ### Relationship & Server Awareness
 
