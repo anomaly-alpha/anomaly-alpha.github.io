@@ -17,6 +17,7 @@ const { getLoreLine, getDreamLine } = require('./wisdom/loreAssembler');
 const { buildExamplesLine } = require('../persona/examples');
 const { embedText, cosineSimilarity } = require('./intelligence/embeddings');
 const { getResponseInsights } = require('./intelligence/responseLearner');
+const { formatKnowledge } = require('./intelligence/knowledgeGraph');
 
 function buildContext(userId, guildId, channelId, opts) {
   opts = opts || {};
@@ -41,9 +42,8 @@ function buildContext(userId, guildId, channelId, opts) {
 
   const memory = getMemoryEntries(userId, guildId, 10);
   const factEntries = memory.filter(function(m) { return m.source === 'etch'; });
-  const extractedEntries = memory.filter(function(m) { return m.source === 'extracted'; });
   const memoryLine = factEntries.length > 0 ? 'What Skarn remembers about this person: ' + factEntries.map(function(m) { return m.content; }).join('; ') : '';
-  const knowledgeLine = extractedEntries.length > 0 ? 'Interests: ' + extractedEntries.filter(function(m) { return m.type === 'interest'; }).map(function(m) { return m.content; }).join(', ') : '';
+  const knowledgeLine = formatKnowledge(userId, guildId);
 
   const warmthLine = getWarmthLine(userId, guildId, roleNature);
   const rel = getRelationship(userId, guildId);

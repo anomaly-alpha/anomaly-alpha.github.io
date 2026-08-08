@@ -1,4 +1,4 @@
-const { getMemoryByType, decayMemoryEntries } = require('../../db/database');
+const { getMemoryByType } = require('../../db/database');
 
 function formatKnowledge(userId, guildId) {
   const interests = getMemoryByType(userId, guildId, 'interest', 5);
@@ -15,8 +15,4 @@ function formatKnowledge(userId, guildId) {
   return parts.join('\n');
 }
 
-function runKnowledgeDecay() {
-  decayMemoryEntries();
-}
-
-module.exports = { formatKnowledge, runKnowledgeDecay };
+module.exports = { formatKnowledge };
