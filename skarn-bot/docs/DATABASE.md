@@ -2,7 +2,7 @@
 
 ## Overview
 
-All persistent state lives in a single SQLite file at `data/skarn.db` (auto-created). The schema is `db/skarn-schema.sql`, run on every startup via `CREATE TABLE IF NOT EXISTS`. Migration strategy: additive only (new columns added via `ALTER TABLE ... ADD COLUMN` in try/catch blocks in `db/database.js`).
+All persistent state lives in a single SQLite file at `data/skarn.db` (auto-created). The schema is `db/skarn-schema.sql`, run on every startup via `CREATE TABLE IF NOT EXISTS`. Migration strategy: additive only (new columns added via `ALTER TABLE ... ADD COLUMN`). Idempotent startup ALTERs live in `db/db.js` (try/catch, e.g. `user_preferences.proactive_opt_in`, `user_profile` growth columns); versioned migrations in `db/migrations.js` (v1 reminder/giveaway indexes, v2 `daily_news.published_at`); `lib/rateLimit.js` auto-adds `rate_limits.bucket`.
 
 ## Table Reference
 
@@ -101,6 +101,8 @@ Derived profile from conversation analysis.
 | `last_deep_conversation_at` | INTEGER | Timestamp of last substantive exchange |
 | `engagement_score` | REAL DEFAULT 0 | 0–1 engagement metric |
 | `last_profile_update_at` | INTEGER NOT NULL | Last profile refresh timestamp |
+| `weekly_sentiment_history` | TEXT DEFAULT '[]' | Weekly sentiment trajectory (JSON; added by migration, read/written by `growthTracker.js`) |
+| `weekly_topic_history` | TEXT DEFAULT '[]' | Weekly topic trajectory (JSON; added by migration) |
 | **PK** | | `(user_id, guild_id)` |
 
 Updated daily by `profileUpdater.js`.
@@ -116,6 +118,18 @@ Per-user emotion state (advisory — drives tone, not gating).
 | `topics_emotional` | TEXT DEFAULT '{}' | Topic-emotion associations (JSON) |
 | `last_mood_check` | INTEGER NOT NULL | Timestamp of last emotion detection |
 | **PK** | | `(user_id, guild_id)` |
+
+#### `emotion_history`
+Per-user emotion trajectory — last 50 detections kept per user per guild (`db/relationship.js`, joined by `features/intelligence/responseLearner.js`).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | INTEGER PK AUTO | Row ID |
+| `user_id` | TEXT NOT NULL | Discord user ID |
+| `guild_id` | TEXT NOT NULL | Discord guild ID |
+| `emotion` | TEXT NOT NULL | Detected emotion |
+| `sentiment` | REAL DEFAULT 0 | Sentiment score |
+| `created_at` | INTEGER NOT NULL | Detection timestamp |
 
 ### Memory & Knowledge
 
@@ -229,6 +243,17 @@ Periodic summaries of completed conversation threads.
 | `message_count` | INTEGER NOT NULL | Number of messages summarized |
 | `created_at` | INTEGER NOT NULL | Summary creation timestamp |
 
+#### `conversation_embeddings`
+Semantic embeddings for conversation messages — RAG retrieval (`db/conversation.js`).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `message_id` | INTEGER PK | Reference to `conversation_messages(id)` |
+| `embedding` | BLOB NOT NULL | Embedding vector |
+| `created_at` | INTEGER NOT NULL | Creation timestamp |
+
+Purged alongside message pruning.
+
 ### Response Learning
 
 #### `response_learning`
@@ -254,9 +279,10 @@ Per-user rolling window for AI calls.
 |--------|------|-------------|
 | `id` | INTEGER PK AUTO | Row ID |
 | `user_id` | TEXT NOT NULL | Discord user ID |
+| `bucket` | TEXT NOT NULL DEFAULT 'command' | Rate-limit bucket (e.g. `command`, realm) |
 | `timestamp` | INTEGER NOT NULL | Call timestamp |
 
-10 calls per 10-minute rolling window.
+50 calls per 10-minute rolling window.
 
 #### `mention_cooldowns`
 Per-user-per-channel @mention throttle.
@@ -388,6 +414,82 @@ Per-guild key-value settings.
 
 Known keys: `aiChannels` (array of channel IDs), `ignoredUsers` (array), `welcomeChannel`, `autoRole`, `logChannel`, `logMessages`, and any admin-configured settings.
 
+### Chronicle, Omen & Server Memory
+
+#### `lorebook`
+Per-guild world-info entries, keyword-triggered and injected into AI context (`features/lorebook/lorebook.handler.js`, written via `db/ops.js`).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | INTEGER PK AUTO | Row ID |
+| `guild_id` | TEXT NOT NULL | Discord guild ID |
+| `keywords` | TEXT NOT NULL | Trigger keywords |
+| `content` | TEXT NOT NULL | Lore/world-info text |
+| `category` | TEXT DEFAULT 'general' | Entry category |
+| `priority` | INTEGER DEFAULT 0 | Match priority (higher wins) |
+| `created_at` | INTEGER NOT NULL | Creation timestamp |
+| `updated_at` | INTEGER NOT NULL | Update timestamp |
+
+#### `server_signals`
+Captured guild activity signals feeding the chronicle + omen pipeline (`features/serverMemory/signalStore.js`).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | INTEGER PK AUTO | Signal ID |
+| `guild_id` | TEXT NOT NULL | Discord guild ID |
+| `channel_id` | TEXT | Source channel (nullable) |
+| `signal_type` | TEXT NOT NULL | Signal type |
+| `summary_text` | TEXT NOT NULL | Captured signal summary |
+| `source_user_id` | TEXT | Originating user (nullable) |
+| `created_at` | INTEGER NOT NULL | Capture timestamp |
+
+Pruned after 30 days (scheduler).
+
+#### `signal_embeddings`
+Embedding vectors for captured signals — semantic matching (`features/serverMemory/omen/omenJob.js`).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `signal_id` | INTEGER PK | Reference to `server_signals(id)` |
+| `embedding` | TEXT NOT NULL | Serialized embedding vector |
+| `created_at` | INTEGER NOT NULL | Creation timestamp |
+
+#### `chronicle_entries`
+Per-guild chronicle entries — periodic summaries of guild life (`features/serverMemory/chronicle/chronicleStore.js`, scheduler `runChronicleJob`).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | INTEGER PK AUTO | Entry ID |
+| `guild_id` | TEXT NOT NULL | Discord guild ID |
+| `content` | TEXT NOT NULL | Chronicle text |
+| `period_start` | INTEGER NOT NULL | Period start |
+| `period_end` | INTEGER NOT NULL | Period end |
+| `created_at` | INTEGER NOT NULL | Creation timestamp |
+
+#### `server_omens`
+Per-guild omens — unresolved predictions tracked until fulfilled or expired (`features/serverMemory/omen/omenStore.js`, scheduler `runOmenJob`).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | INTEGER PK AUTO | Omen ID |
+| `guild_id` | TEXT NOT NULL | Discord guild ID |
+| `omen_text` | TEXT NOT NULL | The omen text |
+| `embedding` | TEXT NOT NULL | Embedding for fulfillment matching |
+| `status` | TEXT DEFAULT 'unresolved' | `unresolved`, `fulfilled`, `expired` |
+| `fulfillment_text` | TEXT | Fulfillment note (nullable) |
+| `created_at` | INTEGER NOT NULL | Creation timestamp |
+| `resolved_at` | INTEGER | Resolution timestamp (nullable) |
+
+#### `memory_optout`
+Per-user-per-guild chronicle participation opt-out (`features/serverMemory/signalStore.js`).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `user_id` | TEXT | Discord user ID |
+| `guild_id` | TEXT | Discord guild ID |
+| `chronicle_optout` | INTEGER DEFAULT 0 | 1 = excluded from chronicle capture |
+| **PK** | | `(user_id, guild_id)` |
+
 ### Game Systems
 
 #### `realm_characters`
@@ -410,7 +512,7 @@ Player characters in the Realm of Skarn RPG.
 | `created_at` / `updated_at` | INTEGER | Timestamps |
 | **PK** | | `(user_id, guild_id)` |
 
-Additional realm tables: `realm_inventory`, `realm_quests`, `realm_npc_memory`, `realm_discovered_locations`, `realm_kill_log`, `realm_world_state`.
+Additional realm tables: `realm_inventory`, `realm_quests`, `realm_npc_memory`, `realm_discovered_locations`, `realm_kill_log`, `realm_world_state`, `realm_omens`.
 
 #### `realm_inventory`
 Per-character inventory items.
@@ -514,6 +616,16 @@ Per-guild key-value state for Realm-level persistence.
 
 Used for: daily AI call counters, world events, realm-level configuration.
 
+#### `realm_omens`
+Fulfilled Realm omen records with stored callback text (`features/serverMemory/omen/omenStore.js`, surfaced via `features/realm/aiDriver.js`).
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `omen_id` | INTEGER PK | Reference to `server_omens(id)` |
+| `guild_id` | TEXT NOT NULL | Discord guild ID |
+| `fulfilled_at` | INTEGER NOT NULL | Fulfillment timestamp |
+| `callback_text` | TEXT NOT NULL | Stored callback text |
+
 ### Utility Tables
 
 | Table | Purpose |
@@ -534,9 +646,10 @@ Used for: daily AI call counters, world events, realm-level configuration.
 |-------|-------|---------|---------|
 | `idx_memory_user` | `memory_entries` | `(user_id, guild_id)` | User memory lookups |
 | `idx_memory_decay` | `memory_entries` | `(last_seen_at, confidence)` | Decay pass efficiency |
-| `idx_rate_limits_user` | `rate_limits` | `(user_id, timestamp)` | Rate limit queries |
+| `idx_rate_limits_user` | `rate_limits` | `(user_id, bucket, timestamp)` | Rate limit queries |
 | `idx_conv_msg_thread` | `conversation_messages` | `(thread_id, created_at)` | Thread message retrieval |
 | `idx_conv_msg_user` | `conversation_messages` | `(user_id, guild_id, created_at)` | User conversation history |
+| `idx_conv_msg_channel_time` | `conversation_messages` | `(channel_id, created_at)` | Channel message retrieval |
 | `idx_conv_thread_user` | `conversation_threads` | `(user_id, guild_id, archived_at)` | Active thread lookups |
 | `idx_conv_summary_thread` | `conversation_summaries` | `(thread_id)` | Summary retrieval |
 | `idx_user_relationship_guild` | `user_relationship` | `(guild_id, familiarity)` | Guild aggregate queries |
@@ -553,6 +666,8 @@ Used for: daily AI call counters, world events, realm-level configuration.
 | `idx_realm_quests_user` | `realm_quests` | `(user_id, guild_id)` | Character quest queries |
 | `idx_realm_npc_memory_user` | `realm_npc_memory` | `(npc_id, user_id, guild_id)` | NPC memory lookups |
 | `idx_realm_kill_log_user` | `realm_kill_log` | `(user_id, guild_id)` | Kill stats queries |
+| `idx_reminders_due` | `reminders` | `(remind_at, delivered)` | Reminder dispatch (migration v1) |
+| `idx_giveaways_ends` | `giveaways` | `(ends_at, ended)` | Giveaway expiry (migration v1) |
 
 ## Maintenance Jobs
 
@@ -560,9 +675,9 @@ Used for: daily AI call counters, world events, realm-level configuration.
 |-----|----------|--------|
 | State decay | 10min | Dormant/Attentive transitions, relationship decay, memory decay, cooldown cleanup |
 | Daily maintenance | 24h | Profile updates, thread summarization, message pruning (90d) |
-| News fetch | 1h | Fetch articles into `daily_news` |
+| News fetch | 15min | Fetch articles into `daily_news` |
 | Daily digest | 6pm | Post news digest to configured channels |
-| Proactive scheduler | 5min | Check follow-ups, absence detection |
+| Proactive scheduler | 10min | Check follow-ups, absence detection |
 
 ## Scoping Rule
 
