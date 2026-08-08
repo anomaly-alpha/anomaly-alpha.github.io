@@ -38,20 +38,11 @@ function startSchedulers(client) {
   setInterval(safeRun(generateLoreBatch, 'Lore'), 60 * 60 * 1000);
   safeRun(generateLoreBatch, 'Lore')();
 
-  const statuses = [
-    { type: 'Playing', text: 'with AI' }, { type: 'Listening', text: 'to commands' },
-    { type: 'Watching', text: 'the server' }, { type: 'Playing', text: 'Tetris' },
-    { type: 'Listening', text: 'to your questions' }, { type: 'Watching', text: 'you type...' },
-    { type: 'Playing', text: '52 commands' }, { type: 'Listening', text: 'for mentions' },
-  ];
-  let statusIndex = 0;
-  function setStatus() {
-    const status = statuses[statusIndex];
-    client.user.setActivity(status.text, { type: status.type });
-    statusIndex = (statusIndex + 1) % statuses.length;
-  }
-  setStatus();
-  setInterval(setStatus, 30000);
+  // Streaming presence (type 1 requires a tv url or Discord rejects the activity)
+  client.user.setActivity('<+HUSH> ONLINE', {
+    type: 1, // ActivityType.Streaming
+    url: 'https://twitch.tv/skarn',
+  });
 
   startScheduler(client);
   startProactiveScheduler(client);
