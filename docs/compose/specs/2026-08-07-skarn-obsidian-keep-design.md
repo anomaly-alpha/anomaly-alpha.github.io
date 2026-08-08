@@ -12,7 +12,7 @@ The Skarn landing page (`skarn-bot/index.html`, built in the "Skarn Railway Page
 - **Palette** (obsidian + ember):
   - Background: radial gradient `#33160f` → `#0a0708` (ancient ember glow bleeding into black volcanic stone), base `#0a0708`.
   - Ember accent: `#ff6b35` (existing repo category color — reuse).
-  - Text: parchment `#e8d9c9` body; warm white `#f6e7d4` headings; muted `#a8957e` subtitles; dim `#6f5d47` metadata; shelf wood `#24181a`; plaque stone `#17100f`→`#0d0908` with border `#3a2a2c`.
+  - Text: parchment `#e8d9c9` body; warm white `#f6e7d4` headings; muted `#a8957e` subtitles; dim `#7d8389` metadata (5.23:1 — spec-prose candidate `#6f5d47` rejected for a11y); shelf wood `#24181a`; plaque stone `#17100f`→`#0d0908` with border `#3a2a2c`.
   - Link hover: `#ff6b35`; link base: parchment (links are tomes, not blue links).
 - **Typography**: headings Georgia/serif with letter-spacing (arcane inscription); body serif; no external fonts (zero-CDN constraint).
 - **Components**:
@@ -45,12 +45,12 @@ The Skarn landing page (`skarn-bot/index.html`, built in the "Skarn Railway Page
 | `.plaque` | `linear-gradient(180deg,#17100f,#0d0908)`, `border:1px solid #3a2a2c`, radius 8px; links `#ff6b35` |
 | `h2` (section headers) | small-caps style: `letter-spacing:2px; color:#c96a33;` with bottom border `#3a2a2c` |
 | `.docs section` | shelf block: `margin-bottom` |
-| `h3` (year-plate) | `font-size:9.5px; letter-spacing:2px; color:#8a7350;` with a flex rule line (`::after` gradient) |
+| `h3` (year-plate) | `font-size:.7rem; letter-spacing:2px; text-transform:uppercase; color:#9a8359;` with a flex rule line (`::after` gradient). Shipped value `#9a8359` (5.51:1 contrast) — spec-prose candidate `#8a7350` (4.44:1) rejected for a11y. |
 | `ul` (shelf base) | `border-bottom:3px solid #24181a;` padding bottom; `list-style:none; margin:0 0 14px;` |
 | `li` (tome row) | `display:flex; align-items:center; gap:9px; margin:4px 0;` — a `.spine` div (5px×20px, `linear-gradient(90deg,#4a1d10,#7a2e12 60%,#ff6b35)`, ember glow shadow) + the `<a>` |
 | `a` | parchment `#e8d9c9`, no underline; hover `#ff6b35`; focus outline ember |
 | Kind label | small italic dim text at row end; kind = section type (`plan`/`spec`/`report`/`adr`/`prompt`/`top level`) — add a `data-kind` attribute? **No**: generator output must stay byte-stable, so derive kind via CSS `::after` content is impractical per-row without per-section classes. Instead: style per-section kind label by giving each generated `<section>` a class via CSS only is impossible (generator doesn't emit one). **Decision:** skip per-row kind labels in the generated index (the section header already says the type). The research pack (hand-authored) keeps plain descriptive labels. |
-| Footer | `border-top:1px solid #3a2a2c; color:#6f5d47; font-style:italic;` — keep "Updated <span id="skarn-updated">…" intact |
+| Footer | `border-top:1px solid #3a2a2c; color:#7d8389; font-style:italic;` — keep "Updated <span id="skarn-updated">…" intact |
 | Scrollbar/selection | optional ember `::selection` |
 
 ## [S5] Verification
