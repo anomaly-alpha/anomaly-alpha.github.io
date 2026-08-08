@@ -343,20 +343,12 @@ async function maybeMuse(guild, client) {
   if (!content) { rescheduleDraw(guild.id, now); return false; }      // [S8] 6-7 (AI fail / crisis)
   // [S3] Re-check before send (grilled): the LLM call took seconds — if a user
   // message landed meanwhile, this channel is no longer quiet. Skip + reschedule.
-  if (!isChannelQuiet(channel, client.user.id)) { rescheduleDraw(guild.id, Date.now()); return false; }
+  if (!isChannelQuiet(channel)) { rescheduleDraw(guild.id, Date.now()); return false; }
   try {
     await channel.send({ content: content, allowedMentions: { parse: [] } });
   } catch (e) { console.error('[Musing] send error:', e.message); }
   rescheduleDraw(guild.id, now);
   return true;
-}
-
-function isChannelQuiet(channel, botId) {
-  if (!channel) return false;
-  const state = getChannelState(channel.id, channel.guild ? channel.guild.id : '');
-  const quietState = state.current_state === 'Dormant' || state.current_state === 'Attentive';
-  const idle = Date.now() - (state.last_message_at || 0) >= MUSING_QUIET_MS;
-  return quietState && idle;
 }
 
 function startMusingScheduler(client) {
