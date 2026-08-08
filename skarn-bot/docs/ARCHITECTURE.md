@@ -1,12 +1,12 @@
 # Skarn Bot — Architecture
 
-> **Derived overview (2026-08-04):** this file is a high-level diagram, not the spec.
+> **Derived overview (2026-08-08):** this file is a high-level diagram, not the spec.
 > When it disagrees with `CONTEXT.md`, CONTEXT.md wins — and file a correction here.
 > Drift fixes tracked by `npm run audit:docs` (scripts/audit-docs.js).
 
 ## System Overview
 
-Skarn is a Discord.js v14 bot with an LLM-powered AI persona ("Skarn, the Warmaster of the Abyss"). It runs on Node.js, stores state in SQLite, and calls OpenAI for every AI feature. The bot has ~75 slash commands spanning AI conversation, games, server management, fun, and utilities.
+Skarn is a Discord.js v14 bot with an LLM-powered AI persona ("Skarn, the Warmaster of the Abyss"). It runs on Node.js, stores state in SQLite, and calls OpenAI for every AI feature. The bot has 78 slash commands spanning AI conversation, games, server management, fun, and utilities.
 
 ## High-Level Data Flow
 
@@ -42,30 +42,42 @@ Discord Gateway
 
 ## AI Call Flow (every `/consult` or `@Skarn` mention)
 
+Both handlers delegate to the shared pipeline `runPipeline()` (`features/ai/sharedPipeline.js:46`):
+
 ```
 User message
     │
     ▼
-buildContext(userId, guildId, channelId)
-    │  Reads from SQLite: channel state, guild mood, relationship,
-    │  server culture, memory entries, conversation history,
-    │  user profile, emotional context, knowledge base, news
-    │
+runMessageAnalysis()  — preprocessing/pipeline.js (analyzer + shouldAnalyze gate)
+    │  Analyzer output informs model routing + memory extraction
     ▼
-buildSystemPrompt({ roleLine, ...all context lines })
-    │  Assembles SKARN_CORE_IDENTITY + role instruction + 13+ context lines
-    │
+buildContext(userId, guildId, channelId)      — features/promptContext.js
+    │  Returns 32 context lines from ~12+ modules: channel state, guild mood,
+    │  relationship, server culture, memory entries, conversation history,
+    │  user profile, emotional context, knowledge base, news, lorebook, RAG,
+    │  socratic guidance, safety line, server wisdom, etc.
     ▼
-OpenAI API (model from modelRouter.js)
+buildSystemPrompt({ roleLine, ...context lines })   — persona/identity.js
+    │  Assembles SKARN_CORE_IDENTITY + role instruction + context lines
+    ▼
+Tool loop (turn 1: getTools() + tool_choice 'auto')  — features/tools/*
+    │  Model may call a tool (run_command, get_weather, …); runTool() executes
+    │  it and feeds the result back for the final in-character reply
+    ▼
+OpenAI API (moderatedChatCompletion, model from modelRouter.js)
     │  Temperature: 0.8 (consult) / 0.85 (mention) / varies by command
     │  Token budget: from roleTokenBudgets[role], modified by deadpan escalation
+    ▼
+condenseReply()  — features/ai/condenser.js
+    │  Tightens over-target replies to the role's character reply target
+    ▼
+storeMessage('assistant') → trackResponse → extractMemory (non-blocking)
     │
     ▼
-postProcess(reply, roleNature)
-    │  Probabilistic: lowercase, period stripping, abbreviations, emoji
-    │
-    ▼
-simulateTyping() → estimateDelay() → message.reply()
+startTypingKeepalive(channel) → getTypingDelay(reply.length) → splitMessage/maybeBurst → send
+    │  Typing indicator kept alive for the whole thinking duration; one
+    │  length-scaled pre-send pause (0.5–4 s); long replies split via
+    │  splitMessage + maybeBurst (postProcess() is /search-only — see below)
 ```
 
 ## Persona Layer Architecture
@@ -75,12 +87,12 @@ The persona system is assembled from 5 layers, fused into a single system prompt
 ```
 Layer 1: Identity         persona/identity.js     SKARN_CORE_IDENTITY (invariant)
 Layer 2: Role             persona/roles.js         Per-command role instruction
-Layer 3: Context          features/promptContext.js 13 dynamic lines from 7 subsystems
+Layer 3: Context          features/promptContext.js 32 context lines from ~12+ modules
 Layer 4: Post-processing  features/discordNative/postProcess.js  Probabilistic text transform
 Layer 5: Behaviors        features/{warmth,humor,etiquette,wisdom}/  Memory, timing, warmth
 ```
 
-Every AI call goes through all 5 layers.
+Layers 1–2 (identity + role) apply to every AI call. Layers 3–4 are **not universal**: the realm `aiDriver.js`, `musingEngine.js`, `presenceCycler.js`, `preprocessing/analyzer.js`, `condenser.js`, and `intelligence/toneAnalyzer.js` build their own context or output path and bypass `promptContext.js` / `postProcess.js`. Layer 4's `postProcess()` is a `/search`-only flavor pass (`commands/search.js:77`, `features/search/search.handler.js:74`); consult/mention use `splitMessage`/`maybeBurst` from the same module instead.
 
 ## Vertical Slice Architecture
 
@@ -93,7 +105,7 @@ features/<name>/
 commands/<name>.js          — Thin wrapper: re-exports command + handler
 ```
 
-The `commands/` directory contains thin wrappers only. `bot.js` loads all 75 command files.
+The `commands/` directory contains thin wrappers only. `bot.js` loads all 78 command files.
 
 ## Key Modules
 
@@ -101,12 +113,12 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 75 com
 | Module | File | Responsibility |
 |--------|------|----------------|
 | Core identity | `persona/identity.js` | `SKARN_CORE_IDENTITY` + `buildSystemPrompt()` |
-| Role registry | `persona/roles.js` | 27 role lines, token budgets, nature classification |
+| Role registry | `persona/roles.js` | 39 role lines, 39 token budgets, 39 nature classifications (roles/roleTokenBudgets/ROLE_NATURE keys aligned) |
 
 ### Context Assembly
 | Module | File | Responsibility |
 |--------|------|----------------|
-| Context collector | `features/promptContext.js` | Fetches all dynamic context from 7 subsystems |
+| Context collector | `features/promptContext.js` | Fetches all dynamic context — `buildContext()` returns 32 context lines from ~12+ modules (channel state, mood, relationship, culture, memory, warmth, humor, etiquette, emotion, news, knowledge, lorebook, RAG, etc.) |
 | Channel state | `features/channelState/` | Dormant/Attentive/Charged/Weathering state machine |
 | Relationship | `features/relationship/` | Familiarity, tags, banter level per user |
 | Mood | `features/mood/` | Per-guild mood (neutral/tired/amused/focused/refreshed) |
@@ -119,14 +131,20 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 75 com
 ### AI Orchestration
 | Module | File | Responsibility |
 |--------|------|----------------|
-| AI client | `ai/client.js` | Singleton OpenAI instance |
-| Mention router | `features/mentionRouter/` | @mention handling, AI call dispatch |
-| Consult handler | `features/consult/` | `/consult` command handler |
+| Shared pipeline | `features/ai/sharedPipeline.js` | `runPipeline()` (:46) — single consult/mention AI flow: analysis → `buildContext()` → `buildSystemPrompt()` → tool loop → `condenseReply()` → `storeMessage()` → typing → `splitMessage`/`maybeBurst` |
+| AI client | `ai/client.js` | Singleton OpenAI instance + `moderatedChatCompletion()` (central admission gate: `isSilenced()` + rate-limit reserve) |
+| Mention router | `features/mentionRouter/` | @mention handling, delegates to `runPipeline()` |
+| Consult handler | `features/consult/` | `/consult` command handler, delegates to `runPipeline()` |
 | Model router | `features/intelligence/modelRouter.js` | Selects AI_MODEL vs AI_MODEL_COMPLEX |
 | Knowledge graph | `features/intelligence/knowledgeGraph.js` | Entity extraction from conversations |
-| Rate limiter | `lib/rateLimit.js` | 50 calls per 10 minutes per user (`RATE_LIMIT_MAX_CALLS`, `lib/rateLimit.js:13`) |
+| Message analysis | `features/preprocessing/pipeline.js` | `runMessageAnalysis()` + `shouldAnalyze()` gate (analyzer-only; retriever/assembler trimmed) |
+| Reply condenser | `features/ai/condenser.js` | Tightens over-target replies to the role's character reply target (skips structured content) |
+| AI tools | `features/tools/` | `toolDefinitions.js` (getTools), `toolRunner.js` (runTool), `messageAdapter.js` (pseudo-message facade) — model-decided function calls on turn 1 of the pipeline |
+| Presence cycler | `features/presence/presenceCycler.js` | Rotating `client.setActivity` phrases, batch AI-generated pool (300) with 24h regen throttle |
+| Musing engine | `features/presence/musingEngine.js` | Ambient reflections (~1/guild/2 days, quiet channels) + `/musing` command path |
+| Rate limiter | `lib/rateLimit.js` | 50 calls per 10 minutes per user (`RATE_LIMIT_MAX_CALLS`, `lib/rateLimit.js:13`); `canCall()`/`recordCall()` single implementation (db/database.js is a re-export facade) |
 | AI stats | `lib/aiStats.js` | Hourly per-user cap (50/hr) |
-| Gates | `lib/gates.js` | Hostile user check, activation gates |
+| Gates | `lib/gates.js` | `ensureAiConfigured()` only — hostile user checks live in `features/safety/slurFilter.js` (`isHostile`/`recordStrike`/`isSilenced`, enforced centrally in `moderatedChatCompletion()`) |
 
 ### Realm of Skarn (RPG)
 | Module | File | Responsibility |
@@ -149,8 +167,8 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 75 com
 |--------|------|----------------|
 | Post-processor | `features/discordNative/postProcess.js` | Lowercase, emoji, abbreviation injection |
 | Reaction system | `features/discordNative/reactionSystem.js` | Passive emoji reactions (3% chance) |
-| Typing sim | `features/discordNative/typingSim.js` | Realistic typing delay |
-| Context injector | `features/discordNative/contextInjector.js` | Last-5-messages context |
+| Typing sim | `features/discordNative/typingSim.js` | `startTypingKeepalive()` + `getTypingDelay()` (single length-scaled pre-send pause; `typingController.js` deleted) |
+| Context injector | `features/discordNative/contextInjector.js` | **Zero callers** — conversation context comes from `getRecentAssistantOrUserMessages()`/`getServerBuzz()` in `promptContext.js` instead |
 | Attention gate | `features/discordNative/attentionGate.js` | Probability-based auto-respond gate |
 | Activation registry | `features/activation/activationRegistry.js` | Text command routing ("skarn weather") |
 | Proactive scheduler | `features/proactive/scheduler.js` | Follow-ups, absence check-ins |
@@ -198,14 +216,14 @@ Dormant is **only** set by `stateDecay.js` `runDecayPass()` — never by message
 | Hostile content | 10 regex patterns, 3 strikes in 10 min → silence | Blocks AI calls for hostile users |
 | Rate limit | 50 calls per 10 min per user (SQLite, `RATE_LIMIT_MAX_CALLS`) | Prevents abuse across all AI commands |
 | Hourly cap | 50 per hour per user | Controls cost |
-| Mention cooldown | 1s per user per channel (SQLite) | Prevents ping-pong loops |
+| Mention cooldown | Helpers `checkMentionCooldown()`/`setMentionCooldown()` exist (`db/ops.js:6-12`) but have **zero callers** — not enforced | Mention path relies on `canInteract`/`canRespond`/`isHostile`/`isSilenced` instead |
 | Sleep mode | Configurable UTC hours; skips AI responses | Reduces cost during quiet hours |
 | Reaction-only | 10% chance → only emoji reaction, no AI text | Reduces cost for casual messages |
 | Opt-in required | `proactive_opt_in` column defaults to 0 | Users must opt in for proactive messages |
 | Role line safety | Explicit bans in role lines (gore, romance) | Content safety baked into system prompt |
 | Slur filter Gate 1 | System prompt instruction (safetyLine) + identity edit | Reduces likelihood of AI-generated slurs |
-| Slur filter Gate 1 | System prompt safety line + OpenAI moderation (fail-closed) | Gate 2 DB patterns deleted 2026-08-01 (CONTEXT.md §13) |
-| Slur filter Gate 3 | OpenAI Moderation API | Catches novel slurs and context-dependent hate speech |
+| Slur filter Gate 2 | **Deleted 2026-08-01** — DB pattern matching removed (`slur_filter` table, cache, CRUD helpers) | No longer applies (CONTEXT.md §13) |
+| Slur filter Gate 3 | OpenAI Moderation API (fail-closed, centralized in `moderatedChatCompletion()`) | Catches novel slurs and context-dependent hate speech |
 | Unified strike system | 3 strikes in 10-min window → 10-min silence; input-only strikes; de-escalation lines are static (no AI call) | Combined hostile input + flagged output safety |
 | Realm rate limit | 30 calls/30min/user (SQLite via `app_flags`) + 1000/day/guild (`realm_world_state`) | Separate cap for RPG subsystem |
 | Realm combat timeout | 5-minute in-memory timer, 10% gold penalty | Prevents abandoned combat resource leaks |
@@ -266,7 +284,7 @@ All state lives in SQLite (`data/skarn.db`). No external database. Key patterns:
 - **Per-user-per-guild** scoping for most tables `(user_id, guild_id)` PK
 - **Ephemeral flags** via `app_flags` with optional TTL (SETs auto-clean via `pruneExpiredFlags()`)
 - **FTS5** on conversation messages and knowledge base for full-text search
-- **No migrations** — schema is `CREATE TABLE IF NOT EXISTS` on every startup; column additions use try/catch for idempotency
+- **Versioned migrations** — `db/migrations.js` runs at startup (`db/db.js:41`), tracked via SQLite `user_version` (2 migrations). Base schema is still `CREATE TABLE IF NOT EXISTS` on every startup (`db/skarn-schema.sql`); column additions use try/catch for idempotency
 
 See `docs/DATABASE.md` for the full table reference.
 
@@ -276,9 +294,9 @@ See `docs/DATABASE.md` for the full table reference.
 |-----|----------|--------|
 | Duplicate ROLE_NATURE (fixed 2026-07-20) | `postProcess.js` vs `roles.js` | Drift risk — `search` was missing from canonical source |
 | Deadpan escalation (fixed 2026-07-20) | `comedyTiming.js` | `extendBanterChain()` wrote to SQLite only, never updated in-memory Map |
-| `clearFlags()` is a no-op | `etiquetteEngine.js` line 44 | Called every 10min decay cycle, does nothing |
-| Duplicate `canCall()`/`recordCall()` | `lib/rateLimit.js` and `database.js` | Two implementations of same rate limit logic |
-| `mentionRouter.js` / `consult.handler.js` near-duplicate | Both handlers | ~180 lines of nearly identical AI call logic |
+| `clearFlags()` was a no-op (fixed 2026-08-01) | `etiquetteEngine.js` (was line 44) | Removed entirely — TTL-based `app_flags` cleanup handles all flag expiry |
+| Duplicate `canCall()`/`recordCall()` (fixed 2026-08-01) | `lib/rateLimit.js` and `database.js` | `lib/rateLimit.js` is now the single implementation (atomic reserve); `db/database.js` is a re-export facade |
+| `mentionRouter.js` / `consult.handler.js` near-duplicate (fixed 2026-08-01) | Both handlers | Both delegate to `runPipeline()` (`features/ai/sharedPipeline.js`); only the defer/edit and canInteract/canRespond differences remain |
 | Database god module (fixed 2026-08-04) | `db/database.js` → `db/` domain modules | `db/database.js` is now a facade over `db/{db,memory,conversation,relationship,channel,ops,humor,stories}.js`; 111 exports preserved, zero call-site changes |
 | Callback sampling is random | `callbackEngine.js` | 10% random, not gated by sentiment or reactions (per spec) |
 
