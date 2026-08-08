@@ -1,7 +1,7 @@
 // ===== PERSONA INVARIANTS =====
 // Guards the deterministic persona logic (no LLM involved). DB-backed functions
 // are seeded first. All assertions are pure-string / DB-seeded — no OpenAI.
-const { db } = require('../../db/database');
+const { db, addMemoryEntry } = require('../../db/database');
 const { getSocraticQuestion } = require('../../features/wisdom/socraticEngine');
 const mood = require('../../features/mood/moodManager');
 const { getEmotionDirective } = require('../../features/wisdom/emotionalIntelligence');
@@ -61,6 +61,10 @@ assert('no philosopher names in prompt', !names.some((n) => prompt.toLowerCase()
 const { buildContext } = require('../../features/promptContext');
 const { roles } = require('../../persona/roles');
 
+// Seed a fact (source='etch') so memoryLine is non-empty — the untrusted_data
+// assertion must check real wrapped content, not the literal tag inside SKARN_RULES.
+addMemoryEntry('uPrimary', 'gPrimary', 'etch', 'fact', 'this is a seeded fact to verify untrusted-data wrapping', 1.0, null);
+
 // A ≥50-char message with a socratic trigger: passes the analyzer gate (Task 1)
 // and promotes to full tier via getSocraticQuestion (promptContext.js:30-33).
 const socraticMsg = 'i cant decide between two jobs, what would you advise?';
@@ -73,6 +77,6 @@ const primaryPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
 
 assert('primary path prompt includes SKARN_RULES', primaryPrompt.includes('Discord TOS compliance'));
 assert('primary path prompt includes safetyLine', !!ctx.safetyLine && primaryPrompt.includes(ctx.safetyLine));
-assert('primary path prompt includes untrusted_data wrapping', primaryPrompt.includes('<untrusted_data>'));
+assert('primary path prompt wraps memory in untrusted_data', !!ctx.memoryLine && primaryPrompt.includes('<untrusted_data>\n' + ctx.memoryLine + '\n</untrusted_data>'));
 assert('primary path prompt includes socratic wisdom line', !!ctx.socraticLine && primaryPrompt.includes(ctx.socraticLine));
 assert('primary path prompt ends with SKARN_FOOTER', primaryPrompt.trim().endsWith('That\'s why you\'re here.'));
