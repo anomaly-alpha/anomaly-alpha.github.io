@@ -46,7 +46,10 @@ function isBlocked(rel) {
 }
 
 function send(res, status, body, type) {
-  res.writeHead(status, { 'Content-Type': type || 'text/plain; charset=utf-8' });
+  res.writeHead(status, {
+    'Content-Type': type || 'text/plain; charset=utf-8',
+    'X-Content-Type-Options': 'nosniff'
+  });
   res.end(body);
 }
 
@@ -59,12 +62,15 @@ function serveFile(res, filePath) {
 }
 
 http.createServer(function (req, res) {
+  if (req.method !== 'GET' && req.method !== 'HEAD') return send(res, 405, 'Method Not Allowed');
   var urlPath;
   try {
     urlPath = decodeURIComponent(req.url.split('?')[0]);
   } catch (e) {
     return send(res, 400, 'Bad Request');
   }
+  // NUL bytes crash fs.stat synchronously — reject before touching the filesystem
+  if (urlPath.indexOf('\0') !== -1) return send(res, 400, 'Bad Request');
   var rel = urlPath.replace(/^\/+/, '');
   if (isBlocked(rel)) return send(res, 404, 'Not Found');
   var filePath = path.normalize(path.join(ROOT, rel));
