@@ -1,5 +1,7 @@
 # Skarn Bot — Pre-Upgrade Audit
 
+> **Status as of 2026-08-08:** ~15 of the ~27 findings below are now FIXED (see CONTEXT.md `> **Resolved ...**` notes): Realm trade dedup + transactional transfer (`economy.js`), `applyBaselineFamiliarity` re-pointed at `memory_entries`, trade flow wired into realm handlers, AI-gate consolidation (`audit-ai-gate.js` guards it), omen embedding cache, conversation-read consolidation, db decomposition (46-line facade), versioned migrations + WAL + FK, backup script + pm2, realm per-subcommand split (`features/realm/handlers/`), typing consolidation, smoke pipeline (10 suites), doc-drift guard (`audit-docs.js`). Still open: 5-LLM stack per mention (analyzer now cost-gated, not removed), sleep mode still gates only slash commands (mentions ungated), RAG index pairing (fixed 2026-08-08), `err.message` leak, Tetris canvas-per-press, search handler duplication, reminders/giveaways missing indexes, `vault.js` was fixed 2026-08-08. Read this report as the audit it was — CONTEXT.md §9/§12/§13 is the current-state record.
+
 - **Date:** 2026-08-02
 - **Scope:** Full-codebase audit (79 JS files, ~16.5k LOC) across five axes + data layer + ops
 - **Method:** 4 parallel subagent deep-dives (architecture/docs, core code, data layer, ops/integrations), consolidated here

@@ -1,5 +1,7 @@
 # Pre-processing Pipeline Implementation Plan
 
+> **Status as of 2026-08-08:** This plan describes the retired 3-stage pipeline. The Analyze→Retrieve→Assemble design was executed, then superseded 2026-08-08 by the prompt-assembly unification: `assembler.js`/`retriever.js` deleted, `features/preprocessing/pipeline.js` trimmed to analyzer-only (`runMessageAnalysis` + `shouldAnalyze` cost gate mirroring `isFullTier`), and `sharedPipeline.js` always builds the prompt via `buildContext()` + `buildSystemPrompt()`. `CHEAP_COMMANDS`/`isSkipListCommand` removed; `runKnowledgeDecay` deleted (decay is `decayMemoryEntries()`); model default is `gpt-5.4-mini`. The analyzer still exists and feeds model routing (`selectModel` complexity) + memory extraction — it just never touches prompt content. See CONTEXT.md §2/§5 for current state.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use compose:subagent (recommended) or compose:execute to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a 3-stage LLM pre-processing pipeline (Analyze → Retrieve → Assemble) that enriches user messages and prunes context before the main Skarn AI call, plus a background post-processor that replaces knowledgeGraph entity extraction.
