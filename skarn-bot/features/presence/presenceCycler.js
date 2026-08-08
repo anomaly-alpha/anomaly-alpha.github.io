@@ -169,9 +169,7 @@ function refreshInBackground() {
 
 function setActivity(client, phrase) {
   if (!client || !client.user) return;
-  client.user.setActivity(phrase, { type: 3 }).catch(function(err) {
-    console.error('[Presence] setActivity error:', err.message);
-  });
+  client.user.setActivity(phrase, { type: 3 });
 }
 
 function startPresenceCycler(client) {
