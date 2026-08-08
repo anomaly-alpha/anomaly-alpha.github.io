@@ -52,3 +52,27 @@ assert('familiarity tiers differ', low && high && low !== high);
 const prompt = buildSystemPrompt({ roleLine: '', contextLine: '' });
 const names = ['socrates', 'marcus aurelius', 'sun tzu', 'laozi', 'nietzsche', 'seneca', 'epictetus'];
 assert('no philosopher names in prompt', !names.some((n) => prompt.toLowerCase().includes(n)));
+
+// ===== PRIMARY-PATH PROMPT GUARDRAILS (regression for the 2026-08-08 drift) =====
+// sharedPipeline.js now ALWAYS builds the prompt via buildContext + buildSystemPrompt.
+// Replicate that exact construction here and assert the guardrails that the old
+// thin assembler path silently dropped: SKARN_RULES, safetyLine, untrusted-data
+// wrapping, and at least one wisdom-layer line.
+const { buildContext } = require('../../features/promptContext');
+const { roles } = require('../../persona/roles');
+
+// A ≥50-char message with a socratic trigger: passes the analyzer gate (Task 1)
+// and promotes to full tier via getSocraticQuestion (promptContext.js:30-33).
+const socraticMsg = 'i cant decide between two jobs, what would you advise?';
+const ctx = buildContext('uPrimary', 'gPrimary', 'cPrimary', {
+  roleNature: 'casual',
+  userContent: socraticMsg,
+  interactionCount: 0,
+});
+const primaryPrompt = buildSystemPrompt({ roleLine: roles.consult, ...ctx });
+
+assert('primary path prompt includes SKARN_RULES', primaryPrompt.includes('Discord TOS compliance'));
+assert('primary path prompt includes safetyLine', !!ctx.safetyLine && primaryPrompt.includes(ctx.safetyLine));
+assert('primary path prompt includes untrusted_data wrapping', primaryPrompt.includes('<untrusted_data>'));
+assert('primary path prompt includes socratic wisdom line', !!ctx.socraticLine && primaryPrompt.includes(ctx.socraticLine));
+assert('primary path prompt ends with SKARN_FOOTER', primaryPrompt.trim().endsWith('That\'s why you\'re here.'));
