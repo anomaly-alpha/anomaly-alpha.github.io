@@ -10,7 +10,12 @@ var PAGE_PATH = path.join(__dirname, '..', 'skarn-bot', 'index.html');
 var BLOB_BASE = 'https://github.com/anomaly-alpha/anomaly-alpha.github.io/blob/main/';
 var DOCS_PREFIX = 'skarn-bot/docs/';
 var TYPES = ['plans', 'specs', 'reports', 'adr', 'prompts'];
+var TYPE_LABELS = { plans: 'Plans', specs: 'Specs', reports: 'Reports', adr: 'ADRs', prompts: 'Prompts' };
 var EXCLUDED = ['compose', 'research'];
+
+function escHtml(str) {
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
 
 function labelFromFile(file) {
   return String(path.basename(file, '.md'))
@@ -19,7 +24,7 @@ function labelFromFile(file) {
 }
 
 function li(file) {
-  return '      <li><a href="' + BLOB_BASE + file + '">' + labelFromFile(file) + '</a></li>';
+  return '      <li><a href="' + escHtml(BLOB_BASE + file) + '">' + escHtml(labelFromFile(file)) + '</a></li>';
 }
 
 var files = cp.execSync('git ls-files ' + DOCS_PREFIX, { encoding: 'utf8' })
@@ -29,6 +34,13 @@ var files = cp.execSync('git ls-files ' + DOCS_PREFIX, { encoding: 'utf8' })
     var rest = f.slice(DOCS_PREFIX.length);
     return EXCLUDED.every(function (d) { return rest.indexOf(d + '/') !== 0; });
   });
+
+// `git ls-files` pathspec is CWD-relative — running from a subdirectory
+// silently yields zero files and would wipe the committed index.
+if (!files.length) {
+  console.error('Error: no committed docs found under ' + DOCS_PREFIX + ' — run from repo root (npm run skarn-index)');
+  process.exit(1);
+}
 
 var html = [];
 
@@ -52,7 +64,7 @@ TYPES.forEach(function (type) {
   });
   var dates = Object.keys(groups).sort(function (a, b) { return b.localeCompare(a); });
   if (dates.indexOf('misc') !== -1) { dates.splice(dates.indexOf('misc'), 1); dates.push('misc'); }
-  html.push('    <section class="docs">\n      <h2>' + type.charAt(0).toUpperCase() + type.slice(1) + '</h2>');
+  html.push('    <section class="docs">\n      <h2>' + (TYPE_LABELS[type] || type.charAt(0).toUpperCase() + type.slice(1)) + '</h2>');
   dates.forEach(function (date) {
     groups[date].sort();
     html.push('      <h3>' + date + '</h3>\n      <ul>');
