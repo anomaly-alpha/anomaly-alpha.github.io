@@ -473,7 +473,19 @@ skarn-bot/
 
 ## Rich Presence
 
-Shows "Watching 😈 Servant of ... / Anomaly Alpha" with timer counting up from 1970.
+Two presence paths:
+
+- **Presence cycler (in-bot)** — `features/presence/presenceCycler.js`, started by `features/scheduler/index.js` (`startPresenceCycler(client)`). On boot it loads an AI-batch-generated phrase pool from `app_state` (`presence_phrases` / `presence_phrases_generated_at`), generating a fresh `PRESENCE_POOL_SIZE`-sized pool (default 300 one-liners, ≤ 8 words, in Skarn's dry observing voice via the `roles.presence` role + `moderatedChatCompletion`) when none is stored or it is older than `PRESENCE_REFRESH_DAYS`. It then cycles `client.setActivity(pool[i], { type: 3 })` every `PRESENCE_CYCLE_MS` (default 120000 = 2 min), skipping ticks during sleep hours. Failed generation falls back to the stored pool (or the static line `the mortals squabble`); regen attempts are throttled to one per 24 h via `app_flags` key `presence_regen_at` so a dead AI path isn't retried every cycle.
+
+  Env knobs:
+
+  | Var | Default | Controls |
+  |-----|---------|----------|
+  | `PRESENCE_POOL_SIZE` | `300` | Number of phrases the AI batch-generates per pool |
+  | `PRESENCE_CYCLE_MS` | `120000` | How often the "Watching" text advances (ms) |
+  | `PRESENCE_REFRESH_DAYS` | `7` | Pool regeneration interval (days) |
+
+- **Legacy desktop script** (`rich-presence.js`, pm2-supervised): shows "Watching 😈 Servant of ... / Anomaly Alpha" with timer counting up from 1970.
 
 ```bash
 node rich-presence.js
