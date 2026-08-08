@@ -8,6 +8,8 @@ const { getEmotionDirective } = require('../../features/wisdom/emotionalIntellig
 const { setUserEmotion } = require('../../db/database');   // NOT on emotionalIntelligence exports
 const { getRelationshipLine } = require('../../features/relationship/relationshipTracker');
 const { buildSystemPrompt } = require('../../persona/identity');
+const { buildContext } = require('../../features/promptContext');
+const { roles } = require('../../persona/roles');
 
 function assert(label, cond) {
   console.log(label + ':', cond);
@@ -53,20 +55,21 @@ const prompt = buildSystemPrompt({ roleLine: '', contextLine: '' });
 const names = ['socrates', 'marcus aurelius', 'sun tzu', 'laozi', 'nietzsche', 'seneca', 'epictetus'];
 assert('no philosopher names in prompt', !names.some((n) => prompt.toLowerCase().includes(n)));
 
-// ===== PRIMARY-PATH PROMPT GUARDRAILS (regression for the 2026-08-08 drift) =====
+// ===== PRIMARY-PATH PROMPT GUARDRAILS (unified prompt-assembly contract) =====
 // sharedPipeline.js now ALWAYS builds the prompt via buildContext + buildSystemPrompt.
 // Replicate that exact construction here and assert the guardrails that the old
 // thin assembler path silently dropped: SKARN_RULES, safetyLine, untrusted-data
-// wrapping, and at least one wisdom-layer line.
-const { buildContext } = require('../../features/promptContext');
-const { roles } = require('../../persona/roles');
+// wrapping, and at least one wisdom-layer line. Pipeline wiring itself is guarded
+// by the Task-1 refactor (branch removed, assembler/retriever deleted); this smoke
+// guards the contract those fixes rely on.
 
 // Seed a fact (source='etch') so memoryLine is non-empty — the untrusted_data
 // assertion must check real wrapped content, not the literal tag inside SKARN_RULES.
 addMemoryEntry('uPrimary', 'gPrimary', 'etch', 'fact', 'this is a seeded fact to verify untrusted-data wrapping', 1.0, null);
 
-// A ≥50-char message with a socratic trigger: passes the analyzer gate (Task 1)
-// and promotes to full tier via getSocraticQuestion (promptContext.js:30-33).
+// A ≥50-char message with a socratic trigger: passes the analyzer gate (Task 1).
+// ≥50 chars so it's full tier by length; also fires the socratic trigger
+// (getSocraticQuestion, promptContext.js:30-33).
 const socraticMsg = 'i cant decide between two jobs, what would you advise?';
 const ctx = buildContext('uPrimary', 'gPrimary', 'cPrimary', {
   roleNature: 'casual',
