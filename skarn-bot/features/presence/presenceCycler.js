@@ -128,18 +128,23 @@ async function generatePool() {
 async function generateAndStore() {
   if (generating) return null;
   generating = true;
-  const phrases = await generatePool();
-  generating = false;
-  if (!phrases) {
-    console.log('[Presence] Generation failed — keeping existing pool');
-    return null;
+  try {
+    const phrases = await generatePool();
+    if (!phrases) {
+      console.log('[Presence] Generation failed — keeping existing pool');
+      return null;
+    }
+    pool = phrases;
+    poolIndex = 0;
+    storePool(phrases);
+    console.log('[Presence] Generated ' + phrases.length + ' phrases');
+    return phrases;
+  } finally {
+    // Always release the guard and stamp the attempt so the 24h regen throttle
+    // also covers failures (avoids retrying a dead AI path every 2 min).
+    generating = false;
+    setFlag(KEY_LAST_REGEN, String(Date.now()));
   }
-  pool = phrases;
-  poolIndex = 0;
-  storePool(phrases);
-  setFlag(KEY_LAST_REGEN, String(Date.now()));
-  console.log('[Presence] Generated ' + phrases.length + ' phrases');
-  return phrases;
 }
 
 async function maybeRegenerate() {
@@ -163,7 +168,10 @@ function refreshInBackground() {
 // ===== Cycling =====
 
 function setActivity(client, phrase) {
-  if (client && client.user) client.user.setActivity(phrase, { type: 3 });
+  if (!client || !client.user) return;
+  client.user.setActivity(phrase, { type: 3 }).catch(function(err) {
+    console.error('[Presence] setActivity error:', err.message);
+  });
 }
 
 function startPresenceCycler(client) {
