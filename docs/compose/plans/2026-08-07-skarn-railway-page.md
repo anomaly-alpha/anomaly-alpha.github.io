@@ -371,7 +371,7 @@ page = page.replace(markerRe, block);
 var today = new Date();
 var MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 var dateLabel = MONTHS[today.getMonth()] + ' ' + today.getDate() + ', ' + today.getFullYear();
-page = page.replace(/(Updated\s+)(\w+\s+\d+,\s+\d{4})/, '$1' + dateLabel);
+page = page.replace(/(Updated\s+<span id="skarn-updated">\s*)(\w+\s+\d+,\s+\d{4})/, '$1' + dateLabel);
 fs.writeFileSync(PAGE_PATH, page, 'utf8');
 console.log('Updated skarn-bot/index.html with ' + files.length + ' docs links');
 ```
