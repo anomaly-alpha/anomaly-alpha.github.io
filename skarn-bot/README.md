@@ -485,7 +485,7 @@ Two presence paths:
   | `PRESENCE_CYCLE_MS` | `120000` | How often the "Watching" text advances (ms) |
   | `PRESENCE_REFRESH_DAYS` | `7` | Pool regeneration interval (days) |
 
-- **Legacy desktop script** (`rich-presence.js`, pm2-supervised): shows "Watching 😈 Servant of ... / Anomaly Alpha" with timer counting up from 1970.
+- **Legacy desktop script** (pm2-supervised `skarn-rpc` → `rich-presence.js`): shows a Streaming presence with `<+HUSH> ONLINE` / `<+HUSH> AWAITING SIGNAL` (`type: 1`, Twitch URL `https://twitch.tv/skarn`), timer counting up from 1970.
 
 ```bash
 node rich-presence.js
