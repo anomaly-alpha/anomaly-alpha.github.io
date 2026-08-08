@@ -29,7 +29,7 @@ AI_MODEL=gpt-5.4-mini
 npm start
 ```
 
-## Quick Reference (77 Commands)
+## Quick Reference (78 Commands)
 
 Grouped by the same themes as `/help` — use `/help` in Discord for the live, always-current list.
 
@@ -186,10 +186,10 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 
 #### `/8ball`
 - **Parameters:** `question` (required)
-- **Response:** Random answer from 20 classic responses
+- **Response:** AI-generated prophecy from Skarn (via `moderatedChatCompletion` with the `prophecy` role — no canned response list)
 
 #### `/poll`
-- **Parameters:** `question` (required), `options` (required, comma-separated, max 10)
+- **Parameters:** `question` (required), `options` (optional, comma-separated, max 10 — leave blank for Skarn to suggest options via AI)
 - **Response:** Embed with numbered options and reaction emojis
 
 #### `/meme`
@@ -420,6 +420,11 @@ When inviting the bot:
 | `DISCORD_TOKEN` | Yes | Bot token from Developer Portal |
 | `CLIENT_ID` | Yes | Application ID from Developer Portal |
 | `OPENAI_API_KEY` | For AI | OpenAI API key |
+| `TAVILY_API_KEY` | For `/search` | Tavily API key for `/search` and the `search_web` tool (`features/search/searchEngine.js`; unset → "not configured" result) |
+| `AI_MODEL` | No | Default OpenAI model — model router falls back to `gpt-5.4-mini` (`features/intelligence/modelRouter.js`); some commands still hardcode `gpt-4o-mini` fallbacks when unset |
+| `AI_MODEL_COMPLEX` | No | Model for long/complex/knowledge-matched queries; falls back to `AI_MODEL` (`modelRouter.js`) |
+| `REALM_DAILY_CALL_LIMIT` | No | Realm AI calls per guild per day (default 1000, `features/realm/realmConfig.js`) |
+| `SKARN_DB_PATH` | No | SQLite database path (defaults to `data/skarn.db`, `db/db.js`) |
 | `SLEEP_START` | No | Sleep hour (0 = disabled) |
 | `SLEEP_END` | No | Wake hour (0 = disabled) |
 | `SLEEP_TIMEZONE` | No | UTC offset (default 0) |
@@ -460,7 +465,7 @@ skarn-bot/
 ├── bot.js                  # Main bot + event handlers
 ├── deploy-commands.js      # Registers slash commands
 ├── rich-presence.js        # Discord Rich Presence (desktop)
-├── commands/               # 77 slash command files
+├── commands/               # 78 slash command files
 ├── games/
 │   └── tetris.js           # Tetris game engine
 ├── data/                   # Runtime data (gitignored)
@@ -494,7 +499,7 @@ node rich-presence.js
 
 ### Verification (manual, per project convention)
 
-No test framework — verify with `npm run smoke` (runs every suite in `scripts/smokes/` against its own temp DB; a one-time `[DB] Migration 1 ... applied` log line on a fresh DB is expected) plus syntax checks and a `node bot.js` boot check. Individual blocks below remain for copy-paste debugging.
+No test framework — verify with `npm run smoke` (runs every suite in `scripts/smokes/` against its own temp DB; a fresh DB logs both `[DB] Migration 1 (add_reminder_giveaway_indexes)` and `[DB] Migration 2 (add_daily_news_published_at)` applied — see `db/migrations.js`) plus syntax checks and a `node bot.js` boot check. Individual blocks below remain for copy-paste debugging.
 
 ```bash
 node -c bot.js                                    # syntax check
@@ -567,7 +572,7 @@ global.fetch = async () => ({ ok: true, text: async () => '<rss><channel><item><
 "
 ```
 
-Expected: `user_version 1`, `baseline OK`, `dup rejected: true`, `trade done: true 0 2`, `condense long uses gate output: true`, `condense short unchanged: true`, `condense tool unchanged: true`, `weather tool returns live data: true`, `dice tool returns a real roll: true`, `news parses + dedupes: true`.
+Expected: `user_version 2`, `baseline OK`, `dup rejected: true`, `trade done: true 0 2`, `condense long uses gate output: true`, `condense short unchanged: true`, `condense tool unchanged: true`, `weather tool returns live data: true`, `dice tool returns a real roll: true`, `news parses + dedupes: true`.
 
 ### run_command smoke
 

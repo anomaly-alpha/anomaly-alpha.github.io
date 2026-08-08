@@ -29,10 +29,11 @@ const rpc = new RPC.Client({ transport: 'ipc' });
 rpc.on('ready', () => {
   console.log('Rich Presence connected!');
   rpc.setActivity({
-    details: '😈 Servant of ...',
-    state: 'Anomaly Alpha',
+    details: '<+HUSH> ONLINE',
+    state: '<+HUSH> AWAITING SIGNAL',
     instance: false,
-    type: 3, // 0=Playing, 1=Streaming, 2=Listening, 3=Watching, 5=Competing
+    type: 0, // 0=Playing, 1=Streaming, 2=Listening, 3=Watching, 5=Competing
+    startTimestamp: 1000, // Jan 1, 1970 00:00:01 — timer counts up from here
   });
 });
 
@@ -41,6 +42,8 @@ rpc.login({ clientId }).catch(err => {
   console.log('Make sure Discord is running.');
 });
 ```
+
+> **Note:** this example mirrors the activity in the repo's own `rich-presence.js`, but the repo script is **not** parameterized — it hardcodes `clientId: '982308134871765022'` (no env var), so repurposing it for your own application requires editing the source. The "Replace `YOUR_APPLICATION_ID`" instruction above applies only to this standalone template.
 
 ## Step 3: Run in Background
 
