@@ -24,18 +24,18 @@ Four additions to the repo root, all plain Node/HTML, no new dependencies:
 2. `package.json` — add `"start": "node scripts/serve.js"`. This is the missing piece
    that fixes "Application failed to respond": Railway/Nixpacks detects Node, installs
    deps, and runs `npm start`; the server now listens on `$PORT`.
-3. `skarn/index.html` — the Skarn landing page: hero blurb, link to the bot README,
+3. `skarn-bot/index.html` — the Skarn landing page: hero blurb, link to the bot README,
    the research pack (REPORT.md, brief.md, findings F1–F6), and a generated index of
-   the full docs tree. Markdown documents are linked as GitHub blob URLs
-   (`https://github.com/anomaly-alpha/anomaly-alpha.github.io/blob/main/<path>`) so
-   GitHub renders them nicely.
+   the full docs tree. Served at `/skarn-bot/`. Markdown documents are linked as GitHub
+   blob URLs (`https://github.com/anomaly-alpha/anomaly-alpha.github.io/blob/main/<path>`)
+   so GitHub renders them nicely.
 4. `scripts/generate-skarn-index.js` + npm script `skarn-index` — regenerates the docs
    index section of `skarn/index.html` between `<!--SKARN_INDEX_START-->` /
    `<!--SKARN_INDEX_END-->` markers, following the repo's existing marker-generator
    pattern (`scripts/generate-codes.js`, `scripts/generate-music.js`).
 
 Side effect (free): the same files are served by GitHub Pages at
-`https://anomaly-alpha.github.io/skarn/`. No conflict; both hosts serve the same
+`https://anomaly-alpha.github.io/skarn-bot/`. No conflict; both hosts serve the same
 committed tree.
 
 ## [S3] Files and responsibilities
@@ -44,8 +44,8 @@ committed tree.
 |------|----------------|
 | `scripts/serve.js` | Zero-dep static server. Entry point for Railway (`npm start`). |
 | `package.json` | `"start": "node scripts/serve.js"` + `"skarn-index": "node scripts/generate-skarn-index.js"`. |
-| `skarn/index.html` | Landing page template with SKARN_INDEX markers. Committed. |
-| `scripts/generate-skarn-index.js` | Scans `git ls-files skarn-bot/docs`, builds grouped link HTML, injects between markers. |
+| `skarn-bot/index.html` | Landing page template with SKARN_INDEX markers. Committed. Served at `/skarn-bot/`. |
+| `scripts/generate-skarn-index.js` | Scans `git ls-files skarn-bot/docs`, builds grouped link HTML, injects between markers in `skarn-bot/index.html`. |
 
 No changes to `npm run build` (deploy-time build already runs generate-codes /
 generate-music / tailwind / terser — all local and idempotent; keep it untouched).
@@ -66,7 +66,7 @@ generate-music / tailwind / terser — all local and idempotent; keep it untouch
 - 404 with a plain-text body for missing files; 403/404 for blocked paths.
 - Single-process, no clustering. Logs each request to stdout (Railway captures logs).
 
-## [S5] Landing page (`skarn/index.html`)
+## [S5] Landing page (`skarn-bot/index.html`)
 
 Self-contained single HTML file, inline CSS, no external assets (matches repo's
 zero-CDN philosophy). Dark "abyss" theme fitting the Skarn persona
@@ -96,7 +96,7 @@ zero-CDN philosophy). Dark "abyss" theme fitting the Skarn persona
   + repo-relative path. Label: filename without extension, dashes/underscores to
   spaces, title-cased.
 - Validate: every path collected comes from `git ls-files` output — no filesystem
-  assumptions. If the marker pair is missing from `skarn/index.html`, exit non-zero
+  assumptions. If the marker pair is missing from `skarn-bot/index.html`, exit non-zero
   with a clear message (same contract as generate-music.js).
 - Idempotent: re-running produces byte-identical output given unchanged docs.
 - Excluded from `npm run build`; run explicitly via `npm run skarn-index` after docs
@@ -107,8 +107,8 @@ zero-CDN philosophy). Dark "abyss" theme fitting the Skarn persona
 Local (no build required — files are committed):
 1. `node scripts/generate-skarn-index.js` → regenerates index; exit 0.
 2. `PORT=8080 node scripts/serve.js &` then curl:
-   - `GET /skarn/` → 200, contains `<title>Skarn`
-   - `GET /skarn` (no slash) → 200 (directory → index.html)
+   - `GET /skarn-bot/` → 200, contains `<title>Skarn`
+   - `GET /skarn-bot` (no slash) → 200 (directory → index.html)
    - `GET /` → 200 (main site index.html)
    - `GET /skarn-bot/docs/research/skarn/REPORT.md` → 200, `text/markdown`
    - `GET /.env` → 404 (dotfile block)
@@ -122,7 +122,7 @@ Deployment:
 - If the deploy-time `npm run build` is slow or fails, set the Railway service's
   Build Command to `true` (or `npm install`) in the dashboard — files are committed,
   no build output is needed. Start Command stays `npm start`.
-- Confirm `https://anomaly-alphagithubio-production.up.railway.app/skarn/` loads.
+- Confirm `https://anomaly-alphagithubio-production.up.railway.app/skarn-bot/` loads.
 
 ## [S8] Out of scope
 
