@@ -5,7 +5,8 @@ Ask with `@Skarn` (or just `skarn ...` in a server channel), and he'll recognize
 request and call the matching tool, then answer in character with the real result.
 
 There are **10 tools** today, and through the `run_command` tool Skarn can run
-**any** of his 37 executable commands from plain speech. Everything below is an
+**any** of his 38 executable commands from plain speech — any *runnable* one,
+that is: lore and musing stay narrated in character. Everything below is an
 example *phrasing* — Skarn's model understands natural language, so these are
 starters, not an exact script. **Section 11** is the complete reference: every
 command in the bot and how to say it.
@@ -150,7 +151,7 @@ Ask Skarn what he remembers about you.
 
 ## 10. Any command, spoken — `run_command`
 
-Skarn can run **any** of his 37 executable commands when you ask naturally —
+Skarn can run **any** of his 38 executable commands when you ask naturally —
 level, leaderboard, avatar, poll, server setup, the lorebook, omens, the
 chronicle, and more. He picks the right command, executes it for real, and posts
 the result, then adds a one-line in-character comment.
@@ -170,7 +171,7 @@ the result, then adds a one-line in-character comment.
   you have the required permission — otherwise Skarn says so.
 - **Chat-first commands:** AI-driven commands (roast, joke, code, recipe...) don't need
   the tool — Skarn just answers in character. Interactive games (realm, tetris,
-  adventure, trivia) stay slash-launched; he'll point you to them.
+  aitrivia, trivia) stay slash-launched; he'll point you to them.
 
 The complete per-command reference with example phrasings is **Section 11** below.
 
@@ -180,7 +181,7 @@ The complete per-command reference with example phrasings is **Section 11** belo
 
 Three ways to use Skarn, and everything falls into one of them:
 
-1. **He runs it for you** (Section 11.1) — 37 commands executed for real via `run_command`.
+1. **He runs it for you** (Section 11.1) — 38 commands executed for real via `run_command`.
 2. **He just answers** (Section 11.3) — AI-driven commands; saying it *is* the invocation.
 3. **He points you to the slash command** (Section 11.4) — multi-turn interactive games.
 
@@ -265,7 +266,9 @@ Say it naturally; he executes the real command and posts the result. Rows marked
 ### 11.2 Commands with dedicated tools
 
 These have their own tools (Sections 1–9) — ask naturally and Skarn calls the
-tool directly; the `skarn <name>` activation phrases still work too.
+tool directly; the activation phrases still work too (`skarn weather`, `skarn
+dice`, `skarn news`, ...). Two break the `<name>` pattern: `skarn remind me`
+and `skarn what do you know about me`.
 
 | Command | Backed by | Section |
 | --- | --- | --- |
@@ -303,6 +306,7 @@ responds in his own voice with the right flavor — no slash command, no tool ca
 | `insult` | `insult me` (playful, never mean) |
 | `joke` | `tell me a joke` · `make up a joke about programmers` |
 | `meme` | `make a meme about Mondays` |
+| `musing` | `ask for a musing` · `skarn musing` (a grounded reflection, ending on a question-hook) |
 | `pickup` | `give me a pickup line` |
 | `recipe` | `what can I make with chicken and rice?` · `recipe for chocolate cake` |
 | `roast` | `roast me` · `roast my friend gently` |
