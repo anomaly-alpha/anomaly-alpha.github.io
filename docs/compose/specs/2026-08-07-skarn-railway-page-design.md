@@ -115,6 +115,8 @@ Local (no build required — files are committed):
    - `GET /node_modules/foo` → 404
    - `GET /../package.json` → 404 (traversal block)
    - `GET /nonexistent` → 404
+   - `GET /%00` → 400 (NUL-byte guard — server must stay alive for the next request)
+   - `POST /` → 405 (non-GET/HEAD methods rejected)
 3. Confirm every blob URL in the generated index corresponds to a committed path.
 
 Deployment:
