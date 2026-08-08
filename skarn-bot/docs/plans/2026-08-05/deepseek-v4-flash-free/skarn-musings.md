@@ -233,8 +233,8 @@ se.getExistingStory = function() { return 'I watched a machine win its first war
 var cs = require('./features/serverMemory/chronicle/chronicleStore');
 cs.getRecentEntry = function() { return { content: 'the guild argued about game balance for two days' }; };
 require('./features/serverMemory/signalStore').getSignalsSince = function() { return []; };
-var conv = require('./db/conversation');
-conv.getServerBuzz = function() { return []; };
+var dbm = require('./db/database');
+dbm.getServerBuzz = function() { return []; };   // stub the FACADE — the engine destructures from db/database, not db/conversation
 var ai = require('./ai/client');
 var calls = [];
 ai.moderatedChatCompletion = function(p) {
@@ -253,10 +253,12 @@ m.generateMusing('g1', 'musing:g1').then(function(out) {
 
 Expected: `OUT: Machines never tire of winning.` and all three `HAS …: true`.
 
-Run (failure path — stub the gate BEFORE require, `success:false` must yield `null`, no fallback text):
+Run (failure path — stub the gate BEFORE require, `success:false` must yield `null`, no fallback text; a story row is seeded so the prompt is non-empty and the gate is genuinely reached):
 
 ```bash
 SKARN_DB_PATH=$(mktemp -d)/musing2.db node -e "
+var db = require('./db/database');
+db.db.prepare(\"INSERT INTO skarn_stories (topic, story_text, source, created_at, used_count) VALUES ('technology','quiet','canonical',?,0)\").run(Date.now());
 var ai = require('./ai/client');
 ai.moderatedChatCompletion = function() { return Promise.resolve({ success: false, safeMessage: 'blocked' }); };
 var m = require('./features/presence/musingEngine');   // require AFTER stub
