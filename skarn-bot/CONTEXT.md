@@ -62,6 +62,7 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 | Random interjections | `interjection_cooldowns` | 5 minutes | 1 per channel | Avoids spammy presence |
 | Active listening cues | `active_listen_cooldowns` | 5 minutes | 1 per channel | Same spacing principle |
 | Reaction emoji | `cooldowns` table (generic) via `checkCooldown()` | ~60 seconds | 1 per channel | SQLite-backed since 2026-08-01 |
+| Per-guild AI spend | `guild_ai_daily:{guildId}` in `app_state` | 1 UTC day | `GUILD_AI_DAILY_LIMIT` (default 2000) | One busy server can't exhaust the shared wallet (chat buckets: mention/consult/musing/interjection; DMs budget under `'dm'`) |
 
 **Design rationale**: each major feature that triggers an AI call or outbound Discord action gets its own rate limit bucket. This prevents one feature's traffic (e.g. reaction spam) from starving another (e.g. AI replies). The admission gate for all AI-bound calls is **centralized in `moderatedChatCompletion()`** (`ai/client.js`): it checks `isSilenced()` then atomically reserves a slot in `rate_limits` via `lib/rateLimit.js` before every call. The per-feature cooldowns are lighter-weight checks that run before that gate is consulted. A consequence: adding a new feature that makes AI calls or sends outbound messages should always include a new cooldown table or check — reusing an existing bucket risks cascading throttles. (The former @mention bucket — `mention_cooldowns` table — was **removed 2026-08-08**: the helpers had zero callers and the mention path uses `canInteract`/`canRespond`/`isHostile`/`isSilenced` instead.)
 
@@ -283,6 +284,7 @@ The following environment variables are consumed by the codebase. Variables are 
 | `PRESENCE_CYCLE_MS` | No | `120000` | How often the "Watching" presence text advances (ms) |
 | `PRESENCE_REFRESH_DAYS` | No | `7` | Presence pool regeneration interval (days) |
 | `REALM_DAILY_CALL_LIMIT` | No | `1000` | Realm per-guild daily AI-call ceiling (`features/realm/realmConfig.js:204`) |
+| `GUILD_AI_DAILY_LIMIT` | No | `2000` | Per-guild daily AI call budget for chat buckets (`features/ai/guildBudget.js`) |
 | `SKARN_DB_PATH` | No | `data/skarn.db` | SQLite database path (`db/db.js:9`); the smoke suites use it for temp-DB isolation |
 
 > **Note**: `AI_MODEL` and `AI_MODEL_COMPLEX` **are documented in `.env.example`** (as commented-out optional defaults, matching the table above). They are consumed by `features/intelligence/modelRouter.js`.
@@ -427,6 +429,7 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 - **All state in SQLite**: All state persists to SQLite — the former in-memory cooldown Maps (`reactionSystem.js`, `commands/search.js`, warmth, realm, omen) were moved to SQLite-backed cooldowns in the 2026-08-01 audit, so there are no exceptions anymore.
   > **Still in-memory (2026-08-02 audit):** `activeCombats` (`features/realm/combat.js`), `activeTrades` (`features/realm/economy.js`), `activeGames` (`games/tetris.js`), `banterChains`/`setups` (`features/humor/comedyTiming.js`). These are game sessions, intentionally volatile — lost on restart. The "zero in-memory Maps" claim refers to *cooldowns* specifically.
 - **rate_limits**: Rolling window table for per-user API call rate limiting. Stores individual timestamps for the 10-minute sliding window.
+- **Per-guild AI budget**: daily per-guild ceiling (`GUILD_AI_DAILY_LIMIT`, default 2000) on interactive chat AI calls, counted in `app_state` key `guild_ai_daily:{guildId}`; DMs share a `'dm'` pseudo-guild bucket; support calls unbudgeted.
 - **mention_cooldowns**: ~~Per-user-per-channel cooldown table for @mention responses (1s TTL).~~ **Dropped 2026-08-08** — orphaned table removed; helpers `checkMentionCooldown`/`setMentionCooldown` were already dead (zero references); the mention path uses `canInteract`/`canRespond`/`isHostile`/`isSilenced`.
 - **interjection_cooldowns**: Per-channel cooldown for random interjections (5min TTL).
 - **active_listen_cooldowns**: Per-channel cooldown for active listening cues (5min TTL).

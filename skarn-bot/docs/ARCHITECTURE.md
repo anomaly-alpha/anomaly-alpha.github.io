@@ -216,6 +216,7 @@ Dormant is **only** set by `stateDecay.js` `runDecayPass()` — never by message
 | Hostile content | 10 regex patterns, 3 strikes in 10 min → silence | Blocks AI calls for hostile users |
 | Rate limit | 50 calls per 10 min per user (SQLite, `RATE_LIMIT_MAX_CALLS`) | Prevents abuse across all AI commands |
 | Hourly cap | 50 per hour per user | Controls cost |
+| Per-guild AI spend budget | `GUILD_AI_DAILY_LIMIT` (default 2000/day) on chat buckets (chat/musing/interjection), enforced in `moderatedChatCompletion()` after moderation; DMs share a `'dm'` pseudo-guild bucket; support calls unbudgeted | One busy server can't exhaust the shared wallet |
 | Mention cooldown | `checkMentionCooldown`/`setMentionCooldown` removed 2026-08-08 (dead); `mention_cooldowns` table dropped 2026-08-08 | Mention path uses `canInteract`/`canRespond`/`isHostile`/`isSilenced` instead |
 | Sleep mode | Configurable UTC hours; skips AI responses | Reduces cost during quiet hours |
 | Reaction-only | 10% chance → only emoji reaction, no AI text | Reduces cost for casual messages |

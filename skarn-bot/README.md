@@ -424,6 +424,7 @@ When inviting the bot:
 | `AI_MODEL` | No | Default OpenAI model — model router falls back to `gpt-5.4-mini` (`features/intelligence/modelRouter.js`); all `AI_MODEL`-driven call sites fall back to `gpt-5.4-mini` when unset |
 | `AI_MODEL_COMPLEX` | No | Model for long/complex/knowledge-matched queries; falls back to `AI_MODEL` (`modelRouter.js`) |
 | `REALM_DAILY_CALL_LIMIT` | No | Realm AI calls per guild per day (default 1000, `features/realm/realmConfig.js`) |
+| `GUILD_AI_DAILY_LIMIT` | No | Per-guild daily AI call budget for chat buckets (default 2000, `features/ai/guildBudget.js`) |
 | `SKARN_DB_PATH` | No | SQLite database path (defaults to `data/skarn.db`, `db/db.js`) |
 | `SLEEP_START` | No | Sleep hour (0 = disabled) |
 | `SLEEP_END` | No | Wake hour (0 = disabled) |
