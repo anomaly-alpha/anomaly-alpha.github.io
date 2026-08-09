@@ -70,7 +70,7 @@ async function moderatedChatCompletion(params) {
   // zero-token blocked calls never consume a slot; releases the per-user slot
   // when the guild is exhausted. budgetExhausted flag lets ambient callers
   // (interjection) skip silently instead of replying the budget message.
-  var { tryReserveGuildCall, getGuildUsage, BUDGETED_BUCKETS } = require('../features/ai/guildBudget');
+  var { tryReserveGuildCall, BUDGETED_BUCKETS } = require('../features/ai/guildBudget');
   if (params.guildId && BUDGETED_BUCKETS.indexOf(bucket) !== -1) {
     if (!tryReserveGuildCall(params.guildId)) {
       releaseCall(params.userId, bucket, reservationId);
