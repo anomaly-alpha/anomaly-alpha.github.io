@@ -41,9 +41,10 @@
 ```
   "complexity_score": 0.5,
   "intensity": 0.5,
-  "subtext": "string or null — one short sentence on what they might really feel beneath the surface, or \"\" if surface-level only",
+  "subtext": "string or null — one short sentence on what they might really feel beneath the surface, or \\"\\" if surface-level only",
   "pacing": "calm|urgent|resigned|energetic|flat"
 ```
+IMPORTANT (code-review finding, 2026-08-08): the `or \\"\\"` must be written in the source as `\\"\\"` (double backslash) so the JS template literal cooks it to `\"\"` (valid JSON escaping) — writing `\"\"` collapses to bare `""` in the evaluated prompt, making the JSON example invalid. Same rule applies to the spec's S3 code block.
 (The guidance line mirrors the tone prompt's phrasing — no few-shot examples.)
 
 - [ ] **Step 3: Parse the new fields** in `analyzeMessage`'s return object (with the existing defaults pattern). Insert these three lines into the returned object, AFTER the existing `complexityScore:` line (currently ~line 62) and BEFORE the `raw:` line (which Step 4 removes):

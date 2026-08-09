@@ -20,7 +20,7 @@ Analyze the following Discord message and return valid JSON only.
   "context_prune": ["newsLine|cultureLine|stateLine|moodLine|relationshipLine|knowledgeLine|emotionalLine"],
   "complexity_score": 0.5,
   "intensity": 0.5,
-  "subtext": "string or null — one short sentence on what they might really feel beneath the surface, or \"\" if surface-level only",
+  "subtext": "string or null — one short sentence on what they might really feel beneath the surface, or \\"\\" if surface-level only",
   "pacing": "calm|urgent|resigned|energetic|flat"
 }
 
