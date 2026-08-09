@@ -2,7 +2,7 @@
 
 ## Overview
 
-All persistent state lives in a single SQLite file at `data/skarn.db` (auto-created). The schema is `db/skarn-schema.sql`, run on every startup via `CREATE TABLE IF NOT EXISTS`. Migration strategy: additive only (new columns added via `ALTER TABLE ... ADD COLUMN`). Idempotent startup ALTERs live in `db/db.js` (try/catch, e.g. `user_preferences.proactive_opt_in`, `user_profile` growth columns); versioned migrations in `db/migrations.js` (v1 reminder/giveaway indexes, v2 `daily_news.published_at`, v3 `drop_mention_cooldowns`); `lib/rateLimit.js` auto-adds `rate_limits.bucket`.
+All persistent state lives in a single SQLite file at `data/skarn.db` (auto-created). The schema is `db/skarn-schema.sql`, run on every startup via `CREATE TABLE IF NOT EXISTS`. Migration strategy: additive for column evolution (new columns via `ALTER TABLE ... ADD COLUMN`); v3 `drop_mention_cooldowns` is the first destructive exception (orphaned table). Idempotent startup ALTERs live in `db/db.js` (try/catch, e.g. `user_preferences.proactive_opt_in`, `user_profile` growth columns); versioned migrations in `db/migrations.js` (v1 reminder/giveaway indexes, v2 `daily_news.published_at`, v3 `drop_mention_cooldowns`); `lib/rateLimit.js` auto-adds `rate_limits.bucket`.
 
 ## Table Reference
 
