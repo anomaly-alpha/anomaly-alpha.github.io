@@ -245,7 +245,7 @@ git commit -m "feat(ai): enforce per-guild AI budget in the admission gate"
 
 - [ ] **Step 2: `features/presence/musingEngine.js`** — inside `generateMusing(guildId, senderId)` at the `moderatedChatCompletion({ ... })` call (currently ~line 85): add `guildId: guildId,` AND `bucket: 'musing',` to the params object (currently no bucket → defaults to `'command'`, which is NOT budgeted).
 
-- [ ] **Step 3: `features/presence/interjectionEngine.js`** — at the `moderatedChatCompletion({ ... })` call (currently ~line 44): add `guildId: message.guild ? message.guild.id : null,` AND `bucket: 'interjection',` to the params object. (null guildId → no budget, e.g. DMs; interjections are channel-scoped so this is effectively always budgeted.)
+- [ ] **Step 3: `features/presence/interjectionEngine.js`** — at the `moderatedChatCompletion({ ... })` call (currently ~line 44): add `guildId: message.guild?.id ?? null,` AND `bucket: 'interjection',` to the params object. (null guildId → no budget, e.g. DMs; interjections are channel-scoped so this is effectively always budgeted.)
 
 - [ ] **Step 3b: Interjection silent-skip on budget exhaustion** (grill finding, 2026-08-08). The interjection failure handler (currently `if (!result.success) { if (result.crisis) {...} await message.reply({ content: result.safeMessage }); return; }`) must NOT reply the budget message to the channel — ambient interjections should skip silently when the guild budget is exhausted. Add a guard so the `budgetExhausted` flag (returned by the gate, Task 2) short-circuits before the reply:
 ```js
