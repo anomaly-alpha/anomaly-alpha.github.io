@@ -2,7 +2,7 @@
 // Guards Strategic #10: analyzed messages write emotion from the analyzer
 // result (no separate tone LLM call). Proves the mapped state lands in
 // user_emotional_context and the tone_subtext memory entry is written.
-const { getUserEmotion } = require('../../db/database');
+const { getUserEmotion, getMemoryEntries } = require('../../db/database');
 const { mapAnalyzerEmotion, applyAnalyzedEmotion } = require('../../features/wisdom/emotionalIntelligence');
 
 function assert(label, cond) {
@@ -20,7 +20,6 @@ assert('mapping: frustrated→stressed', mapAnalyzerEmotion('frustrated') === 's
   const emo = getUserEmotion('u1', 'g1');
   assert('emotion written (mapped frustrated→stressed)', emo && emo.emotional_state === 'stressed');
 
-  const { getMemoryEntries } = require('../../db/database');
   const mems = getMemoryEntries('u1', 'g1', 5);
   assert('tone_subtext memory written', mems.some(function(m) {
     return m.type === 'preference' && m.content.indexOf('tone_subtext: test subtext for the smoke') === 0;
