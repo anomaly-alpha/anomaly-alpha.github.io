@@ -66,6 +66,18 @@ async function moderatedChatCompletion(params) {
     return { success: false, safeMessage: getSafeMessage(inputCheck.categories, inputCheck.unavailable) };
   }
 
+  // Per-guild AI spend budget (chat buckets only) — checked AFTER moderation so
+  // zero-token blocked calls never consume a slot; releases the per-user slot
+  // when the guild is exhausted. budgetExhausted flag lets ambient callers
+  // (interjection) skip silently instead of replying the budget message.
+  var { tryReserveGuildCall, getGuildUsage, BUDGETED_BUCKETS } = require('../features/ai/guildBudget');
+  if (params.guildId && BUDGETED_BUCKETS.indexOf(bucket) !== -1) {
+    if (!tryReserveGuildCall(params.guildId)) {
+      releaseCall(params.userId, bucket, reservationId);
+      return { success: false, safeMessage: 'This server\'s reached its AI allowance for today. Try again tomorrow.', budgetExhausted: true };
+    }
+  }
+
   try {
     var c = getOpenAIClient();
     var apiParams = {
@@ -78,7 +90,7 @@ async function moderatedChatCompletion(params) {
     // Pass through extra OpenAI params (response_format, stop, tools, etc.)
     // WARNING: any param consumed internally by the gate (userId, bucket) MUST be in
     // KNOWN or it leaks into the OpenAI request and fails with "Unknown parameter".
-    var KNOWN = ['model', 'messages', 'max_tokens', 'temperature', 'userId', 'bucket', 'signal'];
+    var KNOWN = ['model', 'messages', 'max_tokens', 'temperature', 'userId', 'bucket', 'signal', 'guildId'];
     for (var key in params) {
       if (KNOWN.indexOf(key) === -1) apiParams[key] = params[key];
     }
