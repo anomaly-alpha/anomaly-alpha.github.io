@@ -152,14 +152,14 @@ function assertRoleRegistryAligned() {
   const b = Object.keys(roleTokenBudgets).sort();
   const c = Object.keys(ROLE_NATURE).sort();
   if (a.join(',') === b.join(',') && b.join(',') === c.join(',')) return true;
-  const missing = {};
+  const missing = Object.create(null);
   a.concat(b, c).forEach(function(k) {
-    if (!(k in roles)) (missing[k] = missing[k] || []).push('roles');
-    if (!(k in roleTokenBudgets)) (missing[k] = missing[k] || []).push('roleTokenBudgets');
-    if (!(k in ROLE_NATURE)) (missing[k] = missing[k] || []).push('ROLE_NATURE');
+    if (!Object.hasOwn(roles, k)) (missing[k] = missing[k] || []).push('roles');
+    if (!Object.hasOwn(roleTokenBudgets, k)) (missing[k] = missing[k] || []).push('roleTokenBudgets');
+    if (!Object.hasOwn(ROLE_NATURE, k)) (missing[k] = missing[k] || []).push('ROLE_NATURE');
   });
   const lines = Object.keys(missing).map(function(k) {
-    return k + ' missing from: ' + missing[k].join(', ');
+    return k + ' missing from: ' + [...new Set(missing[k])].join(', ');
   });
   throw new Error('Role registries out of alignment: ' + lines.join('; '));
 }
