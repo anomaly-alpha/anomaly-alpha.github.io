@@ -161,7 +161,7 @@ npm run smoke
 npm run audit:docs
 npm run audit:gate
 ```
-Expected: `node --check` OK; the standalone smoke prints all 11 assertions `true` and exits 0; `npm run smoke` reports `all 13 suites passed` (00-trivial … 12-guild-budget); `audit:docs` 4/4; `audit:gate` OK.
+Expected: `node --check` OK; the standalone smoke prints all 15 assertions `true` and exits 0; `npm run smoke` reports `all 13 suites passed` (00-trivial … 12-guild-budget); `audit:docs` 4/4; `audit:gate` OK.
 
 - [ ] **Step 4: Commit.**
 ```bash

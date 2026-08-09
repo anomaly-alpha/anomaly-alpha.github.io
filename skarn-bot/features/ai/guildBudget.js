@@ -38,7 +38,7 @@ function tryReserveGuildCall(guildId) {
   try {
     const today = _dailyKey();
     const state = _read(guildId);
-    const count = (state && state.date === today) ? (state.count || 0) : 0;
+    const count = (state && state.date === today) ? (Number(state.count) || 0) : 0;
     if (count >= GUILD_AI_DAILY_LIMIT) return false;
     _write(guildId, { date: today, count: count + 1 });
     return true;

@@ -44,3 +44,11 @@ assert('command NOT budgeted (support default)', BUDGETED_BUCKETS.indexOf('comma
 assert('condense NOT budgeted', BUDGETED_BUCKETS.indexOf('condense') === -1);
 assert('tone NOT budgeted', BUDGETED_BUCKETS.indexOf('tone') === -1);
 assert('realm NOT budgeted', BUDGETED_BUCKETS.indexOf('realm') === -1);
+
+// 5. Fail-open on storage error: a throwing db.prepare must allow the call
+// (never block AI on a counter hiccup) — monkeypatch and restore.
+var realPrepare = db.prepare;
+db.prepare = function() { throw new Error('simulated storage failure'); };
+assert('reserve fails open on storage error', tryReserveGuildCall('gFail') === true);
+assert('usage fails open on storage error', getGuildUsage('gFail').current === 0 && getGuildUsage('gFail').max === GUILD_AI_DAILY_LIMIT);
+db.prepare = realPrepare;
