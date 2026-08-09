@@ -1,7 +1,10 @@
 // ===== RAG PER-USER SCOPING =====
 // Guards quick win #4 (2026-08-08): 'Related past conversations' must never pull
-// another user's messages on a public server (query + cache both scoped per user).
+// another user's messages on a public server. Assertions cover BOTH scoping
+// layers: the embedding query (getRecentMessageEmbeddings) AND the cache read
+// (app_state key read inside buildContext, which feeds ragLine into the prompt).
 const { db, getRecentMessageEmbeddings } = require('../../db/database');
+const { buildContext } = require('../../features/promptContext');
 
 function assert(label, cond) {
   console.log(label + ':', cond);
@@ -35,3 +38,21 @@ assert('uA sees only own messages', a.length > 0 && a.every(function(m) { return
 assert('uB sees only own messages', b.length > 0 && b.every(function(m) { return m.user_id === 'uB'; }));
 assert('uA never receives uB content', !a.some(function(m) { return m.content.indexOf('uB private') !== -1; }));
 assert('uB never receives uA content', !b.some(function(m) { return m.content.indexOf('uA secret') !== -1; }));
+
+// ===== CACHE READ (ragLine) — the path that injects 'Related past conversations' =====
+// Seed app_state with the NEW user-scoped key form directly, then drive the read
+// through buildContext (promptContext.js:148-188). The async embedText call needs
+// no API key here: with <5 seeded embeddings it is skipped, and any rejection is
+// swallowed by .catch(function(){}) — the synchronous cache read runs regardless.
+var now2 = Date.now();
+db.prepare('INSERT OR REPLACE INTO app_state (key, value, updated_at) VALUES (?, ?, ?)').run('rag_uA:c1', JSON.stringify(['uA secret cached text']), now2);
+db.prepare('INSERT OR REPLACE INTO app_state (key, value, updated_at) VALUES (?, ?, ?)').run('rag_uB:c1', JSON.stringify(['uB private cached text']), now2);
+// Legacy unscoped key ('rag_' + channelId) holding the same content as the scoped
+// uB entry: models the pre-fix cache form so the read-key revert scenario leaks
+// real data instead of passing vacuously with an empty ragLine. Fixed code never
+// reads this key.
+db.prepare('INSERT OR REPLACE INTO app_state (key, value, updated_at) VALUES (?, ?, ?)').run('rag_c1', JSON.stringify(['uB private cached text']), now2);
+
+var ctx = buildContext('uA', 'g1', 'c1', { roleNature: 'casual', userContent: 'a sufficiently long user message that reaches the rag block', interactionCount: 1 });
+assert('uA cache read is user-scoped (own text present)', ctx.ragLine && ctx.ragLine.indexOf('uA secret cached') !== -1);
+assert('uA cache read excludes uB text', !ctx.ragLine || ctx.ragLine.indexOf('uB private cached') === -1);
