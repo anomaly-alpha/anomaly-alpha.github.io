@@ -20,7 +20,7 @@ const { getTools } = require('../tools/toolDefinitions');
 const { runTool } = require('../tools/toolRunner');
 const { storeMessage } = require('../conversation/messageStore');
 const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
-const { updateEmotion } = require('../wisdom/emotionalIntelligence');
+const { updateEmotion, applyAnalyzedEmotion } = require('../wisdom/emotionalIntelligence');
 
 const AI_ERRORS = [
   'The connection is frayed. Try again.',
@@ -61,15 +61,25 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
   const rel = getRelationship(userId, guildId);
   const interactionCount = rel ? rel.interaction_count : 0;
 
-  // Detect and track user emotion
-  updateEmotion(userId, guildId, message).catch(function() {});
-
   try {
     const { runMessageAnalysis } = require('../preprocessing/pipeline');
 
     var systemPrompt;
     var contextualMessage;
     var analysis = await runMessageAnalysis(userId, guildId, channelId, message, 'casual');
+
+    // Emotion write — AFTER the analyzer, awaited (grilled Q4): the prompt's
+    // emotional line now reflects THIS message. Analyzed path uses the analyzer
+    // result (no tone LLM call, stack 5→4); short/failed path falls back to tone.
+    // Silent-swallow (grilled S2): emotion tracking is advisory — a write failure
+    // logs and continues; it must never block the reply or trigger the apology path.
+    try {
+      if (analysis) {
+        await applyAnalyzedEmotion(userId, guildId, message, analysis);
+      } else {
+        await updateEmotion(userId, guildId, message);
+      }
+    } catch (e) { /* emotion tracking is advisory — never block the reply */ }
 
     const ctx = buildContext(userId, guildId, channelId, {
       roleNature: 'casual',
