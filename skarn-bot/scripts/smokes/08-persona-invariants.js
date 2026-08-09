@@ -4,7 +4,7 @@
 const { db, addMemoryEntry } = require('../../db/database');
 const { getSocraticQuestion } = require('../../features/wisdom/socraticEngine');
 const mood = require('../../features/mood/moodManager');
-const { getEmotionDirective } = require('../../features/wisdom/emotionalIntelligence');
+const { getEmotionDirective, mapAnalyzerEmotion } = require('../../features/wisdom/emotionalIntelligence');
 const { setUserEmotion } = require('../../db/database');   // NOT on emotionalIntelligence exports
 const { getRelationshipLine } = require('../../features/relationship/relationshipTracker');
 const { buildSystemPrompt } = require('../../persona/identity');
@@ -83,3 +83,10 @@ assert('primary path prompt includes safetyLine', !!ctx.safetyLine && primaryPro
 assert('primary path prompt wraps memory in untrusted_data', !!ctx.memoryLine && primaryPrompt.includes('<untrusted_data>\n' + ctx.memoryLine + '\n</untrusted_data>'));
 assert('primary path prompt includes socratic wisdom line', !!ctx.socraticLine && primaryPrompt.includes(ctx.socraticLine));
 assert('primary path prompt ends with SKARN_FOOTER', primaryPrompt.trim().endsWith('That\'s why you\'re here.'));
+
+// 7. Analyzer emotion vocabulary → EI six-state mapping (storage boundary)
+assert('analyzer emotion mapping: curious→neutral', mapAnalyzerEmotion('curious') === 'neutral');
+assert('analyzer emotion mapping: frustrated→stressed', mapAnalyzerEmotion('frustrated') === 'stressed');
+assert('analyzer emotion mapping: playful→happy', mapAnalyzerEmotion('playful') === 'happy');
+assert('analyzer emotion mapping: happy passes through', mapAnalyzerEmotion('happy') === 'happy');
+assert('analyzer emotion mapping: neutral passes through', mapAnalyzerEmotion('neutral') === 'neutral');

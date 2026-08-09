@@ -4,6 +4,14 @@ const { analyzeTone } = require('../intelligence/toneAnalyzer');
 
 const EMOTION_WEIGHTS = { happy: 1, neutral: 0, sad: -1, anxious: -1, angry: -1, stressed: -1 };
 
+// Analyzer emotion vocabulary → EI six-state model (grilled Q3). EI's
+// directive table + weights stay authoritative; the analyzer's extra states
+// are normalized at the storage boundary.
+function mapAnalyzerEmotion(analyzerEmotion) {
+  const map = { curious: 'neutral', frustrated: 'stressed', playful: 'happy' };
+  return map[analyzerEmotion] || analyzerEmotion || 'neutral';
+}
+
 async function detectEmotion(text, userId) {
   if (!text) return 'neutral';
   try {
@@ -26,6 +34,29 @@ async function updateEmotion(userId, guildId, text) {
     intensity = 0;
     subtext = '';
   }
+
+  const weight = EMOTION_WEIGHTS[emotion] || 0;
+  const sentiment = intensity > 0 ? intensity * weight : analyzeSentiment(text);
+  setUserEmotion(userId, guildId, emotion);
+  logEmotionHistory(userId, guildId, emotion, sentiment);
+
+  // Store subtext in memory if non-empty (so Skarn can reference it later)
+  if (subtext && subtext.length > 3) {
+    try {
+      const { addMemoryEntry } = require('../../db/database');
+      addMemoryEntry(userId, guildId || 'dm', 'extracted', 'preference', 'tone_subtext: ' + subtext, 0.4, text.slice(0, 100));
+    } catch (e) { /* best-effort */ }
+  }
+
+  return emotion;
+}
+
+// Write emotion from the analyzer result (no LLM call) — same side effects as
+// updateEmotion: setUserEmotion + logEmotionHistory + tone_subtext memory.
+async function applyAnalyzedEmotion(userId, guildId, text, analysis) {
+  let emotion = mapAnalyzerEmotion(analysis.emotion);
+  let intensity = typeof analysis.intensity === 'number' ? analysis.intensity : 0;
+  let subtext = analysis.subtext || '';
 
   const weight = EMOTION_WEIGHTS[emotion] || 0;
   const sentiment = intensity > 0 ? intensity * weight : analyzeSentiment(text);
@@ -224,7 +255,7 @@ function getEmotionDirective(userId, guildId) {
 }
 
 module.exports = {
-  detectEmotion, updateEmotion,
+  detectEmotion, updateEmotion, mapAnalyzerEmotion, applyAnalyzedEmotion,
   getEmotionDirective,
   getTrajectoryDirective,
   getMemoryEmotionLine,
