@@ -52,7 +52,7 @@ function getGuildUsage(guildId) {
   try {
     const today = _dailyKey();
     const state = _read(guildId);
-    const current = (state && state.date === today) ? (state.count || 0) : 0;
+    const current = (state && state.date === today) ? (Number(state.count) || 0) : 0;
     return { current: current, max: GUILD_AI_DAILY_LIMIT };
   } catch (e) {
     return { current: 0, max: GUILD_AI_DAILY_LIMIT };
