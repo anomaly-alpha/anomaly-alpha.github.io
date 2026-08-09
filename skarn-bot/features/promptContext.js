@@ -147,7 +147,7 @@ function buildContext(userId, guildId, channelId, opts) {
   var ragLine = '';
   if (isFullTier && guildId && userContent.length >= 10) {
     try {
-      var recentEmbeds = getRecentMessageEmbeddings(guildId, 60);
+      var recentEmbeds = getRecentMessageEmbeddings(userId, guildId, 60);
       if (recentEmbeds.length >= 5) {
         var msgIds = recentEmbeds.map(function(e) { return e.message_id; });
         var msgTexts = recentEmbeds.map(function(e) { return e.content; });
@@ -169,7 +169,7 @@ function buildContext(userId, guildId, channelId, opts) {
             try {
               var _db = require('../db/database').db;
               _db.prepare('INSERT OR REPLACE INTO app_state (key, value, updated_at) VALUES (?, ?, ?)')
-                .run('rag_' + channelId, JSON.stringify(scored.map(function(s) { return s.text; })), Date.now());
+                .run('rag_' + userId + ':' + channelId, JSON.stringify(scored.map(function(s) { return s.text; })), Date.now());
             } catch (e) {}
           }
         }).catch(function() {});
@@ -177,7 +177,7 @@ function buildContext(userId, guildId, channelId, opts) {
     } catch (e) { /* RAG unavailable */ }
     // Also check cached RAG from previous turn
     try {
-      var cached = db.prepare('SELECT value FROM app_state WHERE key = ?').get('rag_' + channelId);
+      var cached = db.prepare('SELECT value FROM app_state WHERE key = ?').get('rag_' + userId + ':' + channelId);
       if (cached && cached.value) {
         var cachedTexts = JSON.parse(cached.value);
         if (cachedTexts.length > 0) {

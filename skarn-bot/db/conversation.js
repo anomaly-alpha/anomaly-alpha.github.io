@@ -209,14 +209,14 @@ function getEmbedding(messageId) {
   try { return JSON.parse(row.embedding.toString()); } catch { return null; }
 }
 
-function getRecentMessageEmbeddings(guildId, limit) {
+function getRecentMessageEmbeddings(userId, guildId, limit) {
   return db.prepare(
     `SELECT e.message_id, e.embedding, m.content, m.user_id, m.created_at, m.role
      FROM conversation_embeddings e
      JOIN conversation_messages m ON e.message_id = m.id
-     WHERE m.guild_id = ? AND m.role = 'user'
+     WHERE m.guild_id = ? AND m.user_id = ? AND m.role = 'user'
      ORDER BY m.created_at DESC LIMIT ?`
-  ).all(guildId, limit || 100);
+  ).all(guildId, userId, limit || 100);
 }
 
 module.exports = {
