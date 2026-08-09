@@ -107,6 +107,9 @@ New order:
     // result (no tone LLM call, stack 5→4); short/failed path falls back to tone.
     // Silent-swallow (grilled S2): emotion tracking is advisory — a write failure
     // logs and continues; it must never block the reply or trigger the apology path.
+    // NOTE (accepted Q4 consequence, re-confirmed 2026-08-08): the fallback branch
+    // awaits a tone LLM call (updateEmotion → analyzeTone), adding latency to short
+    // messages — deliberate trade for a race-free emotional line on every path.
     try {
       if (analysis) {
         await applyAnalyzedEmotion(userId, guildId, message, analysis);
