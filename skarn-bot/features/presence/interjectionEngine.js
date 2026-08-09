@@ -50,8 +50,11 @@ async function maybeInterject(message, client) {
       max_tokens: 100,
       temperature: 0.85,
       userId: message.author.id,
+      guildId: message.guild ? message.guild.id : null,
+      bucket: 'interjection',
     });
     if (!result.success) {
+      if (result.budgetExhausted) return; // guild budget spent — stay quiet (no channel noise)
       if (result.crisis) { await message.reply({ content: FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)], allowedMentions: { parse: ['users'] } }); return; }
       await message.reply({ content: result.safeMessage, allowedMentions: { parse: ['users'] } });
       return;

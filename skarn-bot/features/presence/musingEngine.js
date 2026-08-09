@@ -91,6 +91,8 @@ async function generateMusing(guildId, senderId) {
     max_tokens: 120,
     temperature: 0.9,
     userId: senderId,
+    guildId: guildId,
+    bucket: 'musing',
   });
   if (!result.success) return null;
   const content = result.completion.choices[0].message.content;

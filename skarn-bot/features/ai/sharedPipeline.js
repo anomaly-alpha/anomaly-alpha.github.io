@@ -118,6 +118,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
         max_tokens: getDeadpanBudget(roleTokenBudgets[roleName] || roleTokenBudgets.consult, userId, channelId),
         temperature: temperature,
         userId: userId,
+        guildId: guildId,
         bucket: 'chat',
         ...(turnCount === 1 ? { tools: getTools(), tool_choice: 'auto' } : {}),
       });
