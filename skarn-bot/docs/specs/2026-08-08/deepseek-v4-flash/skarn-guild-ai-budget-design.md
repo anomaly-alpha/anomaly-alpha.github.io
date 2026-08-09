@@ -27,6 +27,9 @@ Decisions (grilled with Anomaly, 2026-08-08):
 - **Fail-open on storage error**: a spend counter must never block AI on a counter hiccup.
 - **DMs**: budgeted under a shared `'dm'` pseudo-guild at the same ceiling (caps the DM-abuse vector).
 - **Interjection bucket side effect**: accepted — interjections move off the user's shared `'command'` quota onto their own bucket (a fix, not a regression).
+- **Ambient interjections skip silently on exhaustion** (plan grill): the gate returns a `budgetExhausted` flag; interjections don't reply the budget message to the channel; mention/consult still show it.
+- **Exhaustion message hides the count and ceiling** (plan grill): `'This server's reached its AI allowance for today. Try again tomorrow.'` — no `X/2000`, no cap revealed.
+- **`guildId` added to the gate's KNOWN params array** (plan grill): prevents the pass-through loop from forwarding it to OpenAI ("Unknown parameter" failure otherwise).
 
 ## [S3] New module: `features/ai/guildBudget.js`
 
@@ -111,12 +114,11 @@ Notes:
   if (params.guildId && BUDGETED_BUCKETS.indexOf(bucket) !== -1) {
     if (!tryReserveGuildCall(params.guildId)) {
       releaseCall(params.userId, bucket, reservationId); // refund the per-user slot
-      var guildUsage = getGuildUsage(params.guildId);
-      return { success: false, safeMessage: 'Even a Warmaster paces himself. (' + guildUsage.current + '/' + guildUsage.max + ' for this server today) Give it a moment.' };
+      return { success: false, safeMessage: 'This server\'s reached its AI allowance for today. Try again tomorrow.', budgetExhausted: true };
     }
   }
 ```
-The message shape matches the existing `{ success: false, safeMessage }` contract every caller handles (sharedPipeline `sendError`, musing/interjection return `null`/skip). Genuine API errors after the reserve (tokens spent) still count against the budget — strictness protects cost. **Per-admission (grilled):** the tool loop may reserve up to 3 guild slots per user message (`maxTurns = 3`, `sharedPipeline.js:110-113`), matching Realm's per-call reserve semantics.
+The message shape matches the existing `{ success: false, safeMessage }` contract every caller handles (sharedPipeline `sendError`, musing/interjection return `null`/skip). **Message hides the count and ceiling (grilled):** it does NOT reveal the 2000 cap or the live count — `'This server's reached its AI allowance for today. Try again tomorrow.'` — keeping the budget policy unpublicized. **`budgetExhausted: true` flag (grilled):** lets ambient interjections skip silently instead of replying the budget message to the channel (see S5.3); mention/consult still show the message via `sendError` because a human is waiting. **`guildId` MUST be added to the `KNOWN` params array** (`ai/client.js:81`) or the pass-through loop forwards it to `chat.completions.create` and every budgeted call fails with "Unknown parameter" (grill finding). Genuine API errors after the reserve (tokens spent) still count against the budget — strictness protects cost. **Per-admission (grilled):** the tool loop may reserve up to 3 guild slots per user message (`maxTurns = 3`, `sharedPipeline.js:110-113`), matching Realm's per-call reserve semantics.
 
 ## [S5] Call-site wiring
 
@@ -124,7 +126,7 @@ Pass `guildId` (and, for musing/interjection, an explicit `bucket`) into `modera
 
 1. `features/ai/sharedPipeline.js:121` — `moderatedChatCompletion({ ... })` inside `runPipeline(userId, guildId, channelId, message, opts)`; add `guildId: guildId` to the params object. Already passes `bucket: 'chat'`. Covers consult (`/consult` → runPipeline) AND mention (mentionRouter → runPipeline). **This is the one change covering both.**
 2. `features/presence/musingEngine.js:85` — `generateMusing(guildId, senderId)` already takes `guildId`; add `guildId: guildId` AND an explicit `bucket: 'musing'` (currently omitted → defaults to `'command'`, which would NOT be budgeted under `BUDGETED_BUCKETS`).
-3. `features/presence/interjectionEngine.js:44` — the interjection path has `message` (Discord message); add `guildId: message.guild ? message.guild.id : null` (null → no budget, e.g. DMs, matching "chat buckets only" intent) AND an explicit `bucket: 'interjection'`. **Side effect (grilled, accepted):** interjections move off the user's shared `'command'` per-user quota onto their own `'interjection'` bucket — ambient chatter no longer drains interactive quota, which is a fix, not a regression.
+3. `features/presence/interjectionEngine.js:44` — the interjection path has `message` (Discord message); add `guildId: message.guild ? message.guild.id : null` (null → no budget, e.g. DMs, matching "chat buckets only" intent) AND an explicit `bucket: 'interjection'`. **Side effect (grilled, accepted):** interjections move off the user's shared `'command'` per-user quota onto their own `'interjection'` bucket — ambient chatter no longer drains interactive quota, which is a fix, not a regression. **Silent skip on exhaustion (grilled):** the interjection failure handler must check the gate's `budgetExhausted` flag and return WITHOUT replying to the channel — ambient interjections never announce the server budget. Musing needs no change (it already returns `null` on non-success).
 4. No change needed for consult.handler.js / mentionRouter.js individually — both delegate to sharedPipeline (CONTEXT.md §12.5: "both handlers now delegate to the shared pipeline").
 5. **DMs (grilled):** the mention path coerces DM traffic to `guildId = 'dm'` (`mentionRouter.js:11`) — DMs are budgeted under a shared `guild_ai_daily:dm` pseudo-guild at the same ceiling, capping the DM-abuse vector. Interjections are channel-scoped so the interjection null-exemption is effectively a no-op.
 
@@ -160,9 +162,9 @@ Standalone run: `SKARN_DB_PATH=$(mktemp -d)/guildbudget.db node scripts/smokes/1
 
 ## [S9] Acceptance criteria
 
-- [ ] New module `features/ai/guildBudget.js` with `tryReserveGuildCall` / `getGuildUsage` / `GUILD_AI_DAILY_LIMIT` (env default 2000), atomic sync reserve, fail-open on storage error.
-- [ ] `moderatedChatCompletion` checks the guild budget AFTER moderation passes and BEFORE the API call (ordering: `isSilenced` → `canCall` → moderation → guild budget → API), releasing the `canCall` slot and returning the in-character message on exhaustion.
-- [ ] `guildId` passed from sharedPipeline (covers consult + mention); musing + interjection get explicit `bucket: 'musing'` / `bucket: 'interjection'` AND `guildId`; DM traffic budgets under the `'dm'` pseudo-guild.
+- [ ] New module `features/ai/guildBudget.js` with `tryReserveGuildCall` / `getGuildUsage` / `GUILD_AI_DAILY_LIMIT` (env default 2000), atomic sync reserve, fail-open on storage error. (`getGuildUsage` is retained as a diagnostic export even though the exhaustion message no longer uses it — the count stays hidden per grill.)
+- [ ] `moderatedChatCompletion` checks the guild budget AFTER moderation passes and BEFORE the API call (ordering: `isSilenced` → `canCall` → moderation → guild budget → API), releasing the `canCall` slot and returning `{ success: false, safeMessage, budgetExhausted: true }` (message hides the count/ceiling) on exhaustion. `guildId` is in the KNOWN params array (no API leak).
+- [ ] `guildId` passed from sharedPipeline (covers consult + mention); musing + interjection get explicit `bucket: 'musing'` / `bucket: 'interjection'` AND `guildId`; DM traffic budgets under the `'dm'` pseudo-guild; interjection failure handler skips silently on `budgetExhausted`.
 - [ ] Budgeted set = exactly `['chat', 'musing', 'interjection']`; `'command'` (support default) and all support buckets untouched and unbudgeted.
 - [ ] Smoke 12 proves reserve-at-limit, increment, rollover reset, and non-budgeted exemption.
 - [ ] CONTEXT.md §4 row + §10 env row + README env row added.

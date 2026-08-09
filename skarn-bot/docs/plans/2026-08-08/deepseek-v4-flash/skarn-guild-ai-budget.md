@@ -180,7 +180,7 @@ git commit -m "feat(ai): add per-guild daily AI spend budget module"
 
 **Interfaces:**
 - Consumes: `tryReserveGuildCall`, `getGuildUsage`, `BUDGETED_BUCKETS` from `features/ai/guildBudget`; existing `releaseCall` from `lib/rateLimit`; `params.guildId` (optional, added by Task 3 call sites)
-- Produces: budget enforcement in the gate — exhaustion returns `{ success: false, safeMessage }` and releases the per-user slot; moderation-blocked calls never reserve (ordering by construction)
+- Produces: budget enforcement in the gate — exhaustion returns `{ success: false, safeMessage, budgetExhausted: true }` (message hides the count/ceiling per grill; flag lets ambient interjections skip silently) and releases the per-user slot; `guildId` added to the KNOWN params array so it never leaks into the OpenAI request; moderation-blocked calls never reserve (ordering by construction)
 
 - [ ] **Step 1: Read `ai/client.js`** to locate the exact insertion point: after the input-moderation block ends (the `if (inputCheck.action === 'block') { ... }` block, currently lines 63-67) and before `try { var c = getOpenAIClient();` (currently line 69).
 
@@ -188,19 +188,29 @@ git commit -m "feat(ai): add per-guild daily AI spend budget module"
 ```js
   // Per-guild AI spend budget (chat buckets only) — checked AFTER moderation so
   // zero-token blocked calls never consume a slot; releases the per-user slot
-  // when the guild is exhausted.
+  // when the guild is exhausted. budgetExhausted flag lets ambient callers
+  // (interjection) skip silently instead of replying the budget message.
   var { tryReserveGuildCall, getGuildUsage, BUDGETED_BUCKETS } = require('../features/ai/guildBudget');
   if (params.guildId && BUDGETED_BUCKETS.indexOf(bucket) !== -1) {
     if (!tryReserveGuildCall(params.guildId)) {
       releaseCall(params.userId, bucket, reservationId);
-      var guildUsage = getGuildUsage(params.guildId);
-      return { success: false, safeMessage: 'Even a Warmaster paces himself. (' + guildUsage.current + '/' + guildUsage.max + ' for this server today) Give it a moment.' };
+      return { success: false, safeMessage: 'This server\'s reached its AI allowance for today. Try again tomorrow.', budgetExhausted: true };
     }
   }
 ```
 Place it AFTER the input-moderation `if (inputCheck.action === 'block')` block and BEFORE `try { var c = getOpenAIClient();`. Do NOT move the existing `canCall`/`isSilenced`/moderation flow. Match the file's existing `var` style (it uses `var`).
 
-- [ ] **Step 3: Verify.**
+- [ ] **Step 3: Add `guildId` to the KNOWN params array** so it never leaks into the OpenAI request. In the pass-through loop (`ai/client.js:81-84`), the `KNOWN` array must include every internally-consumed param or the loop forwards it to `chat.completions.create` and the API fails with "Unknown parameter". Change:
+```js
+    var KNOWN = ['model', 'messages', 'max_tokens', 'temperature', 'userId', 'bucket', 'signal'];
+```
+to:
+```js
+    var KNOWN = ['model', 'messages', 'max_tokens', 'temperature', 'userId', 'bucket', 'signal', 'guildId'];
+```
+This is mandatory — without it every budgeted call fails at the API boundary. (Grill finding, 2026-08-08.)
+
+- [ ] **Step 4: Verify.**
 ```bash
 node --check ai/client.js
 SKARN_DB_PATH=$(mktemp -d)/gate.db node -e "require('./ai/client'); console.log('client loads')"
@@ -208,9 +218,9 @@ npm run smoke
 npm run audit:docs
 npm run audit:gate
 ```
-Expected: syntax OK, module loads, `npm run smoke` all 13 suites pass (the existing smokes exercise the gate), `audit:gate` OK (no new direct OpenAI calls), `audit:docs` 4/4. IMPORTANT: prove the ordering — the check must sit AFTER the moderation block (grep the file: `rg -n "tryReserveGuildCall" ai/client.js` should show it after the `inputCheck.action === 'block'` line and before `getOpenAIClient`).
+Expected: syntax OK, module loads, `npm run smoke` all 13 suites pass (the existing smokes exercise the gate), `audit:gate` OK (no new direct OpenAI calls), `audit:docs` 4/4. IMPORTANT: prove the ordering — the check must sit AFTER the moderation block (grep the file: `rg -n "tryReserveGuildCall" ai/client.js` should show it after the `inputCheck.action === 'block'` line and before `getOpenAIClient`). Also confirm `guildId` is in KNOWN: `rg -n "KNOWN =" ai/client.js` shows the updated array.
 
-- [ ] **Step 4: Commit.**
+- [ ] **Step 5: Commit.**
 ```bash
 git add skarn-bot/ai/client.js
 git commit -m "feat(ai): enforce per-guild AI budget in the admission gate"
@@ -237,17 +247,28 @@ git commit -m "feat(ai): enforce per-guild AI budget in the admission gate"
 
 - [ ] **Step 3: `features/presence/interjectionEngine.js`** — at the `moderatedChatCompletion({ ... })` call (currently ~line 44): add `guildId: message.guild ? message.guild.id : null,` AND `bucket: 'interjection',` to the params object. (null guildId → no budget, e.g. DMs; interjections are channel-scoped so this is effectively always budgeted.)
 
+- [ ] **Step 3b: Interjection silent-skip on budget exhaustion** (grill finding, 2026-08-08). The interjection failure handler (currently `if (!result.success) { if (result.crisis) {...} await message.reply({ content: result.safeMessage }); return; }`) must NOT reply the budget message to the channel — ambient interjections should skip silently when the guild budget is exhausted. Add a guard so the `budgetExhausted` flag (returned by the gate, Task 2) short-circuits before the reply:
+```js
+    if (!result.success) {
+      if (result.budgetExhausted) return; // guild budget spent — stay quiet (no channel noise)
+      if (result.crisis) { await message.reply({ content: FALLBACK_REPLIES[Math.floor(Math.random() * FALLBACK_REPLIES.length)], allowedMentions: { parse: ['users'] } }); return; }
+      await message.reply({ content: result.safeMessage, allowedMentions: { parse: ['users'] } });
+      return;
+    }
+```
+Match the file's existing style (it uses `var`/`async` per the surrounding code). Musing needs NO change for this — it already returns `null` on any non-success (`musingEngine.js:94`), so it's naturally silent.
+
 - [ ] **Step 4: Verify.**
 ```bash
 node --check features/ai/sharedPipeline.js
 node --check features/presence/musingEngine.js
 node --check features/presence/interjectionEngine.js
-rg -n "guildId: guildId|bucket: 'musing'|bucket: 'interjection'" features/ai/sharedPipeline.js features/presence/musingEngine.js features/presence/interjectionEngine.js
+rg -n "guildId: guildId|bucket: 'musing'|bucket: 'interjection'|budgetExhausted" features/ai/sharedPipeline.js features/presence/musingEngine.js features/presence/interjectionEngine.js
 npm run smoke
 npm run audit:docs
 npm run audit:gate
 ```
-Expected: syntax OK; the `rg` shows sharedPipeline passes `guildId: guildId` with `bucket: 'chat'`, musing passes `guildId` + `bucket: 'musing'`, interjection passes `message.guild ? ... : null` + `bucket: 'interjection'`; all 13 smokes pass; both audits green. Also confirm support call sites are untouched: `rg -n "guildId" features/ai/condenser.js features/intelligence/toneAnalyzer.js features/preprocessing/analyzer.js features/preprocessing/postProcessor.js features/presence/presenceCycler.js` should show nothing new.
+Expected: syntax OK; the `rg` shows sharedPipeline passes `guildId: guildId` with `bucket: 'chat'`, musing passes `guildId` + `bucket: 'musing'`, interjection passes `message.guild ? ... : null` + `bucket: 'interjection'` + the `budgetExhausted` silent-skip guard; all 13 smokes pass; both audits green. Also confirm support call sites are untouched: `rg -n "guildId" features/ai/condenser.js features/intelligence/toneAnalyzer.js features/preprocessing/analyzer.js features/preprocessing/postProcessor.js features/presence/presenceCycler.js` should show nothing new.
 
 - [ ] **Step 5: Commit.**
 ```bash
