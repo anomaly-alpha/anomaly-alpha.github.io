@@ -295,7 +295,7 @@ The following environment variables are consumed by the codebase. Variables are 
 >
 > **Note**: `SLEEP_START` / `SLEEP_END` defaults (1 and 7) match `.env.example`. The actual deployment (`.env`) sets both to `0` to disable sleep. This is an environment-specific choice, not a code default mismatch.
 >
-> **Note**: `AI_MODEL`'s code-level default is `gpt-5.4-mini` only via `modelRouter.js` (`selectModel()`, line 13). **~12 call sites bypass the router and hardcode `gpt-4o-mini` fallbacks**: `commands/advice.js:25`, `trivia.js:39`, `translate.js:53`, `8ball.js:18`, `news.js:58`, `daily.js:42`, `compare.js:20`, `poll.js:33` and `:90`, `history.js:123`, `vibe.js:41`, and `features/intelligence/toneAnalyzer.js:55`. The effective default therefore differs by call site.
+> **Note**: `AI_MODEL`'s code-level default is `gpt-5.4-mini` everywhere (modelRouter.js `selectModel()` plus every command/feature fallback site, swept 2026-08-08). Support-call models (condenser/postProcessor/analyzer) still hardcode `gpt-4.1-mini` by design (spec 6.4 carve-out).
 >
 > **Note**: `features/presence/presenceCycler.js` re-reads `SLEEP_START`/`SLEEP_END`/`SLEEP_TIMEZONE` via its own local `isSleepTime()` copy (mirroring `bot.js:79–85`) so the presence cycler also halts during sleep hours.
 

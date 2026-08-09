@@ -120,7 +120,7 @@ module.exports = {
         try {
           var systemPrompt = buildSystemPrompt({ roleLine: roles.history });
           var result = await moderatedChatCompletion({
-            model: process.env.AI_MODEL || 'gpt-4o-mini',
+            model: process.env.AI_MODEL || 'gpt-5.4-mini',
             messages: [
               { role: 'system', content: systemPrompt },
               { role: 'user', content: chatText },

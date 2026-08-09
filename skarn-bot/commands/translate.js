@@ -50,7 +50,7 @@ module.exports = {
     try {
       var systemPrompt = buildSystemPrompt({ roleLine: roles.translate });
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-4o-mini',
+        model: process.env.AI_MODEL || 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Translate this to ' + LANG_NAMES[to] + ': "' + text + '"' },

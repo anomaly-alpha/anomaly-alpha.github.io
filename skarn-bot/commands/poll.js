@@ -30,7 +30,7 @@ module.exports = {
         var ctx = recentTopics.length > 0 ? 'Recent server conversation: ' + recentTopics.join('; ').slice(0, 500) : '';
         var systemPrompt = buildSystemPrompt({ roleLine: roles.pollsuggest });
         var result = await moderatedChatCompletion({
-          model: process.env.AI_MODEL || 'gpt-4o-mini',
+          model: process.env.AI_MODEL || 'gpt-5.4-mini',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: 'Topic: "' + question + '"\n' + ctx + '\n\nSuggest 3-5 poll options. Return ONLY a JSON array of strings.' },
@@ -87,7 +87,7 @@ module.exports = {
       var ctx = recentTopics.length > 0 ? 'Recent server conversation: ' + recentTopics.join('; ').slice(0, 500) : '';
       var systemPrompt = buildSystemPrompt({ roleLine: roles.pollsuggest });
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-4o-mini',
+        model: process.env.AI_MODEL || 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Topic: "' + question + '"\n' + ctx + '\n\nSuggest 3-5 poll options. Return ONLY a JSON array of strings.' },

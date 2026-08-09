@@ -55,7 +55,7 @@ module.exports = {
       var headlines = articles.slice(0, 10).map(function(a, i) { return (i + 1) + '. ' + a.headline + ' — ' + (a.snippet || ''); }).join('\n');
       var systemPrompt = buildSystemPrompt({ roleLine: roles.search });
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-4o-mini',
+        model: process.env.AI_MODEL || 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Here are today\'s headlines. Pick the 3 most interesting and give your dry commentary on each:\n\n' + headlines },

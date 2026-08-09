@@ -52,7 +52,7 @@ async function analyzeTone(text, userId) {
     const gateResult = await moderatedChatCompletion({
       userId: userId,
       bucket: 'tone',
-      model: process.env.AI_MODEL || 'gpt-4o-mini',
+      model: process.env.AI_MODEL || 'gpt-5.4-mini',
       messages: messages,
       max_tokens: 100,
       temperature: 0.1,

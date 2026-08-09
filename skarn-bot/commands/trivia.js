@@ -36,7 +36,7 @@ module.exports = {
 
         var systemPrompt = buildSystemPrompt({ roleLine: roles.aitrivia });
         var result = await moderatedChatCompletion({
-          model: process.env.AI_MODEL || 'gpt-4o-mini',
+          model: process.env.AI_MODEL || 'gpt-5.4-mini',
           messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: prompt }],
           max_tokens: roleTokenBudgets.aitrivia,
           temperature: 0.8,

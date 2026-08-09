@@ -421,7 +421,7 @@ When inviting the bot:
 | `CLIENT_ID` | Yes | Application ID from Developer Portal |
 | `OPENAI_API_KEY` | For AI | OpenAI API key |
 | `TAVILY_API_KEY` | For `/search` | Tavily API key for `/search` and the `search_web` tool (`features/search/searchEngine.js`; unset → "not configured" result) |
-| `AI_MODEL` | No | Default OpenAI model — model router falls back to `gpt-5.4-mini` (`features/intelligence/modelRouter.js`); some commands still hardcode `gpt-4o-mini` fallbacks when unset |
+| `AI_MODEL` | No | Default OpenAI model — model router falls back to `gpt-5.4-mini` (`features/intelligence/modelRouter.js`); all AI call sites fall back to `gpt-5.4-mini` when unset |
 | `AI_MODEL_COMPLEX` | No | Model for long/complex/knowledge-matched queries; falls back to `AI_MODEL` (`modelRouter.js`) |
 | `REALM_DAILY_CALL_LIMIT` | No | Realm AI calls per guild per day (default 1000, `features/realm/realmConfig.js`) |
 | `SKARN_DB_PATH` | No | SQLite database path (defaults to `data/skarn.db`, `db/db.js`) |

@@ -15,7 +15,7 @@ module.exports = {
     const systemPrompt = buildSystemPrompt({ roleLine: roles.prophecy });
     try {
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-4o-mini',
+        model: process.env.AI_MODEL || 'gpt-5.4-mini',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: question },
