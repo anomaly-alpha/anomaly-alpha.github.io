@@ -1,5 +1,5 @@
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
-const { getUserEmotion, setUserEmotion, logEmotionHistory, getEmotionTrend, getMemoryEntries, getSentimentTrend, getServerClimate } = require('../../db/database');
+const { getUserEmotion, setUserEmotion, logEmotionHistory, getEmotionTrend, getMemoryEntries, getSentimentTrend, getServerClimate, addMemoryEntry } = require('../../db/database');
 const { analyzeTone } = require('../intelligence/toneAnalyzer');
 
 const EMOTION_WEIGHTS = { happy: 1, neutral: 0, sad: -1, anxious: -1, angry: -1, stressed: -1 };
@@ -35,20 +35,7 @@ async function updateEmotion(userId, guildId, text) {
     subtext = '';
   }
 
-  const weight = EMOTION_WEIGHTS[emotion] || 0;
-  const sentiment = intensity > 0 ? intensity * weight : analyzeSentiment(text);
-  setUserEmotion(userId, guildId, emotion);
-  logEmotionHistory(userId, guildId, emotion, sentiment);
-
-  // Store subtext in memory if non-empty (so Skarn can reference it later)
-  if (subtext && subtext.length > 3) {
-    try {
-      const { addMemoryEntry } = require('../../db/database');
-      addMemoryEntry(userId, guildId || 'dm', 'extracted', 'preference', 'tone_subtext: ' + subtext, 0.4, text.slice(0, 100));
-    } catch (e) { /* best-effort */ }
-  }
-
-  return emotion;
+  return writeEmotionState(userId, guildId, emotion, intensity, subtext, text);
 }
 
 // Write emotion from the analyzer result (no LLM call) — same side effects as
@@ -59,6 +46,13 @@ async function applyAnalyzedEmotion(userId, guildId, text, analysis) {
   const intensity = typeof analysis.intensity === 'number' ? analysis.intensity : 0;
   const subtext = analysis.subtext || '';
 
+  return writeEmotionState(userId, guildId, emotion, intensity, subtext, text);
+}
+
+// Shared emotion-write block (setUserEmotion + logEmotionHistory + best-effort
+// tone_subtext memory). Extracted 2026-08-08 from updateEmotion/applyAnalyzedEmotion
+// so the sentiment formula and memory args live in exactly one place.
+function writeEmotionState(userId, guildId, emotion, intensity, subtext, text) {
   const weight = EMOTION_WEIGHTS[emotion] || 0;
   const sentiment = intensity > 0 ? intensity * weight : analyzeSentiment(text);
   setUserEmotion(userId, guildId, emotion);
@@ -67,7 +61,6 @@ async function applyAnalyzedEmotion(userId, guildId, text, analysis) {
   // Store subtext in memory if non-empty (so Skarn can reference it later)
   if (subtext && subtext.length > 3) {
     try {
-      const { addMemoryEntry } = require('../../db/database');
       addMemoryEntry(userId, guildId || 'dm', 'extracted', 'preference', 'tone_subtext: ' + subtext, 0.4, text.slice(0, 100));
     } catch (e) { /* best-effort */ }
   }
