@@ -27,10 +27,12 @@ On analyzed messages (≥50 chars or `?`), source the emotion (plus `intensity`/
 
 Decisions (grilled with Anomaly, 2026-08-08):
 - **Reuse analyzer emotion** — analyzed messages use the analyzer's emotion; no tone call.
-- **Extend the analyzer prompt** — add `intensity`/`subtext`/`pacing` to the analyzer's JSON schema so nothing the tone call provided is lost (same single call, ~40 extra output tokens, 300-token cap retained).
+- **Extend the analyzer prompt** — add `intensity`/`subtext`/`pacing` to the analyzer's JSON schema so nothing the tone call provided is lost (same single call, ~40 extra output tokens, 300-token cap retained). Subtext gets a one-line guidance instruction (grilled S1) mirroring the tone prompt's phrasing — no few-shot examples.
 - **Map at the storage boundary** — analyzer's `curious→neutral`, `frustrated→stressed`, `playful→happy`; the rest pass through. EI's six-state directive table + weights unchanged.
 - **Tone as short-message fallback** — un-analyzed messages (<50 chars, no `?`) keep the existing `updateEmotion` → `analyzeTone` path; `detectEmotion` (attention gate) unchanged.
 - **Move + await the emotion write** — fixes the latent race; the emotional line reflects the current message.
+- **Silent-swallow emotion-write failures** (grilled S2) — logged, never blocks the reply, never triggers the apology path.
+- **Tone-elimination proof = structural + rg** (grilled S3) — no runtime monkeypatch-count; rely on the `if (analysis)` control flow + the `rg "analyzeTone"` reachability check.
 
 ## [S3] Extend the analyzer prompt + parser — `features/preprocessing/analyzer.js`
 
@@ -46,7 +48,7 @@ And parse them in `analyzeMessage`'s result object (with the existing defaults p
       subtext: parsed.subtext || '',
       pacing: parsed.pacing || 'calm',
 ```
-`max_tokens: 300` stays (the three fields add ~40 tokens to the 300-cap output; the prompt itself grows by ~2 lines of schema). `emotion`/`toneToMatch` fields remain (still emitted; `emotion` now consumed via S4, `toneToMatch` still unused but harmless). **Stale-comment cleanup (self-review finding):** `analyzer.js:63` still has `raw: messageText` with the comment `// original user message for the assembler` — the assembler is deleted (2026-08-08) and `raw` is consumed by nothing (the unified path builds `contextualMessage` from `ctx.conversationLine`). Verify with `rg -n "\.raw"` that nothing reads it, then remove the `raw` field and its stale comment.
+`max_tokens: 300` stays (the three fields add ~40 tokens to the 300-cap output; the prompt itself grows by ~2 lines of schema). **Subtext guidance (grilled S1):** add one instruction line to the analyzer prompt after the `subtext` schema line — `"subtext": one short sentence on what they might really feel beneath the surface, or "" if surface-level only` — mirroring the tone prompt's phrasing (no few-shot examples; keeps `tone_subtext` memory + the directive note working). `emotion`/`toneToMatch` fields remain (still emitted; `emotion` now consumed via S4, `toneToMatch` still unused but harmless). **Stale-comment cleanup (self-review finding):** `analyzer.js:63` still has `raw: messageText` with the comment `// original user message for the assembler` — the assembler is deleted (2026-08-08) and `raw` is consumed by nothing (the unified path builds `contextualMessage` from `ctx.conversationLine`). Verify with `rg -n "\.raw"` that nothing reads it, then remove the `raw` field and its stale comment.
 
 ## [S4] Emotion mapping helper + analyzed-emotion writer — `features/wisdom/emotionalIntelligence.js`
 
@@ -103,11 +105,15 @@ New order:
     // Emotion write — AFTER the analyzer, awaited (grilled Q4): the prompt's
     // emotional line now reflects THIS message. Analyzed path uses the analyzer
     // result (no tone LLM call, stack 5→4); short/failed path falls back to tone.
-    if (analysis) {
-      await applyAnalyzedEmotion(userId, guildId, message, analysis);
-    } else {
-      await updateEmotion(userId, guildId, message);
-    }
+    // Silent-swallow (grilled S2): emotion tracking is advisory — a write failure
+    // logs and continues; it must never block the reply or trigger the apology path.
+    try {
+      if (analysis) {
+        await applyAnalyzedEmotion(userId, guildId, message, analysis);
+      } else {
+        await updateEmotion(userId, guildId, message);
+      }
+    } catch (e) { /* emotion tracking is advisory — never block the reply */ }
 
     const ctx = buildContext(userId, guildId, channelId, {
       roleNature: 'casual',
@@ -119,7 +125,7 @@ New order:
       ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${message}`
       : message;
 ```
-Remove the old `updateEmotion(userId, guildId, message).catch(function() {});` at line 65. Import `applyAnalyzedEmotion` alongside `updateEmotion` (line 23). `analysis` is `null` for short messages OR analyzer failure — both fall back to `updateEmotion` (which still catches its own errors internally). The `.catch(function(){})` is no longer needed because both branches are awaited inside the existing try — but the outer try/catch at `sharedPipeline.js:235` already handles failures, so an emotion-write throw won't break the reply (it'd hit the catch and flagForApology — verify this is acceptable: an emotion-write failure should NOT trigger the apology path; see S6).
+Remove the old `updateEmotion(userId, guildId, message).catch(function() {});` at line 65. Import `applyAnalyzedEmotion` alongside `updateEmotion` (line 23). `analysis` is `null` for short messages OR analyzer failure — both fall back to `updateEmotion` (which still catches its own errors internally). The local try/catch around the emotion write (shown above) absorbs write failures so they never reach the outer `runPipeline` catch or trigger the apology path (grilled S2).
 
 ## [S6] Error handling
 
@@ -150,7 +156,7 @@ assert('analyzer emotion mapping: happy passes through', mapAnalyzerEmotion('hap
 ```
 - **New smoke `scripts/smokes/13-emotion-reuse.js`** (temp DB): seed nothing; call `applyAnalyzedEmotion('u1','g1','this is a longer message that exceeds fifty characters for the smoke test here', { emotion: 'frustrated', intensity: 0.7, subtext: 'test subtext' })` and assert `getUserEmotion('u1','g1').emotional_state === 'stressed'` (mapped) and that a `tone_subtext:` memory entry exists. Also assert `mapAnalyzerEmotion('neutral') === 'neutral'`.
 - **Existing smokes** must stay green: `npm run smoke` (14 suites now), `npm run audit:docs` (4/4), `npm run audit:gate` (OK — no new direct OpenAI calls; `applyAnalyzedEmotion` adds none, the tone call is REMOVED from the analyzed path).
-- **Cost regression proof:** `rg -n "analyzeTone" features/ --glob '*.js'` should show it only in `emotionalIntelligence.js` (fallback path) + `toneAnalyzer.js` itself + `attentionGate.js` (detectEmotion) — NOT reachable from the analyzed branch of sharedPipeline.
+- **Cost regression proof (structural + rg, grilled S3):** `rg -n "analyzeTone" features/ --glob '*.js'` should show it only in `emotionalIntelligence.js` (fallback path) + `toneAnalyzer.js` itself + `attentionGate.js` (detectEmotion) — NOT reachable from the analyzed branch of sharedPipeline. Combined with the `if (analysis) applyAnalyzedEmotion else updateEmotion` control flow, this proves the analyzed path makes zero LLM calls for emotion. No runtime monkeypatch-count (grilled S3).
 
 ## [S8] Docs updates
 
