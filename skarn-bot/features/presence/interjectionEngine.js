@@ -50,7 +50,7 @@ async function maybeInterject(message, client) {
       max_tokens: 100,
       temperature: 0.85,
       userId: message.author.id,
-      guildId: message.guild ? message.guild.id : null,
+      guildId: message.guild?.id ?? null,
       bucket: 'interjection',
     });
     if (!result.success) {
