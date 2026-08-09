@@ -144,4 +144,24 @@ function replyTargetFor(role) {
   return replyTargets[role] || REPLIES_CHAR_DEFAULT;
 }
 
-module.exports = { roles, roleTokenBudgets, ROLE_NATURE, replyTargets, replyTargetFor, REPLIES_CHAR_DEFAULT };
+// ===== Role-registry alignment guard =====
+// roles / roleTokenBudgets / ROLE_NATURE must stay key-aligned (CONTEXT.md §11.3).
+// Called at boot (bot.js) and exercised by scripts/smokes/10-role-registry.js.
+function assertRoleRegistryAligned() {
+  const a = Object.keys(roles).sort();
+  const b = Object.keys(roleTokenBudgets).sort();
+  const c = Object.keys(ROLE_NATURE).sort();
+  if (a.join(',') === b.join(',') && b.join(',') === c.join(',')) return true;
+  const missing = {};
+  a.concat(b, c).forEach(function(k) {
+    if (!(k in roles)) (missing[k] = missing[k] || []).push('roles');
+    if (!(k in roleTokenBudgets)) (missing[k] = missing[k] || []).push('roleTokenBudgets');
+    if (!(k in ROLE_NATURE)) (missing[k] = missing[k] || []).push('ROLE_NATURE');
+  });
+  const lines = Object.keys(missing).map(function(k) {
+    return k + ' missing from: ' + missing[k].join(', ');
+  });
+  throw new Error('Role registries out of alignment: ' + lines.join('; '));
+}
+
+module.exports = { roles, roleTokenBudgets, ROLE_NATURE, replyTargets, replyTargetFor, REPLIES_CHAR_DEFAULT, assertRoleRegistryAligned };

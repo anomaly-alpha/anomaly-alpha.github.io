@@ -7,6 +7,7 @@ const { db, getUserPreferences, setUserPreference, getGuildConfig, setGuildConfi
 // ===== Skarn Persona System =====
 const { handleMention } = require('./features/mentionRouter/mentionRouter');
 const { seedKnowledgeBase } = require('./features/knowledge/knowledgeSeeder');
+const { assertRoleRegistryAligned } = require('./persona/roles');
 
 // A rejection from the AI mention pipeline must never take down the whole bot
 async function safeHandleMention(message) {
@@ -402,6 +403,9 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
     await logChannel.send({ embeds: [embed], allowedMentions: { parse: ['users'] } });
   } catch (e) { console.error('[Bot] Caught:', e.message); }
 });
+
+// Fail fast if persona role registries drift apart (CONTEXT.md §11.3)
+assertRoleRegistryAligned();
 
 client.login(process.env.DISCORD_TOKEN).catch(e => {
   console.error('[Bot] Login failed:', e.message);
