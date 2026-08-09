@@ -46,7 +46,7 @@
 ```
 (The guidance line mirrors the tone prompt's phrasing — no few-shot examples.)
 
-- [ ] **Step 3: Parse the new fields** in `analyzeMessage`'s return object (with the existing defaults pattern):
+- [ ] **Step 3: Parse the new fields** in `analyzeMessage`'s return object (with the existing defaults pattern). Insert these three lines into the returned object, AFTER the existing `complexityScore:` line (currently ~line 62) and BEFORE the `raw:` line (which Step 4 removes):
 ```js
       intensity: typeof parsed.intensity === 'number' ? parsed.intensity : 0,
       subtext: parsed.subtext || '',
@@ -123,9 +123,8 @@ Match the file's `const` style. Note: `async` but no `await` inside — signatur
 
 - [ ] **Step 3: Export both** — add `mapAnalyzerEmotion, applyAnalyzedEmotion` to `module.exports` (the file exports `detectEmotion, updateEmotion` plus the directive getters; find the export line and add both).
 
-- [ ] **Step 4: Add mapping assertions to `scripts/smokes/08-persona-invariants.js`** (after the existing emotion assertions; it already imports from emotionalIntelligence):
+- [ ] **Step 4: Add mapping assertions to `scripts/smokes/08-persona-invariants.js`** (after the existing emotion assertions). NOTE: the file already has `const { getEmotionDirective } = require('../../features/wisdom/emotionalIntelligence');` at line 7 — EXTEND that existing destructure to `const { getEmotionDirective, mapAnalyzerEmotion } = require('../../features/wisdom/emotionalIntelligence');` rather than adding a second require line. Then append the assertions:
 ```js
-const { mapAnalyzerEmotion } = require('../../features/wisdom/emotionalIntelligence');
 assert('analyzer emotion mapping: curious→neutral', mapAnalyzerEmotion('curious') === 'neutral');
 assert('analyzer emotion mapping: frustrated→stressed', mapAnalyzerEmotion('frustrated') === 'stressed');
 assert('analyzer emotion mapping: playful→happy', mapAnalyzerEmotion('playful') === 'happy');
