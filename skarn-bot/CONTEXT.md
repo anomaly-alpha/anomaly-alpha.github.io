@@ -39,7 +39,6 @@ Every persistent table has a well-defined scope — the columns that form its pr
 | `user_profile` | per-user-per-guild | `(user_id, guild_id)` PRIMARY KEY | Profile is personal per server |
 | `user_emotional_context` | per-user-per-guild | `(user_id, guild_id)` PRIMARY KEY | Emotional state is personal per server |
 | `rate_limits` | per-user-per-bucket | `(user_id, bucket, timestamp)` INDEX | Rate limiting is per-user per bucket |
-| `mention_cooldowns` | per-user-per-channel | `(user_id, channel_id)` PRIMARY KEY | Mention throttle is per-conversation |
 | `interjection_cooldowns` | per-channel | `channel_id` PRIMARY KEY | Interjection is per-conversation |
 | `active_listen_cooldowns` | per-channel | `channel_id` PRIMARY KEY | Active listening is per-conversation |
 | `sentiment_buffers` | per-channel | `channel_id` PRIMARY KEY | Sentiment is per-conversation |
@@ -60,7 +59,7 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 |---|---|---|---|---|
 | General AI calls | `rate_limits` via `lib/rateLimit.js` (atomic reserve) | 10-minute sliding window | 50 per window (`RATE_LIMIT_MAX_CALLS`) | Single atomic limiter; admission gate centralized in `moderatedChatCompletion()` |
 | Hourly AI cap | `ai_usage` | 1-hour rolling | 50 per hour | Guards against excessive per-user spend |
-| @mention responses | `mention_cooldowns` | 1 second | 1 per user per channel | Prevents ping-pong loops — **unenforced since 2026-08-08**: helpers `checkMentionCooldown`/`setMentionCooldown` removed (dead); table retained; mention path uses `canInteract`/`canRespond`/`isHostile`/`isSilenced` |
+| @mention responses | — | — | — | Prevents ping-pong loops — **removed 2026-08-08**: `mention_cooldowns` table dropped; mention path uses `canInteract`/`canRespond`/`isHostile`/`isSilenced` |
 | Random interjections | `interjection_cooldowns` | 5 minutes | 1 per channel | Avoids spammy presence |
 | Active listening cues | `active_listen_cooldowns` | 5 minutes | 1 per channel | Same spacing principle |
 | Reaction emoji | `cooldowns` table (generic) via `checkCooldown()` | ~60 seconds | 1 per channel | SQLite-backed since 2026-08-01 |
@@ -365,7 +364,7 @@ The following bugs were identified during a structural code review and should be
 
 **Status**: Not fixed (the feature exists but is noisier than intended).
 
-> **Note (2026-08-08)**: the spec's "banter-toned questions" signal exists only as the dead helper `isBanterTone(content)` (`features/humor/callbackEngine.js` lines 8–11) — it has zero callers and was never wired in.
+> **Note (2026-08-08)**: the spec's "banter-toned questions" signal existed only as the dead helper `isBanterTone(content)` (`features/humor/callbackEngine.js` lines 8–11) — it had zero callers and was never wired in. **Removed 2026-08-08** along with the orphaned `BANTER_WORDS` list and the unused `Sentiment` import/instantiation.
 
 ## 13. Slur Filter System (2026-07-20; Gate 2 removed 2026-08-01)
 
@@ -429,7 +428,7 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 - **All state in SQLite**: All state persists to SQLite — the former in-memory cooldown Maps (`reactionSystem.js`, `commands/search.js`, warmth, realm, omen) were moved to SQLite-backed cooldowns in the 2026-08-01 audit, so there are no exceptions anymore.
   > **Still in-memory (2026-08-02 audit):** `activeCombats` (`features/realm/combat.js`), `activeTrades` (`features/realm/economy.js`), `activeGames` (`games/tetris.js`), `banterChains`/`setups` (`features/humor/comedyTiming.js`). These are game sessions, intentionally volatile — lost on restart. The "zero in-memory Maps" claim refers to *cooldowns* specifically.
 - **rate_limits**: Rolling window table for per-user API call rate limiting. Stores individual timestamps for the 10-minute sliding window.
-- **mention_cooldowns**: Per-user-per-channel cooldown table for @mention responses (1s TTL). **Table retained; helpers removed 2026-08-08 (dead) — not enforced.**
+- **mention_cooldowns**: ~~Per-user-per-channel cooldown table for @mention responses (1s TTL).~~ **Dropped 2026-08-08** — orphaned table removed; helpers `checkMentionCooldown`/`setMentionCooldown` were already dead (zero references); the mention path uses `canInteract`/`canRespond`/`isHostile`/`isSilenced`.
 - **interjection_cooldowns**: Per-channel cooldown for random interjections (5min TTL).
 - **active_listen_cooldowns**: Per-channel cooldown for active listening cues (5min TTL).
 - **sentiment_buffers**: Per-channel rolling window of last 5 message texts, used for Weathering state detection. Persisted in SQLite despite being ephemeral in nature.
@@ -482,7 +481,7 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 ### User Preferences
 
 - **proactive_opt_in**: The column (DEFAULT 0) controlling whether users receive proactive messages (check-ins, follow-ups). 0 = opted out by default (no proactive messages), 1 = opted in. Renamed from `proactive_opt_out` which had inverted semantics.
-- **Mention cooldown**: 1-second cooldown per user per channel for @mentions. **Unenforced since 2026-08-08** — helpers removed (dead); `mention_cooldowns` table retained.
+- **Mention cooldown**: ~~1-second cooldown per user per channel for @mentions.~~ **Removed 2026-08-08** — `mention_cooldowns` table dropped; mention path uses `canInteract`/`canRespond`/`isHostile`/`isSilenced` instead.
 - **Proactive cap**: 1 proactive message per user per day maximum.
 
 ### Command Activation

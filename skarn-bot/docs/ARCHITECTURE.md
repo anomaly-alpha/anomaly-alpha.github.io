@@ -216,7 +216,7 @@ Dormant is **only** set by `stateDecay.js` `runDecayPass()` — never by message
 | Hostile content | 10 regex patterns, 3 strikes in 10 min → silence | Blocks AI calls for hostile users |
 | Rate limit | 50 calls per 10 min per user (SQLite, `RATE_LIMIT_MAX_CALLS`) | Prevents abuse across all AI commands |
 | Hourly cap | 50 per hour per user | Controls cost |
-| Mention cooldown | `checkMentionCooldown`/`setMentionCooldown` removed 2026-08-08 (dead); `mention_cooldowns` table retained | Mention path uses `canInteract`/`canRespond`/`isHostile`/`isSilenced` instead |
+| Mention cooldown | `checkMentionCooldown`/`setMentionCooldown` removed 2026-08-08 (dead); `mention_cooldowns` table dropped 2026-08-08 | Mention path uses `canInteract`/`canRespond`/`isHostile`/`isSilenced` instead |
 | Sleep mode | Configurable UTC hours; skips AI responses | Reduces cost during quiet hours |
 | Reaction-only | 10% chance → only emoji reaction, no AI text | Reduces cost for casual messages |
 | Opt-in required | `proactive_opt_in` column defaults to 0 | Users must opt in for proactive messages |
@@ -284,7 +284,7 @@ All state lives in SQLite (`data/skarn.db`). No external database. Key patterns:
 - **Per-user-per-guild** scoping for most tables `(user_id, guild_id)` PK
 - **Ephemeral flags** via `app_flags` with optional TTL (SETs auto-clean via `pruneExpiredFlags()`)
 - **FTS5** on conversation messages and knowledge base for full-text search
-- **Versioned migrations** — `db/migrations.js` runs at startup (`db/db.js:41`), tracked via SQLite `user_version` (2 migrations). Base schema is still `CREATE TABLE IF NOT EXISTS` on every startup (`db/skarn-schema.sql`); column additions use try/catch for idempotency
+- **Versioned migrations** — `db/migrations.js` runs at startup (`db/db.js:41`), tracked via SQLite `user_version` (3 migrations). Base schema is still `CREATE TABLE IF NOT EXISTS` on every startup (`db/skarn-schema.sql`); column additions use try/catch for idempotency
 
 See `docs/DATABASE.md` for the full table reference.
 

@@ -24,6 +24,13 @@ const MIGRATIONS = [
       }
     },
   },
+  {
+    version: 3,
+    name: 'drop_mention_cooldowns',
+    up(db) {
+      db.prepare('DROP TABLE IF EXISTS mention_cooldowns').run(); // orphaned 2026-08-08: helpers removed, zero references remain
+    },
+  },
 ];
 
 function runMigrations(db) {

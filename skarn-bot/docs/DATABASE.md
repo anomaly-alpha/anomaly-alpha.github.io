@@ -2,7 +2,7 @@
 
 ## Overview
 
-All persistent state lives in a single SQLite file at `data/skarn.db` (auto-created). The schema is `db/skarn-schema.sql`, run on every startup via `CREATE TABLE IF NOT EXISTS`. Migration strategy: additive only (new columns added via `ALTER TABLE ... ADD COLUMN`). Idempotent startup ALTERs live in `db/db.js` (try/catch, e.g. `user_preferences.proactive_opt_in`, `user_profile` growth columns); versioned migrations in `db/migrations.js` (v1 reminder/giveaway indexes, v2 `daily_news.published_at`); `lib/rateLimit.js` auto-adds `rate_limits.bucket`.
+All persistent state lives in a single SQLite file at `data/skarn.db` (auto-created). The schema is `db/skarn-schema.sql`, run on every startup via `CREATE TABLE IF NOT EXISTS`. Migration strategy: additive only (new columns added via `ALTER TABLE ... ADD COLUMN`). Idempotent startup ALTERs live in `db/db.js` (try/catch, e.g. `user_preferences.proactive_opt_in`, `user_profile` growth columns); versioned migrations in `db/migrations.js` (v1 reminder/giveaway indexes, v2 `daily_news.published_at`, v3 `drop_mention_cooldowns`); `lib/rateLimit.js` auto-adds `rate_limits.bucket`.
 
 ## Table Reference
 
@@ -284,17 +284,9 @@ Per-user rolling window for AI calls.
 
 50 calls per 10-minute rolling window.
 
-#### `mention_cooldowns`
-Per-user-per-channel @mention throttle.
+#### `mention_cooldowns` — **dropped 2026-08-08**
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `user_id` | TEXT | Discord user ID |
-| `channel_id` | TEXT | Discord channel ID |
-| `expires_at` | INTEGER NOT NULL | Cooldown expiry |
-| **PK** | | `(user_id, channel_id)` |
-
-1-second TTL.
+Per-user-per-channel @mention throttle table. **Removed 2026-08-08**: it was orphaned — the helpers `checkMentionCooldown`/`setMentionCooldown` were deleted earlier and nothing referenced the table. Existing DBs drop it idempotently via migration v3 (`drop_mention_cooldowns`); fresh DBs never create it (removed from `db/skarn-schema.sql`). The mention path now relies solely on `canInteract`/`canRespond`/`isHostile`/`isSilenced`.
 
 #### `interjection_cooldowns`
 Per-channel interjection throttle.

@@ -352,13 +352,6 @@ CREATE INDEX IF NOT EXISTS idx_rate_limits_user ON rate_limits(user_id, bucket, 
 
 -- ===== Cooldowns =====
 
-CREATE TABLE IF NOT EXISTS mention_cooldowns (
-  user_id TEXT NOT NULL,
-  channel_id TEXT NOT NULL,
-  expires_at INTEGER NOT NULL,
-  PRIMARY KEY (user_id, channel_id)
-);
-
 CREATE TABLE IF NOT EXISTS interjection_cooldowns (
   channel_id TEXT PRIMARY KEY,
   expires_at INTEGER NOT NULL

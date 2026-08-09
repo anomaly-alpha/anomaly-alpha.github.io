@@ -1,15 +1,5 @@
 const { addCallback, getCallbacks, pruneCallbacks } = require('../../db/database');
 
-const Sentiment = require('sentiment');
-const sentiment = new Sentiment();
-
-const BANTER_WORDS = ['lmao', 'lmfao', 'lol', 'rofl', 'haha', 'hehe', 'lolz', 'lul'];
-
-function isBanterTone(content) {
-  const lower = content.toLowerCase();
-  return BANTER_WORDS.some(w => lower.includes(w));
-}
-
 function updateCallbacks(channelId, userId, content) {
   if (content.length > 50 && Math.random() < 0.1) {
     addCallback(channelId, userId, content.slice(0, 200));
