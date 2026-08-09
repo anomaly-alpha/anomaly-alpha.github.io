@@ -15,14 +15,18 @@ Consequence: on a busy public server, many distinct users each spending their ow
 
 ## [S2] Solution overview
 
-Add a per-guild daily spend budget for interactive chat AI calls, enforced inside the existing central admission gate. Mirror Realm's proven `tryReserve()` pattern (atomic synchronous check-and-increment, no `await` inside, reservation consumed even if the downstream call fails) but store the counter in the generic `app_state` key-value store rather than the realm-specific `realm_world_state`.
+Add a per-guild daily spend budget for interactive chat AI calls, enforced inside the existing central admission gate. Mirror Realm's proven `tryReserve()` pattern (atomic synchronous check-and-increment, no `await` inside) but store the counter in the generic `app_state` key-value store rather than the realm-specific `realm_world_state`. The reserve runs AFTER moderation passes (S4) so zero-token calls never consume the budget by construction.
 
 When a guild's daily ceiling is reached, budgeted calls are skipped with the existing in-character rate-limit message shape (`{ success: false, safeMessage }`), which every caller already handles. The budget counter must never block AI on a storage hiccup — storage failures fail **open** (allow the call).
 
-Decisions (confirmed with Anomaly):
-- **Budgeted set = chat buckets only**: `bucket: 'chat'` (sharedPipeline: consult + mention), plus the musing and interjection calls (which currently default to `bucket: 'command'`). Support buckets (condense, tone/analyzer, topic, summarizer, presence, realm, weather, story, chronicle, omen, attention) are NOT budgeted.
+Decisions (grilled with Anomaly, 2026-08-08):
+- **Budgeted set = chat buckets only**: `bucket: 'chat'` (sharedPipeline: consult + mention), plus `bucket: 'musing'` and `bucket: 'interjection'` (explicit buckets added at those call sites; `'command'` deliberately excluded — it's the support-call default). Support buckets (condense, tone/analyzer, topic, summarizer, presence, realm, weather, story, chronicle, omen, attention) are NOT budgeted.
 - **Exhaustion behavior**: skip the call + in-character message (same UX as rate limiting).
 - **Default ceiling**: `GUILD_AI_DAILY_LIMIT` env var, default **2000** calls/day/guild.
+- **Counting granularity**: per gate admission (a tool-loop message can use up to 3 slots, `maxTurns = 3`), matching Realm's per-call semantics.
+- **Fail-open on storage error**: a spend counter must never block AI on a counter hiccup.
+- **DMs**: budgeted under a shared `'dm'` pseudo-guild at the same ceiling (caps the DM-abuse vector).
+- **Interjection bucket side effect**: accepted — interjections move off the user's shared `'command'` quota onto their own bucket (a fix, not a regression).
 
 ## [S3] New module: `features/ai/guildBudget.js`
 
@@ -60,9 +64,11 @@ function _write(guildId, state) {
 }
 
 // Atomic synchronous reserve — mirrors Realm tryReserve strictness (reservation
-// is consumed even if the AI call after it fails). Returns true (allow) or
-// false (budget exhausted). Fail-open on storage error: never block AI on a
-// counter hiccup.
+// is consumed once the API call starts). Returns true (allow) or false (budget
+// exhausted). Fail-open on storage error: never block AI on a counter hiccup.
+// §9.1 note: this is a read-modify-write on app_state, but it is atomic by
+// construction — synchronous (no await), better-sqlite3 single-threaded, single
+// bot instance (CONTEXT.md §8). Revisit if multi-instance ever returns.
 function tryReserveGuildCall(guildId) {
   try {
     const today = _dailyKey();
@@ -97,18 +103,20 @@ Notes:
 
 ## [S4] Gate integration — `ai/client.js`
 
-`moderatedChatCompletion(params)` gains an optional `params.guildId`. **Ordering (resolved):** the guild-budget check runs BEFORE the per-user `canCall` reservation, so an exhausted-guild call never consumes (nor releases) a per-user slot. Sequence: `isSilenced` → guild budget → `canCall` → moderation → API call:
+`moderatedChatCompletion(params)` gains an optional `params.guildId`. **Ordering (grilled, resolved):** the guild-budget check runs AFTER moderation passes and BEFORE the API call — `isSilenced` → `canCall` → moderation → **guild budget** → API call. This makes the "zero-token calls don't count" guarantee hold *by construction*: a moderation-blocked call never reserves a guild slot, so no refund code is needed. On guild exhaustion, the already-taken `canCall` slot is released with the existing `releaseCall` (one path):
 
 ```js
   var { tryReserveGuildCall, getGuildUsage, BUDGETED_BUCKETS } = require('../features/ai/guildBudget');
+  // ...after moderation passes (inputCheck.action === 'pass'), before the chat call:
   if (params.guildId && BUDGETED_BUCKETS.indexOf(bucket) !== -1) {
     if (!tryReserveGuildCall(params.guildId)) {
+      releaseCall(params.userId, bucket, reservationId); // refund the per-user slot
       var guildUsage = getGuildUsage(params.guildId);
       return { success: false, safeMessage: 'Even a Warmaster paces himself. (' + guildUsage.current + '/' + guildUsage.max + ' for this server today) Give it a moment.' };
     }
   }
 ```
-The guild check is synchronous and cheap; `canCall` is the reservation that must be released on downstream failure, so checking the budget first avoids the release path entirely. The message shape matches the existing `{ success: false, safeMessage }` contract every caller handles (sharedPipeline `sendError`, musing/interjection return `null`/skip).
+The message shape matches the existing `{ success: false, safeMessage }` contract every caller handles (sharedPipeline `sendError`, musing/interjection return `null`/skip). Genuine API errors after the reserve (tokens spent) still count against the budget — strictness protects cost. **Per-admission (grilled):** the tool loop may reserve up to 3 guild slots per user message (`maxTurns = 3`, `sharedPipeline.js:110-113`), matching Realm's per-call reserve semantics.
 
 ## [S5] Call-site wiring
 
@@ -116,17 +124,19 @@ Pass `guildId` (and, for musing/interjection, an explicit `bucket`) into `modera
 
 1. `features/ai/sharedPipeline.js:121` — `moderatedChatCompletion({ ... })` inside `runPipeline(userId, guildId, channelId, message, opts)`; add `guildId: guildId` to the params object. Already passes `bucket: 'chat'`. Covers consult (`/consult` → runPipeline) AND mention (mentionRouter → runPipeline). **This is the one change covering both.**
 2. `features/presence/musingEngine.js:85` — `generateMusing(guildId, senderId)` already takes `guildId`; add `guildId: guildId` AND an explicit `bucket: 'musing'` (currently omitted → defaults to `'command'`, which would NOT be budgeted under `BUDGETED_BUCKETS`).
-3. `features/presence/interjectionEngine.js:44` — the interjection path has `message` (Discord message); add `guildId: message.guild ? message.guild.id : null` (null → no budget, e.g. DMs, matching "chat buckets only" intent) AND an explicit `bucket: 'interjection'`.
+3. `features/presence/interjectionEngine.js:44` — the interjection path has `message` (Discord message); add `guildId: message.guild ? message.guild.id : null` (null → no budget, e.g. DMs, matching "chat buckets only" intent) AND an explicit `bucket: 'interjection'`. **Side effect (grilled, accepted):** interjections move off the user's shared `'command'` per-user quota onto their own `'interjection'` bucket — ambient chatter no longer drains interactive quota, which is a fix, not a regression.
 4. No change needed for consult.handler.js / mentionRouter.js individually — both delegate to sharedPipeline (CONTEXT.md §12.5: "both handlers now delegate to the shared pipeline").
+5. **DMs (grilled):** the mention path coerces DM traffic to `guildId = 'dm'` (`mentionRouter.js:11`) — DMs are budgeted under a shared `guild_ai_daily:dm` pseudo-guild at the same ceiling, capping the DM-abuse vector. Interjections are channel-scoped so the interjection null-exemption is effectively a no-op.
 
 Support call sites (condenser, toneAnalyzer, topicExtractor, summarizer, storyEngine, chronicleJob, omenJob, presenceCycler, realm aiDriver, weatherScheduler, attentionGate) are NOT modified — they stay unbudgeted per [S2].
 
 ## [S6] Error handling
 
-- **Budget counter storage failure** → `tryReserveGuildCall` catches and returns `true` (fail-open): a spend counter must never block AI on a storage hiccup. Documented in the module header.
+- **Budget counter storage failure** → `tryReserveGuildCall` catches and returns `true` (fail-open, grilled): a spend counter must never block AI on a storage hiccup. Documented in the module header.
 - **`app_state` missing / unparseable** → treated as `{date: today, count: 0}` (fresh day) — `_read` returns null, `_write` overwrites via INSERT OR REPLACE.
 - **No new caller failure modes**: exhaustion returns the standard `{ success: false, safeMessage }` shape already handled everywhere (sharedPipeline: `opts.sendError`; musing: `return null`; interjection: `return`).
-- **Reservation strictness**: per Realm's documented pattern, a successfully-reserved guild call that fails downstream still counts against the budget (the AI call was about to happen). This is intentional — strictness protects the cost budget.
+- **Atomicity (grilled):** the reserve is a synchronous read-modify-write on `app_state` — no `await` inside, better-sqlite3 is single-threaded, and the bot is a single instance (CONTEXT.md §8), so reserves cannot interleave: atomic by construction. A module comment cites CONTEXT.md §9.1's read-modify-write invariant and notes this is the first thing to revisit if multi-instance ever returns.
+- **Reservation strictness**: per Realm's documented pattern, a successfully-reserved guild call that fails AFTER the API call starts (tokens spent) still counts against the budget. This is intentional — strictness protects the cost budget. Moderation-blocked calls never reach the reserve (ordering S4), so they never count.
 
 ## [S7] Testing / validation
 
@@ -151,8 +161,8 @@ Standalone run: `SKARN_DB_PATH=$(mktemp -d)/guildbudget.db node scripts/smokes/1
 ## [S9] Acceptance criteria
 
 - [ ] New module `features/ai/guildBudget.js` with `tryReserveGuildCall` / `getGuildUsage` / `GUILD_AI_DAILY_LIMIT` (env default 2000), atomic sync reserve, fail-open on storage error.
-- [ ] `moderatedChatCompletion` checks the guild budget (when `guildId` present + bucket budgeted) BEFORE the per-user `canCall` reservation, and returns the in-character message on exhaustion.
-- [ ] `guildId` passed from sharedPipeline (covers consult + mention); musing + interjection get explicit `bucket: 'musing'` / `bucket: 'interjection'` AND `guildId`.
+- [ ] `moderatedChatCompletion` checks the guild budget AFTER moderation passes and BEFORE the API call (ordering: `isSilenced` → `canCall` → moderation → guild budget → API), releasing the `canCall` slot and returning the in-character message on exhaustion.
+- [ ] `guildId` passed from sharedPipeline (covers consult + mention); musing + interjection get explicit `bucket: 'musing'` / `bucket: 'interjection'` AND `guildId`; DM traffic budgets under the `'dm'` pseudo-guild.
 - [ ] Budgeted set = exactly `['chat', 'musing', 'interjection']`; `'command'` (support default) and all support buckets untouched and unbudgeted.
 - [ ] Smoke 12 proves reserve-at-limit, increment, rollover reset, and non-budgeted exemption.
 - [ ] CONTEXT.md §4 row + §10 env row + README env row added.
