@@ -90,3 +90,4 @@ assert('analyzer emotion mapping: frustrated→stressed', mapAnalyzerEmotion('fr
 assert('analyzer emotion mapping: playful→happy', mapAnalyzerEmotion('playful') === 'happy');
 assert('analyzer emotion mapping: happy passes through', mapAnalyzerEmotion('happy') === 'happy');
 assert('analyzer emotion mapping: neutral passes through', mapAnalyzerEmotion('neutral') === 'neutral');
+assert('analyzer emotion mapping: falsy→neutral', mapAnalyzerEmotion('') === 'neutral' && mapAnalyzerEmotion(undefined) === 'neutral');

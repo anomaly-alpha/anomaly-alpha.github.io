@@ -54,9 +54,10 @@ async function updateEmotion(userId, guildId, text) {
 // Write emotion from the analyzer result (no LLM call) — same side effects as
 // updateEmotion: setUserEmotion + logEmotionHistory + tone_subtext memory.
 async function applyAnalyzedEmotion(userId, guildId, text, analysis) {
-  let emotion = mapAnalyzerEmotion(analysis.emotion);
-  let intensity = typeof analysis.intensity === 'number' ? analysis.intensity : 0;
-  let subtext = analysis.subtext || '';
+  if (!analysis) return 'neutral'; // null-analysis guard — self-contained boundary (review finding)
+  const emotion = mapAnalyzerEmotion(analysis.emotion);
+  const intensity = typeof analysis.intensity === 'number' ? analysis.intensity : 0;
+  const subtext = analysis.subtext || '';
 
   const weight = EMOTION_WEIGHTS[emotion] || 0;
   const sentiment = intensity > 0 ? intensity * weight : analyzeSentiment(text);
