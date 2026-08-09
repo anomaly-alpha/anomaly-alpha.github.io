@@ -18,7 +18,10 @@ Analyze the following Discord message and return valid JSON only.
   "safety_flags": ["hostile|self_harm|spam|nsfw"],
   "suggested_tier": "light|full",
   "context_prune": ["newsLine|cultureLine|stateLine|moodLine|relationshipLine|knowledgeLine|emotionalLine"],
-  "complexity_score": 0.5
+  "complexity_score": 0.5,
+  "intensity": 0.5,
+  "subtext": "string or null — one short sentence on what they might really feel beneath the surface, or \"\" if surface-level only",
+  "pacing": "calm|urgent|resigned|energetic|flat"
 }
 
 Message: `;
@@ -60,7 +63,9 @@ async function analyzeMessage(userId, guildId, channelId, messageText, roleNatur
       suggestedTier: parsed.suggested_tier === 'full' ? 'full' : 'light',
       contextPrune: Array.isArray(parsed.context_prune) ? parsed.context_prune : [],
       complexityScore: typeof parsed.complexity_score === 'number' ? parsed.complexity_score : 0.5,
-      raw: messageText, // original user message for the assembler
+      intensity: typeof parsed.intensity === 'number' ? parsed.intensity : 0,
+      subtext: parsed.subtext || '',
+      pacing: parsed.pacing || 'calm',
     };
   } catch (e) {
     console.error('[Analyzer] Error:', e.message);
