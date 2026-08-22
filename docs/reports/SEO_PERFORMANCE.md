@@ -1,7 +1,7 @@
 # SEO Performance Report
 
-**Generated:** Jul 15, 2026
-**Export:** https___anomaly-alpha.github.io_-Performance-on-Search-2026-07-17
+**Generated:** Aug 20, 2026
+**Export:** https___anomaly-alpha-20260822
 
 ---
 
@@ -9,35 +9,16 @@
 
 | Metric | Current | Previous | Raw Δ | Per-Day Δ |
 |--------|---------|---------|-------|-----------|
-| GSC Period | 75 days | 62 days | 13d | — |
-| Total Clicks | 1027 | 410 | +150.5% | +107.6% |
-| Total Impressions | 21883 | 11402 | +91.9% | +58.7% |
-| CTR | 4.69% | 3.6% | 1.09pp | — |
-| Avg Position | 7.2 | 7.3 | -0.1 | — |
+| GSC Period | 92 days | 92 days | 0d | — |
+| Total Clicks | 4432 | 0 | — | — |
+| Total Impressions | 60370 | 1778 | +3295.4% | +3300.0% |
+| CTR | 7.34% | 0% | 7.34pp | — |
+| Avg Position | 6.8 | 0 | 6.8 | — |
 
 ## Trend (Chart.csv)
 
 | Date | Clicks | Impressions | CTR | Position |
 |------|--------|-------------|-----|----------|
-| 2026-05-02 | 0 | 0 | — | 0.0 |
-| 2026-05-03 | 4 | 55 | 7.27% | 5.5 |
-| 2026-05-04 | 0 | 50 | 0.00% | 12.5 |
-| 2026-05-05 | 2 | 70 | 2.86% | 8.8 |
-| 2026-05-06 | 1 | 89 | 1.12% | 6.9 |
-| 2026-05-07 | 7 | 84 | 8.33% | 6.9 |
-| 2026-05-08 | 2 | 76 | 2.63% | 6.6 |
-| 2026-05-09 | 1 | 73 | 1.37% | 6.6 |
-| 2026-05-10 | 3 | 60 | 5.00% | 6.5 |
-| 2026-05-11 | 3 | 59 | 5.08% | 6.3 |
-| 2026-05-12 | 0 | 60 | 0.00% | 7.4 |
-| 2026-05-13 | 0 | 37 | 0.00% | 5.5 |
-| 2026-05-14 | 1 | 58 | 1.72% | 4.9 |
-| 2026-05-15 | 2 | 63 | 3.17% | 6.3 |
-| 2026-05-16 | 1 | 46 | 2.17% | 5.8 |
-| 2026-05-17 | 4 | 72 | 5.56% | 6.1 |
-| 2026-05-18 | 5 | 102 | 4.90% | 8.4 |
-| 2026-05-19 | 6 | 154 | 3.90% | 7.4 |
-| 2026-05-20 | 1 | 157 | 0.64% | 9.0 |
 | 2026-05-21 | 6 | 77 | 7.79% | 7.7 |
 | 2026-05-22 | 1 | 53 | 1.89% | 5.7 |
 | 2026-05-23 | 0 | 44 | 0.00% | 7.3 |
@@ -94,35 +75,74 @@
 | 2026-07-13 | 69 | 981 | 7.03% | 6.5 |
 | 2026-07-14 | 51 | 849 | 6.01% | 6.5 |
 | 2026-07-15 | 75 | 896 | 8.37% | 6.2 |
+| 2026-07-16 | 58 | 829 | 7.00% | 5.9 |
+| 2026-07-17 | 94 | 965 | 9.74% | 6.0 |
+| 2026-07-18 | 84 | 1081 | 7.77% | 5.9 |
+| 2026-07-19 | 69 | 897 | 7.69% | 6.4 |
+| 2026-07-20 | 65 | 1002 | 6.49% | 6.0 |
+| 2026-07-21 | 65 | 1595 | 4.08% | 6.1 |
+| 2026-07-22 | 72 | 1118 | 6.44% | 5.9 |
+| 2026-07-23 | 87 | 1086 | 8.01% | 5.9 |
+| 2026-07-24 | 106 | 1212 | 8.75% | 5.4 |
+| 2026-07-25 | 69 | 925 | 7.46% | 5.8 |
+| 2026-07-26 | 65 | 884 | 7.35% | 5.8 |
+| 2026-07-27 | 58 | 722 | 8.03% | 6.3 |
+| 2026-07-28 | 65 | 843 | 7.71% | 6.0 |
+| 2026-07-29 | 58 | 736 | 7.88% | 6.3 |
+| 2026-07-30 | 49 | 747 | 6.56% | 6.4 |
+| 2026-07-31 | 79 | 1042 | 7.58% | 5.8 |
+| 2026-08-01 | 65 | 1025 | 6.34% | 6.4 |
+| 2026-08-02 | 109 | 1116 | 9.77% | 5.9 |
+| 2026-08-03 | 116 | 1102 | 10.53% | 5.7 |
+| 2026-08-04 | 115 | 1472 | 7.81% | 5.8 |
+| 2026-08-05 | 76 | 1112 | 6.83% | 5.6 |
+| 2026-08-06 | 75 | 983 | 7.63% | 5.6 |
+| 2026-08-07 | 74 | 876 | 8.45% | 6.0 |
+| 2026-08-08 | 69 | 821 | 8.40% | 5.7 |
+| 2026-08-09 | 54 | 801 | 6.74% | 6.4 |
+| 2026-08-10 | 53 | 760 | 6.97% | 6.6 |
+| 2026-08-11 | 73 | 824 | 8.86% | 6.4 |
+| 2026-08-12 | 76 | 815 | 9.33% | 6.1 |
+| 2026-08-13 | 78 | 790 | 9.87% | 5.9 |
+| 2026-08-14 | 112 | 1432 | 7.82% | 5.6 |
+| 2026-08-15 | 148 | 1299 | 11.39% | 5.9 |
+| 2026-08-16 | 125 | 1192 | 10.49% | 5.6 |
+| 2026-08-17 | 204 | 2038 | 10.01% | 5.3 |
+| 2026-08-18 | 272 | 2517 | 10.81% | 5.3 |
+| 2026-08-19 | 219 | 1712 | 12.79% | 5.0 |
+| 2026-08-20 | 192 | 1481 | 12.96% | 5.1 |
 
 **Weekly averages:**
 
 | Week Start | Avg Clicks/Day | Avg Impressions/Day | CTR | Avg Position |
 |------------|----------------|--------------------|-----|-------------|
-| 2026-05-02 | 2.3 | 60.6 | 3.77% | 6.7 |
-| 2026-05-09 | 1.4 | 58.6 | 2.44% | 6.2 |
-| 2026-05-16 | 3.4 | 94.4 | 3.63% | 7.2 |
-| 2026-05-23 | 1.9 | 66.3 | 2.8% | 6.8 |
-| 2026-05-30 | 6.3 | 210.9 | 2.98% | 8 |
-| 2026-06-06 | 6.7 | 180.3 | 3.72% | 7.9 |
-| 2026-06-13 | 11 | 185.9 | 5.92% | 7.7 |
-| 2026-06-20 | 11.1 | 351.3 | 3.17% | 7.7 |
-| 2026-06-27 | 17.9 | 537.6 | 3.32% | 7.3 |
-| 2026-07-04 | 42.3 | 761.4 | 5.55% | 6.7 |
-| 2026-07-11 | 59.4 | 866.6 | 6.85% | 6.6 |
+| 2026-05-21 | 1.7 | 53.4 | 3.21% | 6.7 |
+| 2026-05-28 | 5.9 | 204.1 | 2.87% | 7.8 |
+| 2026-06-04 | 4.4 | 146.6 | 3.02% | 7.9 |
+| 2026-06-11 | 11.7 | 198.3 | 5.91% | 7.7 |
+| 2026-06-18 | 10.6 | 275.9 | 3.83% | 7.9 |
+| 2026-06-25 | 14.7 | 480.3 | 3.06% | 7.2 |
+| 2026-07-02 | 38.6 | 764.6 | 5.04% | 6.9 |
+| 2026-07-09 | 53 | 808 | 6.56% | 6.7 |
+| 2026-07-16 | 72.4 | 1069.6 | 6.77% | 6 |
+| 2026-07-23 | 72.6 | 915.4 | 7.93% | 5.9 |
+| 2026-07-30 | 87 | 1088 | 8% | 5.9 |
+| 2026-08-06 | 67.7 | 840 | 8.06% | 6.1 |
+| 2026-08-13 | 165.4 | 1568.6 | 10.55% | 5.5 |
+| 2026-08-20 | 192 | 1481 | 12.96% | 5.1 |
 
 ## Page Performance (Pages.csv)
 
 | Page | Clicks | Impressions | CTR | Position | Share | Trend
 |------|--------|-------------|-----|----------|-------|-------|
-| `/guide/code/` | 830 | 16831 | 4.93% | 7.39 | 80.4% | +214.4% |
-| `/` | 102 | 1520 | 6.71% | 5.08 | 9.9% | +32.5% |
-| `/guide/pvp/` | 51 | 1841 | 2.77% | 6.73 | 4.9% | +27.5% |
-| `/guide/beginners/` | 26 | 853 | 3.05% | 7.26 | 2.5% | +44.4% |
-| `/guide/faq/` | 11 | 841 | 1.31% | 7.47 | 1.1% | +57.1% |
-| `/guide/event/` | 6 | 549 | 1.09% | 6.76 | 0.6% | +20.0% |
-| `/guide/xp/` | 4 | 203 | 1.97% | 6.62 | 0.4% | — |
-| `/guide/login/` | 2 | 209 | 0.96% | 6.34 | 0.2% | 0.0% |
+| `/guide/code/` | 4115 | 52456 | 7.84% | 6.23 | 92.6% | — |
+| `/` | 195 | 3466 | 5.63% | 5.48 | 4.4% | — |
+| `/guide/pvp/` | 48 | 2511 | 1.91% | 6.53 | 1.1% | — |
+| `/guide/beginners/` | 39 | 1607 | 2.43% | 7.22 | 0.9% | — |
+| `/guide/faq/` | 27 | 1563 | 1.73% | 7.84 | 0.6% | — |
+| `/guide/xp/` | 13 | 914 | 1.42% | 5.59 | 0.3% | — |
+| `/guide/event/` | 7 | 863 | 0.81% | 6.53 | 0.2% | — |
+| `/guide/login/` | 1 | 424 | 0.24% | 5.34 | 0% | — |
 
 ## Query Performance (Queries.csv)
 
@@ -130,79 +150,79 @@
 
 | Query | Clicks | Impressions | CTR | Position |
 |-------|--------|-------------|-----|----------|
-| invincible codes | 42 | 594 | 7.07% | 6.69 |
-| new invincible codes | 37 | 242 | 15.29% | 6.17 |
-| invincible gtg codes | 19 | 230 | 8.26% | 7.96 |
-| new invincible guarding the globe codes | 18 | 95 | 18.95% | 6.22 |
-| invincible guarding the globe codes | 16 | 261 | 6.13% | 10.97 |
-| invincible code | 15 | 150 | 10% | 7.81 |
-| invincible promo codes | 14 | 227 | 6.17% | 7.10 |
-| invincible guarding the globe new codes | 14 | 126 | 11.11% | 6.75 |
-| invincible guarding the globe redeem | 9 | 143 | 6.29% | 6.95 |
-| invincible guarding the globe codes new | 9 | 32 | 28.12% | 8.28 |
-| invincible guarding the globe promo codes | 8 | 261 | 3.07% | 8.44 |
-| invincible new codes | 8 | 82 | 9.76% | 6.74 |
-| invincible gtg code redeem | 7 | 142 | 4.93% | 7.34 |
-| redeem invincible ubisoft barcelona | 6 | 240 | 2.5% | 7.62 |
-| invincible redeem code | 6 | 140 | 4.29% | 7.36 |
-| invincible gtg calculator | 5 | 106 | 4.72% | 3.25 |
-| invincible guarding the globe promo code | 5 | 95 | 5.26% | 7.88 |
-| invincible: guarding the globe codes | 5 | 31 | 16.13% | 15.84 |
-| https://redeem.invincible.ubisoft.barcelona/ | 4 | 647 | 0.62% | 8.89 |
-| invincible promo code | 4 | 99 | 4.04% | 5.94 |
-| invincible guarding the globe code | 4 | 76 | 5.26% | 9.20 |
-| invincible guarding the globe redeem code | 4 | 73 | 5.48% | 8.88 |
-| new codes for invincible | 4 | 32 | 12.5% | 6.09 |
-| invincible guarding the globe gems | 4 | 17 | 23.53% | 4.71 |
-| codes invincible | 4 | 15 | 26.67% | 5.13 |
-| ubisoft invincible redeem code | 3 | 140 | 2.14% | 7.52 |
-| promo codes for invincible guarding the globe | 3 | 60 | 5% | 7.92 |
-| invincible codes redeem | 3 | 43 | 6.98% | 10.28 |
-| new codes for invincible guarding the globe | 3 | 35 | 8.57% | 6.63 |
-| invincible gtg new codes | 3 | 23 | 13.04% | 4.91 |
+| invincible gtg codes | 612 | 2488 | 24.6% | 3.60 |
+| invincible codes | 216 | 1631 | 13.24% | 4.54 |
+| invincible guarding the globe codes | 176 | 1463 | 12.03% | 5.45 |
+| new invincible codes | 112 | 522 | 21.46% | 4.00 |
+| new invincible gtg codes | 86 | 345 | 24.93% | 3.08 |
+| invincible gtg new codes | 84 | 295 | 28.47% | 2.82 |
+| invincible guarding the globe code | 69 | 405 | 17.04% | 4.36 |
+| invincible guarding the globe new codes | 64 | 384 | 16.67% | 4.21 |
+| invincible gtg code redeem | 62 | 1744 | 3.56% | 5.88 |
+| new invincible guarding the globe codes | 57 | 245 | 23.27% | 3.96 |
+| invincible guarding the globe promo codes | 53 | 573 | 9.25% | 5.82 |
+| invincible code | 49 | 474 | 10.34% | 5.51 |
+| invincible gtg code | 49 | 348 | 14.08% | 5.50 |
+| gtg codes | 38 | 329 | 11.55% | 2.87 |
+| invincible promo codes | 37 | 366 | 10.11% | 5.35 |
+| invincible guarding the globe redeem codes | 33 | 243 | 13.58% | 4.82 |
+| invincible guarding the globe code redeem | 32 | 679 | 4.71% | 7.17 |
+| invincible: guarding the globe redeem codes | 32 | 160 | 20% | 5.69 |
+| invincible guarding the globe redeem code | 31 | 399 | 7.77% | 7.58 |
+| invincible new codes | 31 | 179 | 17.32% | 4.56 |
+| invincible gtg code redeem website | 26 | 640 | 4.06% | 6.72 |
+| invincible gtg codes new | 24 | 121 | 19.83% | 3.79 |
+| invincible redeem codes | 23 | 207 | 11.11% | 6.01 |
+| https://redeem.invincible.ubisoft.barcelona/ | 21 | 1509 | 1.39% | 8.18 |
+| redeem invincible ubisoft barcelona | 20 | 888 | 2.25% | 6.98 |
+| code invincible | 20 | 155 | 12.9% | 5.89 |
+| new codes for invincible gtg | 20 | 55 | 36.36% | 2.33 |
+| codes for invincible gtg | 19 | 70 | 27.14% | 3.43 |
+| guarding the globe codes | 18 | 203 | 8.87% | 4.62 |
+| invincible gtg redeem codes | 18 | 201 | 8.96% | 6.35 |
 
 ### CTR leaks (0 clicks, ≥5 impressions)
 
 | Query | Impressions | Position | Score | Severity |
 |-------|-------------|----------|-------|----------|
-| invincible gem | 39 | 2.79 | 320.19000000000005 | CRITICAL |
-| invincible redeem code barcelona | 63 | 6.10 | 308.70000000000005 | CRITICAL |
-| invincible pvp | 47 | 6.57 | 208.20999999999998 | CRITICAL |
-| invincible redeemer | 41 | 6.37 | 189.82999999999998 | CRITICAL |
-| invincible barcelona redeem code | 29 | 5.59 | 156.89000000000001 | CRITICAL |
-| invincible calculator | 21 | 4.14 | 144.06 | HIGH |
-| ubisoft barcelona invincible redeem | 52 | 8.38 | 136.23999999999995 | HIGH |
-| invincible gtg code redeem barcelona | 24 | 5.33 | 136.07999999999998 | HIGH |
-| @ryxx-edits: https://redeem.invincible.ubisof… | 27 | 6.41 | 123.92999999999999 | HIGH |
-| how to get gems in invincible guarding the gl… | 23 | 6.39 | 106.03 | HIGH |
-| https://redeem.invincible.ubisoft.barcelona/. | 45 | 8.71 | 103.04999999999995 | HIGH |
-| gem invincible | 13 | 3.54 | 96.98 | HIGH |
-| invincible ubisoft barcelona redeem | 24 | 6.96 | 96.96000000000001 | HIGH |
-| thkmrk | 13 | 3.62 | 95.94 | HIGH |
-| @deftonesandsoad: https://redeem.invincible.u… | 18 | 5.89 | 91.98 | HIGH |
-| redeem invincible ubisoft barcelona codes | 12 | 4.58 | 77.03999999999999 | MEDIUM |
-| invincible barcelona redeem codes | 11 | 4.36 | 73.03999999999999 | MEDIUM |
-| invincible game promo code | 32 | 8.75 | 72 | MEDIUM |
-| invincible guarding the globe redeem website | 20 | 7.45 | 71 | MEDIUM |
-| redeem invincible barcelona | 15 | 6.47 | 67.95 | MEDIUM |
-| redeem.invincible.ubisoft-barcelona | 15 | 6.67 | 64.95 | MEDIUM |
-| invincible gtg codes new | 10 | 4.70 | 63 | MEDIUM |
-| invincible: guarding the globe redemption web… | 37 | 9.59 | 52.17 | MEDIUM |
-| invincible guarding the globe new redeem code… | 5 | 1.20 | 49 | MEDIUM |
-| redeem.invincible.ubisoft.barcelona in a brow… | 17 | 8.12 | 48.960000000000015 | MEDIUM |
-| invincible gtg barcelona redeem | 9 | 5.89 | 45.99 | MEDIUM |
-| invincible.redeem | 11 | 7.00 | 44 | MEDIUM |
-| guarding the globe promo codes | 8 | 5.62 | 43.04 | MEDIUM |
-| are there any new codes for invincible guardi… | 14 | 8.00 | 42 | MEDIUM |
-| invincible guarding the globe new redeem code… | 12 | 7.58 | 41.04 | MEDIUM |
+| @ryxx-edits: https://redeem.invincible.ubisof… | 77 | 6.30 | 361.90000000000003 | CRITICAL |
+| invincible gtg code redeem barcelona | 56 | 4.73 | 351.12 | CRITICAL |
+| invincible guarding the globe code redeem web… | 99 | 7.89 | 307.89000000000004 | CRITICAL |
+| invincible ubisoft barcelona redeem | 62 | 6.66 | 269.08 | CRITICAL |
+| invincible pvp | 47 | 6.34 | 219.02 | CRITICAL |
+| invincible gtg barcelona redeem | 32 | 5.06 | 190.08 | CRITICAL |
+| @deftonesandsoad: https://redeem.invincible.u… | 38 | 6.05 | 188.1 | CRITICAL |
+| invincible guarding the globe redeem website | 56 | 7.71 | 184.24 | CRITICAL |
+| ubisoft.redeem.invincible.ubisoft/barcelona | 80 | 8.94 | 164.80000000000004 | CRITICAL |
+| invincible xp calculator | 34 | 6.18 | 163.88 | CRITICAL |
+| visit https // redeem.invincible.ubisoft.barc… | 50 | 7.80 | 160 | CRITICAL |
+| invincible gtg redeemer | 39 | 7.13 | 150.93 | CRITICAL |
+| invincible redeem website | 43 | 7.60 | 146.20000000000002 | HIGH |
+| invincible redemption website | 50 | 8.24 | 138 | HIGH |
+| https redeem invincible ubisoft barcelona pas… | 68 | 9.03 | 133.96000000000004 | HIGH |
+| code redeem invincible gtg | 27 | 6.19 | 129.86999999999998 | HIGH |
+| invincible barcelona | 30 | 6.90 | 122.99999999999999 | HIGH |
+| barcelona invincible gtg | 17 | 3.94 | 120.02000000000001 | HIGH |
+| ubisoft barcelona redeem invincible | 35 | 7.71 | 115.15 | HIGH |
+| invincible.redeem | 26 | 6.58 | 114.92 | HIGH |
+| redeem invincible | 29 | 7.28 | 107.88 | HIGH |
+| redeem.invincible.ubisoft.barcelona. | 36 | 8.03 | 106.92000000000002 | HIGH |
+| invincible gtg code website | 19 | 5.89 | 97.09 | HIGH |
+| invincible code redemption | 17 | 5.53 | 92.99 | HIGH |
+| redeem invincible ubisoft barcelona codes | 14 | 4.57 | 90.02 | HIGH |
+| redeem.invincible.ubisoft-barcelona | 20 | 6.65 | 87 | HIGH |
+| gtg code | 12 | 3.75 | 87 | HIGH |
+| thkmrk | 12 | 3.83 | 86.03999999999999 | HIGH |
+| invinciblegtg redeem code | 14 | 4.86 | 85.96 | HIGH |
+| redeem ubisoft barcelona invincible | 22 | 7.18 | 84.04 | HIGH |
 
 ## Devices (Devices.csv)
 
 | Device | Clicks | Impressions | CTR | Position | Share |
 |--------|--------|-------------|-----|----------|-------|
-| Mobile | 920 | 16930 | 5.43% | 6.70 | 89.6% |
-| Desktop | 95 | 4697 | 2.02% | 8.86 | 9.3% |
-| Tablet | 12 | 256 | 4.69% | 6.23 | 1.2% |
+| Mobile | 4097 | 49786 | 8.23% | 5.69 | 92.4% |
+| Desktop | 297 | 9845 | 3.02% | 9.17 | 6.7% |
+| Tablet | 38 | 739 | 5.14% | 5.59 | 0.9% |
 
 ## Countries (Countries.csv)
 
@@ -210,22 +230,19 @@
 
 | Country | Clicks | Impressions | CTR | Position |
 |---------|--------|-------------|-----|----------|
-| United States | 526 | 11470 | 4.59% | 7.31 |
-| United Kingdom | 104 | 2543 | 4.09% | 7.08 |
-| Canada | 53 | 1075 | 4.93% | 6.65 |
-| Australia | 36 | 626 | 5.75% | 6.93 |
-| Brazil | 32 | 454 | 7.05% | 7.12 |
-| France | 26 | 247 | 10.53% | 6.63 |
-| Germany | 19 | 472 | 4.03% | 6.87 |
-| Italy | 19 | 291 | 6.53% | 6.90 |
-| Philippines | 16 | 336 | 4.76% | 6.88 |
-| Turkey | 15 | 259 | 5.79% | 6.93 |
+| United States | 2632 | 32173 | 8.18% | 5.92 |
+| United Kingdom | 573 | 8333 | 6.88% | 6.06 |
+| Canada | 206 | 2962 | 6.95% | 5.78 |
+| Australia | 139 | 1782 | 7.8% | 6.03 |
+| France | 87 | 692 | 12.57% | 6.46 |
+| Brazil | 59 | 956 | 6.17% | 7.04 |
+| Germany | 57 | 1054 | 5.41% | 6.45 |
+| Philippines | 54 | 1202 | 4.49% | 7.44 |
+| India | 37 | 408 | 9.07% | 8.38 |
+| Italy | 32 | 633 | 5.06% | 6.75 |
 
 ## Rich Results (Search appearance.csv)
 
-| Feature | Clicks | Impressions | Status |
-|---------|--------|-------------|--------|
-| All | 0 | 0 | No rich results detected |
 
 ## Issues & Opportunities
 
@@ -233,26 +250,26 @@
 
 | # | Issue | Impact | Severity | First Seen |
 |---|-------|--------|----------|------------|
-| 1 | **"invincible gem"** at pos 2.79 — 39 imp, 0 clicks | 0 clicks at pos 2.79, 39 impressions | CRITICAL | Jul 15, 2026 |
-| 2 | **"invincible redeem code barcelona"** at pos 6.10 — 63 imp, 0 clicks | 0 clicks at pos 6.10, 63 impressions | CRITICAL | Jul 15, 2026 |
-| 3 | **"invincible pvp"** at pos 6.57 — 47 imp, 0 clicks | 0 clicks at pos 6.57, 47 impressions | CRITICAL | Jul 15, 2026 |
-| 4 | **"invincible redeemer"** at pos 6.37 — 41 imp, 0 clicks | 0 clicks at pos 6.37, 41 impressions | CRITICAL | Jul 15, 2026 |
-| 5 | **"invincible barcelona redeem code"** at pos 5.59 — 29 imp, 0 clicks | 0 clicks at pos 5.59, 29 impressions | CRITICAL | Jul 15, 2026 |
-| 6 | **"invincible calculator"** at pos 4.14 — 21 imp, 0 clicks | 0 clicks at pos 4.14, 21 impressions | HIGH | Jul 15, 2026 |
-| 7 | **"ubisoft barcelona invincible redeem"** at pos 8.38 — 52 imp, 0 clicks | 0 clicks at pos 8.38, 52 impressions | HIGH | Jul 15, 2026 |
-| 8 | **"invincible gtg code redeem barcelona"** at pos 5.33 — 24 imp, 0 clicks | 0 clicks at pos 5.33, 24 impressions | HIGH | Jul 15, 2026 |
-| 9 | **"@ryxx-edits: https://redeem.invincible.u…"** at pos 6.41 — 27 imp, 0 clicks | 0 clicks at pos 6.41, 27 impressions | HIGH | Jul 15, 2026 |
-| 10 | **"how to get gems in invincible guarding t…"** at pos 6.39 — 23 imp, 0 clicks | 0 clicks at pos 6.39, 23 impressions | HIGH | Jul 15, 2026 |
-| 11 | **"https://redeem.invincible.ubisoft.barcel…"** at pos 8.71 — 45 imp, 0 clicks | 0 clicks at pos 8.71, 45 impressions | HIGH | Jul 15, 2026 |
-| 12 | **"gem invincible"** at pos 3.54 — 13 imp, 0 clicks | 0 clicks at pos 3.54, 13 impressions | HIGH | Jul 15, 2026 |
-| 13 | **"invincible ubisoft barcelona redeem"** at pos 6.96 — 24 imp, 0 clicks | 0 clicks at pos 6.96, 24 impressions | HIGH | Jul 15, 2026 |
-| 14 | **"thkmrk"** at pos 3.62 — 13 imp, 0 clicks | 0 clicks at pos 3.62, 13 impressions | HIGH | Jul 15, 2026 |
-| 15 | **"@deftonesandsoad: https://redeem.invinci…"** at pos 5.89 — 18 imp, 0 clicks | 0 clicks at pos 5.89, 18 impressions | HIGH | Jul 15, 2026 |
-| 16 | **"redeem invincible ubisoft barcelona code…"** at pos 4.58 — 12 imp, 0 clicks | 0 clicks at pos 4.58, 12 impressions | MEDIUM | Jul 15, 2026 |
-| 17 | **"invincible barcelona redeem codes"** at pos 4.36 — 11 imp, 0 clicks | 0 clicks at pos 4.36, 11 impressions | MEDIUM | Jul 15, 2026 |
-| 18 | **"invincible game promo code"** at pos 8.75 — 32 imp, 0 clicks | 0 clicks at pos 8.75, 32 impressions | MEDIUM | Jul 15, 2026 |
-| 19 | **"invincible guarding the globe redeem web…"** at pos 7.45 — 20 imp, 0 clicks | 0 clicks at pos 7.45, 20 impressions | MEDIUM | Jul 15, 2026 |
-| 20 | **"redeem invincible barcelona"** at pos 6.47 — 15 imp, 0 clicks | 0 clicks at pos 6.47, 15 impressions | MEDIUM | Jul 15, 2026 |
+| 1 | **"@ryxx-edits: https://redeem.invincible.u…"** at pos 6.30 — 77 imp, 0 clicks | 0 clicks at pos 6.30, 77 impressions | CRITICAL | Aug 20, 2026 |
+| 2 | **"invincible gtg code redeem barcelona"** at pos 4.73 — 56 imp, 0 clicks | 0 clicks at pos 4.73, 56 impressions | CRITICAL | Aug 20, 2026 |
+| 3 | **"invincible guarding the globe code redee…"** at pos 7.89 — 99 imp, 0 clicks | 0 clicks at pos 7.89, 99 impressions | CRITICAL | Aug 20, 2026 |
+| 4 | **"invincible ubisoft barcelona redeem"** at pos 6.66 — 62 imp, 0 clicks | 0 clicks at pos 6.66, 62 impressions | CRITICAL | Aug 20, 2026 |
+| 5 | **"invincible pvp"** at pos 6.34 — 47 imp, 0 clicks | 0 clicks at pos 6.34, 47 impressions | CRITICAL | Aug 20, 2026 |
+| 6 | **"invincible gtg barcelona redeem"** at pos 5.06 — 32 imp, 0 clicks | 0 clicks at pos 5.06, 32 impressions | CRITICAL | Aug 20, 2026 |
+| 7 | **"@deftonesandsoad: https://redeem.invinci…"** at pos 6.05 — 38 imp, 0 clicks | 0 clicks at pos 6.05, 38 impressions | CRITICAL | Aug 20, 2026 |
+| 8 | **"invincible guarding the globe redeem web…"** at pos 7.71 — 56 imp, 0 clicks | 0 clicks at pos 7.71, 56 impressions | CRITICAL | Aug 20, 2026 |
+| 9 | **"ubisoft.redeem.invincible.ubisoft/barcel…"** at pos 8.94 — 80 imp, 0 clicks | 0 clicks at pos 8.94, 80 impressions | CRITICAL | Aug 20, 2026 |
+| 10 | **"invincible xp calculator"** at pos 6.18 — 34 imp, 0 clicks | 0 clicks at pos 6.18, 34 impressions | CRITICAL | Aug 20, 2026 |
+| 11 | **"visit https // redeem.invincible.ubisoft…"** at pos 7.80 — 50 imp, 0 clicks | 0 clicks at pos 7.80, 50 impressions | CRITICAL | Aug 20, 2026 |
+| 12 | **"invincible gtg redeemer"** at pos 7.13 — 39 imp, 0 clicks | 0 clicks at pos 7.13, 39 impressions | CRITICAL | Aug 20, 2026 |
+| 13 | **"invincible redeem website"** at pos 7.60 — 43 imp, 0 clicks | 0 clicks at pos 7.60, 43 impressions | HIGH | Aug 20, 2026 |
+| 14 | **"invincible redemption website"** at pos 8.24 — 50 imp, 0 clicks | 0 clicks at pos 8.24, 50 impressions | HIGH | Aug 20, 2026 |
+| 15 | **"https redeem invincible ubisoft barcelon…"** at pos 9.03 — 68 imp, 0 clicks | 0 clicks at pos 9.03, 68 impressions | HIGH | Aug 20, 2026 |
+| 16 | **"code redeem invincible gtg"** at pos 6.19 — 27 imp, 0 clicks | 0 clicks at pos 6.19, 27 impressions | HIGH | Aug 20, 2026 |
+| 17 | **"invincible barcelona"** at pos 6.90 — 30 imp, 0 clicks | 0 clicks at pos 6.90, 30 impressions | HIGH | Aug 20, 2026 |
+| 18 | **"barcelona invincible gtg"** at pos 3.94 — 17 imp, 0 clicks | 0 clicks at pos 3.94, 17 impressions | HIGH | Aug 20, 2026 |
+| 19 | **"ubisoft barcelona redeem invincible"** at pos 7.71 — 35 imp, 0 clicks | 0 clicks at pos 7.71, 35 impressions | HIGH | Aug 20, 2026 |
+| 20 | **"invincible.redeem"** at pos 6.58 — 26 imp, 0 clicks | 0 clicks at pos 6.58, 26 impressions | HIGH | Aug 20, 2026 |
 
 ## Comparison History
 
@@ -266,3 +283,5 @@
 | **0704** | **May 2–Jul 2** | **62** | **410** | **6.6** | **11,402** | **183.9** | **3.60%** | **7.3** | **None** | **Last 3 months** |
 | https___anomaly-alpha.github.io_-Performance-on-Search-2026-07-17 | 2026-05-02 – 2026-07-15 | 75 | 1027 | 13.7 | 21883 | 291.8 | 4.69% | 7.2 |
 | https___anomaly-alpha.github.io_-Performance-on-Search-2026-07-17 | 2026-05-02 – 2026-07-15 | 75 | 1027 | 13.7 | 21883 | 291.8 | 4.69% | 7.2 |
+| 0726 | 2026-05-02 – 2026-07-24 | 84 | 1727 | 20.6 | 31668 | 377 | 5.45% | 7.1 |
+| 260822 | 2026-05-21 – 2026-08-20 | 92 | 4432 | 48.2 | 60370 | 656.2 | 7.34% | 6.8 |
