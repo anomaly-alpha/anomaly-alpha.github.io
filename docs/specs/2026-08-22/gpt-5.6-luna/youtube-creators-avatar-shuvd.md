@@ -27,7 +27,7 @@ In scope:
 
 Out of scope:
 
-- Additional creators in this release.
+- Candidates outside the nine supplied channels in this release.
 - Authenticated scraping, YouTube Data API integration, or discovery of unrelated channels during updates.
 - User accounts, ratings, comments, subscriptions, or personalization.
 - Locally stored thumbnails or video files.
@@ -80,9 +80,8 @@ Required creator fields:
   "status": "active",
   "displayOrder": 1,
   "lastChecked": "2026-08-22",
-    "videos": [],
-    "sourceUrl": "https://www.youtube.com/@AvatarShuvd",
-    "featuredCreator": true
+  "videos": [],
+  "sourceUrl": "https://www.youtube.com/@AvatarShuvd"
 }
 ```
 
