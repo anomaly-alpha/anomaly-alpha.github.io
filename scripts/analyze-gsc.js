@@ -9,6 +9,8 @@ const DASHBOARD_DATA_PATH = path.join(__dirname, '..', 'data', 'generated', 'seo
 
 const OLD_NAMING = /^https___anomaly-alpha-(\d{4})$/;
 const NEW_NAMING = /^https___anomaly-alpha\.github\.io_-Performance-on-Search-(\d{4}-\d{2}-\d{2})$/;
+const YYYYMMDD_NAMING = /^https___anomaly-alpha-(\d{4})(\d{2})(\d{2})$/;
+const AI_FEATURES_NAMING = /^https___anomaly-alpha-(\d{4})(\d{2})(\d{2})-Generative-AI-Features$/;
 
 function parseExportDate(folderName) {
   let m = folderName.match(OLD_NAMING);
@@ -19,14 +21,28 @@ function parseExportDate(folderName) {
   }
   m = folderName.match(NEW_NAMING);
   if (m) return new Date(m[1]);
+  m = folderName.match(YYYYMMDD_NAMING);
+  if (m) return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]));
+  m = folderName.match(AI_FEATURES_NAMING);
+  if (m) return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]));
   return null;
 }
 
 function discoverExports() {
   const entries = fs.readdirSync(DATA_DIR, { withFileTypes: true });
   const exports = entries
-    .filter(e => e.isDirectory() && (OLD_NAMING.test(e.name) || NEW_NAMING.test(e.name)))
-    .map(e => ({ name: e.name, date: parseExportDate(e.name), path: path.join(DATA_DIR, e.name) }))
+    .filter(e => e.isDirectory() && (
+      OLD_NAMING.test(e.name) ||
+      NEW_NAMING.test(e.name) ||
+      YYYYMMDD_NAMING.test(e.name) ||
+      AI_FEATURES_NAMING.test(e.name)
+    ))
+    .map(e => ({
+      name: e.name,
+      date: parseExportDate(e.name),
+      path: path.join(DATA_DIR, e.name),
+      isAIFeatures: AI_FEATURES_NAMING.test(e.name)
+    }))
     .filter(e => e.date !== null)
     .sort((a, b) => b.date - a.date);
   return exports;
