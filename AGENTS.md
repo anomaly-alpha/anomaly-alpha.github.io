@@ -149,7 +149,8 @@ docs/
 ├── specs/YYYY-MM-DD/<model>/   # Design specs
 ├── plans/YYYY-MM-DD/<model>/   # Implementation plans
 ├── reports/YYYY-MM-DD/<model>/ # Audit reports, findings
-└── handoffs/YYYY-MM-DD/<model>/ # Agent handoffs and delivery context
+├── handoffs/YYYY-MM-DD/<model>/ # Agent handoffs and delivery context
+└── guides/YYYY-MM-DD/<model>/  # Agent workflow guides
 ```
 
 - **Model name**: use the model ID from the system prompt (e.g. `opencode-go/deepseek-v4-flash`), dropping the org prefix (e.g. `deepseek-v4-flash`)
@@ -189,6 +190,8 @@ Each plan is self-contained with file paths, code snippets, and verification ste
 Located at `docs/plans/2026-05-28/deepseek-v4-flash-free/` with INDEX.md.
 
 ## Reference docs
+
+> **Before changing MiMoCode global/project config or `.mimocode/agent/` definitions**, read [`docs/guides/2026-08-22/gpt-5.6-luna/subagent-strategy.md`](docs/guides/2026-08-22/gpt-5.6-luna/subagent-strategy.md).
 
 - `CONTEXT.md` — domain model (categories, leagues, tiers, tokens)
 - `docs/DESIGN_SYSTEM.md` — complete CSS token reference

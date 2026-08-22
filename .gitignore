@@ -11,7 +11,10 @@ Thumbs.db
 lighthouse-report.html
 *.report.html
 lighthouse-reports/
-.mimocode/
+.mimocode/*
+!.mimocode/mimocode.json
+!.mimocode/agent/
+!.mimocode/agent/*.md
 chrome/
 _dream_tmp*.py
 .compose/
