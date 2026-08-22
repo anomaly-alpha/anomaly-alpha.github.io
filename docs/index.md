@@ -117,7 +117,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 
 ## Improvement Plans
 
-160 executable improvement plans at `docs/plan/2026-05-20/deepseek-v4-flash/` cover every aspect of the project:
+160 executable improvement plans at `docs/plans/2026-05-20/deepseek-v4-flash/` cover every aspect of the project:
 
 | Category | Plans | Focus |
 |----------|-------|-------|
@@ -138,7 +138,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 
 ## SEO Reports
 
-Live SEO performance analysis from Google Search Console exports at `docs/reports/SEO_PERFORMANCE.md`. Updated periodically by running plan 162 (`docs/plan/2026-05-28/deepseek-v4-flash-free/162-gsc-export-analyzer.md`) against new GSC exports in `data/`.
+Live SEO performance analysis from Google Search Console exports at `docs/reports/2026-08-20/unknown/SEO_PERFORMANCE.md`. Updated periodically by running plan 162 (`docs/plans/2026-05-28/deepseek-v4-flash-free/162-gsc-export-analyzer.md`) against new GSC exports in `data/`.
 ## Contributors
 
 - Anomaly

@@ -140,17 +140,29 @@ After any major HTML/CSS/JS changes, always:
 - **Internal linking** — bidirectional nav between main page and all guide pages, guide pages link to each other
 - **Guide page structure** — Each guide links to all 6 other guides + back to main page
 
-## Plan conventions
+## Docs structure
 
-- **When planning**: save the plan to `docs/plan/YYYY-MM-DD/<model-name>/` without making code changes
+All specs, plans, reports, and handoffs follow this directory convention:
+
+```
+docs/
+├── specs/YYYY-MM-DD/<model>/   # Design specs
+├── plans/YYYY-MM-DD/<model>/   # Implementation plans
+├── reports/YYYY-MM-DD/<model>/ # Audit reports, findings
+└── handoffs/YYYY-MM-DD/<model>/ # Agent handoffs and delivery context
+```
+
 - **Model name**: use the model ID from the system prompt (e.g. `opencode-go/deepseek-v4-flash`), dropping the org prefix (e.g. `deepseek-v4-flash`)
+- **Handoffs**: save handoffs to `docs/handoffs/YYYY-MM-DD/<model>/`
+- Type suffixes (`-plan`, `-spec`, `-design`) and model suffixes (`-sonnet-5-medium`) are stripped from filenames since both are encoded in the directory path
+- **Unknown metadata**: use `unknown` for the date or model only when the source document does not record it
+- **Never save to `docs/compose/` or singular `docs/plan/`** — always use the `docs/{type}/YYYY-MM-DD/<model>/` structure above
 - **Go-build workflow**: first plan, then build — never skip the plan step
-- **Existing plans**: reorganized under `docs/plan/YYYY-MM-DD/opencode/` (retroactively assigned, since model info not captured at time)
 
-## Improvement Plans
+### Existing plans
 
 A comprehensive set of 160 executable improvement plans exists at:
-**`docs/plan/2026-05-20/deepseek-v4-flash/`**
+**`docs/plans/2026-05-20/deepseek-v4-flash/`**
 
 | File | Focus |
 |------|-------|
@@ -174,15 +186,15 @@ Each plan is self-contained with file paths, code snippets, and verification ste
 | `161` | 2026-05-28 | Gems/Codes SEO, Breadcrumbs, Article Schema (copywriting overhaul + meta refresh + dynamic code count + breadcrumb nav + Article schema) |
 | `162` | 2026-05-28 | GSC Export Analyzer (standalone plan for AI models to analyze Google Search Console exports and update SEO performance report) |
 
-Located at `docs/plan/2026-05-28/deepseek-v4-flash-free/` with INDEX.md.
+Located at `docs/plans/2026-05-28/deepseek-v4-flash-free/` with INDEX.md.
 
 ## Reference docs
 
 - `CONTEXT.md` — domain model (categories, leagues, tiers, tokens)
 - `docs/DESIGN_SYSTEM.md` — complete CSS token reference
-- `docs/reports/SEO_PERFORMANCE.md` — SEO performance report (updated from GSC exports)
-- `docs/reports/LIGHTHOUSE_AUDIT.md` — Lighthouse performance audit scores + fix plan
-- `docs/plan/2026-05-20/deepseek-v4-flash/` — 160 improvement plans
+- `docs/reports/2026-08-20/unknown/SEO_PERFORMANCE.md` — SEO performance report (updated from GSC exports)
+- `docs/reports/2026-07-26/unknown/LIGHTHOUSE_AUDIT.md` — Lighthouse performance audit scores + fix plan
+- `docs/plans/2026-05-20/deepseek-v4-flash/` — 160 improvement plans
 
 ---
 

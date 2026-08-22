@@ -79,6 +79,6 @@ Manual one-time edits to `index.html`:
 
 ## References
 
-- Plan 163: Promo Code Single Source of Truth (`docs/plan/2026-05-31/deepseek-v4-flash-free/163-promo-code-single-source-of-truth.md`)
+- Plan 163: Promo Code Single Source of Truth (`docs/plans/2026-05-31/deepseek-v4-flash-free/163-promo-code-single-source-of-truth.md`)
 - Plan 13: Promo Code Data Deduplication (removed `cards[0].codes` usage from `script.js`, making it dead data)
 - `script.js` — `loadAllConfigs()` reads `REWARDS.promoCodes`; all render functions guard with `REWARDS&&REWARDS.promoCodes?...`

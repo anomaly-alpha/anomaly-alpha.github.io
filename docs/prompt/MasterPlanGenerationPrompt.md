@@ -2,13 +2,13 @@ Generate 160 improvement plan files for the project at `/Users/prime/Desktop/Gem
 
 ## Output Directory
 
-Create plans at `docs/plan/YYYY-MM-DD/<your-model-name>/`. The directory `docs/plan/` already exists. Add your model-named subdirectory under today's date.
+Create plans at `docs/plans/YYYY-MM-DD/<your-model-name>/`. The directory `docs/plans/` already exists. Add your model-named subdirectory under today's date.
 
 To determine your model name: find the model ID in your system prompt. If it has an org prefix like `opencode-go/deepseek-v4-flash`, drop the prefix → `deepseek-v4-flash`. If no prefix, use the full ID. If you cannot determine it, use `unknown-model`.
 
 All files sit flat (no subfolders):
 ```
-docs/plan/YYYY-MM-DD/<model>/
+docs/plans/YYYY-MM-DD/<model>/
 ├── INDEX.md
 ├── 01-plan-name.md
 ├── 02-plan-name.md
@@ -98,7 +98,7 @@ Minimum: 2 implementation steps, 1 code snippet per step, complete Files Modifie
 2. List all 160 ideas before writing any files
 3. If you can't think of 160 unique, practical plans, stop at the highest quality number. Never generate filler.
 4. Determine your model name
-5. `mkdir -p docs/plan/YYYY-MM-DD/<model>/`
+5. `mkdir -p docs/plans/YYYY-MM-DD/<model>/`
 6. Write INDEX.md first (summarize all plans with categories)
 7. Write plans sequentially: 01.md, 02.md, ...
 8. Every 10 plans, re-read earlier ones for duplicates/contradictions
@@ -138,7 +138,7 @@ Known: Plan 09 (ESLint) vs Plan 132 (Biome). Plan 01 uses csso, Plan 133 replace
 ## Final Verification
 
 ```bash
-ls docs/plan/YYYY-MM-DD/<model>/*.md | grep -v INDEX | wc -l
-for i in $(seq -w 1 160); do found=$(ls docs/plan/YYYY-MM-DD/<model>/${i}-*.md 2>/dev/null | head -1); if [ -z "$found" ]; then echo "MISSING: $i"; fi; done
-test -f docs/plan/YYYY-MM-DD/<model>/INDEX.md && echo "INDEX OK" || echo "INDEX MISSING"
+ls docs/plans/YYYY-MM-DD/<model>/*.md | grep -v INDEX | wc -l
+for i in $(seq -w 1 160); do found=$(ls docs/plans/YYYY-MM-DD/<model>/${i}-*.md 2>/dev/null | head -1); if [ -z "$found" ]; then echo "MISSING: $i"; fi; done
+test -f docs/plans/YYYY-MM-DD/<model>/INDEX.md && echo "INDEX OK" || echo "INDEX MISSING"
 ```

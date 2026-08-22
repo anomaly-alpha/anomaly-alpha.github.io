@@ -635,4 +635,4 @@ To update a color across the entire application, change the token value in `styl
 
 ## Improvement Plans
 
-160 executable plans covering architecture, security, performance, accessibility, SEO, testing, PWA, CSS, JS quality, and new features are available at `docs/plan/2026-05-20/deepseek-v4-flash/`.
+160 executable plans covering architecture, security, performance, accessibility, SEO, testing, PWA, CSS, JS quality, and new features are available at `docs/plans/2026-05-20/deepseek-v4-flash/`.
