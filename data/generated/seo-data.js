@@ -1,429 +1,429 @@
 window.__SEO_DATA = {
-  "fetched": "2026-07-15",
-  "exportName": "https___anomaly-alpha.github.io_-Performance-on-Search-2026-07-17",
+  "fetched": "2026-08-20",
+  "exportName": "https___anomaly-alpha-20260822",
   "totals": {
-    "clicks": 1027,
-    "impressions": 21883,
-    "ctr": 4.69,
-    "position": 7.2
+    "clicks": 4432,
+    "impressions": 60370,
+    "ctr": 7.34,
+    "position": 6.8
   },
   "daily": [
     {
-      "date": "2026-06-16",
-      "clicks": 16,
-      "impressions": 187
+      "date": "2026-07-22",
+      "clicks": 72,
+      "impressions": 1118
     },
     {
-      "date": "2026-06-17",
-      "clicks": 14,
-      "impressions": 201
+      "date": "2026-07-23",
+      "clicks": 87,
+      "impressions": 1086
     },
     {
-      "date": "2026-06-18",
-      "clicks": 10,
-      "impressions": 225
+      "date": "2026-07-24",
+      "clicks": 106,
+      "impressions": 1212
     },
     {
-      "date": "2026-06-19",
-      "clicks": 12,
-      "impressions": 191
-    },
-    {
-      "date": "2026-06-20",
-      "clicks": 3,
-      "impressions": 118
-    },
-    {
-      "date": "2026-06-21",
-      "clicks": 19,
-      "impressions": 313
-    },
-    {
-      "date": "2026-06-22",
-      "clicks": 14,
-      "impressions": 401
-    },
-    {
-      "date": "2026-06-23",
-      "clicks": 12,
-      "impressions": 389
-    },
-    {
-      "date": "2026-06-24",
-      "clicks": 4,
-      "impressions": 294
-    },
-    {
-      "date": "2026-06-25",
-      "clicks": 12,
-      "impressions": 341
-    },
-    {
-      "date": "2026-06-26",
-      "clicks": 14,
-      "impressions": 603
-    },
-    {
-      "date": "2026-06-27",
-      "clicks": 14,
-      "impressions": 443
-    },
-    {
-      "date": "2026-06-28",
-      "clicks": 13,
-      "impressions": 433
-    },
-    {
-      "date": "2026-06-29",
-      "clicks": 8,
-      "impressions": 421
-    },
-    {
-      "date": "2026-06-30",
-      "clicks": 18,
-      "impressions": 485
-    },
-    {
-      "date": "2026-07-01",
-      "clicks": 24,
-      "impressions": 636
-    },
-    {
-      "date": "2026-07-02",
-      "clicks": 24,
-      "impressions": 527
-    },
-    {
-      "date": "2026-07-03",
-      "clicks": 24,
-      "impressions": 818
-    },
-    {
-      "date": "2026-07-04",
-      "clicks": 22,
-      "impressions": 679
-    },
-    {
-      "date": "2026-07-05",
-      "clicks": 82,
-      "impressions": 1066
-    },
-    {
-      "date": "2026-07-06",
-      "clicks": 51,
-      "impressions": 913
-    },
-    {
-      "date": "2026-07-07",
-      "clicks": 45,
-      "impressions": 719
-    },
-    {
-      "date": "2026-07-08",
-      "clicks": 22,
-      "impressions": 630
-    },
-    {
-      "date": "2026-07-09",
-      "clicks": 30,
-      "impressions": 575
-    },
-    {
-      "date": "2026-07-10",
-      "clicks": 44,
-      "impressions": 748
-    },
-    {
-      "date": "2026-07-11",
-      "clicks": 40,
-      "impressions": 740
-    },
-    {
-      "date": "2026-07-12",
-      "clicks": 62,
-      "impressions": 867
-    },
-    {
-      "date": "2026-07-13",
+      "date": "2026-07-25",
       "clicks": 69,
-      "impressions": 981
+      "impressions": 925
     },
     {
-      "date": "2026-07-14",
-      "clicks": 51,
-      "impressions": 849
+      "date": "2026-07-26",
+      "clicks": 65,
+      "impressions": 884
     },
     {
-      "date": "2026-07-15",
+      "date": "2026-07-27",
+      "clicks": 58,
+      "impressions": 722
+    },
+    {
+      "date": "2026-07-28",
+      "clicks": 65,
+      "impressions": 843
+    },
+    {
+      "date": "2026-07-29",
+      "clicks": 58,
+      "impressions": 736
+    },
+    {
+      "date": "2026-07-30",
+      "clicks": 49,
+      "impressions": 747
+    },
+    {
+      "date": "2026-07-31",
+      "clicks": 79,
+      "impressions": 1042
+    },
+    {
+      "date": "2026-08-01",
+      "clicks": 65,
+      "impressions": 1025
+    },
+    {
+      "date": "2026-08-02",
+      "clicks": 109,
+      "impressions": 1116
+    },
+    {
+      "date": "2026-08-03",
+      "clicks": 116,
+      "impressions": 1102
+    },
+    {
+      "date": "2026-08-04",
+      "clicks": 115,
+      "impressions": 1472
+    },
+    {
+      "date": "2026-08-05",
+      "clicks": 76,
+      "impressions": 1112
+    },
+    {
+      "date": "2026-08-06",
       "clicks": 75,
-      "impressions": 896
+      "impressions": 983
+    },
+    {
+      "date": "2026-08-07",
+      "clicks": 74,
+      "impressions": 876
+    },
+    {
+      "date": "2026-08-08",
+      "clicks": 69,
+      "impressions": 821
+    },
+    {
+      "date": "2026-08-09",
+      "clicks": 54,
+      "impressions": 801
+    },
+    {
+      "date": "2026-08-10",
+      "clicks": 53,
+      "impressions": 760
+    },
+    {
+      "date": "2026-08-11",
+      "clicks": 73,
+      "impressions": 824
+    },
+    {
+      "date": "2026-08-12",
+      "clicks": 76,
+      "impressions": 815
+    },
+    {
+      "date": "2026-08-13",
+      "clicks": 78,
+      "impressions": 790
+    },
+    {
+      "date": "2026-08-14",
+      "clicks": 112,
+      "impressions": 1432
+    },
+    {
+      "date": "2026-08-15",
+      "clicks": 148,
+      "impressions": 1299
+    },
+    {
+      "date": "2026-08-16",
+      "clicks": 125,
+      "impressions": 1192
+    },
+    {
+      "date": "2026-08-17",
+      "clicks": 204,
+      "impressions": 2038
+    },
+    {
+      "date": "2026-08-18",
+      "clicks": 272,
+      "impressions": 2517
+    },
+    {
+      "date": "2026-08-19",
+      "clicks": 219,
+      "impressions": 1712
+    },
+    {
+      "date": "2026-08-20",
+      "clicks": 192,
+      "impressions": 1481
     }
   ],
   "pages": [
     {
       "url": "/guide/code/",
-      "clicks": 830,
-      "impressions": 16831,
-      "ctr": 4.93,
-      "position": 7.39,
-      "share": 80.4
+      "clicks": 4115,
+      "impressions": 52456,
+      "ctr": 7.84,
+      "position": 6.23,
+      "share": 92.6
     },
     {
       "url": "/",
-      "clicks": 102,
-      "impressions": 1520,
-      "ctr": 6.71,
-      "position": 5.08,
-      "share": 9.9
+      "clicks": 195,
+      "impressions": 3466,
+      "ctr": 5.63,
+      "position": 5.48,
+      "share": 4.4
     },
     {
       "url": "/guide/pvp/",
-      "clicks": 51,
-      "impressions": 1841,
-      "ctr": 2.77,
-      "position": 6.73,
-      "share": 4.9
-    },
-    {
-      "url": "/guide/beginners/",
-      "clicks": 26,
-      "impressions": 853,
-      "ctr": 3.05,
-      "position": 7.26,
-      "share": 2.5
-    },
-    {
-      "url": "/guide/faq/",
-      "clicks": 11,
-      "impressions": 841,
-      "ctr": 1.31,
-      "position": 7.47,
+      "clicks": 48,
+      "impressions": 2511,
+      "ctr": 1.91,
+      "position": 6.53,
       "share": 1.1
     },
     {
-      "url": "/guide/event/",
-      "clicks": 6,
-      "impressions": 549,
-      "ctr": 1.09,
-      "position": 6.76,
+      "url": "/guide/beginners/",
+      "clicks": 39,
+      "impressions": 1607,
+      "ctr": 2.43,
+      "position": 7.22,
+      "share": 0.9
+    },
+    {
+      "url": "/guide/faq/",
+      "clicks": 27,
+      "impressions": 1563,
+      "ctr": 1.73,
+      "position": 7.84,
       "share": 0.6
     },
     {
       "url": "/guide/xp/",
-      "clicks": 4,
-      "impressions": 203,
-      "ctr": 1.97,
-      "position": 6.62,
-      "share": 0.4
+      "clicks": 13,
+      "impressions": 914,
+      "ctr": 1.42,
+      "position": 5.59,
+      "share": 0.3
+    },
+    {
+      "url": "/guide/event/",
+      "clicks": 7,
+      "impressions": 863,
+      "ctr": 0.81,
+      "position": 6.53,
+      "share": 0.2
     },
     {
       "url": "/guide/login/",
-      "clicks": 2,
-      "impressions": 209,
-      "ctr": 0.96,
-      "position": 6.34,
-      "share": 0.2
+      "clicks": 1,
+      "impressions": 424,
+      "ctr": 0.24,
+      "position": 5.34,
+      "share": 0
     }
   ],
   "ctrLeaks": [
     {
-      "query": "invincible gem",
-      "impressions": 39,
-      "position": 2.79,
-      "score": 320.19000000000005,
+      "query": "@ryxx-edits: https://redeem.invincible.ubisoft.barcelona/",
+      "impressions": 77,
+      "position": 6.3,
+      "score": 361.90000000000003,
       "severity": "CRITICAL"
     },
     {
-      "query": "invincible redeem code barcelona",
-      "impressions": 63,
-      "position": 6.1,
-      "score": 308.70000000000005,
+      "query": "invincible gtg code redeem barcelona",
+      "impressions": 56,
+      "position": 4.73,
+      "score": 351.12,
+      "severity": "CRITICAL"
+    },
+    {
+      "query": "invincible guarding the globe code redeem website",
+      "impressions": 99,
+      "position": 7.89,
+      "score": 307.89000000000004,
+      "severity": "CRITICAL"
+    },
+    {
+      "query": "invincible ubisoft barcelona redeem",
+      "impressions": 62,
+      "position": 6.66,
+      "score": 269.08,
       "severity": "CRITICAL"
     },
     {
       "query": "invincible pvp",
       "impressions": 47,
-      "position": 6.57,
-      "score": 208.20999999999998,
+      "position": 6.34,
+      "score": 219.02,
       "severity": "CRITICAL"
     },
     {
-      "query": "invincible redeemer",
-      "impressions": 41,
-      "position": 6.37,
-      "score": 189.82999999999998,
+      "query": "invincible gtg barcelona redeem",
+      "impressions": 32,
+      "position": 5.06,
+      "score": 190.08,
       "severity": "CRITICAL"
-    },
-    {
-      "query": "invincible barcelona redeem code",
-      "impressions": 29,
-      "position": 5.59,
-      "score": 156.89000000000001,
-      "severity": "CRITICAL"
-    },
-    {
-      "query": "invincible calculator",
-      "impressions": 21,
-      "position": 4.14,
-      "score": 144.06,
-      "severity": "HIGH"
-    },
-    {
-      "query": "ubisoft barcelona invincible redeem",
-      "impressions": 52,
-      "position": 8.38,
-      "score": 136.23999999999995,
-      "severity": "HIGH"
-    },
-    {
-      "query": "invincible gtg code redeem barcelona",
-      "impressions": 24,
-      "position": 5.33,
-      "score": 136.07999999999998,
-      "severity": "HIGH"
-    },
-    {
-      "query": "@ryxx-edits: https://redeem.invincible.ubisoft.barcelona/",
-      "impressions": 27,
-      "position": 6.41,
-      "score": 123.92999999999999,
-      "severity": "HIGH"
-    },
-    {
-      "query": "how to get gems in invincible guarding the globe",
-      "impressions": 23,
-      "position": 6.39,
-      "score": 106.03,
-      "severity": "HIGH"
-    },
-    {
-      "query": "https://redeem.invincible.ubisoft.barcelona/.",
-      "impressions": 45,
-      "position": 8.71,
-      "score": 103.04999999999995,
-      "severity": "HIGH"
-    },
-    {
-      "query": "gem invincible",
-      "impressions": 13,
-      "position": 3.54,
-      "score": 96.98,
-      "severity": "HIGH"
-    },
-    {
-      "query": "invincible ubisoft barcelona redeem",
-      "impressions": 24,
-      "position": 6.96,
-      "score": 96.96000000000001,
-      "severity": "HIGH"
-    },
-    {
-      "query": "thkmrk",
-      "impressions": 13,
-      "position": 3.62,
-      "score": 95.94,
-      "severity": "HIGH"
     },
     {
       "query": "@deftonesandsoad: https://redeem.invincible.ubisoft.barcelona",
-      "impressions": 18,
-      "position": 5.89,
-      "score": 91.98,
-      "severity": "HIGH"
-    },
-    {
-      "query": "redeem invincible ubisoft barcelona codes",
-      "impressions": 12,
-      "position": 4.58,
-      "score": 77.03999999999999,
-      "severity": "MEDIUM"
-    },
-    {
-      "query": "invincible barcelona redeem codes",
-      "impressions": 11,
-      "position": 4.36,
-      "score": 73.03999999999999,
-      "severity": "MEDIUM"
-    },
-    {
-      "query": "invincible game promo code",
-      "impressions": 32,
-      "position": 8.75,
-      "score": 72,
-      "severity": "MEDIUM"
+      "impressions": 38,
+      "position": 6.05,
+      "score": 188.1,
+      "severity": "CRITICAL"
     },
     {
       "query": "invincible guarding the globe redeem website",
-      "impressions": 20,
-      "position": 7.45,
-      "score": 71,
-      "severity": "MEDIUM"
+      "impressions": 56,
+      "position": 7.71,
+      "score": 184.24,
+      "severity": "CRITICAL"
     },
     {
-      "query": "redeem invincible barcelona",
-      "impressions": 15,
-      "position": 6.47,
-      "score": 67.95,
-      "severity": "MEDIUM"
+      "query": "ubisoft.redeem.invincible.ubisoft/barcelona",
+      "impressions": 80,
+      "position": 8.94,
+      "score": 164.80000000000004,
+      "severity": "CRITICAL"
+    },
+    {
+      "query": "invincible xp calculator",
+      "impressions": 34,
+      "position": 6.18,
+      "score": 163.88,
+      "severity": "CRITICAL"
+    },
+    {
+      "query": "visit https // redeem.invincible.ubisoft.barcelona/",
+      "impressions": 50,
+      "position": 7.8,
+      "score": 160,
+      "severity": "CRITICAL"
+    },
+    {
+      "query": "invincible gtg redeemer",
+      "impressions": 39,
+      "position": 7.13,
+      "score": 150.93,
+      "severity": "CRITICAL"
+    },
+    {
+      "query": "invincible redeem website",
+      "impressions": 43,
+      "position": 7.6,
+      "score": 146.20000000000002,
+      "severity": "HIGH"
+    },
+    {
+      "query": "invincible redemption website",
+      "impressions": 50,
+      "position": 8.24,
+      "score": 138,
+      "severity": "HIGH"
+    },
+    {
+      "query": "https redeem invincible ubisoft barcelona paste verification",
+      "impressions": 68,
+      "position": 9.03,
+      "score": 133.96000000000004,
+      "severity": "HIGH"
+    },
+    {
+      "query": "code redeem invincible gtg",
+      "impressions": 27,
+      "position": 6.19,
+      "score": 129.86999999999998,
+      "severity": "HIGH"
+    },
+    {
+      "query": "invincible barcelona",
+      "impressions": 30,
+      "position": 6.9,
+      "score": 122.99999999999999,
+      "severity": "HIGH"
+    },
+    {
+      "query": "barcelona invincible gtg",
+      "impressions": 17,
+      "position": 3.94,
+      "score": 120.02000000000001,
+      "severity": "HIGH"
+    },
+    {
+      "query": "ubisoft barcelona redeem invincible",
+      "impressions": 35,
+      "position": 7.71,
+      "score": 115.15,
+      "severity": "HIGH"
+    },
+    {
+      "query": "invincible.redeem",
+      "impressions": 26,
+      "position": 6.58,
+      "score": 114.92,
+      "severity": "HIGH"
     }
   ],
   "devices": [
     {
       "name": "Mobile",
-      "clicks": 920,
-      "share": 89.6
+      "clicks": 4097,
+      "share": 92.4
     },
     {
       "name": "Desktop",
-      "clicks": 95,
-      "share": 9.3
+      "clicks": 297,
+      "share": 6.7
     },
     {
       "name": "Tablet",
-      "clicks": 12,
-      "share": 1.2
+      "clicks": 38,
+      "share": 0.9
     }
   ],
   "countries": [
     {
       "name": "United States",
-      "clicks": 526
+      "clicks": 2632
     },
     {
       "name": "United Kingdom",
-      "clicks": 104
+      "clicks": 573
     },
     {
       "name": "Canada",
-      "clicks": 53
+      "clicks": 206
     },
     {
       "name": "Australia",
-      "clicks": 36
-    },
-    {
-      "name": "Brazil",
-      "clicks": 32
+      "clicks": 139
     },
     {
       "name": "France",
-      "clicks": 26
+      "clicks": 87
+    },
+    {
+      "name": "Brazil",
+      "clicks": 59
     },
     {
       "name": "Germany",
-      "clicks": 19
-    },
-    {
-      "name": "Italy",
-      "clicks": 19
+      "clicks": 57
     },
     {
       "name": "Philippines",
-      "clicks": 16
+      "clicks": 54
     },
     {
-      "name": "Turkey",
-      "clicks": 15
+      "name": "India",
+      "clicks": 37
+    },
+    {
+      "name": "Italy",
+      "clicks": 32
     }
   ]
 };

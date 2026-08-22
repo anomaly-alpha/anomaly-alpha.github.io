@@ -1,5 +1,26 @@
 window.__PROMO_CODES=[
   {
+    "code": "SPRACE",
+    "gems": 0,
+    "tickets": 0,
+    "reward": "1 x Space Racer",
+    "dateAdded": "2026-08-21"
+  },
+  {
+    "code": "THAEDS",
+    "gems": 0,
+    "tickets": 0,
+    "reward": "1 x Thaedus",
+    "dateAdded": "2026-08-14"
+  },
+  {
+    "code": "TECHJK",
+    "gems": 0,
+    "tickets": 0,
+    "reward": "1 x Tech Jacket",
+    "dateAdded": "2026-08-14"
+  },
+  {
     "code": "RAID26",
     "gems": 0,
     "tickets": 0,
@@ -38,6 +59,18 @@ window.__PROMO_CODES=[
     "tickets": 0,
     "reward": "1 x Kregg, 1 x Anissa",
     "dateAdded": "2026-05-20"
+  },
+  {
+    "code": "BULL3T",
+    "gems": 500,
+    "tickets": 0,
+    "dateAdded": "2026-05-19"
+  },
+  {
+    "code": "HALMRY",
+    "gems": 750,
+    "tickets": 0,
+    "dateAdded": "2026-05-19"
   },
   {
     "code": "ANISS4",

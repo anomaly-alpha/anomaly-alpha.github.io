@@ -1,6 +1,39 @@
 {
-  "updated": "2026-08-04",
+  "updated": "2026-08-21",
   "codes": [
+    {
+      "code": "SPRACE",
+      "gems": 0,
+      "tickets": 0,
+      "reward": "1 x Space Racer",
+      "dateAdded": "2026-08-21"
+    },
+    {
+      "code": "THAEDS",
+      "gems": 0,
+      "tickets": 0,
+      "reward": "1 x Thaedus",
+      "dateAdded": "2026-08-14"
+    },
+    {
+      "code": "TECHJK",
+      "gems": 0,
+      "tickets": 0,
+      "reward": "1 x Tech Jacket",
+      "dateAdded": "2026-08-14"
+    },
+    {
+      "code": "BULL3T",
+      "gems": 500,
+      "tickets": 0,
+      "dateAdded": "2026-05-19"
+    },
+    {
+      "code": "HALMRY",
+      "gems": 750,
+      "tickets": 0,
+      "dateAdded": "2026-05-19"
+    },
     {
       "code": "JUL4TH",
       "gems": 250,
