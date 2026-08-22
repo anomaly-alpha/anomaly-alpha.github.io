@@ -46,12 +46,15 @@ Insert immediately after `<head>` on every target page:
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-21RZK3GKKZ', { 'anonymize_ip': true });
+  gtag('config', 'G-21RZK3GKKZ', {
+    'send_page_view': true
+  });
 </script>
 ```
 
 Notes:
-- `anonymize_ip: true` is explicitly set for privacy best practice (Google anonymizes by default now, but being explicit is better).
+- `send_page_view: true` is explicitly set to document the intended page-view behavior; GA4 uses this as the default unless disabled.
+- IP handling follows Google Analytics' current processing and privacy controls; no legacy `anonymize_ip` option is used.
 - No cookie consent mechanism — page views only, no custom events, and no PII is intentionally sent by the site.
 
 ## [S6] Privacy policy update

@@ -5,15 +5,16 @@ specs:
   - docs/specs/2026-08-22/gpt-5.6-luna/google-analytics-setup.md
 plans:
   - docs/plans/2026-08-22/gpt-5.6-luna/google-analytics-setup.md
+  - docs/plans/2026-08-22/gpt-5.6-luna/google-analytics-setup-updated.md
 branch: main
-commits: 633fd475..88c0044
+commits: 633fd475..e4614638
 ---
 
 # Google Analytics Setup — Final Report
 
 ## What Was Built
 
-Google Analytics 4 page-view tracking is now installed on 16 standalone site pages using measurement ID `G-21RZK3GKKZ`. Each page loads the Google tag asynchronously immediately after `<head>` and configures the tag with explicit IP anonymization.
+Google Analytics 4 page-view tracking is now installed on 16 standalone site pages using measurement ID `G-21RZK3GKKZ`. Each page loads the Google tag asynchronously immediately after `<head>` and explicitly configures `send_page_view: true`.
 
 The privacy policy now accurately describes pseudonymous/aggregated analytics data, persistent `_ga` and `_ga_*` cookies, Google processing and retention, opt-out paths, GDPR/CCPA rights, DNT behavior, and the site's no-intentional-PII position.
 
@@ -34,6 +35,7 @@ Deploy the static site normally. Google Analytics begins receiving page views wh
 ## Verification
 
 - The precondition checks confirmed the 16 target pages initially lacked the measurement ID; post-change assertions confirmed one identical tag block per target and no tag in the three excluded files.
+- The follow-up configuration review replaced the legacy `anonymize_ip` option with explicit `send_page_view: true` and updated the privacy wording to match current GA4 IP handling.
 - `npm run build` passed without generated source changes.
 - `npm run lighthouse:all` and `npm run lighthouse:report` passed for all eight configured audit pages, with no regression attributed to the tag.
 - Browser QA confirmed rendering and zero console errors on the homepage, PvP guide, privacy page, and 404 page.
@@ -51,5 +53,6 @@ Deploy the static site normally. Google Analytics begins receiving page views wh
 |------|------|-------|
 | `docs/specs/2026-08-22/gpt-5.6-luna/google-analytics-setup.md` | Design spec | Approved analytics scope and privacy requirements |
 | `docs/plans/2026-08-22/gpt-5.6-luna/google-analytics-setup.md` | Implementation plan | Executed task sequence and verification commands |
+| `docs/plans/2026-08-22/gpt-5.6-luna/google-analytics-setup-updated.md` | Revised plan | Explicit `send_page_view: true` follow-up |
 | `index.html` and 15 additional approved HTML pages | Implementation | Identical GA4 tag block |
 | `privacy/index.html` | Implementation | Current analytics and rights disclosure |

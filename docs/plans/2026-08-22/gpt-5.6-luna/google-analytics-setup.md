@@ -17,7 +17,7 @@
 
 - Insert the Google tag immediately after `<head>` on every target page.
 - Use measurement ID `G-21RZK3GKKZ` exactly once per page-level tag block.
-- Configure the tag with `anonymize_ip: true`.
+- Configure the tag with `send_page_view: true`.
 - Modify exactly 16 pages: `index.html`, eight `guide/*/index.html` pages, `music/index.html`, `skarn-bot/index.html`, `terms/index.html`, `privacy/index.html`, `seo/index.html`, `authors/anomaly/index.html`, and `404.html`.
 - Do not modify `googleeb60e8e5ee55440e.html`, `gem_infographic.html`, or `tests/back-to-top.html`.
 - Do not add a cookie consent mechanism or custom analytics events; no consent-based compliance behavior is part of this plan.
@@ -107,7 +107,9 @@ Insert this exact block immediately after the opening `<head>` tag in every targ
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-21RZK3GKKZ', { 'anonymize_ip': true });
+  gtag('config', 'G-21RZK3GKKZ', {
+    'send_page_view': true
+  });
 </script>
 ```
 
@@ -129,12 +131,13 @@ $targets = @(
 )
 $excluded = @('googleeb60e8e5ee55440e.html', 'gem_infographic.html', 'tests/back-to-top.html')
 $marker = '<!-- Google tag (gtag.js) -->'
-$config = "gtag('config', 'G-21RZK3GKKZ', { 'anonymize_ip': true });"
+$configPattern = "gtag\('config',\s*'G-21RZK3GKKZ',\s*\{\s*'send_page_view':\s*true\s*\}\);"
 foreach ($file in $targets) {
   $html = Get-Content -LiteralPath $file -Raw
   if (($html -split [regex]::Escape($marker)).Count - 1 -ne 1) { throw "$file must contain exactly one Google tag marker." }
   if (($html -split [regex]::Escape('https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ')).Count - 1 -ne 1) { throw "$file must contain exactly one GA script source." }
-  if (($html -split [regex]::Escape($config)).Count - 1 -ne 1) { throw "$file must contain exactly one GA config." }
+  if ([regex]::Matches($html, $configPattern).Count -ne 1) { throw "$file must contain exactly one GA config." }
+  if ($html -match 'anonymize_ip') { throw "$file must not contain the legacy anonymize_ip option." }
   if ($html -notmatch '(?s)<head>\s*<!-- Google tag \(gtag\.js\) -->') { throw "$file must place the GA tag immediately after <head>." }
 }
 foreach ($file in $excluded) {
@@ -191,7 +194,7 @@ Make these exact content changes in `privacy/index.html`:
 
 3. Replace section 2’s paragraph with:
 
-   `This Site uses Google Analytics, provided by Google LLC, to understand pseudonymous or aggregated usage such as page views, referral sources, general geographic region, device type, and browser type. Google Analytics may process an IP address to derive approximate location; the tag is configured with IP anonymization. We do not intentionally collect names, email addresses, account credentials, or other directly identifying information. The Site has no user registration, no forms, and no server-side application data storage. Calculations are performed locally in your browser. Your PvP league and rank selections are saved only in your browser's localStorage and are not sent to us.`
+   `This Site uses Google Analytics, provided by Google LLC, to understand pseudonymous or aggregated usage such as page views, referral sources, general geographic region, device type, and browser type. Google Analytics may process an IP address to derive approximate location; IP handling follows Google Analytics' current processing and privacy controls. We do not intentionally collect names, email addresses, account credentials, or other directly identifying information. The Site has no user registration, no forms, and no server-side application data storage. Calculations are performed locally in your browser. Your PvP league and rank selections are saved only in your browser's localStorage and are not sent to us.`
 
 4. Extend section 3 to identify Google Analytics as a processor: Google LLC receives analytics data under Google’s privacy policy, while GitHub, Inc. continues to host the Site and GitHub Issues remains the public contact channel. Link Google’s privacy policy at `https://policies.google.com/privacy`.
 
@@ -221,6 +224,7 @@ $required = @(
   '_ga_*',
   'https://policies.google.com/privacy',
   'https://tools.google.com/dlpage/gaoptout',
+  'IP handling follows Google Analytics'' current processing and privacy controls.',
   'disable JavaScript',
   '2026-08-22',
   'August 22, 2026'
@@ -232,6 +236,7 @@ foreach ($stale in @(
   'No data is collected, no cookies are set.',
   'no analytics scripts',
   'This Site does not set any cookies.',
+  'the tag is configured with IP anonymization',
   'Since we collect no personal data',
   'Not applicable — no personal data is collected or stored by this Site',
   'If analytics or any form of data collection is added to this Site in the future',
@@ -239,7 +244,7 @@ foreach ($stale in @(
 )) {
   if ($html -match [regex]::Escape($stale)) { throw "privacy/index.html still contains stale privacy claim: $stale" }
 }
- $description = 'Privacy Policy for the Invincible Guarding the Globe Gem Rewards Calculator. We use Google Analytics to understand pseudonymous site usage. No user registration or forms are provided.'
+$description = 'Privacy Policy for the Invincible Guarding the Globe Gem Rewards Calculator. We use Google Analytics to understand pseudonymous site usage. No user registration or forms are provided.'
 if ([regex]::Matches($html, [regex]::Escape($description)).Count -ne 4) { throw 'Expected the updated privacy description in description, Open Graph, Twitter, and JSON-LD metadata.' }
 Write-Output 'FOCUSED PASS: privacy policy discloses GA processing, cookies, opt-out, and current date.'
 ```
