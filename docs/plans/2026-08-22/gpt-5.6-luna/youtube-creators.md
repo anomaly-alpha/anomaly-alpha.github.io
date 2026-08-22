@@ -93,8 +93,7 @@ Create `data/youtube-creators.json` with a top-level object containing `updated`
       "displayOrder": 1,
       "lastChecked": "2026-08-22",
       "videos": [],
-      "sourceUrl": "https://www.youtube.com/@AvatarShuvd",
-      "featuredCreator": true
+      "sourceUrl": "https://www.youtube.com/@AvatarShuvd"
     }
   ]
 }
@@ -167,9 +166,12 @@ window.__YOUTUBE_CREATORS = [/* public, sorted creator data */];
 
 to `data/generated/youtube-creators.js`.
 
-It must also replace two explicit marker pairs in `guide/creators/index.html`:
+It must also replace three explicit marker pairs in `guide/creators/index.html`:
 
 ```html
+<!--FEATURED_CREATOR_START-->
+<!--FEATURED_CREATOR_END-->
+
 <!--CREATOR_SECTIONS_START-->
 <!--CREATOR_SECTIONS_END-->
 
@@ -206,6 +208,7 @@ Refactor the generator so its pure validation and rendering functions can be imp
 ### Files
 
 - Create: `guide/creators/index.html`
+- Create: `og-images/creators.png` from licensed source imagery and record its provenance in source metadata
 - Modify: `styles.css`
 - Modify: `script.js`
 - Modify: `src/tailwind-input.css` only if new Tailwind utilities are genuinely needed
@@ -233,7 +236,7 @@ Add page-specific values:
 - Require the approved `og-images/creators.png` asset. It may use scraped creator imagery only when a documented license permits reuse; retain source/license metadata.
 - `meta name="referrer" content="strict-origin-when-cross-origin"`.
 
-Add BreadcrumbList and CollectionPage JSON-LD to the existing graph style. Let the generator populate a separate ItemList/VideoObject marker from every locally visible active or pending item, up to twelve per creator. Do not include subscriber counts in visible content or schema.
+Add BreadcrumbList and CollectionPage JSON-LD to the existing graph style. Let the generator populate a separate ItemList/VideoObject marker from every locally visible active-status item belonging to active or pending creators, up to twelve per creator. Do not include subscriber counts in visible content or schema.
 
 For every active video, generate this minimum `VideoObject` shape:
 
@@ -261,7 +264,20 @@ Discover creators helping players build stronger teams,
 clear events, and master Invincible: Guarding the Globe.
 ```
 
-Below it, include the `CREATOR_SECTIONS` markers exactly once. Load `../../data/generated/youtube-creators.js` before `../../script.js`.
+Below it, include these marker pairs exactly once:
+
+```html
+<!--FEATURED_CREATOR_START-->
+<!--FEATURED_CREATOR_END-->
+
+<!--CREATOR_SECTIONS_START-->
+<!--CREATOR_SECTIONS_END-->
+
+<!--CREATORS_JSON_LD_START-->
+<!--CREATORS_JSON_LD_END-->
+```
+
+Load `../../data/generated/youtube-creators.js` before `../../script.js`.
 
 The generated creator sections must include a featured-hero marker and a normal-list marker. The approved featured creator appears only in the hero. The hero is larger and bolder than the other creator sections.
 
@@ -283,7 +299,7 @@ Generate one `<section>` per visible creator with:
 - Heading containing creator name and optional handle.
 - Optional tag list.
 - Description and last-checked time.
-- External `Visit Channel` link only for active creators.
+- External `Visit Channel` link for every creator with a verified channel URL, including pending creators.
 - A responsive video-list container.
 
 Generate each active featured video as exactly one button:
@@ -331,7 +347,10 @@ Never put the iframe in the page before a visitor opens a video.
 Add BEM-style classes to `styles.css`:
 
 - `.gem-creators`
+- `.gem-creators__featured`
+- `.gem-creators__list`
 - `.gem-creator`
+- `.gem-creator--featured`
 - `.gem-creator__meta`
 - `.gem-creator__tags`
 - `.gem-creator__videos`
@@ -522,4 +541,6 @@ The implementing model must report:
 5. The direct URLs and last-checked dates used for every active video.
 6. Commands run and their outcomes, including `npm run test:creators`.
 7. Manual browser checks completed, including modal isolation and the no-JavaScript fallback.
-8. Any remaining blocker, including an active creator failing the six-item/recent-activity gates. The lack of a correction/removal contact link is not a blocker for this release.
+8. `/add-creator` and `/update-creators` skill behavior, approval gates, and validation results.
+9. Reminder registration and cadence: notification-only, 9:00 AM Eastern on day 1 of every third month.
+10. Any remaining blocker, including an active creator failing the six-item/recent-activity gates. The lack of a correction/removal contact link is not a blocker for this release.
