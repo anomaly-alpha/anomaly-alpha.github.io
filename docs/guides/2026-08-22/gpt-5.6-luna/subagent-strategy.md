@@ -20,7 +20,7 @@ Route agent tasks to the most cost-effective capable model:
 
 MiMoCode merges configuration from two scopes:
 
-1. **Global scope** — `~/.mimocode/mimocode.json` + `~/.mimocode/agent/*.md`
+1. **Global scope** — `~/.config/mimocode/mimocode.jsonc` (or `mimocode.json`) + `~/.config/mimocode/agent/*.md`
    - Applies to **all repositories** on the machine.
    - Use for model/provider authentication and default model routing.
 
@@ -141,7 +141,7 @@ Every specialist must return a structured summary with these fields:
 
 ### 4.7 Coordination model
 
-- The **primary agent** (build/plan/compose/general) orchestrates specialist invocations.
+- The **primary agent** (`build`, `plan`, or `compose`) orchestrates specialist invocations.
 - Specialists run as **subagents** — bounded, one-pass tasks.
 - The primary agent collects specialist summaries and incorporates findings.
 - After all specialists complete, the primary agent runs a final review via `reviewer.md`.
@@ -201,7 +201,7 @@ mimo models openai
 mimo models opencode-go
 ```
 
-Expected: list of available models for each provider. If a provider is missing, configure it in global `~/.mimocode/mimocode.json` before proceeding.
+Expected: list of available models for each provider. If a provider is missing, configure it in global `~/.config/mimocode/mimocode.jsonc` before proceeding.
 
 ### Step 2: Apply project config
 
