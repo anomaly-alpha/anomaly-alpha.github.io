@@ -15,3 +15,7 @@
   Cache-Control: public, max-age=3600
 /
   Cache-Control: public, max-age=3600
+
+# YouTube embeds require a valid HTTP referrer
+/*
+  Referrer-Policy: strict-origin-when-cross-origin
