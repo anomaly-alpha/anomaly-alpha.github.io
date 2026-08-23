@@ -18,6 +18,7 @@
     "skarn-index": "node scripts/generate-skarn-index.js",
     "generate-creators": "node scripts/generate-youtube-creators.js",
     "test:creators": "node tests/youtube-creators-generator.test.js",
+    "test:ads-txt": "node tests/ads-txt.test.js",
     "build": "node scripts/generate-codes.js && node scripts/generate-music.js && node scripts/generate-youtube-creators.js && npm run build:css && npm run build:js",
     "build:tailwind": "tailwindcss -i src/tailwind-input.css -o tailwind.css",
     "update-assets": "curl -Lo vendor/chart.umd.js https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js",
