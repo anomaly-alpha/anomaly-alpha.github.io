@@ -1,0 +1,526 @@
+{
+  "updated": "2026-08-22",
+  "contentMaintainer": "Anomaly Alpha",
+  "reviewCadenceDays": 90,
+  "featuredCreatorId": "avatar-shuvd",
+  "candidateSources": [
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=kPDC78Dv1NI",
+      "canonicalUrl": "https://www.youtube.com/watch?v=kPDC78Dv1NI",
+      "kind": "video-seed",
+      "resolvedCreatorId": "rapid-gtg",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Public YouTube oEmbed identifies the rapid channel and a GTG boss guide title.",
+      "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=1NF0U3lJYoo",
+      "canonicalUrl": "https://www.youtube.com/watch?v=1NF0U3lJYoo",
+      "kind": "video-seed",
+      "resolvedCreatorId": "tutaaa-gtg",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Public YouTube oEmbed identifies Tutaaa-GTG and a GTG Boss Raid title.",
+      "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=vZ0pb6iUPP0",
+      "canonicalUrl": "https://www.youtube.com/watch?v=vZ0pb6iUPP0",
+      "kind": "video-seed",
+      "resolvedCreatorId": "avatar-shuvd",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Public YouTube oEmbed identifies Avatar Shuvd and a GTG Boss Raid feedback title.",
+      "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=u6m0gmOzwfs",
+      "canonicalUrl": "https://www.youtube.com/watch?v=u6m0gmOzwfs",
+      "kind": "video-seed",
+      "resolvedCreatorId": "avatar-shuvd",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Public YouTube oEmbed identifies Avatar Shuvd and a GTG Update 2.14 tier list.",
+      "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=cqRWJ_F4p64",
+      "canonicalUrl": "https://www.youtube.com/watch?v=cqRWJ_F4p64",
+      "kind": "video-seed",
+      "resolvedCreatorId": "avatar-shuvd",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Public YouTube oEmbed identifies Avatar Shuvd and a GTG return/update video.",
+      "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=S0xrNwdkExw",
+      "canonicalUrl": "https://www.youtube.com/watch?v=S0xrNwdkExw",
+      "kind": "video-seed",
+      "resolvedCreatorId": "avatar-shuvd",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Public YouTube oEmbed identifies Avatar Shuvd and a GTG tier-list video.",
+      "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=P6yTQHW6YFA",
+      "canonicalUrl": "https://www.youtube.com/watch?v=P6yTQHW6YFA",
+      "kind": "video-seed",
+      "resolvedCreatorId": "th3o",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Public YouTube oEmbed identifies TH3O and a GTG Recruitment Road event title.",
+      "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=r4c19_n0wr4",
+      "canonicalUrl": "https://www.youtube.com/watch?v=r4c19_n0wr4",
+      "kind": "video-seed",
+      "resolvedCreatorId": "lavamoose",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Public YouTube oEmbed identifies LAVAMOOSE and a GTG gameplay title.",
+      "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=mCw0PowHTls",
+      "canonicalUrl": "https://www.youtube.com/watch?v=mCw0PowHTls",
+      "kind": "video-seed",
+      "resolvedCreatorId": "tutaaa-gtg",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Public YouTube oEmbed identifies Tutaaa-GTG and a GTG free-to-play guide title.",
+      "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=wNKoLf9xKJA",
+      "canonicalUrl": "https://www.youtube.com/watch?v=wNKoLf9xKJA",
+      "kind": "video-seed",
+      "resolvedCreatorId": "omni-bane",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Public YouTube oEmbed identifies OMNI-BANE and a GTG hero teaser title.",
+      "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/live/pK9C7mUMceI",
+      "canonicalUrl": "https://www.youtube.com/watch?v=pK9C7mUMceI",
+      "kind": "livestream-seed",
+      "resolvedCreatorId": "just-a-guy-named-francis",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Public YouTube oEmbed identifies Just a Guy named Francis and a replayable GTG character-release livestream.",
+      "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/shorts/kGq-Racu8tw",
+      "canonicalUrl": "https://www.youtube.com/watch?v=kGq-Racu8tw",
+      "kind": "short-seed",
+      "resolvedCreatorId": "beaoloooo",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "rejected",
+      "evidenceNote": "Public YouTube oEmbed identifies a portrait-format Short.",
+      "statusReason": "Rejected because this is a YouTube Short; Shorts do not qualify for the directory."
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/shorts/sxosoNY7WDU",
+      "canonicalUrl": "https://www.youtube.com/watch?v=sxosoNY7WDU",
+      "kind": "short-seed",
+      "resolvedCreatorId": "kingslay727",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "rejected",
+      "evidenceNote": "Public YouTube oEmbed identifies a portrait-format Short.",
+      "statusReason": "Rejected because this is a YouTube Short; Shorts do not qualify for the directory."
+    }
+  ],
+  "ogImageSources": [
+    {
+      "sourceUrl": "https://anomaly-alpha.github.io/og-images/creators.png",
+      "license": "Original artwork created for Anomaly Alpha; no external creator imagery used.",
+      "attribution": "Anomaly Alpha",
+      "lastChecked": "2026-08-22"
+    }
+  ],
+  "creators": [
+    {
+      "id": "avatar-shuvd",
+      "name": "Avatar Shuvd",
+      "handle": "@avatarshuvd",
+      "channelUrl": "https://www.youtube.com/@avatarshuvd",
+      "description": "Invincible GTG tier lists, guides, and update coverage.",
+      "tags": ["Tier Lists", "Guides", "Updates"],
+      "status": "active",
+      "displayOrder": 1,
+      "lastChecked": "2026-08-22",
+      "sourceUrl": "https://www.youtube.com/@avatarshuvd",
+      "videos": [
+        {
+          "id": "vZ0pb6iUPP0",
+          "title": "My Boss Raid FEEDBACK! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd shares feedback on the Invincible: Guarding the Globe Boss Raid.",
+          "category": "Updates",
+          "published": "2026-08-11",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": true,
+          "sourceUrl": "https://www.youtube.com/watch?v=vZ0pb6iUPP0",
+          "canonicalUrl": "https://www.youtube.com/watch?v=vZ0pb6iUPP0",
+          "evidenceNote": "The public title identifies an Invincible: Guarding the Globe Boss Raid feedback video.",
+          "statusReason": ""
+        },
+        {
+          "id": "BIC2rGvRB-U",
+          "title": "Tier List 3.3 EDITION! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd ranks the Invincible: Guarding the Globe roster for the 3.3 edition.",
+          "category": "Tier Lists",
+          "published": "2026-07-12",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": true,
+          "sourceUrl": "https://www.youtube.com/watch?v=BIC2rGvRB-U",
+          "canonicalUrl": "https://www.youtube.com/watch?v=BIC2rGvRB-U",
+          "evidenceNote": "The public title identifies an Invincible: Guarding the Globe tier list for update 3.3.",
+          "statusReason": ""
+        },
+        {
+          "id": "0Jrp_N12Q3Y",
+          "title": "Tier List 3.2 EDITION! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd ranks the Invincible: Guarding the Globe roster for the 3.2 edition.",
+          "category": "Tier Lists",
+          "published": "2026-06-10",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": true,
+          "sourceUrl": "https://www.youtube.com/watch?v=0Jrp_N12Q3Y",
+          "canonicalUrl": "https://www.youtube.com/watch?v=0Jrp_N12Q3Y",
+          "evidenceNote": "The public title identifies an Invincible: Guarding the Globe tier list for update 3.2.",
+          "statusReason": ""
+        },
+        {
+          "id": "OHOxofIK2mk",
+          "title": "Tier list 3.1 EDITION! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd ranks the Invincible: Guarding the Globe roster for the 3.1 edition.",
+          "category": "Tier Lists",
+          "published": "2026-05-06",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": true,
+          "sourceUrl": "https://www.youtube.com/watch?v=OHOxofIK2mk",
+          "canonicalUrl": "https://www.youtube.com/watch?v=OHOxofIK2mk",
+          "evidenceNote": "The public title identifies an Invincible: Guarding the Globe tier list for update 3.1.",
+          "statusReason": ""
+        },
+        {
+          "id": "XVSSOg4grxg",
+          "title": "Tier List 3.0 EDITION! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd ranks the Invincible: Guarding the Globe roster for the 3.0 edition.",
+          "category": "Tier Lists",
+          "published": "2026-04-14",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": true,
+          "sourceUrl": "https://www.youtube.com/watch?v=XVSSOg4grxg",
+          "canonicalUrl": "https://www.youtube.com/watch?v=XVSSOg4grxg",
+          "evidenceNote": "The public title identifies an Invincible: Guarding the Globe tier list for update 3.0.",
+          "statusReason": ""
+        },
+        {
+          "id": "WmRoQRCfYi4",
+          "title": "Brit SAVES the GDA! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd covers a GTG story and gameplay moment where Brit saves the GDA.",
+          "category": "Guides",
+          "published": "2026-07-27",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": true,
+          "sourceUrl": "https://www.youtube.com/watch?v=WmRoQRCfYi4",
+          "canonicalUrl": "https://www.youtube.com/watch?v=WmRoQRCfYi4",
+          "evidenceNote": "The public title identifies an Invincible: Guarding the Globe gameplay/story video.",
+          "statusReason": ""
+        },
+        {
+          "id": "u6m0gmOzwfs",
+          "title": "COMPLETE TIER LIST (Update 2.14 Edition) - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd ranks the Invincible: Guarding the Globe roster for Update 2.14.",
+          "category": "Tier Lists",
+          "published": "2026-02-22",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=u6m0gmOzwfs",
+          "canonicalUrl": "https://www.youtube.com/watch?v=u6m0gmOzwfs",
+          "evidenceNote": "The public title identifies an Invincible: Guarding the Globe tier list for Update 2.14.",
+          "statusReason": ""
+        },
+        {
+          "id": "cqRWJ_F4p64",
+          "title": "WE'RE BACK! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd returns with an Invincible: Guarding the Globe update video.",
+          "category": "Updates",
+          "published": "2026-01-20",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=cqRWJ_F4p64",
+          "canonicalUrl": "https://www.youtube.com/watch?v=cqRWJ_F4p64",
+          "evidenceNote": "The public title identifies an Invincible: Guarding the Globe update video.",
+          "statusReason": ""
+        },
+        {
+          "id": "S0xrNwdkExw",
+          "title": "TIER LIST TIME! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd presents an Invincible: Guarding the Globe tier list.",
+          "category": "Tier Lists",
+          "published": "2025-03-19",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=S0xrNwdkExw",
+          "canonicalUrl": "https://www.youtube.com/watch?v=S0xrNwdkExw",
+          "evidenceNote": "The public title identifies an Invincible: Guarding the Globe tier list.",
+          "statusReason": ""
+        }
+      ]
+    },
+    {
+      "id": "rapid-gtg",
+      "name": "rapid",
+      "handle": "@RapidGTG",
+      "channelUrl": "https://www.youtube.com/@RapidGTG",
+      "description": "Invincible GTG boss and event coverage.",
+      "tags": ["Guides", "Events"],
+      "status": "pending",
+      "displayOrder": 2,
+      "lastChecked": "2026-08-22",
+      "sourceUrl": "https://www.youtube.com/watch?v=kPDC78Dv1NI",
+      "videos": [
+        {
+          "id": "kPDC78Dv1NI",
+          "title": "Boss Raid is Finally Here! | Hail Mary Boss Guide & Strategy | Invincible: Guarding the Globe",
+          "description": "rapid explains the Hail Mary Boss Raid in Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-07-31",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=kPDC78Dv1NI",
+          "canonicalUrl": "https://www.youtube.com/watch?v=kPDC78Dv1NI",
+          "evidenceNote": "The public title identifies a GTG Boss Raid guide and strategy video.",
+          "statusReason": ""
+        }
+      ]
+    },
+    {
+      "id": "tutaaa-gtg",
+      "name": "Tutaaa-GTG",
+      "handle": "@TutaaaGTG",
+      "channelUrl": "https://www.youtube.com/@TutaaaGTG",
+      "description": "Invincible GTG gameplay, team-building, and free-to-play guidance.",
+      "tags": ["Gameplay", "Guides", "Team Building"],
+      "status": "pending",
+      "displayOrder": 3,
+      "lastChecked": "2026-08-22",
+      "sourceUrl": "https://www.youtube.com/@TutaaaGTG",
+      "videos": [
+        {
+          "id": "1NF0U3lJYoo",
+          "title": "We Waited All This Time… FOR THIS?! | Boss Raid Hail Mary - Invincible Guarding The Globe",
+          "description": "Tutaaa-GTG reacts to the Hail Mary Boss Raid in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-08-09",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=1NF0U3lJYoo",
+          "canonicalUrl": "https://www.youtube.com/watch?v=1NF0U3lJYoo",
+          "evidenceNote": "The public title identifies a GTG Boss Raid gameplay video.",
+          "statusReason": ""
+        },
+        {
+          "id": "mCw0PowHTls",
+          "title": "I'M GOING FREE TO PLAY in Invincible: Guarding the Globe… Here's Why - TutaaaGTG",
+          "description": "Tutaaa-GTG explains a free-to-play approach to Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-08-16",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=mCw0PowHTls",
+          "canonicalUrl": "https://www.youtube.com/watch?v=mCw0PowHTls",
+          "evidenceNote": "The public title identifies a GTG free-to-play guide.",
+          "statusReason": ""
+        }
+      ]
+    },
+    {
+      "id": "th3o",
+      "name": "TH3O",
+      "handle": "@TH3Oyt",
+      "channelUrl": "https://www.youtube.com/@TH3Oyt",
+      "description": "Invincible GTG event, hero, and team coverage.",
+      "tags": ["Events", "Guides"],
+      "status": "pending",
+      "displayOrder": 4,
+      "lastChecked": "2026-08-22",
+      "sourceUrl": "https://www.youtube.com/@TH3Oyt",
+      "videos": [
+        {
+          "id": "P6yTQHW6YFA",
+          "title": "New Recruitment Road Event!! - Invincible: Guarding the Globe",
+          "description": "TH3O covers the New Recruitment Road event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-08-11",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=P6yTQHW6YFA",
+          "canonicalUrl": "https://www.youtube.com/watch?v=P6yTQHW6YFA",
+          "evidenceNote": "The public title identifies a GTG Recruitment Road event video.",
+          "statusReason": ""
+        }
+      ]
+    },
+    {
+      "id": "lavamoose",
+      "name": "LAVAMOOSE",
+      "handle": "@LAVAMOOSE1369",
+      "channelUrl": "https://www.youtube.com/@LAVAMOOSE1369",
+      "description": "Invincible GTG gameplay and story coverage.",
+      "tags": ["Gameplay"],
+      "status": "pending",
+      "displayOrder": 5,
+      "lastChecked": "2026-08-22",
+      "sourceUrl": "https://www.youtube.com/@LAVAMOOSE1369",
+      "videos": [
+        {
+          "id": "r4c19_n0wr4",
+          "title": "The Entire Second Season of Invincible In Invincible Guarding The Globe",
+          "description": "LAVAMOOSE covers the second season content in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-08-14",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=r4c19_n0wr4",
+          "canonicalUrl": "https://www.youtube.com/watch?v=r4c19_n0wr4",
+          "evidenceNote": "The public title explicitly identifies Invincible Guarding the Globe season content.",
+          "statusReason": ""
+        }
+      ]
+    },
+    {
+      "id": "omni-bane",
+      "name": "OMNI-BANE",
+      "handle": "@BaneApe5",
+      "channelUrl": "https://www.youtube.com/@BaneApe5",
+      "description": "Invincible GTG hero news and community updates.",
+      "tags": ["Updates", "Gameplay"],
+      "status": "pending",
+      "displayOrder": 6,
+      "lastChecked": "2026-08-22",
+      "sourceUrl": "https://www.youtube.com/@BaneApe5",
+      "videos": [
+        {
+          "id": "wNKoLf9xKJA",
+          "title": "Invincible Guarding The Globe - New Hero Tease...we need to talk guys",
+          "description": "OMNI-BANE discusses a new hero tease for Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-08-21",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=wNKoLf9xKJA",
+          "canonicalUrl": "https://www.youtube.com/watch?v=wNKoLf9xKJA",
+          "evidenceNote": "The public title explicitly identifies an Invincible Guarding the Globe new-hero update.",
+          "statusReason": ""
+        }
+      ]
+    },
+    {
+      "id": "just-a-guy-named-francis",
+      "name": "Just a Guy named Francis",
+      "handle": "@JustaGuynamedFrancis",
+      "channelUrl": "https://www.youtube.com/@JustaGuynamedFrancis",
+      "description": "Invincible GTG livestream coverage and character-release gameplay.",
+      "tags": ["Livestreams", "Gameplay"],
+      "status": "pending",
+      "displayOrder": 7,
+      "lastChecked": "2026-08-22",
+      "sourceUrl": "https://www.youtube.com/@JustaGuynamedFrancis",
+      "videos": [
+        {
+          "id": "pK9C7mUMceI",
+          "title": "NEW CHARACTER RELEASE DAY | Invincible: Guarding the Globe [LIVE]",
+          "description": "Just a Guy named Francis streams a character release day in Invincible: Guarding the Globe.",
+          "category": "Livestreams",
+          "published": "2026-08-21",
+          "lastChecked": "2026-08-22",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/live/pK9C7mUMceI",
+          "canonicalUrl": "https://www.youtube.com/watch?v=pK9C7mUMceI",
+          "evidenceNote": "The public title identifies a replayable GTG character-release livestream.",
+          "statusReason": ""
+        }
+      ]
+    },
+    {
+      "id": "beaoloooo",
+      "name": "Beaoloooo",
+      "handle": "@marvin2804",
+      "channelUrl": "https://www.youtube.com/@marvin2804",
+      "description": "Candidate retained for future public-content review.",
+      "tags": [],
+      "status": "hidden",
+      "displayOrder": 8,
+      "lastChecked": "2026-08-22",
+      "sourceUrl": "https://www.youtube.com/shorts/kGq-Racu8tw",
+      "videos": [
+        {
+          "id": "kGq-Racu8tw",
+          "title": "Out Meta the Meta (900 Million 👊🏻 up) - Invincible Guarding the Globe",
+          "description": "",
+          "category": "Gameplay",
+          "published": "",
+          "lastChecked": "2026-08-22",
+          "status": "unavailable",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/shorts/kGq-Racu8tw",
+          "canonicalUrl": "https://www.youtube.com/watch?v=kGq-Racu8tw",
+          "evidenceNote": "Public YouTube oEmbed identifies a portrait-format Short.",
+          "statusReason": "Rejected because this is a YouTube Short; Shorts do not qualify for the directory."
+        }
+      ]
+    },
+    {
+      "id": "kingslay727",
+      "name": "KingSlay727",
+      "handle": "@kingslay727",
+      "channelUrl": "https://www.youtube.com/@kingslay727",
+      "description": "Candidate retained for future public-content review.",
+      "tags": [],
+      "status": "hidden",
+      "displayOrder": 9,
+      "lastChecked": "2026-08-22",
+      "sourceUrl": "https://www.youtube.com/shorts/sxosoNY7WDU",
+      "videos": [
+        {
+          "id": "sxosoNY7WDU",
+          "title": "#invincible #fyp #mobilegaming #newhero #subscribe",
+          "description": "",
+          "category": "Gameplay",
+          "published": "",
+          "lastChecked": "2026-08-22",
+          "status": "unavailable",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/shorts/sxosoNY7WDU",
+          "canonicalUrl": "https://www.youtube.com/watch?v=sxosoNY7WDU",
+          "evidenceNote": "Public YouTube oEmbed identifies a portrait-format Short.",
+          "statusReason": "Rejected because this is a YouTube Short; Shorts do not qualify for the directory."
+        }
+      ]
+    }
+  ]
+}
