@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script type="application/json" id="ads-config">
+{
+  "enabled": false,
+  "slots": {
+    "lower": { "state": "site-message" }
+  }
+}
+    </script>
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ"></script>
@@ -275,7 +283,7 @@ html { visibility: hidden }
                 <span class="gem-text--pvp"><svg class="mr-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="1em" height="1em" fill="currentColor"><path d="M192 0c17.7 0 32 14.3 32 32l0 112-64 0 0-112c0-17.7 14.3-32 32-32zM64 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 80-64 0 0-80zm192 0c0-17.7 14.3-32 32-32s32 14.3 32 32l0 96c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-96zm96 64c0-17.7 14.3-32 32-32s32 14.3 32 32l0 64c0 17.7-14.3 32-32 32s-32-14.3-32-32l0-64zm-96 88l0-.6c9.4 5.4 20.3 8.6 32 8.6c13.2 0 25.4-4 35.6-10.8c8.7 24.9 32.5 42.8 60.4 42.8c11.7 0 22.6-3.1 32-8.6l0 8.6c0 52.3-25.1 98.8-64 128l0 96c0 17.7-14.3 32-32 32l-160 0c-17.7 0-32-14.3-32-32l0-78.4c-17.3-7.9-33.2-18.8-46.9-32.5L69.5 357.5C45.5 333.5 32 300.9 32 267l0-27c0-35.3 28.7-64 64-64l88 0c22.1 0 40 17.9 40 40s-17.9 40-40 40l-56 0c-8.8 0-16 7.2-16 16s7.2 16 16 16l56 0c39.8 0 72-32.2 72-72z"/></svg>INVINCIBLE GTG PVP GUIDE</span>
             </h1>
             <p class="gem-subtitle--hero text-base">
-                ~1,850 Gems/Week — All 14 Leagues, 120 Ranks
+                ~1,850 Gems/Week — All 14 Leagues, Variable Ranks
             </p>
             <p class="text-sm gem-text--muted mt-3">
                 by <a href="https://anomaly-alpha.github.io/authors/anomaly/" class="gem-text--cyan font-semibold hover:text-white transition-colors">Anomaly</a>
@@ -291,7 +299,7 @@ html { visibility: hidden }
                 <h2 class="text-2xl font-bold text-white">PvP Income Overview</h2>
             </div>
         <p class="text-xs gem-text--muted mb-2">Last updated: <time datetime="2026-08-22">Aug 22, 2026</time></p>
-            <p class="text-white/60">Your PvP league and rank determine your biggest gem variable. See exactly what you'll earn in every arena — Restricted, Open, and Alliance War — with payouts for all 14 leagues and 120 ranks. At the default Elite II league (rank 13), you earn ~1,850 gems/week: 520 from Restricted Arena, 520 from Open Arena, and 810 from Alliance War. Climbing just a few leagues can add hundreds of gems per cycle. Use the interactive calculator on the main page to dial in your exact payouts. <a href="../beginners/" class="gem-text--cyan underline">New player? Learn how PvP fits into your weekly gem income &rarr;</a></p>
+            <p class="text-white/60">Your PvP league and rank determine your biggest gem variable. See exactly what you'll earn in every arena — Restricted, Open, and Alliance War — with payouts for all 14 leagues with variable player counts and rank brackets. At the default Elite II league (rank 13), you earn ~1,850 gems/week: 520 from Restricted Arena, 520 from Open Arena, and 810 from Alliance War. Climbing just a few leagues can add hundreds of gems per cycle. Use the interactive calculator on the main page to dial in your exact payouts. <a href="../beginners/" class="gem-text--cyan underline">New player? Learn how PvP fits into your weekly gem income &rarr;</a></p>
         </section>
 
         <section class="mx-4 mb-8">
@@ -328,17 +336,17 @@ html { visibility: hidden }
                         </tr>
                     </thead>
                     <tbody class="text-white/80">
-                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#1</td><td class="text-right px-4">670</td><td class="text-right pl-4">1,490</td></tr>
-                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#2</td><td class="text-right px-4">630</td><td class="text-right pl-4">1,270</td></tr>
-                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#3</td><td class="text-right px-4">600</td><td class="text-right pl-4">1,190</td></tr>
-                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#4 - #10</td><td class="text-right px-4">560</td><td class="text-right pl-4">1,120</td></tr>
-                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#11 - #30</td><td class="text-right px-4">520</td><td class="text-right pl-4">970</td></tr>
-                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#31 - #60</td><td class="text-right px-4">480</td><td class="text-right pl-4">890</td></tr>
-                        <tr><td class="py-2 pr-4">#61 - #120</td><td class="text-right px-4">450</td><td class="text-right pl-4">890</td></tr>
+                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#1</td><td class="text-right px-4">670</td><td class="text-right pl-4">990</td></tr>
+                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#2</td><td class="text-right px-4">630</td><td class="text-right pl-4">890</td></tr>
+                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#3</td><td class="text-right px-4">600</td><td class="text-right pl-4">790</td></tr>
+                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#4 - #10</td><td class="text-right px-4">560</td><td class="text-right pl-4">590</td></tr>
+                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#11 - #30</td><td class="text-right px-4">520</td><td class="text-right pl-4">590</td></tr>
+                        <tr class="border-b border-white/5"><td class="py-2 pr-4">#31 - #60</td><td class="text-right px-4">480</td><td class="text-right pl-4">590</td></tr>
+                        <tr><td class="py-2 pr-4">#61 - #120</td><td class="text-right px-4">450</td><td class="text-right pl-4">490</td></tr>
                     </tbody>
                 </table>
             </div>
-            <p class="text-white/40 text-xs mt-2">Default: Elite II, rank 13 → 520 gems + 970 PvP Currency + 1 Hero Shop Ticket per arena.</p>
+            <p class="text-white/40 text-xs mt-2">Default: Elite II, rank 13 → 520 gems + 590 PvP Currency + 1 Hero Shop Ticket per arena.</p>
         </section>
 
         <section class="mx-4 mb-8">
@@ -496,6 +504,13 @@ html { visibility: hidden }
             <a href="../../" class="gem-text--cyan hover:text-white transition-colors">&larr; Calculate Your Weekly Gems</a>
             <p class="text-white/30 text-xs mt-2">Use the <a href="../../" class="gem-text--cyan hover:text-white">interactive PvP calculator</a> on the main page to calculate exact payouts for your league and rank.</p>
         </footer>
+            <aside class="gem-site-message" data-ad-slot="lower" data-ads-enabled="false" aria-label="Site message">
+                <span class="gem-site-message__label">Site message</span>
+                <p class="gem-site-message__text">
+                    Explore another guide:
+                    <a class="gem-site-message__link" href="../faq/">FAQ &rarr;</a>
+                </p>
+            </aside>
         </article>
         </main>
         <footer class="gem-legal-footer">

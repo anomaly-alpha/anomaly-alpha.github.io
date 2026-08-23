@@ -1,3 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .gem-site-message {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem 0.75rem;
+    margin: 2rem 1rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--gem-border--subtle);
+    border-radius: 0.5rem;
+    background: var(--gem-card-bg--cyan);
+    color: var(--gem-text--secondary);
+    text-align: center;
+  }
+
+  .gem-site-message__label {
+    color: var(--gem-text--muted);
+    font-family: Orbitron, sans-serif;
+    font-size: 0.625rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .gem-site-message__text {
+    margin: 0;
+    font-size: 0.8rem;
+  }
+
+  .gem-site-message__link {
+    color: var(--gem-cyan);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .gem-site-message__link:focus-visible {
+    outline: 2px solid var(--gem-cyan);
+    outline-offset: 3px;
+  }
+}

@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script type="application/json" id="ads-config">
+{
+  "enabled": false,
+  "slots": {
+    "lower": { "state": "site-message" }
+  }
+}
+    </script>
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ"></script>
@@ -230,7 +238,14 @@
                     <a href="../faq/" class="gem-card gem-card--code gem-card--hover p-5 text-center" aria-label="Read the gem rewards FAQ"><h3 class="text-lg font-bold gem-text--cyan mb-2">Gem FAQ</h3><p class="text-white/60 text-sm">Answers about rewards and codes</p></a>
                     <a href="../creators/" class="gem-card gem-card--code gem-card--hover p-5 text-center" aria-label="YouTube Creators"><h3 class="text-lg font-bold gem-text--cyan mb-2">YouTube Creators</h3><p class="text-white/60 text-sm">Curated directory of creators with guides, tier lists, and gameplay</p></a>
                 </section>
-            </article>
+            <aside class="gem-site-message" data-ad-slot="lower" data-ads-enabled="false" aria-label="Site message">
+                <span class="gem-site-message__label">Site message</span>
+                <p class="gem-site-message__text">
+                    Explore another guide:
+                    <a class="gem-site-message__link" href="../code/">Promo Codes &rarr;</a>
+                </p>
+            </aside>
+        </article>
         </main>
 
         <footer class="gem-legal-footer">

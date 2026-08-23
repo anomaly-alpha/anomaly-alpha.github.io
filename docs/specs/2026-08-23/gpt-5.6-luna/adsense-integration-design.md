@@ -1,5 +1,9 @@
 # AdSense integration design
 
+> [!NOTE]
+> This document may not reflect the current implementation.
+> See the final report for up-to-date state: [Final Report](../../../reports/2026-08-23/gpt-5.6-luna/adsense-disabled-fallback.md)
+
 **Status:** Approved design; implementation not started
 **Date:** 2026-08-23
 **Project:** Anomaly Alpha static web app

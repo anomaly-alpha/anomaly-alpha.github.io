@@ -1,5 +1,9 @@
 # Disabled Ad Fallback Milestone Implementation Plan
 
+> [!NOTE]
+> This document may not reflect the current implementation.
+> See the final report for up-to-date state: [Final Report](../../../reports/2026-08-23/gpt-5.6-luna/adsense-disabled-fallback.md)
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use compose:subagent (recommended) or compose:execute to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Establish the first safe AdSense milestone: one visible internal-guide fallback per eligible page while the ad switch remains off and no Google ad/CMP code loads.

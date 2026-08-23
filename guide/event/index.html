@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script type="application/json" id="ads-config">
+{
+  "enabled": false,
+  "slots": {
+    "lower": { "state": "site-message" }
+  }
+}
+    </script>
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ"></script>
@@ -375,6 +383,13 @@ html { visibility: hidden }
         <footer class="gem-contributors">
             <a href="../../" class="gem-text--cyan hover:text-white transition-colors">&larr; Calculate Your Weekly Gems</a>
         </footer>
+            <aside class="gem-site-message" data-ad-slot="lower" data-ads-enabled="false" aria-label="Site message">
+                <span class="gem-site-message__label">Site message</span>
+                <p class="gem-site-message__text">
+                    Explore another guide:
+                    <a class="gem-site-message__link" href="../pvp/">PvP Guide &rarr;</a>
+                </p>
+            </aside>
         </article>
         </main>
         <footer class="gem-legal-footer">
