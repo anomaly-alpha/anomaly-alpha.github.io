@@ -56,14 +56,24 @@ The page must work from both `file://` and a local web server. It must not use r
 The generator must be added to `package.json` as:
 
 ```text
-update-creators: node scripts/generate-youtube-creators.js
+generate-creators: node scripts/generate-youtube-creators.js
 ```
 
-The existing `build` script must invoke `update-creators` before CSS/JS minification. Generated output is committed, matching the existing promo-code workflow.
+The existing `build` script must invoke `generate-creators` after the existing data generators and before CSS/JS minification. The name is intentionally distinct from the `/update-creators` editorial command. Generated output is committed, matching the existing promo-code workflow.
 
 ## Source data schema
 
 `data/youtube-creators.json` is the only hand-edited creator content source. The generator must reject invalid data and exit non-zero when any required field is missing or duplicated.
+
+The top-level object contains:
+
+- `updated`: the source-data revision date.
+- `contentMaintainer`: `Anomaly Alpha` for this release.
+- `reviewCadenceDays`: exactly `90`, matching the durable reminder cadence.
+- `featuredCreatorId`: the approved active creator used for the static hero.
+- `candidateSources`: submitted channel/video URLs with `sourceUrl`, `kind`, `resolvedCreatorId` when known, `lastChecked`, `resolutionStatus`, and `statusReason` when unresolved or rejected.
+- `ogImageSources`: external image provenance with `sourceUrl`, `license`, `attribution`, and `lastChecked` for every non-original image used by `og-images/creators.png`.
+- `creators`: the normalized creator records.
 
 Creator records retain full provenance, evidence notes, rejection reasons, last-checked dates, and image-license metadata where imagery is used. `featuredCreatorId` stores the approved static hero selection.
 
@@ -97,6 +107,7 @@ Required video fields:
 {
   "id": "u6m0gmOzwfs",
   "title": "Complete Tier List",
+  "description": "Avatar Shuvd ranks the Invincible: Guarding the Globe roster for Update 2.14.",
   "category": "Tier Lists",
   "published": "2026-02-22",
   "lastChecked": "2026-08-22",
@@ -104,15 +115,21 @@ Required video fields:
   "featured": true,
   "sourceUrl": "https://www.youtube.com/watch?v=u6m0gmOzwfs",
   "canonicalUrl": "https://www.youtube.com/watch?v=u6m0gmOzwfs",
-  "evidenceNote": "The title and page content identify an Invincible: Guarding the Globe tier-list video."
+  "evidenceNote": "The title and page content identify an Invincible: Guarding the Globe tier-list video.",
+  "statusReason": ""
 }
 ```
+
+Every public video requires a concise editorial `description` for the card and its `VideoObject` entry. It may be written by the maintainer when grounded in public video evidence.
+Rejected or unavailable records require a non-empty `statusReason`; active records may leave it empty.
 
 Allowed video status values:
 
 - `active` — render as a playable card.
 - `pending` — exclude from public rendering until confirmed.
 - `unavailable` — exclude from cards and report during validation.
+
+Allowed category values are `Guides`, `Tier Lists`, `Updates`, `Events`, `Team Building`, `Gameplay`, and `Livestreams`. A `featured: true` item must have `status: active`; each active creator has exactly six featured items, while additional eligible items use `featured: false`.
 
 Validation rules:
 
@@ -123,13 +140,15 @@ Validation rules:
 - Video IDs must match YouTube ID character constraints.
 - Dates must use `YYYY-MM-DD`.
 - Categories and statuses must use the documented values.
-- `displayOrder` must be unique.
+- `displayOrder` must be unique across all creator records; it orders active and pending creators, with the featured creator removed from the normal list after hero rendering.
 - A featured video must have `status: active`.
 - Every active creator must have at least six eligible items, including at least three published in the previous 180 days. Standard videos and replayable livestreams count; Shorts do not.
 - A pending creator must have at least one eligible item and fail an active threshold. A zero-content candidate is hidden.
 - A stale active creator becomes pending, remains visible at the bottom, and retains its available cards and verified channel link.
 - Public names come from verified YouTube channel display names. Editorial descriptions, tags, and one-sentence video summaries are allowed when grounded in public evidence.
 - Accepted and rejected links retain original URL, canonical URL where applicable, evidence notes, and reasons.
+- `sourceUrl` preserves the submitted discovery URL; `channelUrl` is the verified canonical channel URL. They may be identical when the channel URL was the submitted source.
+- `unavailable` and rejected records retain a non-empty `statusReason`.
 
 Initial creator requirements:
 
@@ -247,9 +266,11 @@ Add or update:
 - Description and Open Graph/Twitter metadata.
 - BreadcrumbList JSON-LD.
 - `CollectionPage` JSON-LD.
-- `ItemList` containing every locally visible item up to the twelve-item cap.
+- `ItemList` containing every locally visible active-status item, including expanded cards, up to the twelve-item cap per creator.
 - `VideoObject` entries only for videos with confirmed title, thumbnail, publication date, and YouTube URL.
 - `dateModified` using the latest confirmed `lastChecked` date.
+
+The structured data includes the expanded cards even when the expansion control is initially closed; it is capped at twelve active-status items per creator and is not limited to the six featured cards.
 
 Do not publish subscriber counts unless they are stored with a `lastChecked` date and clearly labeled as approximate.
 
@@ -268,7 +289,7 @@ Update the following as part of implementation:
 
 The implementation is complete only after:
 
-- `npm run update-creators` validates and generates data successfully.
+- `npm run generate-creators` validates and generates data successfully.
 - `npm run build` completes successfully.
 - JSON validation catches duplicate IDs, malformed URLs, missing dates, invalid statuses, threshold violations, missing evidence, and invalid source/canonical URLs.
 - The page loads from `file://`.

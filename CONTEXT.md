@@ -1,7 +1,7 @@
 # Context — Gem Rewards Infographic
 
 ## Project Type
-Multi-page interactive infographic web app for the Invincible Guarding the Globe mobile game (hub + 6 guide pages).
+Multi-page interactive infographic web app for the Invincible Guarding the Globe mobile game (hub + maintained guide cluster, including the creator directory).
 
 ## Purpose
 Display weekly gem reward sources with interactive filtering, dynamic charts, detailed strategy guides, and a sci-fi game aesthetic.
@@ -21,6 +21,14 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Tier** — Rank bracket within a league's payout table that defines reward values
 - **Demotion Threshold** — Rank 86: at or above this rank, Alliance War players risk being demoted
 - **Spider Chart** — Radar chart comparing actual gem income vs target income across 4 categories
+
+### YouTube Creator Directory
+- **Creator** — An independent community channel with publicly verified Invincible: Guarding the Globe coverage.
+- **Eligible video** — A public standard video or replayable livestream with confirmed GTG relevance, title, publication date, video ID, and evidence; Shorts are excluded.
+- **Active creator** — A creator with at least six eligible videos, including at least three published within the previous 180 days.
+- **Pending creator** — A verified candidate with at least one eligible video that does not yet meet the active threshold; it appears after active creators.
+- **Hidden candidate** — A retained research record with zero eligible videos; it does not appear in the public directory.
+- **Featured creator** — The approved active creator shown in the static hero; Avatar Shuvd is preferred when qualified.
 
 ### Mode System
 - **selectedModes** — Array of active category modes (`event`, `pvp`, `login`, `code`); defaults to `event`, `pvp`, `login` (code inactive by default)
@@ -48,6 +56,8 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - `/guide/faq/` — Gem rewards FAQ with FAQPage schema
 - `/guide/beginners/` — New player guide with priority checklist and spending tips
 - `/guide/xp/` — XP & progression guide: Hero XP, Agent XP, Hero Special XP, Hero Rank-Up reference table (Rare→Omnipotent+)
+- `/guide/redeem/` — Promo-code redemption walkthrough
+- `/guide/creators/` — Curated YouTube creators, verified videos, and privacy-enhanced user-initiated playback
 
 ## Architecture
 - Inline JSON configs in HTML `<head>` (no fetch, works from `file://`)
@@ -60,7 +70,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - Contributors stored in `contributors-config` inline JSON (hex colors, rendered directly in HTML for JSON-LD author sync)
 - Code rewards defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; promo card total animates via `animateValue()`
 - PvP league select options generated from `GAME.pvp.leagues` (14) and `GAME.pvp.multiverseLeagues` (6)
-- Structured data: WebPage + FAQPage schema on main page, Article + FAQPage schema on detail pages
+- Structured data: WebPage + FAQPage schema on main page, Article + FAQPage schema on detail pages, and CollectionPage/ItemList/VideoObject entries on the creator directory
 - OG/Twitter cards: 10+ meta tags for rich social sharing; 7 per-page PNG images with `og:image:type`, `width/height`, `alt`
 
 ## Performance Architecture

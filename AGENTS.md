@@ -23,15 +23,18 @@ Open `index.html` in a browser. Works from `file://`.
 | `robots.txt` | Crawl directives, sitemap reference |
 | `.editorconfig` | Editor formatting defaults (indent, line endings, charset) |
 | `CHANGELOG.md` | Release history (auto-curated from git log) |
-| `sitemap.xml` | All 9 URLs (main + 7 guides + authors/anomaly/) |
-| `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp) |
+| `sitemap.xml` | All public URLs (main + guide pages + authors/anomaly/) |
+| `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators) |
 | `googleeb60e8e5ee55440e.html` | Google Search Console verification |
-| `guide/*/index.html` | Detail guides for code, event, pvp, login, faq, beginners, xp |
+| `guide/*/index.html` | Detail guides for code, event, pvp, login, faq, beginners, xp, redeem, creators |
 | `data/arena_payouts.txt` | Open + Restricted arena payout tables |
 | `data/multiverse_war_payouts.txt` | Multiverse War payout tables |
 | `data/codes.json` | Single source of truth for promo codes (hand-edited only) |
 | `data/generated/promo-codes.js` | Generated active-codes bundle (from `npm run update-codes`) |
 | `scripts/generate-codes.js` | Generator: reads `data/codes.json`, writes `data/generated/promo-codes.js` + updates `guide/code/index.html` via markers + updates `index.html` inline promo codes |
+| `data/youtube-creators.json` | Approved creator/video source data with provenance and status history |
+| `data/generated/youtube-creators.js` | Generated public creator data loaded by the creators guide |
+| `scripts/generate-youtube-creators.js` | Validates creator data and generates creator HTML, JSON-LD, noscript links, and browser data |
 | `vendor/chart.umd.js` | Self-hosted Chart.js (downloaded via `npm run update-assets`) |
 | `lighthouse-config.js` | Shared Lighthouse audit config (mobile, 3G, 4× CPU) |
 | `lighthouserc.js` | CI assertion budget for Lighthouse performance checks |
@@ -62,6 +65,8 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run build:js` — JS minification only (via terser)
 - `npm run build:tailwind` — Tailwind rebuild only (skip minification)
 - `npm run update-codes` — Regenerate `data/generated/promo-codes.js` and update all code counts/descriptions/chips in `guide/code/index.html` from `data/codes.json`
+- `npm run generate-creators` — Validate creator source data and regenerate the static creators guide and browser data
+- `npm run test:creators` — Run the built-in creator generator and validation tests
 - `npm run update-assets` — Download latest vendor assets (Chart.js, fonts)
 - `npm run lighthouse:home` — Run Lighthouse audit on homepage
 - `npm run lighthouse:all` — Batch audit all 8 pages via PowerShell script
@@ -136,9 +141,10 @@ After any major HTML/CSS/JS changes, always:
 
 - **OG/Twitter tags** — every page needs `og:title`, `og:description`, `og:url`, `og:type`, `og:image`, `twitter:card`
 - **Canonical** — self-referencing canonical on every page
-- **Structured data** — WebPage + FAQPage schema on main page; Guide schema on detail pages
+- **Structured data** — WebPage + FAQPage schema on main page; Guide schema on detail pages; CollectionPage, ItemList, and VideoObject entries on the creators directory
 - **Internal linking** — bidirectional nav between main page and all guide pages, guide pages link to each other
-- **Guide page structure** — Each guide links to all 6 other guides + back to main page
+- **Guide page structure** — Each guide links to the maintained guide cluster + back to the main page
+- **Creator directory** — `/guide/creators/` is a static, generated directory. Active creators require six eligible videos and three recent videos; pending creators render verified available items at the bottom; hidden candidates remain source-only.
 
 ## Docs structure
 

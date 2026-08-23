@@ -92,7 +92,7 @@ anomaly-alpha/
 │   └── chart.umd.js     — Self-hosted Chart.js 4.4.1 (lazy-loaded)
 ├── fonts/               — Self-hosted woff2 files (Rajdhani + Orbitron)
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
-├── og-images/*.png      — Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp)
+├── og-images/*.png      — Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators)
 ├── favicon.ico           — Browser favicon for tab
 ├── robots.txt           — Allows all crawlers, references sitemap
 ├── sitemap.xml          — 8 URLs (main + 7 guide pages)
@@ -110,8 +110,12 @@ anomaly-alpha/
 │   ├── login/index.html — Login rewards guide (daily, weekly, monthly breakdown)
 │   ├── faq/index.html   — Gem rewards FAQ
 │   ├── beginners/index.html — New player guide
-│   └── xp/index.html    — XP & progression guide (Hero Rank-Up reference)
+│   ├── xp/index.html    — XP & progression guide (Hero Rank-Up reference)
+│   ├── redeem/index.html — Promo-code redemption guide
+│   └── creators/index.html — Curated YouTube creator directory with lazy modal playback
 ├── data/                — Source data files
+│   ├── youtube-creators.json — Approved creator/video records and provenance
+│   └── generated/youtube-creators.js — Generated public creator bundle
 │   ├── arena_payouts.txt             — Open + Restricted arena payout data
 │   ├── multiverse_war_payouts.txt    — Multiverse War payout data
 │   └── https___anomaly-alpha*/       — Google Search Console export folders
@@ -142,6 +146,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 - **Chart.js** 4.4.1 (doughnut, bar, radar charts) — self-hosted in `vendor/chart.umd.js`, animations disabled
 - **Icons** — inline SVGs (32 icons, replaced Font Awesome)
 - **Fonts** — self-hosted Rajdhani + Orbitron woff2 files
+- **Creator directory** — static, approval-gated YouTube creator data with YouTube-hosted thumbnails and user-initiated privacy-enhanced playback
 
 ## Improvement Plans
 

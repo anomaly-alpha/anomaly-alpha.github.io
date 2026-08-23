@@ -34,7 +34,18 @@ The feature is complete only when the data generator, new guide page, navigation
 3. Record `git status --short` before editing. Existing changes are user-owned.
 4. Inspect one representative guide page, preferably `guide/beginners/index.html`, and the existing card modal code in `index.html`, `script.js`, and `styles.css`.
 5. Inspect `scripts/generate-codes.js` and `data/generated/promo-codes.js`. Reuse its source-data-to-generated-output pattern; do not introduce a second architecture.
-6. Identify every existing guide navigation block with `rg`. The new Creators link must be added consistently wherever guide links are intentionally listed.
+6. Identify every existing guide navigation surface. `rg` is not installed in this Windows environment; use PowerShell `Get-ChildItem -Recurse -File | Select-String` (or an equivalent available search) instead. The new Creators link must be added consistently wherever guide links are intentionally listed.
+7. Confirm the approval-gated workflow files exist before implementation: local `.mimocode/skills/add-creator/SKILL.md`, `.mimocode/skills/update-creators/SKILL.md`, `.mimocode/command/add-creator.md`, `.mimocode/command/update-creators.md`, plus the matching global copies under `C:\Users\petra\.agents\skills\`. Do not recreate or broaden their permissions.
+8. Confirm the durable notification reminder exists: `0 9 1 */3 *`, Eastern Time, notification-only. It prompts `/update-creators` and does not start research automatically.
+
+### Workflow assets
+
+The research workflows are part of execution readiness, not an optional follow-up:
+
+- `/add-creator` accepts channel and/or video URLs, supports batch research with separate approval per creator, and proposes `active`, `pending`, or `hidden` records without writing before approval.
+- `/update-creators` audits active, pending, and hidden known records, proposes status/featured/content/linked-output changes in a dry run, and writes only after explicit approval.
+- Both workflows use public YouTube pages/oEmbed only, preserve provenance/evidence/rejection reasons, and never commit or push.
+- Global skills are under `C:\Users\petra\.agents\skills\`; project-local skills and command wrappers are under `.mimocode\skills\` and `.mimocode\command\`.
 
 ### Content approval gate
 
@@ -46,20 +57,34 @@ Before adding an `active` creator or video to the source JSON, confirm its publi
 - Its title, publication date, and 11-character video ID are confirmed from the YouTube page.
 - It is a standard video or replayable livestream. Shorts do not count toward qualification.
 
-The supplied candidate set includes these seed URLs; group them by verified channel and research each channel further:
+The supplied candidate set includes these seed URLs; group them by verified channel and research each channel further. The channel names below come from public oEmbed metadata and still require current page-level verification before publication:
 
-| Video ID | Confirmed title | Confirmed publication date | Direct URL |
-|---|---|---|---|
-| `kPDC78Dv1NI` | Boss Raid is Finally Here! | unknown | `https://www.youtube.com/watch?v=kPDC78Dv1NI` |
-| `1NF0U3lJYoo` | We Waited All This Time… FOR THIS?! | unknown | `https://www.youtube.com/watch?v=1NF0U3lJYoo` |
-| `vZ0pb6iUPP0` | My Boss Raid FEEDBACK! | unknown | `https://www.youtube.com/watch?v=vZ0pb6iUPP0` |
-| `P6yTQHW6YFA` | New Recruitment Road Event!! | unknown | `https://www.youtube.com/watch?v=P6yTQHW6YFA` |
-| `r4c19_n0wr4` | The Entire Second Season of Invincible In Invincible Guarding The Globe | unknown | `https://www.youtube.com/watch?v=r4c19_n0wr4` |
-| `mCw0PowHTls` | I'M GOING FREE TO PLAY in Invincible: Guarding the Globe… Here's Why | unknown | `https://www.youtube.com/watch?v=mCw0PowHTls` |
-| `wNKoLf9xKJA` | Invincible Guarding The Globe - New Hero Tease | unknown | `https://www.youtube.com/watch?v=wNKoLf9xKJA` |
-| `pK9C7mUMceI` | NEW CHARACTER RELEASE DAY | unknown | `https://www.youtube.com/live/pK9C7mUMceI` |
+| Video ID | Resolved channel | Confirmed title | Confirmed publication date | Direct URL |
+|---|---|---|---|---|
+| `kPDC78Dv1NI` | RapidGTG (`@RapidGTG`) | Boss Raid is Finally Here! | unknown | `https://www.youtube.com/watch?v=kPDC78Dv1NI` |
+| `1NF0U3lJYoo` | Tutaaa-GTG (`@TutaaaGTG`) | We Waited All This Time… FOR THIS?! | unknown | `https://www.youtube.com/watch?v=1NF0U3lJYoo` |
+| `vZ0pb6iUPP0` | Avatar Shuvd (`@avatarshuvd`) | My Boss Raid FEEDBACK! | unknown | `https://www.youtube.com/watch?v=vZ0pb6iUPP0` |
+| `u6m0gmOzwfs` | Avatar Shuvd (`@avatarshuvd`) | Complete Tier List (Update 2.14 Edition) | 2026-02-22 | `https://www.youtube.com/watch?v=u6m0gmOzwfs` |
+| `cqRWJ_F4p64` | Avatar Shuvd (`@avatarshuvd`) | WE'RE BACK! | 2026-01-20 | `https://www.youtube.com/watch?v=cqRWJ_F4p64` |
+| `S0xrNwdkExw` | Avatar Shuvd (`@avatarshuvd`) | TIER LIST TIME! | 2025-03-19 | `https://www.youtube.com/watch?v=S0xrNwdkExw` |
+| `P6yTQHW6YFA` | TH3O (`@TH3Oyt`) | New Recruitment Road Event!! | unknown | `https://www.youtube.com/watch?v=P6yTQHW6YFA` |
+| `r4c19_n0wr4` | LAVAMOOSE (`@LAVAMOOSE1369`) | The Entire Second Season of Invincible In Invincible Guarding The Globe | unknown | `https://www.youtube.com/watch?v=r4c19_n0wr4` |
+| `mCw0PowHTls` | Tutaaa-GTG (`@TutaaaGTG`) | I'M GOING FREE TO PLAY in Invincible: Guarding the Globe… Here's Why | unknown | `https://www.youtube.com/watch?v=mCw0PowHTls` |
+| `wNKoLf9xKJA` | OMNI-BANE (`@BaneApe5`) | Invincible Guarding The Globe - New Hero Tease | unknown | `https://www.youtube.com/watch?v=wNKoLf9xKJA` |
+| `pK9C7mUMceI` | Just a Guy named Francis (`@JustaGuynamedFrancis`) | NEW CHARACTER RELEASE DAY | unknown | `https://www.youtube.com/live/pK9C7mUMceI` |
 
-The supplied Shorts `kGq-Racu8tw` and `sxosoNY7WDU` are retained as rejected research records and do not count. Before implementation, re-open every seed and research each verified channel until its status is known. The executor may replace a candidate only with another item that passes the eligibility rules above. Avatar Shuvd is preferred for the hero when active; no named secondary creator is mandatory.
+The supplied Shorts `kGq-Racu8tw` (Beaoloooo, `@marvin2804`) and `sxosoNY7WDU` (KingSlay727, `@kingslay727`) are retained as rejected research records and do not count. Before implementation, re-open every seed and research each verified channel until its status is known. The executor may replace a candidate only with another item that passes the eligibility rules above. Avatar Shuvd is preferred for the hero when active; no named secondary creator is mandatory.
+
+### Research gate before code
+
+Do not begin page or generator implementation until the research pass has:
+
+1. Resolved all eleven regular-video/livestream seeds to the nine candidate channels without guessing identities.
+2. Recorded each channel’s verified display name, canonical channel URL, source URLs, evidence notes, and last-checked date.
+3. Collected enough eligible items to classify every candidate as active (six total, three recent), pending (at least one), or hidden (zero).
+4. Recorded rejected Shorts, unavailable items, and every rejection reason in `candidateSources` or the relevant video record.
+5. Confirmed at least one active creator for the static hero. If no candidate qualifies, stop and report the missing-content blocker rather than creating an empty or invented hero.
+6. Obtained the license/permission and attribution metadata needed for `og-images/creators.png` before using creator imagery.
 
 ## Phase 1 — Define the data contract
 
@@ -73,14 +98,24 @@ The supplied Shorts `kGq-Racu8tw` and `sxosoNY7WDU` are retained as rejected res
 
 ### 1.1 Source JSON
 
-Create `data/youtube-creators.json` with a top-level object containing `updated`, `contentMaintainer`, `reviewCadenceDays`, `featuredCreatorId`, `candidateSources`, and `creators`.
+Create `data/youtube-creators.json` with a top-level object containing `updated`, `contentMaintainer`, `reviewCadenceDays`, `featuredCreatorId`, `candidateSources`, `ogImageSources`, and `creators`.
 
 ```json
 {
   "updated": "2026-08-22",
   "contentMaintainer": "Anomaly Alpha",
   "reviewCadenceDays": 90,
-  "featuredCreatorId": "avatar-shuvd",
+  "featuredCreatorId": null,
+  "candidateSources": [
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=vZ0pb6iUPP0",
+      "kind": "video-seed",
+      "resolvedCreatorId": "avatar-shuvd",
+      "lastChecked": "2026-08-22",
+      "resolutionStatus": "verified"
+    }
+  ],
+  "ogImageSources": [],
   "creators": [
     {
       "id": "avatar-shuvd",
@@ -99,7 +134,11 @@ Create `data/youtube-creators.json` with a top-level object containing `updated`
 }
 ```
 
-Research all nine supplied channels. Every active creator requires at least six confirmed eligible items, including at least three published in the previous 180 days. Standard videos and replayable livestreams count; Shorts do not. Keep up to twelve locally rendered items and retain additional validated records in source data.
+Research all eleven regular-video/livestream seed URLs across nine resolved channels. Every active creator requires at least six confirmed eligible items, including at least three published in the previous 180 days. Standard videos and replayable livestreams count; Shorts do not. Keep up to twelve locally rendered items and retain additional validated records in source data.
+
+The sample `featuredCreatorId: null` is only a pre-research shape. Before the first build, set it to the approved active Avatar Shuvd record or to the approved active fallback. The generator must reject a release dataset whose featured ID is null, unknown, pending, or hidden.
+
+Before the first build, populate `ogImageSources` with the source URL, license/permission basis, attribution, and last-checked date for every non-original image used in `og-images/creators.png`. The generator must reject a release asset with missing provenance.
 
 Every active video must also include a one-sentence `description`. It is displayed only where appropriate and supplies the `description` required for its structured-data entry. Example:
 
@@ -115,9 +154,14 @@ Every active video must also include a one-sentence `description`. It is display
   "featured": true,
   "sourceUrl": "https://www.youtube.com/watch?v=u6m0gmOzwfs",
   "canonicalUrl": "https://www.youtube.com/watch?v=u6m0gmOzwfs",
-  "evidenceNote": "The title and page content identify an Invincible: Guarding the Globe tier-list video."
+  "evidenceNote": "The title and page content identify an Invincible: Guarding the Globe tier-list video.",
+  "statusReason": ""
 }
 ```
+
+Rejected or unavailable records require a non-empty `statusReason`; active records may leave it empty.
+
+Exactly six items per active creator have `featured: true`; additional eligible items have `featured: false` and may appear in the expansion up to the twelve-item cap.
 
 ### 1.2 Resolve the creator status and featured rules
 
@@ -136,9 +180,11 @@ Record this rule in the data generator's validation error messages and, if the s
 Implement validation before writing any output. On failure, print each error and exit with code 1. Validate:
 
 - Valid JSON and top-level `updated` date.
-- `contentMaintainer` is a non-empty string and `reviewCadenceDays` is an integer from 30 to 180.
+- `contentMaintainer` is a non-empty string and `reviewCadenceDays` is exactly `90`, matching the durable reminder cadence.
+- `candidateSources` is a non-empty array with valid source URLs, `kind`, resolution status, and last-checked dates; each source resolves to zero or one known creator.
+- `ogImageSources` records provenance, permission/license, attribution, and last-checked date for every external image used by the OG asset.
 - Unique lowercase kebab-case creator IDs.
-- Unique numeric `displayOrder` values.
+- Unique numeric `displayOrder` values across all creators; use the same editorial order for active and pending groups, with the featured creator omitted only after hero rendering.
 - Creator status in `active`, `pending`, or `hidden`.
 - Valid ISO date-only values for `updated`, `lastChecked`, and `published`.
 - Active and pending creator URLs begin with `https://www.youtube.com/` when a channel is verified.
@@ -146,13 +192,17 @@ Implement validation before writing any output. On failure, print each error and
 - Tags are a non-empty string array for active creators.
 - Video IDs are unique across every creator and match `^[A-Za-z0-9_-]{11}$`.
 - Video status in `active`, `pending`, or `unavailable`.
+- Video category is one of `Guides`, `Tier Lists`, `Updates`, `Events`, `Team Building`, `Gameplay`, or `Livestreams`.
 - Active featured videos have all required fields and valid `lastChecked`/`published` dates.
 - Active featured videos have a concise, non-empty description.
 - Active creators contain at least six eligible items, including at least three published within the previous 180 days.
+- Active creators contain exactly six `featured: true` items; additional eligible items are not featured.
+- Every `featured: true` item has `status: active`.
 - Pending creators contain at least one eligible item.
 - Hidden creators contain zero eligible items and never appear in public output.
 - The featured creator is active and is excluded from the normal list when rendered in the hero.
 - Store submitted URLs, canonical URLs, evidence notes, rejection reasons, and image-license metadata.
+- `sourceUrl` is the submitted discovery URL; `channelUrl` is the verified canonical channel URL. `statusReason` is required for rejected or unavailable records.
 - Pending and unavailable videos never appear in generated public cards or JSON-LD.
 - Every public video passes the content approval gate. Standard videos and replayable livestreams are eligible; Shorts are retained as rejected records and never qualify.
 
@@ -187,12 +237,14 @@ Generated output must render the approved `featuredCreatorId` as a static hero w
 
 Generate six featured cards per active creator and an accessible expansion revealing up to twelve validated cards, plus a verified channel link. The generator must include every locally visible item in the ItemList/VideoObject JSON-LD. The featured creator is selected during the approved `/update-creators` workflow and is not rotated in the browser.
 
+“Every locally visible item” includes cards behind the expansion control: the JSON-LD contains all validated active-status items rendered by the page up to twelve per creator, not only the initial six featured cards.
+
 ### 1.5 Build integration
 
 Add:
 
 ```json
-"update-creators": "node scripts/generate-youtube-creators.js"
+"generate-creators": "node scripts/generate-youtube-creators.js"
 ```
 
 to `package.json` scripts. Add a second script:
@@ -302,7 +354,7 @@ Generate one `<section>` per visible creator with:
 - External `Visit Channel` link for every creator with a verified channel URL, including pending creators.
 - A responsive video-list container.
 
-Generate each active featured video as exactly one button:
+Generate each locally visible active-status video as exactly one button:
 
 ```html
 <button
@@ -434,14 +486,17 @@ Do not claim a private, age-gated, or embedding-disabled cause unless the page c
 - Modify: `guide/beginners/index.html`
 - Modify: `guide/xp/index.html`
 - Modify: `guide/redeem/index.html`
+- Modify: `404.html`
+- Modify: `music/index.html`
 - Modify: `sitemap.xml`
-- Review/modify only if needed: `privacy/index.html`, `_headers`, `README.md`, `CONTEXT.md`
+- Modify after the feature files exist: `AGENTS.md`, `README.md`, `CONTEXT.md`
+- Review/modify only if needed: `privacy/index.html`, `_headers`
 
-1. Find all intentional guide navigation surfaces, including top navigation, homepage structured guide lists, and bottom cross-link card grids. Add a `Creators` link with correct relative paths everywhere. Normalize existing `Redeem` links across the same surfaces.
+1. Find all intentional guide navigation surfaces, including the homepage, every guide page, `404.html`, `music/index.html`, top navigation, homepage structured guide lists, and bottom cross-link card grids. Add a `Creators` link with correct relative paths everywhere. Normalize existing `Redeem` links across the same surfaces.
 2. Add `https://anomaly-alpha.github.io/guide/creators/` to `sitemap.xml` with the current implementation date.
 3. Add a concise page-level privacy disclosure: loading thumbnails and opening playback may connect the visitor to YouTube. A public correction/removal route is not required.
 4. Inspect `_headers`. If no CSP exists, do not introduce an unrelated policy. If a CSP exists in the deployed configuration, allow `https://www.youtube-nocookie.com` in `frame-src` and `https://i.ytimg.com` in `img-src`.
-5. Keep `README.md`, `CONTEXT.md`, the approved spec, and this plan manually maintained during recurring content refreshes.
+5. After the feature files exist, update `AGENTS.md`, `README.md`, and `CONTEXT.md` once so ownership, guide counts, and the topical cluster are accurate. Keep those documents, the approved spec, and this plan manually maintained during recurring content refreshes.
 
 ### Ongoing content maintenance
 
@@ -456,8 +511,8 @@ At each approved update:
 5. Promote or demote creators in the dry-run proposal: active requires six items and three within the previous 180 days; pending requires at least one; hidden has zero.
 6. Suggest an active `featuredCreatorId`, preferring Avatar Shuvd when qualified and otherwise using the editorial score.
 7. Propose updates to generated data, creator markup/JSON-LD, all guide navigation/card grids, Redeem links, sitemap, page metadata, creator copy, and `og-images/creators.png` when the qualifying set changes.
-8. Keep README, CONTEXT, the plan, and the spec manual.
-9. Run `npm run test:creators`, `npm run update-creators`, `npm run build`, and relevant browser checks after approval.
+8. Keep AGENTS, README, CONTEXT, the plan, and the spec manual during recurring content refreshes.
+9. Run `npm run test:creators`, `npm run generate-creators`, `npm run build`, and relevant browser checks after approval.
 
 The public page displays active creators first and pending creators with at least one eligible item at the bottom. Hidden and unavailable records remain in source data for the editorial audit trail.
 
@@ -469,7 +524,7 @@ Run from the repository root:
 
 ```text
 npm run test:creators
-npm run update-creators
+npm run generate-creators
 npm run build
 node --check scripts/generate-youtube-creators.js
 ```
