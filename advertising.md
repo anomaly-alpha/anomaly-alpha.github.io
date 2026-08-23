@@ -1,4 +1,4 @@
-# Advertising Copy — Invincible Gem Rewards Calculator
+# Advertising Copy — Invincible GTG Gem Calculator
 
 **URL:** https://anomaly-alpha.github.io
 **Contributors:** Anomaly, TheOneTruePanda, dbp loves allen, Sy
@@ -9,9 +9,9 @@
 
 > **@everyone** Know your exact weekly gem stack in seconds 💎
 >
-> Drop your league + rank into the **Gem Rewards Calculator** and see exactly what you'll earn — Restricted Arena, Open Arena, Alliance War, events, login streaks, and promo codes all in one place.
+> Drop your league + rank into the **Invincible GTG Gem Calculator** and see exactly what you'll earn — Restricted Arena, Open Arena, Alliance War, events, login streaks, and promo codes all in one place.
 >
-> 🔹 Live PvP payout tables (all 14 leagues, 120 ranks) → https://anomaly-alpha.github.io/guide/pvp/
+> 🔹 Live PvP payout tables (all 14 leagues, variable ranks by league) → https://anomaly-alpha.github.io/guide/pvp/
 > 🔹 Event & login reward tracker → https://anomaly-alpha.github.io/guide/event/
 > 🔹 28 active promo codes (tap to reveal + copy) → https://anomaly-alpha.github.io/guide/code/
 > 🔹 Weekly countdown timers
@@ -29,7 +29,7 @@
 
 > Which league pays the most in Invincible: Guarding the Globe? 🏆
 >
-> Drop your league+rank into the interactive PvP calculator — see exact gems for all 14 leagues, all 120 ranks. Events, login streaks, 28 promo codes included.
+> Drop your league+rank into the interactive PvP calculator — see exact gems for all 14 leagues with variable ranks by league. Events, login streaks, 28 promo codes included.
 >
 > 👉 https://anomaly-alpha.github.io
 >
@@ -54,7 +54,7 @@
 > • **Login rewards** — daily (130×7=910), weekly (60+400), monthly — full breakdown
 > • **Events** — The Long Haul (300g top 5%) and Earth's Defenders (200g top 10%) strategy guides
 > • **Charts** — optional income breakdown vs weekly targets
-> • **Forecaster** — project your gem income out to 1 year with conservative/expected/optimistic scenarios
+> • **Forecaster (coming soon)** — project your gem income out to 1 year with conservative/expected/optimistic scenarios
 
 > **Links:**
 > → https://anomaly-alpha.github.io — Gem Calculator (start here, pick your league/rank)
@@ -69,7 +69,7 @@
 
 > **~4,043 Gems/Week — Here's Exactly Where They Come From 💎**
 >
-> See exactly how many gems you'll earn this week. The Gem Rewards Calculator gives you:
+> See exactly how many gems you'll earn this week. The Invincible GTG Gem Calculator gives you:
 >
 > ✅ Live PvP payouts — all leagues, all ranks → https://anomaly-alpha.github.io/guide/pvp/
 > ✅ Event reward tracker → https://anomaly-alpha.github.io/guide/event/
@@ -87,9 +87,9 @@
 ## 5. Instagram Caption + Story
 
 > **Caption:**
-> Drop your league & rank into the Gem Rewards Calculator 💎
+> Drop your league & rank into the Invincible GTG Gem Calculator 💎
 >
-> See every source — PvP, events, login streaks, 28 promo codes. All 14 leagues. All 120 ranks. Zero fluff. Updated Jul 2026.
+> See every source — PvP, events, login streaks, 28 promo codes. All 14 leagues. Variable ranks by league. Zero fluff. Updated Jul 2026.
 >
 > Link in bio → anomalyalphagems
 > (or just visit https://anomaly-alpha.github.io)
@@ -108,13 +108,13 @@
 > We created a free community tool that calculates weekly gem earnings across all PvP leagues, events, login rewards, and promo codes for Invincible: Guarding the Globe.
 
 > The calculator handles:
-> • 14 PvP leagues with 120 rank tiers each → https://anomaly-alpha.github.io/guide/pvp/
+> • 14 PvP leagues with variable rank tiers by league → https://anomaly-alpha.github.io/guide/pvp/
 > • Event reward tier estimates → https://anomaly-alpha.github.io/guide/event/
 > • Login streak totals (daily, weekly, monthly) → https://anomaly-alpha.github.io/guide/login/
 > • 28 active promo codes (tap to reveal + copy; redeem via verification code at redeem.invincible.ubisoft.barcelona) → https://anomaly-alpha.github.io/guide/code/
 > • Visual charts for income distribution
 
-> Built with vanilla HTML, CSS, and JS — no frameworks, no runtime dependencies, no tracking.
+> Built with vanilla HTML, CSS, and JS — no frameworks, no runtime dependencies. Ads are currently disabled; Google Analytics page-view measurement only.
 
 > Open to feedback and contributions:
 > https://anomaly-alpha.github.io
@@ -129,11 +129,11 @@
 >
 > **Community-Built Gem Calculator Launches for Invincible: Guarding the Globe Players**
 >
-> [CITY, Date] — A new free web tool (updated Jul 2026) helps players of Invincible: Guarding the Globe plan their weekly gem income. The Gem Rewards Calculator (https://anomaly-alpha.github.io) provides instant payout estimates for all PvP modes — Restricted Arena, Open Arena, and Alliance War — across all 14 leagues and 120 rank positions.
+> [CITY, Date] — A new free web tool (updated Jul 2026) helps players of Invincible: Guarding the Globe plan their weekly gem income. The Invincible GTG Gem Calculator (https://anomaly-alpha.github.io) provides instant payout estimates for all PvP modes — Restricted Arena, Open Arena, and Alliance War — across all 14 leagues with variable player counts and rank brackets.
 >
 > Additional features include event reward tracking, login streak calculations, current promo code redemption, and interactive charts for income visualisation.
 >
-> The tool requires no installation, no account creation, and no data collection. It runs entirely in the browser as a static page, built by players for players.
+> The tool requires no installation and no account creation. It runs in the browser as a static page with ads currently disabled, built by players for players.
 >
 > **About the project:** Developed by community contributors Anomaly, TheOneTruePanda, dbp loves allen, and Sy. Source code is available under an open license.
 >
@@ -150,10 +150,10 @@
 >
 > Know your exact weekly gem stack in seconds — no math required.
 >
-> The **Gem Rewards Calculator** lets you select your league and rank — then instantly see your full weekly gem income across Restricted Arena, Open Arena, Alliance War, events, login streaks, and promo codes.
+> The **Invincible GTG Gem Calculator** lets you select your league and rank — then instantly see your full weekly gem income across Restricted Arena, Open Arena, Alliance War, events, login streaks, and promo codes.
 >
 > **What you get:**
-> • All 14 leagues, ranks 1–120
+> • All 14 leagues, variable ranks by league
 > • PvP currency, tickets, totem frags & modules
 > • Event reward breakdowns
 > • Daily/weekly/monthly login totals
@@ -168,16 +168,16 @@
 
 ## 9. SMS / Text Message
 
-> Gem Calculator for Invincible GtG: 28 codes + PvP + events + login = full weekly gem plan. Pick your league & rank, see it all. Free, no app. https://anomaly-alpha.github.io
+> Gem Calculator for Invincible GTG: 28 codes + PvP + events + login = full weekly gem plan. Pick your league & rank, see it all. Free, no app. https://anomaly-alpha.github.io
 
 ---
 
 ## 10. YouTube Video Description
 
-> **Title:** Gem Rewards Calculator — Plan Your Weekly Income in Invincible: Guarding the Globe
+> **Title:** Invincible GTG Gem Calculator — Plan Your Weekly Income in Invincible: Guarding the Globe
 >
 > **Description:**
-> In this video I walk through the Gem Rewards Calculator — a free web tool that shows your exact weekly gem income from every source in Invincible: Guarding the Globe.
+> In this video I walk through the Invincible GTG Gem Calculator — a free web tool that shows your exact weekly gem income from every source in Invincible: Guarding the Globe.
 >
 > 🔗 **Try it yourself:** https://anomaly-alpha.github.io
 >
@@ -189,7 +189,7 @@
 > 3:10 – Charts & Filters
 > 3:40 – PvP League/Rank Selectors
 >
-> All 14 leagues, 120 ranks, no signup required. Bookmark it for reset day.
+> All 14 leagues, variable ranks by league, no signup required. Bookmark it for reset day.
 >
 > #Invincible #GuardingTheGlobe #GemGuide #PvPCalculator
 
@@ -204,7 +204,7 @@
 >
 > Drop your league and rank. See every gem source instantly.
 >
-> All 14 leagues. All 120 ranks. Zero signup.
+> All 14 leagues. Variable ranks by league. Zero signup.
 >
 > Link in bio / comments 👇
 > https://anomaly-alpha.github.io"
@@ -213,19 +213,19 @@
 
 ## 12. SEO Meta Description / Google Snippet
 
-> Plan your weekly gem income in Invincible Guarding the Globe — interactive PvP payout calculator with all 14 leagues and 120 ranks, event reward tracker, login streak guide, and promo codes. Free, no signup. https://anomaly-alpha.github.io
+> Plan your weekly gem income in Invincible Guarding the Globe — interactive PvP payout calculator with all 14 leagues and variable ranks by league, event reward tracker, login streak guide, and promo codes. Free, no signup. https://anomaly-alpha.github.io
 
 ---
 
 ## 13. Forum Signature (e.g. Reddit, GameFAQ, official forums)
 
-> **Gem Rewards Calculator** — See your full weekly gem income from PvP, events, login streaks & 28 active promo codes. All 14 leagues, ranks 1–120. https://anomaly-alpha.github.io
+> **Invincible GTG Gem Calculator** — See your full weekly gem income from PvP, events, login streaks & 28 active promo codes. All 14 leagues, variable ranks by league. https://anomaly-alpha.github.io
 
 ---
 
 ## 14. Podcast / Stream Sponsor Read
 
-> "This week's tip is brought to you by the Gem Rewards Calculator — a free web tool for Invincible: Guarding the Globe. Select your PvP league and rank, and it instantly shows ~1,850 weekly gems from arenas plus event rewards, login streaks, and 28 promo codes. No install, no signup. Check it out at https://anomaly-alpha.github.io"
+> "This week's tip is brought to you by the Invincible GTG Gem Calculator — a free web tool for Invincible: Guarding the Globe. Select your PvP league and rank, and it instantly shows ~1,850 weekly gems from arenas plus event rewards, login streaks, and 28 promo codes. No install, no signup. Check it out at https://anomaly-alpha.github.io"
 
 ---
 
@@ -253,13 +253,13 @@
 
 ## 16. App Store / Product Hunt Style Tagline
 
-> **Gem Rewards Calculator** — Your weekly gem income planner for Invincible: Guarding the Globe (updated Jul 2026). PvP payouts, event rewards, login streaks & 28 promo codes in one place. No app, no ads, no data collection. Just results.
+> **Invincible GTG Gem Calculator** — Your weekly gem income planner for Invincible: Guarding the Globe (updated Jul 2026). PvP payouts, event rewards, login streaks & 28 promo codes in one place. No app, ads currently disabled. Just results.
 
 ---
 
 ## 17. SERP / Google Snippet
 
-> Invincible Guarding the Globe gem calculator — free weekly income planner with PvP payouts, 28 active promo codes, login rewards, and event earnings across all 14 leagues. Interactive league comparator and 1-year forecaster included.
+> Invincible Guarding the Globe gem calculator — free weekly income planner with PvP payouts, 28 active promo codes, login rewards, and event earnings across all 14 leagues. Interactive league comparator included. 1-year forecaster coming soon.
 
 ---
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## Aug 2026
+
+- **Documentation synchronization**: Corrected stale counts (28 active codes, 9 OG images, 9 inline JSON configs, 11 sitemap URLs, 9 guide pages). Expanded file tree to include music, seo, privacy, terms, authors pages, scripts, and tests. Fixed `docs/plan/` → `docs/plans/` paths. Documented ads-disabled/site-message fallback and GA4 analytics. Added ADR-002 reference. Replaced false "no tracking/no data collection" claims in advertising copy with accurate ads-disabled/anonymous-analytics language. Added external-reference-audit report link.
+
 ## Jul 2026
 
 - **Site-wide SEO growth**: Interactive gem income forecaster (Chart.js line chart, 3 scenarios, milestones, shareable URL). New XP & progression guide (`/guide/xp/`) with Hero Rank-Up table. PvP league comparator (side-by-side payout comparison). Code age timeline (green/yellow/orange/red bands by release date). "What's New" changelog + localStorage freshness beacon. Meta refresh for event [Jul 2026] and PvP "Guide & Gems" title. Redeem portal rewrite targeting 840 impressions. 5 contextual internal links. FAQ rephrase for GSC query matching.
@@ -37,4 +41,4 @@
 
 ## Earlier
 
-- Initial site launch with hub + 6 guide pages, Tailwind CSS, Chart.js 4.4.1, Rajdhani/Orbitron fonts, BEM design system, inline JSON configs.
+- Initial site launch with hub + 6 guide pages (code, event, pvp, login, faq, beginners), Tailwind CSS, Chart.js 4.4.1, Rajdhani/Orbitron fonts, BEM design system, inline JSON configs.

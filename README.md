@@ -80,11 +80,11 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (129 KB) — Main HTML + inline JSON configs (8 in `<head>`)
-├── script.js            (40 KB) — All JS: charts, filters, PvP, modals, countdowns (minified)
-├── styles.css           (40 KB) — CSS custom properties + BEM component classes (minified)
-├── tailwind.css         (14 KB) — Generated Tailwind utility classes (minified)
-├── package.json         — Dev dependencies config (tailwindcss, csso, terser)
+├── index.html           (136 KB) — Main HTML + inline JSON configs (9 in `<head>`)
+├── script.js            (46 KB) — All JS: charts, filters, PvP, modals, countdowns (minified)
+├── styles.css           (48 KB) — CSS custom properties + BEM component classes (minified)
+├── tailwind.css         (16 KB) — Generated Tailwind utility classes (minified)
+├── package.json         — Dependencies and dev dependencies config (tailwindcss, csso, terser, chrome-launcher)
 ├── tailwind.config.js   — Tailwind config with color aliases + content paths
 ├── src/
 │   └── tailwind-input.css — Tailwind source with @tailwind directives
@@ -92,17 +92,29 @@ anomaly-alpha/
 │   └── chart.umd.js     — Self-hosted Chart.js 4.4.1 (lazy-loaded)
 ├── fonts/               — Self-hosted woff2 files (Rajdhani + Orbitron)
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
-├── og-images/*.png      — Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators)
+├── og-images/*.png      — Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators — 9 total)
 ├── favicon.ico           — Browser favicon for tab
 ├── robots.txt           — Allows all crawlers, references sitemap
-├── sitemap.xml          — 8 URLs (main + 7 guide pages)
+├── sitemap.xml          — 11 URLs (main + 9 guide pages + authors/anomaly/)
 ├── _headers             — Cloudflare Pages cache config
 ├── 404.html             — Custom error page
 ├── AGENTS.md            — Agent instructions for this repo
 ├── README.md            — This file
 ├── gem_infographic.html — Legacy redirect stub (index.html)
 ├── googleeb60e8e5ee55440e.html — Google Search Console verification
+├── ads.txt              — Publisher authorization record (AdSense, currently unused)
 ├── advertising.md       — Marketing copy for social channels
+├── CHANGELOG.md         — Release history (auto-curated from git log)
+├── music/               — Generated music page (dedicated standalone page)
+│   └── index.html
+├── seo/                 — SEO utilities page
+│   └── index.html
+├── privacy/             — Privacy policy page
+│   └── index.html
+├── terms/               — Terms of service page
+│   └── index.html
+├── authors/             — Author profile pages
+│   └── anomaly/index.html
 ├── guide/               — Topical cluster guide pages
 │   ├── code/index.html  — Promo code guide (current code, redemption steps)
 │   ├── event/index.html — Event rewards guide (The Long Haul, Earth's Defenders)
@@ -114,16 +126,36 @@ anomaly-alpha/
 │   ├── redeem/index.html — Promo-code redemption guide
 │   └── creators/index.html — Curated YouTube creator directory with lazy modal playback
 ├── data/                — Source data files
-│   ├── youtube-creators.json — Approved creator/video records and provenance
-│   └── generated/youtube-creators.js — Generated public creator bundle
-│   ├── arena_payouts.txt             — Open + Restricted arena payout data
-│   ├── multiverse_war_payouts.txt    — Multiverse War payout data
-│   └── https___anomaly-alpha*/       — Google Search Console export folders
+│   ├── codes.json                — Single source of truth for promo codes
+│   ├── youtube-creators.json     — Approved creator/video records and provenance
+│   ├── playlists.json            — Music playlist data
+│   ├── generated/
+│   │   ├── promo-codes.js        — Generated active codes bundle
+│   │   ├── youtube-creators.js   — Generated public creator bundle
+│   │   └── seo-data.js           — Generated SEO data
+│   ├── arena_payouts.txt         — Open + Restricted arena payout data
+│   ├── multiverse_war_payouts.txt — Multiverse War payout data
+│   └── https___anomaly-alpha*/   — Google Search Console export folders
+├── scripts/             — Build and generator scripts
+│   ├── generate-codes.js         — Reads data/codes.json, writes promo-codes.js + updates HTML
+│   ├── generate-music.js         — Generates music page data
+│   ├── generate-youtube-creators.js — Validates creator data, generates HTML/JSON-LD/browser data
+│   ├── gen-serp-dumps.js         — Generates SERP dump files from GSC query data
+│   ├── analyze-gsc.js            — Analyzes GSC export data
+│   ├── run-lighthouse.ps1        — Batch Lighthouse audit script
+│   └── serve.js                  — Local development server
+├── tests/               — Custom test scripts (no standard framework; run via `node tests/<file>`)
+│   ├── ads-fallback.test.js      — Validates ads-config and site-message fallback
+│   ├── ads-txt.test.js           — Validates ads.txt content
+│   ├── promo-codes-generator.test.js — Validates code generation
+│   ├── youtube-creators-generator.test.js — Validates creator generation
+│   ├── back-to-top.test.js       — Tests back-to-top button behavior
+│   └── test-harness.js           — Shared test helpers
 ├── docs/
 │   ├── DESIGN_SYSTEM.md  — CSS token reference
 │   ├── index.md          — Feature documentation
 │   ├── adr/              — Architecture Decision Records
-│   ├── plan/             — Improvement plans + session plans (YYYY-MM-DD/*.md)
+│   ├── plans/            — Improvement plans + session plans (YYYY-MM-DD/*.md)
 │   └── reports/          — SEO performance reports (from GSC exports)
 ├── journal/              — Daily session journals (YYYY-MM-DD/index.md)
 ```
@@ -150,7 +182,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 
 ## Improvement Plans
 
-160 executable plans at `docs/plan/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plan/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
+160 executable plans at `docs/plans/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plans/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
 
 
 

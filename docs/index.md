@@ -75,7 +75,9 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 - `/guide/faq/` — Gem rewards FAQ with FAQPage schema
 - `/guide/beginners/` — New player guide with priority checklist and gem spending tips
 - `/guide/xp/` — XP & progression guide: Hero XP, Agent XP, Hero Rank-Up table (Rare→Omnipotent+)
-- Each guide links to all 6 other guides + back to main page for topical relevance
+- `/guide/redeem/` — Promo-code redemption walkthrough
+- `/guide/creators/` — Curated YouTube creators, verified videos, and privacy-enhanced user-initiated playback
+- Each guide links to all 8 other guides + back to main page for topical relevance
 
 ### Visual Effects
 - Floating particles in background (9 particles)
@@ -86,12 +88,12 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 
 ## Tech Stack
 
-- **Structure**: Main HTML + inline JSON configs, 7 guide pages
+- **Structure**: Main HTML + inline JSON configs, 9 guide pages + music, seo, privacy, terms, authors pages
 - **Styling**: Tailwind CSS (local build via npm) + custom CSS design token system
 - **Charts**: Chart.js (doughnut, bar, radar) — self-hosted in `vendor/chart.umd.js`, lazy-loaded on first toggle
 - **Icons**: Inline SVGs (32 icons, replaced Font Awesome)
 - **Typography**: Rajdhani + Orbitron — self-hosted woff2 files in `fonts/`
-- **Data**: Inline JSON configs (6 configs embedded in `<head>`, source in `data/`)
+- **Data**: Inline JSON configs (9 configs embedded in `<head>`, source in `data/`)
 
 ## Design System
 
@@ -139,6 +141,11 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 ## SEO Reports
 
 Live SEO performance analysis from Google Search Console exports at `docs/reports/2026-08-20/unknown/SEO_PERFORMANCE.md`. Updated periodically by running plan 162 (`docs/plans/2026-05-28/deepseek-v4-flash-free/162-gsc-export-analyzer.md`) against new GSC exports in `data/`.
+
+## Audit Reports
+
+- [External-Reference Audit (2026-08-23)](reports/2026-08-23/mimocode/external-reference-audit.md) — Verification of external URLs, platform claims, analytics, and AdSense references across all HTML, JS, and Markdown files.
+
 ## Contributors
 
 - Anomaly

@@ -13,11 +13,11 @@ Open `index.html` in a browser. Works from `file://`.
 
 | File | Role |
 |------|------|
-| `index.html` | HTML + 8 inline `<script type="application/json">` configs in `<head>` + OG/Twitter/canonical tags + structured data |
+| `index.html` | HTML + 9 inline `<script type="application/json">` configs in `<head>` (ads, game, rewards, contributors, chart, countdown, ui, theme, music) + OG/Twitter/canonical tags + structured data |
 | `script.js` | All JS (global scope, no imports/exports, minified via terser) |
 | `styles.css` | CSS custom property tokens + BEM classes (minified via csso) |
 | `tailwind.css` | Generated Tailwind utility classes (from `npm run build`, minified via csso) |
-| `package.json` | Dev dependencies config (Tailwind CLI, csso, terser) |
+| `package.json` | Dependencies (`chrome-launcher`) and devDependencies (`tailwindcss`, `csso`, `terser`) |
 | `tailwind.config.js` | Tailwind content paths configuration |
 | `src/tailwind-input.css` | Tailwind source with `@tailwind` directives |
 | `robots.txt` | Crawl directives, sitemap reference |
@@ -26,6 +26,10 @@ Open `index.html` in a browser. Works from `file://`.
 | `sitemap.xml` | All public URLs (main + guide pages + authors/anomaly/) |
 | `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators) |
 | `googleeb60e8e5ee55440e.html` | Google Search Console verification |
+| `seo/index.html` | SEO utilities page |
+| `privacy/index.html` | Privacy policy (documents GA4 analytics) |
+| `terms/index.html` | Terms of service |
+| `authors/anomaly/index.html` | Author profile (Schema.org ProfilePage + Person) |
 | `guide/*/index.html` | Detail guides for code, event, pvp, login, faq, beginners, xp, redeem, creators |
 | `data/arena_payouts.txt` | Open + Restricted arena payout tables |
 | `data/multiverse_war_payouts.txt` | Multiverse War payout tables |
@@ -35,6 +39,8 @@ Open `index.html` in a browser. Works from `file://`.
 | `data/youtube-creators.json` | Approved creator/video source data with provenance and status history |
 | `data/generated/youtube-creators.js` | Generated public creator data loaded by the creators guide |
 | `scripts/generate-youtube-creators.js` | Validates creator data and generates creator HTML, JSON-LD, noscript links, and browser data |
+| `scripts/generate-music.js` | Generates music page data from source playlists |
+| `music/index.html` | Generated music page (standalone, inline `music-config` block; playlists sourced from `data/playlists.json`) |
 | `vendor/chart.umd.js` | Self-hosted Chart.js (downloaded via `npm run update-assets`) |
 | `lighthouse-config.js` | Shared Lighthouse audit config (mobile, 3G, 4× CPU) |
 | `lighthouserc.js` | CI assertion budget for Lighthouse performance checks |
@@ -50,7 +56,8 @@ Open `index.html` in a browser. Works from `file://`.
 
 - **Never use `fetch()`** — all data from inline JSON configs loaded via `loadConfig(id)`
 - **Forecaster (not yet implemented)** — `initForecastChart()` creates a 4th Chart.js line chart instance (separate from the 3 existing charts). Destroyed and recreated only when the forecaster toggles off/on; otherwise updated via `chart.update('none')`. **Note: HTML elements not yet added to index.html — JS functions exist but are unreachable.**
-- **No test framework** — manual QA via browser open/reload. Changes are verified by opening the affected page(s) in a browser and checking functionality. No CI/CD pipeline exists — commits are pushed directly to GitHub Pages.
+- **Ads disabled, site-message fallback** — Each eligible page has an `ads-config` inline JSON block with `"enabled": false` and a lower-content `gem-site-message` HTML fallback. GA4 analytics is active (`G-21RZK3GKKZ`) across all pages. `ads.txt` exists but no ad-serving runtime is loaded. The fallback is validated by `npm run test:ads-fallback` and `npm run test:ads-txt`.
+- **No standard test framework** — custom Node test scripts in `tests/` (e.g. `npm run test:creators`, `npm run test:ads-fallback`, `npm run test:ads-txt`). Manual QA via browser open/reload for HTML/CSS/JS changes. No CI/CD pipeline — commits are pushed directly to GitHub Pages.
 - **Charts are lazy-loaded** — Chart.js loaded dynamically on first "Show Charts" click via `loadChartJs()` + `initCharts()`
 - **Never recreate charts** — create once via `initCharts()`, update via `chart.update('none')`
 - **Never use JSDoc** — minimal inline comments, section headers (`// ===== NAME =====`) only
@@ -66,7 +73,10 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run build:tailwind` — Tailwind rebuild only (skip minification)
 - `npm run update-codes` — Regenerate `data/generated/promo-codes.js` and update all code counts/descriptions/chips in `guide/code/index.html` from `data/codes.json`
 - `npm run generate-creators` — Validate creator source data and regenerate the static creators guide and browser data
+- `npm run update-music` — Regenerate music page data from source playlists
 - `npm run test:creators` — Run the built-in creator generator and validation tests
+- `npm run test:ads-txt` — Validate ads.txt content
+- `npm run test:ads-fallback` — Validate ads-config and site-message fallback across pages
 - `npm run update-assets` — Download latest vendor assets (Chart.js, fonts)
 - `npm run lighthouse:home` — Run Lighthouse audit on homepage
 - `npm run lighthouse:all` — Batch audit all 8 pages via PowerShell script
@@ -94,7 +104,7 @@ After any major HTML/CSS/JS changes, always:
 - **Single source of truth**: `data/codes.json` is the only hand-edited file for promo codes. Run `npm run update-codes` to regenerate `data/generated/promo-codes.js` (active codes) and update all dynamic content in `guide/code/index.html` via markers
 - **Guide code page markers**: 9 marker pairs (`GUIDE_DESC`, `GUIDE_OG_DESC`, `GUIDE_OG_IMAGE_ALT`, `GUIDE_TWITTER_DESC`, `GUIDE_LD_DESC`, `GUIDE_TAB`, `GUIDE_UPDATED`, `GUIDE_CODES_ACTIVE`, `GUIDE_CODES_EXPIRED`) — generated by `scripts/generate-codes.js` from `data/codes.json`
 - **Guide code page must include `script.js`** — `guide/code/index.html` needs `<script src="../../script.js">` before `</body>` for `copyCode()` to work on code chips
-- **OG images**: 7 per-page PNG files in `og-images/` (`home.png`, `code.png`, etc.); SVGs previously served as editable sources
+- **OG images**: 9 per-page PNG files in `og-images/` (`home.png`, `code.png`, `event.png`, `pvp.png`, `login.png`, `faq.png`, `beginners.png`, `xp.png`, `creators.png`); SVGs previously served as editable sources
 
 ## PvP system
 
@@ -117,7 +127,7 @@ After any major HTML/CSS/JS changes, always:
 - **HTML**: scrolling `<section class="gem-ticker">` in `index.html` with duplicated content for seamless loop
 - **CSS**: BEM classes `.gem-ticker`, `__track`, `__content`, `__item`, `__label`, `__sep` + `@keyframes gem-ticker` (0%→-50% X translation)
 - **Height**: 44px, monochrome (no category colors), old-school newspaper scroll
-- **Content**: "PvP 1,850+/wk • Codes 29 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk" repeated twice
+- **Content**: "PvP 1,850+/wk • Codes 28 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk" repeated twice
 - **Duration**: 40s linear infinite, will-change:transform
 
 ## Category colors

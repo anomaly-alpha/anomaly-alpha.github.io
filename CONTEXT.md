@@ -17,7 +17,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 
 ### Key Terms
 - **League** — 14-tier PvP ranking system (Intern → Invincible) with per-league payout tables for Restricted/Open arenas; 6-group system for Alliance War
-- **Rank** — Position 1-120 within a league; higher ranks earn more gems, PvP Currency, Hero Shop Tickets, Totem Fragments, and Modules
+- **Rank** — Position within a league; league populations vary by league (100–500 players), while the current UI rank selector offers positions 1–120; higher ranks earn more gems, PvP Currency, Hero Shop Tickets, Totem Fragments, and Modules
 - **Tier** — Rank bracket within a league's payout table that defines reward values
 - **Demotion Threshold** — Rank 86: at or above this rank, Alliance War players risk being demoted
 - **Spider Chart** — Radar chart comparing actual gem income vs target income across 4 categories
@@ -61,7 +61,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 
 ## Architecture
 - Inline JSON configs in HTML `<head>` (no fetch, works from `file://`)
-- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME` — global config objects loaded from 6 inline `<script>` tags; `contributors-config` is a 7th, `music-config` is an 8th
+- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME` — global config objects loaded from 6 inline `<script>` tags; `contributors-config` is a 7th, `music-config` is an 8th, `ads-config` is a 9th (ads disabled, site-message fallback)
 - `getPvpPayout(arena, leagueId, rank)` — core PvP calculation function, reads per-league payout tables from `GAME.pvp.arenas` (restricted/open) and `GAME.pvp.multiverse` (6 grouped leagues for Alliance War)
 - Modal data lives in `REWARDS.cards[].modal` — loaded via `findCardById(id)` helper
 - `showCardModal(cardId)` / `closeCardModal()` — modal lifecycle
@@ -71,7 +71,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - Code rewards defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; promo card total animates via `animateValue()`
 - PvP league select options generated from `GAME.pvp.leagues` (14) and `GAME.pvp.multiverseLeagues` (6)
 - Structured data: WebPage + FAQPage schema on main page, Article + FAQPage schema on detail pages, and CollectionPage/ItemList/VideoObject entries on the creator directory
-- OG/Twitter cards: 10+ meta tags for rich social sharing; 7 per-page PNG images with `og:image:type`, `width/height`, `alt`
+- OG/Twitter cards: 10+ meta tags for rich social sharing; 9 per-page PNG images with `og:image:type`, `width/height`, `alt`
 
 ## Performance Architecture
 - **Counter CLS prevention** — `.gem-counter` uses `min-width: 6ch` + `font-variant-numeric: tabular-nums` + `display: inline-block` to prevent width changes during `animateValue()` rAF
@@ -93,7 +93,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 CSS custom properties in `:root` with dark/light mode support (`:root.light-mode`). Categories: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, `--gem-purple`. Semantic: `--gem-star`, `--gem-gem`. Background, orb, alert, and shadow tokens also defined. Full reference: `docs/DESIGN_SYSTEM.md`.
 
 ### Organization Entity
-- **Anomaly Alpha** — The organization that publishes and maintains the site. Schema.org `Organization` type. Named "Anomaly Alpha" in JSON-LD publisher/provider fields across all pages. Previously used "Gem Rewards Calculator" as the organization name (changed Jul 2026). `og:site_name` currently "Gem Rewards Calculator" — planned to change to "Invincible GTG" in the SEO rewrite branch.
+- **Anomaly Alpha** — The organization that publishes and maintains the site. Schema.org `Organization` type. Named "Anomaly Alpha" in JSON-LD publisher/provider fields across all pages. Previously used "Gem Rewards Calculator" as the organization name (changed Jul 2026). Pages that define `og:site_name` use "Invincible GTG"; the music page still shows "Gem Rewards Calculator" (pending guide-pass update); pages without the tag do not claim to set it.
 - **Anomaly** — Person (founder/developer). Schema.org `Person` type at `/authors/anomaly/`. Not to be confused with the publishing Organization.
 
 ## Architecture Decision Records
@@ -103,10 +103,11 @@ ADRs live in `docs/adr/`. Each records a hard-to-reverse decision with context, 
 | ADR | Title |
 |-----|-------|
 | 001 | [Promo Code Single Source of Truth](docs/adr/ADR-001-promo-code-single-source-of-truth.md) |
+| 002 | [Hostile User Limit](docs/adr/0002-hostile-user-limit.md) — 3-strikes/1-hour silence (skarn-bot) |
 
 ## Improvement Plans
 
-160 executable plans at `docs/plan/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plan/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
+160 executable plans at `docs/plans/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plans/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
 
 ## Constraints
 - Build step (npm run build) generates local Tailwind CSS. Output is committed. Works from file:// after build.
@@ -114,3 +115,5 @@ ADRs live in `docs/adr/`. Each records a hard-to-reverse decision with context, 
 - Zero CDN dependencies — all assets self-hosted (fonts, Chart.js, SVGs)
 - Supports dark and light modes via `:root.light-mode` token overrides
 - Guide pages share the same CSS and design system as the main page
+- **Analytics**: GA4 (`G-21RZK3GKKZ`) is active on all pages (homepage, 9 guides, music, seo, privacy, terms, authors, 404, skarn-bot)
+- **Ads**: Ads are currently disabled (`ads-config.enabled: false`). `ads.txt` exists but no ad-serving runtime is loaded. A static `gem-site-message` fallback appears on eligible pages
