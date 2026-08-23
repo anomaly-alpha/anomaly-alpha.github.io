@@ -232,9 +232,9 @@ test('Valid active creator generates featured hero with 6 cards plus expansion d
   assert.strictEqual(matches ? matches.length : 0, 8, 'Should have 6 featured cards plus 2 expansion cards');
   assert.ok(html.indexOf('Show more videos') !== -1, 'Should expose additional validated videos behind an expansion control');
   // Check thumbnail attributes
-  assert.ok(html.indexOf('data-thumbnail-fallback="maxres"') !== -1, 'Should have fallback attribute');
+  assert.ok(html.indexOf('data-thumbnail-fallback="hqdefault"') !== -1, 'Should have fallback attribute');
   assert.ok(html.indexOf('loading="lazy"') !== -1, 'Should have lazy loading');
-  assert.ok(html.indexOf('maxresdefault.jpg') !== -1, 'Should use maxresdefault');
+  assert.ok(html.indexOf('hqdefault.jpg') !== -1, 'Should use reliable hqdefault thumbnails');
 });
 
 test('Featured creator excluded from normal list', function () {
@@ -260,7 +260,7 @@ test('Active creators sorted by displayOrder in normal list', function () {
   assert.ok(alphaPos === -1, 'Alpha (featured) should not be in normal list');
 });
 
-test('Pending creator renders at bottom with label and channel link', function () {
+test('Pending creator renders at bottom with positive label and channel link', function () {
   var featured = makeActiveCreator('featured-hero', 0);
   var active = makeActiveCreator('active-one', 1);
   var pending = makePendingCreator('pending-one', 2);
@@ -273,7 +273,8 @@ test('Pending creator renders at bottom with label and channel link', function (
   assert.ok(pendingPos !== -1, 'Pending should appear');
   assert.ok(activePos < pendingPos, 'Active should come before pending');
   assert.ok(html.indexOf('gem-creator--pending') !== -1, 'Should have pending class');
-  assert.ok(html.indexOf('Pending</span>') !== -1, 'Should have pending label');
+  assert.ok(html.indexOf('New</span>') !== -1, 'Should have positive creator label');
+  assert.ok(html.indexOf('Pending</span>') === -1, 'Should hide pending label');
   assert.ok(html.indexOf('More videos coming soon') !== -1, 'Pending should show coming soon');
   // Pending creator should still have Visit Channel link
   var pendingSection = html.substring(pendingPos);

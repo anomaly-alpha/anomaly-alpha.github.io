@@ -11,6 +11,7 @@ const VALID_CATEGORIES = [
 ];
 const VALID_STATUSES = ['active', 'pending', 'hidden'];
 const VALID_VIDEO_STATUSES = ['active', 'pending', 'unavailable'];
+const VALID_CREATOR_BADGES = ['New', 'Updates', 'Featured'];
 const VIDEO_ID_RE = /^[A-Za-z0-9_-]{11}$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const KEBAB_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -50,6 +51,19 @@ function escapeJsonLd(str) {
 
 function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function getCreatorBadge(creator) {
+  if (creator && VALID_CREATOR_BADGES.includes(creator.badge)) {
+    return creator.badge;
+  }
+  if (creator && creator.status === 'active') return 'Featured';
+  if (creator && Array.isArray(creator.tags) && creator.tags.includes('Updates')) return 'Updates';
+  return 'New';
+}
+
+function getCreatorBadgeModifier(creator) {
+  return getCreatorBadge(creator).toLowerCase();
 }
 
 // ===== DATE HELPERS =====
@@ -364,8 +378,10 @@ function validateData(data) {
 // ===== RENDERING: VIDEO CARD =====
 
 function renderVideoCard(video, creator) {
-  var thumbnailUrl = 'https://i.ytimg.com/vi/' + video.id + '/maxresdefault.jpg';
+  var thumbnailUrl = 'https://i.ytimg.com/vi/' + video.id + '/hqdefault.jpg';
   var altText = 'Thumbnail for ' + video.title + ' by ' + creator.name;
+  var badge = getCreatorBadge(creator);
+  var badgeModifier = getCreatorBadgeModifier(creator);
 
   var html = '';
   html += '        <button\n';
@@ -384,16 +400,14 @@ function renderVideoCard(video, creator) {
   html += '              width="480"\n';
   html += '              height="270"\n';
   html += '              referrerpolicy="strict-origin-when-cross-origin"\n';
-  html += '              data-thumbnail-fallback="maxres"\n';
+  html += '              data-thumbnail-fallback="hqdefault"\n';
   html += '            >\n';
   html += '            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>\n';
   html += '            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>\n';
   html += '          </div>\n';
   html += '          <div class="gem-creator-video__content">\n';
   html += '            <span class="gem-creator-video__creator">' + escapeHtml(creator.name);
-  if (creator.status === 'pending') {
-    html += ' <span class="gem-creator-video__status">Pending</span>';
-  }
+  html += ' <span class="gem-creator-video__status gem-creator-video__status--' + badgeModifier + '" aria-label="Creator highlight: ' + escapeHtml(badge) + '">' + escapeHtml(badge) + '</span>';
   html += '</span>\n';
   html += '            <span class="gem-creator-video__title">' + escapeHtml(video.title) + '</span>\n';
   html += '            <span class="gem-creator-video__meta"><time datetime="' + escapeHtml(video.published) + '">' + escapeHtml(video.published) + '</time> &middot; ' + escapeHtml(video.category) + '</span>\n';
@@ -508,9 +522,9 @@ function renderCreatorSectionsHtml(data) {
     html += '        <section class="gem-creator' + (isPending ? ' gem-creator--pending' : '') + '" id="creator-' + escapeHtml(creator.id) + '">\n';
     html += '          <div class="gem-creator__meta">\n';
     html += '            <h2>' + escapeHtml(creator.name);
-    if (isPending) {
-      html += ' <span class="gem-creator__pending-label">Pending</span>';
-    }
+    var badge = getCreatorBadge(creator);
+    var badgeModifier = getCreatorBadgeModifier(creator);
+    html += ' <span class="gem-creator__badge gem-creator__badge--' + badgeModifier + '">' + escapeHtml(badge) + '</span>';
     html += '</h2>\n';
     if (creator.handle) {
       html += '            <p class="gem-creator__handle">' + escapeHtml(creator.handle) + '</p>\n';
@@ -617,8 +631,10 @@ function renderFeedSummaryHtml(data) {
   html += '          <ul>\n';
   for (var ci = 0; ci < creators.length; ci++) {
     var creator = creators[ci];
+    var badge = getCreatorBadge(creator);
+    var badgeModifier = getCreatorBadgeModifier(creator);
     html += '            <li><a href="' + escapeHtml(creator.channelUrl) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(creator.name) + '</a>';
-    if (creator.status === 'pending') html += ' <span>Pending</span>';
+    html += ' <span class="gem-creators__channel-badge gem-creators__channel-badge--' + badgeModifier + '">' + escapeHtml(badge) + '</span>';
     html += '</li>\n';
   }
   html += '          </ul>\n';
@@ -747,9 +763,9 @@ function renderNoscriptHtml(data) {
 
 function renderDisclaimerHtml() {
   var html = '';
-  html += '      <div class="gem-creators__note">\n';
-  html += '        <p>Thumbnails and playback may connect to YouTube. Videos play through YouTube when selected. Creator activity and video availability can change.</p>\n';
-  html += '        <p>Creators listed here are independent community members and are not necessarily endorsed by Ubisoft, YouTube, or Anomaly Alpha.</p>\n';
+  html += '      <div class="gem-creators__note" role="note" aria-label="Directory notes">\n';
+  html += '        <p class="gem-creators__note-item"><strong>Playback note</strong> Thumbnails and playback may connect to YouTube. Videos play through YouTube when selected. Creator activity and video availability can change.</p>\n';
+  html += '        <p class="gem-creators__note-item"><strong>Independence note</strong> Creators listed here are independent community members and are not necessarily endorsed by Ubisoft, YouTube, or Anomaly Alpha.</p>\n';
   html += '      </div>\n';
   return html;
 }
@@ -786,6 +802,7 @@ function renderJsOutput(data) {
         channelUrl: c.channelUrl,
         description: c.description,
         tags: c.tags || [],
+        badge: getCreatorBadge(c),
         status: c.status,
         displayOrder: c.displayOrder,
         videos: visibleVideos
@@ -986,10 +1003,12 @@ module.exports = {
   VALID_CATEGORIES: VALID_CATEGORIES,
   VALID_STATUSES: VALID_STATUSES,
   VALID_VIDEO_STATUSES: VALID_VIDEO_STATUSES,
+  VALID_CREATOR_BADGES: VALID_CREATOR_BADGES,
   VIDEO_ID_RE: VIDEO_ID_RE,
   DATE_RE: DATE_RE,
   KEBAB_RE: KEBAB_RE,
   MAX_VIDEOS_PER_CREATOR: MAX_VIDEOS_PER_CREATOR,
   FEATURED_PER_CREATOR: FEATURED_PER_CREATOR,
-  RECENT_DAYS: RECENT_DAYS
+  RECENT_DAYS: RECENT_DAYS,
+  getCreatorBadge: getCreatorBadge
 };

@@ -21,7 +21,7 @@
     <meta name="description" content="Curated directory of YouTube creators covering Invincible: Guarding the Globe — guides, tier lists, gameplay, and community updates.">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="robots" content="max-snippet:150, max-image-preview:large">
-    <meta name="date" content="2026-08-22">
+    <meta name="date" content="2026-08-23">
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
     <link rel="icon" href="../../favicon.ico" sizes="any">
     <link rel="author" href="https://anomaly-alpha.github.io/authors/anomaly/">
@@ -55,6 +55,105 @@ html { visibility: hidden }
     <link rel="preload" href="../../fonts/Rajdhani-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="../../fonts/Rajdhani-Bold.woff2" as="font" type="font/woff2" crossorigin>
     <noscript><link rel="stylesheet" href="../../tailwind.css"><link rel="stylesheet" href="../../styles.css"></noscript>
+    <style id="creator-directory-overrides">
+      .gem-creator-video__status,
+      .gem-creator__badge,
+      .gem-creators__channel-badge {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        border-radius: 999px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .gem-creator-video__status--new,
+      .gem-creator__badge--new,
+      .gem-creators__channel-badge--new {
+        border-color: var(--gem-alert--success-border);
+        background: var(--gem-alert--success-bg);
+        color: var(--gem-alert--success-text);
+      }
+
+      .gem-creator-video__status--updates,
+      .gem-creator__badge--updates,
+      .gem-creators__channel-badge--updates {
+        border-color: var(--gem-alert--info-border);
+        background: var(--gem-alert--info-bg);
+        color: var(--gem-alert--info-text);
+      }
+
+      .gem-creator-video__status--featured,
+      .gem-creator__badge--featured,
+      .gem-creators__channel-badge--featured {
+        border-color: rgba(255, 235, 59, .45);
+        background: rgba(255, 235, 59, .16);
+        color: var(--gem-star);
+      }
+
+      .gem-creator-video__creator {
+        display: inline-flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: .4rem;
+      }
+
+      .gem-creator-video__creator .gem-creator-video__status {
+        margin-left: 0;
+      }
+
+      .gem-creator__badge {
+        margin-left: .45rem;
+        padding: .18rem .5rem;
+        border: 1px solid;
+        font-family: var(--gem-font);
+        font-size: .62rem;
+        letter-spacing: .08em;
+        vertical-align: middle;
+      }
+
+      .gem-creators__channel-badge {
+        margin-left: .35rem;
+        padding: .12rem .4rem;
+        border: 1px solid;
+        font-size: .62rem;
+        letter-spacing: .06em;
+      }
+
+      .gem-creators__note {
+        display: grid;
+        gap: .75rem;
+        margin: 1.5rem;
+        padding: 1rem 1.25rem;
+        border: 1px solid var(--gem-border--subtle);
+        border-left: 3px solid var(--gem-cyan);
+        border-radius: .5rem;
+        background: linear-gradient(135deg, rgba(0, 229, 255, .08), rgba(255, 255, 255, .03));
+      }
+
+      .gem-creators__note-item {
+        margin: 0;
+        color: var(--gem-text--secondary);
+        font-size: .82rem;
+        line-height: 1.55;
+      }
+
+      .gem-creators__note-item strong {
+        display: block;
+        margin-bottom: .15rem;
+        color: var(--gem-cyan);
+        font-family: "Orbitron", sans-serif;
+        font-size: .64rem;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 480px) {
+        .gem-creators__note {
+          padding: .9rem 1rem;
+        }
+      }
+    </style>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -92,7 +191,7 @@ html { visibility: hidden }
           "description": "Curated directory of YouTube creators covering Invincible: Guarding the Globe — guides, tier lists, gameplay, and community updates.",
           "url": "https://anomaly-alpha.github.io/guide/creators/",
           "about": { "@id": "#game" },
-          "dateModified": "2026-08-22"
+          "dateModified": "2026-08-23"
         }
       ]
     }
@@ -297,6 +396,27 @@ html { visibility: hidden }
       "position": 10,
       "item": {
         "@type": "VideoObject",
+        "name": "Brit GDA Hero Release",
+        "description": "Hero Haven covers the Brit hero release in Invincible: Guarding the Globe.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/uHtsSkEdxMQ/hqdefault.jpg",
+        "uploadDate": "2026-07-27",
+        "contentUrl": "https://www.youtube.com/watch?v=uHtsSkEdxMQ",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/uHtsSkEdxMQ",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "item": {
+        "@type": "VideoObject",
         "name": "Tier List 3.3 EDITION! - Invincible: Guarding the Globe",
         "description": "Avatar Shuvd ranks the Invincible: Guarding the Globe roster for the 3.3 edition.",
         "thumbnailUrl": "https://i.ytimg.com/vi/BIC2rGvRB-U/hqdefault.jpg",
@@ -315,7 +435,49 @@ html { visibility: hidden }
     },
     {
       "@type": "ListItem",
-      "position": 11,
+      "position": 12,
+      "item": {
+        "@type": "VideoObject",
+        "name": "4th of July Celebration Event USA 250th | Invincible Guarding the Globe",
+        "description": "Hero Haven covers the 4th of July celebration event in Invincible: Guarding the Globe.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/-LxlUf2u91I/hqdefault.jpg",
+        "uploadDate": "2026-07-08",
+        "contentUrl": "https://www.youtube.com/watch?v=-LxlUf2u91I",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/-LxlUf2u91I",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "item": {
+        "@type": "VideoObject",
+        "name": "Volcanikka Hero Release | Invincible Guardian the Globe",
+        "description": "Hero Haven covers the Volcanikka hero release, skills, and team compositions.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/8PydEGIaqKs/hqdefault.jpg",
+        "uploadDate": "2026-06-27",
+        "contentUrl": "https://www.youtube.com/watch?v=8PydEGIaqKs",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/8PydEGIaqKs",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
       "item": {
         "@type": "VideoObject",
         "name": "Tier List 3.2 EDITION! - Invincible: Guarding the Globe",
@@ -336,7 +498,70 @@ html { visibility: hidden }
     },
     {
       "@type": "ListItem",
-      "position": 12,
+      "position": 15,
+      "item": {
+        "@type": "VideoObject",
+        "name": "Thaddeus Event Weekend | Invincible GTG",
+        "description": "Hero Haven covers the Thaddeus event weekend in Invincible: Guarding the Globe.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/Ss-Mcp8V9lk/hqdefault.jpg",
+        "uploadDate": "2026-05-31",
+        "contentUrl": "https://www.youtube.com/watch?v=Ss-Mcp8V9lk",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/Ss-Mcp8V9lk",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 16,
+      "item": {
+        "@type": "VideoObject",
+        "name": "Hero Haven Live Stream",
+        "description": "Hero Haven livestreams Invincible: Guarding the Globe community coverage.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/08A6hDoz60c/hqdefault.jpg",
+        "uploadDate": "2026-05-30",
+        "contentUrl": "https://www.youtube.com/watch?v=08A6hDoz60c",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/08A6hDoz60c",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 17,
+      "item": {
+        "@type": "VideoObject",
+        "name": "Patch Notes 2.3 | Invincible Guarding the Globe",
+        "description": "Hero Haven covers Invincible: Guarding the Globe Patch 2.3 and its new additions.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/7TaH3gBEOGA/hqdefault.jpg",
+        "uploadDate": "2026-05-27",
+        "contentUrl": "https://www.youtube.com/watch?v=7TaH3gBEOGA",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/7TaH3gBEOGA",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 18,
       "item": {
         "@type": "VideoObject",
         "name": "Tier list 3.1 EDITION! - Invincible: Guarding the Globe",
@@ -357,7 +582,28 @@ html { visibility: hidden }
     },
     {
       "@type": "ListItem",
-      "position": 13,
+      "position": 19,
+      "item": {
+        "@type": "VideoObject",
+        "name": "Tech Jacket Hero Event!",
+        "description": "Hero Haven covers the Tech Jacket hero event and team implications.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/JBsR1Bqaz9Q/hqdefault.jpg",
+        "uploadDate": "2026-05-05",
+        "contentUrl": "https://www.youtube.com/watch?v=JBsR1Bqaz9Q",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/JBsR1Bqaz9Q",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 20,
       "item": {
         "@type": "VideoObject",
         "name": "Tier List 3.0 EDITION! - Invincible: Guarding the Globe",
@@ -378,7 +624,112 @@ html { visibility: hidden }
     },
     {
       "@type": "ListItem",
-      "position": 14,
+      "position": 21,
+      "item": {
+        "@type": "VideoObject",
+        "name": "Space Racer Pulls!",
+        "description": "Hero Haven covers the Space Racer hero and recruitment pulls.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/LxGSldX72KQ/hqdefault.jpg",
+        "uploadDate": "2026-04-07",
+        "contentUrl": "https://www.youtube.com/watch?v=LxGSldX72KQ",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/LxGSldX72KQ",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 22,
+      "item": {
+        "@type": "VideoObject",
+        "name": "Happy Easter! | Easter Event Pulls",
+        "description": "Hero Haven covers the Easter event and recruitment pulls.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/MWgKyGNQVBU/hqdefault.jpg",
+        "uploadDate": "2026-04-05",
+        "contentUrl": "https://www.youtube.com/watch?v=MWgKyGNQVBU",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/MWgKyGNQVBU",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 23,
+      "item": {
+        "@type": "VideoObject",
+        "name": "Easter Egg Hunt Event",
+        "description": "Hero Haven covers the Easter Egg Hunt event with tips and pulls.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/i6lwnhKmf9w/hqdefault.jpg",
+        "uploadDate": "2026-03-31",
+        "contentUrl": "https://www.youtube.com/watch?v=i6lwnhKmf9w",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/i6lwnhKmf9w",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 24,
+      "item": {
+        "@type": "VideoObject",
+        "name": "Dinosaurus Event Overview and Pulls!",
+        "description": "Hero Haven covers the Dinosaurus event and hero recruitment pulls.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/yqe-K4EzvnM/hqdefault.jpg",
+        "uploadDate": "2026-03-23",
+        "contentUrl": "https://www.youtube.com/watch?v=yqe-K4EzvnM",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/yqe-K4EzvnM",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 25,
+      "item": {
+        "@type": "VideoObject",
+        "name": "Account Overview | Season 4 Ready!",
+        "description": "Hero Haven reviews an Invincible: Guarding the Globe account ahead of Season 4.",
+        "thumbnailUrl": "https://i.ytimg.com/vi/Ihjz35Uswv0/hqdefault.jpg",
+        "uploadDate": "2026-03-16",
+        "contentUrl": "https://www.youtube.com/watch?v=Ihjz35Uswv0",
+        "embedUrl": "https://www.youtube-nocookie.com/embed/Ihjz35Uswv0",
+        "author": {
+          "@type": "Person",
+          "name": "Hero Haven",
+          "url": "https://www.youtube.com/@HeroHavenGTG"
+        },
+        "about": {
+          "@id": "#game"
+        }
+      }
+    },
+    {
+      "@type": "ListItem",
+      "position": 26,
       "item": {
         "@type": "VideoObject",
         "name": "COMPLETE TIER LIST (Update 2.14 Edition) - Invincible: Guarding the Globe",
@@ -399,7 +750,7 @@ html { visibility: hidden }
     },
     {
       "@type": "ListItem",
-      "position": 15,
+      "position": 27,
       "item": {
         "@type": "VideoObject",
         "name": "WE'RE BACK! - Invincible: Guarding the Globe",
@@ -420,7 +771,7 @@ html { visibility: hidden }
     },
     {
       "@type": "ListItem",
-      "position": 16,
+      "position": 28,
       "item": {
         "@type": "VideoObject",
         "name": "TIER LIST TIME! - Invincible: Guarding the Globe",
@@ -501,7 +852,7 @@ html { visibility: hidden }
                 Discover creators helping players build stronger teams, clear events, and master Invincible: Guarding the Globe.
             </p>
             <p class="text-sm gem-text--muted mt-3">
-                Updated <time datetime="2026-08-22">Aug 22, 2026</time>
+                 Updated <time datetime="2026-08-23">Aug 23, 2026</time>
             </p>
         </div>
 
@@ -513,19 +864,20 @@ html { visibility: hidden }
           <p>When a major event lands, videos from different creators stack together here so the community response reads as one burst of activity.</p>
         </div>
         <div class="gem-creators__stats" aria-label="Feed summary">
-          <span><strong>16</strong> videos</span>
-          <span><strong>7</strong> creators</span>
+          <span><strong>28</strong> videos</span>
+          <span><strong>8</strong> creators</span>
         </div>
         <div class="gem-creators__channels">
           <span class="gem-creators__channels-label">Channels in this feed</span>
           <ul>
-            <li><a href="https://www.youtube.com/@avatarshuvd" target="_blank" rel="noopener noreferrer">Avatar Shuvd</a></li>
-            <li><a href="https://www.youtube.com/@RapidGTG" target="_blank" rel="noopener noreferrer">rapid</a> <span>Pending</span></li>
-            <li><a href="https://www.youtube.com/@TutaaaGTG" target="_blank" rel="noopener noreferrer">Tutaaa-GTG</a> <span>Pending</span></li>
-            <li><a href="https://www.youtube.com/@TH3Oyt" target="_blank" rel="noopener noreferrer">TH3O</a> <span>Pending</span></li>
-            <li><a href="https://www.youtube.com/@LAVAMOOSE1369" target="_blank" rel="noopener noreferrer">LAVAMOOSE</a> <span>Pending</span></li>
-            <li><a href="https://www.youtube.com/@BaneApe5" target="_blank" rel="noopener noreferrer">OMNI-BANE</a> <span>Pending</span></li>
-            <li><a href="https://www.youtube.com/@JustaGuynamedFrancis" target="_blank" rel="noopener noreferrer">Just a Guy named Francis</a> <span>Pending</span></li>
+            <li><a href="https://www.youtube.com/@avatarshuvd" target="_blank" rel="noopener noreferrer">Avatar Shuvd</a> <span class="gem-creators__channel-badge gem-creators__channel-badge--featured">Featured</span></li>
+            <li><a href="https://www.youtube.com/@HeroHavenGTG" target="_blank" rel="noopener noreferrer">Hero Haven</a> <span class="gem-creators__channel-badge gem-creators__channel-badge--new">New</span></li>
+            <li><a href="https://www.youtube.com/@RapidGTG" target="_blank" rel="noopener noreferrer">rapid</a> <span class="gem-creators__channel-badge gem-creators__channel-badge--new">New</span></li>
+            <li><a href="https://www.youtube.com/@TutaaaGTG" target="_blank" rel="noopener noreferrer">Tutaaa-GTG</a> <span class="gem-creators__channel-badge gem-creators__channel-badge--new">New</span></li>
+            <li><a href="https://www.youtube.com/@TH3Oyt" target="_blank" rel="noopener noreferrer">TH3O</a> <span class="gem-creators__channel-badge gem-creators__channel-badge--new">New</span></li>
+            <li><a href="https://www.youtube.com/@LAVAMOOSE1369" target="_blank" rel="noopener noreferrer">LAVAMOOSE</a> <span class="gem-creators__channel-badge gem-creators__channel-badge--new">New</span></li>
+            <li><a href="https://www.youtube.com/@BaneApe5" target="_blank" rel="noopener noreferrer">OMNI-BANE</a> <span class="gem-creators__channel-badge gem-creators__channel-badge--updates">Updates</span></li>
+            <li><a href="https://www.youtube.com/@JustaGuynamedFrancis" target="_blank" rel="noopener noreferrer">Just a Guy named Francis</a> <span class="gem-creators__channel-badge gem-creators__channel-badge--new">New</span></li>
           </ul>
         </div>
       </section>
@@ -550,20 +902,20 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/wNKoLf9xKJA/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/wNKoLf9xKJA/hqdefault.jpg"
               alt="Thumbnail for Invincible Guarding The Globe - New Hero Tease...we need to talk guys by OMNI-BANE"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">OMNI-BANE <span class="gem-creator-video__status">Pending</span></span>
+            <span class="gem-creator-video__creator">OMNI-BANE <span class="gem-creator-video__status gem-creator-video__status--updates" aria-label="Creator highlight: Updates">Updates</span></span>
             <span class="gem-creator-video__title">Invincible Guarding The Globe - New Hero Tease...we need to talk guys</span>
             <span class="gem-creator-video__meta"><time datetime="2026-08-21">2026-08-21</time> &middot; Updates</span>
           </div>
@@ -579,20 +931,20 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/pK9C7mUMceI/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/pK9C7mUMceI/hqdefault.jpg"
               alt="Thumbnail for NEW CHARACTER RELEASE DAY | Invincible: Guarding the Globe [LIVE] by Just a Guy named Francis"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Just a Guy named Francis <span class="gem-creator-video__status">Pending</span></span>
+            <span class="gem-creator-video__creator">Just a Guy named Francis <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
             <span class="gem-creator-video__title">NEW CHARACTER RELEASE DAY | Invincible: Guarding the Globe [LIVE]</span>
             <span class="gem-creator-video__meta"><time datetime="2026-08-21">2026-08-21</time> &middot; Livestreams</span>
           </div>
@@ -612,20 +964,20 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/mCw0PowHTls/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/mCw0PowHTls/hqdefault.jpg"
               alt="Thumbnail for I&#39;M GOING FREE TO PLAY in Invincible: Guarding the Globe… Here&#39;s Why - TutaaaGTG by Tutaaa-GTG"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Tutaaa-GTG <span class="gem-creator-video__status">Pending</span></span>
+            <span class="gem-creator-video__creator">Tutaaa-GTG <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
             <span class="gem-creator-video__title">I&#39;M GOING FREE TO PLAY in Invincible: Guarding the Globe… Here&#39;s Why - TutaaaGTG</span>
             <span class="gem-creator-video__meta"><time datetime="2026-08-16">2026-08-16</time> &middot; Guides</span>
           </div>
@@ -645,20 +997,20 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/r4c19_n0wr4/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/r4c19_n0wr4/hqdefault.jpg"
               alt="Thumbnail for The Entire Second Season of Invincible In Invincible Guarding The Globe by LAVAMOOSE"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">LAVAMOOSE <span class="gem-creator-video__status">Pending</span></span>
+            <span class="gem-creator-video__creator">LAVAMOOSE <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
             <span class="gem-creator-video__title">The Entire Second Season of Invincible In Invincible Guarding The Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-08-14">2026-08-14</time> &middot; Gameplay</span>
           </div>
@@ -678,20 +1030,20 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/vZ0pb6iUPP0/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/vZ0pb6iUPP0/hqdefault.jpg"
               alt="Thumbnail for My Boss Raid FEEDBACK! - Invincible: Guarding the Globe by Avatar Shuvd"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Avatar Shuvd</span>
+            <span class="gem-creator-video__creator">Avatar Shuvd <span class="gem-creator-video__status gem-creator-video__status--featured" aria-label="Creator highlight: Featured">Featured</span></span>
             <span class="gem-creator-video__title">My Boss Raid FEEDBACK! - Invincible: Guarding the Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-08-11">2026-08-11</time> &middot; Updates</span>
           </div>
@@ -707,20 +1059,20 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/P6yTQHW6YFA/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/P6yTQHW6YFA/hqdefault.jpg"
               alt="Thumbnail for New Recruitment Road Event!! - Invincible: Guarding the Globe by TH3O"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">TH3O <span class="gem-creator-video__status">Pending</span></span>
+            <span class="gem-creator-video__creator">TH3O <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
             <span class="gem-creator-video__title">New Recruitment Road Event!! - Invincible: Guarding the Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-08-11">2026-08-11</time> &middot; Events</span>
           </div>
@@ -740,20 +1092,20 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/1NF0U3lJYoo/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/1NF0U3lJYoo/hqdefault.jpg"
               alt="Thumbnail for We Waited All This Time… FOR THIS?! | Boss Raid Hail Mary - Invincible Guarding The Globe by Tutaaa-GTG"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Tutaaa-GTG <span class="gem-creator-video__status">Pending</span></span>
+            <span class="gem-creator-video__creator">Tutaaa-GTG <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
             <span class="gem-creator-video__title">We Waited All This Time… FOR THIS?! | Boss Raid Hail Mary - Invincible Guarding The Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-08-09">2026-08-09</time> &middot; Gameplay</span>
           </div>
@@ -773,20 +1125,20 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/kPDC78Dv1NI/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/kPDC78Dv1NI/hqdefault.jpg"
               alt="Thumbnail for Boss Raid is Finally Here! | Hail Mary Boss Guide &amp; Strategy | Invincible: Guarding the Globe by rapid"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">rapid <span class="gem-creator-video__status">Pending</span></span>
+            <span class="gem-creator-video__creator">rapid <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
             <span class="gem-creator-video__title">Boss Raid is Finally Here! | Hail Mary Boss Guide &amp; Strategy | Invincible: Guarding the Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-07-31">2026-07-31</time> &middot; Guides</span>
           </div>
@@ -795,7 +1147,7 @@ html { visibility: hidden }
           <li class="gem-creators__item" data-published="2026-07-27">
             <div class="gem-creators__date-marker">
               <time datetime="2026-07-27">Jul 27, 2026</time>
-              <span>1 video</span>
+              <span>2 videos</span>
             </div>
         <button
           type="button"
@@ -806,22 +1158,51 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/WmRoQRCfYi4/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/WmRoQRCfYi4/hqdefault.jpg"
               alt="Thumbnail for Brit SAVES the GDA! - Invincible: Guarding the Globe by Avatar Shuvd"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Avatar Shuvd</span>
+            <span class="gem-creator-video__creator">Avatar Shuvd <span class="gem-creator-video__status gem-creator-video__status--featured" aria-label="Creator highlight: Featured">Featured</span></span>
             <span class="gem-creator-video__title">Brit SAVES the GDA! - Invincible: Guarding the Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-07-27">2026-07-27</time> &middot; Guides</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-07-27">
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="uHtsSkEdxMQ"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play Brit GDA Hero Release by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/uHtsSkEdxMQ/hqdefault.jpg"
+              alt="Thumbnail for Brit GDA Hero Release by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">Brit GDA Hero Release</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-07-27">2026-07-27</time> &middot; Updates</span>
           </div>
         </button>
           </li>
@@ -839,22 +1220,88 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/BIC2rGvRB-U/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/BIC2rGvRB-U/hqdefault.jpg"
               alt="Thumbnail for Tier List 3.3 EDITION! - Invincible: Guarding the Globe by Avatar Shuvd"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Avatar Shuvd</span>
+            <span class="gem-creator-video__creator">Avatar Shuvd <span class="gem-creator-video__status gem-creator-video__status--featured" aria-label="Creator highlight: Featured">Featured</span></span>
             <span class="gem-creator-video__title">Tier List 3.3 EDITION! - Invincible: Guarding the Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-07-12">2026-07-12</time> &middot; Tier Lists</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-07-08">
+            <div class="gem-creators__date-marker">
+              <time datetime="2026-07-08">Jul 8, 2026</time>
+              <span>1 video</span>
+            </div>
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="-LxlUf2u91I"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play 4th of July Celebration Event USA 250th | Invincible Guarding the Globe by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/-LxlUf2u91I/hqdefault.jpg"
+              alt="Thumbnail for 4th of July Celebration Event USA 250th | Invincible Guarding the Globe by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">4th of July Celebration Event USA 250th | Invincible Guarding the Globe</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-07-08">2026-07-08</time> &middot; Events</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-06-27">
+            <div class="gem-creators__date-marker">
+              <time datetime="2026-06-27">Jun 27, 2026</time>
+              <span>1 video</span>
+            </div>
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="8PydEGIaqKs"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play Volcanikka Hero Release | Invincible Guardian the Globe by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/8PydEGIaqKs/hqdefault.jpg"
+              alt="Thumbnail for Volcanikka Hero Release | Invincible Guardian the Globe by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">Volcanikka Hero Release | Invincible Guardian the Globe</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-06-27">2026-06-27</time> &middot; Updates</span>
           </div>
         </button>
           </li>
@@ -872,22 +1319,121 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/0Jrp_N12Q3Y/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/0Jrp_N12Q3Y/hqdefault.jpg"
               alt="Thumbnail for Tier List 3.2 EDITION! - Invincible: Guarding the Globe by Avatar Shuvd"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Avatar Shuvd</span>
+            <span class="gem-creator-video__creator">Avatar Shuvd <span class="gem-creator-video__status gem-creator-video__status--featured" aria-label="Creator highlight: Featured">Featured</span></span>
             <span class="gem-creator-video__title">Tier List 3.2 EDITION! - Invincible: Guarding the Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-06-10">2026-06-10</time> &middot; Tier Lists</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-05-31">
+            <div class="gem-creators__date-marker">
+              <time datetime="2026-05-31">May 31, 2026</time>
+              <span>1 video</span>
+            </div>
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="Ss-Mcp8V9lk"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play Thaddeus Event Weekend | Invincible GTG by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/Ss-Mcp8V9lk/hqdefault.jpg"
+              alt="Thumbnail for Thaddeus Event Weekend | Invincible GTG by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">Thaddeus Event Weekend | Invincible GTG</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-05-31">2026-05-31</time> &middot; Events</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-05-30">
+            <div class="gem-creators__date-marker">
+              <time datetime="2026-05-30">May 30, 2026</time>
+              <span>1 video</span>
+            </div>
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="08A6hDoz60c"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play Hero Haven Live Stream by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/08A6hDoz60c/hqdefault.jpg"
+              alt="Thumbnail for Hero Haven Live Stream by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">Hero Haven Live Stream</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-05-30">2026-05-30</time> &middot; Livestreams</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-05-27">
+            <div class="gem-creators__date-marker">
+              <time datetime="2026-05-27">May 27, 2026</time>
+              <span>1 video</span>
+            </div>
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="7TaH3gBEOGA"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play Patch Notes 2.3 | Invincible Guarding the Globe by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/7TaH3gBEOGA/hqdefault.jpg"
+              alt="Thumbnail for Patch Notes 2.3 | Invincible Guarding the Globe by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">Patch Notes 2.3 | Invincible Guarding the Globe</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-05-27">2026-05-27</time> &middot; Updates</span>
           </div>
         </button>
           </li>
@@ -905,22 +1451,55 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/OHOxofIK2mk/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/OHOxofIK2mk/hqdefault.jpg"
               alt="Thumbnail for Tier list 3.1 EDITION! - Invincible: Guarding the Globe by Avatar Shuvd"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Avatar Shuvd</span>
+            <span class="gem-creator-video__creator">Avatar Shuvd <span class="gem-creator-video__status gem-creator-video__status--featured" aria-label="Creator highlight: Featured">Featured</span></span>
             <span class="gem-creator-video__title">Tier list 3.1 EDITION! - Invincible: Guarding the Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-05-06">2026-05-06</time> &middot; Tier Lists</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-05-05">
+            <div class="gem-creators__date-marker">
+              <time datetime="2026-05-05">May 5, 2026</time>
+              <span>1 video</span>
+            </div>
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="JBsR1Bqaz9Q"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play Tech Jacket Hero Event! by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/JBsR1Bqaz9Q/hqdefault.jpg"
+              alt="Thumbnail for Tech Jacket Hero Event! by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">Tech Jacket Hero Event!</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-05-05">2026-05-05</time> &middot; Events</span>
           </div>
         </button>
           </li>
@@ -938,22 +1517,187 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/XVSSOg4grxg/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/XVSSOg4grxg/hqdefault.jpg"
               alt="Thumbnail for Tier List 3.0 EDITION! - Invincible: Guarding the Globe by Avatar Shuvd"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Avatar Shuvd</span>
+            <span class="gem-creator-video__creator">Avatar Shuvd <span class="gem-creator-video__status gem-creator-video__status--featured" aria-label="Creator highlight: Featured">Featured</span></span>
             <span class="gem-creator-video__title">Tier List 3.0 EDITION! - Invincible: Guarding the Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-04-14">2026-04-14</time> &middot; Tier Lists</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-04-07">
+            <div class="gem-creators__date-marker">
+              <time datetime="2026-04-07">Apr 7, 2026</time>
+              <span>1 video</span>
+            </div>
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="LxGSldX72KQ"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play Space Racer Pulls! by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/LxGSldX72KQ/hqdefault.jpg"
+              alt="Thumbnail for Space Racer Pulls! by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">Space Racer Pulls!</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-04-07">2026-04-07</time> &middot; Gameplay</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-04-05">
+            <div class="gem-creators__date-marker">
+              <time datetime="2026-04-05">Apr 5, 2026</time>
+              <span>1 video</span>
+            </div>
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="MWgKyGNQVBU"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play Happy Easter! | Easter Event Pulls by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/MWgKyGNQVBU/hqdefault.jpg"
+              alt="Thumbnail for Happy Easter! | Easter Event Pulls by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">Happy Easter! | Easter Event Pulls</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-04-05">2026-04-05</time> &middot; Events</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-03-31">
+            <div class="gem-creators__date-marker">
+              <time datetime="2026-03-31">Mar 31, 2026</time>
+              <span>1 video</span>
+            </div>
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="i6lwnhKmf9w"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play Easter Egg Hunt Event by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/i6lwnhKmf9w/hqdefault.jpg"
+              alt="Thumbnail for Easter Egg Hunt Event by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">Easter Egg Hunt Event</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-03-31">2026-03-31</time> &middot; Events</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-03-23">
+            <div class="gem-creators__date-marker">
+              <time datetime="2026-03-23">Mar 23, 2026</time>
+              <span>1 video</span>
+            </div>
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="yqe-K4EzvnM"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play Dinosaurus Event Overview and Pulls! by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/yqe-K4EzvnM/hqdefault.jpg"
+              alt="Thumbnail for Dinosaurus Event Overview and Pulls! by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">Dinosaurus Event Overview and Pulls!</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-03-23">2026-03-23</time> &middot; Events</span>
+          </div>
+        </button>
+          </li>
+          <li class="gem-creators__item" data-published="2026-03-16">
+            <div class="gem-creators__date-marker">
+              <time datetime="2026-03-16">Mar 16, 2026</time>
+              <span>1 video</span>
+            </div>
+        <button
+          type="button"
+          class="gem-creator-video"
+          data-youtube-video-id="Ihjz35Uswv0"
+          data-creator-id="hero-haven-gtg"
+          aria-label="Play Account Overview | Season 4 Ready! by Hero Haven"
+        >
+          <div class="gem-creator-video__thumbnail">
+            <img
+              src="https://i.ytimg.com/vi/Ihjz35Uswv0/hqdefault.jpg"
+              alt="Thumbnail for Account Overview | Season 4 Ready! by Hero Haven"
+              loading="lazy"
+              decoding="async"
+              width="480"
+              height="270"
+              referrerpolicy="strict-origin-when-cross-origin"
+              data-thumbnail-fallback="hqdefault"
+            >
+            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
+            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
+          </div>
+          <div class="gem-creator-video__content">
+            <span class="gem-creator-video__creator">Hero Haven <span class="gem-creator-video__status gem-creator-video__status--new" aria-label="Creator highlight: New">New</span></span>
+            <span class="gem-creator-video__title">Account Overview | Season 4 Ready!</span>
+            <span class="gem-creator-video__meta"><time datetime="2026-03-16">2026-03-16</time> &middot; Gameplay</span>
           </div>
         </button>
           </li>
@@ -971,20 +1715,20 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/u6m0gmOzwfs/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/u6m0gmOzwfs/hqdefault.jpg"
               alt="Thumbnail for COMPLETE TIER LIST (Update 2.14 Edition) - Invincible: Guarding the Globe by Avatar Shuvd"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Avatar Shuvd</span>
+            <span class="gem-creator-video__creator">Avatar Shuvd <span class="gem-creator-video__status gem-creator-video__status--featured" aria-label="Creator highlight: Featured">Featured</span></span>
             <span class="gem-creator-video__title">COMPLETE TIER LIST (Update 2.14 Edition) - Invincible: Guarding the Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-02-22">2026-02-22</time> &middot; Tier Lists</span>
           </div>
@@ -1004,20 +1748,20 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/cqRWJ_F4p64/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/cqRWJ_F4p64/hqdefault.jpg"
               alt="Thumbnail for WE&#39;RE BACK! - Invincible: Guarding the Globe by Avatar Shuvd"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Avatar Shuvd</span>
+            <span class="gem-creator-video__creator">Avatar Shuvd <span class="gem-creator-video__status gem-creator-video__status--featured" aria-label="Creator highlight: Featured">Featured</span></span>
             <span class="gem-creator-video__title">WE&#39;RE BACK! - Invincible: Guarding the Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2026-01-20">2026-01-20</time> &middot; Updates</span>
           </div>
@@ -1037,20 +1781,20 @@ html { visibility: hidden }
         >
           <div class="gem-creator-video__thumbnail">
             <img
-              src="https://i.ytimg.com/vi/S0xrNwdkExw/maxresdefault.jpg"
+              src="https://i.ytimg.com/vi/S0xrNwdkExw/hqdefault.jpg"
               alt="Thumbnail for TIER LIST TIME! - Invincible: Guarding the Globe by Avatar Shuvd"
               loading="lazy"
               decoding="async"
               width="480"
               height="270"
               referrerpolicy="strict-origin-when-cross-origin"
-              data-thumbnail-fallback="maxres"
+              data-thumbnail-fallback="hqdefault"
             >
             <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>
             <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>
           </div>
           <div class="gem-creator-video__content">
-            <span class="gem-creator-video__creator">Avatar Shuvd</span>
+            <span class="gem-creator-video__creator">Avatar Shuvd <span class="gem-creator-video__status gem-creator-video__status--featured" aria-label="Creator highlight: Featured">Featured</span></span>
             <span class="gem-creator-video__title">TIER LIST TIME! - Invincible: Guarding the Globe</span>
             <span class="gem-creator-video__meta"><time datetime="2025-03-19">2025-03-19</time> &middot; Tier Lists</span>
           </div>
@@ -1061,9 +1805,9 @@ html { visibility: hidden }
 <!--CREATOR_SECTIONS_END-->
 
 <!--CREATORS_NOTE_START-->
-      <div class="gem-creators__note">
-        <p>Thumbnails and playback may connect to YouTube. Videos play through YouTube when selected. Creator activity and video availability can change.</p>
-        <p>Creators listed here are independent community members and are not necessarily endorsed by Ubisoft, YouTube, or Anomaly Alpha.</p>
+      <div class="gem-creators__note" role="note" aria-label="Directory notes">
+        <p class="gem-creators__note-item"><strong>Playback note</strong> Thumbnails and playback may connect to YouTube. Videos play through YouTube when selected. Creator activity and video availability can change.</p>
+        <p class="gem-creators__note-item"><strong>Independence note</strong> Creators listed here are independent community members and are not necessarily endorsed by Ubisoft, YouTube, or Anomaly Alpha.</p>
       </div>
 <!--CREATORS_NOTE_END-->
 
@@ -1081,10 +1825,22 @@ html { visibility: hidden }
           <li><a href="https://www.youtube.com/watch?v=1NF0U3lJYoo" target="_blank" rel="noopener noreferrer">Watch We Waited All This Time… FOR THIS?! | Boss Raid Hail Mary - Invincible Guarding The Globe by Tutaaa-GTG on YouTube</a></li>
           <li><a href="https://www.youtube.com/watch?v=kPDC78Dv1NI" target="_blank" rel="noopener noreferrer">Watch Boss Raid is Finally Here! | Hail Mary Boss Guide &amp; Strategy | Invincible: Guarding the Globe by rapid on YouTube</a></li>
           <li><a href="https://www.youtube.com/watch?v=WmRoQRCfYi4" target="_blank" rel="noopener noreferrer">Watch Brit SAVES the GDA! - Invincible: Guarding the Globe by Avatar Shuvd on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=uHtsSkEdxMQ" target="_blank" rel="noopener noreferrer">Watch Brit GDA Hero Release by Hero Haven on YouTube</a></li>
           <li><a href="https://www.youtube.com/watch?v=BIC2rGvRB-U" target="_blank" rel="noopener noreferrer">Watch Tier List 3.3 EDITION! - Invincible: Guarding the Globe by Avatar Shuvd on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=-LxlUf2u91I" target="_blank" rel="noopener noreferrer">Watch 4th of July Celebration Event USA 250th | Invincible Guarding the Globe by Hero Haven on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=8PydEGIaqKs" target="_blank" rel="noopener noreferrer">Watch Volcanikka Hero Release | Invincible Guardian the Globe by Hero Haven on YouTube</a></li>
           <li><a href="https://www.youtube.com/watch?v=0Jrp_N12Q3Y" target="_blank" rel="noopener noreferrer">Watch Tier List 3.2 EDITION! - Invincible: Guarding the Globe by Avatar Shuvd on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=Ss-Mcp8V9lk" target="_blank" rel="noopener noreferrer">Watch Thaddeus Event Weekend | Invincible GTG by Hero Haven on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=08A6hDoz60c" target="_blank" rel="noopener noreferrer">Watch Hero Haven Live Stream by Hero Haven on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=7TaH3gBEOGA" target="_blank" rel="noopener noreferrer">Watch Patch Notes 2.3 | Invincible Guarding the Globe by Hero Haven on YouTube</a></li>
           <li><a href="https://www.youtube.com/watch?v=OHOxofIK2mk" target="_blank" rel="noopener noreferrer">Watch Tier list 3.1 EDITION! - Invincible: Guarding the Globe by Avatar Shuvd on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=JBsR1Bqaz9Q" target="_blank" rel="noopener noreferrer">Watch Tech Jacket Hero Event! by Hero Haven on YouTube</a></li>
           <li><a href="https://www.youtube.com/watch?v=XVSSOg4grxg" target="_blank" rel="noopener noreferrer">Watch Tier List 3.0 EDITION! - Invincible: Guarding the Globe by Avatar Shuvd on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=LxGSldX72KQ" target="_blank" rel="noopener noreferrer">Watch Space Racer Pulls! by Hero Haven on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=MWgKyGNQVBU" target="_blank" rel="noopener noreferrer">Watch Happy Easter! | Easter Event Pulls by Hero Haven on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=i6lwnhKmf9w" target="_blank" rel="noopener noreferrer">Watch Easter Egg Hunt Event by Hero Haven on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=yqe-K4EzvnM" target="_blank" rel="noopener noreferrer">Watch Dinosaurus Event Overview and Pulls! by Hero Haven on YouTube</a></li>
+          <li><a href="https://www.youtube.com/watch?v=Ihjz35Uswv0" target="_blank" rel="noopener noreferrer">Watch Account Overview | Season 4 Ready! by Hero Haven on YouTube</a></li>
           <li><a href="https://www.youtube.com/watch?v=u6m0gmOzwfs" target="_blank" rel="noopener noreferrer">Watch COMPLETE TIER LIST (Update 2.14 Edition) - Invincible: Guarding the Globe by Avatar Shuvd on YouTube</a></li>
           <li><a href="https://www.youtube.com/watch?v=cqRWJ_F4p64" target="_blank" rel="noopener noreferrer">Watch WE&#39;RE BACK! - Invincible: Guarding the Globe by Avatar Shuvd on YouTube</a></li>
           <li><a href="https://www.youtube.com/watch?v=S0xrNwdkExw" target="_blank" rel="noopener noreferrer">Watch TIER LIST TIME! - Invincible: Guarding the Globe by Avatar Shuvd on YouTube</a></li>

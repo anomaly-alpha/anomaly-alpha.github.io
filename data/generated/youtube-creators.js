@@ -10,6 +10,7 @@ window.__YOUTUBE_CREATORS=[
       "Guides",
       "Updates"
     ],
+    "badge": "Featured",
     "status": "active",
     "displayOrder": 1,
     "videos": [
@@ -88,6 +89,119 @@ window.__YOUTUBE_CREATORS=[
     ]
   },
   {
+    "id": "hero-haven-gtg",
+    "name": "Hero Haven",
+    "handle": "@HeroHavenGTG",
+    "channelUrl": "https://www.youtube.com/@HeroHavenGTG",
+    "description": "Invincible GTG hero releases, events, and gameplay coverage.",
+    "tags": [
+      "Updates",
+      "Events",
+      "Gameplay"
+    ],
+    "badge": "New",
+    "status": "active",
+    "displayOrder": 12,
+    "videos": [
+      {
+        "id": "uHtsSkEdxMQ",
+        "title": "Brit GDA Hero Release",
+        "description": "Hero Haven covers the Brit hero release in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-07-27",
+        "featured": true
+      },
+      {
+        "id": "-LxlUf2u91I",
+        "title": "4th of July Celebration Event USA 250th | Invincible Guarding the Globe",
+        "description": "Hero Haven covers the 4th of July celebration event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-07-08",
+        "featured": true
+      },
+      {
+        "id": "8PydEGIaqKs",
+        "title": "Volcanikka Hero Release | Invincible Guardian the Globe",
+        "description": "Hero Haven covers the Volcanikka hero release, skills, and team compositions.",
+        "category": "Updates",
+        "published": "2026-06-27",
+        "featured": true
+      },
+      {
+        "id": "Ss-Mcp8V9lk",
+        "title": "Thaddeus Event Weekend | Invincible GTG",
+        "description": "Hero Haven covers the Thaddeus event weekend in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-05-31",
+        "featured": true
+      },
+      {
+        "id": "08A6hDoz60c",
+        "title": "Hero Haven Live Stream",
+        "description": "Hero Haven livestreams Invincible: Guarding the Globe community coverage.",
+        "category": "Livestreams",
+        "published": "2026-05-30",
+        "featured": true
+      },
+      {
+        "id": "7TaH3gBEOGA",
+        "title": "Patch Notes 2.3 | Invincible Guarding the Globe",
+        "description": "Hero Haven covers Invincible: Guarding the Globe Patch 2.3 and its new additions.",
+        "category": "Updates",
+        "published": "2026-05-27",
+        "featured": true
+      },
+      {
+        "id": "JBsR1Bqaz9Q",
+        "title": "Tech Jacket Hero Event!",
+        "description": "Hero Haven covers the Tech Jacket hero event and team implications.",
+        "category": "Events",
+        "published": "2026-05-05",
+        "featured": false
+      },
+      {
+        "id": "LxGSldX72KQ",
+        "title": "Space Racer Pulls!",
+        "description": "Hero Haven covers the Space Racer hero and recruitment pulls.",
+        "category": "Gameplay",
+        "published": "2026-04-07",
+        "featured": false
+      },
+      {
+        "id": "MWgKyGNQVBU",
+        "title": "Happy Easter! | Easter Event Pulls",
+        "description": "Hero Haven covers the Easter event and recruitment pulls.",
+        "category": "Events",
+        "published": "2026-04-05",
+        "featured": false
+      },
+      {
+        "id": "i6lwnhKmf9w",
+        "title": "Easter Egg Hunt Event",
+        "description": "Hero Haven covers the Easter Egg Hunt event with tips and pulls.",
+        "category": "Events",
+        "published": "2026-03-31",
+        "featured": false
+      },
+      {
+        "id": "yqe-K4EzvnM",
+        "title": "Dinosaurus Event Overview and Pulls!",
+        "description": "Hero Haven covers the Dinosaurus event and hero recruitment pulls.",
+        "category": "Events",
+        "published": "2026-03-23",
+        "featured": false
+      },
+      {
+        "id": "Ihjz35Uswv0",
+        "title": "Account Overview | Season 4 Ready!",
+        "description": "Hero Haven reviews an Invincible: Guarding the Globe account ahead of Season 4.",
+        "category": "Gameplay",
+        "published": "2026-03-16",
+        "featured": false
+      }
+    ]
+  },
+  {
     "id": "rapid-gtg",
     "name": "rapid",
     "handle": "@RapidGTG",
@@ -97,6 +211,7 @@ window.__YOUTUBE_CREATORS=[
       "Guides",
       "Events"
     ],
+    "badge": "New",
     "status": "pending",
     "displayOrder": 2,
     "videos": [
@@ -121,6 +236,7 @@ window.__YOUTUBE_CREATORS=[
       "Guides",
       "Team Building"
     ],
+    "badge": "New",
     "status": "pending",
     "displayOrder": 3,
     "videos": [
@@ -152,6 +268,7 @@ window.__YOUTUBE_CREATORS=[
       "Events",
       "Guides"
     ],
+    "badge": "New",
     "status": "pending",
     "displayOrder": 4,
     "videos": [
@@ -174,6 +291,7 @@ window.__YOUTUBE_CREATORS=[
     "tags": [
       "Gameplay"
     ],
+    "badge": "New",
     "status": "pending",
     "displayOrder": 5,
     "videos": [
@@ -197,6 +315,7 @@ window.__YOUTUBE_CREATORS=[
       "Updates",
       "Gameplay"
     ],
+    "badge": "Updates",
     "status": "pending",
     "displayOrder": 6,
     "videos": [
@@ -220,6 +339,7 @@ window.__YOUTUBE_CREATORS=[
       "Livestreams",
       "Gameplay"
     ],
+    "badge": "New",
     "status": "pending",
     "displayOrder": 7,
     "videos": [
