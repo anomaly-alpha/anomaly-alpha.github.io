@@ -148,7 +148,7 @@ After any major HTML/CSS/JS changes, always:
 
 ## Docs structure
 
-All specs, plans, reports, and handoffs follow this directory convention:
+Always save every new or updated spec, plan, report, handoff, and guide directly under `docs/{type}/YYYY-MM-DD/<model>/`:
 
 ```
 docs/
