@@ -19,4 +19,5 @@ chrome/
 _dream_tmp*.py
 .compose/
 .lhci/
+.playwright-mcp/
 journal/
