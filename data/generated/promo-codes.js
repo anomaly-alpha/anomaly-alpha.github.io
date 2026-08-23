@@ -28,12 +28,6 @@ window.__PROMO_CODES=[
     "dateAdded": "2026-08-04"
   },
   {
-    "code": "JUL4TH",
-    "gems": 250,
-    "tickets": 0,
-    "dateAdded": "2026-07-03"
-  },
-  {
     "code": "INVCBL",
     "gems": 0,
     "tickets": 0,
@@ -41,24 +35,11 @@ window.__PROMO_CODES=[
     "dateAdded": "2026-06-26"
   },
   {
-    "code": "IGTG33",
-    "gems": 500,
-    "tickets": 0,
-    "dateAdded": "2026-06-07"
-  },
-  {
     "code": "SUMMER",
     "gems": 200,
     "tickets": 0,
     "reward": "1 x Armoured Eve",
     "dateAdded": "2026-06-07"
-  },
-  {
-    "code": "KRESSA",
-    "gems": 0,
-    "tickets": 0,
-    "reward": "1 x Kregg, 1 x Anissa",
-    "dateAdded": "2026-05-20"
   },
   {
     "code": "BULL3T",
@@ -70,6 +51,13 @@ window.__PROMO_CODES=[
     "code": "HALMRY",
     "gems": 750,
     "tickets": 0,
+    "dateAdded": "2026-05-19"
+  },
+  {
+    "code": "DINOSR",
+    "gems": 0,
+    "tickets": 0,
+    "reward": "1 x Dinosaurus",
     "dateAdded": "2026-05-19"
   },
   {
@@ -128,23 +116,9 @@ window.__PROMO_CODES=[
     "dateAdded": "2026-04-01"
   },
   {
-    "code": "KREGG4",
-    "gems": 0,
-    "tickets": 0,
-    "reward": "1 x Kregg",
-    "dateAdded": "2026-04-01"
-  },
-  {
     "code": "LEXTV4",
     "gems": 300,
     "tickets": 0,
-    "dateAdded": "2026-04-01"
-  },
-  {
-    "code": "LUCAN4",
-    "gems": 0,
-    "tickets": 0,
-    "reward": "1 x Lucan",
     "dateAdded": "2026-04-01"
   },
   {
@@ -178,13 +152,6 @@ window.__PROMO_CODES=[
     "dateAdded": "2026-04-01"
   },
   {
-    "code": "THULA4",
-    "gems": 0,
-    "tickets": 0,
-    "reward": "1 x Thula",
-    "dateAdded": "2026-04-01"
-  },
-  {
     "code": "TUTTV4",
     "gems": 300,
     "tickets": 0,
@@ -204,12 +171,6 @@ window.__PROMO_CODES=[
   },
   {
     "code": "NOLAN4",
-    "gems": 300,
-    "tickets": 0,
-    "dateAdded": "2026-03-01"
-  },
-  {
-    "code": "THKMRK",
     "gems": 300,
     "tickets": 0,
     "dateAdded": "2026-03-01"

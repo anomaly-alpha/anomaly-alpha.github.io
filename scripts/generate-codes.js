@@ -21,6 +21,9 @@ expired.sort((a, b) => new Date(b.expiredDate) - new Date(a.expiredDate));
 
 const activeCount = active.length;
 const expiredCount = expired.length;
+const activeCodeItems = active.slice(0, 3).map((c, index) =>
+  `            { "@type": "ListItem", "position": ${index + 1}, "item": { "@type": "Code", "name": "${c.code}" } }`
+).join(',\n');
 
 // Generate promo-codes.js — only active codes in the bundle
 const jsContent = 'window.__PROMO_CODES=' + JSON.stringify(active, null, 2) + ';';
@@ -78,8 +81,14 @@ const replacements = [
   // GUIDE_ARTICLE_MODIFIED — removed: dateModified should only update on substantive content changes, not code list updates
 
   // GUIDE_LD_DESC (JSON-LD)
-  [/"description": "__GUIDE_LD_DESC__",/,
+  [/^([ \t]*)"description": "(?:Find active Invincible Guarding the Globe promo codes, codes, and reward codes\. \d+ active promo codes with gems, hero shards & tickets\.|New Invincible Guarding the Globe promo codes — \d+ active codes with gems, hero shards & tickets\. Tap to copy and redeem at the Ubisoft portal\.|__GUIDE_LD_DESC__)",$/m,
     `          "description": "New Invincible Guarding the Globe promo codes — ${activeCount} active codes with gems, hero shards & tickets. Tap to copy and redeem at the Ubisoft portal.",`],
+
+  // Share button titles
+  [/\d+ active Invincible Guarding the Globe promo codes \\u2014 tap to copy and redeem\./g,
+    `${activeCount} active Invincible Guarding the Globe promo codes \\u2014 tap to copy and redeem.`],
+  [/Invincible Guarding the Globe Promo Codes \\u2014 \d+ active \[/g,
+    `Invincible Guarding the Globe Promo Codes \\u2014 ${activeCount} active [`],
 
   // GUIDE_TAB
   [/<!--GUIDE_TAB_START-->[\s\S]*?<!--GUIDE_TAB_END-->/,
@@ -139,6 +148,18 @@ const inlineCodes = 'window.__PROMO_CODES=' + JSON.stringify(active) + ';';
 indexHtml = indexHtml.replace(
   /<!--PROMO_CODES_INLINE_START-->[\s\S]*?<!--PROMO_CODES_INLINE_END-->/,
   `<!--PROMO_CODES_INLINE_START-->\n    <script>${inlineCodes}</script>\n    <!--PROMO_CODES_INLINE_END-->`
+);
+indexHtml = indexHtml.replace(
+  /^([ \t]*)"description": "\d+ active Invincible Guarding the Globe promo codes",[ \t]*\r?\n[ \t]*"numberOfItems": \d+,/m,
+  `          "description": "${activeCount} active Invincible Guarding the Globe promo codes",\n          "numberOfItems": ${activeCount},`
+);
+indexHtml = indexHtml.replace(
+  /            \{ "@type": "ListItem", "position": 1, "item": \{ "@type": "Code", "name": "[^"]+" \} \},?\r?\n            \{ "@type": "ListItem", "position": 2, "item": \{ "@type": "Code", "name": "[^"]+" \} \},?\r?\n            \{ "@type": "ListItem", "position": 3, "item": \{ "@type": "Code", "name": "[^"]+" \} \}/,
+  activeCodeItems
+);
+indexHtml = indexHtml.replace(
+  /(<span class="gem-ticker__label">Codes<\/span> )\d+ active/g,
+  `$1${activeCount} active`
 );
 fs.writeFileSync(indexPath, indexHtml, 'utf8');
 console.log(`Updated index.html inline promo codes — ${activeCount} active`);

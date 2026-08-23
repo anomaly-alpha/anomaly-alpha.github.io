@@ -35,9 +35,18 @@
       "dateAdded": "2026-05-19"
     },
     {
+      "code": "DINOSR",
+      "gems": 0,
+      "tickets": 0,
+      "reward": "1 x Dinosaurus",
+      "dateAdded": "2026-05-19"
+    },
+    {
       "code": "JUL4TH",
       "gems": 250,
       "tickets": 0,
+      "expired": true,
+      "expiredDate": "2026-07-29",
       "dateAdded": "2026-07-03"
     },
     {
@@ -51,6 +60,8 @@
       "code": "IGTG33",
       "gems": 500,
       "tickets": 0,
+      "expired": true,
+      "expiredDate": "2026-07-29",
       "dateAdded": "2026-06-07"
     },
     {
@@ -105,7 +116,7 @@
       "gems": 500,
       "tickets": 0,
       "expired": true,
-      "expiredDate": "2026-06-07",
+      "expiredDate": "2026-07-29",
       "dateAdded": "2026-05-26"
     },
     {
@@ -149,6 +160,8 @@
       "gems": 0,
       "tickets": 0,
       "reward": "1 x Kregg",
+      "expired": true,
+      "expiredDate": "2026-07-29",
       "dateAdded": "2026-04-01"
     },
     {
@@ -156,6 +169,8 @@
       "gems": 0,
       "tickets": 0,
       "reward": "1 x Kregg, 1 x Anissa",
+      "expired": true,
+      "expiredDate": "2026-07-29",
       "dateAdded": "2026-05-20"
     },
     {
@@ -184,6 +199,8 @@
       "gems": 0,
       "tickets": 0,
       "reward": "1 x Lucan",
+      "expired": true,
+      "expiredDate": "2026-07-29",
       "dateAdded": "2026-04-01"
     },
     {
@@ -231,8 +248,11 @@
     },
     {
       "code": "THKMRK",
-      "gems": 300,
+      "gems": 0,
       "tickets": 0,
+      "reward": "No rewards tracked",
+      "expired": true,
+      "expiredDate": "2026-07-29",
       "dateAdded": "2026-03-01"
     },
     {
@@ -240,6 +260,8 @@
       "gems": 0,
       "tickets": 0,
       "reward": "1 x Thula",
+      "expired": true,
+      "expiredDate": "2026-07-29",
       "dateAdded": "2026-04-01"
     },
     {
