@@ -42,6 +42,11 @@ Every persistent table has a well-defined scope — the columns that form its pr
 | `interjection_cooldowns` | per-channel | `channel_id` PRIMARY KEY | Interjection is per-conversation |
 | `active_listen_cooldowns` | per-channel | `channel_id` PRIMARY KEY | Active listening is per-conversation |
 | `sentiment_buffers` | per-channel | `channel_id` PRIMARY KEY | Sentiment is per-conversation |
+| `emotion_history` | per-user-per-guild | `(user_id, guild_id, created_at)` INDEX | Emotion trajectory is personal per server |
+| `conversation_embeddings` | per-message | `message_id` PK FK | Embeddings follow conversation messages |
+| `signal_embeddings` | per-signal | `signal_id` PK FK | Embeddings follow server signals |
+| `memory_optout` | per-user-per-guild | `(user_id, guild_id)` PRIMARY KEY | Chrono opt-out is personal per server |
+| `realm_omens` | per-omen-per-guild | `omen_id` PK FK, `guild_id` | Realm fulfilled omens are per-guild |
 
 **Scoping rule**: the majority of tables are scoped by `(user_id, guild_id)` — data belongs to a user within a specific server. Exceptions are channel-scoped concepts (`channel_state`, `sentiment_buffers`, cooldown tables) and guild-scoped config (`guild_config`, `guild_mood`). No table is truly global (all users, all guilds) except ephemeral key-value stores (`app_state`, `app_flags`) and the shared knowledge base (`knowledge_base`). This uniformity means bulk cleanup by user or by guild follows a predictable pattern.
 

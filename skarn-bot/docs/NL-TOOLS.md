@@ -5,7 +5,9 @@ Ask with `@Skarn` (or just `skarn ...` in a server channel), and he'll recognize
 request and call the matching tool, then answer in character with the real result.
 
 There are **10 tools** today, and through the `run_command` tool Skarn can run
-**any** of his 38 executable commands from plain speech — any *runnable* one,
+**any** of the currently registered activation-registry commands that pass the
+filter (dynamically built from `activationRegistry.getAll()` — currently ~38
+in the documented non-interactive subset) from plain speech — any *runnable* one,
 that is: lore and musing stay narrated in character. Everything below is an
 example *phrasing* — Skarn's model understands natural language, so these are
 starters, not an exact script. **Section 11** is the complete reference: every
@@ -151,7 +153,9 @@ Ask Skarn what he remembers about you.
 
 ## 10. Any command, spoken — `run_command`
 
-Skarn can run **any** of his 38 executable commands when you ask naturally —
+Skarn can run **any** of the currently registered activation-registry commands
+(not the ~38 documented non-interactive subset — the actual enum is dynamic
+from `activationRegistry.getAll()`) when you ask naturally —
 level, leaderboard, avatar, poll, server setup, the lorebook, omens, the
 chronicle, and more. He picks the right command, executes it for real, and posts
 the result, then adds a one-line in-character comment.
@@ -181,7 +185,7 @@ The complete per-command reference with example phrasings is **Section 11** belo
 
 Three ways to use Skarn, and everything falls into one of them:
 
-1. **He runs it for you** (Section 11.1) — 38 commands executed for real via `run_command`.
+1. **He runs it for you** (Section 11.1) — activation-registry commands executed for real via `run_command` (dynamically filtered; the documented non-interactive subset below).
 2. **He just answers** (Section 11.3) — AI-driven commands; saying it *is* the invocation.
 3. **He points you to the slash command** (Section 11.4) — multi-turn interactive games.
 

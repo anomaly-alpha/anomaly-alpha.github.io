@@ -121,7 +121,7 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 78 com
 | Context collector | `features/promptContext.js` | Fetches all dynamic context — `buildContext()` returns 32 context lines from ~12+ modules (channel state, mood, relationship, culture, memory, warmth, humor, etiquette, emotion, news, knowledge, lorebook, RAG, etc.) |
 | Channel state | `features/channelState/` | Dormant/Attentive/Charged/Weathering state machine |
 | Relationship | `features/relationship/` | Familiarity, tags, banter level per user |
-| Mood | `features/mood/` | Per-guild mood (neutral/tired/amused/focused/refreshed) |
+| Mood | `features/mood/` | Per-guild mood (neutral/tired/amused/focused/refreshed/wrath) |
 | Culture | `features/culture/` | N-gram language tracking per channel |
 | Warmth | `features/warmth/` | Sentiment-aware warmth, patience, active listening |
 | Humor | `features/humor/` | Callback engine, comedy timing, banter chains |
@@ -304,7 +304,7 @@ See `docs/DATABASE.md` for the full table reference.
 ## Environment Variables
 
 See `.env.example` for required vars. Key notes:
-- `OPENAI_API_KEY` is **required** for all AI features (not in `.env.example` — add manually)
+- `OPENAI_API_KEY` is **required** for all AI features (documented in `.env.example`)
 - `AI_MODEL` defaults to `gpt-5.4-mini`; `AI_MODEL_COMPLEX` falls back to `AI_MODEL`
 - `TAVILY_API_KEY` enables web search via the Tavily API (single provider since 2026-08-02; free tier 1,000 credits/mo, basic search = 1 credit)
 - Sleep defaults to 1:00–7:00 UTC; set both to 0 to disable

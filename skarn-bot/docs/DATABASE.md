@@ -24,7 +24,7 @@ Per-channel mood machine (Dormant / Attentive / Charged / Weathering).
 State transitions: message arrival → Attentive/Charged/Weathering; `runDecayPass()` → Attentive (30min idle) or Dormant (6h idle). Dormant is **only** set by decay, never by message handler.
 
 #### `guild_mood`
-Per-guild Skarn mood (neutral / tired / amused / focused / refreshed).
+Per-guild Skarn mood (neutral / tired / amused / focused / refreshed / wrath).
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -177,7 +177,7 @@ AI-generated stories from Skarn's past, keyed by topic.
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | INTEGER PK AUTO | Row ID |
-| `topic` | TEXT NOT NULL | Story topic (war, loss, change, tech, time, power) |
+| `topic` | TEXT NOT NULL | Story topic (war, loss, change, technology, time, power, dreams, stillness, wonder, regret, humans) |
 | `story_text` | TEXT NOT NULL | The story content |
 | `source` | TEXT | Origin of the story |
 | `used_count` | INTEGER DEFAULT 0 | Number of times referenced |

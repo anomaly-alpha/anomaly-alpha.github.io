@@ -1,5 +1,9 @@
 # Discord Rich Presence Setup Guide
 
+> **Note:** the in-bot presence cycler (`features/presence/presenceCycler.js`) is the
+> **recommended / current** bot path. This guide covers the **optional standalone desktop
+> RPC** process (`rich-presence.js`) — useful for a separate machine or as a fallback.
+
 Platform-agnostic guide to run Discord Rich Presence in the background.
 
 ## Prerequisites
