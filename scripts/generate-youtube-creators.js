@@ -403,7 +403,7 @@ function renderVideoCard(video, creator) {
   html += '              data-thumbnail-fallback="hqdefault"\n';
   html += '            >\n';
   html += '            <span class="gem-creator-video__fallback" aria-hidden="true">Thumbnail unavailable</span>\n';
-  html += '            <span class="gem-creator-video__play" aria-hidden="true">&#9654;</span>\n';
+  html += '            <span class="gem-creator-video__play" aria-hidden="true"><svg class="gem-creator-video__play-icon" viewBox="0 0 68 48" focusable="false"><path class="gem-creator-video__play-shell" d="M66.52 7.2c-.78-2.93-3.08-5.24-6.01-6.01C55.12 0 34 0 34 0S12.88 0 7.49 1.19C4.56 1.96 2.26 4.27 1.48 7.2 0 12.59 0 24 0 24s0 11.41 1.48 16.8c.78 2.93 3.08 5.24 6.01 6.01C12.88 48 34 48 34 48s21.12 0 26.51-1.19c2.93-.77 5.23-3.08 6.01-6.01C68 35.41 68 24 68 24s0-11.41-1.48-16.8z"></path><path class="gem-creator-video__play-triangle" d="M27 34.5v-21L45 24 27 34.5z"></path></svg></span>\n';
   html += '          </div>\n';
   html += '          <div class="gem-creator-video__content">\n';
   html += '            <span class="gem-creator-video__creator">' + escapeHtml(creator.name);
@@ -783,6 +783,7 @@ function renderJsOutput(data) {
     .map(function (c) {
       var visibleVideos = c.videos
         .filter(function (v) { return v.status === 'active'; })
+        .sort(function (a, b) { return new Date(b.published) - new Date(a.published); })
         .slice(0, MAX_VIDEOS_PER_CREATOR)
         .map(function (v) {
           return {
