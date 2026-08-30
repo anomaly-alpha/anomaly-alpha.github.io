@@ -1,4 +1,4 @@
-const { getChannelState, getMemoryEntries, getRelationship, db, findLoreForMessage, getRecentMessageEmbeddings, getRecentAssistantOrUserMessages, getOlderSummaries, getServerBuzz } = require('../db/database');
+const { getChannelState, getMemoryEntries, getRelationship, getUserEmotion, db, findLoreForMessage, getRecentMessageEmbeddings, getRecentAssistantOrUserMessages, getOlderSummaries, getServerBuzz } = require('../db/database');
 const { getStateLine } = require('./channelState/stateTracker');
 const { getRelationshipLine } = require('./relationship/relationshipTracker');
 const { getMoodLine } = require('./mood/moodManager');
@@ -7,7 +7,7 @@ const { getWarmthLine, getPatienceLine } = require('./warmth/warmthManager');
 const { getCallbackLine } = require('./humor/callbackEngine');
 const { getGratitudeDirective, getFirstOfDayLine, getMilestoneLine, getApologyLine } = require('./etiquette/etiquetteEngine');
 const { searchKnowledge, formatKnowledgeSnippet } = require('./knowledge/knowledgeBase');
-const { getEmotionDirective, getTrajectoryDirective, getMemoryEmotionLine, getEscalationDirective, getCalibrationDirective, getClimateLine } = require('./wisdom/emotionalIntelligence');
+const { getEmotionDirective, getIntentDirective, getTrajectoryDirective, getMemoryEmotionLine, getEscalationDirective, getCalibrationDirective, getClimateLine } = require('./wisdom/emotionalIntelligence');
 const { getRecentNews, CATEGORIES } = require('./news/newsFetcher');
 const { getChannelActivity } = require('./channelContext/channelContext');
 const { buildSafetyLine } = require('./safety/slurFilter');
@@ -55,6 +55,15 @@ function buildContext(userId, guildId, channelId, opts) {
   const milestoneLine = familiarity >= 15 ? getMilestoneLine(userId, interactionCount) : '';
   const apologyLine = familiarity >= 15 ? getApologyLine(userId) : '';
   const emotionalLine = getEmotionDirective(userId, guildId);
+
+  // Intent detection — infers what the user wants based on emotion + message patterns
+  var intentLine = '';
+  try {
+    var _ei = getUserEmotion(userId, guildId);
+    if (_ei && _ei.emotional_state && _ei.emotional_state !== 'neutral') {
+      intentLine = getIntentDirective(userContent, _ei.emotional_state);
+    }
+  } catch (e) { /* intent detection unavailable */ }
 
   // ===== Emotional Intelligence Upgrades =====
   const trajectoryLine = getTrajectoryDirective(userId, guildId);
@@ -234,6 +243,7 @@ function buildContext(userId, guildId, channelId, opts) {
     warmthLine: warmthLine, patienceLine: patienceLine, callbackLine: callbackLine,
     gratitudeLine: gratitudeLine, firstOfDayLine: firstOfDayLine,
     milestoneLine: milestoneLine, apologyLine: apologyLine, emotionalLine: emotionalLine,
+    intentLine: intentLine,
     conversationLine: [conversationLine, profileLine].filter(Boolean).join('\n\n'),
     knowledgeLine: [knowledgeLine, kbLine].filter(Boolean).join('\n'),
     channelLine: channelLine,
