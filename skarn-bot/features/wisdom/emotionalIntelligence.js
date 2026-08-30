@@ -251,14 +251,16 @@ function getEmotionDirective(userId, guildId) {
 // ===== [6] Intent Detection =====
 function getIntentDirective(content, emotionState) {
   if (!emotionState || emotionState === 'neutral') return '';
-  if (!content || typeof content !== 'string') return '';
+  if (!content || typeof content !== 'string' || !content.trim()) return '';
 
   var lower = content.toLowerCase();
   var hasQuestion = /\?\s*$/.test(content.trim());
   var isShort = content.length < 15;
   var isLong = content.length > 100;
   var hasHumorMarkers = /\b(lol|lmao|haha|rofl|lmfao)\b/i.test(lower);
-  var hasPositiveMarkers = /\b(yay|woohoo|awesome|amazing|incredible|finally|got the| landed the| killed it|nailed it|!{1,3})\b/i.test(lower);
+  var hasPositiveWords = /\b(yay|woohoo|awesome|amazing|incredible|finally|got the|landed the|killed it|nailed it)\b/i.test(lower);
+  var hasExclamation = /!{1,3}/.test(content);
+  var hasPositiveMarkers = hasPositiveWords || hasExclamation;
   var hasTaskMarkers = /\b(exam|test|interview|project|assignment|deadline|presentation|job|promotion|application)\b/i.test(lower);
   var hasEmotionalWords = /\b(sad|depressed|anxious|worried|stressed|scared|lonely|lost|hate|tired|exhausted|done|over it|can't|cant|help|why|anymore)\b/i.test(lower);
   var hasNegativity = /\b(failed|lost|broke|ruined|screwed|sucks|terrible|awful|worst|horrible)\b/i.test(lower);
@@ -284,17 +286,17 @@ function getIntentDirective(content, emotionState) {
   }
 
   // Short + negative emotion → venting
-  if (isShort && (emotionState === 'sad' || emotionState === 'anxious')) {
+  if (isShort && (emotionState === 'sad' || emotionState === 'anxious' || emotionState === 'angry')) {
     return 'They\'re letting it out. Be present — don\'t try to fix it.';
   }
 
   // Task mention + negative emotion → needs practical help
-  if (hasTaskMarkers && (emotionState === 'sad' || emotionState === 'stressed')) {
+  if (hasTaskMarkers && (emotionState === 'sad' || emotionState === 'stressed' || emotionState === 'angry')) {
     return 'They have a concrete problem. Be practical and useful.';
   }
 
   // Long + negative sentiment → storytelling/sharing
-  if (isLong && (emotionState === 'sad' || emotionState === 'stressed')) {
+  if (isLong && (emotionState === 'sad' || emotionState === 'stressed' || emotionState === 'angry')) {
     return 'They\'re telling you something real. Listen first — they need to be heard.';
   }
 
