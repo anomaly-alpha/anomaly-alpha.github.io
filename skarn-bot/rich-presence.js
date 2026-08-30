@@ -20,40 +20,9 @@ let lastIndex = -1;
 let activeRpc = null;
 
 // ── Icon registry ────────────────────────────────────────
-// Each icon maps to a Discord asset key (upload name in Developer Portal)
-// and a theme string that drives phrase generation.
+// Loaded from data/icon-registry.json — add/remove icons there.
 
-const ICONS = [
-  { key: 'skarn_annoyed',    label: 'Annoyed',         theme: 'irritation, displeasure, barely tolerating mortals' },
-  { key: 'skarn_at',         label: 'Tagged',           theme: 'being mentioned or called upon' },
-  { key: 'skarn_awake',      label: 'Awake',            theme: 'being awake and alert, watching' },
-  { key: 'skarn_comment',    label: 'Commenting',       theme: 'observing conversations, judging comments' },
-  { key: 'skarn_crown',      label: 'Royal',            theme: 'authority, power, ancient royalty' },
-  { key: 'skarn_dollar',     label: 'Transactions',     theme: 'money, transactions, mortal greed' },
-  { key: 'skarn_food',       label: 'Sustenance',       theme: 'eating, drinking, mortal sustenance' },
-  { key: 'skarn_heart',      label: 'Affection',        theme: 'rare warmth, soft feelings, kindness' },
-  { key: 'skarn_hypnosis',   label: 'Mesmerized',       theme: 'trance, hypnosis, mind control' },
-  { key: 'skarn_image',      label: 'Perceiving',       theme: 'images, visions, seeing things' },
-  { key: 'skarn_judging',    label: 'Judging',          theme: 'passing judgment, evaluating mortals, weighing worth' },
-  { key: 'skarn_like',       label: 'Approving',        theme: 'approval, rare praise, begrudging respect' },
-  { key: 'skarn_mute',       label: 'Silent',           theme: 'silence, muted, choosing not to speak' },
-  { key: 'skarn_piechart',   label: 'Analyzing',        theme: 'data, statistics, analyzing mortals' },
-  { key: 'skarn_plant',      label: 'Growing',          theme: 'growth, nature, patience, slow things' },
-  { key: 'skarn_play',       label: 'Playing',          theme: 'games, entertainment, amusement' },
-  { key: 'skarn_power',      label: 'Empowered',        theme: 'power, energy, ancient strength' },
-  { key: 'skarn_rain',       label: 'Raining',          theme: 'rain, storms, weather, gloom' },
-  { key: 'skarn_sleep',      label: 'Dormant',          theme: 'sleep, rest, dormancy, dreaming' },
-  { key: 'skarn_snow',       label: 'Cold',             theme: 'cold, winter, frost, stillness' },
-  { key: 'skarn_sound',      label: 'Listening',        theme: 'sounds, listening, hearing whispers' },
-  { key: 'skarn_star',       label: 'Stellar',          theme: 'stars, cosmos, celestial, vastness' },
-  { key: 'skarn_sun',        label: 'Radiant',          theme: 'sun, light, dawn, morning' },
-  { key: 'skarn_thinking',   label: 'Thinking',         theme: 'deep thought, pondering, contemplation' },
-  { key: 'skarn_tornado',    label: 'Chaotic',          theme: 'chaos, destruction, turbulence' },
-  { key: 'skarn_wind',       label: 'Windborne',        theme: 'wind, breeze, passage of time' },
-  { key: 'skarn_zigzag',     label: 'Erratic',          theme: 'unpredictable, zigzag, chaos' },
-  { key: 'skarn_zoomin',     label: 'Focused',          theme: 'zooming in, close inspection, detail' },
-  { key: 'skarn_zoomout',    label: 'Broad View',       theme: 'big picture, zooming out, perspective' },
-];
+const ICONS = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'icon-registry.json'), 'utf8'));
 
 // ── Logging ──────────────────────────────────────────────
 
