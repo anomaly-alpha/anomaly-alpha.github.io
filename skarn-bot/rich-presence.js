@@ -6,16 +6,17 @@ const https = require('https');
 
 const clientId = '982308134871765022';
 const RETRY_MS = 15000;
-const ROTATE_MS = 2 * 60 * 1000;       // 2 minutes
+const ROTATE_MS = 10 * 1000;            // 10 seconds
 const REGEN_MS = 5 * 60 * 60 * 1000;   // 5 hours
+const REGEN_BATCH = 50;                 // phrases to generate per regen
 const LOG_FILE = path.join(__dirname, 'data', 'rpc.log');
 const PHRASE_CACHE = path.join(__dirname, 'data', 'rpc-phrases.json');
 
 let retryTimer = null;
 let rotateTimer = null;
 let regenTimer = null;
-let rotationPool = [];  // [{ icon, lines: [{ details, state }, ...] }, ...]
-let lastPoolIndex = -1;
+let rotationPool = [];  // [{ key, details, state }, ...]
+let lastIndex = -1;
 let activeRpc = null;
 
 // ── Icon registry ────────────────────────────────────────
@@ -79,43 +80,41 @@ function getState() {
 
 // ── Phrase generation via OpenAI ──────────────────────────
 
-function generatePhrasesForIcons() {
+function generateBatch(existing) {
   return new Promise((resolve, reject) => {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) {
-      log('No OPENAI_API_KEY — using cached or fallback');
-      return resolve(loadCache() || buildFallback());
+      log('No OPENAI_API_KEY — using cache only');
+      return resolve(existing.length > 0 ? existing : buildFallback());
     }
 
-    // Build a prompt that generates phrases for ALL icons in one call
-    const iconList = ICONS.map(i => `- ${i.key}: ${i.theme}`).join('\n');
+    // Pick random icons for this batch
+    const shuffled = [...ICONS].sort(() => Math.random() - 0.5);
+    const batchIcons = shuffled.slice(0, Math.min(REGEN_BATCH, ICONS.length));
+    const iconList = batchIcons.map(i => `- ${i.key}: ${i.theme}`).join('\n');
+
     const prompt = `You are Skarn, a 10,000-year-old retired demon who serves as a Discord bot. Your voice is dry, wise, and quietly amused by mortals.
 
-Generate short inner-monologue LINE PAIRS for each icon theme below. Each icon gets exactly 6 pairs. Each pair has two lines:
+Generate ${REGEN_BATCH} short inner-monologue LINE PAIRS. Each pair has two lines:
 - "details": the primary thought (max 5 words, punchy)
 - "state": a secondary thought or follow-up (max 5 words, complementary)
 
-SHORT is everything. Think tweet-length, not sentences. Every word must earn its place.
-
-The two lines should feel like a complete thought split across two lines — like a setup + punchline. Together they paint a picture of Skarn's mood for that icon.
+SHORT is everything. Every word must earn its place.
 
 Rules:
 - Dry humor, quiet observation, ancient perspective
-- Never use the words "Skarn" or "I" — these are third-person inner thoughts
-- The two lines should complement each other, not repeat
-- Vary the tone across the 6 pairs: some menacing, some weary, some amused, some surprisingly warm
-- Match the icon's theme
+- Never use the words "Skarn" or "I" — third-person inner thoughts
+- The two lines complement each other, not repeat
+- Vary the tone: menacing, weary, amused, warm, philosophical
 - MAX 5 WORDS per line. No exceptions.
 
 Icons and their themes:
 ${iconList}
 
-Output format — strict JSON array, no markdown:
-[
-  {"key": "skarn_at", "lines": [{"details": "line 1", "state": "line 2"}, {"details": "line 1", "state": "line 2"}, {"details": "line 1", "state": "line 2"}, {"details": "line 1", "state": "line 2"}, {"details": "line 1", "state": "line 2"}, {"details": "line 1", "state": "line 2"}]},
-  {"key": "skarn_awake", "lines": [{"details": "line 1", "state": "line 2"}, ...]}
-]
-...one entry per icon, 6 line pairs each. No text outside the JSON.`;
+Output a flat JSON array of objects. Each object has "key", "details", "state". No grouping by icon — just flat pairs.
+[{"key":"skarn_at","details":"Summoned again","state":"Patience thins"}, ...]
+
+No markdown, no text outside the JSON. ${REGEN_BATCH} entries minimum.`;
 
     const body = JSON.stringify({
       model: 'gpt-4.1-mini',
@@ -140,46 +139,133 @@ Output format — strict JSON array, no markdown:
         try {
           const parsed = JSON.parse(data);
           const text = parsed.choices?.[0]?.message?.content || '';
-          // Strip markdown code fences if present
           const cleaned = text.replace(/^```(?:json)?\s*\n?/, '').replace(/\n?```\s*$/, '').trim();
           const raw = JSON.parse(cleaned);
+          const arr = Array.isArray(raw) ? raw : raw.icons || raw.pool || Object.values(raw).find(v => Array.isArray(v)) || [];
 
-          // Handle both { icons: [...] }, { pool: [...] }, and bare array
-          const arr = Array.isArray(raw) ? raw : raw.icons || raw.pool || raw.phrases || Object.values(raw).find(v => Array.isArray(v)) || [];
+          // Validate and flatten
+          const newEntries = arr
+            .filter(e => e.key && e.details && e.state)
+            .map(e => ({ key: e.key, details: String(e.details).slice(0, 60), state: String(e.state).slice(0, 60) }));
 
-          const pool = ICONS.map(icon => {
-            const match = arr.find(a => a.key === icon.key);
-            // Support both new format (lines: [{details, state}]) and legacy (phrases: ["..."])
-            let lines = match?.lines?.filter(l => l?.details && l?.state) || [];
-            if (lines.length === 0 && match?.phrases) {
-              lines = match.phrases.filter(p => typeof p === 'string' && p.length <= 60)
-                .map(p => ({ details: p, state: '<+HUSH>' }));
-            }
-            return { ...icon, lines };
-          }).filter(entry => entry.lines.length > 0);
+          // Dedup against existing
+          const existingSet = new Set(existing.map(e => e.details + '|' + e.state));
+          const unique = newEntries.filter(e => !existingSet.has(e.details + '|' + e.state));
 
-          if (pool.length >= 10) {
-            const totalLines = pool.reduce((n, e) => n + e.lines.length, 0);
-            log('Generated ' + totalLines + ' line pairs across ' + pool.length + ' icons');
-            saveCache(pool);
-            resolve(pool);
-          } else {
-            log('Too few icons generated (' + pool.length + '), using cache/fallback');
-            resolve(loadCache() || buildFallback());
-          }
+          const merged = [...existing, ...unique];
+          log('Generated ' + newEntries.length + ' new, ' + unique.length + ' unique, total: ' + merged.length);
+          saveCache(merged);
+          resolve(merged);
         } catch (e) {
           log('Parse error: ' + e.message);
-          resolve(loadCache() || buildFallback());
+          resolve(existing.length > 0 ? existing : buildFallback());
         }
       });
     });
 
     req.on('error', (e) => {
       log('API error: ' + e.message);
-      resolve(loadCache() || buildFallback());
+      resolve(existing.length > 0 ? existing : buildFallback());
     });
 
     req.setTimeout(60000, () => { req.destroy(); reject(new Error('timeout')); });
+    req.write(body);
+    req.end();
+  });
+}
+
+function initialGenerate() {
+  return new Promise((resolve, reject) => {
+    const apiKey = process.env.OPENAI_API_KEY;
+    const existing = loadCache();
+
+    if (!apiKey) {
+      log('No OPENAI_API_KEY — using cache');
+      return resolve(existing || buildFallback());
+    }
+
+    if (existing && existing.length >= 500) {
+      log('Cache has ' + existing.length + ' phrases, appending batch');
+      resolve(generateBatch(existing));
+      return;
+    }
+
+    // First run or small cache — generate a large initial batch
+    const iconList = ICONS.map(i => `- ${i.key}: ${i.theme}`).join('\n');
+    const prompt = `You are Skarn, a 10,000-year-old retired demon who serves as a Discord bot. Your voice is dry, wise, and quietly amused by mortals.
+
+Generate 200 short inner-monologue LINE PAIRS. Each pair has two lines:
+- "details": the primary thought (max 5 words, punchy)
+- "state": a secondary thought or follow-up (max 5 words, complementary)
+
+SHORT is everything. Every word must earn its place.
+
+Rules:
+- Dry humor, quiet observation, ancient perspective
+- Never use the words "Skarn" or "I" — third-person inner thoughts
+- The two lines complement each other, not repeat
+- Vary the tone: menacing, weary, amused, warm, philosophical, threatening
+- MAX 5 WORDS per line. No exceptions.
+
+Icons and their themes:
+${iconList}
+
+Output a flat JSON array of objects. Each object has "key", "details", "state".
+[{"key":"skarn_at","details":"Summoned again","state":"Patience thins"}, ...]
+
+No markdown, no text outside the JSON. 200 entries minimum.`;
+
+    const body = JSON.stringify({
+      model: 'gpt-4.1-mini',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 1.0,
+      max_tokens: 16000,
+    });
+
+    const req = https.request({
+      hostname: 'api.openai.com',
+      path: '/v1/chat/completions',
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + apiKey,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body),
+      },
+    }, (res) => {
+      let data = '';
+      res.on('data', (chunk) => data += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          const text = parsed.choices?.[0]?.message?.content || '';
+          const cleaned = text.replace(/^```(?:json)?\s*\n?/, '').replace(/\n?```\s*$/, '').trim();
+          const raw = JSON.parse(cleaned);
+          const arr = Array.isArray(raw) ? raw : raw.icons || raw.pool || Object.values(raw).find(v => Array.isArray(v)) || [];
+
+          const newEntries = arr
+            .filter(e => e.key && e.details && e.state)
+            .map(e => ({ key: e.key, details: String(e.details).slice(0, 60), state: String(e.state).slice(0, 60) }));
+
+          const existingSet = existing ? new Set(existing.map(e => e.details + '|' + e.state)) : new Set();
+          const unique = newEntries.filter(e => !existingSet.has(e.details + '|' + e.state));
+          const merged = existing ? [...existing, ...unique] : unique;
+
+          log('Initial generation: ' + unique.length + ' unique phrases, total: ' + merged.length);
+          saveCache(merged);
+          resolve(merged);
+        } catch (e) {
+          log('Parse error: ' + e.message);
+          resolve(existing || buildFallback());
+        }
+      });
+    });
+
+    req.on('error', (e) => {
+      log('API error: ' + e.message);
+      resolve(existing || buildFallback());
+    });
+
+    req.setTimeout(90000, () => { req.destroy(); reject(new Error('timeout')); });
     req.write(body);
     req.end();
   });
@@ -190,28 +276,33 @@ Output format — strict JSON array, no markdown:
 function loadCache() {
   try {
     const data = JSON.parse(fs.readFileSync(PHRASE_CACHE, 'utf8'));
-    const pool = data.pool || data.icons;
-    if (pool && pool.length >= 10) {
-      // Migrate legacy format: phrases=["..."] → lines=[{details,state}]
-      const migrated = pool.map(entry => {
-        if (entry.lines && entry.lines.length > 0) return entry;
-        if (entry.phrases) {
-          return { ...entry, lines: entry.phrases.map(p => ({ details: p, state: '<+HUSH>' })) };
-        }
-        return entry;
-      }).filter(e => e.lines && e.lines.length > 0);
-      const total = migrated.reduce((n, e) => n + e.lines.length, 0);
-      log('Loaded cached pool: ' + total + ' line pairs across ' + migrated.length + ' icons');
-      return migrated;
+    const pool = data.pool;
+    if (Array.isArray(pool) && pool.length > 0) {
+      // Migrate legacy format (grouped by icon) to flat format
+      if (pool[0]?.lines) {
+        const flat = [];
+        pool.forEach(entry => {
+          (entry.lines || []).forEach(l => {
+            if (l.details && l.state) flat.push({ key: entry.key, details: l.details, state: l.state });
+          });
+        });
+        log('Migrated ' + flat.length + ' phrases from legacy format');
+        saveCache(flat);
+        return flat;
+      }
+      // Already flat
+      log('Loaded ' + pool.length + ' cached phrases');
+      return pool;
     }
   } catch (e) {}
   return null;
 }
 
-function saveCache(pool) {
+function saveCache(entries) {
   try {
     fs.writeFileSync(PHRASE_CACHE, JSON.stringify({
-      pool,
+      pool: entries,
+      count: entries.length,
       generatedAt: new Date().toISOString(),
     }, null, 2));
   } catch (e) {
@@ -220,30 +311,28 @@ function saveCache(pool) {
 }
 
 function buildFallback() {
-  return ICONS.map(icon => ({
-    key: icon.key,
-    label: icon.label,
-    theme: icon.theme,
-    lines: [{ details: 'watching from the shadows', state: '<+HUSH>' }],
-  }));
+  return [
+    { key: 'skarn_judging', details: 'Watching from the shadows', state: 'Silent judgment' },
+    { key: 'skarn_sleep', details: 'Pretending to be asleep', state: 'Mortals pass by' },
+    { key: 'skarn_annoyed', details: 'Another futile request', state: 'Patience wears thin' },
+  ];
 }
 
 // ── Activity builder ─────────────────────────────────────
 
 function buildActivity() {
-  // Pick a random icon, avoiding back-to-back repeats
+  // Pick a random entry, avoiding back-to-back repeats
   let idx;
   do {
     idx = Math.floor(Math.random() * rotationPool.length);
-  } while (idx === lastPoolIndex && rotationPool.length > 1);
-  lastPoolIndex = idx;
+  } while (idx === lastIndex && rotationPool.length > 1);
+  lastIndex = idx;
 
   const entry = rotationPool[idx];
-  const line = entry.lines[Math.floor(Math.random() * entry.lines.length)];
 
   return {
-    details: line.details,
-    state: line.state,
+    details: entry.details,
+    state: entry.state,
     largeImageKey: 'skarn_logo',
     largeImageText: 'Skarn Bot',
     smallImageKey: entry.key,
@@ -274,9 +363,9 @@ function startRotation(rpc) {
 function scheduleRegen() {
   if (regenTimer) clearTimeout(regenTimer);
   regenTimer = setTimeout(async () => {
-    log('Regenerating phrase pool...');
-    rotationPool = await generatePhrasesForIcons();
-    lastPoolIndex = -1;
+    log('Appending new phrases to pool...');
+    rotationPool = await generateBatch(rotationPool);
+    lastIndex = -1;
     scheduleRegen();
   }, REGEN_MS);
 }
@@ -290,7 +379,7 @@ function scheduleRetry() {
 
 async function connect() {
   if (rotationPool.length === 0) {
-    rotationPool = await generatePhrasesForIcons();
+    rotationPool = await initialGenerate();
   }
 
   const rpc = new RPC.Client({ transport: 'ipc' });
@@ -303,8 +392,7 @@ async function connect() {
     startRotation(rpc);
     scheduleRegen();
 
-    const totalLines = rotationPool.reduce((n, e) => n + e.lines.length, 0);
-    log('Rotation: every ' + (ROTATE_MS / 1000) + 's | Icons: ' + rotationPool.length + ' | Line pairs: ' + totalLines + ' | Regen: every ' + (REGEN_MS / 3600000) + 'h');
+    log('Rotation: every ' + (ROTATE_MS / 1000) + 's | Phrases: ' + rotationPool.length + ' | Regen: +' + REGEN_BATCH + ' every ' + (REGEN_MS / 3600000) + 'h');
   });
 
   rpc.on('error', (err) => log('Error: ' + err.message));
