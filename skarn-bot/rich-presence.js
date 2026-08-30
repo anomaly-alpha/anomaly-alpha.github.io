@@ -15,8 +15,7 @@ let retryTimer = null;
 let rotateTimer = null;
 let regenTimer = null;
 let rotationPool = [];  // [{ icon, lines: [{ details, state }, ...] }, ...]
-let poolIndex = 0;
-let lineIndex = 0;
+let lastPoolIndex = -1;
 let activeRpc = null;
 
 // ── Icon registry ────────────────────────────────────────
@@ -232,15 +231,15 @@ function buildFallback() {
 // ── Activity builder ─────────────────────────────────────
 
 function buildActivity() {
-  const entry = rotationPool[poolIndex % rotationPool.length];
-  const line = entry.lines[lineIndex % entry.lines.length];
+  // Pick a random icon, avoiding back-to-back repeats
+  let idx;
+  do {
+    idx = Math.floor(Math.random() * rotationPool.length);
+  } while (idx === lastPoolIndex && rotationPool.length > 1);
+  lastPoolIndex = idx;
 
-  // Advance indices
-  lineIndex++;
-  if (lineIndex >= entry.lines.length) {
-    lineIndex = 0;
-    poolIndex++;
-  }
+  const entry = rotationPool[idx];
+  const line = entry.lines[Math.floor(Math.random() * entry.lines.length)];
 
   return {
     details: line.details,
@@ -277,8 +276,7 @@ function scheduleRegen() {
   regenTimer = setTimeout(async () => {
     log('Regenerating phrase pool...');
     rotationPool = await generatePhrasesForIcons();
-    poolIndex = 0;
-    lineIndex = 0;
+    lastPoolIndex = -1;
     scheduleRegen();
   }, REGEN_MS);
 }
