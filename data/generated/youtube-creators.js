@@ -15,11 +15,35 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 1,
     "videos": [
       {
+        "id": "YvXN5RSG270",
+        "title": "Actual PERFECT F2P EVENT!? - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd evaluates a free-to-play-friendly event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-08-25",
+        "featured": true
+      },
+      {
+        "id": "TWeqQO10tIQ",
+        "title": "EQUIPMENT SHOP MAXXING - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd demonstrates maximizing the equipment shop in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-08-24",
+        "featured": false
+      },
+      {
         "id": "WnlpzjtV3MQ",
         "title": "I STOLE LUCK! - Invincible: Guarding the Globe",
         "description": "Avatar Shuvd covers a new Invincible: Guarding the Globe event and its rewards.",
         "category": "Events",
         "published": "2026-08-23",
+        "featured": false
+      },
+      {
+        "id": "WDKu6p_3ubY",
+        "title": "Machine Head SELLING TOTEMS! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd covers Machine Head selling totems in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-08-22",
         "featured": false
       },
       {
@@ -31,11 +55,35 @@ window.__YOUTUBE_CREATORS=[
         "featured": false
       },
       {
+        "id": "fI-csyoqLV4",
+        "title": "Kregg was GOOD to Me! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd showcases Kregg gameplay and summons in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-08-21",
+        "featured": false
+      },
+      {
+        "id": "o8A1Sr5d9yU",
+        "title": "SHAPESMITH IS HERE! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd covers the Shapesmith hero release in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-08-20",
+        "featured": false
+      },
+      {
         "id": "NDBPPgJiqz0",
         "title": "Great Event! Terrible Timing... - Invincible: Guarding the Globe",
         "description": "Avatar Shuvd reviews the Boot Camp event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-08-20",
+        "featured": false
+      },
+      {
+        "id": "zotsKm0dF8k",
+        "title": "Kregg has ARRIVED!! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd covers the Kregg hero arrival in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-08-19",
         "featured": false
       },
       {
@@ -47,68 +95,20 @@ window.__YOUTUBE_CREATORS=[
         "featured": false
       },
       {
+        "id": "zK1ggBR_xRE",
+        "title": "BATTLE BEAST RECRUITABLE AND MORE - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd covers Battle Beast becoming recruitable and additional updates in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-08-18",
+        "featured": false
+      },
+      {
         "id": "z2yBATpteWM",
         "title": "Guide to Getting SEANCE DOG! - Invincible: Guarding the Globe",
         "description": "Avatar Shuvd guides players through getting Seance Dog in Invincible: Guarding the Globe.",
         "category": "Guides",
         "published": "2026-08-18",
         "featured": false
-      },
-      {
-        "id": "SCKjyZnmxoE",
-        "title": "Tier List 3.4 EDITION! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd ranks the roster for Invincible: Guarding the Globe update 3.4.",
-        "category": "Tier Lists",
-        "published": "2026-08-16",
-        "featured": false
-      },
-      {
-        "id": "pANOjNp28J0",
-        "title": "PERFECT Faction Event! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd covers a faction event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-08-15",
-        "featured": false
-      },
-      {
-        "id": "vZ0pb6iUPP0",
-        "title": "My Boss Raid FEEDBACK! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd shares feedback on the Invincible: Guarding the Globe Boss Raid.",
-        "category": "Updates",
-        "published": "2026-08-11",
-        "featured": true
-      },
-      {
-        "id": "vYzbbIWnSew",
-        "title": "BOSS RAID MODE REVEALED! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd explains the revealed Boss Raid mode in Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-07-28",
-        "featured": false
-      },
-      {
-        "id": "WmRoQRCfYi4",
-        "title": "Brit SAVES the GDA! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd covers a GTG story and gameplay moment where Brit saves the GDA.",
-        "category": "Guides",
-        "published": "2026-07-27",
-        "featured": true
-      },
-      {
-        "id": "BIC2rGvRB-U",
-        "title": "Tier List 3.3 EDITION! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd ranks the Invincible: Guarding the Globe roster for the 3.3 edition.",
-        "category": "Tier Lists",
-        "published": "2026-07-12",
-        "featured": true
-      },
-      {
-        "id": "0Jrp_N12Q3Y",
-        "title": "Tier List 3.2 EDITION! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd ranks the Invincible: Guarding the Globe roster for the 3.2 edition.",
-        "category": "Tier Lists",
-        "published": "2026-06-10",
-        "featured": true
       }
     ]
   },
@@ -280,6 +280,14 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 4,
     "videos": [
       {
+        "id": "EG2jpxYiLlY",
+        "title": "Fresh Recruits Event is INSANE! - Invincible: Guarding the Globe",
+        "description": "TH3O covers the Fresh Recruits event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-08-24",
+        "featured": false
+      },
+      {
         "id": "P9AAkj2Ka9Y",
         "title": "NEW Damien Darkblood Hero Event!! - Invincible: Guarding the Globe",
         "description": "TH3O covers the Damien Darkblood hero event in Invincible: Guarding the Globe.",
@@ -422,6 +430,14 @@ window.__YOUTUBE_CREATORS=[
     "status": "active",
     "displayOrder": 6,
     "videos": [
+      {
+        "id": "fxIVp3QKMyk",
+        "title": "Invincible Guarding The Globe- BANES Fresh Recruit Summons!!",
+        "description": "OMNI-BANE covers Fresh Recruit summons in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-08-23",
+        "featured": false
+      },
       {
         "id": "wNKoLf9xKJA",
         "title": "Invincible Guarding The Globe - New Hero Tease...we need to talk guys",
