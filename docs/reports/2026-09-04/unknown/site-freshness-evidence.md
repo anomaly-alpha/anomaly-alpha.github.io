@@ -51,7 +51,7 @@ Research conducted using Tavily search and extraction against official Ubisoft s
 | Scope | Record or claim | Previous value | New value | Source URL(s) | Retrieved | Evidence summary | Disposition |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | data/youtube-creators.json | Top-level updated timestamp | 2026-08-25 | 2026-09-04 | Repository source data | 2026-09-04 | Will be updated when Task 4 runs the refresh. | **Change needed** (Task 4) |
-| Creator: avatar-shuvd | Status: active, featured, 22 videos | active | Retain active | https://www.youtube.com/@avatarshuvd | 2026-09-04 | Avatar Shuvd remains the featured creator with 22 eligible videos and 3+ within 180 days. Active posting continues (latest YvXN5RSG270 Aug 25). | Reviewed and retained |
+| Creator: avatar-shuvd | Status: active, featured, 24 videos | active | Retain active | https://www.youtube.com/@avatarshuvd | 2026-09-04 | Avatar Shuvd remains the featured creator with 24 eligible videos and 3+ within 180 days. Active posting continues (latest YvXN5RSG270 Aug 25). | Reviewed and retained |
 | Creator: rapid-gtg | Status: active, 6 videos | active | Retain active | https://www.youtube.com/@RapidGTG | 2026-09-04 | rapid has 6 eligible standard videos with latest YfU7wSiLegk (Aug 15). Meets threshold. | Reviewed and retained |
 | Creator: tutaaa-gtg | Status: active, 8 videos | active | Retain active | https://www.youtube.com/@TutaaaGTG | 2026-09-04 | Tutaaa-GTG has 8 eligible standard videos. Latest jChfgcbDUcU (Aug 23). Meets threshold. | Reviewed and retained |
 | Creator: th3o | Status: active, 8 videos | active | Retain active | https://www.youtube.com/@TH3Oyt | 2026-09-04 | TH3O has 8 eligible standard videos. Latest EG2jpxYiLlY (Aug 24). Meets threshold. | Reviewed and retained |
@@ -63,7 +63,7 @@ Research conducted using Tavily search and extraction against official Ubisoft s
 | Creator: invincible-gtg-omni-fan | Status: active, 14 videos (1 Short rejected) | active | Retain active | https://www.youtube.com/@Invincible.gtg.omnifan | 2026-09-04 | OMNI-FAN has 14 eligible standard videos. Latest epbWhgEaY1U (Aug 21). Well above threshold. | Reviewed and retained |
 | Creator: alexandergzmn-invincible | Status: pending, 3 eligible + 5 Shorts | pending | Retain pending | https://www.youtube.com/@ilovealxxxx0o | 2026-09-04 | AlexanderGZMN has 3 eligible standard videos (Benn_Q0cqRM, w-uzFywwDFg, GljLHljvYmw) and 5 rejected Shorts. Below 6-video active threshold; correctly pending. | Reviewed and retained |
 | Creator: gotcha-beast | Status: pending, 3 videos | pending | Retain pending | https://www.youtube.com/@Gotcha-Beastt | 2026-09-04 | Gotcha Beast has 3 eligible videos. Below 6-video active threshold; correctly pending. | Reviewed and retained |
-| Creator: subsktro | Status: pending, 7 videos | pending | Retain pending | https://www.youtube.com/@subsktro | 2026-09-04 | Subsktro has 7 eligible standard videos but only 8Y09prT7Kdc (May 2026) falls within 180 days of the Aug 2026 snapshot. Pending status is correct — below the 3-recent-videos threshold required for active promotion. | Reviewed and retained |
+| Creator: subsktro | Status: pending, 7 videos | pending | Retain pending | https://www.youtube.com/@subsktro | 2026-09-04 | Subsktro has 7 eligible standard videos, 1 within the 180-day recency window. Pending status is correct — below the 3-recent-videos threshold required for active promotion. | Reviewed and retained |
 | Creator: gxlden | Status: pending, 2 videos | pending | Retain pending | https://www.youtube.com/@GxldenYT_ | 2026-09-04 | Gxlden has 2 eligible videos. Below 6-video active threshold; correctly pending. | Reviewed and retained |
 | Creator: x-gamers-asylum | Status: pending, 5 videos | pending | Retain pending | https://www.youtube.com/@XGamersAsylum | 2026-09-04 | X-Gamers Asylum has 5 eligible videos. Below 6-video active threshold; correctly pending. | Reviewed and retained |
 | Creator: hero-haven-gtg | Status: active, 6+ videos | active | Retain active | https://www.youtube.com/@HeroHavenGTG | 2026-09-04 | Hero Haven has eligible standard videos including uHtsSkEdxMQ (Brit release). 1 Short (Yfx83olO1jw) correctly rejected. Meets threshold. | Reviewed and retained |
@@ -79,7 +79,7 @@ Research conducted using Tavily search and extraction against official Ubisoft s
 | /guide/code/ | Page title | "Invincible GTG Codes & Redeem Portal — Active [Aug 2026]" | Proposed: "Invincible GTG Codes & Redeem Portal — Active [Sep 2026]" | Repository source data | 2026-09-04 | Current title references Aug 2026. Needs September suffix for freshness refresh. | **Change needed** |
 | /guide/code/ | og:title | "Invincible GTG Codes & Redeem Portal — Active [Aug 2026]" | Proposed: sync with new title | Repository source data | 2026-09-04 | Must match page title. | **Change needed** |
 | /guide/code/ | twitter:title | "Invincible GTG Codes & Redeem Portal — Active [Aug 2026]" | Proposed: sync with new title | Repository source data | 2026-09-04 | Must match page title. | **Change needed** |
-| /guide/code/ | Active code count in heading | "29 Active Promo Codes" | Should be "29 Active Promo Codes" (after RAID02 added) | Repository source data | 2026-09-04 | Page says 29 but source data only has 28 currently. After RAID02 addition, 29 is correct. Verify after Task 3. | **Verify after Task 3** |
+| /guide/code/ | Active code count in heading | "28 Active Promo Codes" | Should be "29 Active Promo Codes" (after RAID02 added) | Repository source data | 2026-09-04 | Page heading says 28 active, consistent with source data (28 non-expired). After RAID02 addition, both become 29. Verify after Task 3. | **Verify after Task 3** |
 | /guide/code/ | meta description | "28 active Invincible GTG codes..." | Needs update to 29 after RAID02 | Repository source data | 2026-09-04 | Description says 28 active. Will be 29 after RAID02. | **Change needed** |
 | /guide/code/ | dateModified | 2026-08-22 | 2026-09-04 | Repository source data | 2026-09-04 | Needs update for September refresh. | **Change needed** |
 | /guide/code/ | Schema types | BreadcrumbList, VideoGame, Article, HowTo, FAQPage, etc. | Reviewed and retained | Repository source data | 2026-09-04 | Comprehensive schema coverage. FAQPage present. | Reviewed and retained |
@@ -125,7 +125,7 @@ Research conducted using Tavily search and extraction against official Ubisoft s
 | / (home) | datePublished / dateModified | (none in schema) | Task 6 will add dateModified | Repository source data | 2026-09-04 | Home page does not currently have explicit dates in schema. Task 6 will add dateModified. | **Change needed** (Task 6) |
 | / (home) | Schema types | WebPage, VideoGame, WebSite, BreadcrumbList, WebApplication, Organization, Service, MobileApplication, SoftwareSourceCode, ItemList, CollectionPage | Reviewed and retained | Repository source data | 2026-09-04 | Comprehensive schema. All types appropriate. | Reviewed and retained |
 | /authors/anomaly/ | Page title | "Anomaly — Author Profile" | Reviewed and retained (evergreen) | Repository source data | 2026-09-04 | Per spec, author profile title remains evergreen. | Reviewed and retained |
-| /authors/anomaly/ | robots | noindex | Task 6 may change indexability | Repository source data | 2026-09-04 | Currently noindex. Task 6 will review whether author page should become indexable. | **Review in Task 6** |
+| /authors/anomaly/ | robots | noindex | Task 6 may change indexability | Repository source data | 2026-09-04 | Currently noindex. Task 6 will review whether author page should become indexable. | **Change needed** (Task 6) |
 | /authors/anomaly/ | Schema: ProfilePage | Present | Reviewed and retained | Repository source data | 2026-09-04 | Appropriate schema type for author page. | Reviewed and retained |
 | /music/ | Page title | "Music & Playlists — Invincible GTG" | Reviewed and retained (evergreen) | Repository source data | 2026-09-04 | Per spec, music title remains evergreen. | Reviewed and retained |
 | /music/ | robots | noindex, follow | Reviewed and retained | Repository source data | 2026-09-04 | Correctly noindex per spec. | Reviewed and retained |
@@ -202,7 +202,7 @@ Community sources (VG247, SuperCheats) list several codes as active that our dat
 | index.html inline promo codes | 28 | 28 |
 | index.html ticker | "28 active" | 28 |
 | index.html JSON-LD numberOfItems | 28 | 28 |
-| /guide/code/ page heading | "29 Active" | 28 (premature; correct after RAID02) |
+| /guide/code/ page heading | "28 Active" | 28 (correct; becomes 29 after RAID02) |
 | /guide/code/ meta description | "28 active" | 28 (correct; becomes 29 after RAID02) |
 
 ### 2.4 Title Desync Issues
