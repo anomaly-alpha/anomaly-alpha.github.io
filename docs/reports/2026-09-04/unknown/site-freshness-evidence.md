@@ -133,7 +133,7 @@ Research conducted using Tavily search and extraction against official Ubisoft s
 | /authors/anomaly/ | Page title | "Anomaly — Author Profile" | Reviewed and retained (evergreen) | Repository source data | 2026-09-04 | Per spec, author profile title remains evergreen. | Reviewed and retained |
 | /authors/anomaly/ | robots | noindex | Task 6 may change indexability | Repository source data | 2026-09-04 | Currently noindex. Task 6 will review whether author page should become indexable. | **Change needed** (Task 6) |
 | /authors/anomaly/ | Schema: ProfilePage | Present | Reviewed and retained | Repository source data | 2026-09-04 | Appropriate schema type for author page. | Reviewed and retained |
-| /authors/anomaly/ | og:title | "Anomaly — Author Profile" | Desynced — needs synchronization with page title | Repository source data | 2026-09-04 | og:title on /authors/anomaly/ needs synchronization with page title. | **Change needed** (Task 5) |
+| /authors/anomaly/ | og:title | "Anomaly — Author" | Sync with page title: Anomaly — Author Profile | Repository source data | 2026-09-04 | og:title on /authors/anomaly/ needs synchronization with page title. | **Change needed** (Task 5) |
 | /music/ | Page title | "Music & Playlists — Invincible GTG" | Reviewed and retained (evergreen) | Repository source data | 2026-09-04 | Per spec, music title remains evergreen. | Reviewed and retained |
 | /music/ | robots | noindex, follow | Reviewed and retained | Repository source data | 2026-09-04 | Correctly noindex per spec. | Reviewed and retained |
 | /music/ | Visible freshness text | "Updated Jul 16, 2026" | Needs update to "Reviewed Sep 4, 2026" | Repository source data | 2026-09-04 | Per spec, music gets a separate reviewed date. Source playlist content unchanged. | **Change needed** (Task 7) |
@@ -143,14 +143,14 @@ Research conducted using Tavily search and extraction against official Ubisoft s
 | /privacy/ | robots | noindex, follow | Reviewed and retained | Repository source data | 2026-09-04 | Correctly noindex per spec. | Reviewed and retained |
 | /privacy/ | dateModified | 2026-08-22 (in schema) | 2026-09-04 (after prose rewrite) | Repository source data | 2026-09-04 | Will be updated when privacy policy is rewritten in Task 5. | **Change needed** (Task 5) |
 | /privacy/ | datePublished | Expected: 2026-07-17 | 2026-07-17 | Repository source data | 2026-09-04 | Per spec, expected publication date. | **Change needed** — add if missing (Task 6) |
-| /privacy/ | og:title | "Privacy Policy — Invincible GTG" | Desynced — needs synchronization with page title | Repository source data | 2026-09-04 | og:title on /privacy/ needs synchronization with page title. | **Change needed** (Task 5) |
-| /privacy/ | twitter:title | "Privacy Policy — Invincible GTG" | Desynced — needs synchronization with page title | Repository source data | 2026-09-04 | twitter:title on /privacy/ needs synchronization with page title. | **Change needed** (Task 5) |
+| /privacy/ | og:title | "Privacy Policy — Invincible GTG Gem Calculator" | Sync with page title: Privacy Policy — Invincible GTG | Repository source data | 2026-09-04 | og:title on /privacy/ needs synchronization with page title. | **Change needed** (Task 5) |
+| /privacy/ | twitter:title | "Privacy Policy — Invincible GTG Gem Calculator" | Sync with page title: Privacy Policy — Invincible GTG | Repository source data | 2026-09-04 | twitter:title on /privacy/ needs synchronization with page title. | **Change needed** (Task 5) |
 | /terms/ | Page title | "Terms of Service — Invincible GTG" | Reviewed and retained (evergreen) | Repository source data | 2026-09-04 | Per spec, terms title remains evergreen. | Reviewed and retained |
 | /terms/ | robots | noindex, follow | Reviewed and retained | Repository source data | 2026-09-04 | Correctly noindex per spec. | Reviewed and retained |
 | /terms/ | dateModified | 2026-07-17 (in schema) | 2026-09-04 (after prose rewrite) | Repository source data | 2026-09-04 | Will be updated when terms are rewritten in Task 5. | **Change needed** (Task 5) |
 | /terms/ | datePublished | Expected: 2026-07-17 | 2026-07-17 | Repository source data | 2026-09-04 | Per spec, expected publication date. | **Change needed** — add if missing (Task 6) |
-| /terms/ | og:title | "Terms of Service — Invincible GTG" | Desynced — needs synchronization with page title | Repository source data | 2026-09-04 | og:title on /terms/ needs synchronization with page title. | **Change needed** (Task 5) |
-| /terms/ | twitter:title | "Terms of Service — Invincible GTG" | Desynced — needs synchronization with page title | Repository source data | 2026-09-04 | twitter:title on /terms/ needs synchronization with page title. | **Change needed** (Task 5) |
+| /terms/ | og:title | "Terms of Service — Invincible GTG Gem Calculator" | Sync with page title: Terms of Service — Invincible GTG | Repository source data | 2026-09-04 | og:title on /terms/ needs synchronization with page title. | **Change needed** (Task 5) |
+| /terms/ | twitter:title | "Terms of Service — Invincible GTG Gem Calculator" | Sync with page title: Terms of Service — Invincible GTG | Repository source data | 2026-09-04 | twitter:title on /terms/ needs synchronization with page title. | **Change needed** (Task 5) |
 
 ### 1.6 Sitemap and Indexation
 
@@ -163,20 +163,20 @@ Research conducted using Tavily search and extraction against official Ubisoft s
 
 | URL | Primary search intent | Current title | Proposed title | Chars | og:title sync | twitter:title sync | JSON-LD headline sync |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| / | Gem calculator + codes + PvP | Invincible GTG Codes, Gems & PvP Guide — ~4,043/Week [Aug 2026] | Invincible GTG Codes, Gems & PvP Guide — ~4,043/Week [Sep 2026] | 63 | Yes | Yes | Yes |
+| / | Gem calculator + codes + PvP | Invincible GTG Codes, Gems & PvP Guide — ~4,043/Week [Aug 2026] | Invincible GTG Codes, Gems & PvP Guide — ~4,043/Week [Sep 2026] | 63 | Yes | Yes | N/A (WebPage uses name; update name to proposed [Sep 2026]) |
 | /guide/code/ | Active promo codes | Invincible GTG Codes & Redeem Portal — Active [Aug 2026] | Invincible GTG Codes & Redeem Portal — Active [Sep 2026] | 56 | Yes | Yes | Yes; update to proposed [Sep 2026] |
 | /guide/event/ | Event gem income | Invincible GTG Event Guide — How to Get 500 Gems/Week [Aug 2026] | Invincible GTG Event Guide — How to Get 500 Gems/Week [Sep 2026] | 64 | Yes | Yes | Fix needed — sync with proposed title |
-| /guide/pvp/ | PvP arena payouts | Invincible GTG PvP Guide — Arena Payouts & Gem Rewards [Aug 2026] | Invincible GTG PvP Guide — Arena Payouts & Gem Rewards [Sep 2026] | 65 | Yes | Yes | N/A |
+| /guide/pvp/ | PvP arena payouts | Invincible GTG PvP Guide — Arena Payouts & Gem Rewards [Aug 2026] | Invincible GTG PvP Guide — Arena Payouts & Gem Rewards [Sep 2026] | 65 | Yes | Yes | Yes; update to proposed [Sep 2026] |
 | /guide/login/ | Login rewards breakdown | Invincible GTG Login Rewards — 1,393 Gems/Week Guide | Invincible GTG Login Rewards — 1,393 Gems/Week Guide [Sep 2026] | 63 | Yes | Yes | Fix needed — sync with proposed title |
 | /guide/faq/ | FAQ for GTG | Invincible GTG FAQ — Gems Per Week, Codes & Rewards Guide | Invincible GTG FAQ — Gems Per Week, Codes & Rewards [Sep 2026] | 62 | Yes | Yes | Fix needed — headline differs from both current and proposed title (drops 'Guide') |
-| /guide/xp/ | XP and rank costs | Invincible GTG XP Calculator & Level-Up Guide [Aug 2026] | Invincible GTG XP Calculator & Level-Up Guide [Sep 2026] | 56 | Yes | Fix desync | N/A |
+| /guide/xp/ | XP and rank costs | Invincible GTG XP Calculator & Level-Up Guide [Aug 2026] | Invincible GTG XP Calculator & Level-Up Guide [Sep 2026] | 56 | Yes | Fix desync | Yes; update to proposed [Sep 2026] |
 | /guide/beginners/ | New player gem guide | Invincible GTG Beginner Guide — How to Get Free Gems [Aug 2026] | Invincible GTG Beginner Guide — How to Get Free Gems [Sep 2026] | 63 | Yes | Yes | Fix needed — sync with proposed title |
-| /guide/redeem/ | Code redemption how-to | Invincible GTG Redeem Codes — Ubisoft Barcelona Portal [Aug 2026] | Invincible GTG Redeem Codes — Ubisoft Barcelona Portal [Sep 2026] | 65 | Yes | Fix desync | N/A |
+| /guide/redeem/ | Code redemption how-to | Invincible GTG Redeem Codes — Ubisoft Barcelona Portal [Aug 2026] | Invincible GTG Redeem Codes — Ubisoft Barcelona Portal [Sep 2026] | 65 | Yes | Fix desync | Yes; update to proposed [Sep 2026] |
 | /guide/creators/ | YouTube creator directory | Invincible GTG YouTube Creators — Guides, Tier Lists & Gameplay | Invincible GTG YouTube Creators — Guides, Tier Lists & Gameplay [Sep 2026] | 74 | Yes | Yes | N/A (CollectionPage) |
 | /authors/anomaly/ | Author profile (evergreen) | Anomaly — Author Profile | Anomaly — Author Profile (no change) | 24 | Fix desync | N/A | N/A (ProfilePage) |
 | /music/ | Playlists (evergreen) | Music & Playlists — Invincible GTG | Music & Playlists — Invincible GTG (no change) | 34 | Yes | Yes | N/A |
-| /privacy/ | Privacy policy (evergreen) | Privacy Policy — Invincible GTG | Privacy Policy — Invincible GTG (no change) | 31 | Fix desync | Fix desync | N/A (Article) |
-| /terms/ | Terms of service (evergreen) | Terms of Service — Invincible GTG | Terms of Service — Invincible GTG (no change) | 33 | Fix desync | Fix desync | N/A (Article) |
+| /privacy/ | Privacy policy (evergreen) | Privacy Policy — Invincible GTG | Privacy Policy — Invincible GTG (no change) | 31 | Fix desync | Fix desync | Fix desync; update Article headline |
+| /terms/ | Terms of service (evergreen) | Terms of Service — Invincible GTG | Terms of Service — Invincible GTG (no change) | 33 | Fix desync | Fix desync | Fix desync; update Article headline |
 
 ---
 
@@ -248,4 +248,4 @@ Community sources (VG247, SuperCheats) list several codes as active that our dat
 | Sitemap (1.6) | 2 (update lastmod, expand to 14 URLs) | 0 | 0 | 0 | 2 |
 | **Totals** | **56** | **56** | **2** | **7** | **121** |
 
-**Title matrix cross-check (section 1.7):** 14 pages total — 10 need [Sep 2026] suffix update, 4 are evergreen (no title change). 5 pages have sync issues requiring fix: /guide/redeem/ (twitter:title), /guide/xp/ (twitter:title), /authors/anomaly/ (og:title), /privacy/ (og:title + twitter:title), /terms/ (og:title + twitter:title). 6 pages have JSON-LD headline requiring sync or update (/, /guide/code/, /guide/event/, /guide/login/, /guide/faq/, /guide/beginners/).
+**Title matrix cross-check (section 1.7):** 14 pages total — 10 need [Sep 2026] suffix update, 4 are evergreen (no title change). 5 pages have sync issues requiring fix: /guide/redeem/ (twitter:title), /guide/xp/ (twitter:title), /authors/anomaly/ (og:title), /privacy/ (og:title + twitter:title), /terms/ (og:title + twitter:title). Eight guide Article headlines require synchronization/update (code, event, login, faq, beginners, pvp, xp, redeem), the home WebPage name requires the proposed-title update, and privacy/terms Article headlines are separately desynced.
