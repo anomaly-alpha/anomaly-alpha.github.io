@@ -291,20 +291,24 @@ Set the existing GLOB34 record’s expiredDate to 2026-08-28. Preserve its exist
 
 Add marker pairs for the code guide’s date meta, Article modified timestamp, and JSON-LD dateModified. The generator replacement shape must remain source-driven. Re-enable the existing GUIDE_ARTICLE_MODIFIED replacement, which is currently disabled in scripts/generate-codes.js because the previous policy excluded code-list changes from Article freshness. This release explicitly treats the code source update as a substantive page update.
 
+Before modifying scripts/generate-codes.js, insert the HTML-side markers into guide/code/index.html: wrap the current meta name=date element near line 35 with GUIDE_DATE_META_START/END, wrap the current article:modified_time element near lines 56–58 with GUIDE_ARTICLE_MODIFIED_START/END, and wrap the JSON-LD dateModified property near line 161 with GUIDE_LD_DATEMODIFIED_START/END. Each marker pair must occur exactly once.
+
     const articleModified = updated + 'T00:00:00Z';
-    const freshnessReplacements = [
+    replacements.push(
       [/<!--GUIDE_DATE_META_START-->.*?<!--GUIDE_DATE_META_END-->/,
         '<!--GUIDE_DATE_META_START--> <meta name="date" content="' + updated + '"> <!--GUIDE_DATE_META_END-->'],
       [/<!--GUIDE_ARTICLE_MODIFIED_START-->.*?<!--GUIDE_ARTICLE_MODIFIED_END-->/,
         '<!--GUIDE_ARTICLE_MODIFIED_START--> <meta property="article:modified_time" content="' + articleModified + '"> <!--GUIDE_ARTICLE_MODIFIED_END-->']
-    ];
+    );
 
 Add a GUIDE_LD_DATEMODIFIED_START/END marker pair around the code page’s JSON-LD dateModified property and add its concrete replacement to the same replacements array:
 
-    [/<!--GUIDE_LD_DATEMODIFIED_START-->.*?<!--GUIDE_LD_DATEMODIFIED_END-->/,
-      '<!--GUIDE_LD_DATEMODIFIED_START--> "dateModified": "' + updated + '" <!--GUIDE_LD_DATEMODIFIED_END-->']
+    replacements.push([
+      /<!--GUIDE_LD_DATEMODIFIED_START-->.*?<!--GUIDE_LD_DATEMODIFIED_END-->/,
+      '<!--GUIDE_LD_DATEMODIFIED_START--> "dateModified": "' + updated + '" <!--GUIDE_LD_DATEMODIFIED_END-->'
+    ]);
 
-Use the existing generator style, assert each new marker occurs exactly once, and preserve datePublished.
+Append these entries to the existing replacements array; do not create a separate freshnessReplacements array. Use the existing generator style, assert each new marker occurs exactly once, and preserve datePublished.
 
 - [ ] **Step 3: Run code generation and inspect counts**
 
@@ -350,6 +354,8 @@ Update the generator’s ItemList output so it starts with the same schema conte
 Merge these required properties into the existing generated ItemList object without removing its existing itemListElement array.
 
 Keep generated uploadDate equal to each video’s published date, not 2026-09-04. Add collection datePublished 2026-08-23 and dateModified 2026-09-04 to the CollectionPage output.
+
+The CollectionPage node is in the static JSON-LD graph in guide/creators/index.html, not in the generated marker section. Edit that static node directly near line 252 to add datePublished 2026-08-23 and update dateModified to 2026-09-04. Keep the generator change limited to the generated ItemList context and generated video data.
 
 - [ ] **Step 3: Run creator validation and generation**
 
@@ -531,6 +537,8 @@ The generator must fail when reviewed is missing or invalid instead of silently 
 
 Add a MUSIC_REVIEWED_START/END marker around the page’s review label and replace it from playlistData.reviewed:
 
+Insert the marker pair in music/index.html line 76, after the existing Updated date and before the playlistCount span. Use the existing date text as the placeholder between the markers so the generator can replace it on the first run.
+
     var reviewedLabel = '<!--MUSIC_REVIEWED_START-->Reviewed ' + formatDate(playlistData.reviewed) + '<!--MUSIC_REVIEWED_END-->';
     pageHtml = pageHtml.replace(/<!--MUSIC_REVIEWED_START-->.*?<!--MUSIC_REVIEWED_END-->/, reviewedLabel);
 
@@ -539,6 +547,8 @@ Preserve the existing Updated label as the playlist-content date derived from pl
 - [ ] **Step 2c: Add durable generated JSON-LD**
 
 Add a MUSIC_SCHEMA_START/END marker to music/index.html and replace it with one JSON-LD block containing the following graph. Build the playlist ItemList from playlistData.playlists so names, URLs, positions, and descriptions cannot drift from the visible grid:
+
+Insert an empty MUSIC_SCHEMA_START/MUSIC_SCHEMA_END marker pair in music/index.html inside the head, immediately before the closing head tag and after the existing music-config block. The generator owns the content between these markers.
 
     var schema = {
       '@context': 'https://schema.org',
@@ -676,7 +686,7 @@ Expected: no unintended August freshness references, no noindex on the 14 target
 
 - [ ] **Step 5: Inspect rendered pages in a browser**
 
-Serve the workspace locally, inspect all 14 target pages with Playwright, and record in the evidence ledger:
+Run npm run start to serve the workspace on its default port 8080, inspect all 14 target pages at http://127.0.0.1:8080/ with Playwright, and record in the evidence ledger:
 
     document.title
     document.querySelector('link[rel="canonical"]').href
@@ -693,9 +703,16 @@ Confirm each page’s title, canonical, robots directive, visible review date, J
 
 Expected: all pages complete, budgets pass, and any regression is fixed before release.
 
-- [ ] **Step 7: Commit verified integration state**
+- [ ] **Step 7: Commit verified integration state only when needed**
 
-    git status --short
-    git commit -m "release: verify September site freshness update"
+    $pending = git status --short
+    if ($pending) {
+      $pending
+      git diff --check
+      git add docs/reports/2026-09-04/unknown/site-freshness-evidence.md tests/structured-data.test.js package.json data/codes.json scripts/generate-codes.js data/generated/promo-codes.js index.html guide authors/anomaly data/youtube-creators.json scripts/generate-youtube-creators.js data/generated/youtube-creators.js data/playlists.json scripts/generate-music.js music privacy terms sitemap.xml robots.txt CHANGELOG.md
+      git commit -m "release: verify September site freshness update"
+    } else {
+      Write-Host "No final integration commit needed; task commits are clean."
+    }
 
-Expected: the worktree contains only intentional release changes and the evidence ledger records all verification commands and outcomes.
+Expected: the worktree contains only intentional release changes, the final commit is created only when pending release changes exist, and the evidence ledger records all verification commands and outcomes.
