@@ -139,6 +139,10 @@ Create tests/structured-data.test.js with Node built-ins only. The initial test 
       return blocks.flatMap(block => block['@graph'] || [block]);
     }
 
+    function typesFor(nodes) {
+      return nodes.flatMap(node => Array.isArray(node['@type']) ? node['@type'] : [node['@type']]);
+    }
+
     for (const file of PAGES) {
       const blocks = blocksFor(file);
       assert(blocks.length > 0, file + ': expected JSON-LD');
@@ -153,6 +157,56 @@ Create tests/structured-data.test.js with Node built-ins only. The initial test 
     assert.strictEqual(profile.mainEntity['@type'], 'Person', 'author: mainEntity must be Person');
     assert.strictEqual(profile.mainEntity['@id'], 'https://anomaly-alpha.github.io/authors/anomaly/#person', 'author: Person ID must be stable');
     assert.strictEqual(profile.mainEntity.url, 'https://anomaly-alpha.github.io/authors/anomaly/', 'author: Person URL must be profile URL');
+
+    const canonicalUrls = {
+      'index.html': 'https://anomaly-alpha.github.io/',
+      'guide/code/index.html': 'https://anomaly-alpha.github.io/guide/code/',
+      'guide/beginners/index.html': 'https://anomaly-alpha.github.io/guide/beginners/',
+      'guide/event/index.html': 'https://anomaly-alpha.github.io/guide/event/',
+      'guide/pvp/index.html': 'https://anomaly-alpha.github.io/guide/pvp/',
+      'guide/login/index.html': 'https://anomaly-alpha.github.io/guide/login/',
+      'guide/faq/index.html': 'https://anomaly-alpha.github.io/guide/faq/',
+      'guide/xp/index.html': 'https://anomaly-alpha.github.io/guide/xp/',
+      'guide/redeem/index.html': 'https://anomaly-alpha.github.io/guide/redeem/',
+      'guide/creators/index.html': 'https://anomaly-alpha.github.io/guide/creators/',
+      'authors/anomaly/index.html': 'https://anomaly-alpha.github.io/authors/anomaly/',
+      'music/index.html': 'https://anomaly-alpha.github.io/music/',
+      'privacy/index.html': 'https://anomaly-alpha.github.io/privacy/',
+      'terms/index.html': 'https://anomaly-alpha.github.io/terms/'
+    };
+    const requiredTypes = {
+      'index.html': ['WebPage'],
+      'guide/code/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'HowTo', 'FAQPage', 'DefinedTerm'],
+      'guide/beginners/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
+      'guide/event/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
+      'guide/pvp/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
+      'guide/login/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
+      'guide/faq/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
+      'guide/xp/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'DefinedTerm'],
+      'guide/redeem/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage'],
+      'guide/creators/index.html': ['CollectionPage', 'ItemList'],
+      'authors/anomaly/index.html': ['ProfilePage'],
+      'music/index.html': ['CollectionPage', 'BreadcrumbList', 'ItemList'],
+      'privacy/index.html': ['Article'],
+      'terms/index.html': ['Article']
+    };
+    for (const file of PAGES) {
+      const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
+      const canonical = html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)/i);
+      assert(canonical && canonical[1] === canonicalUrls[file], file + ': canonical URL mismatch');
+      const types = typesFor(nodesFor(blocksFor(file)));
+      for (const required of requiredTypes[file]) {
+        assert(types.includes(required), file + ': missing expected ' + required);
+      }
+      for (const node of nodesFor(blocksFor(file))) {
+        if (node['@type'] === 'VideoGame' && node.name === 'Invincible Guarding the Globe') {
+          assert.strictEqual(node['@id'], 'https://anomaly-alpha.github.io/#game', file + ': game ID must be stable');
+        }
+        if (node['@type'] === 'Organization' && node.name === 'Anomaly Alpha') {
+          assert.strictEqual(node['@id'], 'https://anomaly-alpha.github.io/#organization', file + ': organization ID must be stable');
+        }
+      }
+    }
 
     for (const file of PAGES) {
       for (const node of nodesFor(blocksFor(file)).filter(node => node['@type'] === 'Article')) {
@@ -231,27 +285,33 @@ Make these exact JSON changes and preserve all other records:
       "dateAdded": "2026-08-31"
     }
 
-Set the existing GLOB34 record’s expiredDate to 2026-08-28. Do not duplicate JUL4TH or DINOSR and do not rename RAID26.
+Set the existing GLOB34 record’s expiredDate to 2026-08-28. Preserve its existing gems, tickets, and reward fields unchanged. Do not duplicate JUL4TH or DINOSR and do not rename RAID26.
 
 - [ ] **Step 2: Add durable code-page freshness markers**
 
-Add marker pairs for the code guide’s date meta, Article modified timestamp, and JSON-LD dateModified. The generator replacement shape must remain source-driven:
+Add marker pairs for the code guide’s date meta, Article modified timestamp, and JSON-LD dateModified. The generator replacement shape must remain source-driven. Re-enable the existing GUIDE_ARTICLE_MODIFIED replacement, which is currently disabled in scripts/generate-codes.js because the previous policy excluded code-list changes from Article freshness. This release explicitly treats the code source update as a substantive page update.
 
     const articleModified = updated + 'T00:00:00Z';
     const freshnessReplacements = [
-      [/<!--GUIDE_DATE_META_START-->[\s\S]*?<!--GUIDE_DATE_META_END-->/,
-        '<!--GUIDE_DATE_META_START-->\n    <meta name="date" content="' + updated + '">\n<!--GUIDE_DATE_META_END-->'],
-      [/<!--GUIDE_ARTICLE_MODIFIED_START-->[\s\S]*?<!--GUIDE_ARTICLE_MODIFIED_END-->/,
-        '<!--GUIDE_ARTICLE_MODIFIED_START-->\n    <meta property="article:modified_time" content="' + articleModified + '">\n<!--GUIDE_ARTICLE_MODIFIED_END-->']
+      [/<!--GUIDE_DATE_META_START-->.*?<!--GUIDE_DATE_META_END-->/,
+        '<!--GUIDE_DATE_META_START--> <meta name="date" content="' + updated + '"> <!--GUIDE_DATE_META_END-->'],
+      [/<!--GUIDE_ARTICLE_MODIFIED_START-->.*?<!--GUIDE_ARTICLE_MODIFIED_END-->/,
+        '<!--GUIDE_ARTICLE_MODIFIED_START--> <meta property="article:modified_time" content="' + articleModified + '"> <!--GUIDE_ARTICLE_MODIFIED_END-->']
     ];
 
-Use the existing generator style and preserve datePublished. Add the matching JSON-LD dateModified marker using the same updated value.
+Add a GUIDE_LD_DATEMODIFIED_START/END marker pair around the code page’s JSON-LD dateModified property and add its concrete replacement to the same replacements array:
+
+    [/<!--GUIDE_LD_DATEMODIFIED_START-->.*?<!--GUIDE_LD_DATEMODIFIED_END-->/,
+      '<!--GUIDE_LD_DATEMODIFIED_START--> "dateModified": "' + updated + '" <!--GUIDE_LD_DATEMODIFIED_END-->']
+
+Use the existing generator style, assert each new marker occurs exactly once, and preserve datePublished.
 
 - [ ] **Step 3: Run code generation and inspect counts**
 
     npm run update-codes
     Select-String -Path data/generated/promo-codes.js -Pattern 'RAID02|DINOSR|GLOB34|JUL4TH'
     Select-String -Path guide/code/index.html,index.html -Pattern 'RAID02|Sep 2026|2026-09-04'
+    node -e "const fs=require('fs'); const d=require('./data/codes.json'); const g=d.codes.find(c=>c.code==='GLOB34'); const r=d.codes.filter(c=>c.code==='RAID02'); const active=d.codes.filter(c=>!c.expired); const generated=fs.readFileSync('data/generated/promo-codes.js','utf8'); if(!g||g.expiredDate!=='2026-08-28'||g.gems!==500||r.length!==1||r[0].expired||active.filter(c=>c.code==='RAID02').length!==1||!generated.includes('RAID02')||generated.includes('GLOB34')) process.exit(1); console.log('Code source and generated invariants passed; active='+active.length)"
 
 Expected: RAID02 appears once in the active generated payload, GLOB34 is expired with 2026-08-28, the code page uses Sep 2026, and root/code counts match.
 
@@ -389,7 +449,7 @@ Use these exact identifiers consistently:
     https://anomaly-alpha.github.io/authors/anomaly/#person
     https://anomaly-alpha.github.io/#organization
 
-Preserve datePublished. Set dateModified and visible review/update dates to 2026-09-04 for rewritten or technically refreshed pages. Add missing original datePublished values: creators 2026-08-23, privacy 2026-07-17, terms 2026-07-17, music 2026-07-17.
+Preserve datePublished. Set dateModified and visible review/update dates to 2026-09-04 for rewritten or technically refreshed pages. Add missing original datePublished values for creators 2026-08-23, privacy 2026-07-17, and terms 2026-07-17. Task 7 owns music’s datePublished 2026-07-17 and dateModified/reviewed-date output.
 
 - [ ] **Step 3: Repair the author profile**
 
@@ -412,7 +472,7 @@ Ensure every JSON-LD script has its own context. Add homepage WebPage dateModifi
 
 - [ ] **Step 5: Commit metadata and schema repairs**
 
-    git add index.html guide authors/anomaly privacy terms
+    git add index.html guide/code guide/beginners guide/event guide/pvp guide/login guide/faq guide/xp guide/redeem guide/creators authors/anomaly privacy terms
     git commit -m "seo: repair September metadata and structured data"
 
 ### Task 7: Make music indexable with separate review freshness
@@ -423,6 +483,7 @@ Ensure every JSON-LD script has its own context. Add homepage WebPage dateModifi
 - Modify: data/playlists.json
 - Modify: scripts/generate-music.js
 - Modify: music/index.html
+- Test: tests/structured-data.test.js
 
 **Interfaces:**
 - Consumes: current playlist source and the music review result from Task 1.
@@ -438,7 +499,91 @@ Leave updated at 2026-07-17 unless a playlist ID, description, or link actually 
 
 - [ ] **Step 2: Update the music generator**
 
-Validate reviewed as a date-only value, render Reviewed Sep 4, 2026, and emit a page graph containing a CollectionPage, BreadcrumbList, and playlist collection representation. Preserve the existing MUSIC_GRID markers and file:// relative-link behavior.
+- [ ] **Step 2a: Validate the reviewed source field**
+
+Replace the existing validatePlaylists(playlists) signature with validatePlaylists(data) so the generator validates the top-level reviewed field and then validates data.playlists:
+
+    function isDateOnly(value) {
+      return typeof value === 'string' && /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(value) && !isNaN(new Date(value + 'T00:00:00Z').getTime());
+    }
+
+    function validatePlaylists(data) {
+      if (!isDateOnly(data.reviewed)) {
+        console.error('Error: data/playlists.json reviewed must be a valid YYYY-MM-DD date');
+        return false;
+      }
+      var playlists = data.playlists;
+      for (var i = 0; i < playlists.length; i++) {
+        var playlist = playlists[i];
+        if (!playlist.id || !playlist.name || !playlist.color || !playlist.page) {
+          console.error('Error: playlist ' + i + ' missing required field (id, name, color, page)');
+          return false;
+        }
+      }
+      return true;
+    }
+
+    if (!validatePlaylists(playlistData)) process.exit(1);
+
+The generator must fail when reviewed is missing or invalid instead of silently ignoring it.
+
+- [ ] **Step 2b: Add durable review-date output**
+
+Add a MUSIC_REVIEWED_START/END marker around the page’s review label and replace it from playlistData.reviewed:
+
+    var reviewedLabel = '<!--MUSIC_REVIEWED_START-->Reviewed ' + formatDate(playlistData.reviewed) + '<!--MUSIC_REVIEWED_END-->';
+    pageHtml = pageHtml.replace(/<!--MUSIC_REVIEWED_START-->.*?<!--MUSIC_REVIEWED_END-->/, reviewedLabel);
+
+Preserve the existing Updated label as the playlist-content date derived from playlistData.updated.
+
+- [ ] **Step 2c: Add durable generated JSON-LD**
+
+Add a MUSIC_SCHEMA_START/END marker to music/index.html and replace it with one JSON-LD block containing the following graph. Build the playlist ItemList from playlistData.playlists so names, URLs, positions, and descriptions cannot drift from the visible grid:
+
+    var schema = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'BreadcrumbList',
+          'itemListElement': [
+            { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://anomaly-alpha.github.io/' },
+            { '@type': 'ListItem', 'position': 2, 'name': 'Music & Playlists', 'item': 'https://anomaly-alpha.github.io/music/' }
+          ]
+        },
+        {
+          '@id': 'https://anomaly-alpha.github.io/music/#page',
+          '@type': 'CollectionPage',
+          'name': 'Music & Playlists — Invincible GTG',
+          'url': 'https://anomaly-alpha.github.io/music/',
+          'datePublished': '2026-07-17',
+          'dateModified': playlistData.reviewed,
+          'isPartOf': {
+            '@type': 'WebSite',
+            '@id': 'https://anomaly-alpha.github.io/#website',
+            'name': 'Invincible GTG',
+            'url': 'https://anomaly-alpha.github.io/'
+          }
+        },
+        {
+          '@type': 'ItemList',
+          'name': 'Invincible GTG playlists',
+          'itemListElement': playlistData.playlists.map(function (playlist, index) {
+            return {
+              '@type': 'ListItem',
+              'position': index + 1,
+              'name': playlist.name,
+              'description': playlist.description,
+              'url': 'https://open.spotify.com/playlist/' + playlist.id
+            };
+          })
+        }
+      ]
+    };
+
+var schemaHtml = '<script type="application/ld+json">' + JSON.stringify(schema).replace(/<[/]script/gi, '<' + String.fromCharCode(92) + '/script') + '</script>';
+pageHtml = pageHtml.replace(/<!--MUSIC_SCHEMA_START-->[^]*?<!--MUSIC_SCHEMA_END-->/, '<!--MUSIC_SCHEMA_START-->' + schemaHtml + '<!--MUSIC_SCHEMA_END-->');
+
+Preserve the existing MUSIC_GRID markers and file:// relative-link behavior. The generated schema block must include its own context and remain idempotent.
 
 - [ ] **Step 3: Make the page indexable and verify metadata**
 
@@ -523,9 +668,11 @@ Check target pages and generated outputs with these commands:
 
     Select-String -Path index.html,guide/*/index.html,authors/anomaly/index.html,music/index.html,privacy/index.html,terms/index.html -Pattern 'Aug 2026|2026-08-22|2026-08-23|noindex'
     Select-String -Path data/generated/promo-codes.js,index.html,guide/code/index.html -Pattern 'RAID02|GLOB34|DINOSR|JUL4TH'
+    Select-String -Path music/index.html -Pattern 'Reviewed Sep 4, 2026|datePublished.*2026-07-17|dateModified.*2026-09-04|CollectionPage|BreadcrumbList|ItemList'
+    Select-String -Path privacy/index.html,terms/index.html -Pattern 'datePublished.*2026-07-17|dateModified.*2026-09-04'
     git diff --exit-code -- data/generated/promo-codes.js data/generated/youtube-creators.js guide/creators/index.html music/index.html
 
-Expected: no unintended August freshness references, no noindex on the 14 target pages, exact code records, and no generator drift.
+Expected: no unintended August freshness references, no noindex on the 14 target pages, exact code records, music review/schema/date fields, legal publication/modified dates, and no generator drift.
 
 - [ ] **Step 5: Inspect rendered pages in a browser**
 
@@ -536,7 +683,7 @@ Serve the workspace locally, inspect all 14 target pages with Playwright, and re
     document.querySelector('meta[name="robots"]')?.content
     [...document.scripts].filter(script => script.type === 'application/ld+json').map(script => JSON.parse(script.textContent))
 
-Confirm each page’s title, canonical, robots directive, visible review date, JSON-LD contexts, author/mainEntity relationship, and FAQ parity.
+Confirm each page’s title, canonical, robots directive, visible review date, JSON-LD contexts, author/mainEntity relationship, and FAQ parity. Confirm music contains CollectionPage with datePublished 2026-07-17 and dateModified 2026-09-04, BreadcrumbList, and playlist ItemList. Confirm privacy and terms contain datePublished 2026-07-17 and dateModified 2026-09-04.
 
 - [ ] **Step 6: Run Lighthouse and inspect the score table**
 
