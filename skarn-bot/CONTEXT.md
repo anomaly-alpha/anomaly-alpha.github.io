@@ -467,6 +467,14 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 - **Wisdom layer (2026-08-01)**: The `SKARN_CORE_IDENTITY` reauthor + `SKARN_FOOTER` update in `persona/identity.js`. Grounded in distilled behaviors (question-over-answer, absorb-before-responding, read-the-terrain, confidence-needs-no-volume, hardship-as-material) — philosopher names are never in the prompt. Includes 5 trait directives (wiser/patient/knowledgeable/kind/intelligent) and anti-drift guardrails in the **Wisdom Through Millennia** section. Design spec: `docs/specs/2026-08-01/deepseek-v4-flash/skarn-wisdom-layer-design.md`.
 - **Guild mood** (`features/mood/moodManager.js`): Per-guild mood state in `guild_mood` (free-text `current_mood`). `evaluateMood()` reads 2h interaction stats and sets one of 6 moods — refreshed, neutral, tired, amused, focused, and **wrath** (added 2026-08-01: `totalInteractions > 100 && avgFamiliarity < 10`, checked before `tired` so high-volume low-familiarity servers read as controlled wrath). `getMoodLine()` injects the matching line into the prompt. Note: `avg_familiarity || 0` means data-less high-volume guilds also hit wrath.
 
+### Presence Systems
+
+- **Presence mood**: The global Skarn ambient disposition shared by the Railway bot presence and the local desktop Rich Presence. It has exactly four states — dormant, observing, pondering, and displeased — and is distinct from any one guild's mood or channel's state.
+- **Mood window**: The bounded interval during which one presence mood remains active. Phrase rotation may continue inside the window, but the mood itself does not change until the window ends.
+- **Phrase dataset**: A process-owned collection of mood-tagged presence phrases. The Railway bot and local Rich Presence maintain separate datasets; sharing the presence mood does not imply sharing phrase text.
+- **Mood authority**: The single owner that establishes the current global presence mood and its window. Other processes observe it and report their own health; they do not create competing mood revisions.
+- **Presence heartbeat**: A bounded liveness report from a presence process containing its last observed mood and operational counters. A heartbeat describes process health and never changes the canonical presence mood.
+
 ### Realm of Skarn (RPG Subsystem)
 
 - **Realm of Skarn**: A persistent AI-driven RPG within Discord. 12 top-level files under `features/realm/` (1,936 lines total; ~2,835 including the 8 files in `features/realm/handlers/`).

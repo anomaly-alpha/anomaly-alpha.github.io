@@ -7,10 +7,15 @@ const https = require('https');
 const clientId = '982308134871765022';
 const RETRY_MS = 15000;
 const ROTATE_MS = 10 * 1000;            // 10 seconds
-const REGEN_MS = 5 * 60 * 60 * 1000;   // 5 hours
+const REGEN_MS = 12 * 60 * 60 * 1000;   // 12 hours
 const REGEN_BATCH = 50;                 // phrases to generate per regen
+const ACTIVE_POOL_LIMIT = 500;
+const ARCHIVE_LIMIT = 2000;
+const MOOD_DWELL_MS = 10 * 60 * 1000;
+const MOOD_IDS = new Set(['dormant', 'observing', 'pondering', 'displeased']);
 const LOG_FILE = path.join(__dirname, 'data', 'rpc.log');
 const PHRASE_CACHE = path.join(__dirname, 'data', 'rpc-phrases.json');
+const MOOD_CLASSIFICATION = path.join(__dirname, 'data', 'rpc-phrase-moods.json');
 
 let retryTimer = null;
 let rotateTimer = null;
@@ -18,11 +23,135 @@ let regenTimer = null;
 let rotationPool = [];  // [{ key, details, state }, ...]
 let lastIndex = -1;
 let activeRpc = null;
+let phraseMoodMap = new Map();
+let currentMood = null;
+let moodUntil = 0;
 
 // ── Icon registry ────────────────────────────────────────
 // Loaded from data/icon-registry.json — add/remove icons there.
 
 const ICONS = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'icon-registry.json'), 'utf8'));
+const ICONS_BY_KEY = new Map(ICONS.map(icon => [icon.key, icon]));
+const ASSET_ALIASES = Object.freeze({
+  skarn_alignment_center: 'skarn_align_center',
+  skarn_dollars: 'skarn_dollar',
+  skarn_expclamation_mark: 'skarn_exclamation_mark',
+  skarn_headbeat: 'skarn_heartbeat',
+  skarn_mail: 'skarn_email',
+  skarn_move: 'skarn_motion',
+  skarn_smile: 'skarn_face',
+  skarn_stop: 'skarn_pause',
+});
+const PHRASE_REWRITES = Object.freeze({
+  'skarn_power|strength borrowed, never owned|will bends but does not break': {
+    details: 'strength borrowed, never owned',
+    state: 'Will bends, never breaks',
+  },
+  'skarn_close|Closed chapter on lost ages|New ones open with equal folly': {
+    details: 'Closed chapter on lost ages',
+    state: 'New ones open; folly repeats',
+  },
+});
+let archivedEntries = [];
+
+// ── Asset and phrase normalization ────────────────────────
+
+function entrySignature(entry) {
+  return entry.key + '|' + entry.details + '|' + entry.state;
+}
+
+function addToArchive(entries, reason) {
+  const seen = new Set(archivedEntries.map(entrySignature));
+  (entries || []).forEach(entry => {
+    if (!entry || !entry.key || !entry.details || !entry.state) return;
+    const archived = {
+      key: String(entry.key),
+      details: String(entry.details).slice(0, 60),
+      state: String(entry.state).slice(0, 60),
+      reason: reason || entry.reason || 'unsupported-asset',
+    };
+    const signature = entrySignature(archived);
+    if (seen.has(signature)) return;
+    archivedEntries.push(archived);
+    seen.add(signature);
+  });
+}
+
+function normalizeEntry(entry) {
+  if (!entry || !entry.key || !entry.details || !entry.state) return null;
+  const key = ASSET_ALIASES[entry.key] || entry.key;
+  const icon = ICONS_BY_KEY.get(key);
+  if (!icon) return null;
+  const original = {
+    key: entry.key,
+    details: String(entry.details),
+    state: String(entry.state),
+  };
+  const rewrite = PHRASE_REWRITES[key + '|' + original.details + '|' + original.state];
+  const details = rewrite ? rewrite.details : original.details.slice(0, 60);
+  const state = rewrite ? rewrite.state : original.state.slice(0, 60);
+  const mood = MOOD_IDS.has(entry.mood) ? entry.mood : phraseMoodMap.get(entrySignature({ key, details, state })) || phraseMoodMap.get(entrySignature(original)) || 'observing';
+  return {
+    key,
+    details,
+    state,
+    label: icon.label,
+    mood,
+  };
+}
+
+function normalizeEntries(entries) {
+  const active = [];
+  const unsupported = [];
+  const duplicates = [];
+  const seen = new Set();
+  (entries || []).forEach(entry => {
+    const normalized = normalizeEntry(entry);
+    if (!normalized) {
+      unsupported.push(entry);
+      return;
+    }
+    const signature = (normalized.details + '|' + normalized.state).toLowerCase();
+    if (seen.has(signature)) {
+      duplicates.push(entry);
+      return;
+    }
+    seen.add(signature);
+    active.push(normalized);
+  });
+  return { active, unsupported, duplicates };
+}
+
+function capActivePool(entries) {
+  if (entries.length <= ACTIVE_POOL_LIMIT) return { active: entries, pruned: [] };
+  return {
+    active: entries.slice(-ACTIVE_POOL_LIMIT),
+    pruned: entries.slice(0, -ACTIVE_POOL_LIMIT),
+  };
+}
+
+function capArchive() {
+  if (archivedEntries.length <= ARCHIVE_LIMIT) return;
+  const protectedEntries = archivedEntries.filter(entry => entry.reason === 'unsupported-asset' || entry.reason === 'duplicate');
+  const otherEntries = archivedEntries.filter(entry => entry.reason !== 'unsupported-asset' && entry.reason !== 'duplicate');
+  const remaining = Math.max(0, ARCHIVE_LIMIT - protectedEntries.length);
+  archivedEntries = [...protectedEntries.slice(0, ARCHIVE_LIMIT), ...otherEntries.slice(-remaining)];
+}
+
+function loadMoodClassification() {
+  try {
+    const data = JSON.parse(fs.readFileSync(MOOD_CLASSIFICATION, 'utf8'));
+    const map = new Map();
+    (data.phrases || []).forEach(entry => {
+      if (!entry || !MOOD_IDS.has(entry.mood)) return;
+      map.set(entrySignature(entry), entry.mood);
+    });
+    phraseMoodMap = map;
+    log('Loaded ' + map.size + ' phrase mood classifications');
+  } catch (e) {
+    phraseMoodMap = new Map();
+  }
+}
 
 // ── Logging ──────────────────────────────────────────────
 
@@ -37,14 +166,24 @@ function getState() {
   const hour = new Date().getUTCHours();
   const localHour = (hour + Math.floor(-new Date().getTimezoneOffset() / 60) + 24) % 24;
 
-  if (localHour >= 1 || localHour < 7) {
-    return { detail: 'Dormant' };
+  if (localHour >= 1 && localHour < 7) {
+    return { id: 'dormant', detail: 'Dormant', dwellMs: MOOD_DWELL_MS };
   }
 
   const roll = Math.random();
-  if (roll < 0.05) return { detail: 'Displeased' };
-  if (roll < 0.15) return { detail: 'Pondering' };
-  return { detail: 'Observing' };
+  if (roll < 0.05) return { id: 'displeased', detail: 'Displeased', dwellMs: MOOD_DWELL_MS };
+  if (roll < 0.15) return { id: 'pondering', detail: 'Pondering', dwellMs: MOOD_DWELL_MS };
+  return { id: 'observing', detail: 'Observing', dwellMs: MOOD_DWELL_MS };
+}
+
+function getCurrentMood() {
+  const now = Date.now();
+  const state = getState();
+  if (state.id !== 'dormant' && currentMood && currentMood.id !== 'dormant' && now < moodUntil) return currentMood;
+  if (currentMood?.id !== state.id) log('Mood: ' + state.id);
+  currentMood = state;
+  moodUntil = now + state.dwellMs;
+  return currentMood;
 }
 
 // ── Phrase generation via OpenAI ──────────────────────────
@@ -67,6 +206,7 @@ function generateBatch(existing) {
 Generate ${REGEN_BATCH} short inner-monologue LINE PAIRS. Each pair has two lines:
 - "details": the primary thought (max 5 words, punchy)
 - "state": a secondary thought or follow-up (max 5 words, complementary)
+- "mood": exactly one of "dormant", "observing", "pondering", or "displeased"
 
 SHORT is everything. Every word must earn its place.
 
@@ -74,14 +214,15 @@ Rules:
 - Dry humor, quiet observation, ancient perspective
 - Never use the words "Skarn" or "I" — third-person inner thoughts
 - The two lines complement each other, not repeat
+- Mood describes the emotional atmosphere of the pair, not the icon itself
 - Vary the tone: menacing, weary, amused, warm, philosophical
 - MAX 5 WORDS per line. No exceptions.
 
 Icons and their themes:
 ${iconList}
 
-Output a flat JSON array of objects. Each object has "key", "details", "state". No grouping by icon — just flat pairs.
-[{"key":"skarn_at","details":"Summoned again","state":"Patience thins"}, ...]
+Output a flat JSON array of objects. Each object has "key", "details", "state", and "mood". No grouping by icon — just flat pairs.
+[{"key":"skarn_at","details":"Summoned again","state":"Patience thins","mood":"displeased"}, ...]
 
 No markdown, no text outside the JSON. ${REGEN_BATCH} entries minimum.`;
 
@@ -112,19 +253,34 @@ No markdown, no text outside the JSON. ${REGEN_BATCH} entries minimum.`;
           const raw = JSON.parse(cleaned);
           const arr = Array.isArray(raw) ? raw : raw.icons || raw.pool || Object.values(raw).find(v => Array.isArray(v)) || [];
 
-          // Validate and flatten
           const newEntries = arr
             .filter(e => e.key && e.details && e.state)
-            .map(e => ({ key: e.key, details: String(e.details).slice(0, 60), state: String(e.state).slice(0, 60) }));
+            .map(e => ({ key: e.key, details: String(e.details).slice(0, 60), state: String(e.state).slice(0, 60), mood: MOOD_IDS.has(e.mood) ? e.mood : '' }));
 
-          // Dedup against existing
-          const existingSet = new Set(existing.map(e => e.details + '|' + e.state));
-          const unique = newEntries.filter(e => !existingSet.has(e.details + '|' + e.state));
+          const normalized = [];
+          const unsupported = [];
+          newEntries.forEach(entry => {
+            const normalizedEntry = normalizeEntry(entry);
+            if (normalizedEntry) normalized.push(normalizedEntry);
+            else unsupported.push(entry);
+          });
+          addToArchive(unsupported);
+
+          const existingSet = new Set(existing.map(e => (e.details + '|' + e.state).toLowerCase()));
+          const unique = normalized.filter(e => {
+            const signature = (e.details + '|' + e.state).toLowerCase();
+            if (existingSet.has(signature)) return false;
+            existingSet.add(signature);
+            return true;
+          });
 
           const merged = [...existing, ...unique];
-          log('Generated ' + newEntries.length + ' new, ' + unique.length + ' unique, total: ' + merged.length);
-          saveCache(merged);
-          resolve(merged);
+          const capped = capActivePool(merged);
+          addToArchive(capped.pruned, 'pool-overflow');
+          capArchive();
+          log('Generated ' + newEntries.length + ' new, ' + unique.length + ' unique, ' + unsupported.length + ' archived, active: ' + capped.active.length);
+          saveCache(capped.active);
+          resolve(capped.active);
         } catch (e) {
           log('Parse error: ' + e.message);
           resolve(existing.length > 0 ? existing : buildFallback());
@@ -153,9 +309,9 @@ function initialGenerate() {
       return resolve(existing || buildFallback());
     }
 
-    if (existing && existing.length >= 500) {
-      log('Cache has ' + existing.length + ' phrases, appending batch');
-      resolve(generateBatch(existing));
+    if (existing && existing.length > 0) {
+      log('Cache has ' + existing.length + ' active phrases, skipping startup generation');
+      resolve(existing);
       return;
     }
 
@@ -166,6 +322,7 @@ function initialGenerate() {
 Generate 200 short inner-monologue LINE PAIRS. Each pair has two lines:
 - "details": the primary thought (max 5 words, punchy)
 - "state": a secondary thought or follow-up (max 5 words, complementary)
+- "mood": exactly one of "dormant", "observing", "pondering", or "displeased"
 
 SHORT is everything. Every word must earn its place.
 
@@ -173,14 +330,15 @@ Rules:
 - Dry humor, quiet observation, ancient perspective
 - Never use the words "Skarn" or "I" — third-person inner thoughts
 - The two lines complement each other, not repeat
+- Mood describes the emotional atmosphere of the pair, not the icon itself
 - Vary the tone: menacing, weary, amused, warm, philosophical, threatening
 - MAX 5 WORDS per line. No exceptions.
 
 Icons and their themes:
 ${iconList}
 
-Output a flat JSON array of objects. Each object has "key", "details", "state".
-[{"key":"skarn_at","details":"Summoned again","state":"Patience thins"}, ...]
+Output a flat JSON array of objects. Each object has "key", "details", "state", and "mood".
+[{"key":"skarn_at","details":"Summoned again","state":"Patience thins","mood":"displeased"}, ...]
 
 No markdown, no text outside the JSON. 200 entries minimum.`;
 
@@ -213,15 +371,32 @@ No markdown, no text outside the JSON. 200 entries minimum.`;
 
           const newEntries = arr
             .filter(e => e.key && e.details && e.state)
-            .map(e => ({ key: e.key, details: String(e.details).slice(0, 60), state: String(e.state).slice(0, 60) }));
+            .map(e => ({ key: e.key, details: String(e.details).slice(0, 60), state: String(e.state).slice(0, 60), mood: MOOD_IDS.has(e.mood) ? e.mood : '' }));
 
-          const existingSet = existing ? new Set(existing.map(e => e.details + '|' + e.state)) : new Set();
-          const unique = newEntries.filter(e => !existingSet.has(e.details + '|' + e.state));
+          const normalized = [];
+          const unsupported = [];
+          newEntries.forEach(entry => {
+            const normalizedEntry = normalizeEntry(entry);
+            if (normalizedEntry) normalized.push(normalizedEntry);
+            else unsupported.push(entry);
+          });
+          addToArchive(unsupported);
+
+          const existingSet = existing ? new Set(existing.map(e => (e.details + '|' + e.state).toLowerCase())) : new Set();
+          const unique = normalized.filter(e => {
+            const signature = (e.details + '|' + e.state).toLowerCase();
+            if (existingSet.has(signature)) return false;
+            existingSet.add(signature);
+            return true;
+          });
           const merged = existing ? [...existing, ...unique] : unique;
+          const capped = capActivePool(merged);
+          addToArchive(capped.pruned, 'pool-overflow');
+          capArchive();
 
-          log('Initial generation: ' + unique.length + ' unique phrases, total: ' + merged.length);
-          saveCache(merged);
-          resolve(merged);
+          log('Initial generation: ' + unique.length + ' unique phrases, ' + unsupported.length + ' archived, active: ' + capped.active.length);
+          saveCache(capped.active);
+          resolve(capped.active);
         } catch (e) {
           log('Parse error: ' + e.message);
           resolve(existing || buildFallback());
@@ -243,35 +418,54 @@ No markdown, no text outside the JSON. 200 entries minimum.`;
 // ── Phrase cache ──────────────────────────────────────────
 
 function loadCache() {
+  archivedEntries = [];
+  loadMoodClassification();
   try {
     const data = JSON.parse(fs.readFileSync(PHRASE_CACHE, 'utf8'));
-    const pool = data.pool;
-    if (Array.isArray(pool) && pool.length > 0) {
-      // Migrate legacy format (grouped by icon) to flat format
-      if (pool[0]?.lines) {
-        const flat = [];
-        pool.forEach(entry => {
-          (entry.lines || []).forEach(l => {
-            if (l.details && l.state) flat.push({ key: entry.key, details: l.details, state: l.state });
-          });
+    let pool = data.pool;
+    let migratedLegacy = false;
+    if (Array.isArray(pool) && pool[0]?.lines) {
+      const flat = [];
+      pool.forEach(entry => {
+        (entry.lines || []).forEach(line => {
+          if (line.details && line.state) flat.push({ key: entry.key, details: line.details, state: line.state });
         });
-        log('Migrated ' + flat.length + ' phrases from legacy format');
-        saveCache(flat);
-        return flat;
-      }
-      // Already flat
-      log('Loaded ' + pool.length + ' cached phrases');
-      return pool;
+      });
+      pool = flat;
+      migratedLegacy = true;
+      log('Migrated ' + pool.length + ' phrases from legacy format');
     }
+    if (!Array.isArray(pool) || pool.length === 0) return null;
+
+    addToArchive(Array.isArray(data.archive) ? data.archive : []);
+    const normalized = normalizeEntries(pool);
+    addToArchive(normalized.unsupported);
+    addToArchive(normalized.duplicates, 'duplicate');
+    const capped = capActivePool(normalized.active);
+    addToArchive(capped.pruned, 'pool-overflow');
+    capArchive();
+
+    const aliasesChanged = pool.some(entry => {
+      const normalizedEntry = normalizeEntry(entry);
+      return normalizedEntry && (normalizedEntry.key !== entry.key || normalizedEntry.details !== entry.details || normalizedEntry.state !== entry.state);
+    });
+    const needsMigration = migratedLegacy || aliasesChanged || normalized.unsupported.length > 0 || normalized.duplicates.length > 0 || capped.pruned.length > 0 || !Array.isArray(data.archive);
+    if (needsMigration) saveCache(capped.active);
+
+    log('Loaded ' + capped.active.length + ' active phrases; archived ' + archivedEntries.length + ' inactive phrases');
+    return capped.active.length > 0 ? capped.active : null;
   } catch (e) {}
   return null;
 }
 
 function saveCache(entries) {
   try {
+    capArchive();
     fs.writeFileSync(PHRASE_CACHE, JSON.stringify({
       pool: entries,
+      archive: archivedEntries,
       count: entries.length,
+      archivedCount: archivedEntries.length,
       generatedAt: new Date().toISOString(),
     }, null, 2));
   } catch (e) {
@@ -280,21 +474,24 @@ function saveCache(entries) {
 }
 
 function buildFallback() {
-  return [
-    { key: 'skarn_judging', details: 'Watching from the shadows', state: 'Silent judgment' },
+  return normalizeEntries([
+    { key: 'skarn_eye', details: 'Watching from the shadows', state: 'Silent judgment' },
     { key: 'skarn_sleep', details: 'Pretending to be asleep', state: 'Mortals pass by' },
-    { key: 'skarn_annoyed', details: 'Another futile request', state: 'Patience wears thin' },
-  ];
+    { key: 'skarn_dislike', details: 'Another futile request', state: 'Patience wears thin' },
+  ]).active;
 }
 
 // ── Activity builder ─────────────────────────────────────
 
 function buildActivity() {
-  // Pick a random entry, avoiding back-to-back repeats
+  const mood = getCurrentMood();
+  const moodEntries = rotationPool.filter(entry => entry.mood === mood.id);
+  const candidates = moodEntries.length > 0 ? moodEntries : rotationPool;
   let idx;
   do {
-    idx = Math.floor(Math.random() * rotationPool.length);
-  } while (idx === lastIndex && rotationPool.length > 1);
+    const candidate = candidates[Math.floor(Math.random() * candidates.length)];
+    idx = rotationPool.indexOf(candidate);
+  } while (idx === lastIndex && candidates.length > 1);
   lastIndex = idx;
 
   const entry = rotationPool[idx];
