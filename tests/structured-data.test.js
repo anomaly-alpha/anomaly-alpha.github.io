@@ -84,7 +84,7 @@ const requiredTypes = {
   'guide/faq/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
   'guide/xp/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'DefinedTerm'],
   'guide/redeem/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage'],
-  'guide/creators/index.html': ['CollectionPage', 'ItemList'],
+  'guide/creators/index.html': ['BreadcrumbList', 'VideoGame', 'CollectionPage', 'ItemList'],
   'authors/anomaly/index.html': ['ProfilePage'],
   'music/index.html': ['CollectionPage', 'BreadcrumbList', 'ItemList'],
   'privacy/index.html': ['Article'],
@@ -160,7 +160,7 @@ for (const file of PAGES) {
     if (!obj || typeof obj !== 'object') return;
     if (Array.isArray(obj)) { obj.forEach(collect); return; }
     if (obj['@id']) {
-      var id = obj['@id'];
+      const id = obj['@id'];
       definedIds.add(id.startsWith('#') ? SITE_ROOT + id : id);
     }
     for (const v of Object.values(obj)) collect(v);
@@ -169,7 +169,7 @@ for (const file of PAGES) {
     if (!obj || typeof obj !== 'object') return;
     if (Array.isArray(obj)) { obj.forEach(check); return; }
     if (obj['@id']) {
-      var refId = obj['@id'];
+      let refId = obj['@id'];
       refId = refId.startsWith('#') ? SITE_ROOT + refId : refId;
       if (!definedIds.has(refId)) {
         assert(obj['@type'], file + ': dangling reference @id "' + obj['@id'] + '"');
@@ -188,11 +188,17 @@ const generators = [
 ];
 for (const [script, outputs] of generators) {
   const snapshots = outputs.map(f => fs.readFileSync(path.join(ROOT, f)));
-  execFileSync(process.execPath, [script], { cwd: ROOT });
-  outputs.forEach((f, i) => {
-    const current = fs.readFileSync(path.join(ROOT, f));
-    assert(Buffer.compare(snapshots[i], current) === 0, script + ': output changed for ' + f);
-  });
+  try {
+    execFileSync(process.execPath, [script], { cwd: ROOT });
+    outputs.forEach((f, i) => {
+      const current = fs.readFileSync(path.join(ROOT, f));
+      assert(Buffer.compare(snapshots[i], current) === 0, script + ': output changed for ' + f);
+    });
+  } finally {
+    outputs.forEach((f, i) => {
+      fs.writeFileSync(path.join(ROOT, f), snapshots[i]);
+    });
+  }
 }
 
 console.log('Structured-data checks passed for ' + PAGES.length + ' pages');
