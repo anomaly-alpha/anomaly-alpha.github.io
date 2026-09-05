@@ -707,6 +707,7 @@ function renderJsonLdHtml(data) {
   if (allVideoObjects.length === 0) return '';
 
   var itemList = {
+    '@context': 'https://schema.org',
     '@type': 'ItemList',
     'name': 'Invincible GTG Creator Videos',
     'itemListElement': allVideoObjects.map(function (vo, i) {
