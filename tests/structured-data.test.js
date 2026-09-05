@@ -27,7 +27,7 @@ const PAGES = [
 function blocksFor(file) {
   const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
   return [...html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)]
-    .map(match => JSON.parse(match[1]));
+    .map(match => JSON.parse(match[1].replace(/<!--[\s\S]*?-->/g, '')));
 }
 
 function decodeEntities(text) {
