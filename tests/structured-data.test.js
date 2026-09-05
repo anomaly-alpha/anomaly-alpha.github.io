@@ -43,6 +43,17 @@ function typesFor(nodes) {
   return nodes.flatMap(node => Array.isArray(node['@type']) ? node['@type'] : [node['@type']]);
 }
 
+function allNodes(value) {
+  const result = [];
+  (function walk(v) {
+    if (!v || typeof v !== 'object') return;
+    if (Array.isArray(v)) { v.forEach(walk); return; }
+    if (v['@type']) result.push(v);
+    for (const child of Object.values(v)) walk(child);
+  })(value);
+  return result;
+}
+
 for (const file of PAGES) {
   const blocks = blocksFor(file);
   assert(blocks.length > 0, file + ': expected JSON-LD');
@@ -140,7 +151,7 @@ for (const file of PAGES) {
 for (const file of PAGES) {
   const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
   const visible = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]+>/g, ' ');
-  for (const node of nodesFor(blocksFor(file))) {
+  for (const node of allNodes(blocksFor(file))) {
     assert.notStrictEqual(node['@type'], 'Product', file + ': unexpected Product schema (no visible content contract)');
     assert.notStrictEqual(node['@type'], 'Review', file + ': unexpected Review schema (no visible content contract)');
     if (node['@type'] === 'VideoObject') {
