@@ -136,6 +136,21 @@ for (const file of PAGES) {
   }
 }
 
+// ===== Schema content parity =====
+for (const file of PAGES) {
+  const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
+  const visible = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]+>/g, ' ');
+  for (const node of nodesFor(blocksFor(file))) {
+    assert.notStrictEqual(node['@type'], 'Product', file + ': unexpected Product schema (no visible content contract)');
+    assert.notStrictEqual(node['@type'], 'Review', file + ': unexpected Review schema (no visible content contract)');
+    if (node['@type'] === 'VideoObject') {
+      const hasVisibleName = node.name && visible.includes(node.name);
+      const hasVisibleDesc = node.description && visible.includes(node.description);
+      assert(hasVisibleName || hasVisibleDesc, file + ': VideoObject missing visible name or description');
+    }
+  }
+}
+
 // ===== Local reference resolution =====
 const SITE_ROOT = 'https://anomaly-alpha.github.io/';
 for (const file of PAGES) {
