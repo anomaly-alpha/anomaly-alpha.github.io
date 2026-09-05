@@ -44,7 +44,7 @@ function decodeEntities(text) {
 }
 
 function normalize(text) {
-  return decodeEntities(String(text)).replace(/\s+/g, ' ').trim();
+  return decodeEntities(String(text)).replace(/\s+/g, ' ').replace(/\s+([,.!?;:])/g, '$1').trim();
 }
 
 function visibleText(html) {
