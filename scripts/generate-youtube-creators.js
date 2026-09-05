@@ -620,7 +620,7 @@ function renderFeedSummaryHtml(data) {
   html += '        <div class="gem-creators__signal-copy">\n';
   html += '          <p class="gem-creators__eyebrow">ACTIVITY FEED</p>\n';
   html += '          <h2 id="creatorFeedTitle">Fresh coverage, newest first</h2>\n';
-  html += '          <p>When a major event lands, videos from different creators stack together here so the community response reads as one burst of activity.</p>\n';
+  html += '          <p>When a major update or event lands, videos from different creators stack together here so the community response reads as one burst of activity. Each card represents a single video, sorted newest first.</p>\n';
   html += '        </div>\n';
   html += '        <div class="gem-creators__stats" aria-label="Feed summary">\n';
   html += '          <span><strong>' + items.length + '</strong> videos</span>\n';
@@ -765,8 +765,8 @@ function renderNoscriptHtml(data) {
 function renderDisclaimerHtml() {
   var html = '';
   html += '      <div class="gem-creators__note" role="note" aria-label="Directory notes">\n';
-  html += '        <p class="gem-creators__note-item"><strong>Playback note</strong> Thumbnails and playback may connect to YouTube. Videos play through YouTube when selected. Creator activity and video availability can change.</p>\n';
-  html += '        <p class="gem-creators__note-item"><strong>Independence note</strong> Creators listed here are independent community members and are not necessarily endorsed by Ubisoft, YouTube, or Anomaly Alpha.</p>\n';
+  html += '        <p class="gem-creators__note-item"><strong>Playback note</strong> Thumbnails and playback may connect to YouTube. Videos play through YouTube when selected, using YouTube\'s privacy-enhanced embed mode. Creator activity and video availability can change without notice.</p>\n';
+  html += '        <p class="gem-creators__note-item"><strong>Independence note</strong> Creators listed here are independent community members and are not necessarily endorsed by Ubisoft, Skybound, YouTube, or Anomaly Alpha. Inclusion is based on content eligibility thresholds, not sponsorship.</p>\n';
   html += '      </div>\n';
   return html;
 }
