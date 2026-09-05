@@ -90,11 +90,14 @@ const replacements = [
   [/^([ \t]*)"description": "(?:Find active Invincible Guarding the Globe promo codes, codes, and reward codes\. \d+ active promo codes with gems, hero shards & tickets\.|New Invincible Guarding the Globe promo codes — \d+ active codes with gems, hero shards & tickets\. Tap to copy and redeem at the Ubisoft portal\.|__GUIDE_LD_DESC__)",$/m,
     `          "description": "New Invincible Guarding the Globe promo codes — ${activeCount} active codes with gems, hero shards & tickets. Tap to copy and redeem at the Ubisoft portal.",`],
 
-  // Share button titles
+  // Share button titles \u2014 count
   [/\d+ active Invincible Guarding the Globe promo codes \\u2014 tap to copy and redeem\./g,
     `${activeCount} active Invincible Guarding the Globe promo codes \\u2014 tap to copy and redeem.`],
-  [/Invincible Guarding the Globe Promo Codes \\u2014 \d+ active \[/g,
-    `Invincible Guarding the Globe Promo Codes \\u2014 ${activeCount} active [`],
+  [/Invincible Guarding the Globe Promo Codes \\u2014 \d+ active \[[A-Z][a-z]{2} \d{4}\]/g,
+    `Invincible Guarding the Globe Promo Codes \\u2014 ${activeCount} active [${monthYear}]`],
+
+  // Share button dates \u2014 source-driven from monthYear
+  [/Updated [A-Z][a-z]{2} \d{4}\./g, `Updated ${monthYear}.`],
 
   // GUIDE_TAB
   [/<!--GUIDE_TAB_START-->[\s\S]*?<!--GUIDE_TAB_END-->/,
