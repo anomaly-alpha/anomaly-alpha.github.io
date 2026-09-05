@@ -1,4 +1,7 @@
 node_modules/
 .env
 data/
+!data/
+data/*
+!data/presence-mood-contract.json
 logs/

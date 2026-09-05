@@ -3,16 +3,27 @@ const RPC = require('discord-rpc');
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const {
+  createMoodWindow,
+  isSleepTime: isPresenceSleepTime,
+  loadPresenceContract,
+} = require('./features/presence/presenceContract');
+const {
+  LOCAL_STATE_PATH,
+  loadMoodState,
+  saveMoodState,
+} = require('./features/presence/presenceState');
 
 const clientId = '982308134871765022';
 const RETRY_MS = 15000;
-const ROTATE_MS = 10 * 1000;            // 10 seconds
-const REGEN_MS = 12 * 60 * 60 * 1000;   // 12 hours
-const REGEN_BATCH = 50;                 // phrases to generate per regen
+const PRESENCE_CONTRACT = loadPresenceContract();
+const ROTATE_MS = PRESENCE_CONTRACT.phraseRotationMs;
+const REGEN_MS = PRESENCE_CONTRACT.maintenance.localIntervalMs;
+const REGEN_BATCH = PRESENCE_CONTRACT.maintenance.maxBatchSize;
 const ACTIVE_POOL_LIMIT = 500;
 const ARCHIVE_LIMIT = 2000;
-const MOOD_DWELL_MS = 10 * 60 * 1000;
-const MOOD_IDS = new Set(['dormant', 'observing', 'pondering', 'displeased']);
+const MOOD_IDS = new Set(PRESENCE_CONTRACT.moods);
+const INITIAL_MOOD_STATE = loadMoodState(LOCAL_STATE_PATH);
 const LOG_FILE = path.join(__dirname, 'data', 'rpc.log');
 const PHRASE_CACHE = path.join(__dirname, 'data', 'rpc-phrases.json');
 const MOOD_CLASSIFICATION = path.join(__dirname, 'data', 'rpc-phrase-moods.json');
@@ -24,8 +35,7 @@ let rotationPool = [];  // [{ key, details, state }, ...]
 let lastIndex = -1;
 let activeRpc = null;
 let phraseMoodMap = new Map();
-let currentMood = null;
-let moodUntil = 0;
+let currentMoodState = INITIAL_MOOD_STATE.state;
 
 // ── Icon registry ────────────────────────────────────────
 // Loaded from data/icon-registry.json — add/remove icons there.
@@ -163,27 +173,46 @@ function log(line) {
 // ── State detection (standalone) ─────────────────────────
 
 function getState() {
-  const hour = new Date().getUTCHours();
-  const localHour = (hour + Math.floor(-new Date().getTimezoneOffset() / 60) + 24) % 24;
-
-  if (localHour >= 1 && localHour < 7) {
-    return { id: 'dormant', detail: 'Dormant', dwellMs: MOOD_DWELL_MS };
-  }
-
-  const roll = Math.random();
-  if (roll < 0.05) return { id: 'displeased', detail: 'Displeased', dwellMs: MOOD_DWELL_MS };
-  if (roll < 0.15) return { id: 'pondering', detail: 'Pondering', dwellMs: MOOD_DWELL_MS };
-  return { id: 'observing', detail: 'Observing', dwellMs: MOOD_DWELL_MS };
+  const now = Date.now();
+  const state = createMoodWindow({
+    now,
+    random: Math.random(),
+    process: 'skarn-rpc',
+    previousState: currentMoodState,
+    contract: PRESENCE_CONTRACT,
+  });
+  return {
+    id: state.mood,
+    detail: state.mood.charAt(0).toUpperCase() + state.mood.slice(1),
+    dwellMs: Math.max(0, state.moodUntil - now),
+    state,
+  };
 }
 
 function getCurrentMood() {
   const now = Date.now();
-  const state = getState();
-  if (state.id !== 'dormant' && currentMood && currentMood.id !== 'dormant' && now < moodUntil) return currentMood;
-  if (currentMood?.id !== state.id) log('Mood: ' + state.id);
-  currentMood = state;
-  moodUntil = now + state.dwellMs;
-  return currentMood;
+  const enteredSleep = currentMoodState && currentMoodState.mood !== 'dormant' && isPresenceSleepTime(now, PRESENCE_CONTRACT);
+  if (currentMoodState && now < currentMoodState.moodUntil && !enteredSleep) {
+    return {
+      id: currentMoodState.mood,
+      detail: currentMoodState.mood.charAt(0).toUpperCase() + currentMoodState.mood.slice(1),
+      dwellMs: currentMoodState.moodUntil - now,
+    };
+  }
+
+  const next = getState();
+  currentMoodState = next.state;
+  try {
+    saveMoodState(LOCAL_STATE_PATH, currentMoodState);
+  } catch (e) {
+    log('Failed to save mood state: ' + e.message);
+  }
+  log('Mood: ' + next.id + ' | until ' + new Date(currentMoodState.moodUntil).toISOString());
+  return {
+    id: next.id,
+    detail: next.detail,
+    dwellMs: next.dwellMs,
+  };
 }
 
 // ── Phrase generation via OpenAI ──────────────────────────

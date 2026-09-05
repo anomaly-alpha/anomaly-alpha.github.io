@@ -8,6 +8,7 @@
     "deploy": "node deploy-commands.js",
     "backup": "node scripts/backup-db.js",
     "classify:rpc": "node scripts/classify-rpc-phrases.js",
+    "test:presence": "node scripts/smokes/14-presence-mood.js",
     "audit:gate": "node scripts/audit-ai-gate.js && SKARN_DB_PATH=$(mktemp -d)/gate.db node scripts/smoke-gate.js",
     "smoke": "node scripts/run-smokes.js",
     "audit:docs": "node scripts/audit-docs.js"
