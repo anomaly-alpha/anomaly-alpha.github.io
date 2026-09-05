@@ -1,5 +1,14 @@
 # Changelog
 
+## Sep 2026
+
+- **Promo-code refresh**: New active codes RAID02 (Bulletproof + Powerplex) and GLOB34 (two Epic tiers). Expanded from 28 to 30 active codes; expired older codes. All promo data regenerated from `data/codes.json`.
+- **Creator and video refresh**: 23 eligible creator videos across 3 channels; added pending creators and expanded verified catalog. Creator directory regenerated from `data/youtube-creators.json`.
+- **Guide and policy rewrite**: Content refresh on all 9 guide pages (code, beginners, event, pvp, login, faq, xp, redeem, creators) plus privacy and terms policies. Reviewed editorial copy and updated structured data across the guide cluster.
+- **Indexability expansion**: Author profile, music, privacy, and terms pages now indexable. Sitemap expanded from 11 to 14 canonical URLs. `robots.txt` unchanged (Allow: /, sitemap reference retained).
+- **SEO title refresh**: September-titled SEO metadata for all game-content pages with `[Sep 2026]` suffix. Unique query-first titles targeting 50–60 characters. Synchronized og:title, twitter:title, and JSON-LD headline across all pages.
+- **Structured-data repair**: Added datePublished and dateModified to all Article and CollectionPage schemas. Author ProfilePage gains stable Person entity reference. FAQ schema parity verified against visible content. Sitemap and noindex directives validated for all 14 indexable pages.
+
 ## Aug 2026
 
 - **Documentation synchronization**: Corrected stale counts (28 active codes, 9 OG images, 9 inline JSON configs, 11 sitemap URLs, 9 guide pages). Expanded file tree to include music, seo, privacy, terms, authors pages, scripts, and tests. Fixed `docs/plan/` → `docs/plans/` paths. Documented ads-disabled/site-message fallback and GA4 analytics. Added ADR-002 reference. Replaced false "no tracking/no data collection" claims in advertising copy with accurate ads-disabled/anonymous-analytics language. Added external-reference-audit report link.
