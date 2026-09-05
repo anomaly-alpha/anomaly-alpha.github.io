@@ -912,12 +912,24 @@ function generate(sourcePath, templatePath) {
     return { success: false, errors: [err.message], html: null, js: null };
   }
 
+  // Detect template EOL style before replacement
+  var hasCrlf = /\r\n/.test(templateHtml);
+
   // Replace markers (idempotent)
   templateHtml = replaceMarker(templateHtml, 'FEATURED_CREATOR', featuredHtml);
   templateHtml = replaceMarker(templateHtml, 'CREATOR_SECTIONS', sectionsHtml);
   templateHtml = replaceMarker(templateHtml, 'CREATORS_JSON_LD', jsonLdHtml);
   templateHtml = replaceMarker(templateHtml, 'CREATORS_NOSCRIPT', noscriptHtml);
   templateHtml = replaceMarker(templateHtml, 'CREATORS_NOTE', disclaimerHtml);
+
+  // Normalize to template's original EOL style
+  if (hasCrlf) {
+    // Convert lone LF to CRLF (skip already-paired \r\n)
+    templateHtml = templateHtml.replace(/(?<!\r)\n/g, '\r\n');
+  } else {
+    // Strip any stray CR to keep pure LF
+    templateHtml = templateHtml.replace(/\r\n/g, '\n');
+  }
 
   return { success: true, errors: [], html: templateHtml, js: jsOutput };
 }
