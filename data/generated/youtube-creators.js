@@ -15,6 +15,54 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 1,
     "videos": [
       {
+        "id": "xT5lSyRPiqY",
+        "title": "20 SHOPS!? - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd covers the 20 shops update in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-09-03",
+        "featured": false
+      },
+      {
+        "id": "Xk0irGBsyx4",
+        "title": "IMPROVED Boss Raid Returns! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd reviews the improved Boss Raid return in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-09-02",
+        "featured": false
+      },
+      {
+        "id": "dXG8h5h3pfI",
+        "title": "LEGENDARY Triple Event Returns! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd covers the returning legendary triple event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-09-01",
+        "featured": false
+      },
+      {
+        "id": "u9omBhW9Dpg",
+        "title": "Wait, This Event is GOOD!? - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd reviews the event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-08-31",
+        "featured": false
+      },
+      {
+        "id": "nM7SPDZhjzw",
+        "title": "One Thing SAVES This Event! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd explains the event feature that changes the outcome in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-08-29",
+        "featured": false
+      },
+      {
+        "id": "k3jdh4STxMM",
+        "title": "HUGE SUBSOIL DEFENDER!? Armored Damien Review! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd reviews the Armored Damien hero in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-08-28",
+        "featured": false
+      },
+      {
         "id": "YvXN5RSG270",
         "title": "Actual PERFECT F2P EVENT!? - Invincible: Guarding the Globe",
         "description": "Avatar Shuvd evaluates a free-to-play-friendly event in Invincible: Guarding the Globe.",
@@ -60,54 +108,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "Avatar Shuvd showcases Kregg gameplay and summons in Invincible: Guarding the Globe.",
         "category": "Gameplay",
         "published": "2026-08-21",
-        "featured": false
-      },
-      {
-        "id": "o8A1Sr5d9yU",
-        "title": "SHAPESMITH IS HERE! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd covers the Shapesmith hero release in Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-08-20",
-        "featured": false
-      },
-      {
-        "id": "NDBPPgJiqz0",
-        "title": "Great Event! Terrible Timing... - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd reviews the Boot Camp event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-08-20",
-        "featured": false
-      },
-      {
-        "id": "zotsKm0dF8k",
-        "title": "Kregg has ARRIVED!! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd covers the Kregg hero arrival in Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-08-19",
-        "featured": false
-      },
-      {
-        "id": "BdnzW_C5IAM",
-        "title": "Update 3.5 Gave Me a GIFT! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd covers Update 3.5 and its new rewards in Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-08-19",
-        "featured": false
-      },
-      {
-        "id": "zK1ggBR_xRE",
-        "title": "BATTLE BEAST RECRUITABLE AND MORE - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd covers Battle Beast becoming recruitable and additional updates in Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-08-18",
-        "featured": false
-      },
-      {
-        "id": "z2yBATpteWM",
-        "title": "Guide to Getting SEANCE DOG! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd guides players through getting Seance Dog in Invincible: Guarding the Globe.",
-        "category": "Guides",
-        "published": "2026-08-18",
         "featured": false
       }
     ]
@@ -199,6 +199,14 @@ window.__YOUTUBE_CREATORS=[
     "status": "active",
     "displayOrder": 3,
     "videos": [
+      {
+        "id": "zXQuufSmxUU",
+        "title": "WE HAVE TO TALK ABOUT THIS MODE... Invincible Guarding The Globe - TutaaaGTG",
+        "description": "Tutaaa-GTG discusses Alliance Mode in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-09-05",
+        "featured": false
+      },
       {
         "id": "jChfgcbDUcU",
         "title": "My New Goals As a Semi-F2P Player - Invincible Guarding The Globe: TutaaaGTG",
@@ -359,6 +367,14 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 5,
     "videos": [
       {
+        "id": "_8VqAmjI_hg",
+        "title": "The Entire Second Season Part 2 || Invincible Guarding The Globe",
+        "description": "LAVAMOOSE covers the second season of Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-08-31",
+        "featured": false
+      },
+      {
         "id": "YSxoKnFRF_Y",
         "title": "Hurm Has Arrived In Invincible Guarding The Globe",
         "description": "LAVAMOOSE covers the Hurm hero arrival in Invincible: Guarding the Globe.",
@@ -430,6 +446,22 @@ window.__YOUTUBE_CREATORS=[
     "status": "active",
     "displayOrder": 6,
     "videos": [
+      {
+        "id": "06upXNh41R0",
+        "title": "Invincible Guarding The Globe- Triple Pick Event!!",
+        "description": "OMNI-BANE covers the Triple Pick Event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-08-31",
+        "featured": false
+      },
+      {
+        "id": "fvFDH5i2E8Y",
+        "title": "Invincible Guarding The Globe Fresh Recruit Event!!!",
+        "description": "OMNI-BANE covers the Fresh Recruit Event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-08-28",
+        "featured": false
+      },
       {
         "id": "fxIVp3QKMyk",
         "title": "Invincible Guarding The Globe- BANES Fresh Recruit Summons!!",
@@ -583,6 +615,14 @@ window.__YOUTUBE_CREATORS=[
     "status": "active",
     "displayOrder": 9,
     "videos": [
+      {
+        "id": "buXNXHGQXLc",
+        "title": "INVINCABLE GTG JUST CHATTING",
+        "description": "KingSlay727 hosts a just-chatting video about Invincible GTG.",
+        "category": "Livestreams",
+        "published": "2026-09-04",
+        "featured": false
+      },
       {
         "id": "-o-kp4fNBzo",
         "title": "NEW HERO",
@@ -762,6 +802,14 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 13,
     "videos": [
       {
+        "id": "l0CHsWcE3mY",
+        "title": "New Event ! Fresh Recruits Event on INVINCIBLE: Guarding The Globe 🌎 Farm as many Brit while you can",
+        "description": "INVINCIBLE GTG OMNI-FAN covers the Fresh Recruits Event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-08-28",
+        "featured": false
+      },
+      {
         "id": "epbWhgEaY1U",
         "title": "Damien Darkblood (Under Realm) Now Available on INVINCIBLE: Guarding The Globe",
         "description": "OMNI-FAN covers Damien Darkblood becoming available in Invincible: Guarding the Globe.",
@@ -847,14 +895,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "OMNI-FAN covers the Comic-con Cecil's Nightmares event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-07-17",
-        "featured": false
-      },
-      {
-        "id": "LQkC3833H5E",
-        "title": "Multiverse Recruitment Event on INVINCIBLE: Guarding The Globe",
-        "description": "OMNI-FAN covers the Multiverse recruitment event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-07-08",
         "featured": false
       }
     ]

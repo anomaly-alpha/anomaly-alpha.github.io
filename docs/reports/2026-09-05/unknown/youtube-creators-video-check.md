@@ -18,9 +18,9 @@ Resolved feeds checked:
 - LAVAMOOSE: https://www.youtube.com/feeds/videos.xml?channel_id=UCr4L3RRjIpKSCC7aaFWosKQ
 - KingSlay727: https://www.youtube.com/feeds/videos.xml?channel_id=UCTWNwUOlYOlme4NiJUbkZ1Q
 
-## Clear missing candidates
+## Clear candidates added in the follow-up
 
-These entries are absent from data/youtube-creators.json and have titles that clearly identify Invincible: Guarding the Globe coverage. They still need a direct page check for final evidence before being added.
+These entries were absent from data/youtube-creators.json and had titles that clearly identify Invincible: Guarding the Globe coverage. They were added using the first-party Atom feed evidence; a deeper direct page review can add richer descriptions later if needed.
 
 | Creator | Published UTC | Video | Title |
 |---|---|---|---|
@@ -68,6 +68,10 @@ Older missing GTG entries also appeared in the feeds, including LAVAMOOSE video 
 
 RapidGTG, HeroHavenGTG, Subsktro, XGamersAsylum, PopsMeta, and the hidden Beaoloooo record could not be resolved to a reliable current Atom feed in this pass. Their channel URLs remain in data/youtube-creators.json and need manual channel-page review or channel-ID resolution.
 
+## Follow-up implementation
+
+After the research review, the 12 clear candidates were added to data/youtube-creators.json with active status, featured:false, source-feed evidence notes, and 2026-09-05 lastChecked values. The affected creator records and top-level source updated field were also refreshed. npm run generate-creators regenerated the public creator bundle and directory; the ambiguous candidates and unresolved channels remain excluded.
+
 ## Conclusion
 
-The prior September refresh did not add videos, but the live feed comparison shows that this reflects the committed data state rather than creator inactivity. At least 12 clear candidates are missing from the source, with additional ambiguous KingSlay727 and Avatar Shuvd candidates requiring page-level verification. No source or generated files were modified during this check.
+The prior September refresh did not add videos, but the live feed comparison showed that this reflected the committed data state rather than creator inactivity. The follow-up update now includes 12 clear candidates, while additional ambiguous KingSlay727 and Avatar Shuvd candidates still require page-level verification. Creator and structured-data tests pass after regeneration.
