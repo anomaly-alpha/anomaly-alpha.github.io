@@ -219,7 +219,7 @@ Located at `docs/plans/2026-05-28/deepseek-v4-flash-free/` with INDEX.md.
 
 ## `skarn-bot/` sub-project
 
-**`skarn-bot/` is a completely independent project** — its own bot, its own Node.js project (`package.json`), its own database schema, its own development lifecycle. Nothing in `skarn-bot/` relates to the web app in this repo's root. All work on skarn-bot happens within its directory tree.
+**`skarn-bot/` is an independent service package** — its own Discord bot, Node.js project (`package.json`), database schema, and lifecycle. It is deployed by Railway from the monorepo's `/skarn-bot` root directory.
 
 ### skarn-bot docs structure
 
@@ -251,4 +251,15 @@ Type suffixes (`-plan`, `-spec`, `-design`) and model suffixes (`-sonnet-5-mediu
 - **skarn-bot reports**: saved to `skarn-bot/docs/reports/YYYY-MM-DD/<model>/`
 - **skarn-bot prompts**: saved to `skarn-bot/docs/prompts/<model>/`
 - ADRs go to `skarn-bot/docs/adr/` as `NNNN-title.md`
-- All skarn-bot work is committed to this repo's main branch and pushed to GitHub Pages alongside the web app
+- All service work is committed to this repo's main branch. The root website is published by GitHub Pages; skarn-bot is deployed by Railway; skarn-rpc is checked out and supervised by Ubuntu systemd.
+
+## Monorepo service layout
+
+This repository is one monorepo with three separately deployed surfaces:
+
+- Root files and directories: the public anomaly-alpha.github.io website published by GitHub Pages.
+- skarn-bot/: the Railway Discord bot package, including its SQLite/runtime data and Railway-specific lifecycle.
+- skarn-rpc/: the Ubuntu desktop Rich Presence package, including its own package.json, runtime data directory, and systemd lifecycle.
+- skarn-bot/data/presence-mood-contract.json: the tracked shared mood-policy contract loaded by both service packages; runtime mood state and phrase datasets remain process-owned.
+
+Deployments must keep the service boundaries intact. Railway uses skarn-bot/ as its service root. Ubuntu checks out the full repository into the user's home directory and runs skarn-rpc/rich-presence.js from that checkout. Do not treat the Ubuntu runtime as a second copy of the repository or place its source outside the checkout.

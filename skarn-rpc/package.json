@@ -1,0 +1,14 @@
+{
+  "name": "skarn-rpc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Skarn desktop Discord Rich Presence",
+  "main": "rich-presence.js",
+  "scripts": {
+    "start": "node rich-presence.js"
+  },
+  "dependencies": {
+    "discord-rpc": "^4.0.1",
+    "dotenv": "^16.4.7"
+  }
+}
