@@ -2,6 +2,10 @@
 const { moderatedChatCompletion } = require('../../ai/client');
 const { getAppState, setAppState, getFlag, setFlag } = require('../../db/ops');
 const { roles } = require('../../persona/roles');
+const { loadPresenceContract } = require('./presenceContract');
+const { createPresenceMoodCoordinator } = require('./presenceMoodCoordinator');
+const { createPresenceMoodCycler } = require('./presenceMoodCycler');
+const { loadRailwayPhraseDataset } = require('./railwayPresenceDataset');
 
 const POOL_SIZE = parseInt(process.env.PRESENCE_POOL_SIZE, 10) || 300;
 const CYCLE_MS = parseInt(process.env.PRESENCE_CYCLE_MS, 10) || 120000;
@@ -172,7 +176,7 @@ function setActivity(client, phrase) {
   client.user.setActivity(phrase, { type: 3 });
 }
 
-function startPresenceCycler(client) {
+function startLegacyPresenceCycler(client) {
   const stored = loadPool();
   pool = stored || [STATIC_DEFAULT];
   poolIndex = 0;
@@ -193,6 +197,37 @@ function startPresenceCycler(client) {
     setActivity(client, advancePhrase());
     refreshInBackground();
   }, CYCLE_MS);
+}
+
+function startMoodPresenceCycler(client) {
+  try {
+    const contract = loadPresenceContract();
+    const coordinator = createPresenceMoodCoordinator({
+      contract,
+      readState: () => getAppState('skarn_presence_mood'),
+      writeState: state => setAppState('skarn_presence_mood', JSON.stringify(state)),
+    });
+    const dataset = loadRailwayPhraseDataset();
+    const cycler = createPresenceMoodCycler({
+      contract,
+      dataset,
+      coordinator,
+      setActivity: (text, options) => client.user.setActivity(text, options),
+      log: line => console.log('[Presence] ' + line),
+    });
+    cycler.start();
+    return cycler;
+  } catch (error) {
+    console.error('[Presence] PRESENCE_MOOD_V2 unavailable: ' + error.message);
+    console.error('[Presence] Run npm run migrate:presence -- --export-review, then review and apply the manifest before enabling it again.');
+    return startLegacyPresenceCycler(client);
+  }
+}
+
+function startPresenceCycler(client) {
+  if (process.env.PRESENCE_MOOD_V2 !== 'true') return startLegacyPresenceCycler(client);
+  console.log('[Presence] PRESENCE_MOOD_V2 enabled');
+  return startMoodPresenceCycler(client);
 }
 
 module.exports = { startPresenceCycler, maybeRegenerate, _parsePool, _setPool, currentPhrase, advancePhrase };
