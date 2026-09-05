@@ -22,10 +22,33 @@ const PAGES = [
   'terms/index.html'
 ];
 
+// ===== Shared helpers =====
+
 function blocksFor(file) {
   const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
   return [...html.matchAll(/<script[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)]
     .map(match => JSON.parse(match[1]));
+}
+
+function decodeEntities(text) {
+  return text
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
+}
+
+function normalize(text) {
+  return decodeEntities(String(text)).replace(/\s+/g, ' ').trim();
+}
+
+function visibleText(html) {
+  return normalize(html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]+>/g, ' '));
 }
 
 const INDEXABLE = [
@@ -54,6 +77,8 @@ function allNodes(value) {
   return result;
 }
 
+// ===== JSON-LD presence and @context =====
+
 for (const file of PAGES) {
   const blocks = blocksFor(file);
   assert(blocks.length > 0, file + ': expected JSON-LD');
@@ -62,12 +87,16 @@ for (const file of PAGES) {
   });
 }
 
+// ===== Author profile =====
+
 const authorNodes = nodesFor(blocksFor('authors/anomaly/index.html'));
 const profile = authorNodes.find(node => node['@type'] === 'ProfilePage');
 assert(profile && profile.mainEntity, 'author: ProfilePage.mainEntity is required');
 assert.strictEqual(profile.mainEntity['@type'], 'Person', 'author: mainEntity must be Person');
 assert.strictEqual(profile.mainEntity['@id'], 'https://anomaly-alpha.github.io/authors/anomaly/#person', 'author: Person ID must be stable');
 assert.strictEqual(profile.mainEntity.url, 'https://anomaly-alpha.github.io/authors/anomaly/', 'author: Person URL must be profile URL');
+
+// ===== Canonical URLs and required types =====
 
 const canonicalUrls = {
   'index.html': 'https://anomaly-alpha.github.io/',
@@ -119,6 +148,8 @@ for (const file of PAGES) {
   }
 }
 
+// ===== Article required fields =====
+
 for (const file of PAGES) {
   for (const node of nodesFor(blocksFor(file)).filter(node => node['@type'] === 'Article')) {
     ['headline', 'author', 'publisher', 'image', 'datePublished', 'dateModified'].forEach(key => {
@@ -126,6 +157,8 @@ for (const file of PAGES) {
     });
   }
 }
+
+// ===== Sitemap and indexability =====
 
 const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
 ['/music/', '/privacy/', '/terms/', '/authors/anomaly/'].forEach(url => {
@@ -136,63 +169,77 @@ INDEXABLE.forEach(file => {
   assert(!/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(html), file + ': indexable page still has noindex');
 });
 
+// ===== FAQ visibility + schema content parity (shared visibleText) =====
+
 for (const file of PAGES) {
   const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
-  const visible = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]+>/g, ' ');
-  for (const page of nodesFor(blocksFor(file)).filter(node => node['@type'] === 'FAQPage')) {
+  const vis = visibleText(html);
+  const blocks = blocksFor(file);
+
+  for (const page of nodesFor(blocks).filter(node => node['@type'] === 'FAQPage')) {
     for (const question of page.mainEntity || []) {
-      assert(visible.includes(question.name), file + ': FAQ question is not visible');
-      assert(visible.includes(question.acceptedAnswer.text), file + ': FAQ answer is not visible');
+      assert(vis.includes(normalize(question.name)), file + ': FAQ question is not visible');
+      assert(vis.includes(normalize(question.acceptedAnswer.text)), file + ': FAQ answer is not visible');
     }
   }
-}
 
-// ===== Schema content parity =====
-for (const file of PAGES) {
-  const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
-  const visible = html.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<[^>]+>/g, ' ');
-  for (const node of allNodes(blocksFor(file))) {
+  for (const node of allNodes(blocks)) {
     assert.notStrictEqual(node['@type'], 'Product', file + ': unexpected Product schema (no visible content contract)');
     assert.notStrictEqual(node['@type'], 'Review', file + ': unexpected Review schema (no visible content contract)');
     if (node['@type'] === 'VideoObject') {
-      const hasVisibleName = node.name && visible.includes(node.name);
-      const hasVisibleDesc = node.description && visible.includes(node.description);
+      const hasVisibleName = node.name && vis.includes(normalize(node.name));
+      const hasVisibleDesc = node.description && vis.includes(normalize(node.description));
       assert(hasVisibleName || hasVisibleDesc, file + ': VideoObject missing visible name or description');
     }
   }
 }
 
 // ===== Local reference resolution =====
+// Defined IDs collected only from top-level JSON-LD nodes (standalone blocks or @graph members).
+// Nested property values inspected recursively; @context and top-level nodes skipped.
+// Fragment IDs normalized against SITE_ROOT. Dangling untyped references fail.
+
 const SITE_ROOT = 'https://anomaly-alpha.github.io/';
 for (const file of PAGES) {
   const blocks = blocksFor(file);
+
+  const topLevelNodes = new Set();
   const definedIds = new Set();
-  (function collect(obj) {
-    if (!obj || typeof obj !== 'object') return;
-    if (Array.isArray(obj)) { obj.forEach(collect); return; }
-    if (obj['@id']) {
-      const id = obj['@id'];
-      definedIds.add(id.startsWith('#') ? SITE_ROOT + id : id);
+  for (const block of blocks) {
+    if (block['@graph']) {
+      for (const node of block['@graph']) {
+        topLevelNodes.add(node);
+        if (node['@id']) {
+          definedIds.add(node['@id'].startsWith('#') ? SITE_ROOT + node['@id'] : node['@id']);
+        }
+      }
+    } else {
+      topLevelNodes.add(block);
+      if (block['@id']) {
+        definedIds.add(block['@id'].startsWith('#') ? SITE_ROOT + block['@id'] : block['@id']);
+      }
     }
-    for (const v of Object.values(obj)) collect(v);
-  })(blocks);
-  (function check(obj) {
+  }
+
+  (function checkRefs(obj) {
     if (!obj || typeof obj !== 'object') return;
-    if (Array.isArray(obj)) { obj.forEach(check); return; }
-    if (obj['@id']) {
-      let refId = obj['@id'];
-      refId = refId.startsWith('#') ? SITE_ROOT + refId : refId;
+    if (Array.isArray(obj)) { obj.forEach(checkRefs); return; }
+    if (obj['@id'] && !topLevelNodes.has(obj)) {
+      const refId = obj['@id'].startsWith('#') ? SITE_ROOT + obj['@id'] : obj['@id'];
       if (!definedIds.has(refId)) {
         assert(obj['@type'], file + ': dangling reference @id "' + obj['@id'] + '"');
       }
     }
     for (const [k, v] of Object.entries(obj)) {
-      if (k !== '@context') check(v);
+      if (k === '@context') continue;
+      if (typeof v === 'object' && v !== null) checkRefs(v);
     }
   })(blocks);
 }
 
 // ===== Generator idempotency =====
+// generate-music.js idempotency deferred to Task 7 (music JSON-LD/output added there).
+
 const generators = [
   ['scripts/generate-codes.js', ['data/generated/promo-codes.js', 'guide/code/index.html', 'index.html']],
   ['scripts/generate-youtube-creators.js', ['data/generated/youtube-creators.js', 'guide/creators/index.html']]
