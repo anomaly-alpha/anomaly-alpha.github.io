@@ -469,11 +469,12 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 
 ### Presence Systems
 
-- **Presence mood**: The global Skarn ambient disposition shared by the Railway bot presence and the local desktop Rich Presence. It has exactly four states — dormant, observing, pondering, and displeased — and is distinct from any one guild's mood or channel's state.
+- **Presence mood**: The global Skarn ambient disposition shared as a vocabulary and behavioral policy by the Railway bot presence and the local desktop Rich Presence. It has exactly four states — dormant, observing, pondering, and displeased — and is distinct from any one guild's mood or channel's state. In v1, each process owns its current mood independently; shared policy does not imply live synchronization or matching instantaneous moods. The shared policy is intended to live in data/presence-mood-contract.json.
 - **Mood window**: The bounded interval during which one presence mood remains active. Phrase rotation may continue inside the window, but the mood itself does not change until the window ends.
 - **Phrase dataset**: A process-owned collection of mood-tagged presence phrases. The Railway bot and local Rich Presence maintain separate datasets; sharing the presence mood does not imply sharing phrase text.
-- **Mood authority**: The single owner that establishes the current global presence mood and its window. Other processes observe it and report their own health; they do not create competing mood revisions.
-- **Presence heartbeat**: A bounded liveness report from a presence process containing its last observed mood and operational counters. A heartbeat describes process health and never changes the canonical presence mood.
+- **Presence mood owner**: Each process owns and persists its own current presence mood window. Railway owns the Railway bot state; the local RPC owns the local state. There is no cross-process authority in v1.
+- **Shared presence-mood contract**: The committed policy for the four IDs, sleep window, mood dwell, selection weights, phrase cadence, and maintenance limits. Both processes load the same contract while maintaining independent runtime state.
+- **Railway runtime snapshot**: A bounded Railway app_state record written periodically with recent cycler and dataset health so operators can inspect it through SSH. It is not a heartbeat and does not receive local-process liveness in v1.
 
 ### Realm of Skarn (RPG Subsystem)
 
