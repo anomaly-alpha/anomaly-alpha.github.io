@@ -1,5 +1,10 @@
 # September 2026 Complete Site Freshness Update
 
+> [!NOTE]
+> This document may not reflect the current implementation.
+> See the final report for up-to-date state:
+> [Final Report](../reports/site-freshness.md)
+
 Status: approved design for implementation planning
 Snapshot date: 2026-09-04
 

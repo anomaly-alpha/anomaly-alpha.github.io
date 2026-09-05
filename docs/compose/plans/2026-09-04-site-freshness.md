@@ -1,5 +1,10 @@
 # September 2026 Site Freshness Update Implementation Plan
 
+> [!NOTE]
+> This document may not reflect the current implementation.
+> See the final report for up-to-date state:
+> [Final Report](../reports/site-freshness.md)
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use compose:subagent (recommended) or compose:execute to implement this plan task-by-task. Steps use checkbox syntax for tracking.
 
 **Goal:** Refresh the public Invincible GTG site’s codes, creators, guide/policy copy, SEO metadata, indexation, dates, and structured data for the 2026-09-04 snapshot.
