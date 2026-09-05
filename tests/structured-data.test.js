@@ -164,6 +164,8 @@ const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
 ['/music/', '/privacy/', '/terms/', '/authors/anomaly/'].forEach(url => {
   assert(sitemap.includes('https://anomaly-alpha.github.io' + url), 'sitemap missing ' + url);
 });
+const locCount = (sitemap.match(/<loc>/g) || []).length;
+assert.strictEqual(locCount, 14, 'sitemap must contain exactly 14 <loc> entries, found ' + locCount);
 INDEXABLE.forEach(file => {
   const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
   assert(!/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(html), file + ': indexable page still has noindex');

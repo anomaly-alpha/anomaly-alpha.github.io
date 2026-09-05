@@ -23,7 +23,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `robots.txt` | Crawl directives, sitemap reference |
 | `.editorconfig` | Editor formatting defaults (indent, line endings, charset) |
 | `CHANGELOG.md` | Release history (auto-curated from git log) |
-| `sitemap.xml` | All public URLs (main + guide pages + authors/anomaly/) |
+| `sitemap.xml` | All public URLs (home, guide pages, authors/anomaly, music, privacy, terms) |
 | `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators) |
 | `googleeb60e8e5ee55440e.html` | Google Search Console verification |
 | `seo/index.html` | SEO utilities page |
