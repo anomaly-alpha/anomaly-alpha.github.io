@@ -60,6 +60,7 @@ const guideTwitterDescription = `Invincible GTG: ${activeCount} active codes, ge
 
 // Read guide page
 let html = fs.readFileSync(codeGuidePath, 'utf8');
+const guideEol = html.includes('\r\n') ? '\r\n' : '\n';
 
 const replacements = [
   // GUIDE_DESC
@@ -159,11 +160,14 @@ for (const m of freshnessMarkers) {
   if (count !== 1) throw new Error(`${m} marker expected 1 occurrence, found ${count}`);
 }
 
+// Normalize line endings back to original style
+if (guideEol === '\r\n') html = html.replace(/(?<!\r)\n/g, '\r\n');
 fs.writeFileSync(codeGuidePath, html, 'utf8');
 console.log(`Updated guide/code/index.html — ${activeCount} active, ${expiredCount} expired, ${monthYear}`);
 
 // Update inline promo codes in index.html
 let indexHtml = fs.readFileSync(indexPath, 'utf8');
+const indexEol = indexHtml.includes('\r\n') ? '\r\n' : '\n';
 const inlineCodes = 'window.__PROMO_CODES=' + JSON.stringify(active) + ';';
 indexHtml = indexHtml.replace(
   /<!--PROMO_CODES_INLINE_START-->[\s\S]*?<!--PROMO_CODES_INLINE_END-->/,
@@ -181,6 +185,8 @@ indexHtml = indexHtml.replace(
   /(<span class="gem-ticker__label">Codes<\/span> )\d+ active/g,
   `$1${activeCount} active`
 );
+// Normalize line endings back to original style
+if (indexEol === '\r\n') indexHtml = indexHtml.replace(/(?<!\r)\n/g, '\r\n');
 fs.writeFileSync(indexPath, indexHtml, 'utf8');
 console.log(`Updated index.html inline promo codes — ${activeCount} active`);
 console.log(`Updated guide/code/index.html — ${activeCount} active, ${expiredCount} expired, ${monthYear}`);
