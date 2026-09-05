@@ -14,6 +14,32 @@ function relativize(absPath) {
   return rel;
 }
 
+function formatDate(dateStr) {
+  var d = new Date(dateStr + 'T00:00:00Z');
+  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return months[d.getUTCMonth()] + ' ' + d.getUTCDate() + ', ' + d.getUTCFullYear();
+}
+
+function isDateOnly(value) {
+  return typeof value === 'string' && /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(value) && !isNaN(new Date(value + 'T00:00:00Z').getTime());
+}
+
+function validatePlaylists(data) {
+  if (!isDateOnly(data.reviewed)) {
+    console.error('Error: data/playlists.json reviewed must be a valid YYYY-MM-DD date');
+    return false;
+  }
+  var playlists = data.playlists;
+  for (var i = 0; i < playlists.length; i++) {
+    var playlist = playlists[i];
+    if (!playlist.id || !playlist.name || !playlist.color || !playlist.page) {
+      console.error('Error: playlist ' + i + ' missing required field (id, name, color, page)');
+      return false;
+    }
+  }
+  return true;
+}
+
 function buildPlaylistGrid(playlists) {
   return playlists.map(p => {
     const card = [
@@ -29,17 +55,6 @@ function buildPlaylistGrid(playlists) {
   }).join('\n');
 }
 
-function validatePlaylists(playlists) {
-  for (var i = 0; i < playlists.length; i++) {
-    var p = playlists[i];
-    if (!p.id || !p.name || !p.color || !p.page) {
-      console.error('Error: playlist ' + i + ' missing required field (id, name, color, page)');
-      return false;
-    }
-  }
-  return true;
-}
-
 // Read playlist data
 var playlistData;
 try {
@@ -49,7 +64,7 @@ try {
   process.exit(1);
 }
 
-if (!validatePlaylists(playlistData.playlists)) {
+if (!validatePlaylists(playlistData)) {
   process.exit(1);
 }
 
@@ -72,15 +87,57 @@ if (!markerRegex.test(pageHtml)) {
 }
 pageHtml = pageHtml.replace(markerRegex, gridMarker);
 
+// Replace MUSIC_REVIEWED markers
+var reviewedLabel = '<!--MUSIC_REVIEWED_START-->Reviewed ' + formatDate(playlistData.reviewed) + '<!--MUSIC_REVIEWED_END-->';
+pageHtml = pageHtml.replace(/<!--MUSIC_REVIEWED_START-->.*?<!--MUSIC_REVIEWED_END-->/, reviewedLabel);
+
+// Replace MUSIC_SCHEMA markers with generated JSON-LD
+var schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://anomaly-alpha.github.io/' },
+        { '@type': 'ListItem', 'position': 2, 'name': 'Music & Playlists', 'item': 'https://anomaly-alpha.github.io/music/' }
+      ]
+    },
+    {
+      '@id': 'https://anomaly-alpha.github.io/music/#page',
+      '@type': 'CollectionPage',
+      'name': 'Music & Playlists — Invincible GTG',
+      'url': 'https://anomaly-alpha.github.io/music/',
+      'datePublished': '2026-07-17',
+      'dateModified': playlistData.reviewed,
+      'isPartOf': {
+        '@type': 'WebSite',
+        '@id': 'https://anomaly-alpha.github.io/#website',
+        'name': 'Invincible GTG',
+        'url': 'https://anomaly-alpha.github.io/'
+      }
+    },
+    {
+      '@type': 'ItemList',
+      'name': 'Invincible GTG playlists',
+      'itemListElement': playlistData.playlists.map(function (playlist, index) {
+        return {
+          '@type': 'ListItem',
+          'position': index + 1,
+          'name': playlist.name,
+          'description': playlist.description,
+          'url': 'https://open.spotify.com/playlist/' + playlist.id
+        };
+      })
+    }
+  ]
+};
+
+var schemaHtml = '<script type="application/ld+json">' + JSON.stringify(schema).replace(/<[/]script/gi, '<' + String.fromCharCode(92) + '/script') + '</script>';
+pageHtml = pageHtml.replace(/<!--MUSIC_SCHEMA_START-->[^]*?<!--MUSIC_SCHEMA_END-->/, '<!--MUSIC_SCHEMA_START-->' + schemaHtml + '<!--MUSIC_SCHEMA_END-->');
+
 // Update date and count
 pageHtml = pageHtml.replace(/(Updated\s+)(\w+\s+\d+,\s+\d{4})/, '$1' + formatDate(playlistData.updated));
 pageHtml = pageHtml.replace(/(\d+)\s+playlists?/, playlistData.playlists.length + ' playlists');
 
 fs.writeFileSync(PAGE_PATH, pageHtml, 'utf8');
 console.log('Updated music/index.html \u2014 ' + playlistData.playlists.length + ' playlists');
-
-function formatDate(dateStr) {
-  var d = new Date(dateStr + 'T00:00:00Z');
-  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
-}

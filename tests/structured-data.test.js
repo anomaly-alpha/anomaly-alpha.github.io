@@ -238,11 +238,11 @@ for (const file of PAGES) {
 }
 
 // ===== Generator idempotency =====
-// generate-music.js idempotency deferred to Task 7 (music JSON-LD/output added there).
 
 const generators = [
   ['scripts/generate-codes.js', ['data/generated/promo-codes.js', 'guide/code/index.html', 'index.html']],
-  ['scripts/generate-youtube-creators.js', ['data/generated/youtube-creators.js', 'guide/creators/index.html']]
+  ['scripts/generate-youtube-creators.js', ['data/generated/youtube-creators.js', 'guide/creators/index.html']],
+  ['scripts/generate-music.js', ['music/index.html']]
 ];
 for (const [script, outputs] of generators) {
   const snapshots = outputs.map(f => fs.readFileSync(path.join(ROOT, f)));
