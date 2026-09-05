@@ -2,6 +2,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const PAGES = [
@@ -133,6 +134,50 @@ for (const file of PAGES) {
       assert(visible.includes(question.acceptedAnswer.text), file + ': FAQ answer is not visible');
     }
   }
+}
+
+// ===== Local reference resolution =====
+const SITE_ROOT = 'https://anomaly-alpha.github.io/';
+for (const file of PAGES) {
+  const blocks = blocksFor(file);
+  const definedIds = new Set();
+  (function collect(obj) {
+    if (!obj || typeof obj !== 'object') return;
+    if (Array.isArray(obj)) { obj.forEach(collect); return; }
+    if (obj['@id']) {
+      var id = obj['@id'];
+      definedIds.add(id.startsWith('#') ? SITE_ROOT + id : id);
+    }
+    for (const v of Object.values(obj)) collect(v);
+  })(blocks);
+  (function check(obj) {
+    if (!obj || typeof obj !== 'object') return;
+    if (Array.isArray(obj)) { obj.forEach(check); return; }
+    if (obj['@id']) {
+      var refId = obj['@id'];
+      refId = refId.startsWith('#') ? SITE_ROOT + refId : refId;
+      if (!definedIds.has(refId)) {
+        assert(obj['@type'], file + ': dangling reference @id "' + obj['@id'] + '"');
+      }
+    }
+    for (const [k, v] of Object.entries(obj)) {
+      if (k !== '@context') check(v);
+    }
+  })(blocks);
+}
+
+// ===== Generator idempotency =====
+const generators = [
+  ['scripts/generate-codes.js', ['data/generated/promo-codes.js', 'guide/code/index.html', 'index.html']],
+  ['scripts/generate-youtube-creators.js', ['data/generated/youtube-creators.js', 'guide/creators/index.html']]
+];
+for (const [script, outputs] of generators) {
+  const snapshots = outputs.map(f => fs.readFileSync(path.join(ROOT, f)));
+  execFileSync(process.execPath, [script], { cwd: ROOT });
+  outputs.forEach((f, i) => {
+    const current = fs.readFileSync(path.join(ROOT, f));
+    assert(Buffer.compare(snapshots[i], current) === 0, script + ': output changed for ' + f);
+  });
 }
 
 console.log('Structured-data checks passed for ' + PAGES.length + ' pages');
