@@ -2,8 +2,8 @@
 
 ## Sep 2026
 
-- **Promo-code refresh**: New active codes RAID02 (Bulletproof + Powerplex) and GLOB34 (two Epic tiers). Expanded from 28 to 30 active codes; expired older codes. All promo data regenerated from `data/codes.json`.
-- **Creator and video refresh**: 23 eligible creator videos across 3 channels; added pending creators and expanded verified catalog. Creator directory regenerated from `data/youtube-creators.json`.
+- **Promo-code refresh**: New active code RAID02 (Bulletproof + Powerplex). GLOB34 corrected and retained as expired (2026-08-28, 500-gem reward). Expanded from 28 to 29 active codes; expired older codes. All promo data regenerated from `data/codes.json`.
+- **Creator and video refresh**: Active and pending creator/video records rechecked, verification timestamps refreshed, existing eligibility thresholds/cap preserved. Creator directory regenerated from `data/youtube-creators.json`.
 - **Guide and policy rewrite**: Content refresh on all 9 guide pages (code, beginners, event, pvp, login, faq, xp, redeem, creators) plus privacy and terms policies. Reviewed editorial copy and updated structured data across the guide cluster.
 - **Indexability expansion**: Author profile, music, privacy, and terms pages now indexable. Sitemap expanded from 11 to 14 canonical URLs. `robots.txt` unchanged (Allow: /, sitemap reference retained).
 - **SEO title refresh**: September-titled SEO metadata for all game-content pages with `[Sep 2026]` suffix. Unique query-first titles targeting 50–60 characters. Synchronized og:title, twitter:title, and JSON-LD headline across all pages.
