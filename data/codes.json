@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-22",
+  "updated": "2026-09-04",
   "codes": [
     {
       "code": "SPRACE",
@@ -178,7 +178,7 @@
       "gems": 500,
       "tickets": 0,
       "expired": true,
-      "expiredDate": "2026-07-29",
+      "expiredDate": "2026-08-28",
       "dateAdded": "2026-05-19"
     },
     {
@@ -187,6 +187,13 @@
       "tickets": 0,
       "reward": "5x GDA Behavioral Suppressant pieces, 5x GDA Synapse Breaker pieces",
       "dateAdded": "2026-08-04"
+    },
+    {
+      "code": "RAID02",
+      "gems": 0,
+      "tickets": 0,
+      "reward": "1 x Bulletproof, 1 x Powerplex",
+      "dateAdded": "2026-08-31"
     },
     {
       "code": "LEXTV4",

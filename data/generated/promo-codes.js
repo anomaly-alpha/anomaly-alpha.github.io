@@ -1,5 +1,12 @@
 window.__PROMO_CODES=[
   {
+    "code": "RAID02",
+    "gems": 0,
+    "tickets": 0,
+    "reward": "1 x Bulletproof, 1 x Powerplex",
+    "dateAdded": "2026-08-31"
+  },
+  {
     "code": "SPRACE",
     "gems": 0,
     "tickets": 0,

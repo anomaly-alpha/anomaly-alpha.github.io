@@ -78,7 +78,13 @@ const replacements = [
   [/<!--GUIDE_TWITTER_DESC_START-->[\s\S]*?<!--GUIDE_TWITTER_DESC_END-->/,
     `<!--GUIDE_TWITTER_DESC_START-->\n    <meta name="twitter:description" content="${guideTwitterDescription}">\n<!--GUIDE_TWITTER_DESC_END-->`],
 
-  // GUIDE_ARTICLE_MODIFIED — removed: dateModified should only update on substantive content changes, not code list updates
+  // GUIDE_DATE_META
+  [/<!--GUIDE_DATE_META_START-->[\s\S]*?<!--GUIDE_DATE_META_END-->/,
+    `<!--GUIDE_DATE_META_START-->\n    <meta name="date" content="${updated}">\n<!--GUIDE_DATE_META_END-->`],
+
+  // GUIDE_ARTICLE_MODIFIED
+  [/<!--GUIDE_ARTICLE_MODIFIED_START-->[\s\S]*?<!--GUIDE_ARTICLE_MODIFIED_END-->/,
+    `<!--GUIDE_ARTICLE_MODIFIED_START-->\n    <meta property="article:modified_time" content="${updated}T00:00:00Z">\n<!--GUIDE_ARTICLE_MODIFIED_END-->`],
 
   // GUIDE_LD_DESC (JSON-LD)
   [/^([ \t]*)"description": "(?:Find active Invincible Guarding the Globe promo codes, codes, and reward codes\. \d+ active promo codes with gems, hero shards & tickets\.|New Invincible Guarding the Globe promo codes — \d+ active codes with gems, hero shards & tickets\. Tap to copy and redeem at the Ubisoft portal\.|__GUIDE_LD_DESC__)",$/m,
@@ -113,7 +119,9 @@ const replacements = [
   // JSON-LD headline — same pattern as title
   [/("headline": "(?:\bNew\s+)?Invincible).*?— .*?\[[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `"headline": "New Invincible GTG Codes — All Active [${monthYear}]"$2`],
 
-  // JSON-LD dateModified — removed: should only update on substantive content changes
+  // JSON-LD dateModified
+  [/<!--GUIDE_LD_DATEMODIFIED_START-->[\s\S]*?<!--GUIDE_LD_DATEMODIFIED_END-->/,
+    `<!--GUIDE_LD_DATEMODIFIED_START-->\n          "dateModified": "${updated}"\n<!--GUIDE_LD_DATEMODIFIED_END-->`],
 
   // Subtitle: "N Active Promo Codes — Tap, Copy, Redeem"
   [/\d+ Active Promo Codes — Tap, Copy, Redeem/g, `${activeCount} Active Promo Codes — Tap, Copy, Redeem`],
@@ -137,6 +145,15 @@ const replacements = [
 
 for (const [pattern, replacement] of replacements) {
   html = html.replace(pattern, replacement);
+}
+
+// Assert freshness markers occurred exactly once
+const freshnessMarkers = [
+  'GUIDE_DATE_META', 'GUIDE_ARTICLE_MODIFIED', 'GUIDE_LD_DATEMODIFIED'
+];
+for (const m of freshnessMarkers) {
+  const count = (html.match(new RegExp(`<!--${m}_START-->`, 'g')) || []).length;
+  if (count !== 1) throw new Error(`${m} marker expected 1 occurrence, found ${count}`);
 }
 
 fs.writeFileSync(codeGuidePath, html, 'utf8');
