@@ -1,8 +1,9 @@
 # Discord Rich Presence Setup Guide
 
 > **Note:** the in-bot presence cycler (`features/presence/presenceCycler.js`) is the
-> **recommended / current** bot path. This guide covers the **optional standalone desktop
-> RPC** process (`rich-presence.js`) — useful for a separate machine or as a fallback.
+> recommended bot path. This guide covers the optional standalone desktop RPC in
+> `skarn-rpc/rich-presence.js`. The old `skarn-bot/rich-presence.js` path is only a
+> compatibility wrapper.
 
 Platform-agnostic guide to run Discord Rich Presence in the background.
 
@@ -12,42 +13,25 @@ Platform-agnostic guide to run Discord Rich Presence in the background.
 - Discord desktop app running
 - Discord Application created (get Application ID from Developer Portal)
 
-## Step 1: Create Project
+## Step 1: Install the repository RPC package
 
 ```bash
-mkdir discord-rpc
-cd discord-rpc
-npm init -y
-npm install discord-rpc
+cd skarn-rpc
+npm install
 ```
 
-## Step 2: Create rich-presence.js
+## Step 2: Run the repository RPC runtime
 
-Replace `YOUR_APPLICATION_ID` with your actual ID:
+The implementation is `skarn-rpc/rich-presence.js`; it reads the shared catalog and
+retains the local Discord IPC renderer. From the `skarn-rpc/` directory, run:
 
-```js
-const RPC = require('discord-rpc');
-const clientId = 'YOUR_APPLICATION_ID';
-const rpc = new RPC.Client({ transport: 'ipc' });
-
-rpc.on('ready', () => {
-  console.log('Rich Presence connected!');
-  rpc.setActivity({
-    details: '<+HUSH> ONLINE',
-    state: '<+HUSH> AWAITING SIGNAL',
-    instance: false,
-    type: 0, // 0=Playing, 1=Streaming, 2=Listening, 3=Watching, 5=Competing
-    startTimestamp: 1000, // Jan 1, 1970 00:00:01 — timer counts up from here
-  });
-});
-
-rpc.login({ clientId }).catch(err => {
-  console.error('Failed:', err.message);
-  console.log('Make sure Discord is running.');
-});
+```bash
+npm start
 ```
 
-> **Note:** this example mirrors the activity in the repo's own `rich-presence.js`, but the repo script is **not** parameterized — it hardcodes `clientId: '982308134871765022'` (no env var), so repurposing it for your own application requires editing the source. The "Replace `YOUR_APPLICATION_ID`" instruction above applies only to this standalone template.
+> The repository runtime is `skarn-rpc/rich-presence.js` and hardcodes the configured
+> Discord client ID. Run it from `skarn-rpc/`; do not maintain a second implementation
+> under `skarn-bot/`.
 
 ## Step 3: Run in Background
 
@@ -83,7 +67,7 @@ pm2 startup
 screen -S rpc
 
 # Run the script
-node rich-presence.js
+node ../skarn-rpc/rich-presence.js
 
 # Detach: Ctrl+A, then D
 # Reattach: screen -r rpc
@@ -92,7 +76,7 @@ node rich-presence.js
 ### Option C: nohup (Linux/Mac)
 
 ```bash
-nohup node rich-presence.js > rpc.log 2>&1 &
+nohup node ../skarn-rpc/rich-presence.js > ../skarn-rpc/rpc.log 2>&1 &
 ```
 
 ### Option D: Windows Task Scheduler

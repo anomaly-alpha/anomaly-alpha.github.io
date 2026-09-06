@@ -4,7 +4,7 @@ const path = require('path');
 const CONTRACT_SCHEMA_VERSION = 1;
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
-const CONTRACT_PATH = path.join(__dirname, '../../data/presence-mood-contract.json');
+const CONTRACT_PATH = path.join(__dirname, '../../presence-assets/presence-mood-contract.json');
 const MOOD_IDS = Object.freeze(['dormant', 'observing', 'pondering', 'displeased']);
 const ROLL_MOODS = Object.freeze(['displeased', 'pondering', 'observing']);
 

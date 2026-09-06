@@ -5,7 +5,8 @@
   "description": "Skarn desktop Discord Rich Presence",
   "main": "rich-presence.js",
   "scripts": {
-    "start": "node rich-presence.js"
+    "start": "node rich-presence.js",
+    "verify:shared-catalog": "node scripts/verify-shared-catalog.js"
   },
   "dependencies": {
     "discord-rpc": "^4.0.1",

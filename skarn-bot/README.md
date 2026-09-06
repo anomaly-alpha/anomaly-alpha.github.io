@@ -472,7 +472,7 @@ npm run deploy
 skarn-bot/
 ├── bot.js                  # Main bot + event handlers
 ├── deploy-commands.js      # Registers slash commands
-├── rich-presence.js        # Discord Rich Presence (desktop, optional legacy)
+├── rich-presence.js        # Compatibility wrapper for ../skarn-rpc
 ├── commands/               # 78 slash command files (thin wrappers)
 ├── features/               # Vertical-slice feature modules
 │   ├── ai/                 # Shared pipeline, condenser, tool runner
@@ -503,24 +503,22 @@ skarn-bot/
 
 ## Rich Presence
 
-> **Note:** the in-bot presence cycler (`features/presence/presenceCycler.js`) is the primary and recommended path. The standalone `rich-presence.js` desktop script is an optional legacy alternative.
+The two runtimes share the tracked catalog, but retain separate renderers and live state.
 
-Two presence paths:
+The tracked source is presence-assets/presence-phrases.json: exactly 5,000 validated entries across dormant, observing, pondering, and displeased, with at least 500 entries per mood. The shared timing and sleep policy is presence-assets/presence-mood-contract.json.
 
-- **Presence cycler (in-bot)** — `features/presence/presenceCycler.js`, started by `features/scheduler/index.js` (`startPresenceCycler(client)`). On boot it loads an AI-batch-generated phrase pool from `app_state` (`presence_phrases` / `presence_phrases_generated_at`), generating a fresh `PRESENCE_POOL_SIZE`-sized pool (default 300 one-liners, ≤ 8 words, in Skarn's dry observing voice via the `roles.presence` role + `moderatedChatCompletion`) when none is stored or it is older than `PRESENCE_REFRESH_DAYS`. It then cycles `client.setActivity(pool[i], { type: 3 })` every `PRESENCE_CYCLE_MS` (default 120000 = 2 min), skipping ticks during sleep hours. Failed generation falls back to the stored pool (or the static line `the mortals squabble`); regen attempts are throttled to one per 24 h via `app_flags` key `presence_regen_at` so a dead AI path isn't retried every cycle.
+The bot presence cycler is started once by the scheduler. It is provider-free at runtime: it loads the catalog at startup, keeps mood-filtered shuffled decks in memory, and updates one global Discord Watching activity every 10 seconds. Optional curated Unicode symbols prefix the text. A single guarded writer prevents overlapping updates and applies rejection/disconnect cooldowns. During sleep hours it selects dormant phrases while command sleep behavior remains active; invalid or missing assets use a static Watching fallback without crashing the bot. The current ten-minute mood window is the only presence-related app_state value.
 
-  Env knobs:
+Generate or check the catalog from skarn-bot/:
 
-  | Var | Default | Controls |
-  |-----|---------|----------|
-  | `PRESENCE_POOL_SIZE` | `300` | Number of phrases the AI batch-generates per pool |
-  | `PRESENCE_CYCLE_MS` | `120000` | How often the "Watching" text advances (ms) |
-  | `PRESENCE_REFRESH_DAYS` | `7` | Pool regeneration interval (days) |
+    npm run generate:presence   # rebuild and atomically write the complete catalog
+    npm run check:presence      # validate without modifying files
+    npm run test:presence       # presence contract, writer, and catalog smoke tests
 
-- **Legacy desktop script** (pm2-supervised `skarn-rpc` → `rich-presence.js`): shows a Playing presence with `<+HUSH> ONLINE` / `<+HUSH> AWAITING SIGNAL` (`type: 0`), timer counting up from 1970. This is **optional** — the in-bot presence cycler above is the primary/current path.
+The local RPC (skarn-rpc/rich-presence.js) reads the same catalog through a read-only adapter and retains local IPC, artwork, timers, mood state, and RPC details/state/icon rendering. Gateway bot activities do not support RPC artwork fields.
 
 ```bash
-node rich-presence.js
+node ../skarn-rpc/rich-presence.js
 ```
 
 ### Verification (manual, per project convention)

@@ -140,7 +140,9 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 78 com
 | Message analysis | `features/preprocessing/pipeline.js` | `runMessageAnalysis()` + `shouldAnalyze()` gate (analyzer-only; retriever/assembler trimmed) |
 | Reply condenser | `features/ai/condenser.js` | Tightens over-target replies to the role's character reply target (skips structured content) |
 | AI tools | `features/tools/` | `toolDefinitions.js` (getTools), `toolRunner.js` (runTool), `messageAdapter.js` (pseudo-message facade) — model-decided function calls on turn 1 of the pipeline |
-| Presence cycler | `features/presence/presenceCycler.js` | Rotating `client.setActivity` phrases, batch AI-generated pool (300) with 24h regen throttle |
+| Presence contract/catalog | `features/presence/presenceContract.js`, `features/presence/railwayPresenceDataset.js` | Loads the tracked `presence-assets/presence-mood-contract.json` and 5,000-entry `presence-assets/presence-phrases.json` catalog |
+| Presence cycler | `features/presence/presenceCycler.js`, `presenceMoodCycler.js`, `presenceUpdateGate.js` | Provider-free global Watching activity, mood-filtered in-memory rotation every 10 seconds, optional Unicode symbols, one guarded writer, rejection cooldowns, and static fallback |
+| Presence mood state | `features/presence/presenceMoodCoordinator.js` | Persists only the current ten-minute mood window in the existing `app_state` key `skarn_presence_mood`; no phrase table or runtime pool |
 | Musing engine | `features/presence/musingEngine.js` | Ambient reflections (~1/guild/2 days, quiet channels) + `/musing` command path |
 | Rate limiter | `lib/rateLimit.js` | 50 calls per 10 minutes per user (`RATE_LIMIT_MAX_CALLS`, `lib/rateLimit.js:13`); `canCall()`/`recordCall()` single implementation (db/database.js is a re-export facade) |
 | AI stats | `lib/aiStats.js` | Hourly per-user cap (50/hr) |
@@ -288,6 +290,8 @@ All state lives in SQLite (`data/skarn.db`). No external database. Key patterns:
 - **Versioned migrations** — `db/migrations.js` runs at startup (`db/db.js:41`), tracked via SQLite `user_version` (3 migrations). Base schema is still `CREATE TABLE IF NOT EXISTS` on every startup (`db/skarn-schema.sql`); column additions use try/catch for idempotency
 
 See `docs/DATABASE.md` for the full table reference.
+
+Presence content is deliberately outside the database. Both runtimes consume the tracked JSON catalog at `skarn-bot/presence-assets/presence-phrases.json`; the bot does not use the former app_state phrase pool, and the Railway `/app/data` volume receives no presence asset upload. The local RPC uses a read-only adapter and retains its own IPC/artwork/state.
 
 ## Known Active Bugs
 

@@ -1,0 +1,20 @@
+const assert = require('assert');
+const fs = require('fs');
+const path = require('path');
+const generator = require('../generate-presence-phrases');
+
+const root = path.join(__dirname, '..', '..');
+const catalog = JSON.parse(fs.readFileSync(path.join(root, 'presence-assets/presence-phrases.json')));
+const icons = new Set(JSON.parse(fs.readFileSync(path.join(root, '..', 'skarn-rpc/data/icon-registry.json'))).map(x => x.key));
+const palette = JSON.parse(fs.readFileSync(path.join(root, 'presence-assets/railway-symbol-palette.json')));
+const validation = generator.validateCatalog(catalog, icons, palette);
+const counts = validation.counts;
+assert.ok(validation.ok, validation.errors.join('; '));
+assert.strictEqual(catalog.phrases.length, 5000);
+assert.ok(Object.values(counts).every(count => count >= 500));
+assert.ok(catalog.phrases.some(entry => entry.rpcDetails && entry.rpcState && entry.rpcIconKey));
+assert.ok(catalog.phrases.some(entry => entry.symbol === undefined));
+assert.ok(!generator.validateCatalog({ ...catalog, phrases: catalog.phrases.slice(0, -1) }, icons, palette).ok);
+const forbidden = { ...catalog, phrases: catalog.phrases.map((entry, index) => index === 0 ? { ...entry, text: 'message content' } : entry) };
+assert.ok(!generator.validateCatalog(forbidden, icons, palette).ok);
+console.log('Presence catalog smoke passed:', JSON.stringify(counts));

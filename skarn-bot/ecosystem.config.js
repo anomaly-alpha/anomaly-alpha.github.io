@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   apps: [
     {
@@ -12,7 +14,7 @@ module.exports = {
     {
       name: 'skarn-rpc',
       script: 'rich-presence.js',
-      cwd: __dirname,
+      cwd: path.resolve(__dirname, '../skarn-rpc'),
       max_restarts: 5,
       restart_delay: 10000,
       autorestart: true,

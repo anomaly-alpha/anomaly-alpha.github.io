@@ -165,7 +165,7 @@ Without it, every casual message would trigger an AI call, increasing cost and m
 
 **File**: `bot.js` lines 75–85 (`isSleepTime()` at 79–85; the `isAsleep` timer at 87–121; interjection-local `isSleeping` at 314–324)
 
-`isSleepTime()` checks the current hour against `SLEEP_START`/`SLEEP_END` config (default: 1 AM – 7 AM UTC). During sleep hours the bot **skips interjections** (via a separate local `isSleeping` at `bot.js:314–324`, which ignores `SLEEP_TIMEZONE`) and **slash commands** (`isAsleep`, `bot.js:128`); presence cycling also halts (`bot.js:113–121`). **Mention handling is not sleep-gated** — the @mention AI path (`bot.js:307–311`) runs unconditionally. Controlled by environment variables, defaults to active.
+`isSleepTime()` checks the current hour against `SLEEP_START`/`SLEEP_END` config (default: 1 AM – 7 AM UTC). During sleep hours the bot **skips interjections** (via a separate local `isSleeping` at `bot.js:314–324`, which ignores `SLEEP_TIMEZONE`) and **slash commands** (`isAsleep`, `bot.js:128`). The presence cycler continues its 10-second schedule, selecting dormant phrases; the sleep timer no longer writes a competing activity. **Mention handling is not sleep-gated** — the @mention AI path (`bot.js:307–311`) runs unconditionally. Controlled by environment variables, defaults to active.
 
 Removal would cause the bot to respond 24/7, increasing cost for servers with low nighttime activity and potentially disrupting users who expect quiet hours.
 
@@ -287,9 +287,6 @@ The following environment variables are consumed by the codebase. Variables are 
 | `SLEEP_TIMEZONE` | No | `0` | UTC offset applied arithmetically to sleep hours. Integer, not DST-aware. (`bot.js` line 77) |
 | `AI_MODEL` | No | `gpt-5.4-mini` | Default OpenAI model for all AI calls (`features/intelligence/modelRouter.js` line 13) |
 | `AI_MODEL_COMPLEX` | No | falls back to `AI_MODEL` | Model used for long/question/complex queries and knowledge-matched queries (`modelRouter.js` lines 4, 7, 11) |
-| `PRESENCE_POOL_SIZE` | No | `300` | Phrases the presence cycler batch-generates per pool (`features/presence/presenceCycler.js`) |
-| `PRESENCE_CYCLE_MS` | No | `120000` | How often the "Watching" presence text advances (ms) |
-| `PRESENCE_REFRESH_DAYS` | No | `7` | Presence pool regeneration interval (days) |
 | `REALM_DAILY_CALL_LIMIT` | No | `1000` | Realm per-guild daily AI-call ceiling (`features/realm/realmConfig.js:204`) |
 | `GUILD_AI_DAILY_LIMIT` | No | `2000` | Per-guild daily AI call budget for chat buckets (`features/ai/guildBudget.js`) |
 | `SKARN_DB_PATH` | No | `data/skarn.db` | SQLite database path (`db/db.js:9`); the smoke suites use it for temp-DB isolation |
@@ -304,7 +301,7 @@ The following environment variables are consumed by the codebase. Variables are 
 >
 > **Note**: `AI_MODEL`'s code-level default is `gpt-5.4-mini` everywhere (modelRouter.js `selectModel()` plus every command/feature fallback site, swept 2026-08-08). Support-call models (condenser/postProcessor/analyzer) still hardcode `gpt-4.1-mini` by design (spec 6.4 carve-out).
 >
-> **Note**: `features/presence/presenceCycler.js` re-reads `SLEEP_START`/`SLEEP_END`/`SLEEP_TIMEZONE` via its own local `isSleepTime()` copy (mirroring `bot.js:79–85`) so the presence cycler also halts during sleep hours.
+> **Note**: Presence mood uses the canonical contract's sleep window. During that window the cycler keeps selecting dormant catalog entries while command sleep behavior remains active; it does not make provider calls or regenerate phrases at runtime.
 
 ## 11. Open questions / not yet decided
 
@@ -419,8 +416,8 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 - **Skarn**: The Warmaster of the Abyss, a 10,000-year-old retired demon who serves Anomaly Alpha as a Discord bot.
 - **buildSystemPrompt()**: Single function in `persona/identity.js` that assembles core identity + role line + all context lines into a unified system prompt for every AI call.
 - **Role line**: Command-specific instruction from `persona/roles.js`. Every AI command has exactly one role line. No command inlines its own role string.
-- **`presence` role**: A `persona/roles.js` role line used by the presence cycler — prompts Skarn's "inner monologue" to burst out short (≤ 8 words) dry observations he makes while watching the living realm. Added to all three persona registries: `roles.presence`, `roleTokenBudgets.presence` (400), `ROLE_NATURE.presence` (`'casual'`).
-- **Presence cycler** (`features/presence/presenceCycler.js`): Gives Skarn a living Discord presence. On boot (`startPresenceCycler(client)`, wired in `features/scheduler/index.js`) it loads a batch-generated phrase pool from `app_state` (`presence_phrases`, stamped in `presence_phrases_generated_at`) and starts a `setInterval` that advances `client.setActivity(pool[i], { type: 3 })` every `PRESENCE_CYCLE_MS` (120000 = 2 min), skipping during sleep hours. When no pool is stored or it is older than `PRESENCE_REFRESH_DAYS` (7), it regenerates `PRESENCE_POOL_SIZE` (300) one-liners through `moderatedChatCompletion` using the `presence` role (batch cost, not per-message); failures keep the stored pool (or the static `the mortals squabble`), and regen is throttled to once per 24 h by the `app_flags` key `presence_regen_at` (stamped even on failure so a dead AI path isn't retried every cycle). Env knobs: `PRESENCE_POOL_SIZE`, `PRESENCE_CYCLE_MS`, `PRESENCE_REFRESH_DAYS`.
+- **Presence catalog** (`skarn-bot/presence-assets/presence-phrases.json`): The tracked shared source for both the Railway bot and local RPC. It contains exactly 5,000 validated mood-tagged entries, with at least 500 entries per mood; it is generated and checked as a complete Git-tracked file, not stored in SQLite or uploaded to the Railway volume.
+- **Presence cycler** (`features/presence/presenceCycler.js`): Gives Skarn a living Discord presence. On boot (`startPresenceCycler(client)`, wired in `features/scheduler/index.js`) it loads the shared catalog and starts a `setInterval` that advances one global `Watching` activity every 10 seconds. Runtime selection is provider-free and uses mood-filtered in-memory decks with optional curated Unicode symbols. One guarded writer prevents overlapping Gateway updates; rejection/disconnect cooldowns and a static Watching fallback keep the bot available. During sleep hours it selects dormant phrases while command sleep behavior remains active. The bot persists only the current ten-minute mood window in the existing `app_state` key `skarn_presence_mood`; no phrase pool or runtime AI regeneration is used.
 - **Musings**: Ambient in-voice reflections grounded in recent events + Skarn's story archive + the guild's own recent life, ending with a question-hook. Timer-driven (~1/guild/2 days, quiet channels only) and command-driven (`/musing`, `skarn musing`; excluded from the run_command tool as nested-AI).
 
 ### Memory Systems
@@ -469,12 +466,11 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 
 ### Presence Systems
 
-- **Presence mood**: The global Skarn ambient disposition shared as a vocabulary and behavioral policy by the Railway bot presence and the local desktop Rich Presence. It has exactly four states — dormant, observing, pondering, and displeased — and is distinct from any one guild's mood or channel's state. In v1, each process owns its current mood independently; shared policy does not imply live synchronization or matching instantaneous moods. The shared policy is intended to live in data/presence-mood-contract.json.
+- **Presence mood**: The global Skarn ambient disposition shared as a vocabulary and behavioral policy by the Railway bot presence and the local desktop Rich Presence. It has exactly four states — dormant, observing, pondering, and displeased — and is distinct from any one guild's mood or channel's state. Each process owns its current mood independently; shared policy does not imply live synchronization or matching instantaneous moods. Both load the tracked policy from skarn-bot/presence-assets/presence-mood-contract.json.
 - **Mood window**: The bounded interval during which one presence mood remains active. Phrase rotation may continue inside the window, but the mood itself does not change until the window ends.
-- **Phrase dataset**: A process-owned collection of mood-tagged presence phrases. The Railway bot and local Rich Presence maintain separate datasets; sharing the presence mood does not imply sharing phrase text.
+- **Phrase catalog**: The single tracked shared collection of mood-tagged presence phrases at skarn-bot/presence-assets/presence-phrases.json. Both runtimes read it; each retains independent selection and renderer state.
 - **Presence mood owner**: Each process owns and persists its own current presence mood window. Railway owns the Railway bot state; the local RPC owns the local state. There is no cross-process authority in v1.
 - **Shared presence-mood contract**: The committed policy for the four IDs, sleep window, mood dwell, selection weights, phrase cadence, and maintenance limits. Both processes load the same contract while maintaining independent runtime state.
-- **Railway runtime snapshot**: A bounded Railway app_state record written periodically with recent cycler and dataset health so operators can inspect it through SSH. It is not a heartbeat and does not receive local-process liveness in v1.
 
 ### Realm of Skarn (RPG Subsystem)
 

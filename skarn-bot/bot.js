@@ -100,11 +100,9 @@ client.once('clientReady', () => {
   setInterval(() => {
     if (isSleepTime() && !isAsleep) {
       isAsleep = true;
-      client.user.setActivity('💤 Sleeping — back at ' + SLEEP_END + ':00');
       console.log('Sleep mode: going offline');
     } else if (!isSleepTime() && isAsleep) {
       isAsleep = false;
-      client.user.setActivity('');
       console.log('Sleep mode: waking up');
     }
   }, 60000);

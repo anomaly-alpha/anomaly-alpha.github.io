@@ -4,6 +4,8 @@
 
 All persistent state lives in a single SQLite file at `data/skarn.db` (auto-created). The schema is `db/skarn-schema.sql`, run on every startup via `CREATE TABLE IF NOT EXISTS`. Migration strategy: additive for column evolution (new columns via `ALTER TABLE ... ADD COLUMN`); v3 `drop_mention_cooldowns` is the first destructive exception (orphaned table). Idempotent startup ALTERs live in `db/db.js` (try/catch, e.g. `user_preferences.proactive_opt_in`, `user_profile` growth columns); versioned migrations in `db/migrations.js` (v1 reminder/giveaway indexes, v2 `daily_news.published_at`, v3 `drop_mention_cooldowns`); `lib/rateLimit.js` auto-adds `rate_limits.bucket`.
 
+Presence is not a database domain. The shared 5,000-entry phrase catalog is the tracked file `skarn-bot/presence-assets/presence-phrases.json`, consumed read-only by the bot and local RPC. The bot persists only its current ten-minute mood window in the existing `app_state` key `skarn_presence_mood`; it has no presence phrase table, archive, runtime phrase pool, migration, or volume-uploaded catalog. The RPC retains its local IPC artwork and mood state outside this SQLite database.
+
 ## Table Reference
 
 ### Persona & Context
