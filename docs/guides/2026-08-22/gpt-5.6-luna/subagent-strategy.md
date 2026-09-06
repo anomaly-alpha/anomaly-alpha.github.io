@@ -11,8 +11,8 @@ Route agent tasks to the most cost-effective capable model:
 | Task group | Model | Variant | Reason |
 |------------|-------|---------|--------|
 | build, plan, compose | `openai/gpt-5.6-luna` | `xhigh` | Complex orchestration, multi-file edits, security review |
-| general, explore, browser-qa, reviewer, seo-a11y | `opencode-go/mimo-v2.5` | `high` | General reasoning, read-only review, browser testing |
-| lite model group | `opencode-go/mimo-v2.5` | — | Fallback / low-cost tasks |
+| general, explore, browser-qa, reviewer, seo-a11y | `openai/gpt-5.6-luna` | `medium` | General reasoning, read-only review, browser testing |
+| lite model group | `openai/gpt-5.6-luna` | `medium` | Fallback / low-cost tasks |
 
 ---
 
@@ -45,7 +45,7 @@ MiMoCode merges configuration from two scopes:
 
 ```json
 "model_groups": {
-  "lite": "opencode-go/mimo-v2.5"
+  "lite": "openai/gpt-5.6-luna"
 }
 ```
 
@@ -66,12 +66,12 @@ MiMoCode merges configuration from two scopes:
     "variant": "xhigh"
   },
   "general": {
-    "model": "opencode-go/mimo-v2.5",
-    "variant": "high"
+    "model": "openai/gpt-5.6-luna",
+    "variant": "medium"
   },
   "explore": {
-    "model": "opencode-go/mimo-v2.5",
-    "variant": "high"
+    "model": "openai/gpt-5.6-luna",
+    "variant": "medium"
   }
 }
 ```
@@ -96,9 +96,9 @@ Four specialist roles are defined as `.mimocode/agent/*.md` prompt files. Each u
 | File | Model | Variant | Role |
 |------|-------|---------|------|
 | `security-reviewer.md` | `openai/gpt-5.6-luna` | `xhigh` | Security-sensitive review (OWASP checklist) |
-| `browser-qa.md` | `lite` (resolves to `opencode-go/mimo-v2.5`) | `high` | Playwright/Lighthouse browser testing |
-| `reviewer.md` | `lite` | `high` | Final read-only code review |
-| `seo-a11y-reviewer.md` | `lite` | `high` | SEO + accessibility audit + small fixes |
+| `browser-qa.md` | `openai/gpt-5.6-luna` | `medium` | Playwright/Lighthouse browser testing |
+| `reviewer.md` | `openai/gpt-5.6-luna` | `medium` | Final read-only code review |
+| `seo-a11y-reviewer.md` | `openai/gpt-5.6-luna` | `medium` | SEO + accessibility audit + small fixes |
 
 ### 4.2 Frontmatter format
 
@@ -198,7 +198,6 @@ bun.lock
 
 ```bash
 mimo models openai
-mimo models opencode-go
 ```
 
 Expected: list of available models for each provider. If a provider is missing, configure it in global `~/.config/mimocode/mimocode.jsonc` before proceeding.
@@ -281,11 +280,10 @@ Expected: no matches. The tracked config should contain only model IDs, variant 
 The strategy is correctly applied when:
 
 1. `mimo models openai` lists available models (provider authenticated)
-2. `mimo models opencode-go` lists available models (provider authenticated)
-3. `.mimocode/mimocode.json` is valid JSON with the correct `model`, `model_groups`, and `agent` keys
-4. `mimo agent list` inside the repo shows all 4 specialists
-5. `mimo agent list` outside the repo does not show project specialists
-6. SHA256 hashes of `.mimocode/agent/*.md` match between source and target machines
-7. `git check-ignore` confirms portable files are tracked and local files are ignored
-8. No secrets, API keys, tokens, or absolute machine paths appear in tracked files
-9. No files have been committed or pushed during this process
+2. `.mimocode/mimocode.json` is valid JSON with the correct `model`, `model_groups`, and `agent` keys
+3. `mimo agent list` inside the repo shows all 4 specialists
+4. `mimo agent list` outside the repo does not show project specialists
+5. SHA256 hashes of `.mimocode/agent/*.md` match between source and target machines
+6. `git check-ignore` confirms portable files are tracked and local files are ignored
+7. No secrets, API keys, tokens, or absolute machine paths appear in tracked files
+8. No files have been committed or pushed during this process

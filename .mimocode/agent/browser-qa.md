@@ -1,7 +1,7 @@
 ---
 mode: subagent
-model: lite
-variant: high
+model: openai/gpt-5.6-luna
+variant: medium
 description: Test UI changes in a real browser and make only small, obvious source fixes when directly evidenced.
 ---
 
