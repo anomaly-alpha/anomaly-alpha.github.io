@@ -24,7 +24,7 @@ function createPresenceMoodCycler(options) {
     lastMood = state.mood; lastPhraseId = selected.id; lastUpdateAt = currentNow;
     lastUpdateResult = gate.canAttempt(currentNow) ? 'pending' : (gate.getStatus(currentNow).inFlight ? 'in-flight' : 'suppressed');
     const result = gate.attempt(() => c.setActivity(formatted, { type: 3 }), currentNow);
-    result.then(outcome => { lastUpdateResult = outcome.ok ? 'ok' : outcome.reason; if (!outcome.ok && outcome.reason !== 'suppressed' && outcome.reason !== 'in-flight') updateErrorCount++; log('Railway presence: ' + state.mood + ' / ' + selected.id + ' (' + outcome.reason + ')'); }).catch(error => { updateErrorCount++; lastUpdateResult = 'error'; log('Railway presence update failed: ' + error.message); });
+    result.then(outcome => { lastUpdateResult = outcome.ok ? 'ok' : outcome.reason; if (!outcome.ok && outcome.reason !== 'suppressed' && outcome.reason !== 'in-flight') updateErrorCount++; log('Railway presence: ' + state.mood + ' / ' + selected.id + ' (' + lastUpdateResult + ')'); }).catch(error => { updateErrorCount++; lastUpdateResult = 'error'; log('Railway presence update failed: ' + error.message); });
     return { mood: state.mood, moodRevision: state.revision, candidateCount: dataResult.counts[state.mood] || 0, phraseId: selected.id, result: lastUpdateResult };
   }
   function start() { if (timer) return; cycle(); timer = setIntervalFn(() => { try { cycle(); } catch (error) { updateErrorCount++; lastUpdateResult = 'error'; log('Railway presence cycle failed: ' + error.message); } }, contract.phraseRotationMs); }
