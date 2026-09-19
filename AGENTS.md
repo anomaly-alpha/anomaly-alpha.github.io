@@ -11,8 +11,9 @@ Open `index.html` in a browser. Works from `file://`.
 
 ## Git workflow preference
 
-- Local Git operations are authorized for the agent, including status, diff, staging, commits, history, and local branch inspection.
-- Remote operations such as fetch, pull, push, and remote branch updates should be given to the user as terminal commands to run unless the user explicitly authorizes the agent to perform them.
+- Local and normal remote Git operations are authorized for the agent when the inherited SSH agent is available. The configured GitHub key is /home/prime/.ssh/github-anomaly-alpha; start MiMoCode from the same shell after ssh-add so SSH_AUTH_SOCK is inherited.
+- Before remote operations, verify access with ssh -T git@github-anomaly-alpha and git ls-remote origin HEAD. Never request, store, or expose the SSH passphrase or private key.
+- Require explicit confirmation for destructive remote actions such as force-pushes or branch deletion.
 
 ## File ownership
 
