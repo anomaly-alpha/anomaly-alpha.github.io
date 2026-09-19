@@ -1,12 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-const { CONTRACT_SCHEMA_VERSION, MOOD_IDS } = require('./presenceContract');
+const { CONTRACT_SCHEMA_VERSION, MOOD_IDS, loadPresenceContract } = require('./presenceContract');
 
 const LOCAL_STATE_PATH = path.join(__dirname, '../../data/rpc-mood-state.json');
 const PROCESS_IDS = new Set(['skarn-rpc', 'skarn-railway-bot']);
 
-function validateMoodState(state) {
+function validateMoodState(state, options) {
   const errors = [];
   if (!state || typeof state !== 'object' || Array.isArray(state)) {
     return { ok: false, errors: ['state must be an object'] };
@@ -27,10 +27,24 @@ function validateMoodState(state) {
   if (!Number.isSafeInteger(state.revision) || state.revision < 1) {
     errors.push('revision must be a positive safe integer');
   }
+  if (!Number.isSafeInteger(state.policyRevision) || state.policyRevision < 1) {
+    errors.push('policyRevision must be a positive safe integer');
+  }
+  const expectedPolicyRevision = options && options.expectedPolicyRevision;
+  if (Number.isSafeInteger(expectedPolicyRevision) && state.policyRevision !== expectedPolicyRevision) {
+    errors.push('policyRevision does not match the active local policy');
+  }
   if (!Number.isSafeInteger(state.updatedAt) || state.updatedAt < 0) {
     errors.push('updatedAt must be a non-negative safe integer');
   }
   return { ok: errors.length === 0, errors };
+}
+
+function getExpectedPolicyRevision(options) {
+  if (options && options.requirePolicyRevision === false) return undefined;
+  if (options && Number.isSafeInteger(options.expectedPolicyRevision)) return options.expectedPolicyRevision;
+  const contract = loadPresenceContract();
+  return contract.policyRevision;
 }
 
 function createMoodState(options) {
@@ -43,13 +57,16 @@ function createMoodState(options) {
     moodUntil: options.moodUntil,
     revision: options.revision,
     updatedAt: options.updatedAt,
+    policyRevision: options.policyRevision === undefined
+      ? loadPresenceContract().policyRevision
+      : options.policyRevision,
   };
   const validation = validateMoodState(state);
   if (!validation.ok) throw new Error('invalid mood state: ' + validation.errors.join('; '));
   return state;
 }
 
-function loadMoodState(filePath, now, fileSystem) {
+function loadMoodState(filePath, now, fileSystem, options) {
   const target = filePath || LOCAL_STATE_PATH;
   const timestamp = now === undefined ? Date.now() : now;
   const adapter = fileSystem || fs;
@@ -69,6 +86,15 @@ function loadMoodState(filePath, now, fileSystem) {
   }
   const validation = validateMoodState(state);
   if (!validation.ok) return { state: null, resumable: false, reason: 'invalid', errors: validation.errors };
+  const expectedPolicyRevision = getExpectedPolicyRevision(options);
+  if (Number.isSafeInteger(expectedPolicyRevision) && state.policyRevision !== expectedPolicyRevision) {
+    return {
+      state: null,
+      resumable: false,
+      reason: 'policy-revision-mismatch',
+      errors: ['policyRevision does not match the active local policy'],
+    };
+  }
   if (!Number.isFinite(timestamp) || timestamp < 0) throw new RangeError('now must be a non-negative number');
   if (state.moodUntil <= timestamp) return { state, resumable: false, reason: 'expired', errors: [] };
   return { state, resumable: true, reason: 'valid', errors: [] };

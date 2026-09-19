@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "description": "Bounded authored Skarn reactions. Headlines, age, and source remain factual and source-derived.",
+  "maxReactionBytes": 72,
+  "topics": ["science", "space", "ai", "release", "games", "general"],
+  "salience": ["low", "normal", "high"],
+  "reactions": {
+    "science": {
+      "low": ["The instruments remain patient.", "Evidence, not thunder."],
+      "normal": ["The numbers have begun whispering.", "A useful disturbance."],
+      "high": ["The sky has filed a complaint.", "This warrants the good telescope."]
+    },
+    "space": {
+      "low": ["The dark remains statistically large.", "The heavens continue their old work."],
+      "normal": ["The void has supplied another footnote.", "A small signal from a very large room."],
+      "high": ["The heavens have become conspicuous.", "Deploy the ceremonial telescope."]
+    },
+    "ai": {
+      "low": ["The machines are still explaining themselves.", "A modest pulse in the silicon."],
+      "normal": ["The machines have produced paperwork.", "Inference remains an unruly art."],
+      "high": ["The silicon has made a bold claim.", "Someone taught the machine ambition."]
+    },
+    "release": {
+      "low": ["Another version enters the labyrinth.", "The changelog has awakened."],
+      "normal": ["The gears have received fresh instructions.", "A new build seeks judgment."],
+      "high": ["The release bell has been struck.", "The changelog demands inspection."]
+    },
+    "games": {
+      "low": ["The arena continues its noisy rituals.", "A minor quest stirs."],
+      "normal": ["The players have found fresh mischief.", "The arena has changed its furniture."],
+      "high": ["The arena has raised its voice.", "Prepare the ceremonial controller."]
+    },
+    "general": {
+      "low": ["The world continues, regrettably.", "A small signal survives."],
+      "normal": ["The world has offered a new complication.", "A fresh disturbance merits attention."],
+      "high": ["The world has become unusually loud.", "This one escaped the ordinary." ]
+    }
+  },
+  "fallback": {
+    "low": "The signal remains faint.",
+    "normal": "The signal merits inspection.",
+    "high": "The signal refuses to be ignored."
+  }
+}

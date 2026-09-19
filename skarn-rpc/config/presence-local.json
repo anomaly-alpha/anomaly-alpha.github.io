@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "policyRevision": 1,
+  "timeZone": "America/Toronto",
+  "sleepWindow": {
+    "startHour": 1,
+    "endHour": 7
+  }
+}
