@@ -1,6 +1,8 @@
 ---
 description: Investigate repositories read-only and return concise file-and-line evidence
 mode: subagent
+model: openai/gpt-5.6-luna
+variant: xhigh
 permission:
   edit: deny
   bash:

@@ -1,7 +1,7 @@
 ---
 mode: subagent
 model: openai/gpt-5.6-luna
-variant: medium
+variant: xhigh
 description: Perform the final read-only review of the working diff and specialist changes.
 ---
 
