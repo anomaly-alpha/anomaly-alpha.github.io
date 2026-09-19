@@ -1,5 +1,11 @@
 window.__PROMO_CODES=[
   {
+    "code": "UPDAT3",
+    "gems": 500,
+    "tickets": 0,
+    "dateAdded": "2026-09-15"
+  },
+  {
     "code": "RAID02",
     "gems": 0,
     "tickets": 0,

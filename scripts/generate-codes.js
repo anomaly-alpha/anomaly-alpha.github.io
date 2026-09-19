@@ -124,8 +124,10 @@ const replacements = [
   [/("headline": "(?:\bNew\s+)?Invincible).*?— .*?\[[A-Z][a-z]{2} \d{4}("\s*,\n)/g, `"headline": "New Invincible GTG Codes — All Active [${monthYear}]"$2`],
 
   // JSON-LD dateModified
-  [/<!--GUIDE_LD_DATEMODIFIED_START-->[\s\S]*?<!--GUIDE_LD_DATEMODIFIED_END-->/,
-    `<!--GUIDE_LD_DATEMODIFIED_START-->\n          "dateModified": "${updated}"\n<!--GUIDE_LD_DATEMODIFIED_END-->`],
+  [/<!--GUIDE_LD_DATEMODIFIED_START-->[^]*?<!--GUIDE_LD_DATEMODIFIED_END-->|^([ ]*)"dateModified": "[^"]*"/m,
+    (match, indent) => match.startsWith('<!--')
+      ? '<!--GUIDE_LD_DATEMODIFIED_START-->' + String.fromCharCode(10) + '          "dateModified": "' + updated + '"' + String.fromCharCode(10) + '<!--GUIDE_LD_DATEMODIFIED_END-->'
+      : (indent || '') + '"dateModified": "' + updated + '"'],
 
   // Subtitle: "N Active Promo Codes — Tap, Copy, Redeem"
   [/\d+ Active Promo Codes — Tap, Copy, Redeem/g, `${activeCount} Active Promo Codes — Tap, Copy, Redeem`],
@@ -153,11 +155,17 @@ for (const [pattern, replacement] of replacements) {
 
 // Assert freshness markers occurred exactly once
 const freshnessMarkers = [
-  'GUIDE_DATE_META', 'GUIDE_ARTICLE_MODIFIED', 'GUIDE_LD_DATEMODIFIED'
+  'GUIDE_DATE_META', 'GUIDE_ARTICLE_MODIFIED'
 ];
 for (const m of freshnessMarkers) {
   const count = (html.match(new RegExp(`<!--${m}_START-->`, 'g')) || []).length;
   if (count !== 1) throw new Error(`${m} marker expected 1 occurrence, found ${count}`);
+}
+
+const ldDateMarkerCount = (html.match(/<!--GUIDE_LD_DATEMODIFIED_START-->/g) || []).length;
+const ldDateValueCount = (html.match(/^[ ]*"dateModified": "[^"]*"/gm) || []).length;
+if (ldDateMarkerCount > 1 || ldDateValueCount !== 1) {
+  throw new Error('dateModified expected one JSON-LD value and at most one marker');
 }
 
 // Normalize line endings back to original style
