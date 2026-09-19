@@ -9,6 +9,11 @@ Open `index.html` in a browser. Works from `file://`.
 
 **Note:** Requires Node.js 18+ to build Tailwind. If `npm` isn't available, download from [nodejs.org](https://nodejs.org) for your platform.
 
+## Git workflow preference
+
+- Local Git operations are authorized for the agent, including status, diff, staging, commits, history, and local branch inspection.
+- Remote operations such as fetch, pull, push, and remote branch updates should be given to the user as terminal commands to run unless the user explicitly authorizes the agent to perform them.
+
 ## File ownership
 
 | File | Role |
