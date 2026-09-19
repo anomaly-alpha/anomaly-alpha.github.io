@@ -21,3 +21,4 @@ _dream_tmp*.py
 .lhci/
 .playwright-mcp/
 journal/
+scripts/start-mimo-with-github-agent.sh
