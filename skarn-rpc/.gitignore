@@ -2,4 +2,8 @@ node_modules/
 .env
 data/*
 !data/
+!data/news-sources.json
+!data/news-reactions.json
+!data/icon-role-overrides.json
+data/news-state.json
 *.log

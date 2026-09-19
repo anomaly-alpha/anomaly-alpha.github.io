@@ -6,10 +6,18 @@
   "main": "rich-presence.js",
   "scripts": {
     "start": "node rich-presence.js",
-    "verify:shared-catalog": "node scripts/verify-shared-catalog.js"
+    "verify:shared-catalog": "node scripts/verify-shared-catalog.js",
+    "test:activity": "node scripts/test-activity-publisher.js",
+    "test:contract": "node scripts/test-presence-contract.js",
+    "test:content": "node scripts/test-content-policy.js",
+    "test:news": "node scripts/test-news-pipeline.js",
+    "test:selector": "node scripts/test-candidate-selector.js",
+    "test:all": "npm run test:activity && npm run test:contract && npm run test:content && npm run test:news && npm run test:selector && (cd ../skarn-bot && npm run test:presence)",
+    "check": "node --check rich-presence.js && node --check features/news/feedClient.js && node --check features/news/feedParser.js && node --check features/news/newsPoller.js && node --check features/news/newsState.js && node --check features/presence/activityLogger.js && node --check features/presence/activityPublisher.js && node --check features/presence/activityRenderer.js && node --check features/presence/candidateSelector.js && node --check features/presence/presenceContract.js && node --check features/presence/presenceState.js && node --check features/presence/repetitionPolicy.js && node --check features/presence/sharedCatalogAdapter.js && node --check scripts/test-activity-publisher.js && node --check scripts/test-candidate-selector.js && node --check scripts/test-content-policy.js && node --check scripts/test-news-pipeline.js && node --check scripts/test-presence-contract.js && node --check scripts/verify-shared-catalog.js"
   },
   "dependencies": {
     "discord-rpc": "^4.0.1",
-    "dotenv": "^16.4.7"
+    "dotenv": "^16.4.7",
+    "rss-parser": "3.13.0"
   }
 }

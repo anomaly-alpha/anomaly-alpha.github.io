@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Fixture Atom</title>
+  <id>https://blog.rust-lang.org/</id>
+  <updated>2026-09-19T11:45:00Z</updated>
+  <entry>
+    <title>Rust release candidate arrives</title>
+    <id>tag:blog.rust-lang.org,2026:fixture-atom-1</id>
+    <link rel="alternate" href="https://blog.rust-lang.org/inside-rust/fixture-release" />
+    <published>2026-09-19T11:40:00Z</published>
+    <updated>2026-09-19T11:44:00Z</updated>
+  </entry>
+</feed>

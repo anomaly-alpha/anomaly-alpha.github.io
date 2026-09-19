@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "mode": "news",
+  "freshnessMode": "retroactive",
+  "maxItemsPerSource": 10,
+  "enabled": true,
+  "pollIntervalMs": 900000,
+  "maxAgeMs": 21600000,
+  "saliencePolicy": {
+    "high": "sourceMatch AND topicMatch AND titleMatch AND NOT titleExcluded",
+    "sourceMatch": "highSalience.sourceIds must contain the source id",
+    "topicMatch": "highSalience.topicFamilies must contain topicFamily",
+    "titleMatch": "titleAny is non-empty and at least one case-insensitive term matches; titleAll terms must also match",
+    "titleExcluded": "any case-insensitive titleNone term prevents promotion"
+  },
+  "sources": [
+    {
+      "id": "nasa-breaking-news",
+      "name": "NASA Breaking News",
+      "domain": "www.nasa.gov",
+      "feedUrl": "https://www.nasa.gov/news-release/feed/",
+      "topicFamily": "space",
+      "trustClass": "official",
+      "basePriority": 95,
+      "iconRole": "world",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["nasa-breaking-news"],
+        "topicFamilies": ["space", "science"],
+        "titleAny": ["breaking", "launch", "mission", "discovery", "asteroid", "moon", "mars"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "github-changelog",
+      "name": "GitHub Changelog",
+      "domain": "github.blog",
+      "feedUrl": "https://github.blog/changelog/feed/",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 90,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["github-changelog"],
+        "topicFamilies": ["developer", "release", "security"],
+        "titleAny": ["security", "vulnerability", "release", "available", "deprecat", "actions", "copilot"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "openai-news",
+      "name": "OpenAI News",
+      "domain": "openai.com",
+      "feedUrl": "https://openai.com/news/rss.xml",
+      "topicFamily": "ai",
+      "trustClass": "official",
+      "basePriority": 90,
+      "iconRole": "knowledge",
+      "maxResponseBytes": 2097152,
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["openai-news"],
+        "topicFamilies": ["ai", "release", "research"],
+        "titleAny": ["launch", "release", "model", "research", "reasoning", "safety", "available"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "rust-blog",
+      "name": "Rust Blog",
+      "domain": "blog.rust-lang.org",
+      "feedUrl": "https://blog.rust-lang.org/feed.xml",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 88,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["rust-blog"],
+        "topicFamilies": ["developer", "release", "security"],
+        "titleAny": ["release", "edition", "security", "rust", "compiler", "cargo"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "playstation-blog",
+      "name": "PlayStation Blog",
+      "domain": "blog.playstation.com",
+      "feedUrl": "https://blog.playstation.com/feed",
+      "topicFamily": "gaming",
+      "trustClass": "official",
+      "basePriority": 82,
+      "iconRole": "movement",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["playstation-blog"],
+        "topicFamilies": ["gaming", "release"],
+        "titleAny": ["available", "launch", "release", "playstation", "ps5", "state of play", "update"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    }
+  ]
+}
