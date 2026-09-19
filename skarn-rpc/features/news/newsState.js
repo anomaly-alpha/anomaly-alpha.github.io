@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const STATE_SCHEMA_VERSION = 1;
-const MAX_ITEMS = 50;
+const MAX_ITEMS = 150;
 const DEFAULT_MAX_AGE_MS = 6 * 60 * 60 * 1000;
 const ALL_TIME_MAX_AGE_MS = Number.MAX_SAFE_INTEGER;
 const STATE_PATH = path.join(__dirname, '../../data/news-state.json');
@@ -62,7 +62,7 @@ function validateNewsState(state) {
   if (!Number.isSafeInteger(state.updatedAt) || state.updatedAt < 0) errors.push('updatedAt must be a non-negative safe integer');
   if (!Array.isArray(state.items)) errors.push('items must be an array');
   if (Array.isArray(state.items)) {
-    if (state.items.length > MAX_ITEMS) errors.push('items cannot exceed 50');
+    if (state.items.length > MAX_ITEMS) errors.push('items cannot exceed ' + MAX_ITEMS);
     state.items.forEach((item, index) => { if (!isValidItem(item)) errors.push('items[' + index + '] is invalid'); });
   }
   if (!state.sources || typeof state.sources !== 'object' || Array.isArray(state.sources)) errors.push('sources must be an object');

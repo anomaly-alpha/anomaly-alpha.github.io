@@ -46,7 +46,7 @@ const activityRenderer = createActivityRenderer({ iconMetadata: ICON_METADATA, r
 const newsPoller = createNewsPoller({ config: NEWS_CONFIG });
 const candidateSelector = createCandidateSelector({
   maxAgeMs: NEWS_MAX_AGE_MS,
-  newsDwellMs: 3 * 60 * 1000,
+  newsDwellMs: NEWS_CONFIG.newsDwellMs || 3 * 60 * 1000,
   newsPoller,
   renderAmbient: entry => activityRenderer.renderAmbient(entry, PRESENCE_STARTED_AT),
   renderNews: (item, now) => activityRenderer.renderNews(item, now),

@@ -1,9 +1,10 @@
 {
   "schemaVersion": 1,
   "mode": "news",
-  "freshnessMode": "retroactive",
+  "freshnessMode": "fresh",
   "maxItemsPerSource": 10,
-  "enabled": true,
+  "newsDwellMs": 30000,
+  "enabled": false,
   "pollIntervalMs": 900000,
   "maxAgeMs": 21600000,
   "saliencePolicy": {
@@ -111,6 +112,206 @@
         "sourceIds": ["playstation-blog"],
         "topicFamilies": ["gaming", "release"],
         "titleAny": ["available", "launch", "release", "playstation", "ps5", "state of play", "update"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "cisa-advisories",
+      "name": "CISA Cybersecurity Advisories",
+      "domain": "www.cisa.gov",
+      "feedUrl": "https://www.cisa.gov/cybersecurity-advisories/all.xml",
+      "topicFamily": "security",
+      "trustClass": "official",
+      "basePriority": 96,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["cisa-advisories"],
+        "topicFamilies": ["security", "release"],
+        "titleAny": ["alert", "advisory", "vulnerability", "ransomware", "cyber", "exploit"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "microsoft-security",
+      "name": "Microsoft Security Blog",
+      "domain": "www.microsoft.com",
+      "feedUrl": "https://www.microsoft.com/en-us/security/blog/feed/",
+      "topicFamily": "security",
+      "trustClass": "official",
+      "basePriority": 91,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["microsoft-security"],
+        "topicFamilies": ["security", "release"],
+        "titleAny": ["security", "vulnerability", "defender", "threat", "zero trust", "attack"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "kubernetes-blog",
+      "name": "Kubernetes Blog",
+      "domain": "kubernetes.io",
+      "feedUrl": "https://kubernetes.io/feed.xml",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 89,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["kubernetes-blog"],
+        "topicFamilies": ["developer", "release", "security"],
+        "titleAny": ["release", "security", "kubernetes", "cve", "container", "update"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "gitlab-blog",
+      "name": "GitLab Blog",
+      "domain": "about.gitlab.com",
+      "feedUrl": "https://about.gitlab.com/atom.xml",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 87,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["gitlab-blog"],
+        "topicFamilies": ["developer", "release", "security"],
+        "titleAny": ["release", "security", "devops", "vulnerability", "available", "update"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "mozilla-blog",
+      "name": "Mozilla Blog",
+      "domain": "blog.mozilla.org",
+      "feedUrl": "https://blog.mozilla.org/feed/",
+      "topicFamily": "security",
+      "trustClass": "official",
+      "basePriority": 86,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["mozilla-blog"],
+        "topicFamilies": ["security", "release"],
+        "titleAny": ["security", "firefox", "privacy", "release", "update", "vulnerability"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "esa-top-news",
+      "name": "European Space Agency",
+      "domain": "www.esa.int",
+      "feedUrl": "https://www.esa.int/rssfeed/TopNews",
+      "topicFamily": "space",
+      "trustClass": "official",
+      "basePriority": 94,
+      "iconRole": "world",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["esa-top-news"],
+        "topicFamilies": ["space", "science"],
+        "titleAny": ["launch", "mission", "satellite", "space", "earth", "science"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "xbox-wire",
+      "name": "Xbox Wire",
+      "domain": "news.xbox.com",
+      "feedUrl": "https://news.xbox.com/en-us/feed/",
+      "topicFamily": "gaming",
+      "trustClass": "official",
+      "basePriority": 81,
+      "iconRole": "movement",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["xbox-wire"],
+        "topicFamilies": ["gaming", "release"],
+        "titleAny": ["xbox", "game", "available", "launch", "update", "release"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "cloudflare-blog",
+      "name": "Cloudflare Blog",
+      "domain": "blog.cloudflare.com",
+      "feedUrl": "https://blog.cloudflare.com/rss/",
+      "topicFamily": "security",
+      "trustClass": "official",
+      "basePriority": 85,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["cloudflare-blog"],
+        "topicFamilies": ["security", "release"],
+        "titleAny": ["security", "workers", "release", "cloud", "vulnerability", "update"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "aws-whats-new",
+      "name": "AWS What's New",
+      "domain": "aws.amazon.com",
+      "feedUrl": "https://aws.amazon.com/about-aws/whats-new/recent/feed/",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 84,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["aws-whats-new"],
+        "topicFamilies": ["developer", "release"],
+        "titleAny": ["launch", "available", "release", "aws", "security", "update", "feature"],
+        "titleAll": [],
+        "titleNone": ["job", "career", "internship"]
+      }
+    },
+    {
+      "id": "chrome-developers",
+      "name": "Chrome for Developers",
+      "domain": "developer.chrome.com",
+      "feedUrl": "https://developer.chrome.com/static/blog/feed.xml",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 83,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 21600000,
+      "highSalience": {
+        "sourceIds": ["chrome-developers"],
+        "topicFamilies": ["developer", "release", "security"],
+        "titleAny": ["chrome", "release", "security", "web", "update", "developer"],
         "titleAll": [],
         "titleNone": ["job", "career", "internship"]
       }

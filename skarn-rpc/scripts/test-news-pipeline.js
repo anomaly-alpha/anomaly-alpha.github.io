@@ -6,7 +6,7 @@ const { EventEmitter } = require('events');
 
 const config = require('../data/news-sources.json');
 const { requestFeed } = require('../features/news/feedClient');
-const { MAX_TITLE_BYTES, byteLength, parseFeedDetailed, sanitizeText } = require('../features/news/feedParser');
+const { MAX_TITLE_BYTES, byteLength, canonicalizeUrl, parseFeedDetailed, sanitizeText } = require('../features/news/feedParser');
 const { createEmptyState, loadNewsState, mergeNewsItems, saveNewsState, validateNewsState } = require('../features/news/newsState');
 const { createNewsPoller, validateNewsConfig } = require('../features/news/newsPoller');
 
@@ -88,20 +88,32 @@ function createHttpsStub(routes, calls) {
 async function testConfig() {
   assert.equal(validateNewsConfig(config).ok, true);
   assert.equal(config.mode, 'news');
-  assert.equal(config.freshnessMode, 'retroactive');
+  assert.equal(config.freshnessMode, 'fresh');
   assert.equal(config.maxItemsPerSource, 10);
-  assert.equal(typeof config.enabled, 'boolean');
+  assert.equal(config.newsDwellMs, 30000);
+  assert.equal(config.enabled, false);
   assert.equal(validateNewsConfig({ ...config, enabled: false }).ok, true);
   assert.equal(validateNewsConfig({ ...config, mode: 'invalid' }).ok, false);
   assert.equal(validateNewsConfig({ ...config, freshnessMode: 'invalid' }).ok, false);
   assert.equal(validateNewsConfig({ ...config, maxItemsPerSource: 0 }).ok, false);
-  assert.equal(config.sources.length, 5);
+  assert.equal(validateNewsConfig({ ...config, newsDwellMs: 9999 }).ok, false);
+  assert.equal(config.sources.length, 15);
   assert.deepEqual(config.sources.map(item => item.feedUrl), [
     'https://www.nasa.gov/news-release/feed/',
     'https://github.blog/changelog/feed/',
     'https://openai.com/news/rss.xml',
     'https://blog.rust-lang.org/feed.xml',
     'https://blog.playstation.com/feed',
+    'https://www.cisa.gov/cybersecurity-advisories/all.xml',
+    'https://www.microsoft.com/en-us/security/blog/feed/',
+    'https://kubernetes.io/feed.xml',
+    'https://about.gitlab.com/atom.xml',
+    'https://blog.mozilla.org/feed/',
+    'https://www.esa.int/rssfeed/TopNews',
+    'https://news.xbox.com/en-us/feed/',
+    'https://blog.cloudflare.com/rss/',
+    'https://aws.amazon.com/about-aws/whats-new/recent/feed/',
+    'https://developer.chrome.com/static/blog/feed.xml',
   ]);
   for (const item of config.sources) {
     assert.equal(item.highSalience.sourceIds.includes(item.id), true);
@@ -110,6 +122,7 @@ async function testConfig() {
     assert.ok(Array.isArray(item.highSalience.titleAll));
     assert.ok(Array.isArray(item.highSalience.titleNone));
   }
+  assert.equal(validateNewsConfig({ ...config, sources: [{ ...config.sources[0], domain: 'internal.example', feedUrl: 'https://internal.example/feed' }, ...config.sources.slice(1)] }).ok, false);
 }
 
 async function testParser() {
@@ -162,6 +175,7 @@ async function testParser() {
   ]), source('nasa-breaking-news'), { now: NOW });
   assert.equal(longTitle.rejected[0].reason, 'title-too-long');
   assert.equal(byteLength('☄'.repeat(10)), 30);
+  assert.equal(canonicalizeUrl('https://user:password@www.nasa.gov/story?token=secret&ref=public#section'), 'https://www.nasa.gov/story?ref=public');
 }
 
 async function testClient() {
@@ -184,6 +198,7 @@ async function testClient() {
 
   const redirectStub = createHttpsStub([{ statusCode: 302, headers: { location: 'https://evil.example/steal' }, redirectOnly: true }], []);
   await assert.rejects(() => requestFeed('https://www.nasa.gov/redirect', { allowlist: ['www.nasa.gov'], httpsModule: redirectStub }), error => error.code === 'FEED_HOST_NOT_ALLOWED');
+  await assert.rejects(() => requestFeed('https://127.0.0.1/feed', { allowlist: ['127.0.0.1'], httpsModule: redirectStub }), error => error.code === 'FEED_IP_HOST_NOT_ALLOWED');
   const oversizedStub = createHttpsStub([{ statusCode: 200, headers: { 'content-type': 'application/rss+xml', 'content-length': '9' }, body: '123456789' }], []);
   await assert.rejects(() => requestFeed('https://www.nasa.gov/large', { allowlist: ['www.nasa.gov'], maxResponseBytes: 8, httpsModule: oversizedStub }), error => error.code === 'FEED_RESPONSE_TOO_LARGE');
   const invalidTypeStub = createHttpsStub([{ statusCode: 200, headers: { 'content-type': 'text/html' }, body: '<html></html>' }], []);
@@ -196,17 +211,17 @@ async function testState() {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'skarn-news-state-'));
   const statePath = path.join(directory, 'nested', 'news-state.json');
   let state = createEmptyState(NOW);
-  state.items = Array.from({ length: 60 }, (_, index) => itemFrom(index, NOW - index * 1000));
+  state.items = Array.from({ length: 180 }, (_, index) => itemFrom(index, NOW - index * 1000));
   state = mergeNewsItems(state, [], { now: NOW, maxAgeMs: 6 * 60 * 60 * 1000 });
   const saved = saveNewsState(statePath, state, { now: NOW, maxAgeMs: 6 * 60 * 60 * 1000 });
-  assert.equal(saved.items.length, 50);
+  assert.equal(saved.items.length, 150);
   assert.equal(validateNewsState(saved).ok, true);
   const loaded = loadNewsState(statePath, { now: NOW, maxAgeMs: 6 * 60 * 60 * 1000 });
-  assert.equal(loaded.items.length, 50);
+  assert.equal(loaded.items.length, 150);
   assert.equal(fs.statSync(path.dirname(statePath)).mode & 0o777, 0o700);
   assert.equal(fs.statSync(statePath).mode & 0o777, 0o600);
   assert.equal(fs.readdirSync(path.dirname(statePath)).filter(name => name.includes('.tmp-')).length, 0);
-  assert.equal(loaded.items.some(item => item.id === 'item-59'), false);
+  assert.equal(loaded.items.some(item => item.id === 'item-179'), false);
 
   const balanced = mergeNewsItems(createEmptyState(NOW), Array.from({ length: 20 }, (_, index) => itemFrom(index, NOW - index * 1000)).concat(
     Array.from({ length: 20 }, (_, index) => ({ ...itemFrom(index + 100, NOW - index * 1000), sourceId: 'github-changelog', sourceName: 'GitHub Changelog' })),

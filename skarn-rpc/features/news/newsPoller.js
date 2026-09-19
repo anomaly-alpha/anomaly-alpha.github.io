@@ -1,11 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-const { requestFeed } = require('./feedClient');
+const { DEFAULT_ALLOWED_HOSTS, requestFeed } = require('./feedClient');
 const { parseFeedDetailed } = require('./feedParser');
 const {
   ALL_TIME_MAX_AGE_MS,
   DEFAULT_MAX_AGE_MS,
+  MAX_ITEMS,
   STATE_PATH,
   diagnostic,
   loadNewsState,
@@ -16,6 +17,7 @@ const {
 const CONFIG_PATH = path.join(__dirname, '../../data/news-sources.json');
 const MAX_BACKOFF_MS = 60 * 60 * 1000;
 const JITTER_RATIO = 0.1;
+const APPROVED_FEED_HOSTS = new Set(DEFAULT_ALLOWED_HOSTS.map(host => host.toLowerCase()));
 
 function loadNewsConfig(filePath) {
   const target = filePath || CONFIG_PATH;
@@ -28,11 +30,12 @@ function validateNewsConfig(config) {
   if (config.schemaVersion !== 1) errors.push('unsupported schemaVersion');
   if (config.mode !== undefined && !['ambient', 'news'].includes(config.mode)) errors.push('mode must be ambient or news');
   if (config.freshnessMode !== undefined && !['fresh', 'retroactive'].includes(config.freshnessMode)) errors.push('freshnessMode must be fresh or retroactive');
-  if (config.maxItemsPerSource !== undefined && (!Number.isSafeInteger(config.maxItemsPerSource) || config.maxItemsPerSource < 1 || config.maxItemsPerSource > 50)) errors.push('maxItemsPerSource must be from 1 through 50');
+  if (config.maxItemsPerSource !== undefined && (!Number.isSafeInteger(config.maxItemsPerSource) || config.maxItemsPerSource < 1 || config.maxItemsPerSource > MAX_ITEMS)) errors.push('maxItemsPerSource must be from 1 through ' + MAX_ITEMS);
+  if (config.newsDwellMs !== undefined && (!Number.isSafeInteger(config.newsDwellMs) || config.newsDwellMs < 10000 || config.newsDwellMs > 15 * 60 * 1000)) errors.push('newsDwellMs must be from 10000ms through 900000ms');
   if (typeof config.enabled !== 'boolean') errors.push('enabled must be boolean');
   if (!Number.isSafeInteger(config.pollIntervalMs) || config.pollIntervalMs < 60000) errors.push('pollIntervalMs must be at least one minute');
   if (!Number.isSafeInteger(config.maxAgeMs) || config.maxAgeMs <= 0 || config.maxAgeMs > DEFAULT_MAX_AGE_MS) errors.push('maxAgeMs must be from 1ms through six hours');
-  if (!Array.isArray(config.sources) || config.sources.length !== 5) errors.push('exactly five sources are required');
+  if (!Array.isArray(config.sources) || config.sources.length !== 15) errors.push('exactly fifteen sources are required');
   const ids = new Set();
   const hosts = new Set();
   (config.sources || []).forEach((source, index) => {
@@ -44,9 +47,11 @@ function validateNewsConfig(config) {
     ids.add(source.id);
     if (hosts.has(source.domain)) errors.push(prefix + '.domain is duplicated');
     hosts.add(source.domain);
+    const normalizedDomain = String(source.domain || '').toLowerCase().replace(/[.]$/, '');
+    if (!APPROVED_FEED_HOSTS.has(normalizedDomain)) errors.push(prefix + '.domain is not an approved feed host');
     try {
       const url = new URL(source.feedUrl);
-      if (url.protocol !== 'https:' || url.hostname !== source.domain) errors.push(prefix + '.feedUrl must be HTTPS on its declared domain');
+      if (url.protocol !== 'https:' || url.hostname.toLowerCase() !== normalizedDomain) errors.push(prefix + '.feedUrl must be HTTPS on its declared domain');
     } catch (error) {
       errors.push(prefix + '.feedUrl is invalid');
     }

@@ -7,6 +7,7 @@ const MAX_ID_BYTES = 512;
 const MAX_URL_BYTES = 2048;
 const MAX_SOURCE_BYTES = 128;
 const MAX_TOPIC_BYTES = 64;
+const SENSITIVE_URL_PARAM = /(?:access[_-]?token|api[_-]?key|auth|credential|jwt|key|password|secret|session|sig(?:nature)?|token)/i;
 const INSTRUCTION_PATTERN = /(?:ignore|disregard|forget)\s+(?:all\s+)?(?:previous|prior|above)\s+instructions?|(?:system|developer|assistant)\s+(?:prompt|message)|\b(?:system|developer|assistant)\s*:/i;
 const CONTROL_PATTERN = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f]/g;
 const HTML_PATTERN = /<[^>]*>/g;
@@ -47,9 +48,11 @@ function canonicalizeUrl(value) {
   let parsed;
   try { parsed = new URL(String(value)); } catch (error) { return null; }
   if (!['http:', 'https:'].includes(parsed.protocol) || !parsed.hostname) return null;
+  parsed.username = '';
+  parsed.password = '';
   parsed.hash = '';
   for (const key of Array.from(parsed.searchParams.keys())) {
-    if (/^(?:utm_|fbclid$|gclid$|mc_cid$|mc_eid$)/i.test(key)) parsed.searchParams.delete(key);
+    if (/^(?:utm_|fbclid$|gclid$|mc_cid$|mc_eid$)/i.test(key) || SENSITIVE_URL_PARAM.test(key)) parsed.searchParams.delete(key);
   }
   parsed.searchParams.sort();
   return parsed.toString();

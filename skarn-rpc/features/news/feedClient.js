@@ -1,4 +1,5 @@
 const https = require('https');
+const net = require('net');
 const { URL } = require('url');
 
 const DEFAULT_TIMEOUT_MS = 15000;
@@ -10,6 +11,16 @@ const DEFAULT_ALLOWED_HOSTS = Object.freeze([
   'openai.com',
   'blog.rust-lang.org',
   'blog.playstation.com',
+  'www.cisa.gov',
+  'www.microsoft.com',
+  'kubernetes.io',
+  'about.gitlab.com',
+  'blog.mozilla.org',
+  'www.esa.int',
+  'news.xbox.com',
+  'blog.cloudflare.com',
+  'aws.amazon.com',
+  'developer.chrome.com',
 ]);
 const ACCEPTED_CONTENT_TYPES = new Set([
   'application/atom+xml',
@@ -38,6 +49,11 @@ function validateFeedUrl(value, allowlist) {
   if (parsed.protocol !== 'https:') {
     const failure = new Error('feed URL must use HTTPS');
     failure.code = 'INSECURE_FEED_URL';
+    throw failure;
+  }
+  if (net.isIP(parsed.hostname)) {
+    const failure = new Error('feed URL must use an approved hostname');
+    failure.code = 'FEED_IP_HOST_NOT_ALLOWED';
     throw failure;
   }
   const allowedHosts = asAllowedHosts(allowlist);
