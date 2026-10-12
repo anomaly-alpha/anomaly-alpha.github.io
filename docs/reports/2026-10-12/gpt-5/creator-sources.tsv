@@ -1,0 +1,35 @@
+id	url_or_query	kind	year	title	relevance	credibility	claim_ids	notes
+S001	https://www.youtube.com/@avatarshuvd	channel	2026	Avatar Shuvd — YouTube	high	high	C1	Channel page fetched; page parser exposed channel title only, not video listing.
+S002	https://www.youtube.com/@RapidGTG	channel	2026	rapid — YouTube	high	high	C2	Channel page fetched; page parser exposed channel title only, not video listing.
+S003	https://www.youtube.com/@TutaaaGTG	channel	2026	Tutaaa-GTG — YouTube	high	high	C3	Channel page fetched; page parser exposed channel title only, not video listing.
+S004	https://www.youtube.com/@TH3Oyt	channel	2026	TH3O — YouTube	high	high	C4	Channel page fetched; page parser exposed channel title only, not video listing.
+S005	https://www.youtube.com/@LAVAMOOSE1369	channel	2026	LAVAMOOSE — YouTube	high	high	C5	Channel page fetched; page parser exposed channel title only, not video listing.
+S006	https://www.youtube.com/@BaneApe5	channel	2026	OMNI-BANE — YouTube	high	high	C6	Channel page fetched; page parser exposed channel title only, not video listing.
+S007	https://www.youtube.com/@JustaGuynamedFrancis	channel	2026	Just a Guy named Francis — YouTube	high	high	C7	Channel page fetched; page parser exposed channel title only, not video listing.
+S008	https://www.youtube.com/@kingslay727	channel	2026	KingSlay727 — YouTube	high	high	C8	Channel page fetched; page parser exposed channel title only, not video listing.
+S009	Tavily query: Avatar Shuvd latest Invincible Guarding the Globe videos October 2026	search	2026	Avatar Shuvd recent uploads	high	medium	C1	Found 6i2O9Qf8uHs (2026-10-10) and 1QEE0Mb5WRM (2026-10-09); targeted source queries follow.
+S010	Tavily query: Tutaaa-GTG YouTube latest Invincible Guarding the Globe October 2026	search	2026	Tutaaa-GTG recent uploads	high	medium	C3	Found LhhEuOSagd0 (2026-10-04) and YuL1k9LVTRk (2026-09-13).
+S011	https://www.youtube.com/watch?v=3QmKRqMfRnU	video	2026	THIS IS GAME CHANGING!	high	medium	C8	Search result identifies KingSlay727, Sep 15 2026, and GTG items/case files/new hero.
+S012	https://www.youtube.com/watch?v=lVeD_GWwZ6M	video	2026	Live streaming of INVINCIBLE.GTG.OMNI-FAN	high	medium	C9	Search result identifies channel and Sep 10 2026; description names the game.
+S013	Tavily query: site:youtube.com/watch RapidGTG Invincible Guarding the Globe videos 2026	search	2026	Rapid GTG upload search	medium	low	C2	Results were mostly unrelated/misattributed; no new Rapid upload verified.
+S014	Tavily query: site:youtube.com/watch TH3Oyt TH3O Invincible Guarding the Globe uploads 2026	search	2026	TH3O upload search	medium	low	C4	Search surfaced older April/June and Aug 18 items; source already includes later Aug 24; no additional item verified.
+S015	https://www.youtube.com/watch?v=H2gEk34g-50	video	2026	Can Guns Only Beat Cecils Nightmare??	high	medium	C5	Public result attributes GTG long-form upload to LAVAMOOSE; published 2026-04-14.
+S016	https://www.youtube.com/watch?v=I2pDn30qPpY	video	2026	Invincible Guarding The Globe - MOST WANTED Event!!	high	medium	C6	Public result identifies OMNI-BANE and publication date 2026-09-09.
+S017	Tavily query: JustaGuynamedFrancis Invincible Guarding the Globe 2026	search	2026	Just a Guy named Francis upload search	medium	low	C7	Search results repeated existing July/August entries and returned a 2025 livestream; no later video verified.
+S018	https://www.youtube.com/@marvin2804	channel	2026	Beaoloooo channel search	medium	medium	C8	Results surfaced Shorts (including jpLVBrF2G0U, Fu9RwEVsVGQ, YzoBNNU5lFY); excluded per scope. No eligible long-form item found.
+S019	Tavily query: ilovealxxxx0o AlexanderGZMN Invincible GTG 2026	search	2026	AlexanderGZMN upload search	medium	low	C11	Results confirmed channel content and existing June/August videos; no newer eligible video verified.
+S020	Tavily query: Gotcha-Beastt Gotcha Beast Invincible GTG uploads 2026	search	2026	Gotcha Beast upload search	medium	low	C12	No result newer than the existing July 31 upload; query also returned unrelated OMNI-BANE material.
+S021	https://www.youtube.com/watch?v=A4Z0IO0geqc	video	2026	DINOSAURUS IS HERE!	medium	medium	C13	Public result attributes GTG upload to Subsktro; published 2026-03-23, older than existing May 1 item. No newer item found.
+S022	https://www.youtube.com/watch?v=5PJRV9ho7G0	video	2026	I Tested Level 700 THAEDUS in Cecil's Nightmares	high	medium	C14	Search result attributes GTG gameplay to Gxlden; published 2026-06-16.
+S023	https://www.youtube.com/watch?v=-WlUTcBg_3I	video	2024	HOW TO BE A GOOD F2P PLAYER	high	medium	C15	Public result attributes Invincible: Guarding the Globe guide to X-Gamers Asylum; published 2024-04-15.
+S024	https://www.youtube.com/watch?v=2G2Z_6eRox8	video	2024	Account Progression and Game Future	high	medium	C15	Public result attributes GTG discussion to X-Gamers Asylum; published 2024-05-13.
+S025	Tavily query: HeroHavenGTG Invincible GTG 2026	search	2026	Hero Haven upload search	medium	low	C16	Channel page reports 26 total uploads; search found existing July 27 GTG upload but no newer GTG item.
+S026	https://www.youtube.com/@PopsMeta	channel	2026	Pops — YouTube	high	medium	C17	Channel search reports six videos; the surfaced Aug 16 GTG guide is already present; no additional eligible video verified.
+S027	https://www.youtube.com/watch?v=yrTGtWZzkgE	video	2026	Oops, Wrong Artifact!	high	medium	C1	Public result identifies Avatar Shuvd and publication date 2026-10-06.
+S028	https://www.youtube.com/watch?v=AXSxYMKt47E	video	2026	Update 3.6 PATCH NOTES!	high	medium	C1	Public result identifies Avatar Shuvd and publication date 2026-09-16.
+S029	https://www.youtube.com/watch?v=_2o8CpxnhyE	video	2026	Tier List 3.5 EDITION!	high	medium	C1	Public result identifies Avatar Shuvd and publication date 2026-09-09.
+S030	https://www.youtube.com/watch?v=pQ0g77eKL5g	video	2026	Summon WISELY on Art!	high	medium	C1	Public result identifies Avatar Shuvd and publication date 2026-08-01.
+S031	https://www.youtube.com/watch?v=vRXY6hKJsBg	video	2025	ANNI-SUMMONS!	medium	medium	C1	Public result identifies Avatar Shuvd, Anissa summons, and publication date 2025-02-22.
+S032	https://www.youtube.com/watch?v=ofNGBQUvDMU	video	2025	ACCOUNT OVERVIEW TIME!	medium	medium	C1	Public result identifies Avatar Shuvd and publication date 2025-03-17.
+S033	https://www.youtube.com/watch?v=KUlfNLLY4TE	video	2026	Invincible GTG: COMMUNITY Suggestions and Predictions!	high	medium	C9	Public result identifies KingSlay727 as uploader and date 2026-07-24; Rapid is a guest, not the uploader.
+S034	Tavily queries: exact Avatar Shuvd I was NOT READY title; exact Francis HEYO/BOOTCAMP titles; exact OMNI-FAN Triple Pick title	search	2026	Follow-up identity/date checks	low	low	C1,C7,C10	Results lacked reliable dates or returned mismatched videos; not added.
