@@ -13,6 +13,7 @@ Open `index.html` in a browser. Works from `file://`.
 
 - Local and normal remote Git operations are authorized for the agent when the inherited SSH agent is available. The configured GitHub key is /home/prime/.ssh/github-anomaly-alpha; start MiMoCode from the same shell after ssh-add so SSH_AUTH_SOCK is inherited.
 - Before remote operations, verify access with ssh -T git@github-anomaly-alpha and git ls-remote origin HEAD. Never request, store, or expose the SSH passphrase or private key.
+- User preference: the agent may create local commits when asked, but must not run `git push`. The user will push from another terminal; remind them to push at the end of the task.
 - Require explicit confirmation for destructive remote actions such as force-pushes or branch deletion.
 
 ## File ownership
