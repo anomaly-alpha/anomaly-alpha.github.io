@@ -196,6 +196,25 @@ for (const file of PAGES) {
   }
 }
 
+const promoCodeSource = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'codes.json'), 'utf8'));
+const activePromoCodeCount = promoCodeSource.codes.filter(code => !code.expired).length;
+const faqHtml = fs.readFileSync(path.join(ROOT, 'guide', 'faq', 'index.html'), 'utf8');
+const faqNodes = nodesFor(blocksFor('guide/faq/index.html'));
+const faqCodeAnswer = faqNodes
+  .filter(node => node['@type'] === 'FAQPage')
+  .flatMap(page => page.mainEntity || [])
+  .find(question => question.name === 'Are there any new promo codes?');
+assert(faqCodeAnswer, 'FAQ: promo-code question must exist in structured data');
+assert(faqCodeAnswer.acceptedAnswer.text.includes(activePromoCodeCount + ' active promo codes'), 'FAQ schema count must match data/codes.json');
+assert(visibleText(faqHtml).includes(activePromoCodeCount + ' active promo codes'), 'FAQ visible count must match data/codes.json');
+for (const url of ['https://anomaly-alpha.github.io/', 'https://anomaly-alpha.github.io/guide/code/', 'https://anomaly-alpha.github.io/guide/faq/']) {
+  const entry = sitemap.split(/<url>/).slice(1).map(block => block.split('</url>')[0]).find(block => block.includes('<loc>' + url + '</loc>'));
+  assert(entry, 'sitemap missing code-updated page ' + url);
+  const lastmod = entry.match(/<lastmod>([^<]+)<\/lastmod>/);
+  assert(lastmod, 'sitemap entry missing lastmod for ' + url);
+  assert.strictEqual(lastmod[1], promoCodeSource.updated, 'sitemap lastmod must match code data date for ' + url);
+}
+
 // ===== Local reference resolution =====
 // Defined IDs collected only from top-level JSON-LD nodes (standalone blocks or @graph members).
 // Nested property values inspected recursively; @context and top-level nodes skipped.
@@ -242,7 +261,7 @@ for (const file of PAGES) {
 // ===== Generator idempotency =====
 
 const generators = [
-  ['scripts/generate-codes.js', ['data/generated/promo-codes.js', 'guide/code/index.html', 'index.html']],
+  ['scripts/generate-codes.js', ['data/generated/promo-codes.js', 'guide/code/index.html', 'guide/faq/index.html', 'index.html', 'sitemap.xml']],
   ['scripts/generate-youtube-creators.js', ['data/generated/youtube-creators.js', 'guide/creators/index.html']],
   ['scripts/generate-music.js', ['music/index.html']]
 ];

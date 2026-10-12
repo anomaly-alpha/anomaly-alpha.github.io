@@ -5,7 +5,9 @@ const rootDir = path.resolve(__dirname, '..');
 const codesPath = path.join(rootDir, 'data', 'codes.json');
 const jsOutputPath = path.join(rootDir, 'data', 'generated', 'promo-codes.js');
 const codeGuidePath = path.join(rootDir, 'guide', 'code', 'index.html');
+const faqGuidePath = path.join(rootDir, 'guide', 'faq', 'index.html');
 const indexPath = path.join(rootDir, 'index.html');
+const sitemapPath = path.join(rootDir, 'sitemap.xml');
 
 const { codes, updated } = JSON.parse(fs.readFileSync(codesPath, 'utf8'));
 
@@ -153,6 +155,13 @@ for (const [pattern, replacement] of replacements) {
   html = html.replace(pattern, replacement);
 }
 
+const codeBylineDateMatches = html.match(/Updated <time datetime="[^"]*">[^<]*<\/time>/g) || [];
+if (codeBylineDateMatches.length !== 1) throw new Error('code guide byline date expected exactly once');
+html = html.replace(/Updated <time datetime="[^"]*">[^<]*<\/time>/, `Updated <time datetime="${updated}">${formattedDate}</time>`);
+html = html.replace(/<span class="mx-2 opacity-30">·<\/span>\s*<span class="gem-text--code">64,147\+ impressions<\/span>/, '');
+html = html.replace(/(Updated <time datetime="[^"]*">[^<]*<\/time>)[ \t]*\r?\n[ \t]*\r?\n([ \t]*<\/p>)/, '$1\n$2');
+html = html.replace(/(Updated <time datetime="[^"]*">[^<]*<\/time>)[ \t]*\r?\n[ \t]*\r?\n([ \t]*<\/p>)/, '$1\n$2');
+
 // Assert freshness markers occurred exactly once
 const freshnessMarkers = [
   'GUIDE_DATE_META', 'GUIDE_ARTICLE_MODIFIED'
@@ -172,6 +181,44 @@ if (ldDateMarkerCount > 1 || ldDateValueCount !== 1) {
 if (guideEol === '\r\n') html = html.replace(/(?<!\r)\n/g, '\r\n');
 fs.writeFileSync(codeGuidePath, html, 'utf8');
 console.log(`Updated guide/code/index.html — ${activeCount} active, ${expiredCount} expired, ${monthYear}`);
+
+// Keep the shared FAQ answer and its structured data aligned with the code source.
+let faqHtml = fs.readFileSync(faqGuidePath, 'utf8');
+const faqCountMatches = faqHtml.match(/\b\d+ active promo codes\b/g) || [];
+if (faqCountMatches.length !== 2) throw new Error(`FAQ active-code count expected twice, found ${faqCountMatches.length}`);
+faqHtml = faqHtml.replace(/\b\d+ active promo codes\b/g, `${activeCount} active promo codes`);
+faqHtml = faqHtml.replace(/<meta name="description" content="[^"]*">/, `<meta name="description" content="Quick answers on weekly gems, ${activeCount} active codes, PvP payouts, login rewards, and official redemption steps.">`);
+faqHtml = faqHtml.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="Quick answers on weekly gems, ${activeCount} active codes, PvP payouts, login rewards, and official redemption steps.">`);
+faqHtml = faqHtml.replace(/<meta name="twitter:description" content="[^"]*">/, `<meta name="twitter:description" content="Quick answers on weekly gems, ${activeCount} active codes, PvP payouts, login rewards, and official redemption steps.">`);
+faqHtml = faqHtml.replace(/<meta name="date" content="[^"]*">/, `<meta name="date" content="${updated}">`);
+faqHtml = faqHtml.replace(/<meta property="article:modified_time" content="[^"]*">/, `<meta property="article:modified_time" content="${updated}T00:00:00Z">`);
+const faqLdDateMatches = faqHtml.match(/"dateModified": "[^"]*"/g) || [];
+if (faqLdDateMatches.length !== 1) throw new Error(`FAQ JSON-LD dateModified expected once, found ${faqLdDateMatches.length}`);
+faqHtml = faqHtml.replace(/"dateModified": "[^"]*"/, `"dateModified": "${updated}"`);
+const faqBylineMatches = faqHtml.match(/Updated <time datetime="[^"]*">[^<]*<\/time>/g) || [];
+if (faqBylineMatches.length !== 1) throw new Error(`FAQ byline date expected once, found ${faqBylineMatches.length}`);
+faqHtml = faqHtml.replace(/Updated <time datetime="[^"]*">[^<]*<\/time>/, `Updated <time datetime="${updated}">${formattedDate}</time>`);
+fs.writeFileSync(faqGuidePath, faqHtml, 'utf8');
+console.log(`Updated guide/faq/index.html — ${activeCount} active codes, ${formattedDate}`);
+
+// Code updates change the homepage, code guide, and FAQ content.
+let sitemap = fs.readFileSync(sitemapPath, 'utf8');
+const refreshedUrls = new Set([
+  'https://anomaly-alpha.github.io/',
+  'https://anomaly-alpha.github.io/guide/code/',
+  'https://anomaly-alpha.github.io/guide/faq/',
+]);
+let refreshedUrlCount = 0;
+sitemap = sitemap.replace(/<url>[\s\S]*?<\/url>/g, block => {
+  const location = block.match(/<loc>([^<]+)<\/loc>/);
+  if (!location || !refreshedUrls.has(location[1])) return block;
+  const lastmodMatches = block.match(/<lastmod>[^<]*<\/lastmod>/g) || [];
+  if (lastmodMatches.length !== 1) throw new Error('sitemap entry must have exactly one lastmod for ' + location[1]);
+  refreshedUrlCount++;
+  return block.replace(/<lastmod>[^<]*<\/lastmod>/, `<lastmod>${updated}</lastmod>`);
+});
+if (refreshedUrlCount !== refreshedUrls.size) throw new Error('expected to refresh three sitemap URLs; found ' + refreshedUrlCount);
+fs.writeFileSync(sitemapPath, sitemap, 'utf8');
 
 // Update inline promo codes in index.html
 let indexHtml = fs.readFileSync(indexPath, 'utf8');
