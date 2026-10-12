@@ -4,9 +4,9 @@
   "freshnessMode": "fresh",
   "maxItemsPerSource": 10,
   "newsDwellMs": 30000,
-  "enabled": false,
+  "enabled": true,
   "pollIntervalMs": 900000,
-  "maxAgeMs": 21600000,
+  "maxAgeMs": 86400000,
   "saliencePolicy": {
     "high": "sourceMatch AND topicMatch AND titleMatch AND NOT titleExcluded",
     "sourceMatch": "highSalience.sourceIds must contain the source id",
@@ -26,7 +26,7 @@
       "iconRole": "world",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["nasa-breaking-news"],
         "topicFamilies": ["space", "science"],
@@ -46,7 +46,7 @@
       "iconRole": "knowledge",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["github-changelog"],
         "topicFamilies": ["developer", "release", "security"],
@@ -67,7 +67,7 @@
       "maxResponseBytes": 2097152,
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["openai-news"],
         "topicFamilies": ["ai", "release", "research"],
@@ -87,7 +87,7 @@
       "iconRole": "knowledge",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["rust-blog"],
         "topicFamilies": ["developer", "release", "security"],
@@ -107,7 +107,7 @@
       "iconRole": "movement",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["playstation-blog"],
         "topicFamilies": ["gaming", "release"],
@@ -125,9 +125,10 @@
       "trustClass": "official",
       "basePriority": 96,
       "iconRole": "attention",
-      "enabled": true,
+      "enabled": false,
+      "quarantineReason": "HTTP_403_WAF",
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["cisa-advisories"],
         "topicFamilies": ["security", "release"],
@@ -147,7 +148,7 @@
       "iconRole": "attention",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["microsoft-security"],
         "topicFamilies": ["security", "release"],
@@ -165,9 +166,10 @@
       "trustClass": "official",
       "basePriority": 89,
       "iconRole": "knowledge",
+      "maxResponseBytes": 2097152,
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["kubernetes-blog"],
         "topicFamilies": ["developer", "release", "security"],
@@ -187,7 +189,7 @@
       "iconRole": "knowledge",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["gitlab-blog"],
         "topicFamilies": ["developer", "release", "security"],
@@ -207,7 +209,7 @@
       "iconRole": "attention",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["mozilla-blog"],
         "topicFamilies": ["security", "release"],
@@ -227,7 +229,7 @@
       "iconRole": "world",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["esa-top-news"],
         "topicFamilies": ["space", "science"],
@@ -247,7 +249,7 @@
       "iconRole": "movement",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["xbox-wire"],
         "topicFamilies": ["gaming", "release"],
@@ -267,7 +269,7 @@
       "iconRole": "attention",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["cloudflare-blog"],
         "topicFamilies": ["security", "release"],
@@ -287,7 +289,7 @@
       "iconRole": "knowledge",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["aws-whats-new"],
         "topicFamilies": ["developer", "release"],
@@ -307,7 +309,7 @@
       "iconRole": "knowledge",
       "enabled": true,
       "pollIntervalMs": 900000,
-      "maxAgeMs": 21600000,
+      "maxAgeMs": 86400000,
       "highSalience": {
         "sourceIds": ["chrome-developers"],
         "topicFamilies": ["developer", "release", "security"],
@@ -315,6 +317,609 @@
         "titleAll": [],
         "titleNone": ["job", "career", "internship"]
       }
+    },
+    {
+      "id": "deepmind-blog",
+      "name": "Google DeepMind",
+      "domain": "deepmind.google",
+      "feedUrl": "https://deepmind.google/blog/rss.xml",
+      "topicFamily": "ai",
+      "trustClass": "official",
+      "basePriority": 85,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["deepmind-blog"], "topicFamilies": ["ai", "research", "release"], "titleAny": ["model", "research", "ai", "deepmind", "launch", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "nvidia-developer",
+      "name": "NVIDIA Developer Blog",
+      "domain": "developer.nvidia.com",
+      "feedUrl": "https://developer.nvidia.com/blog/feed/",
+      "topicFamily": "ai",
+      "trustClass": "official",
+      "basePriority": 84,
+      "iconRole": "knowledge",
+      "maxResponseBytes": 2097152,
+      "enabled": false,
+      "quarantineReason": "TIMEOUT",
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["nvidia-developer"], "topicFamilies": ["ai", "research", "release"], "titleAny": ["gpu", "cuda", "ai", "model", "inference", "release"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "meta-engineering",
+      "name": "Meta Engineering",
+      "domain": "engineering.fb.com",
+      "feedUrl": "https://engineering.fb.com/feed/",
+      "topicFamily": "ai",
+      "trustClass": "official",
+      "basePriority": 82,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["meta-engineering"], "topicFamilies": ["ai", "research", "release"], "titleAny": ["ai", "engineering", "open source", "model", "infrastructure", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "pytorch-blog",
+      "name": "PyTorch Blog",
+      "domain": "pytorch.org",
+      "feedUrl": "https://pytorch.org/feed/",
+      "topicFamily": "ai",
+      "trustClass": "official",
+      "basePriority": 81,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["pytorch-blog"], "topicFamilies": ["ai", "research", "release"], "titleAny": ["pytorch", "model", "training", "inference", "release", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "hugging-face-blog",
+      "name": "Hugging Face Blog",
+      "domain": "huggingface.co",
+      "feedUrl": "https://huggingface.co/blog/feed.xml",
+      "topicFamily": "ai",
+      "trustClass": "official",
+      "basePriority": 80,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["hugging-face-blog"], "topicFamilies": ["ai", "research", "release"], "titleAny": ["model", "dataset", "transformer", "inference", "release", "ai"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "apple-ml-research",
+      "name": "Apple Machine Learning Research",
+      "domain": "machinelearning.apple.com",
+      "feedUrl": "https://machinelearning.apple.com/rss.xml",
+      "topicFamily": "ai",
+      "trustClass": "official",
+      "basePriority": 79,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["apple-ml-research"], "topicFamilies": ["ai", "research", "release"], "titleAny": ["learning", "model", "research", "vision", "language", "ai"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "go-blog",
+      "name": "The Go Blog",
+      "domain": "go.dev",
+      "feedUrl": "https://go.dev/blog/feed.atom",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 79,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["go-blog"], "topicFamilies": ["developer", "release", "security"], "titleAny": ["go", "release", "compiler", "toolchain", "security", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "postgresql-news",
+      "name": "PostgreSQL News",
+      "domain": "www.postgresql.org",
+      "feedUrl": "https://www.postgresql.org/news.rss",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 78,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["postgresql-news"], "topicFamilies": ["developer", "release", "security"], "titleAny": ["release", "postgresql", "database", "security", "version", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "ruby-news",
+      "name": "Ruby News",
+      "domain": "www.ruby-lang.org",
+      "feedUrl": "https://www.ruby-lang.org/en/feeds/news.rss",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 77,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["ruby-news"], "topicFamilies": ["developer", "release", "security"], "titleAny": ["ruby", "release", "security", "version", "update", "gem"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "cncf-blog",
+      "name": "CNCF Blog",
+      "domain": "www.cncf.io",
+      "feedUrl": "https://www.cncf.io/feed/",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 76,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["cncf-blog"], "topicFamilies": ["developer", "release", "security"], "titleAny": ["kubernetes", "cloud native", "release", "security", "open source", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "docker-blog",
+      "name": "Docker Blog",
+      "domain": "www.docker.com",
+      "feedUrl": "https://www.docker.com/feed/",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 75,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["docker-blog"], "topicFamilies": ["developer", "release", "security"], "titleAny": ["docker", "container", "release", "security", "build", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "hashicorp-blog",
+      "name": "HashiCorp Blog",
+      "domain": "www.hashicorp.com",
+      "feedUrl": "https://www.hashicorp.com/blog/feed.xml",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 74,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["hashicorp-blog"], "topicFamilies": ["developer", "release", "security"], "titleAny": ["terraform", "vault", "cloud", "release", "security", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "jetbrains-blog",
+      "name": "JetBrains Blog",
+      "domain": "blog.jetbrains.com",
+      "feedUrl": "https://blog.jetbrains.com/feed/",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 73,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["jetbrains-blog"], "topicFamilies": ["developer", "release", "security"], "titleAny": ["release", "kotlin", "intellij", "developer", "security", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "elastic-blog",
+      "name": "Elastic Blog",
+      "domain": "www.elastic.co",
+      "feedUrl": "https://www.elastic.co/blog/feed",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 72,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["elastic-blog"], "topicFamilies": ["developer", "release", "security"], "titleAny": ["elastic", "security", "search", "release", "observability", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "grafana-blog",
+      "name": "Grafana Labs Blog",
+      "domain": "grafana.com",
+      "feedUrl": "https://grafana.com/blog/index.xml",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 71,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["grafana-blog"], "topicFamilies": ["developer", "release", "security"], "titleAny": ["grafana", "observability", "security", "release", "cloud", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "linux-foundation",
+      "name": "Linux Foundation Blog",
+      "domain": "www.linuxfoundation.org",
+      "feedUrl": "https://www.linuxfoundation.org/blog/rss.xml",
+      "topicFamily": "developer",
+      "trustClass": "official",
+      "basePriority": 70,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["linux-foundation"], "topicFamilies": ["developer", "release", "security"], "titleAny": ["linux", "open source", "security", "release", "cloud", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "bleepingcomputer",
+      "name": "BleepingComputer",
+      "domain": "www.bleepingcomputer.com",
+      "feedUrl": "https://www.bleepingcomputer.com/feed/",
+      "topicFamily": "security",
+      "trustClass": "publisher",
+      "basePriority": 78,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["bleepingcomputer"], "topicFamilies": ["security", "release"], "titleAny": ["ransomware", "malware", "vulnerability", "security", "hack", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "schneier-security",
+      "name": "Schneier on Security",
+      "domain": "www.schneier.com",
+      "feedUrl": "https://www.schneier.com/feed/atom/",
+      "topicFamily": "security",
+      "trustClass": "publisher",
+      "basePriority": 77,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["schneier-security"], "topicFamilies": ["security", "release"], "titleAny": ["security", "privacy", "cryptography", "surveillance", "attack", "vulnerability"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "dark-reading",
+      "name": "Dark Reading",
+      "domain": "www.darkreading.com",
+      "feedUrl": "https://www.darkreading.com/rss.xml",
+      "topicFamily": "security",
+      "trustClass": "publisher",
+      "basePriority": 76,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["dark-reading"], "topicFamilies": ["security", "release"], "titleAny": ["security", "vulnerability", "ransomware", "threat", "attack", "zero day"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "securityweek",
+      "name": "SecurityWeek",
+      "domain": "www.securityweek.com",
+      "feedUrl": "https://www.securityweek.com/feed/",
+      "topicFamily": "security",
+      "trustClass": "publisher",
+      "basePriority": 75,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["securityweek"], "topicFamilies": ["security", "release"], "titleAny": ["security", "vulnerability", "ransomware", "threat", "breach", "patch"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "the-record",
+      "name": "The Record by Recorded Future",
+      "domain": "therecord.media",
+      "feedUrl": "https://therecord.media/feed",
+      "topicFamily": "security",
+      "trustClass": "publisher",
+      "basePriority": 74,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["the-record"], "topicFamilies": ["security", "release"], "titleAny": ["cyber", "security", "ransomware", "hack", "threat", "attack"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "sans-isc",
+      "name": "SANS Internet Storm Center",
+      "domain": "isc.sans.edu",
+      "feedUrl": "https://isc.sans.edu/rssfeed_full.xml",
+      "topicFamily": "security",
+      "trustClass": "official",
+      "basePriority": 73,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["sans-isc"], "topicFamilies": ["security", "release"], "titleAny": ["malware", "vulnerability", "isc", "attack", "security", "handler"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "tenable-blog",
+      "name": "Tenable Blog",
+      "domain": "www.tenable.com",
+      "feedUrl": "https://www.tenable.com/blog/feed",
+      "topicFamily": "security",
+      "trustClass": "official",
+      "basePriority": 72,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["tenable-blog"], "topicFamilies": ["security", "release"], "titleAny": ["vulnerability", "security", "exposure", "cve", "threat", "patch"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "unit42-blog",
+      "name": "Palo Alto Networks Unit 42",
+      "domain": "unit42.paloaltonetworks.com",
+      "feedUrl": "https://unit42.paloaltonetworks.com/feed/",
+      "topicFamily": "security",
+      "trustClass": "official",
+      "basePriority": 71,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["unit42-blog"], "topicFamilies": ["security", "release"], "titleAny": ["malware", "threat", "ransomware", "vulnerability", "attack", "cyber"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "crowdstrike-blog",
+      "name": "CrowdStrike Blog",
+      "domain": "www.crowdstrike.com",
+      "feedUrl": "https://www.crowdstrike.com/en-us/blog/feed",
+      "topicFamily": "security",
+      "trustClass": "official",
+      "basePriority": 70,
+      "iconRole": "attention",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["crowdstrike-blog"], "topicFamilies": ["security", "release"], "titleAny": ["threat", "security", "ransomware", "attack", "adversary", "cyber"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "sciencedaily",
+      "name": "ScienceDaily",
+      "domain": "www.sciencedaily.com",
+      "feedUrl": "https://www.sciencedaily.com/rss/all.xml",
+      "topicFamily": "science",
+      "trustClass": "publisher",
+      "basePriority": 77,
+      "iconRole": "world",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["sciencedaily"], "topicFamilies": ["science", "research"], "titleAny": ["discovery", "research", "study", "science", "space", "climate"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "phys-org",
+      "name": "Phys.org",
+      "domain": "phys.org",
+      "feedUrl": "https://phys.org/rss-feed/",
+      "topicFamily": "science",
+      "trustClass": "publisher",
+      "basePriority": 76,
+      "iconRole": "world",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["phys-org"], "topicFamilies": ["science", "research"], "titleAny": ["research", "study", "physics", "space", "science", "discovery"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "science-news",
+      "name": "Science News",
+      "domain": "www.sciencenews.org",
+      "feedUrl": "https://www.sciencenews.org/feed",
+      "topicFamily": "science",
+      "trustClass": "publisher",
+      "basePriority": 75,
+      "iconRole": "world",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["science-news"], "topicFamilies": ["science", "research"], "titleAny": ["research", "study", "science", "space", "health", "climate"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "new-scientist",
+      "name": "New Scientist",
+      "domain": "www.newscientist.com",
+      "feedUrl": "https://www.newscientist.com/feed/home/",
+      "topicFamily": "science",
+      "trustClass": "publisher",
+      "basePriority": 74,
+      "iconRole": "world",
+      "enabled": false,
+      "quarantineReason": "TIMEOUT",
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["new-scientist"], "topicFamilies": ["science", "research"], "titleAny": ["research", "study", "science", "space", "health", "climate"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "polygon",
+      "name": "Polygon",
+      "domain": "www.polygon.com",
+      "feedUrl": "https://www.polygon.com/rss/index.xml",
+      "topicFamily": "gaming",
+      "trustClass": "publisher",
+      "basePriority": 76,
+      "iconRole": "movement",
+      "enabled": false,
+      "quarantineReason": "TIMEOUT",
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["polygon"], "topicFamilies": ["gaming", "release"], "titleAny": ["game", "gaming", "playstation", "xbox", "switch", "release"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "eurogamer",
+      "name": "Eurogamer",
+      "domain": "www.eurogamer.net",
+      "feedUrl": "https://www.eurogamer.net/feed",
+      "topicFamily": "gaming",
+      "trustClass": "publisher",
+      "basePriority": 75,
+      "iconRole": "movement",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["eurogamer"], "topicFamilies": ["gaming", "release"], "titleAny": ["game", "gaming", "playstation", "xbox", "switch", "release"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "rock-paper-shotgun",
+      "name": "Rock Paper Shotgun",
+      "domain": "www.rockpapershotgun.com",
+      "feedUrl": "https://www.rockpapershotgun.com/feed",
+      "topicFamily": "gaming",
+      "trustClass": "publisher",
+      "basePriority": 74,
+      "iconRole": "movement",
+      "enabled": false,
+      "quarantineReason": "TIMEOUT",
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["rock-paper-shotgun"], "topicFamilies": ["gaming", "release"], "titleAny": ["game", "gaming", "pc", "steam", "release", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "gamespot",
+      "name": "GameSpot",
+      "domain": "www.gamespot.com",
+      "feedUrl": "https://www.gamespot.com/feeds/mashup/",
+      "topicFamily": "gaming",
+      "trustClass": "publisher",
+      "basePriority": 73,
+      "iconRole": "movement",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["gamespot"], "topicFamilies": ["gaming", "release"], "titleAny": ["game", "gaming", "playstation", "xbox", "switch", "release"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "macrumors",
+      "name": "MacRumors",
+      "domain": "feeds.macrumors.com",
+      "feedUrl": "https://feeds.macrumors.com/MacRumors-All",
+      "topicFamily": "technology",
+      "trustClass": "publisher",
+      "basePriority": 74,
+      "iconRole": "knowledge",
+      "enabled": false,
+      "quarantineReason": "TIMEOUT",
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["macrumors"], "topicFamilies": ["technology", "release"], "titleAny": ["apple", "iphone", "ipad", "mac", "release", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
+    },
+    {
+      "id": "bbc-technology",
+      "name": "BBC Technology",
+      "domain": "feeds.bbci.co.uk",
+      "feedUrl": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+      "topicFamily": "technology",
+      "trustClass": "publisher",
+      "basePriority": 73,
+      "iconRole": "knowledge",
+      "enabled": true,
+      "pollIntervalMs": 900000,
+      "maxAgeMs": 86400000,
+      "highSalience": {"sourceIds": ["bbc-technology"], "topicFamilies": ["technology", "release"], "titleAny": ["technology", "ai", "security", "internet", "launch", "update"], "titleAll": [], "titleNone": ["job", "career", "internship"]}
     }
+    , {"id":"github-release-oven-sh-bun","name":"oven-sh/bun releases","domain":"github.com","feedUrl":"https://github.com/oven-sh/bun/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-oven-sh-bun"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-denoland-deno","name":"denoland/deno releases","domain":"github.com","feedUrl":"https://github.com/denoland/deno/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-denoland-deno"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-npm-cli","name":"npm/cli releases","domain":"github.com","feedUrl":"https://github.com/npm/cli/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-npm-cli"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-pnpm-pnpm","name":"pnpm/pnpm releases","domain":"github.com","feedUrl":"https://github.com/pnpm/pnpm/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-pnpm-pnpm"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-verdaccio-verdaccio","name":"verdaccio/verdaccio releases","domain":"github.com","feedUrl":"https://github.com/verdaccio/verdaccio/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-verdaccio-verdaccio"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-yarnpkg-yarn","name":"yarnpkg/yarn releases","domain":"github.com","feedUrl":"https://github.com/yarnpkg/yarn/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-yarnpkg-yarn"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-yarnpkg-berry","name":"yarnpkg/berry releases","domain":"github.com","feedUrl":"https://github.com/yarnpkg/berry/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-yarnpkg-berry"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-pypa-hatch","name":"pypa/hatch releases","domain":"github.com","feedUrl":"https://github.com/pypa/hatch/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-pypa-hatch"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-pypa-packaging","name":"pypa/packaging releases","domain":"github.com","feedUrl":"https://github.com/pypa/packaging/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-pypa-packaging"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-pdm-project-pdm","name":"pdm-project/pdm releases","domain":"github.com","feedUrl":"https://github.com/pdm-project/pdm/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-pdm-project-pdm"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-pypa-pip","name":"pypa/pip releases","domain":"github.com","feedUrl":"https://github.com/pypa/pip/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-pypa-pip"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-pypa-pipx","name":"pypa/pipx releases","domain":"github.com","feedUrl":"https://github.com/pypa/pipx/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-pypa-pipx"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-python-poetry-poetry","name":"python-poetry/poetry releases","domain":"github.com","feedUrl":"https://github.com/python-poetry/poetry/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-python-poetry-poetry"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-astral-sh-setup-uv","name":"astral-sh/setup-uv releases","domain":"github.com","feedUrl":"https://github.com/astral-sh/setup-uv/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-astral-sh-setup-uv"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-astral-sh-uv","name":"astral-sh/uv releases","domain":"github.com","feedUrl":"https://github.com/astral-sh/uv/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-astral-sh-uv"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-pypi-warehouse","name":"pypi/warehouse releases","domain":"github.com","feedUrl":"https://github.com/pypi/warehouse/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-pypi-warehouse"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-ruby-rubygems","name":"ruby/rubygems releases","domain":"github.com","feedUrl":"https://github.com/ruby/rubygems/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-ruby-rubygems"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-rubygems-rubygems-org","name":"rubygems/rubygems.org releases","domain":"github.com","feedUrl":"https://github.com/rubygems/rubygems.org/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-rubygems-rubygems-org"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-rust-lang-cargo","name":"rust-lang/cargo releases","domain":"github.com","feedUrl":"https://github.com/rust-lang/cargo/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-rust-lang-cargo"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-obi1kenobi-cargo-semver-checks","name":"obi1kenobi/cargo-semver-checks releases","domain":"github.com","feedUrl":"https://github.com/obi1kenobi/cargo-semver-checks/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-obi1kenobi-cargo-semver-checks"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-rust-lang-crates-io","name":"rust-lang/crates.io releases","domain":"github.com","feedUrl":"https://github.com/rust-lang/crates.io/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-rust-lang-crates-io"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-composer-composer","name":"composer/composer releases","domain":"github.com","feedUrl":"https://github.com/composer/composer/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-composer-composer"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-composer-packagist","name":"composer/packagist releases","domain":"github.com","feedUrl":"https://github.com/composer/packagist/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-composer-packagist"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-gomods-athens","name":"gomods/athens releases","domain":"github.com","feedUrl":"https://github.com/gomods/athens/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-gomods-athens"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-golang-go","name":"golang/go releases","domain":"github.com","feedUrl":"https://github.com/golang/go/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-golang-go"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-gradle-gradle","name":"gradle/gradle releases","domain":"github.com","feedUrl":"https://github.com/gradle/gradle/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-gradle-gradle"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-apache-maven","name":"apache/maven releases","domain":"github.com","feedUrl":"https://github.com/apache/maven/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-apache-maven"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-sbt-sbt","name":"sbt/sbt releases","domain":"github.com","feedUrl":"https://github.com/sbt/sbt/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-sbt-sbt"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-nuget-nuget-client","name":"NuGet/NuGet.Client releases","domain":"github.com","feedUrl":"https://github.com/NuGet/NuGet.Client/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-nuget-nuget-client"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-nuget-nuget-server","name":"NuGet/NuGet.Server releases","domain":"github.com","feedUrl":"https://github.com/NuGet/NuGet.Server/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-nuget-nuget-server"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-nuget-nugetgallery","name":"NuGet/NuGetGallery releases","domain":"github.com","feedUrl":"https://github.com/NuGet/NuGetGallery/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-nuget-nugetgallery"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-powershell-psresourceget","name":"PowerShell/PSResourceGet releases","domain":"github.com","feedUrl":"https://github.com/PowerShell/PSResourceGet/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-powershell-psresourceget"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-conan-io-conan","name":"conan-io/conan releases","domain":"github.com","feedUrl":"https://github.com/conan-io/conan/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-conan-io-conan"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-microsoft-vcpkg-tool","name":"microsoft/vcpkg-tool releases","domain":"github.com","feedUrl":"https://github.com/microsoft/vcpkg-tool/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-microsoft-vcpkg-tool"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-hexpm-hex","name":"hexpm/hex releases","domain":"github.com","feedUrl":"https://github.com/hexpm/hex/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-hexpm-hex"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-hexpm-hexpm","name":"hexpm/hexpm releases","domain":"github.com","feedUrl":"https://github.com/hexpm/hexpm/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-hexpm-hexpm"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-chocolatey-choco","name":"chocolatey/choco releases","domain":"github.com","feedUrl":"https://github.com/chocolatey/choco/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-chocolatey-choco"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-rpm-software-management-dnf","name":"rpm-software-management/dnf releases","domain":"github.com","feedUrl":"https://github.com/rpm-software-management/dnf/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-rpm-software-management-dnf"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-rpm-software-management-dnf5","name":"rpm-software-management/dnf5 releases","domain":"github.com","feedUrl":"https://github.com/rpm-software-management/dnf5/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-rpm-software-management-dnf5"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-flatpak-flatpak","name":"flatpak/flatpak releases","domain":"github.com","feedUrl":"https://github.com/flatpak/flatpak/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-flatpak-flatpak"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-homebrew-brew","name":"Homebrew/brew releases","domain":"github.com","feedUrl":"https://github.com/Homebrew/brew/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-homebrew-brew"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-homebrew-homebrew-brew-vulns","name":"Homebrew/homebrew-brew-vulns releases","domain":"github.com","feedUrl":"https://github.com/Homebrew/homebrew-brew-vulns/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-homebrew-homebrew-brew-vulns"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-macports-macports-base","name":"macports/macports-base releases","domain":"github.com","feedUrl":"https://github.com/macports/macports-base/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-macports-macports-base"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-nixos-nix","name":"NixOS/nix releases","domain":"github.com","feedUrl":"https://github.com/NixOS/nix/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-nixos-nix"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-scoopinstaller-scoop","name":"ScoopInstaller/Scoop releases","domain":"github.com","feedUrl":"https://github.com/ScoopInstaller/Scoop/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-scoopinstaller-scoop"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-canonical-snapd","name":"canonical/snapd releases","domain":"github.com","feedUrl":"https://github.com/canonical/snapd/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-canonical-snapd"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-microsoft-winget-cli","name":"microsoft/winget-cli releases","domain":"github.com","feedUrl":"https://github.com/microsoft/winget-cli/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-microsoft-winget-cli"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-moby-moby","name":"moby/moby releases","domain":"github.com","feedUrl":"https://github.com/moby/moby/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-moby-moby"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-goharbor-harbor","name":"goharbor/harbor releases","domain":"github.com","feedUrl":"https://github.com/goharbor/harbor/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-goharbor-harbor"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-helm-helm","name":"helm/helm releases","domain":"github.com","feedUrl":"https://github.com/helm/helm/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-helm-helm"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-oras-project-oras","name":"oras-project/oras releases","domain":"github.com","feedUrl":"https://github.com/oras-project/oras/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-oras-project-oras"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-podman-container-tools-podman","name":"podman-container-tools/podman releases","domain":"github.com","feedUrl":"https://github.com/podman-container-tools/podman/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-podman-container-tools-podman"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-opentofu-opentofu","name":"opentofu/opentofu releases","domain":"github.com","feedUrl":"https://github.com/opentofu/opentofu/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-opentofu-opentofu"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-hashicorp-terraform","name":"hashicorp/terraform releases","domain":"github.com","feedUrl":"https://github.com/hashicorp/terraform/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-hashicorp-terraform"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-haskell-cabal","name":"haskell/cabal releases","domain":"github.com","feedUrl":"https://github.com/haskell/cabal/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-haskell-cabal"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-cocoapods-cocoapods","name":"CocoaPods/CocoaPods releases","domain":"github.com","feedUrl":"https://github.com/CocoaPods/CocoaPods/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-cocoapods-cocoapods"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-perl-toolchain-gang-cpan-meta","name":"Perl-Toolchain-Gang/CPAN-Meta releases","domain":"github.com","feedUrl":"https://github.com/Perl-Toolchain-Gang/CPAN-Meta/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-perl-toolchain-gang-cpan-meta"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-elm-compiler","name":"elm/compiler releases","domain":"github.com","feedUrl":"https://github.com/elm/compiler/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-elm-compiler"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-luarocks-luarocks","name":"luarocks/luarocks releases","domain":"github.com","feedUrl":"https://github.com/luarocks/luarocks/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-luarocks-luarocks"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-ocaml-opam","name":"ocaml/opam releases","domain":"github.com","feedUrl":"https://github.com/ocaml/opam/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-ocaml-opam"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-dart-lang-pub","name":"dart-lang/pub releases","domain":"github.com","feedUrl":"https://github.com/dart-lang/pub/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-dart-lang-pub"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-dart-lang-pub-dev","name":"dart-lang/pub-dev releases","domain":"github.com","feedUrl":"https://github.com/dart-lang/pub-dev/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-dart-lang-pub-dev"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-commercialhaskell-stack","name":"commercialhaskell/stack releases","domain":"github.com","feedUrl":"https://github.com/commercialhaskell/stack/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-commercialhaskell-stack"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-swiftlang-swift-package-manager","name":"swiftlang/swift-package-manager releases","domain":"github.com","feedUrl":"https://github.com/swiftlang/swift-package-manager/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-swiftlang-swift-package-manager"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-asdf-vm-asdf","name":"asdf-vm/asdf releases","domain":"github.com","feedUrl":"https://github.com/asdf-vm/asdf/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-asdf-vm-asdf"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-conda-conda","name":"conda/conda releases","domain":"github.com","feedUrl":"https://github.com/conda/conda/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-conda-conda"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-mamba-org-mamba","name":"mamba-org/mamba releases","domain":"github.com","feedUrl":"https://github.com/mamba-org/mamba/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-mamba-org-mamba"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-jdx-mise","name":"jdx/mise releases","domain":"github.com","feedUrl":"https://github.com/jdx/mise/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-jdx-mise"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-prefix-dev-pixi","name":"prefix-dev/pixi releases","domain":"github.com","feedUrl":"https://github.com/prefix-dev/pixi/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-prefix-dev-pixi"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-spack-spack","name":"spack/spack releases","domain":"github.com","feedUrl":"https://github.com/spack/spack/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-spack-spack"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-dependabot-dependabot-core","name":"dependabot/dependabot-core releases","domain":"github.com","feedUrl":"https://github.com/dependabot/dependabot-core/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-dependabot-dependabot-core"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-jj-vcs-jj","name":"jj-vcs/jj releases","domain":"github.com","feedUrl":"https://github.com/jj-vcs/jj/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-jj-vcs-jj"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"github-release-renovatebot-renovate","name":"renovatebot/renovate releases","domain":"github.com","feedUrl":"https://github.com/renovatebot/renovate/releases.atom","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":1048576,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["github-release-renovatebot-renovate"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","version","available"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"pnpm","name":"pnpm","domain":"pnpm.io","feedUrl":"https://pnpm.io/blog/rss.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["pnpm"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"yarn","name":"Yarn","domain":"yarnpkg.com","feedUrl":"https://yarnpkg.com/blog/rss.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["yarn"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"astral","name":"Astral","domain":"astral.sh","feedUrl":"https://astral.sh/blog/rss.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["astral"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"pypi-blog","name":"PyPI Blog","domain":"blog.pypi.org","feedUrl":"https://blog.pypi.org/feed_rss_created.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["pypi-blog"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"rubygems-blog","name":"RubyGems Blog","domain":"blog.rubygems.org","feedUrl":"https://blog.rubygems.org/atom.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["rubygems-blog"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"packagist-blog","name":"Packagist Blog","domain":"blog.packagist.com","feedUrl":"https://blog.packagist.com/rss/","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["packagist-blog"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"php-foundation","name":"PHP Foundation","domain":"thephp.foundation","feedUrl":"https://thephp.foundation/atom.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["php-foundation"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"bun","name":"Bun","domain":"bun.com","feedUrl":"https://bun.com/rss.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["bun"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"deno-feed","name":"Deno","domain":"deno.com","feedUrl":"https://deno.com/feed","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["deno-feed"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"raspberry-pi","name":"Raspberry Pi","domain":"www.raspberrypi.com","feedUrl":"https://www.raspberrypi.com/news/feed/","topicFamily":"technology","trustClass":"publisher","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["raspberry-pi"],"topicFamilies":["technology","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"phoronix","name":"Phoronix","domain":"www.phoronix.com","feedUrl":"https://www.phoronix.com/rss.php","topicFamily":"technology","trustClass":"publisher","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["phoronix"],"topicFamilies":["technology","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"lwn","name":"LWN","domain":"lwn.net","feedUrl":"https://lwn.net/headlines/rss","topicFamily":"developer","trustClass":"publisher","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":false,"quarantineReason":"TIMEOUT","pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["lwn"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"kernel-dist","name":"Linux Kernel","domain":"www.kernel.org","feedUrl":"https://www.kernel.org/feeds/kdist.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":false,"quarantineReason":"TIMEOUT","pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["kernel-dist"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"w3-blog","name":"W3C Blog","domain":"www.w3.org","feedUrl":"https://www.w3.org/blog/feed/","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["w3-blog"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"jetbrains-kotlin","name":"Kotlin Blog","domain":"blog.jetbrains.com","feedUrl":"https://blog.jetbrains.com/kotlin/feed/","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["jetbrains-kotlin"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"jetbrains-idea","name":"IntelliJ IDEA Blog","domain":"blog.jetbrains.com","feedUrl":"https://blog.jetbrains.com/idea/feed/","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["jetbrains-idea"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"redhat-security","name":"Red Hat Security","domain":"www.redhat.com","feedUrl":"https://www.redhat.com/en/rss/blog/channel/security","topicFamily":"security","trustClass":"official","basePriority":45,"iconRole":"attention","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["redhat-security"],"topicFamilies":["security","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"planet-gnome","name":"Planet GNOME","domain":"planet.gnome.org","feedUrl":"https://planet.gnome.org/atom.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["planet-gnome"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"planet-kde","name":"Planet KDE","domain":"planet.kde.org","feedUrl":"https://planet.kde.org/atom.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["planet-kde"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"drupal","name":"Drupal News","domain":"www.drupal.org","feedUrl":"https://www.drupal.org/rss.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":false,"quarantineReason":"TIMEOUT","pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["drupal"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"wordpress-news","name":"WordPress News","domain":"wordpress.org","feedUrl":"https://wordpress.org/news/feed/","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":false,"quarantineReason":"TIMEOUT","pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["wordpress-news"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"elixir","name":"Elixir Blog","domain":"elixir-lang.org","feedUrl":"https://elixir-lang.org/atom.xml","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["elixir"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"fs-blog","name":"Farnam Street","domain":"fs.blog","feedUrl":"https://fs.blog/feed/","topicFamily":"technology","trustClass":"publisher","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["fs-blog"],"topicFamilies":["technology","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"techcrunch","name":"TechCrunch","domain":"techcrunch.com","feedUrl":"https://techcrunch.com/feed/","topicFamily":"technology","trustClass":"publisher","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["techcrunch"],"topicFamilies":["technology","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"slack-engineering","name":"Slack Engineering","domain":"slack.engineering","feedUrl":"https://slack.engineering/feed/","topicFamily":"developer","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["slack-engineering"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"stripe-blog","name":"Stripe Blog","domain":"stripe.com","feedUrl":"https://stripe.com/blog/feed.rss","topicFamily":"technology","trustClass":"official","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["stripe-blog"],"topicFamilies":["technology","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"the-verge","name":"The Verge","domain":"www.theverge.com","feedUrl":"https://www.theverge.com/rss/index.xml","topicFamily":"technology","trustClass":"publisher","basePriority":55,"iconRole":"knowledge","maxResponseBytes":524288,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["the-verge"],"topicFamilies":["technology","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"engadget","name":"Engadget","domain":"www.engadget.com","feedUrl":"https://www.engadget.com/rss.xml","topicFamily":"technology","trustClass":"publisher","basePriority":55,"iconRole":"knowledge","maxResponseBytes":524288,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["engadget"],"topicFamilies":["technology","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"interesting-engineering","name":"Interesting Engineering","domain":"interestingengineering.com","feedUrl":"https://interestingengineering.com/feed","topicFamily":"technology","trustClass":"publisher","basePriority":55,"iconRole":"knowledge","maxResponseBytes":524288,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["interesting-engineering"],"topicFamilies":["technology","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"ghacks","name":"gHacks","domain":"www.ghacks.net","feedUrl":"https://www.ghacks.net/feed/","topicFamily":"technology","trustClass":"publisher","basePriority":55,"iconRole":"knowledge","maxResponseBytes":524288,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["ghacks"],"topicFamilies":["technology","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"ars-technica","name":"Ars Technica","domain":"feeds.arstechnica.com","feedUrl":"https://feeds.arstechnica.com/arstechnica/index.xml","topicFamily":"technology","trustClass":"publisher","basePriority":55,"iconRole":"knowledge","maxResponseBytes":524288,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["ars-technica"],"topicFamilies":["technology","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"wired","name":"WIRED","domain":"www.wired.com","feedUrl":"https://www.wired.com/feed/rss","topicFamily":"technology","trustClass":"publisher","basePriority":55,"iconRole":"knowledge","maxResponseBytes":524288,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["wired"],"topicFamilies":["technology","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"security-affairs","name":"Security Affairs","domain":"securityaffairs.com","feedUrl":"https://securityaffairs.com/feed","topicFamily":"security","trustClass":"publisher","basePriority":55,"iconRole":"attention","maxResponseBytes":524288,"enabled":true,"pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["security-affairs"],"topicFamilies":["security","release"],"titleAny":["security","vulnerability","threat","attack","advisory","release"],"titleAll":[],"titleNone":["job","career","internship"]}}
+    , {"id":"overreacted","name":"Overreacted","domain":"overreacted.io","feedUrl":"https://overreacted.io/rss.xml","topicFamily":"developer","trustClass":"publisher","basePriority":45,"iconRole":"knowledge","maxResponseBytes":2097152,"enabled":false,"quarantineReason":"TIMEOUT","pollIntervalMs":900000,"maxAgeMs":86400000,"highSalience":{"sourceIds":["overreacted"],"topicFamilies":["developer","release","security"],"titleAny":["release","security","update","available","research"],"titleAll":[],"titleNone":["job","career","internship"]}}
   ]
 }

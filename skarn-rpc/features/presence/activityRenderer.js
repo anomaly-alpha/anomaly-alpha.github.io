@@ -1,12 +1,29 @@
 const {
   deriveSalience,
   selectIconForTopic,
-  selectReaction,
   selectTopicFamily,
-  normalizeText,
 } = require('./repetitionPolicy');
+const {
+  NEWS_FIELD_MAX_BYTES,
+  NEWS_HEADLINE_MAX_GRAPHEMES,
+  NEWS_METADATA_MAX_GRAPHEMES,
+  compactTitle,
+  evaluateTitle,
+  graphemes,
+  normalizeTitle,
+} = require('../news/newsQuality');
 
 const MAX_LINE_BYTES = 128;
+const NEWS_HEADLINE_MAX_CHARS = NEWS_HEADLINE_MAX_GRAPHEMES;
+const NEWS_METADATA_MAX_CHARS = NEWS_METADATA_MAX_GRAPHEMES;
+const TOPIC_LABELS = Object.freeze({
+  ai: 'AI',
+  games: 'Games',
+  release: 'Release',
+  science: 'Science',
+  space: 'Space',
+  general: 'News',
+});
 
 function truncateUtf8(value, maxBytes) {
   const text = String(value === undefined || value === null ? '' : value)
@@ -16,11 +33,17 @@ function truncateUtf8(value, maxBytes) {
   if (Buffer.byteLength(text, 'utf8') <= maxBytes) return text;
   const suffix = '…';
   let output = '';
-  for (const character of Array.from(text)) {
-    if (Buffer.byteLength(output + character + suffix, 'utf8') > maxBytes) break;
-    output += character;
+  for (const grapheme of graphemes(text)) {
+    if (Buffer.byteLength(output + grapheme + suffix, 'utf8') > maxBytes) break;
+    output += grapheme;
   }
-  return output ? output + suffix : Array.from(text)[0] || '';
+  return output ? output + suffix : graphemes(text)[0] || '';
+}
+
+function truncateVisible(value, maxChars, maxBytes = MAX_LINE_BYTES) {
+  const text = normalizeTitle(value);
+  const compact = compactTitle(text, { maxGraphemes: maxChars });
+  return truncateUtf8(compact || text, maxBytes);
 }
 
 function formatAge(publishedAt, now) {
@@ -35,16 +58,15 @@ function formatAge(publishedAt, now) {
   return Math.floor(hours / 24) + 'd';
 }
 
-function compactNewsState(reaction, age, source) {
-  const suffix = ' · ' + age + ' · ' + source;
-  const reactionBudget = Math.max(1, MAX_LINE_BYTES - Buffer.byteLength(suffix, 'utf8'));
-  return truncateUtf8(reaction, reactionBudget) + suffix;
+function compactNewsState(topic, age, source) {
+  const label = TOPIC_LABELS[topic] || TOPIC_LABELS.general;
+  const sourceLabel = truncateVisible(source || 'source', 24, NEWS_FIELD_MAX_BYTES);
+  return truncateVisible(label + ' · ' + sourceLabel + ' · ' + age, NEWS_METADATA_MAX_GRAPHEMES, NEWS_FIELD_MAX_BYTES);
 }
 
 function createActivityRenderer(options) {
   const config = options || {};
   const iconMetadata = Array.isArray(config.iconMetadata) ? config.iconMetadata : [];
-  const reactions = config.reactions || {};
   const largeImageKey = config.largeImageKey || 'skarn_logo';
   const largeImageText = config.largeImageText || 'Skarn Bot';
 
@@ -72,13 +94,13 @@ function createActivityRenderer(options) {
   function renderNews(item, now) {
     const topic = selectTopicFamily(item);
     const salience = deriveSalience(item);
-    const reaction = item.reaction || selectReaction(reactions, topic, salience, item.id) || 'The signal merits inspection.';
-    const source = truncateUtf8(item.sourceName || item.sourceId || 'source', 40);
+    const source = item.sourceName || item.sourceId || 'source';
     const age = formatAge(item.publishedAt || item.updatedAt, now);
     const icon = selectIconForTopic(iconMetadata, topic, salience, { seed: item.id, newsOnly: true });
+    const quality = evaluateTitle(item.title, { sourceId: item.sourceId });
     return {
-      details: truncateUtf8('News · ' + item.title, MAX_LINE_BYTES),
-      state: compactNewsState(reaction, age, source),
+      details: truncateVisible(quality.displayTitle || item.title, NEWS_HEADLINE_MAX_GRAPHEMES, NEWS_FIELD_MAX_BYTES),
+      state: compactNewsState(topic, age, source),
       ...assets(icon, item.startTimestamp || config.startTimestamp || new Date(now)),
     };
   }
@@ -106,4 +128,16 @@ function renderActivity(candidate, options) {
   return renderer.renderAmbient({ ...candidate, key: candidate && (candidate.key || candidate.iconKey || candidate.smallImageKey) }, candidate && candidate.startTimestamp || config.startTimestamp);
 }
 
-module.exports = { MAX_LINE_BYTES, createActivityRenderer, formatAge, renderActivity, truncateUtf8 };
+module.exports = {
+  MAX_LINE_BYTES,
+  NEWS_HEADLINE_MAX_GRAPHEMES,
+  NEWS_METADATA_MAX_GRAPHEMES,
+  NEWS_HEADLINE_MAX_CHARS,
+  NEWS_METADATA_MAX_CHARS,
+  compactNewsState,
+  createActivityRenderer,
+  formatAge,
+  renderActivity,
+  truncateUtf8,
+  truncateVisible,
+};

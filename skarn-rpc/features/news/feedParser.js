@@ -1,6 +1,7 @@
 const Parser = require('rss-parser');
+const { evaluateTitle } = require('./newsQuality');
 
-const DEFAULT_MAX_AGE_MS = 6 * 60 * 60 * 1000;
+const DEFAULT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const ALL_TIME_MAX_AGE_MS = Number.MAX_SAFE_INTEGER;
 const MAX_TITLE_BYTES = 256;
 const MAX_ID_BYTES = 512;
@@ -107,7 +108,10 @@ function normalizeItem(item, source, options, index) {
   const titleResult = sanitizeText(firstValue(item, ['title']));
   if (!titleResult.text) return reject('empty-title', index);
   if (titleResult.instructionLike) return reject('instruction-like-text', index);
+  if (titleResult.hadControlCharacters) return reject('unsafe_text', index);
   if (byteLength(titleResult.text) > MAX_TITLE_BYTES) return reject('title-too-long', index);
+  const quality = evaluateTitle(titleResult.text, { sourceId: source.id, shortTitleExceptions: source.shortTitleExceptions });
+  if (!quality.eligible) return reject(quality.reason, index);
 
   const canonicalUrl = canonicalizeUrl(firstValue(item, ['link', 'url', 'id', 'guid']));
   if (!canonicalUrl || byteLength(canonicalUrl) > MAX_URL_BYTES) return reject('invalid-url', index);

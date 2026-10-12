@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 
 const STATE_SCHEMA_VERSION = 1;
-const MAX_ITEMS = 150;
-const DEFAULT_MAX_AGE_MS = 6 * 60 * 60 * 1000;
+const MAX_ITEMS = 1500;
+const DEFAULT_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const ALL_TIME_MAX_AGE_MS = Number.MAX_SAFE_INTEGER;
 const STATE_PATH = path.join(__dirname, '../../data/news-state.json');
 const ITEM_FIELDS = Object.freeze([
@@ -140,10 +140,18 @@ function loadNewsState(filePath, options) {
   try {
     parsed = JSON.parse(adapter.readFileSync(target, 'utf8'));
   } catch (error) {
-    return createEmptyState(now);
+    if (error && error.code === 'ENOENT') return createEmptyState(now);
+    const failure = new Error('news state could not be read: ' + diagnostic(error));
+    failure.code = error && error.code === 'JSON_INVALID' ? 'NEWS_STATE_INVALID_JSON' : 'NEWS_STATE_READ_FAILED';
+    failure.cause = error;
+    throw failure;
   }
   const validation = validateNewsState(parsed);
-  if (!validation.ok) return createEmptyState(now);
+  if (!validation.ok) {
+    const failure = new Error('news state is invalid: ' + validation.errors.join('; '));
+    failure.code = 'NEWS_STATE_INVALID';
+    throw failure;
+  }
   try { adapter.chmodSync(target, 0o600); } catch (error) {}
   try { adapter.chmodSync(path.dirname(target), 0o700); } catch (error) {}
   return mergeNewsItems(parsed, [], { now, maxAgeMs: (options && options.maxAgeMs) || DEFAULT_MAX_AGE_MS, maxItemsPerSource: options && options.maxItemsPerSource });

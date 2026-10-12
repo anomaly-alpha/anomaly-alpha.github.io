@@ -91,14 +91,14 @@ async function testConfig() {
   assert.equal(config.freshnessMode, 'fresh');
   assert.equal(config.maxItemsPerSource, 10);
   assert.equal(config.newsDwellMs, 30000);
-  assert.equal(config.enabled, false);
+  assert.equal(config.enabled, true);
   assert.equal(validateNewsConfig({ ...config, enabled: false }).ok, true);
   assert.equal(validateNewsConfig({ ...config, mode: 'invalid' }).ok, false);
   assert.equal(validateNewsConfig({ ...config, freshnessMode: 'invalid' }).ok, false);
   assert.equal(validateNewsConfig({ ...config, maxItemsPerSource: 0 }).ok, false);
   assert.equal(validateNewsConfig({ ...config, newsDwellMs: 9999 }).ok, false);
-  assert.equal(config.sources.length, 15);
-  assert.deepEqual(config.sources.map(item => item.feedUrl), [
+  assert.equal(config.sources.length, 157);
+  assert.deepEqual(config.sources.slice(0, 15).map(item => item.feedUrl), [
     'https://www.nasa.gov/news-release/feed/',
     'https://github.blog/changelog/feed/',
     'https://openai.com/news/rss.xml',
@@ -115,6 +115,10 @@ async function testConfig() {
     'https://aws.amazon.com/about-aws/whats-new/recent/feed/',
     'https://developer.chrome.com/static/blog/feed.xml',
   ]);
+  assert.equal(new Set(config.sources.map(item => item.feedUrl)).size, 157);
+  assert.ok(config.sources.some(item => item.id === 'github-release-oven-sh-bun'));
+  assert.ok(config.sources.some(item => item.id === 'pnpm'));
+  assert.ok(config.sources.some(item => item.id === 'w3-blog'));
   for (const item of config.sources) {
     assert.equal(item.highSalience.sourceIds.includes(item.id), true);
     assert.equal(item.highSalience.topicFamilies.includes(item.topicFamily), true);
@@ -155,9 +159,13 @@ async function testParser() {
   ]), source('nasa-breaking-news'), { now: NOW });
   assert.deepEqual(unsafe.items, []);
   assert.equal(unsafe.rejected[0].reason, 'instruction-like-text');
+  const control = await parseFeedDetailed(rssXml([
+    itemXml({ title: 'Safe title\u0007 with control', guid: 'control', link: 'https://www.nasa.gov/control', date: 'Fri, 19 Sep 2026 11:00:00 GMT' }),
+  ]), source('nasa-breaking-news'), { now: NOW });
+  assert.equal(control.rejected[0].reason, 'unsafe_text');
 
   const old = await parseFeedDetailed(rssXml([
-    itemXml({ title: 'Old story', guid: 'old', link: 'https://www.nasa.gov/old', date: 'Fri, 19 Sep 2026 00:00:00 GMT' }),
+    itemXml({ title: 'Old story', guid: 'old', link: 'https://www.nasa.gov/old', date: 'Thu, 11 Sep 2026 00:00:00 GMT' }),
   ]), source('nasa-breaking-news'), { now: NOW });
   assert.equal(old.rejected[0].reason, 'stale');
   const historical = await parseFeedDetailed(rssXml([
@@ -211,17 +219,17 @@ async function testState() {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'skarn-news-state-'));
   const statePath = path.join(directory, 'nested', 'news-state.json');
   let state = createEmptyState(NOW);
-  state.items = Array.from({ length: 180 }, (_, index) => itemFrom(index, NOW - index * 1000));
+  state.items = Array.from({ length: 1520 }, (_, index) => itemFrom(index, NOW - index * 1000));
   state = mergeNewsItems(state, [], { now: NOW, maxAgeMs: 6 * 60 * 60 * 1000 });
   const saved = saveNewsState(statePath, state, { now: NOW, maxAgeMs: 6 * 60 * 60 * 1000 });
-  assert.equal(saved.items.length, 150);
+  assert.equal(saved.items.length, 1500);
   assert.equal(validateNewsState(saved).ok, true);
   const loaded = loadNewsState(statePath, { now: NOW, maxAgeMs: 6 * 60 * 60 * 1000 });
-  assert.equal(loaded.items.length, 150);
+  assert.equal(loaded.items.length, 1500);
   assert.equal(fs.statSync(path.dirname(statePath)).mode & 0o777, 0o700);
   assert.equal(fs.statSync(statePath).mode & 0o777, 0o600);
   assert.equal(fs.readdirSync(path.dirname(statePath)).filter(name => name.includes('.tmp-')).length, 0);
-  assert.equal(loaded.items.some(item => item.id === 'item-179'), false);
+  assert.equal(loaded.items.some(item => item.id === 'item-1519'), false);
 
   const balanced = mergeNewsItems(createEmptyState(NOW), Array.from({ length: 20 }, (_, index) => itemFrom(index, NOW - index * 1000)).concat(
     Array.from({ length: 20 }, (_, index) => ({ ...itemFrom(index + 100, NOW - index * 1000), sourceId: 'github-changelog', sourceName: 'GitHub Changelog' })),
@@ -232,7 +240,7 @@ async function testState() {
 }
 
 function enabledFixtureConfig() {
-  return { ...config, enabled: true, pollIntervalMs: 60000, sources: config.sources.map((item, index) => ({ ...item, enabled: index === 0 })) };
+  return { ...config, enabled: true, pollIntervalMs: 60000, sources: config.sources.map((item, index) => ({ ...item, enabled: index === 0, quarantineReason: index === 0 ? undefined : (item.quarantineReason || 'OPERATOR_REVIEW') })) };
 }
 
 async function testPoller() {

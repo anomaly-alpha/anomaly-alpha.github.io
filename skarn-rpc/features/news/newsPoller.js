@@ -17,6 +17,7 @@ const {
 const CONFIG_PATH = path.join(__dirname, '../../data/news-sources.json');
 const MAX_BACKOFF_MS = 60 * 60 * 1000;
 const JITTER_RATIO = 0.1;
+const POLL_CONCURRENCY = 8;
 const APPROVED_FEED_HOSTS = new Set(DEFAULT_ALLOWED_HOSTS.map(host => host.toLowerCase()));
 
 function loadNewsConfig(filePath) {
@@ -34,10 +35,10 @@ function validateNewsConfig(config) {
   if (config.newsDwellMs !== undefined && (!Number.isSafeInteger(config.newsDwellMs) || config.newsDwellMs < 10000 || config.newsDwellMs > 15 * 60 * 1000)) errors.push('newsDwellMs must be from 10000ms through 900000ms');
   if (typeof config.enabled !== 'boolean') errors.push('enabled must be boolean');
   if (!Number.isSafeInteger(config.pollIntervalMs) || config.pollIntervalMs < 60000) errors.push('pollIntervalMs must be at least one minute');
-  if (!Number.isSafeInteger(config.maxAgeMs) || config.maxAgeMs <= 0 || config.maxAgeMs > DEFAULT_MAX_AGE_MS) errors.push('maxAgeMs must be from 1ms through six hours');
-  if (!Array.isArray(config.sources) || config.sources.length !== 15) errors.push('exactly fifteen sources are required');
+  if (!Number.isSafeInteger(config.maxAgeMs) || config.maxAgeMs <= 0 || config.maxAgeMs > DEFAULT_MAX_AGE_MS) errors.push('maxAgeMs must be from 1ms through 24 hours');
+  if (!Array.isArray(config.sources) || config.sources.length !== 157) errors.push('exactly one hundred fifty-seven sources are required');
   const ids = new Set();
-  const hosts = new Set();
+  const feedUrls = new Set();
   (config.sources || []).forEach((source, index) => {
     const prefix = 'sources[' + index + ']';
     for (const field of ['id', 'name', 'domain', 'feedUrl', 'topicFamily', 'trustClass', 'iconRole']) {
@@ -45,19 +46,21 @@ function validateNewsConfig(config) {
     }
     if (ids.has(source.id)) errors.push(prefix + '.id is duplicated');
     ids.add(source.id);
-    if (hosts.has(source.domain)) errors.push(prefix + '.domain is duplicated');
-    hosts.add(source.domain);
+    if (feedUrls.has(source.feedUrl)) errors.push(prefix + '.feedUrl is duplicated');
+    feedUrls.add(source.feedUrl);
     const normalizedDomain = String(source.domain || '').toLowerCase().replace(/[.]$/, '');
     if (!APPROVED_FEED_HOSTS.has(normalizedDomain)) errors.push(prefix + '.domain is not an approved feed host');
     try {
       const url = new URL(source.feedUrl);
-      if (url.protocol !== 'https:' || url.hostname.toLowerCase() !== normalizedDomain) errors.push(prefix + '.feedUrl must be HTTPS on its declared domain');
+      if (url.protocol !== 'https:' || url.hostname.toLowerCase() !== normalizedDomain || url.username || url.password) errors.push(prefix + '.feedUrl must be HTTPS on its declared domain without credentials');
     } catch (error) {
       errors.push(prefix + '.feedUrl is invalid');
     }
     if (typeof source.enabled !== 'boolean') errors.push(prefix + '.enabled must be boolean');
+    if (source.quarantineReason !== undefined && !['HTTP_403_WAF', 'TIMEOUT', 'INVALID_CONTENT_TYPE', 'UNSAFE_REDIRECT', 'UNSAFE_DNS_DESTINATION', 'OPERATOR_REVIEW'].includes(source.quarantineReason)) errors.push(prefix + '.quarantineReason is invalid');
+    if (source.enabled === false && typeof source.quarantineReason !== 'string') errors.push(prefix + '.disabled sources require a quarantineReason');
     if (!Number.isSafeInteger(source.pollIntervalMs) || source.pollIntervalMs < 60000) errors.push(prefix + '.pollIntervalMs is invalid');
-    if (!Number.isSafeInteger(source.maxAgeMs) || source.maxAgeMs <= 0 || source.maxAgeMs > DEFAULT_MAX_AGE_MS) errors.push(prefix + '.maxAgeMs must be from 1ms through six hours');
+    if (!Number.isSafeInteger(source.maxAgeMs) || source.maxAgeMs <= 0 || source.maxAgeMs > DEFAULT_MAX_AGE_MS) errors.push(prefix + '.maxAgeMs must be from 1ms through 24 hours');
     if (source.maxResponseBytes !== undefined && (!Number.isSafeInteger(source.maxResponseBytes) || source.maxResponseBytes < 64 * 1024 || source.maxResponseBytes > 4 * 1024 * 1024)) errors.push(prefix + '.maxResponseBytes must be between 64KiB and 4MiB');
     if (!Number.isSafeInteger(source.basePriority) || source.basePriority < 0) errors.push(prefix + '.basePriority is invalid');
     const rule = source.highSalience;
@@ -74,6 +77,18 @@ function randomJitter(random, base) {
   return Math.floor(base * JITTER_RATIO * bounded);
 }
 
+async function runWithConcurrency(items, limit, worker) {
+  let nextIndex = 0;
+  const workerCount = Math.min(limit, items.length);
+  await Promise.all(Array.from({ length: workerCount }, async () => {
+    while (true) {
+      const index = nextIndex++;
+      if (index >= items.length) return;
+      await worker(items[index]);
+    }
+  }));
+}
+
 function createNewsPoller(options) {
   const settings = options || {};
   const config = settings.config || loadNewsConfig(settings.configPath);
@@ -85,7 +100,7 @@ function createNewsPoller(options) {
   const request = settings.requestFeed || requestFeed;
   const parse = settings.parseFeedDetailed || parseFeedDetailed;
   const statePath = settings.statePath || STATE_PATH;
-  const maxItemsPerSource = config.freshnessMode === 'retroactive' ? config.maxItemsPerSource : undefined;
+  const maxItemsPerSource = undefined;
   let state = settings.state || loadNewsState(statePath, { now: clock(), maxAgeMs: retentionMaxAgeMs, maxItemsPerSource });
   let inFlight = null;
   let timer = null;
@@ -102,6 +117,11 @@ function createNewsPoller(options) {
       lastSuccessAt: null,
       lastError: null,
       consecutiveFailures: 0,
+      disposition: 'enabled',
+      finalUrl: null,
+      redirectCount: 0,
+      tlsVerified: null,
+      contentType: null,
     };
   }
 
@@ -154,7 +174,8 @@ function createNewsPoller(options) {
     let successes = 0;
     let failures = 0;
     let accepted = [];
-    for (const source of config.sources.filter(candidate => candidate.enabled)) {
+    const enabledSources = config.sources.filter(candidate => candidate.enabled);
+    await runWithConcurrency(enabledSources, POLL_CONCURRENCY, async source => {
       const previous = sourceStatus(source.id);
       try {
         const result = await request(source.feedUrl, {
@@ -173,10 +194,15 @@ function createNewsPoller(options) {
             lastSuccessAt: sourceNow,
             lastError: null,
             consecutiveFailures: 0,
+            disposition: source.quarantineReason ? 'quarantined' : 'enabled',
+            finalUrl: result.url || null,
+            redirectCount: Number.isSafeInteger(result.redirectCount) ? result.redirectCount : 0,
+            tlsVerified: result.tlsVerified === true,
+            contentType: result.contentType || null,
             rejectedCount: 0,
           });
           successes++;
-          continue;
+          return;
         }
         const parsed = await parse(result.body, source, { now: sourceNow, maxAgeMs: retentionMaxAgeMs });
         accepted = accepted.concat(parsed.items);
@@ -188,6 +214,11 @@ function createNewsPoller(options) {
           lastSuccessAt: sourceNow,
           lastError: null,
           consecutiveFailures: 0,
+          disposition: source.quarantineReason ? 'quarantined' : 'enabled',
+          finalUrl: result.url || null,
+          redirectCount: Number.isSafeInteger(result.redirectCount) ? result.redirectCount : 0,
+          tlsVerified: result.tlsVerified === true,
+          contentType: result.contentType || null,
           rejectedCount: parsed.rejected.length,
         });
         successes++;
@@ -199,9 +230,10 @@ function createNewsPoller(options) {
           lastPollAt: sourceNow,
           lastError: diagnostic(error),
           consecutiveFailures: previous.consecutiveFailures + 1,
+          disposition: source.quarantineReason ? 'quarantined' : 'enabled',
         });
       }
-    }
+    });
     const finishedAt = clock();
     state = mergeNewsItems(state, accepted, { now: finishedAt, maxAgeMs: retentionMaxAgeMs, maxItemsPerSource });
     state.lastPollAt = finishedAt;

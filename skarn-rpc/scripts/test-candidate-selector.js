@@ -30,6 +30,29 @@ candidates = [];
 const afterDwell = selector.select(ambient, 1700000000000 + 240000);
 assert.strictEqual(afterDwell.kind, 'ambient');
 
+const disabledSourceSelector = createCandidateSelector({
+  sources: [{ id: 'quarantined-feed', enabled: false, quarantineReason: 'TIMEOUT' }],
+  newsPoller: { getCandidates: () => [{ ...news, id: 'quarantined-story', sourceId: 'quarantined-feed' }] },
+  renderNews: item => ({ details: 'News · ' + item.title, state: 'Watching · 1m · ' + item.sourceName }),
+});
+assert.strictEqual(disabledSourceSelector.select(ambient, 1700000000000).kind, 'ambient');
+
+let randomCandidates = [
+  { ...news, id: 'random-1', title: 'First signal', confidence: 0.8 },
+  { ...news, id: 'random-2', title: 'Second signal', confidence: 0.8 },
+  { ...news, id: 'random-3', title: 'Third signal', confidence: 0.8 },
+];
+const randomSelector = createCandidateSelector({
+  newsDwellMs: 100,
+  random: () => 0.5,
+  newsPoller: { getCandidates: () => randomCandidates },
+  renderNews: item => ({ details: 'News · ' + item.title, state: 'Watching · 1m · ' + item.sourceName }),
+});
+const randomFirst = randomSelector.select(ambient, 1700000000000);
+const randomSecond = randomSelector.select(ambient, 1700000000101);
+assert.notStrictEqual(randomFirst.id, randomSecond.id);
+randomCandidates = [];
+
 const newsOnlySelector = createCandidateSelector({
   newsOnly: true,
   newsPoller: { getCandidates: () => [] },
