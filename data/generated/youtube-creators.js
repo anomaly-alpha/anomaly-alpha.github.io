@@ -15,6 +15,46 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 1,
     "videos": [
       {
+        "id": "6i2O9Qf8uHs",
+        "title": "Easy Freebie and Easy Skip! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd reviews the Mystery Shop event and advises players to save gems in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-10",
+        "featured": false
+      },
+      {
+        "id": "1QEE0Mb5WRM",
+        "title": "Valentines Without the Love! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd covers the returning Valentine's event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-09",
+        "featured": false
+      },
+      {
+        "id": "yrTGtWZzkgE",
+        "title": "Oops, Wrong Artifact! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd reviews an artifact and event strategy in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-10-06",
+        "featured": false
+      },
+      {
+        "id": "AXSxYMKt47E",
+        "title": "Update 3.6 PATCH NOTES! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd reviews the 3.6 update and balancing changes for Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-09-16",
+        "featured": false
+      },
+      {
+        "id": "_2o8CpxnhyE",
+        "title": "Tier List 3.5 EDITION! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd updates the Invincible: Guarding the Globe hero tier list for version 3.5.",
+        "category": "Tier Lists",
+        "published": "2026-09-09",
+        "featured": false
+      },
+      {
         "id": "xT5lSyRPiqY",
         "title": "20 SHOPS!? - Invincible: Guarding the Globe",
         "description": "Avatar Shuvd covers the 20 shops update in Invincible: Guarding the Globe.",
@@ -69,46 +109,6 @@ window.__YOUTUBE_CREATORS=[
         "category": "Events",
         "published": "2026-08-25",
         "featured": true
-      },
-      {
-        "id": "TWeqQO10tIQ",
-        "title": "EQUIPMENT SHOP MAXXING - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd demonstrates maximizing the equipment shop in Invincible: Guarding the Globe.",
-        "category": "Guides",
-        "published": "2026-08-24",
-        "featured": false
-      },
-      {
-        "id": "WnlpzjtV3MQ",
-        "title": "I STOLE LUCK! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd covers a new Invincible: Guarding the Globe event and its rewards.",
-        "category": "Events",
-        "published": "2026-08-23",
-        "featured": false
-      },
-      {
-        "id": "WDKu6p_3ubY",
-        "title": "Machine Head SELLING TOTEMS! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd covers Machine Head selling totems in Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-08-22",
-        "featured": false
-      },
-      {
-        "id": "CDRlMgW4V5M",
-        "title": "Armored Damien OUT NOW! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd covers the Armored Damien hero release in Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-08-22",
-        "featured": false
-      },
-      {
-        "id": "fI-csyoqLV4",
-        "title": "Kregg was GOOD to Me! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd showcases Kregg gameplay and summons in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-08-21",
-        "featured": false
       }
     ]
   },
@@ -199,6 +199,22 @@ window.__YOUTUBE_CREATORS=[
     "status": "active",
     "displayOrder": 3,
     "videos": [
+      {
+        "id": "LhhEuOSagd0",
+        "title": "10 THINGS I WISH I KNEW BEFORE PLAYING IGTG… - Invincible Guarding The Globe",
+        "description": "Tutaaa-GTG shares lessons for new players of Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-10-04",
+        "featured": false
+      },
+      {
+        "id": "YuL1k9LVTRk",
+        "title": "The ULTIMATE Ops Guide! Best Teams, Priorities & Tips | Invincible: Guarding the Globe",
+        "description": "Tutaaa-GTG explains GDA Ops teams and priorities in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-09-13",
+        "featured": false
+      },
       {
         "id": "zXQuufSmxUU",
         "title": "WE HAVE TO TALK ABOUT THIS MODE... Invincible Guarding The Globe - TutaaaGTG",
@@ -429,6 +445,14 @@ window.__YOUTUBE_CREATORS=[
         "category": "Gameplay",
         "published": "2026-07-22",
         "featured": true
+      },
+      {
+        "id": "H2gEk34g-50",
+        "title": "Can Guns Only Beat Cecils Nightmare?? // Invincible Guarding The Globe",
+        "description": "LAVAMOOSE attempts Cecil's Nightmare using guns-only heroes in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-04-14",
+        "featured": false
       }
     ]
   },
@@ -446,6 +470,14 @@ window.__YOUTUBE_CREATORS=[
     "status": "active",
     "displayOrder": 6,
     "videos": [
+      {
+        "id": "I2pDn30qPpY",
+        "title": "Invincible Guarding The Globe - MOST WANTED Event!!",
+        "description": "OMNI-BANE covers the Most Wanted event and summons in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-09-09",
+        "featured": false
+      },
       {
         "id": "06upXNh41R0",
         "title": "Invincible Guarding The Globe- Triple Pick Event!!",
@@ -616,6 +648,14 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 9,
     "videos": [
       {
+        "id": "3QmKRqMfRnU",
+        "title": "THIS IS GAME CHANGING!",
+        "description": "KingSlay727 covers new items, case files, and a new hero in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-09-15",
+        "featured": false
+      },
+      {
         "id": "buXNXHGQXLc",
         "title": "INVINCABLE GTG JUST CHATTING",
         "description": "KingSlay727 hosts a just-chatting video about Invincible GTG.",
@@ -670,6 +710,14 @@ window.__YOUTUBE_CREATORS=[
         "category": "Gameplay",
         "published": "2026-08-18",
         "featured": true
+      },
+      {
+        "id": "KUlfNLLY4TE",
+        "title": "Invincible GTG: COMMUNITY Suggestions and Predictions!",
+        "description": "KingSlay727 hosts a community discussion about ideas for Invincible: Guarding the Globe, with Rapid, OMNI-BANE, and AlexanderGZMN.",
+        "category": "Gameplay",
+        "published": "2026-07-24",
+        "featured": false
       }
     ]
   },
@@ -802,6 +850,14 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 13,
     "videos": [
       {
+        "id": "lVeD_GWwZ6M",
+        "title": "Live streaming of INVINCIBLE.GTG.OMNI-FAN",
+        "description": "OMNI-FAN livestreams Invincible: Guarding the Globe gameplay.",
+        "category": "Livestreams",
+        "published": "2026-09-10",
+        "featured": false
+      },
+      {
         "id": "l0CHsWcE3mY",
         "title": "New Event ! Fresh Recruits Event on INVINCIBLE: Guarding The Globe 🌎 Farm as many Brit while you can",
         "description": "INVINCIBLE GTG OMNI-FAN covers the Fresh Recruits Event in Invincible: Guarding the Globe.",
@@ -887,14 +943,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "OMNI-FAN covers the From Worlds Beyond recruitment event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-07-18",
-        "featured": false
-      },
-      {
-        "id": "4nqYznDItBw",
-        "title": "Target Comic-con Cecil's Nightmares Event on INVINCIBLE: Guarding The Globe",
-        "description": "OMNI-FAN covers the Comic-con Cecil's Nightmares event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-07-17",
         "featured": false
       }
     ]
@@ -1102,6 +1150,14 @@ window.__YOUTUBE_CREATORS=[
         "featured": false
       },
       {
+        "id": "5PJRV9ho7G0",
+        "title": "I Tested Level 700 THAEDUS in Cecil's Nightmares… This Happened",
+        "description": "Gxlden tests level 700 Thaedus in Cecil's Nightmares in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-06-16",
+        "featured": false
+      },
+      {
         "id": "fG2byXoMDMs",
         "title": "I Went ALL IN on Thragg… Was It Worth It? (20 + Copies) | Invincible: Guarding the Globe",
         "description": "Gxlden spends gems to pull Thragg and tests the hero in Invincible: Guarding the Globe.",
@@ -1140,6 +1196,22 @@ window.__YOUTUBE_CREATORS=[
         "description": "X-Gamers Asylum showcases Universa in Invincible: Guarding the Globe.",
         "category": "Gameplay",
         "published": "2024-06-25",
+        "featured": false
+      },
+      {
+        "id": "2G2Z_6eRox8",
+        "title": "INVINCIBLE: Guarding the Globe - Account Progression and Game Future",
+        "description": "X-Gamers Asylum discusses account progression and the future of Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2024-05-13",
+        "featured": false
+      },
+      {
+        "id": "-WlUTcBg_3I",
+        "title": "INVINCIBLE Guarding the Globe [HOW TO BE A GOOD F2P PLAYER]",
+        "description": "X-Gamers Asylum shares free-to-play advice for Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2024-04-15",
         "featured": false
       },
       {

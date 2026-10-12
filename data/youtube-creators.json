@@ -1,5 +1,5 @@
 {
-  "updated": "2026-09-05",
+  "updated": "2026-10-12",
   "contentMaintainer": "Anomaly Alpha",
   "reviewCadenceDays": 90,
   "featuredCreatorId": "avatar-shuvd",
@@ -314,9 +314,121 @@
       "badge": "Featured",
       "status": "active",
       "displayOrder": 1,
-      "lastChecked": "2026-09-05",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@avatarshuvd",
       "videos": [
+        {
+          "id": "pQ0g77eKL5g",
+          "title": "Summon WISELY on Art! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd reviews the Art's Outlet event and gem strategy in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-08-01",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=pQ0g77eKL5g",
+          "canonicalUrl": "https://www.youtube.com/watch?v=pQ0g77eKL5g",
+          "evidenceNote": "Public YouTube result attributes the Art's Outlet event video to Avatar Shuvd and gives publication date 2026-08-01.",
+          "statusReason": ""
+        },
+        {
+          "id": "vRXY6hKJsBg",
+          "title": "ANNI-SUMMONS! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd covers Anissa summons in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2025-02-22",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=vRXY6hKJsBg",
+          "canonicalUrl": "https://www.youtube.com/watch?v=vRXY6hKJsBg",
+          "evidenceNote": "Public YouTube result identifies Avatar Shuvd, the Anissa summons title, and publication date 2025-02-22.",
+          "statusReason": ""
+        },
+        {
+          "id": "ofNGBQUvDMU",
+          "title": "ACCOUNT OVERVIEW TIME! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd reviews an Invincible: Guarding the Globe account and roster.",
+          "category": "Gameplay",
+          "published": "2025-03-17",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=ofNGBQUvDMU",
+          "canonicalUrl": "https://www.youtube.com/watch?v=ofNGBQUvDMU",
+          "evidenceNote": "Public YouTube result identifies Avatar Shuvd, the GTG account-overview title, and publication date 2025-03-17.",
+          "statusReason": ""
+        },
+        {
+          "id": "yrTGtWZzkgE",
+          "title": "Oops, Wrong Artifact! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd reviews an artifact and event strategy in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-06",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=yrTGtWZzkgE",
+          "canonicalUrl": "https://www.youtube.com/watch?v=yrTGtWZzkgE",
+          "evidenceNote": "Public YouTube search result identifies Avatar Shuvd, the GTG title, and publication date 2026-10-06.",
+          "statusReason": ""
+        },
+        {
+          "id": "AXSxYMKt47E",
+          "title": "Update 3.6 PATCH NOTES! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd reviews the 3.6 update and balancing changes for Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-09-16",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=AXSxYMKt47E",
+          "canonicalUrl": "https://www.youtube.com/watch?v=AXSxYMKt47E",
+          "evidenceNote": "Public YouTube result identifies Avatar Shuvd, the 3.6 patch-notes title, and publication date 2026-09-16.",
+          "statusReason": ""
+        },
+        {
+          "id": "_2o8CpxnhyE",
+          "title": "Tier List 3.5 EDITION! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd updates the Invincible: Guarding the Globe hero tier list for version 3.5.",
+          "category": "Tier Lists",
+          "published": "2026-09-09",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=_2o8CpxnhyE",
+          "canonicalUrl": "https://www.youtube.com/watch?v=_2o8CpxnhyE",
+          "evidenceNote": "Public YouTube result identifies Avatar Shuvd, the tier-list title, and publication date 2026-09-09.",
+          "statusReason": ""
+        },
+        {
+          "id": "6i2O9Qf8uHs",
+          "title": "Easy Freebie and Easy Skip! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd reviews the Mystery Shop event and advises players to save gems in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-10",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=6i2O9Qf8uHs",
+          "canonicalUrl": "https://www.youtube.com/watch?v=6i2O9Qf8uHs",
+          "evidenceNote": "Public YouTube result identifies Avatar Shuvd, the video title, and publication date 2026-10-10.",
+          "statusReason": ""
+        },
+        {
+          "id": "1QEE0Mb5WRM",
+          "title": "Valentines Without the Love! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd covers the returning Valentine's event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-09",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=1QEE0Mb5WRM",
+          "canonicalUrl": "https://www.youtube.com/watch?v=1QEE0Mb5WRM",
+          "evidenceNote": "Public YouTube result identifies Avatar Shuvd, the video title, and publication date 2026-10-09.",
+          "statusReason": ""
+        },
         {
           "id": "vZ0pb6iUPP0",
           "title": "My Boss Raid FEEDBACK! - Invincible: Guarding the Globe",
@@ -749,7 +861,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 2,
-      "lastChecked": "2026-09-04",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/watch?v=kPDC78Dv1NI",
       "videos": [
         {
@@ -862,9 +974,37 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 3,
-      "lastChecked": "2026-09-05",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@TutaaaGTG",
       "videos": [
+        {
+          "id": "LhhEuOSagd0",
+          "title": "10 THINGS I WISH I KNEW BEFORE PLAYING IGTG… - Invincible Guarding The Globe",
+          "description": "Tutaaa-GTG shares lessons for new players of Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-10-04",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=LhhEuOSagd0",
+          "canonicalUrl": "https://www.youtube.com/watch?v=LhhEuOSagd0",
+          "evidenceNote": "Public YouTube result identifies Tutaaa-GTG, the video title, and publication date 2026-10-04.",
+          "statusReason": ""
+        },
+        {
+          "id": "YuL1k9LVTRk",
+          "title": "The ULTIMATE Ops Guide! Best Teams, Priorities & Tips | Invincible: Guarding the Globe",
+          "description": "Tutaaa-GTG explains GDA Ops teams and priorities in Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-09-13",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=YuL1k9LVTRk",
+          "canonicalUrl": "https://www.youtube.com/watch?v=YuL1k9LVTRk",
+          "evidenceNote": "Public YouTube result identifies Tutaaa-GTG, the video title, and publication date 2026-09-13.",
+          "statusReason": ""
+        },
         {
           "id": "1NF0U3lJYoo",
           "title": "We Waited All This Time… FOR THIS?! | Boss Raid Hail Mary - Invincible Guarding The Globe",
@@ -1003,7 +1143,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 4,
-      "lastChecked": "2026-09-04",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@TH3Oyt",
       "videos": [
         {
@@ -1130,9 +1270,23 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 5,
-      "lastChecked": "2026-09-05",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@LAVAMOOSE1369",
       "videos": [
+        {
+          "id": "H2gEk34g-50",
+          "title": "Can Guns Only Beat Cecils Nightmare?? // Invincible Guarding The Globe",
+          "description": "LAVAMOOSE attempts Cecil's Nightmare using guns-only heroes in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-04-14",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=H2gEk34g-50",
+          "canonicalUrl": "https://www.youtube.com/watch?v=H2gEk34g-50",
+          "evidenceNote": "Public YouTube result attributes the video to LAVAMOOSE and identifies the GTG gameplay title and publication date 2026-04-14.",
+          "statusReason": ""
+        },
         {
           "id": "r4c19_n0wr4",
           "title": "The Entire Second Season of Invincible In Invincible Guarding The Globe",
@@ -1257,9 +1411,23 @@
       "badge": "Updates",
       "status": "active",
       "displayOrder": 6,
-      "lastChecked": "2026-09-05",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@BaneApe5",
       "videos": [
+        {
+          "id": "I2pDn30qPpY",
+          "title": "Invincible Guarding The Globe - MOST WANTED Event!!",
+          "description": "OMNI-BANE covers the Most Wanted event and summons in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-09-09",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=I2pDn30qPpY",
+          "canonicalUrl": "https://www.youtube.com/watch?v=I2pDn30qPpY",
+          "evidenceNote": "Public YouTube result identifies OMNI-BANE, the Most Wanted GTG event title, and publication date 2026-09-09.",
+          "statusReason": ""
+        },
         {
           "id": "fxIVp3QKMyk",
           "title": "Invincible Guarding The Globe- BANES Fresh Recruit Summons!!",
@@ -1426,7 +1594,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 7,
-      "lastChecked": "2026-09-04",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@JustaGuynamedFrancis",
       "videos": [
         {
@@ -1524,7 +1692,7 @@
       "tags": [],
       "status": "hidden",
       "displayOrder": 8,
-      "lastChecked": "2026-09-04",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/shorts/kGq-Racu8tw",
       "videos": [
         {
@@ -1553,9 +1721,37 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 9,
-      "lastChecked": "2026-09-05",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/shorts/sxosoNY7WDU",
       "videos": [
+        {
+          "id": "KUlfNLLY4TE",
+          "title": "Invincible GTG: COMMUNITY Suggestions and Predictions!",
+          "description": "KingSlay727 hosts a community discussion about ideas for Invincible: Guarding the Globe, with Rapid, OMNI-BANE, and AlexanderGZMN.",
+          "category": "Gameplay",
+          "published": "2026-07-24",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=KUlfNLLY4TE",
+          "canonicalUrl": "https://www.youtube.com/watch?v=KUlfNLLY4TE",
+          "evidenceNote": "Public YouTube result identifies KingSlay727 as the uploader, the GTG community-discussion title, and publication date 2026-07-24.",
+          "statusReason": ""
+        },
+        {
+          "id": "3QmKRqMfRnU",
+          "title": "THIS IS GAME CHANGING!",
+          "description": "KingSlay727 covers new items, case files, and a new hero in Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-09-15",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=3QmKRqMfRnU",
+          "canonicalUrl": "https://www.youtube.com/watch?v=3QmKRqMfRnU",
+          "evidenceNote": "Public YouTube result identifies KingSlay727, the title, and publication date 2026-09-15; the video description names new GTG items, case files, and a hero.",
+          "statusReason": ""
+        },
         {
           "id": "sxosoNY7WDU",
           "title": "#invincible #fyp #mobilegaming #newhero #subscribe",
@@ -1680,9 +1876,23 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 13,
-      "lastChecked": "2026-09-05",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@Invincible.gtg.omnifan",
       "videos": [
+        {
+          "id": "lVeD_GWwZ6M",
+          "title": "Live streaming of INVINCIBLE.GTG.OMNI-FAN",
+          "description": "OMNI-FAN livestreams Invincible: Guarding the Globe gameplay.",
+          "category": "Livestreams",
+          "published": "2026-09-10",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=lVeD_GWwZ6M",
+          "canonicalUrl": "https://www.youtube.com/watch?v=lVeD_GWwZ6M",
+          "evidenceNote": "Public YouTube result identifies INVINCIBLE GTG OMNI-FAN and publication date 2026-09-10; the description names Invincible: Guarding the Globe.",
+          "statusReason": ""
+        },
         {
           "id": "epbWhgEaY1U",
           "title": "Damien Darkblood (Under Realm) Now Available on INVINCIBLE: Guarding The Globe",
@@ -1919,7 +2129,7 @@
       "badge": "New",
       "status": "pending",
       "displayOrder": 14,
-      "lastChecked": "2026-09-04",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@ilovealxxxx0o",
       "videos": [
         {
@@ -2046,7 +2256,7 @@
       "badge": "New",
       "status": "pending",
       "displayOrder": 15,
-      "lastChecked": "2026-09-04",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@Gotcha-Beastt",
       "videos": [
         {
@@ -2103,7 +2313,7 @@
       "badge": "New",
       "status": "pending",
       "displayOrder": 16,
-      "lastChecked": "2026-09-04",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@subsktro",
       "videos": [
         {
@@ -2216,9 +2426,23 @@
       "badge": "New",
       "status": "pending",
       "displayOrder": 17,
-      "lastChecked": "2026-09-04",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@GxldenYT_",
       "videos": [
+        {
+          "id": "5PJRV9ho7G0",
+          "title": "I Tested Level 700 THAEDUS in Cecil's Nightmares… This Happened",
+          "description": "Gxlden tests level 700 Thaedus in Cecil's Nightmares in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-06-16",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=5PJRV9ho7G0",
+          "canonicalUrl": "https://www.youtube.com/watch?v=5PJRV9ho7G0",
+          "evidenceNote": "Public YouTube result attributes the upload to Gxlden, describes GTG gameplay, and gives publication date 2026-06-16.",
+          "statusReason": ""
+        },
         {
           "id": "VJMZor5zeVQ",
           "title": "BRIT is FINALLY HERE in Invincible GTG… I Have 40K Gems to Get Him",
@@ -2259,9 +2483,37 @@
       "badge": "New",
       "status": "pending",
       "displayOrder": 18,
-      "lastChecked": "2026-09-04",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@XGamersAsylum",
       "videos": [
+        {
+          "id": "-WlUTcBg_3I",
+          "title": "INVINCIBLE Guarding the Globe [HOW TO BE A GOOD F2P PLAYER]",
+          "description": "X-Gamers Asylum shares free-to-play advice for Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2024-04-15",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=-WlUTcBg_3I",
+          "canonicalUrl": "https://www.youtube.com/watch?v=-WlUTcBg_3I",
+          "evidenceNote": "Public YouTube result identifies X-Gamers Asylum, the GTG F2P guide, and publication date 2024-04-15.",
+          "statusReason": ""
+        },
+        {
+          "id": "2G2Z_6eRox8",
+          "title": "INVINCIBLE: Guarding the Globe - Account Progression and Game Future",
+          "description": "X-Gamers Asylum discusses account progression and the future of Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2024-05-13",
+          "lastChecked": "2026-10-12",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=2G2Z_6eRox8",
+          "canonicalUrl": "https://www.youtube.com/watch?v=2G2Z_6eRox8",
+          "evidenceNote": "Public YouTube result identifies X-Gamers Asylum, the GTG account-progression title, and publication date 2024-05-13.",
+          "statusReason": ""
+        },
         {
           "id": "sXX3Rbz1shI",
           "title": "INVINCIBLE: Guarding The Globe All The Characters Full Tier List",
@@ -2344,7 +2596,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 12,
-      "lastChecked": "2026-09-04",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/@HeroHavenGTG",
       "videos": [
         {
@@ -2527,7 +2779,7 @@
       "badge": "New",
       "status": "pending",
       "displayOrder": 11,
-      "lastChecked": "2026-09-04",
+      "lastChecked": "2026-10-12",
       "sourceUrl": "https://www.youtube.com/shorts/lujXnD4flNw",
       "videos": [
         {
