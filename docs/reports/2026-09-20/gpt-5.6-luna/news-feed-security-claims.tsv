@@ -1,0 +1,8 @@
+id	claim	evidence	confidence
+C1	137 of 150 endpoints met the strict transport/content baseline: HTTPS with verified TLS, 2xx response, accepted XML content type, no redirect, and matching final host.	news-feed-security-sources.tsv rows rated good	high
+C2	Two endpoints redirect but remain on their declared host: CrowdStrike and Slack Engineering.	news-feed-security-sources.tsv rows crowdstrike-blog and slack-engineering	high
+C3	CISA returned HTTP 403 with HTML, so the configured feed was not verified as retrievable XML from this environment.	news-feed-security-sources.tsv row cisa-advisories	high
+C4	Ten endpoints timed out with curl exit 28 before returning a response; this is an availability/compatibility gap, not evidence of insecure TLS.	news-feed-security-sources.tsv rows with curl_exit 28	high
+C5	All responding endpoints had TLS verification result 0, and no observed remote IP was private or link-local.	probe metadata aggregate	high
+C6	The current runtime configuration validates against its host allowlist and uses 150 feeds, enabled news mode, seven-day freshness, and bounded per-source retention.	validateNewsConfig output and current worktree configuration	high
+C7	Publisher posture is mixed: 129 sources are marked official and 21 publisher-class; this metadata is a trust signal, not an independent security certification.	current news-sources.json trustClass counts	high

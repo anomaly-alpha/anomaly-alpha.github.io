@@ -1,0 +1,63 @@
+timestamp	metric	resource	status	description
+2026-09-20T17:35:00Z	88	0	baseline	Current accepted Skarn cache items inside the strict 24-hour publication window before Tavily source discovery.
+2026-09-20T18:28:47Z	0	0	candidate	Tavily discovery: eight topical searches plus four curated-feed extractions yielded 24 direct candidate URLs for validation.
+2026-09-20T18:28:47Z	0	671	dead-end	Krebs on Security; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours and 10 were rejected.
+2026-09-20T18:28:47Z	8	639	keep	The Verge; HTTPS/TLS/XML passed, no redirect, eight items accepted inside 24 hours.
+2026-09-20T18:28:47Z	20	704	keep	Engadget; HTTPS/TLS/XML passed, no redirect, 20 items accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	973	dead-end	GitHub Engineering; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	1262	dead-end	eBay Tech; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	1106	dead-end	Salesforce Engineering; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	1167	dead-end	Medium Engineering; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	1764	dead-end	Dropbox Tech; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	663	dead-end	Yelp Engineering; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	569	dead-end	Canva Engineering; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	14525	dead-end	Cisco Engineering; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	706	dead-end	Google Research; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	10	1398	keep	Interesting Engineering; HTTPS/TLS/XML passed, no redirect, ten items accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	1269	dead-end	Meta Research; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	307	dead-end	InfoWorld; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	526	dead-end	Computer Weekly; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	201	dead-end	ZDNET; HTTPS/TLS passed with one same-host redirect, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	405	dead-end	ITPro; response exceeded the 512 KiB production response cap.
+2026-09-20T18:28:47Z	4	1034	keep	gHacks; HTTPS/TLS/XML passed, no redirect, four items accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	507	dead-end	DP Solutions; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	159	dead-end	Elastic Security Labs; response exceeded the 512 KiB production response cap.
+2026-09-20T18:28:47Z	0	304	dead-end	CrowdStrike Blog; HTTPS/TLS/XML passed with two same-host redirects, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	535	dead-end	W3C News; HTTPS/TLS/XML passed with one same-host redirect, but zero items were accepted inside 24 hours.
+2026-09-20T18:28:47Z	0	5003	dead-end	Schneier on Security; request timed out under the production timeout.
+2026-09-20T18:40:26Z	3	538	keep	Ars Technica; HTTPS/TLS/XML passed, no redirect, three items accepted inside 24 hours.
+2026-09-20T18:40:26Z	9	231	keep	WIRED; HTTPS/TLS/XML passed, no redirect, nine items accepted inside 24 hours.
+2026-09-20T18:40:26Z	0	295	dead-end	Wall Street Journal US Business; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:40:26Z	0	306	dead-end	Wall Street Journal; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:40:26Z	0	325	dead-end	Wall Street Journal Markets; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:40:26Z	0	334	dead-end	Wall Street Journal World; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:40:26Z	0	348	dead-end	Wall Street Journal Lifestyle; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	15535	dead-end	Australian Cyber Security Centre; request timed out under the production timeout.
+2026-09-20T18:41:31Z	0	689	dead-end	Apple Security Releases; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	1596	dead-end	CERT-EU; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	877	dead-end	CERT-FR Alerts; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	1200	dead-end	CERT-FR Advisories; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	1853	dead-end	Check Point Research; response exceeded the 512 KiB production response cap.
+2026-09-20T18:41:31Z	0	1581	dead-end	Cisco Talos Intelligence; response exceeded the 512 KiB production response cap.
+2026-09-20T18:41:31Z	0	1328	dead-end	CyberArk; rejected by the immutable host boundary in candidate validation.
+2026-09-20T18:41:31Z	0	1509	dead-end	ENISA; HTTPS request returned HTTP 404.
+2026-09-20T18:41:31Z	0	915	dead-end	WeLiveSecurity; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	662	dead-end	FortiGuard Labs; rejected by the immutable host boundary in candidate validation.
+2026-09-20T18:41:31Z	0	643	dead-end	GreyNoise; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	2405	dead-end	Group-IB; HTTPS/TLS/XML passed with one same-host redirect, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	909	dead-end	Huntress; response exceeded the 512 KiB production response cap.
+2026-09-20T18:41:31Z	0	737	dead-end	JPCERT/CC; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	316	dead-end	Malwarebytes Labs; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	220	dead-end	Mandiant; rejected by the immutable host boundary in candidate validation.
+2026-09-20T18:41:31Z	0	576	dead-end	Microsoft Security Response Center; response exceeded the 512 KiB production response cap.
+2026-09-20T18:41:31Z	0	373	dead-end	UK NCSC Reports; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	187	dead-end	UK NCSC News; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	354	dead-end	Palo Alto Networks Security; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	179	dead-end	Proofpoint; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	1202	dead-end	Qualys; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:41:31Z	0	260	dead-end	Rapid7; response exceeded the 512 KiB production response cap.
+2026-09-20T18:47:09Z	4	876	keep	Security Affairs; HTTPS/TLS/XML passed, no redirect, four items accepted inside 24 hours.
+2026-09-20T18:47:09Z	0	348	dead-end	9to5Google; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:47:09Z	0	526	dead-end	Homeland Security Newswire; TLS verification failed.
+2026-09-20T18:47:09Z	0	452	dead-end	IGN Videos; HTTPS/TLS/XML passed, but zero items were accepted inside 24 hours.
+2026-09-20T18:50:47Z	149	112	keep	Final live result after seven validated feed additions: 149 accepted stories inside 24 hours and 112 in the source-balanced active pool.
