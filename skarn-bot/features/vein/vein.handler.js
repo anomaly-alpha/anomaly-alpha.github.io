@@ -84,7 +84,7 @@ async function execute(interaction) {
     });
 
     var result = await moderatedChatCompletion({
-      model: process.env.AI_MODEL || 'gpt-5.4-mini',
+      model: process.env.AI_MODEL || 'gpt-6-luna',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: `Summarize this conversation from #${targetChannel.name}:\n\n${truncated}` },
@@ -92,6 +92,8 @@ async function execute(interaction) {
       max_tokens: roleTokenBudgets.vein,
       temperature: 0.3,
       userId: interaction.user.id,
+      guildId: interaction.guildId,
+      surface: 'command',
     });
     if (!result.success) {
       if (result.crisis) { await interaction.editReply({ content: require('../safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }

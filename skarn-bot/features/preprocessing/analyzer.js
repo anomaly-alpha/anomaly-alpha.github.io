@@ -32,7 +32,9 @@ async function analyzeMessage(userId, guildId, channelId, messageText, roleNatur
 
   try {
     var result = await moderatedChatCompletion({
-      model: 'gpt-4.1-mini',
+      model: 'gpt-6-luna',
+      guildId: guildId,
+      surface: 'analysis',
       messages: [
         { role: 'user', content: ANALYSIS_PROMPT + messageText }
       ],

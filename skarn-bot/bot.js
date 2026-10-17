@@ -8,11 +8,18 @@ const { db, getUserPreferences, setUserPreference, getGuildConfig, setGuildConfi
 const { handleMention } = require('./features/mentionRouter/mentionRouter');
 const { seedKnowledgeBase } = require('./features/knowledge/knowledgeSeeder');
 const { assertRoleRegistryAligned } = require('./persona/roles');
+const { runWithFriendContext, checkAiPermission, isAiCommand } = require('./features/friendTiers/friendPermission');
+const { recordFriendActivity } = require('./features/friendTiers/friendActivity');
+const { handleConfidantMessage } = require('./features/confidant/confidantConversation');
 
 // A rejection from the AI mention pipeline must never take down the whole bot
 async function safeHandleMention(message) {
   try {
-    await handleMention(message);
+    const result = await runWithFriendContext({ userId: message.author.id, guildId: message.guild?.id, surface: 'mention' }, () => handleMention(message));
+    if (result && message.guild) {
+      try { recordFriendActivity(message.author.id, message.guild.id); }
+      catch (activityError) { console.error('[FriendTiers] Could not record mention:', activityError.message); }
+    }
   } catch (e) {
     console.error('[Bot] Mention handler error:', e.message);
   }
@@ -93,6 +100,16 @@ client.once('clientReady', () => {
   // Warn if any command has no help theme (shows under Other)
   require('./features/help/helpPages').warnUnmappedCommands(client.commands);
 
+  // Keep the configured server's message archive inside its rolling retention window.
+  const messageArchive = require('./db/messageActivityArchive');
+  const pruneMessageArchive = () => {
+    try { messageArchive.pruneExpiredMessages(); }
+    catch (e) { console.error('[MessageArchive] Retention cleanup failed:', e.message); }
+  };
+  pruneMessageArchive();
+  const messageArchiveCleanup = setInterval(pruneMessageArchive, 5 * 60 * 1000);
+  messageArchiveCleanup.unref();
+
   // Schedulers (growth, status rotation, weather, proactive, reminders, news, digest, decay, maintenance, chronicle/omen)
   require('./features/scheduler').startSchedulers(client);
 
@@ -116,8 +133,21 @@ client.on('interactionCreate', async interaction => {
   }
   const command = interaction.client.commands.get(interaction.commandName);
   if (!command) return;
+  if (isAiCommand(interaction.commandName)) {
+    const permission = checkAiPermission(interaction.user.id, interaction.guildId, interaction.commandName === 'consult' ? 'consult' : 'command');
+    if (!permission.allowed) return interaction.reply({ content: permission.safeMessage, flags: 64, allowedMentions: { parse: [] } });
+  }
   try {
-    await command.execute(interaction);
+    await runWithFriendContext({
+      userId: interaction.user.id,
+      guildId: interaction.guildId,
+      surface: interaction.commandName === 'consult' ? 'consult' : 'command',
+      commandName: interaction.commandName,
+    }, () => command.execute(interaction));
+    if (interaction.guildId) {
+      try { recordFriendActivity(interaction.user.id, interaction.guildId); }
+      catch (activityError) { console.error('[FriendTiers] Could not record slash interaction:', activityError.message); }
+    }
   } catch (error) {
     console.error(error);
     const reply = { content: 'Something went wrong.', flags: 64, allowedMentions: { parse: ['users'] } };
@@ -171,6 +201,10 @@ client.on('messageCreate', async function(message) {
     recentMessageIds.delete(oldest);
   }
 
+  // Archive human message bodies only for the explicitly configured guild.
+  try { require('./db/messageActivityArchive').recordMessage(message); }
+  catch (e) { console.error('[MessageArchive] Failed to record message:', e.message); }
+
   // Step 2: Skip messages starting with * or + (prefix markers)
   if (message.content.startsWith('*') || message.content.startsWith('+')) return;
 
@@ -179,27 +213,27 @@ client.on('messageCreate', async function(message) {
 
   // Step 3: DM handling
   if (!message.guild) {
-    // Auto opt-in
-    try {
-      const db = require('./db/database');
-      db.setUserPreference(message.author.id, 'proactive_opt_in', '1');
-    } catch (e) { /* ignore */ }
+    if (await handleConfidantMessage(message)) return;
     // Check activation registry first
     const dmMatch = lookup(message.content);
     if (dmMatch) {
       if (dmMatch.type === 'command' && dmMatch.handler) {
         if (!dmMatch.activation.guildOnly) {
-          try { await dmMatch.handler(message, dmMatch.args); } catch (e) { message.reply({ content: e.message, allowedMentions: { parse: ['users'] } }); }
+          if (isAiCommand(dmMatch.command)) return;
+          try { await runWithFriendContext({ userId: message.author.id, surface: 'command', commandName: dmMatch.command }, () => dmMatch.handler(message, dmMatch.args)); } catch (e) {
+            console.error('[Bot] DM activation handler failed (' + dmMatch.command + '):', e && e.stack ? e.stack : e);
+            await message.reply({ content: 'Something went wrong while running that command.', allowedMentions: { parse: ['users'] } }).catch(function(replyError) {
+              console.error('[Bot] Could not report DM activation failure:', replyError.message);
+            });
+          }
           return;
         }
       } else if (dmMatch.type === 'ai') {
-        message.content = dmMatch.aiContent;
-        await safeHandleMention(message);
+        // AI DMs require an active, explicitly opted-in Confidant thread.
         return;
       }
     }
-    // Fall through to AI
-    await safeHandleMention(message);
+    // Ignore unsolicited DMs. Confidant is the only free-form AI DM surface.
     return;
   }
 
@@ -272,8 +306,22 @@ client.on('messageCreate', async function(message) {
             return;
           }
         }
-        try { await match.handler(message, match.args); } catch (err) {
-          await message.reply({ content: err.message || 'Command failed.', allowedMentions: { parse: ['users'] } });
+        if (isAiCommand(match.command)) {
+          const permission = checkAiPermission(message.author.id, message.guild?.id, match.command === 'consult' ? 'consult' : 'command');
+          if (!permission.allowed) {
+            try { await message.reply({ content: permission.safeMessage, allowedMentions: { parse: [] } }); } catch (e) {}
+            return;
+          }
+        }
+        try {
+          await runWithFriendContext({ userId: message.author.id, guildId: message.guild.id, surface: 'command', commandName: match.command }, () => match.handler(message, match.args));
+          try { recordFriendActivity(message.author.id, message.guild.id); }
+          catch (activityError) { console.error('[FriendTiers] Could not record activation:', activityError.message); }
+        } catch (err) {
+          console.error('[Bot] Activation handler failed (' + match.command + '):', err && err.stack ? err.stack : err);
+          await message.reply({ content: 'Something went wrong while running that command.', allowedMentions: { parse: ['users'] } }).catch(function(replyError) {
+            console.error('[Bot] Could not report activation failure:', replyError.message);
+          });
         }
         return;
       }
@@ -334,7 +382,7 @@ client.on('messageCreate', async function(message) {
       // Attention gate
       try {
         var attentionGate = require('./features/discordNative/attentionGate');
-        if (attentionGate.shouldRespond && await attentionGate.shouldRespond(message, client)) {
+        if (attentionGate.shouldRespond && await runWithFriendContext({ userId: message.author.id, guildId: message.guild.id, surface: 'ai-channel' }, () => attentionGate.shouldRespond(message, client))) {
           await safeHandleMention(message);
           return;
         }
@@ -364,12 +412,14 @@ client.on('messageCreate', async function(message) {
 
   // Step 11: Passive interjection (if not sleeping)
   if (!isSleeping) {
-    try { require('./features/presence/interjectionEngine').maybeInterject(message); } catch (e) {}
+    try { await runWithFriendContext({ userId: message.author.id, guildId: message.guild.id, surface: 'interjection' }, () => require('./features/presence/interjectionEngine').maybeInterject(message)); } catch (e) {}
   }
 });
 
 // ===== Logging: message delete/edit =====
 client.on('messageDelete', async message => {
+  try { require('./db/messageActivityArchive').recordDeletion(message); }
+  catch (e) { console.error('[MessageArchive] Failed to record deleted message:', e.message); }
   if (message.author?.bot) return;
   const logChanId = getGuildConfig(message.guild?.id, 'logChannel');
   if (!logChanId) return;
@@ -389,6 +439,8 @@ client.on('messageUpdate', async (oldMessage, newMessage) => {
   if (!oldMessage || !newMessage) return;
   if (oldMessage.author?.bot) return;
   if (oldMessage.content === newMessage.content) return;
+  try { require('./db/messageActivityArchive').recordEdit(oldMessage, newMessage); }
+  catch (e) { console.error('[MessageArchive] Failed to record edited message:', e.message); }
   const logChanId = getGuildConfig(oldMessage.guild?.id, 'logChannel');
   if (!logChanId) return;
   try {

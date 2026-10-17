@@ -12,22 +12,27 @@ try {
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX_CALLS = 50;
 
-function getUsage(userId, bucket) {
-  bucket = bucket || 'command';
-  const cutoff = Date.now() - RATE_LIMIT_WINDOW_MS;
-  const count = db.prepare(
-    'SELECT COUNT(*) as count FROM rate_limits WHERE user_id = ? AND bucket = ? AND timestamp > ?'
-  ).get(userId, bucket, cutoff);
-  return { current: count.count, max: RATE_LIMIT_MAX_CALLS };
+function maxCallsFor(multiplier) {
+  return Math.max(1, Math.floor(RATE_LIMIT_MAX_CALLS * (Number(multiplier) || 1)));
 }
 
-function canCall(userId, bucket) {
+function getUsage(userId, bucket, multiplier) {
   bucket = bucket || 'command';
   const cutoff = Date.now() - RATE_LIMIT_WINDOW_MS;
   const count = db.prepare(
     'SELECT COUNT(*) as count FROM rate_limits WHERE user_id = ? AND bucket = ? AND timestamp > ?'
   ).get(userId, bucket, cutoff);
-  if (count.count >= RATE_LIMIT_MAX_CALLS) return 0;
+  return { current: count.count, max: maxCallsFor(multiplier) };
+}
+
+function canCall(userId, bucket, multiplier) {
+  bucket = bucket || 'command';
+  const maxCalls = maxCallsFor(multiplier);
+  const cutoff = Date.now() - RATE_LIMIT_WINDOW_MS;
+  const count = db.prepare(
+    'SELECT COUNT(*) as count FROM rate_limits WHERE user_id = ? AND bucket = ? AND timestamp > ?'
+  ).get(userId, bucket, cutoff);
+  if (count.count >= maxCalls) return 0;
   const info = db.prepare(
     'INSERT INTO rate_limits (user_id, bucket, timestamp) VALUES (?, ?, ?)'
   ).run(userId, bucket, Date.now());
@@ -40,8 +45,8 @@ function releaseCall(userId, bucket, reservationId) {
     .run(reservationId, userId, bucket);
 }
 
-function getRateLimitMessage(userId, bucket) {
-  var usage = getUsage(userId, bucket);
+function getRateLimitMessage(userId, bucket, multiplier) {
+  var usage = getUsage(userId, bucket, multiplier);
   return 'Even a Warmaster paces himself. (' + usage.current + '/' + usage.max + ') Give it a moment.';
 }
 

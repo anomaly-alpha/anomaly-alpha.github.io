@@ -53,7 +53,7 @@ async function shouldRespond(message, client) {
   // Sentiment boost — reuse existing emotion detection (async, non-blocking fallback)
   try {
     if (detectEmotion) {
-      var detected = await detectEmotion(content, userId);
+      var detected = await detectEmotion(content, userId, message.guild?.id);
       if (['angry', 'stressed', 'sad'].includes(detected)) probability += 0.4;
       else if (detected === 'anxious') probability += 0.2;
     }
@@ -65,8 +65,10 @@ async function shouldRespond(message, client) {
   try {
     var result = await moderatedChatCompletion({
       userId: userId,
+      guildId: message.guild?.id,
+      surface: 'ai-channel',
       bucket: 'attention',
-      model: process.env.AI_MODEL || 'gpt-5.4-mini',
+      model: process.env.AI_MODEL || 'gpt-6-luna',
       messages: [{
         role: 'user',
         content: 'A Discord bot is watching a channel. Message: "' + content.slice(0, 200) + '". Would the bot have something relevant to say? Answer only YES or NO.'

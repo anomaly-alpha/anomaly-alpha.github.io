@@ -23,6 +23,9 @@ const { runOmenJob } = require('../serverMemory/omen/omenJob');
 const { pruneSignals } = require('../serverMemory/signalStore');
 const { startPresenceCycler } = require('../presence/presenceCycler');
 const { startMusingScheduler } = require('../presence/musingEngine');
+const { runFriendTierUpdate } = require('../friendTiers/friendActivity');
+const { startConfidantProactive } = require('../confidant/confidantProactive');
+const { prune: pruneConfidantRateLimits } = require('../confidant/confidantRateLimit');
 
 function startSchedulers(client) {
   function safeRun(fn, name) {
@@ -45,6 +48,9 @@ function startSchedulers(client) {
   startScheduler(client);
   startProactiveScheduler(client);
   startMusingScheduler(client);
+  safeRun(function() { return runFriendTierUpdate(client); }, 'FriendTiers')();
+  setInterval(safeRun(function() { return runFriendTierUpdate(client); }, 'FriendTiers'), 24 * 60 * 60 * 1000);
+  startConfidantProactive(client);
   setInterval(() => { processDueReminders(client).catch(e => console.error('[Reminder] Tick error:', e.message)); }, 30 * 1000);
 
   setInterval(() => {
@@ -65,7 +71,7 @@ function startSchedulers(client) {
   setInterval(() => {
     try {
       runDecayPass(); cleanCallbacks(); cleanChains(); cleanWarmth(); runDecay();
-      decayMemoryEntries(); cleanCooldowns(); pruneRateLimits(); pruneExpiredFlags();
+      decayMemoryEntries(); cleanCooldowns(); pruneRateLimits(); pruneExpiredFlags(); pruneConfidantRateLimits();
       pruneSentimentBuffers(); pruneBanterChains(); pruneCallbacks(); pruneReactionCounters();
     } catch (e) { console.error('[Maintenance] Job error:', e.message); }
   }, 10 * 60 * 1000);

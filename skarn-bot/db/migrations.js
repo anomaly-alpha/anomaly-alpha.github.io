@@ -31,6 +31,15 @@ const MIGRATIONS = [
       db.prepare('DROP TABLE IF EXISTS mention_cooldowns').run(); // orphaned 2026-08-08: helpers removed, zero references remain
     },
   },
+  {
+    version: 4,
+    name: 'add_rolling_message_archive',
+    up(db) {
+      db.prepare("CREATE TABLE IF NOT EXISTS message_activity_archive (event_id INTEGER PRIMARY KEY AUTOINCREMENT, message_id TEXT NOT NULL, guild_id TEXT NOT NULL, channel_id TEXT NOT NULL, user_id TEXT NOT NULL, event_type TEXT NOT NULL CHECK (event_type IN ('created', 'edited', 'deleted')), content_before TEXT, content_after TEXT, event_at INTEGER NOT NULL, source_created_at INTEGER NOT NULL)").run();
+      db.prepare('CREATE INDEX IF NOT EXISTS idx_message_activity_archive_retention ON message_activity_archive(guild_id, event_at)').run();
+      db.prepare('CREATE INDEX IF NOT EXISTS idx_message_activity_archive_message ON message_activity_archive(guild_id, message_id, event_at)').run();
+    },
+  },
 ];
 
 function runMigrations(db) {

@@ -47,14 +47,16 @@ Every persistent table has a well-defined scope — the columns that form its pr
 | `signal_embeddings` | per-signal | `signal_id` PK FK | Embeddings follow server signals |
 | `memory_optout` | per-user-per-guild | `(user_id, guild_id)` PRIMARY KEY | Chrono opt-out is personal per server |
 | `realm_omens` | per-omen-per-guild | `omen_id` PK FK, `guild_id` | Realm fulfilled omens are per-guild |
+| `friend_tiers` / `friend_flags` | per-user-per-guild | `(user_id, guild_id)` PRIMARY KEY | Earned tier and AI access flags are isolated to each server |
+| `confidant_threads` / `confidant_messages` | per-user account-wide | `user_id` | One explicitly opted-in private DM thread; its origin guild controls tier perks and AI flags |
 
-**Scoping rule**: the majority of tables are scoped by `(user_id, guild_id)` — data belongs to a user within a specific server. Exceptions are channel-scoped concepts (`channel_state`, `sentiment_buffers`, cooldown tables) and guild-scoped config (`guild_config`, `guild_mood`). No table is truly global (all users, all guilds) except ephemeral key-value stores (`app_state`, `app_flags`) and the shared knowledge base (`knowledge_base`). This uniformity means bulk cleanup by user or by guild follows a predictable pattern.
+**Scoping rule**: the majority of tables are scoped by `(user_id, guild_id)` — data belongs to a user within a specific server. Exceptions are channel-scoped concepts (`channel_state`, `sentiment_buffers`, cooldown tables), guild-scoped config (`guild_config`, `guild_mood`), and the account-wide private Confidant thread keyed by `user_id`. The Confidant thread records its origin guild so tier perks and AI flags remain deterministic across servers. Global operational state includes `app_state`, `app_flags`, the Confidant daily call counter, and the shared knowledge base.
 
 > **Resolved (2026-08-01) — "All state in SQLite" is now absolute**: The in-memory cooldown Maps in `features/discordNative/reactionSystem.js` and `commands/search.js` — along with the warmth, realm, and omen Maps — were all moved to SQLite-backed cooldowns (generic `cooldowns` table / `lib/rateLimit.js`). Zero in-memory Maps remain.
 >
 > **Still in-memory (2026-08-02 audit):** `activeCombats` (`features/realm/combat.js`), `activeTrades` (`features/realm/economy.js`), `activeGames` (`games/tetris.js`), `banterChains`/`setups` (`features/humor/comedyTiming.js`). These are game sessions, intentionally volatile — lost on restart. The "zero in-memory Maps" claim refers to *cooldowns* specifically.
 >
-> **Resolved (2026-08-08) — Confidant Mode and Friend Tiers are de-scoped (designed, not shipped)**: Both features exist ONLY as design docs — `docs/specs/2026-07-18/sonnet-5-medium/confidant-mode-v2.md` (DM-based relationship feature with wellbeing guardrails and history compression) and `docs/specs/2026-07-19/sonnet-5-medium/friend-tiers-permissions.md` (five-tier reputation system). Neither has any table, module, or command in the codebase; there is no `confidant`/`friend_tiers` reference anywhere in `features/`, `commands/`, `lib/`, `db/`, or `bot.js`. Per-user relationship machinery is `user_relationship` familiarity only. Future passes should not treat either as a shipped feature; if they are ever built, this note should be replaced with an implementation record.
+> **Implemented (2026-09-09) — Friend Tiers + Confidant Mode**: Friend tiers and AI flags are per-user-per-guild. Confidant is one account-wide, explicitly opted-in DM thread; its origin guild determines tier perks and AI permission flags. Confidant history is stored in plaintext SQLite and disclosed before consent. `/friend`, `/friendadmin`, and `/confidant` manage the feature. See `features/friendTiers/`, `features/confidant/`, and `docs/plans/2026-09-09/gpt-5/friend-tiers-confidant-integration.md`.
 
 ## 4. Rate limiting and cost control
 
@@ -62,10 +64,13 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 
 | Bucket | Table / Mechanism | Window | Ceiling | Why separate |
 |---|---|---|---|---|
-| General AI calls | `rate_limits` via `lib/rateLimit.js` (atomic reserve) | 10-minute sliding window | 50 per window (`RATE_LIMIT_MAX_CALLS`) | Single atomic limiter; admission gate centralized in `moderatedChatCompletion()` |
+| General AI calls | `rate_limits` via `lib/rateLimit.js` (atomic reserve) | 10-minute sliding window | 50 per window, multiplied by earned Friend Tier | Admission checks blocked/limited flags before rate reservation |
 | Hourly AI cap | `ai_usage` | 1-hour rolling | 50 per hour | Guards against excessive per-user spend |
 | Random interjections | `interjection_cooldowns` | 5 minutes | 1 per channel | Avoids spammy presence |
 | Active listening cues | `active_listen_cooldowns` | 5 minutes | 1 per channel | Same spacing principle |
+| Friend-tier multiplier | `friend_tiers.current_tier` | Per-user ceilings | 1.0x–2.0x | Earned per guild; does not raise the global guild budget |
+| Confidant per-user | `confidant_rate_limits` | 24-hour rolling window | 15 AI calls × tier multiplier | Reactive replies, compression, and proactive messages; crisis path exempt |
+| Confidant global | `confidant_daily_usage` | 1 UTC day | `CONFIDANT_DAILY_CALL_LIMIT` (default 300) | Global Confidant cap; crisis path exempt |
 | Reaction emoji | `cooldowns` table (generic) via `checkCooldown()` | ~60 seconds | 1 per channel | SQLite-backed since 2026-08-01 |
 | Per-guild AI spend | `guild_ai_daily:{guildId}` in `app_state` | 1 UTC day | `GUILD_AI_DAILY_LIMIT` (default 2000) | One busy server can't exhaust the shared wallet (chat buckets: mention/consult/musing/interjection; DMs budget under `'dm'`) |
 
@@ -75,9 +80,14 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 
 ## 5. Persona and role conventions
 
+### Friend Tiers and Confidant Mode
+
+- **Friend Tiers**: Five per-guild tiers (Stranger → Acquaintance → Regular → Trusted → Warband) require both tenure and activity points. Points are capped at 5/day and decay by 5/day after 14 inactive days. `/friend status` and `/friend leaderboard` are public; `/friendadmin flag` and `/friendadmin view` require Manage Server. AI flags gate user-facing AI calls independently of tier. The optional tier-boost override is not shipped.
+- **Confidant Mode**: A single account-wide private DM thread created only after informed button consent. Its origin guild selects Friend Tier perks and AI flags. Keep 10 exchanges in full and compress older pairs into a summary. Pause, end, and confirmed forget are distinct controls. History is plaintext SQLite and disclosed before consent. Unsolicited DMs receive no free-form AI reply. Proactive cadence is at most one message per five days after three idle days.
+
 - **`SKARN_CORE_IDENTITY`** (`persona/identity.js` lines 1–80): The invariant core persona — a multi-paragraph character definition that every AI call starts with. Never modified at runtime. Defines Skarn's voice (casual Discord native), familiarity scale, emotional intelligence heuristics, and self-preservation rules. **Reauthored 2026-08-01 (wisdom layer)**: the 8 sections (Voice, Conversation depth, Self-preservation, Emotional intelligence, Memory, Wisdom, Growth, Values) were rewritten with wisdom baked in (economy of language, deliberate patience, observe-don't-label, restraint of certainty, kindness-not-softness), and two new sections were added — **Wisdom Through Millennia** (5 trait directives + anti-drift guardrails: no aphorisms, no therapy-speak, no excessive humility, no unsolicited lecturing, mood-modulated expression) and **Voice Examples** (2 distilled before/after pairs). The first three bedrock paragraphs are preserved verbatim. Philosopher names (Socrates, Marcus Aurelius, etc.) must never appear in the prompt — only their distilled behaviors.
 - **`SKARN_FOOTER`** (`persona/identity.js`): The last line pushed to every system prompt, before the user message. Updated 2026-08-01 to close on the wisdom voice ("Speak with fewer, sharper words… The restraint is the strength.").
-- **`roles.js`** (`persona/roles.js`): Exports three parallel objects: `roles` (39 role instruction strings), `roleTokenBudgets` (100–1000 token budgets per role), and `ROLE_NATURE` (classification: casual / moderate / serious). Every AI command has exactly one role in `roles`; no command inlines its own role string.
+- **`roles.js`** (`persona/roles.js`): Exports three aligned registries: `roles`, `roleTokenBudgets`, and `ROLE_NATURE`. Confidant and its summary process use separate role entries.
 - **`roleTokenBudgets`**: Assigns a max token ceiling per role. Range: 100 (roast, compliment, insult, pickup, meme) to 1000 (realm). This controls how much the AI is allowed to generate per invocation. These budgets are consumed by each feature's OpenAI call independently — there is no shared token tracking across calls.
 - **Reply target vs token budget — units are distinct (resolved 2026-08-02, `skarn-reply-condenser-design.md`)**: a **reply target** is a `character` ceiling that measures how long a reply *reads* to the user (default 200 chars) — the UX goal the reply condenser steers to. `roleTokenBudget` is a `token` ceiling that defines what a reply *costs*. The two are orthogonal knobs: enforcing a tighter char target does not reduce a reply's token spend on its own (the condenser adds cost); raising the token budget does not let a reply get longer once the condenser enforces the char target.
 - **Reply condenser**: a gate-routed LLM pass (`features/ai/condenser.js`) that tightens an already-generated reply down to the role's character reply target, preserving intent and key points, short-circuiting with zero LLM call when a reply is already within target, and skipping structured content (tool-call replies, code fences/tables). Distinct from the **entity post-processor** (`preprocessing/postProcessor.js`, which extracts memory) and the **flavor pass** (`discordNative/postProcess.js`, /search only, which adds casual styling). Implemented 2026-08-02 (spec `docs/specs/2026-08-02/deepseek-v4-flash/skarn-reply-condenser-design.md`), wired into the shared pipeline's `runPipeline`.
@@ -93,7 +103,7 @@ Rather than one global rate limiter, the bot uses **separate buckets per concern
 >
 > **Drift — historical function names**: The existing glossary previously described `buildContext()` as "merging the previous `collectContext()` and `assembleContext()`" — those functions no longer exist anywhere in the codebase. The historical note cannot be verified by reading current code.
 >
-> **Resolved (2026-08-08) — prompt assembly unified**: the thin `assembler.js`/`retriever.js` prompt path was retired — `buildContext()` (`features/promptContext.js`) + `buildSystemPrompt()` (`persona/identity.js`) is the single prompt source for every live conversational path. `formatKnowledge` is wired into `promptContext.js` (called to build `knowledgeLine`), so extracted projects/events reach AI context. `getRecentMessages`, `contextAssembler.js`, and `runKnowledgeDecay` were deleted (dead). `AI_MODEL`'s code-level fallback default is now `gpt-5.4-mini` (`features/intelligence/modelRouter.js` line 13).
+> **Resolved (2026-08-08) — prompt assembly unified**: the thin `assembler.js`/`retriever.js` prompt path was retired — `buildContext()` (`features/promptContext.js`) + `buildSystemPrompt()` (`persona/identity.js`) is the single prompt source for every live conversational path. `formatKnowledge` is wired into `promptContext.js` (called to build `knowledgeLine`), so extracted projects/events reach AI context. `getRecentMessages`, `contextAssembler.js`, and `runKnowledgeDecay` were deleted (dead). At that time, `AI_MODEL`'s code-level fallback default was `gpt-5.4-mini` (`features/intelligence/modelRouter.js` line 13).
 
 ## 6. Memory systems — what's separate and why
 
@@ -285,10 +295,11 @@ The following environment variables are consumed by the codebase. Variables are 
 | `SLEEP_START` | No | `1` | Sleep mode start hour (UTC+offset). Set with `SLEEP_END=0` to disable sleep. (`bot.js` line 75) |
 | `SLEEP_END` | No | `7` | Sleep mode end hour (UTC+offset) (`bot.js` line 76) |
 | `SLEEP_TIMEZONE` | No | `0` | UTC offset applied arithmetically to sleep hours. Integer, not DST-aware. (`bot.js` line 77) |
-| `AI_MODEL` | No | `gpt-5.4-mini` | Default OpenAI model for all AI calls (`features/intelligence/modelRouter.js` line 13) |
+| `AI_MODEL` | No | `gpt-6-luna` | Default OpenAI model for all AI calls (`features/intelligence/modelRouter.js` line 13) |
 | `AI_MODEL_COMPLEX` | No | falls back to `AI_MODEL` | Model used for long/question/complex queries and knowledge-matched queries (`modelRouter.js` lines 4, 7, 11) |
 | `REALM_DAILY_CALL_LIMIT` | No | `1000` | Realm per-guild daily AI-call ceiling (`features/realm/realmConfig.js:204`) |
 | `GUILD_AI_DAILY_LIMIT` | No | `2000` | Per-guild daily AI call budget for chat buckets (`features/ai/guildBudget.js`) |
+| `CONFIDANT_DAILY_CALL_LIMIT` | No | `300` | Global daily Confidant AI-call limit (`features/confidant/confidantRateLimit.js`) |
 | `SKARN_DB_PATH` | No | `data/skarn.db` | SQLite database path (`db/db.js:9`); the smoke suites use it for temp-DB isolation |
 
 > **Note**: `AI_MODEL` and `AI_MODEL_COMPLEX` **are documented in `.env.example`** (as commented-out optional defaults, matching the table above). They are consumed by `features/intelligence/modelRouter.js`.
@@ -299,7 +310,7 @@ The following environment variables are consumed by the codebase. Variables are 
 >
 > **Note**: `SLEEP_START` / `SLEEP_END` defaults (1 and 7) match `.env.example`. The actual deployment (`.env`) sets both to `0` to disable sleep. This is an environment-specific choice, not a code default mismatch.
 >
-> **Note**: `AI_MODEL`'s code-level default is `gpt-5.4-mini` everywhere (modelRouter.js `selectModel()` plus every command/feature fallback site, swept 2026-08-08). Support-call models (condenser/postProcessor/analyzer) still hardcode `gpt-4.1-mini` by design (spec 6.4 carve-out).
+> **Note**: `AI_MODEL`'s code-level default is `gpt-6-luna` everywhere (modelRouter.js `selectModel()` plus every command/feature fallback site). Support-call models (condenser/postProcessor/analyzer) also use `gpt-6-luna`. Chat Completions requests set `reasoning_effort: none` for Luna function-calling compatibility.
 >
 > **Note**: Presence mood uses the canonical contract's sleep window. During that window the cycler keeps selecting dormant catalog entries while command sleep behavior remains active; it does not make provider calls or regenerate phrases at runtime.
 
@@ -309,7 +320,7 @@ The following architectural and configuration decisions are unresolved. Each is 
 
 1. **`roleTokenBudgets.consult` = 600 (resolved 2026-08-01; spec called for 900)** — The budget was raised from 400 to 600 but is still short of the 900 the spec described. `roles.js` is the source of truth. The effective budget is shared between the role response and the growing context lines. No token-usage monitoring exists to confirm whether the current budget is regularly exceeded.
 
-2. **No test framework (resolved 2026-08-01)** — The `tests/` directory and its 6 test files were **removed by decision** (commit `8a736df`). There is no `npm test` script and no CI pipeline — but the project is **not** test-free: a smoke framework exists. `npm run smoke` (`scripts/run-smokes.js`) runs 14 suites under `scripts/smokes/` (`00-trivial` … `13-emotion-reuse`), each against an isolated temp database via `SKARN_DB_PATH`, and `npm run audit:docs` guards doc-vs-code claims. The documentation-vs-reality gap no longer exists.
+2. **No test framework (resolved 2026-08-01)** — The `tests/` directory and its 6 test files were **removed by decision** (commit `8a736df`). There is no `npm test` script and no CI pipeline — but the project is **not** test-free: a smoke framework exists. `npm run smoke` (`scripts/run-smokes.js`) runs 19 suites under `scripts/smokes/` (`00-trivial` through both `17-*` suites), each against an isolated temp database via `SKARN_DB_PATH`, and `npm run audit:docs` guards doc-vs-code claims. The documentation-vs-reality gap no longer exists.
 
 3. **`ROLE_NATURE` duplication — three files historically, now partially fixed** — `roles`, `roleTokenBudgets`, and `ROLE_NATURE` are three separate objects in `persona/roles.js` that duplicate the same set of role keys. Adding a new role requires editing all three. The duplicate `ROLE_NATURE` in `features/discordNative/postProcess.js` was **removed** (fixed 2026-07-20) — it now imports from `persona/roles.js`. However `search` and `realm_npc` remain absent from `ROLE_NATURE` in `roles.js` (search was added 2026-07-20). No guard prevents further drift between the three exports in `roles.js`. **Resolved 2026-08-04:** all three registries share the identical 39-key set; `search` and `realm_npc` are present in `ROLE_NATURE`. **Resolved 2026-08-08:** the drift guard shipped — `assertRoleRegistryAligned()` in `persona/roles.js` (called fail-fast at boot before `client.login()` in `bot.js`, and exercised by `scripts/smokes/10-role-registry.js`) throws if the three key sets ever diverge.
 
@@ -317,7 +328,7 @@ The following architectural and configuration decisions are unresolved. Each is 
 
 5. **`socraticLine` populated by `buildContext()` — resolved 2026-08-01** — `socraticLine` is now generated by `buildContext()` (`features/promptContext.js` calls `getSocraticQuestion()` and returns the line in its result). The Advice tier described in ADR-001 (tiered-context-assembly with socratic questioning for advice-seeking patterns like "should I", "what should") is implemented. `isFullTier` was changed to `let` so a socratic question promotes a message to full tier.
 
-6. **Confidant Mode / Friend Tiers — de-scoped 2026-08-08 (designed, not shipped)** — Both are spec-only: `confidant-mode-v2.md` and `friend-tiers-permissions.md` exist under `docs/specs/`, but there is zero implementing code (no table, module, or command; no references in `features/`, `commands/`, `lib/`, `db/`, or `bot.js`). Decision: formally de-scoped rather than implemented — the only per-user relationship system in the codebase is `user_relationship` familiarity. See the §3 resolved note. If either feature is ever built, it needs its own spec→plan→implementation pass.
+6. **Friend Tiers + Confidant Mode — implemented 2026-09-09** — See §3 for account-wide Confidant scope, origin-guild permissions, plaintext storage disclosure, and the implementation plan. Optional tier boost and public memory-personalized promotion copy are intentionally excluded.
 
 ## 12. Cross-cutting bugs found during code review (2026-07-20)
 

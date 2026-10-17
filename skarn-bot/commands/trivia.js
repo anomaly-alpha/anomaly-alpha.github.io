@@ -36,11 +36,12 @@ module.exports = {
 
         var systemPrompt = buildSystemPrompt({ roleLine: roles.aitrivia });
         var result = await moderatedChatCompletion({
-          model: process.env.AI_MODEL || 'gpt-5.4-mini',
+          model: process.env.AI_MODEL || 'gpt-6-luna',
           messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: prompt }],
           max_tokens: roleTokenBudgets.aitrivia,
           temperature: 0.8,
           userId: interaction.user.id,
+        guildId: interaction.guildId,
         });
         if (!result.success) throw new Error('AI failed');
 

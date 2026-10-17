@@ -55,7 +55,7 @@ module.exports = {
       var headlines = articles.slice(0, 10).map(function(a, i) { return (i + 1) + '. ' + a.headline + ' — ' + (a.snippet || ''); }).join('\n');
       var systemPrompt = buildSystemPrompt({ roleLine: roles.search });
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-5.4-mini',
+        model: process.env.AI_MODEL || 'gpt-6-luna',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Here are today\'s headlines. Pick the 3 most interesting and give your dry commentary on each:\n\n' + headlines },
@@ -63,6 +63,7 @@ module.exports = {
         max_tokens: roleTokenBudgets.search,
         temperature: 0.85,
         userId: interaction.user.id,
+        guildId: interaction.guildId,
       });
       if (!result.success) throw new Error('AI failed');
       await interaction.editReply({ content: '📰 **Skarn\'s take on today\'s news:**\n\n' + result.completion.choices[0].message.content, allowedMentions: { parse: ['users'] } });

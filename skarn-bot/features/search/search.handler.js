@@ -55,7 +55,7 @@ async function execute(interaction) {
 
     // Step 4: OpenAI call
     var result = await moderatedChatCompletion({
-      model: process.env.AI_MODEL || 'gpt-5.4-mini',
+      model: process.env.AI_MODEL || 'gpt-6-luna',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: 'Based on the search results above, answer: ' + query },
@@ -63,6 +63,8 @@ async function execute(interaction) {
       max_tokens: roleTokenBudgets.search,
       temperature: 0.85,
       userId: interaction.user.id,
+      guildId: interaction.guildId,
+      surface: 'command',
     });
     if (!result.success) {
       if (result.crisis) { await interaction.editReply({ content: require('../safety/crisisResponse').getCrisisResponse().content, flags: 64, allowedMentions: { parse: ['users'] } }); return; }

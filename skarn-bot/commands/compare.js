@@ -17,7 +17,7 @@ module.exports = {
     try {
       var systemPrompt = buildSystemPrompt({ roleLine: roles.compare });
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-5.4-mini',
+        model: process.env.AI_MODEL || 'gpt-6-luna',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Compare these two: "' + t1 + '" vs "' + t2 + '"' },
@@ -25,6 +25,7 @@ module.exports = {
         max_tokens: roleTokenBudgets.compare,
         temperature: 0.9,
         userId: interaction.user.id,
+        guildId: interaction.guildId,
       });
       if (!result.success) throw new Error('AI failed');
       await interaction.editReply({ content: '⚖️ **' + t1 + '** vs **' + t2 + '**\n\n' + result.completion.choices[0].message.content, allowedMentions: { parse: ['users'] } });

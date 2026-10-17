@@ -58,7 +58,7 @@ module.exports = {
       });
 
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-5.4-mini',
+        model: process.env.AI_MODEL || 'gpt-6-luna',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Based on the search results above, answer: ' + query },
@@ -66,6 +66,7 @@ module.exports = {
         max_tokens: roleTokenBudgets.search,
         temperature: 0.85,
         userId: message.author.id,
+        guildId: message.guild?.id,
       });
       if (!result.success) {
         if (result.crisis) { await message.reply({ content: require('../features/safety/crisisResponse').getCrisisResponse().content, allowedMentions: { parse: ['users'] } }); return; }

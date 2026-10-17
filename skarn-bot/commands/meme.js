@@ -50,7 +50,7 @@ module.exports = {
         const systemPrompt = buildSystemPrompt({ roleLine: roles.meme, stateLine, memoryLine });
 
         var result = await moderatedChatCompletion({
-          model: process.env.AI_MODEL || 'gpt-5.4-mini',
+          model: process.env.AI_MODEL || 'gpt-6-luna',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: `Meme about: ${topic}` },
@@ -58,6 +58,7 @@ module.exports = {
           max_tokens: roleTokenBudgets.meme,
           temperature: 1.0,
           userId: interaction.user.id,
+        guildId: interaction.guildId,
         });
 
         if (result.success) {

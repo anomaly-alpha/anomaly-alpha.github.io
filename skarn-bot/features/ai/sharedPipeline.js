@@ -6,6 +6,7 @@ const { roles, roleTokenBudgets } = require('../../persona/roles');
 const { condenseReply } = require('./condenser');
 const { replyTargetFor } = require('../../persona/roles');
 const { getUsage } = require('../../lib/rateLimit');
+const { getRateMultiplier, checkAiPermission } = require('../friendTiers/friendPermission');
 const { moderatedChatCompletion } = require('../../ai/client');
 const { buildContext } = require('../promptContext');
 const { splitMessage, maybeBurst } = require('../discordNative/postProcess');
@@ -21,6 +22,7 @@ const { runTool } = require('../tools/toolRunner');
 const { storeMessage } = require('../conversation/messageStore');
 const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
 const { updateEmotion, applyAnalyzedEmotion } = require('../wisdom/emotionalIntelligence');
+const { getFriendFlags, getEffectiveTier, getFamiliarityLine } = require('../friendTiers/friendTierEngine');
 
 const AI_ERRORS = [
   'The connection is frayed. Try again.',
@@ -50,6 +52,14 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
   var beforeSentiment = opts.beforeSentiment;
   var roleName = opts.roleName || 'consult';
   var channel = opts.channel;
+  const friendFlags = getFriendFlags(userId, guildId);
+  const friendTier = getEffectiveTier(userId, guildId);
+  const surface = opts.threadType === 'consult' ? 'consult' : 'mention';
+  const permission = checkAiPermission(userId, guildId, surface);
+  if (!permission.allowed) {
+    await opts.sendError(permission.safeMessage);
+    return false;
+  }
 
   // Typing indicator — visible for the ENTIRE thinking duration, not just the
   // post-generation pause. Stopped in the finally block below.
@@ -89,7 +99,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
       userContent: message,
       interactionCount,
     });
-    systemPrompt = buildSystemPrompt({ roleLine: roles[roleName] || roles.consult, ...ctx });
+    systemPrompt = buildSystemPrompt({ roleLine: roles[roleName] || roles.consult, familiarityLine: getFamiliarityLine(friendTier), ...ctx });
     contextualMessage = ctx.conversationLine
       ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${message}`
       : message;
@@ -125,15 +135,18 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
 
     while (turnCount < maxTurns) {
       turnCount++;
+      var tokenBudget = getDeadpanBudget(roleTokenBudgets[roleName] || roleTokenBudgets.consult, userId, channelId);
+      if (opts.threadType === 'consult' && friendTier >= 3) tokenBudget = Math.floor(tokenBudget * 1.25);
       var result = await moderatedChatCompletion({
         model: selectModel(message, hasKnowledgeMatch, analysis ? analysis.complexityScore : undefined),
         messages: messages,
-        max_tokens: getDeadpanBudget(roleTokenBudgets[roleName] || roleTokenBudgets.consult, userId, channelId),
+        max_tokens: tokenBudget,
         temperature: temperature,
         userId: userId,
         guildId: guildId,
         bucket: 'chat',
-        ...(turnCount === 1 ? { tools: getTools(), tool_choice: 'auto' } : {}),
+        surface: surface,
+        ...(turnCount === 1 && !friendFlags.ai_limited ? { tools: getTools(), tool_choice: 'auto' } : {}),
       });
       if (!result.success) {
         if (result.crisis) {
@@ -167,7 +180,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     // Condense over-target replies before storing/sending (spec [S5]).
     // Story extraction reads the draft so a condensed beat isn't lost.
     const draft = reply;
-    const condensed = await condenseReply(reply, usedRunCommand ? 80 : target, roleName, userId, { usedTool, runCommandShort: usedRunCommand });
+    const condensed = await condenseReply(reply, usedRunCommand ? 80 : target, roleName, userId, { usedTool, runCommandShort: usedRunCommand, guildId, surface });
     if (condensed && typeof condensed.reply === 'string') {
       reply = condensed.reply;
     }
@@ -206,7 +219,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     }
 
     // Usage counter
-    var usage = getUsage(userId, 'chat');
+    var usage = getUsage(userId, 'chat', getRateMultiplier(userId, guildId));
     if (usage.current >= 40) reply = reply + ' -# (' + usage.current + '/' + usage.max + ')';
 
     // Split and send

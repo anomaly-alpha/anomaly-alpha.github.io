@@ -123,7 +123,7 @@ function buildSystemPrompt({
   cultureLine = '', memoryLine = '', conversationLine = '',
   warmthLine = '', patienceLine = '', callbackLine = '',
   gratitudeLine = '', firstOfDayLine = '', milestoneLine = '', apologyLine = '',
-  emotionalLine = '', intentLine = '', knowledgeLine = '', lorebookLine = '', ragLine = '', guidanceLine = '', calibrationLine = '', trajectoryLine = '', memoryEmotionLine = '', escalationLine = '', climateLine = '', serverWisdomLine = '', channelLine = '', additionalContext = '', safetyLine = '', growthLine = '', loreLine = '', dreamLine = '', followUpLine = '', socraticLine = ''
+  emotionalLine = '', intentLine = '', knowledgeLine = '', lorebookLine = '', ragLine = '', guidanceLine = '', calibrationLine = '', trajectoryLine = '', memoryEmotionLine = '', escalationLine = '', climateLine = '', serverWisdomLine = '', channelLine = '', additionalContext = '', safetyLine = '', growthLine = '', loreLine = '', dreamLine = '', followUpLine = '', socraticLine = '', familiarityLine = ''
 } = {}) {
   function untrusted(line) {
     return '<untrusted_data>\n' + line + '\n</untrusted_data>';
@@ -135,6 +135,7 @@ function buildSystemPrompt({
   if (stateLine) parts.push(stateLine);
   if (moodLine) parts.push(moodLine);
   if (relationshipLine) parts.push(relationshipLine);
+  if (familiarityLine) parts.push(familiarityLine);
   if (cultureLine) parts.push(cultureLine);
   if (memoryLine) parts.push(untrusted(memoryLine));
   if (emotionalLine) parts.push(emotionalLine);

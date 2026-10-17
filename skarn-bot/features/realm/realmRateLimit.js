@@ -1,6 +1,8 @@
 const { getWorldState, setWorldState } = require('./realmStore');
 const { getFlag, setFlag } = require('../../db/database');
 const { REALM_RATE_LIMIT, REALM_DAILY_CALL_LIMIT } = require('./realmConfig');
+const { getTierMultiplier } = require('../friendTiers/friendTierEngine');
+const { checkAiPermission } = require('../friendTiers/friendPermission');
 
 // ===== Per-user rate limit (30 calls / 30 min) =====
 
@@ -35,8 +37,10 @@ function _guildDailyCount(guildId) {
 // about to happen, and strictness protects the documented cost budget.
 
 function tryReserve(userId, guildId) {
+  if (!checkAiPermission(userId, guildId, 'realm').allowed) return false;
   const bucket = _userBucketCurrent(userId);
-  if (bucket.length >= REALM_RATE_LIMIT.maxCalls) return false;
+  const multiplier = getTierMultiplier(userId, guildId);
+  if (bucket.length >= Math.floor(REALM_RATE_LIMIT.maxCalls * multiplier)) return false;
 
   const today = _dailyKey();
   const guildCount = _guildDailyCount(guildId);

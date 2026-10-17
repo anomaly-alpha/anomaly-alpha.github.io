@@ -6,38 +6,46 @@ const { runPipeline } = require('../ai/sharedPipeline');
 async function handleMention(message) {
   if (message.author.bot) return;
 
+  const { checkAiPermission } = require('../friendTiers/friendPermission');
+  const permission = checkAiPermission(message.author.id, message.guild?.id, 'mention');
+  if (!permission.allowed) {
+    await message.reply({ content: permission.safeMessage, allowedMentions: { parse: [] } });
+    return false;
+  }
+
   // Respect opt-in
   const { canInteract } = require('../proactive/absenceDetector');
   const guildId = message.guild?.id ?? 'dm';
-  if (!canInteract(message.author.id, guildId)) return;
+  if (!canInteract(message.author.id, guildId)) return false;
 
   const userId = message.author.id;
   const channelId = message.channel.id;
 
   // Hourly cap
-  if (!canRespond(userId)) return;
+  if (!canRespond(userId)) return false;
 
   // Clean message (remove bot mention)
   const cleanMsg = message.content.replace(/<@!?\d+>/g, '').trim();
-  if (!cleanMsg) return;
+  if (!cleanMsg) return false;
 
   // Hostile content check
   const { isHostile, recordStrike, isSilenced, getDeEscalationLine } = require('../safety/slurFilter');
   if (isHostile(cleanMsg)) {
     recordStrike(userId);
-    return message.reply({ content: getDeEscalationLine(), allowedMentions: { parse: ['users'] } });
+    await message.reply({ content: getDeEscalationLine(), allowedMentions: { parse: ['users'] } });
+    return false;
   }
 
-  if (isSilenced(userId)) return;
+  if (isSilenced(userId)) return false;
 
   // Reaction-only check (10% chance for casual messages)
   const sentiment = analyzeSentiment(cleanMsg);
   if (shouldReactOnly('casual')) {
     await message.react(pickReaction(sentiment));
-    return;
+    return false;
   }
 
-  await runPipeline(
+  return runPipeline(
     userId,
     guildId,
     channelId,

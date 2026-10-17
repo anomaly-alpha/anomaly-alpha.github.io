@@ -30,7 +30,7 @@ module.exports = {
         var ctx = recentTopics.length > 0 ? 'Recent server conversation: ' + recentTopics.join('; ').slice(0, 500) : '';
         var systemPrompt = buildSystemPrompt({ roleLine: roles.pollsuggest });
         var result = await moderatedChatCompletion({
-          model: process.env.AI_MODEL || 'gpt-5.4-mini',
+          model: process.env.AI_MODEL || 'gpt-6-luna',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: 'Topic: "' + question + '"\n' + ctx + '\n\nSuggest 3-5 poll options. Return ONLY a JSON array of strings.' },
@@ -38,6 +38,7 @@ module.exports = {
           max_tokens: roleTokenBudgets.pollsuggest,
           temperature: 0.8,
           userId: interaction.user.id,
+        guildId: interaction.guildId,
         });
         if (result.success) {
           var parsed = JSON.parse(result.completion.choices[0].message.content.replace(/```json|```/g, '').trim());
@@ -87,7 +88,7 @@ module.exports = {
       var ctx = recentTopics.length > 0 ? 'Recent server conversation: ' + recentTopics.join('; ').slice(0, 500) : '';
       var systemPrompt = buildSystemPrompt({ roleLine: roles.pollsuggest });
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-5.4-mini',
+        model: process.env.AI_MODEL || 'gpt-6-luna',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Topic: "' + question + '"\n' + ctx + '\n\nSuggest 3-5 poll options. Return ONLY a JSON array of strings.' },
@@ -95,6 +96,7 @@ module.exports = {
         max_tokens: roleTokenBudgets.pollsuggest,
         temperature: 0.8,
         userId: message.author.id,
+        guildId: message.guild?.id,
       });
       if (result.success) {
         try {

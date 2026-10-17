@@ -339,6 +339,76 @@ CREATE TABLE IF NOT EXISTS memory_entries (
 CREATE INDEX IF NOT EXISTS idx_memory_user ON memory_entries(user_id, guild_id);
 CREATE INDEX IF NOT EXISTS idx_memory_decay ON memory_entries(last_seen_at, confidence);
 
+-- ===== Friend Tiers + Confidant =====
+CREATE TABLE IF NOT EXISTS friend_tiers (
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  first_seen_at INTEGER NOT NULL,
+  last_interaction_at INTEGER NOT NULL,
+  activity_points INTEGER NOT NULL DEFAULT 0,
+  activity_points_today INTEGER NOT NULL DEFAULT 0,
+  activity_points_today_date TEXT NOT NULL,
+  current_tier INTEGER NOT NULL DEFAULT 0,
+  last_decay_at INTEGER,
+  PRIMARY KEY (user_id, guild_id)
+);
+CREATE INDEX IF NOT EXISTS idx_friend_tiers_guild ON friend_tiers(guild_id, current_tier DESC, activity_points DESC);
+
+CREATE TABLE IF NOT EXISTS friend_flags (
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  ai_blocked INTEGER NOT NULL DEFAULT 0,
+  ai_limited INTEGER NOT NULL DEFAULT 0,
+  set_by TEXT,
+  updated_at INTEGER,
+  PRIMARY KEY (user_id, guild_id)
+);
+
+CREATE TABLE IF NOT EXISTS friend_flag_audit (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  flag TEXT NOT NULL,
+  value INTEGER NOT NULL,
+  set_by TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_friend_flag_audit_scope ON friend_flag_audit(guild_id, user_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS confidant_threads (
+  user_id TEXT PRIMARY KEY,
+  thread_id TEXT NOT NULL UNIQUE,
+  status TEXT NOT NULL DEFAULT 'active',
+  origin_guild_id TEXT NOT NULL,
+  started_at INTEGER NOT NULL,
+  last_interaction_at INTEGER NOT NULL,
+  message_count INTEGER NOT NULL DEFAULT 0,
+  last_proactive_at INTEGER,
+  last_grounding_at INTEGER,
+  running_summary TEXT NOT NULL DEFAULT ''
+);
+
+CREATE TABLE IF NOT EXISTS confidant_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  role TEXT NOT NULL CHECK(role IN ('user', 'skarn')),
+  content TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_confidant_messages_user ON confidant_messages(user_id, created_at);
+
+CREATE TABLE IF NOT EXISTS confidant_rate_limits (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  created_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_confidant_rate_user ON confidant_rate_limits(user_id, created_at);
+
+CREATE TABLE IF NOT EXISTS confidant_daily_usage (
+  date TEXT PRIMARY KEY,
+  call_count INTEGER NOT NULL DEFAULT 0
+);
+
 -- ===== Rate Limits =====
 
 CREATE TABLE IF NOT EXISTS rate_limits (
@@ -369,6 +439,24 @@ CREATE TABLE IF NOT EXISTS sentiment_buffers (
   messages TEXT NOT NULL DEFAULT '[]',
   updated_at INTEGER NOT NULL
 );
+
+-- ===== Rolling Message Activity Archive =====
+
+CREATE TABLE IF NOT EXISTS message_activity_archive (
+  event_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  message_id TEXT NOT NULL,
+  guild_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  event_type TEXT NOT NULL CHECK (event_type IN ('created', 'edited', 'deleted')),
+  content_before TEXT,
+  content_after TEXT,
+  event_at INTEGER NOT NULL,
+  source_created_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_message_activity_archive_retention ON message_activity_archive(guild_id, event_at);
+CREATE INDEX IF NOT EXISTS idx_message_activity_archive_message ON message_activity_archive(guild_id, message_id, event_at);
 
 -- ===== Banter Chains =====
 

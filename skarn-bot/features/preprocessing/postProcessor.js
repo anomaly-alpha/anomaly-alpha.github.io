@@ -23,7 +23,9 @@ async function postProcessConversation(userId, guildId, channelId, userMessage, 
 
   try {
     var result = await moderatedChatCompletion({
-      model: 'gpt-4.1-mini',
+      model: 'gpt-6-luna',
+      guildId: guildId,
+      surface: 'memory-extraction',
       messages: [{
         role: 'user',
         content: 'Extract entities from this conversation. Return JSON array: [{type, name, context, confidence}]\n'

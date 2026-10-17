@@ -23,6 +23,8 @@ async function generateOmen(guildId) {
 
   var result = await moderatedChatCompletion({
     userId: guildId,
+    guildId: guildId,
+    surface: 'scheduled',
     bucket: 'omen',
     model: model,
     temperature: 0.9,
@@ -42,6 +44,8 @@ async function generateCallback(omenText, signalText, guildId) {
 
   var result = await moderatedChatCompletion({
     userId: guildId,
+    guildId: guildId,
+    surface: 'scheduled',
     bucket: 'omen',
     model: model,
     temperature: 0.8,

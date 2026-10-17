@@ -11,10 +11,10 @@ function getOpenAIClient() {
   return client;
 }
 
-async function moderateInput(text) {
+async function moderateInput(text, signal) {
   try {
     var c = getOpenAIClient();
-    var result = await c.moderations.create({ model: 'omni-moderation-latest', input: text });
+    var result = await c.moderations.create({ model: 'omni-moderation-latest', input: text }, signal ? { signal: signal } : undefined);
     var r = result.results[0];
     for (var i = 0; i < SELF_HARM_CATS.length; i++) {
       if (r.categories[SELF_HARM_CATS[i]]) return { action: 'crisis' };
@@ -39,6 +39,14 @@ async function moderateInput(text) {
 }
 
 async function moderatedChatCompletion(params) {
+  var friendPermission = require('../features/friendTiers/friendPermission');
+  var friendContext = friendPermission.getFriendContext() || {};
+  var userId = params.userId || friendContext.userId;
+  var guildId = params.guildId || friendContext.guildId;
+  var surface = params.surface || friendContext.surface;
+  var permission = friendPermission.checkAiPermission(userId, guildId, surface);
+  if (!permission.allowed) return { success: false, safeMessage: permission.safeMessage, permissionDenied: permission.reason };
+
   var userMessages = params.messages.filter(function(m) { return m.role === 'user'; });
   var userText = userMessages.length > 0 ? userMessages[userMessages.length - 1].content : '';
 
@@ -46,23 +54,24 @@ async function moderatedChatCompletion(params) {
   var { isSilenced, getDeEscalationLine } = require('../features/safety/slurFilter');
   var bucket = params.bucket || 'command';
 
-  if (isSilenced(params.userId)) {
+  if (isSilenced(userId)) {
     return { success: false, safeMessage: getDeEscalationLine() };
   }
-  var reservationId = canCall(params.userId, bucket);
+  var multiplier = friendPermission.getRateMultiplier(userId, guildId);
+  var reservationId = canCall(userId, bucket, multiplier);
   if (!reservationId) {
-    return { success: false, safeMessage: getRateLimitMessage(params.userId, bucket) };
+    return { success: false, safeMessage: getRateLimitMessage(userId, bucket, multiplier) };
   }
 
-  var inputCheck = await moderateInput(userText);
+  var inputCheck = await moderateInput(userText, params.signal);
   if (inputCheck.action === 'crisis') {
-    console.log('[Moderation] Self-harm flagged for user', params.userId, '— crisis response');
-    releaseCall(params.userId, bucket, reservationId);
+    console.log('[Moderation] Self-harm flagged for user', userId, '— crisis response');
+    releaseCall(userId, bucket, reservationId);
     return { success: false, crisis: true };
   }
   if (inputCheck.action === 'block') {
-    console.log('[Moderation] Input blocked for user', params.userId);
-    releaseCall(params.userId, bucket, reservationId);
+    console.log('[Moderation] Input blocked for user', userId);
+    releaseCall(userId, bucket, reservationId);
     return { success: false, safeMessage: getSafeMessage(inputCheck.categories, inputCheck.unavailable) };
   }
 
@@ -71,9 +80,9 @@ async function moderatedChatCompletion(params) {
   // when the guild is exhausted. budgetExhausted flag lets ambient callers
   // (interjection) skip silently instead of replying the budget message.
   var { tryReserveGuildCall, BUDGETED_BUCKETS } = require('../features/ai/guildBudget');
-  if (params.guildId && BUDGETED_BUCKETS.indexOf(bucket) !== -1) {
-    if (!tryReserveGuildCall(params.guildId)) {
-      releaseCall(params.userId, bucket, reservationId);
+  if (guildId && BUDGETED_BUCKETS.indexOf(bucket) !== -1) {
+    if (!tryReserveGuildCall(guildId)) {
+      releaseCall(userId, bucket, reservationId);
       return { success: false, safeMessage: 'This server\'s reached its AI allowance for today. Try again tomorrow.', budgetExhausted: true };
     }
   }
@@ -90,10 +99,12 @@ async function moderatedChatCompletion(params) {
     // Pass through extra OpenAI params (response_format, stop, tools, etc.)
     // WARNING: any param consumed internally by the gate (userId, bucket) MUST be in
     // KNOWN or it leaks into the OpenAI request and fails with "Unknown parameter".
-    var KNOWN = ['model', 'messages', 'max_tokens', 'temperature', 'userId', 'bucket', 'signal', 'guildId'];
+    var KNOWN = ['model', 'messages', 'max_tokens', 'temperature', 'userId', 'bucket', 'signal', 'guildId', 'surface'];
     for (var key in params) {
       if (KNOWN.indexOf(key) === -1) apiParams[key] = params[key];
     }
+    // GPT-6 Luna requires reasoning_effort=none for Chat Completions function calling.
+    if (params.model === 'gpt-6-luna') apiParams.reasoning_effort = 'none';
     var completion = await c.chat.completions.create(apiParams, params.signal ? { signal: params.signal } : undefined);
 
     var outputMod = completion.moderation && completion.moderation.output;
@@ -101,8 +112,8 @@ async function moderatedChatCompletion(params) {
       var r = outputMod.results[0];
       for (var i = 0; i < SELF_HARM_CATS.length; i++) {
         if (r.categories[SELF_HARM_CATS[i]]) {
-          console.log('[Moderation] Output flagged (self-harm) for user', params.userId);
-          releaseCall(params.userId, bucket, reservationId);
+          console.log('[Moderation] Output flagged (self-harm) for user', userId);
+          releaseCall(userId, bucket, reservationId);
           return { success: false, crisis: true };
         }
       }
@@ -117,25 +128,25 @@ async function moderatedChatCompletion(params) {
           }
         }
         if (hasBlockedOut) {
-          console.log('[Moderation] Output blocked for user', params.userId);
-          releaseCall(params.userId, bucket, reservationId);
+          console.log('[Moderation] Output blocked for user', userId);
+          releaseCall(userId, bucket, reservationId);
           return { success: false, safeMessage: getSafeMessage(r.categories, false) };
         }
       }
     } else if (outputMod && outputMod.error) {
-      console.log('[Moderation] Output moderation error for user', params.userId, '— failing closed');
-      releaseCall(params.userId, bucket, reservationId);
+      console.log('[Moderation] Output moderation error for user', userId, '— failing closed');
+      releaseCall(userId, bucket, reservationId);
       return { success: false, safeMessage: getSafeMessage(null, true) };
     } else {
-      console.log('[Moderation] Output moderation unavailable for user', params.userId, '— failing closed');
-      releaseCall(params.userId, bucket, reservationId);
+      console.log('[Moderation] Output moderation unavailable for user', userId, '— failing closed');
+      releaseCall(userId, bucket, reservationId);
       return { success: false, safeMessage: getSafeMessage(null, true) };
     }
 
     return { success: true, completion: completion };
   } catch (e) {
     console.error('[Moderation] Generation failed:', e.message);
-    releaseCall(params.userId, bucket, reservationId);
+    releaseCall(userId, bucket, reservationId);
     return { success: false, safeMessage: getSafeMessage(null, true) };
   }
 }

@@ -2,7 +2,7 @@ const { getThreadsNeedingSummary, getThreadMessages, insertSummary, updateThread
 const { moderatedChatCompletion } = require('../../ai/client');
 
 const SUMMARY_CUTOFF_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
-const MODEL = process.env.AI_MODEL || 'gpt-5.4-mini';
+const MODEL = process.env.AI_MODEL || 'gpt-6-luna';
 
 async function summarizeOldThreads() {
   const threads = getThreadsNeedingSummary(SUMMARY_CUTOFF_MS);
@@ -12,7 +12,7 @@ async function summarizeOldThreads() {
       const messages = getThreadMessages(thread.thread_id);
       if (messages.length < 3) continue;
 
-      const summary = await generateSummary(messages, thread.user_id);
+      const summary = await generateSummary(messages, thread.user_id, thread.guild_id);
       insertSummary(thread.thread_id, summary, messages[0].created_at, messages[messages.length - 1].created_at, messages.length);
       updateThreadSummary(thread.thread_id, summary);
 
@@ -23,11 +23,13 @@ async function summarizeOldThreads() {
   }
 }
 
-async function generateSummary(messages, userId) {
+async function generateSummary(messages, userId, guildId) {
   const conversation = messages.slice(-20).map(m => `${m.role}: ${m.content}`).join('\n');
 
   const result = await moderatedChatCompletion({
     userId: userId,
+    guildId: guildId,
+    surface: 'summarizer',
     bucket: 'summarizer',
     model: MODEL,
     messages: [{

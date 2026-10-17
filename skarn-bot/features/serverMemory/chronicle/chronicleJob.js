@@ -32,6 +32,8 @@ async function generateChronicle(guildId) {
 
   var result = await moderatedChatCompletion({
     userId: guildId,
+    guildId: guildId,
+    surface: 'scheduled',
     bucket: 'chronicle',
     model: model,
     temperature: 0.8,

@@ -27,7 +27,7 @@ const TONE_EXAMPLES = [
 const TONE_CACHE = new Map();
 const CACHE_TTL = 5 * 60 * 1000;
 
-async function analyzeTone(text, userId) {
+async function analyzeTone(text, userId, guildId) {
   if (!text || text.length < 3) {
     return fallbackAnalysis(text);
   }
@@ -51,8 +51,10 @@ async function analyzeTone(text, userId) {
 
     const gateResult = await moderatedChatCompletion({
       userId: userId,
+      guildId: guildId,
+      surface: 'tone-analysis',
       bucket: 'tone',
-      model: process.env.AI_MODEL || 'gpt-5.4-mini',
+      model: process.env.AI_MODEL || 'gpt-6-luna',
       messages: messages,
       max_tokens: 100,
       temperature: 0.1,

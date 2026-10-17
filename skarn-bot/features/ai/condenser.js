@@ -8,7 +8,7 @@ const { roles, ROLE_NATURE } = require('../../persona/roles');
 
 // ==== Constants ====
 const CONDENSER_ENABLED = true; // master switch (spec [S8])
-const CONDENSER_MODEL = 'gpt-4.1-mini';
+const CONDENSER_MODEL = 'gpt-6-luna';
 const CONDENSER_MAX_TOKENS = 140;
 const CONDENSER_TEMP = 0.3;
 const MINIMUM_REASONABLE_FRACTION = 0.16; // reject output shorter than 16% of target
@@ -41,6 +41,8 @@ async function condenseReply(text, target, role, userId, opts) {
 
     const result = await moderatedChatCompletion({
       userId: userId,
+      guildId: opts && opts.guildId,
+      surface: opts && opts.surface,
       bucket: 'condense',
       model: CONDENSER_MODEL,
       max_tokens: CONDENSER_MAX_TOKENS,

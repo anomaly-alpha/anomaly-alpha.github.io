@@ -50,7 +50,7 @@ module.exports = {
     try {
       var systemPrompt = buildSystemPrompt({ roleLine: roles.translate });
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-5.4-mini',
+        model: process.env.AI_MODEL || 'gpt-6-luna',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'Translate this to ' + LANG_NAMES[to] + ': "' + text + '"' },
@@ -58,6 +58,7 @@ module.exports = {
         max_tokens: roleTokenBudgets.translate,
         temperature: 0.7,
         userId: interaction.user.id,
+        guildId: interaction.guildId,
       });
       if (!result.success) throw new Error('AI failed');
       await interaction.editReply({ content: '**' + LANG_NAMES[to] + ' (Skarn-style):** ' + result.completion.choices[0].message.content, allowedMentions: { parse: ['users'] } });

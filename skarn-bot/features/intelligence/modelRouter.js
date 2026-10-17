@@ -1,16 +1,16 @@
 const { getExtractedEntities } = require('../../db/database');
 
 function selectModel(userMessage, hasKnowledgeMatch, complexityScore) {
-  if (hasKnowledgeMatch) return process.env.AI_MODEL_COMPLEX || process.env.AI_MODEL || 'gpt-5.4-mini';
+  if (hasKnowledgeMatch) return process.env.AI_MODEL_COMPLEX || process.env.AI_MODEL || 'gpt-6-luna';
   if (userMessage && userMessage.length > 100 &&
       (userMessage.includes('?') || userMessage.toLowerCase().includes('explain'))) {
-    return process.env.AI_MODEL_COMPLEX || process.env.AI_MODEL || 'gpt-5.4-mini';
+    return process.env.AI_MODEL_COMPLEX || process.env.AI_MODEL || 'gpt-6-luna';
   }
   // Augment: complexity_score > 0.7 triggers complex model as tiebreaker
   if (typeof complexityScore === 'number' && complexityScore > 0.7) {
-    return process.env.AI_MODEL_COMPLEX || process.env.AI_MODEL || 'gpt-5.4-mini';
+    return process.env.AI_MODEL_COMPLEX || process.env.AI_MODEL || 'gpt-6-luna';
   }
-  return process.env.AI_MODEL || 'gpt-5.4-mini';
+  return process.env.AI_MODEL || 'gpt-6-luna';
 }
 
 function checkKnowledgeMatch(userId, guildId, userMessage) {

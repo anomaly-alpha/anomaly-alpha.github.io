@@ -39,7 +39,7 @@ module.exports = {
     try {
       var systemPrompt = buildSystemPrompt({ roleLine: roles.daily });
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-5.4-mini',
+        model: process.env.AI_MODEL || 'gpt-6-luna',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: 'The realm today:\n' + contextParts.join('\n') },
@@ -47,6 +47,7 @@ module.exports = {
         max_tokens: roleTokenBudgets.daily,
         temperature: 0.85,
         userId: interaction.user.id,
+        guildId: interaction.guildId,
       });
       if (!result.success) throw new Error('AI failed');
       await interaction.editReply({ content: '🌅 **Daily Reading**\n\n' + result.completion.choices[0].message.content, allowedMentions: { parse: ['users'] } });

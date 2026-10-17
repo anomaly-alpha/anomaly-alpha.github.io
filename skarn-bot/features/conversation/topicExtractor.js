@@ -1,13 +1,15 @@
 const { moderatedChatCompletion } = require('../../ai/client');
 
-const MODEL = process.env.AI_MODEL || 'gpt-5.4-mini';
+const MODEL = process.env.AI_MODEL || 'gpt-6-luna';
 
-async function extractTopics(text, userId) {
+async function extractTopics(text, userId, guildId) {
   if (!text || text.length < 10) return ['general'];
 
   try {
     const result = await moderatedChatCompletion({
       userId: userId,
+      guildId: guildId,
+      surface: 'topic-extraction',
       bucket: 'topic',
       model: MODEL,
       messages: [{

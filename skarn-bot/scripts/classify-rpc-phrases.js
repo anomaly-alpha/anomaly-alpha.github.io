@@ -9,7 +9,7 @@ const SOURCE_FILE = path.join(DATA_DIR, 'backups', 'rpc-phrases-pre-prune-2026-0
 const REGISTRY_FILE = path.join(DATA_DIR, 'icon-registry.json');
 const OUTPUT_FILE = path.join(DATA_DIR, 'rpc-phrase-moods.json');
 const PROGRESS_FILE = path.join(DATA_DIR, 'rpc-phrase-moods.progress.json');
-const MODEL = process.env.RPC_MOOD_MODEL || 'gpt-4.1-mini';
+const MODEL = process.env.RPC_MOOD_MODEL || 'gpt-6-luna';
 const BATCH_SIZE = parseInt(process.env.RPC_MOOD_BATCH_SIZE, 10) || 100;
 const MAX_RETRIES = 3;
 const MOODS = ['dormant', 'observing', 'pondering', 'displeased'];
@@ -121,6 +121,7 @@ function classifyBatch(batch) {
   ].join('\\n');
   const body = JSON.stringify({
     model: MODEL,
+    reasoning_effort: 'none',
     messages: [{ role: 'user', content: prompt }],
     temperature: 0,
     max_tokens: Math.max(2000, batch.length * 18),

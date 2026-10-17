@@ -120,7 +120,7 @@ module.exports = {
         try {
           var systemPrompt = buildSystemPrompt({ roleLine: roles.history });
           var result = await moderatedChatCompletion({
-            model: process.env.AI_MODEL || 'gpt-5.4-mini',
+            model: process.env.AI_MODEL || 'gpt-6-luna',
             messages: [
               { role: 'system', content: systemPrompt },
               { role: 'user', content: chatText },
@@ -128,6 +128,7 @@ module.exports = {
             max_tokens: roleTokenBudgets.history,
             temperature: 0.7,
             userId: interaction.user.id,
+        guildId: interaction.guildId,
           });
           if (result.success) {
             var summaryEmbed = new EmbedBuilder()

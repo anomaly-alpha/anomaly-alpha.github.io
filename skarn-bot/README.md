@@ -20,7 +20,7 @@ Then fill in your values:
 DISCORD_TOKEN=your_bot_token
 CLIENT_ID=your_application_id
 OPENAI_API_KEY=your_openai_key
-AI_MODEL=gpt-5.4-mini
+AI_MODEL=gpt-6-luna
 ```
 
 ## Running
@@ -38,7 +38,7 @@ npm run audit:gate   # Gate coverage audit — fails if any direct OpenAI chat c
 npm run audit:docs   # Audit documentation vs code (scripts/audit-docs.js)
 ```
 
-## Quick Reference (78 Commands)
+## Quick Reference (81 Commands)
 
 Grouped by the same themes as `/help` — use `/help` in Discord for the live, always-current list.
 
@@ -50,6 +50,7 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 | `/aistats` | View or reset AI stats |
 | `/advice` | Ask Skarn for his take on a dilemma |
 | `/consult` | Talk with Skarn — in-character conversation |
+| `/confidant` | Opt into and manage a private, persistent DM thread |
 | `/etch` | Tell Skarn something to remember |
 | `/find` | Search past conversations |
 | `/forget` | Delete facts Skarn remembers about you |
@@ -146,6 +147,8 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 | Command | Description |
 |---------|-------------|
 | `/addfriend` | Add a friend |
+| `/friend` | Check your per-server Skarn tier and leaderboard |
+| `/friendadmin` | Manage per-server AI access flags (Manage Server) |
 | `/friends` | View friend list |
 | `/knowledge` | Look up a topic in the knowledge base |
 | `/lorebook` | Manage lorebook entries (Admin) |
@@ -430,10 +433,11 @@ When inviting the bot:
 | `CLIENT_ID` | Yes | Application ID from Developer Portal |
 | `OPENAI_API_KEY` | For AI | OpenAI API key |
 | `TAVILY_API_KEY` | For `/search` | Tavily API key for `/search` and the `search_web` tool (`features/search/searchEngine.js`; unset → "not configured" result) |
-| `AI_MODEL` | No | Default OpenAI model — model router falls back to `gpt-5.4-mini` (`features/intelligence/modelRouter.js`); all `AI_MODEL`-driven call sites fall back to `gpt-5.4-mini` when unset |
+| `AI_MODEL` | No | Default OpenAI model — model router falls back to `gpt-6-luna` (`features/intelligence/modelRouter.js`); all `AI_MODEL`-driven call sites fall back to `gpt-6-luna` when unset |
 | `AI_MODEL_COMPLEX` | No | Model for long/complex/knowledge-matched queries; falls back to `AI_MODEL` (`modelRouter.js`) |
 | `REALM_DAILY_CALL_LIMIT` | No | Realm AI calls per guild per day (default 1000, `features/realm/realmConfig.js`) |
 | `GUILD_AI_DAILY_LIMIT` | No | Per-guild daily AI call budget for chat buckets (default 2000, `features/ai/guildBudget.js`) |
+| `CONFIDANT_DAILY_CALL_LIMIT` | No | Global daily Confidant AI call cap (default 300) |
 | `SKARN_DB_PATH` | No | SQLite database path (defaults to `data/skarn.db`, `db/db.js`) |
 | `SLEEP_START` | No | Sleep hour (0 = disabled) |
 | `SLEEP_END` | No | Wake hour (0 = disabled) |

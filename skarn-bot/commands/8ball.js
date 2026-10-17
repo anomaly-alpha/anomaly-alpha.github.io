@@ -15,7 +15,7 @@ module.exports = {
     const systemPrompt = buildSystemPrompt({ roleLine: roles.prophecy });
     try {
       var result = await moderatedChatCompletion({
-        model: process.env.AI_MODEL || 'gpt-5.4-mini',
+        model: process.env.AI_MODEL || 'gpt-6-luna',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: question },
@@ -23,6 +23,7 @@ module.exports = {
         max_tokens: roleTokenBudgets.prophecy,
         temperature: 0.8,
         userId: interaction.user.id,
+        guildId: interaction.guildId,
       });
       if (!result.success) throw new Error('AI failed');
       var reply = result.completion.choices[0].message.content;

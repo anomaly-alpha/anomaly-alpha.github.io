@@ -6,7 +6,7 @@
 
 ## System Overview
 
-Skarn is a Discord.js v14 bot with an LLM-powered AI persona ("Skarn, the Warmaster of the Abyss"). It runs on Node.js, stores state in SQLite, and calls OpenAI for every AI feature. The bot has 78 slash commands spanning AI conversation, games, server management, fun, and utilities.
+Skarn is a Discord.js v14 bot with an LLM-powered AI persona ("Skarn, the Warmaster of the Abyss"). It runs on Node.js, stores state in SQLite, and calls OpenAI for AI features. The bot has 81 slash commands spanning AI conversation, games, server management, fun, and utilities.
 
 ## High-Level Data Flow
 
@@ -15,6 +15,12 @@ Discord Gateway
       │
       ▼
   bot.js (messageCreate / interactionCreate)
+      │
+      ├─► Friend Tier context + AI permission admission
+      │     ├─ friendTiers/friendActivity.js       — per-server capped progress + daily decay
+      │     └─ friendTiers/friendPermission.js     — blocked/limited gates + tier multipliers
+      │
+      ├─► Confidant DM router → confidantConversation.js (active, opted-in account threads only)
       │
       ├─► State tracking (non-blocking, Promise.allSettled)
       │     ├─ channelState/stateTracker.js     — per-channel mood machine
@@ -64,7 +70,7 @@ Tool loop (turn 1: getTools() + tool_choice 'auto')  — features/tools/*
     │  Model may call a tool (run_command, get_weather, …); runTool() executes
     │  it and feeds the result back for the final in-character reply
     ▼
-OpenAI API (moderatedChatCompletion, model from modelRouter.js)
+Friend permission check → OpenAI moderation + tier-aware rate reservation → Chat Completions (model from modelRouter.js)
     │  Temperature: 0.8 (consult) / 0.85 (mention) / varies by command
     │  Token budget: from roleTokenBudgets[role], modified by deadpan escalation
     ▼
@@ -113,7 +119,7 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 78 com
 | Module | File | Responsibility |
 |--------|------|----------------|
 | Core identity | `persona/identity.js` | `SKARN_CORE_IDENTITY` + `buildSystemPrompt()` |
-| Role registry | `persona/roles.js` | 39 role lines, 39 token budgets, 39 nature classifications (roles/roleTokenBudgets/ROLE_NATURE keys aligned) |
+| Role registry | `persona/roles.js` | 41 role lines, 41 token budgets, 41 nature classifications (roles/roleTokenBudgets/ROLE_NATURE keys aligned) |
 
 ### Context Assembly
 | Module | File | Responsibility |
@@ -146,7 +152,9 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 78 com
 | Musing engine | `features/presence/musingEngine.js` | Ambient reflections (~1/guild/2 days, quiet channels) + `/musing` command path |
 | Rate limiter | `lib/rateLimit.js` | 50 calls per 10 minutes per user (`RATE_LIMIT_MAX_CALLS`, `lib/rateLimit.js:13`); `canCall()`/`recordCall()` single implementation (db/database.js is a re-export facade) |
 | AI stats | `lib/aiStats.js` | Hourly per-user cap (50/hr) |
-| Gates | `lib/gates.js` | `ensureAiConfigured()` only — hostile user checks live in `features/safety/slurFilter.js` (`isHostile`/`recordStrike`/`isSilenced`, enforced centrally in `moderatedChatCompletion()`) |
+| Gates | `lib/gates.js` | `ensureAiConfigured()` only — hostile and Friend Tier user checks are enforced before AI calls in `moderatedChatCompletion()` |
+| Friend Tiers | `features/friendTiers/` | Guild-scoped tenure/activity tiers, capped gains, inactivity decay, permission flags, and tier-aware rate limits |
+| Confidant Mode | `features/confidant/` | Explicitly opted-in account-wide DM thread; origin guild selects tier/AI flags; bounded plaintext history, consent/status controls, crisis handling, and low-cadence proactive job |
 
 ### Realm of Skarn (RPG)
 | Module | File | Responsibility |
@@ -309,6 +317,6 @@ Presence content is deliberately outside the database. Both runtimes consume the
 
 See `.env.example` for required vars. Key notes:
 - `OPENAI_API_KEY` is **required** for all AI features (documented in `.env.example`)
-- `AI_MODEL` defaults to `gpt-5.4-mini`; `AI_MODEL_COMPLEX` falls back to `AI_MODEL`
+- `AI_MODEL` defaults to `gpt-6-luna`; `AI_MODEL_COMPLEX` falls back to `AI_MODEL`
 - `TAVILY_API_KEY` enables web search via the Tavily API (single provider since 2026-08-02; free tier 1,000 credits/mo, basic search = 1 credit)
 - Sleep defaults to 1:00–7:00 UTC; set both to 0 to disable

@@ -12,10 +12,10 @@ function mapAnalyzerEmotion(analyzerEmotion) {
   return map[analyzerEmotion] || analyzerEmotion || 'neutral';
 }
 
-async function detectEmotion(text, userId) {
+async function detectEmotion(text, userId, guildId) {
   if (!text) return 'neutral';
   try {
-    const tone = await analyzeTone(text, userId);
+    const tone = await analyzeTone(text, userId, guildId);
     return tone.emotion;
   } catch (e) {
     return 'neutral';
@@ -25,7 +25,7 @@ async function detectEmotion(text, userId) {
 async function updateEmotion(userId, guildId, text) {
   let emotion, intensity, subtext;
   try {
-    const tone = await analyzeTone(text, userId);
+    const tone = await analyzeTone(text, userId, guildId);
     emotion = tone.emotion;
     intensity = tone.intensity;
     subtext = tone.subtext;

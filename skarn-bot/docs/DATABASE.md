@@ -69,6 +69,14 @@ Per-user-per-guild familiarity, tags, banter level.
 
 Familiarity gains: message=+0.5 (capped +3/day), AI command=+1, mention=+2, etch=+1.
 
+#### Friend tier tables
+
+`friend_tiers` and `friend_flags` are scoped by `(user_id, guild_id)`. Tier standing combines first-interaction tenure with activity points (maximum five awarded per UTC day); inactivity decay is tracked with `last_decay_at` to avoid repeated subtraction within a day. `friend_flags` stores AI block/limited state and who last changed it; `friend_flag_audit` preserves admin changes. The optional tier-boost override is not implemented.
+
+#### Confidant tables
+
+`confidant_threads` is keyed by `user_id` and stores one account-wide thread plus a unique `thread_id` and `origin_guild_id`; that guild controls Friend Tier perks and AI flags. `confidant_messages` stores ordered user/Skarn exchanges; older messages are deleted only after successful compression into `running_summary`. `confidant_rate_limits` and `confidant_daily_usage` implement separate rolling per-user and UTC global call ceilings. Message text is plaintext in SQLite; the user is told this before opting in, and confirmed forget deletes the thread and messages from the live database (backups retain the database according to their normal 14-day rotation).
+
 #### `user_preferences`
 Per-user-per-guild opt-ins and preferences.
 
