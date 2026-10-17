@@ -18,7 +18,7 @@ async function showStatus(interaction) {
   if (progress.next) {
     const daysLeft = Math.max(0, progress.next.days - progress.tenureDays);
     const pointsLeft = Math.max(0, progress.next.points - progress.points);
-    embed.addFields({ name: 'Next: ' + progress.next.name, value: 'Tenure  ' + progressBar(progress.tenureDays, progress.next.days) + '  ' + daysLeft + ' days
+    embed.addFields({ name: 'Next: ' + progress.next.name, value: 'Tenure  ' + progressBar(progress.tenureDays, progress.next.days) + '  ' + daysLeft + ' days left\nPoints  ' + progressBar(progress.points, progress.next.points) + '  ' + pointsLeft + ' points' });
   } else {
     embed.addFields({ name: 'Standing', value: 'You have reached Warband.' });
   }
@@ -35,7 +35,7 @@ async function showLeaderboard(interaction) {
     const tier = TIERS[row.current_tier]?.name || 'Stranger';
     return (index + 1) + '. **' + name.replace(/[*_~|]/g, '') + '** — ' + tier + ' · ' + row.activity_points + ' points' + (row.current_tier === 4 ? ' ✦' : '');
   });
-  const embed = new EmbedBuilder().setTitle('Skarn’s Warband').setDescription(lines.join('
+  const embed = new EmbedBuilder().setTitle('Skarn’s Warband').setDescription(lines.join('\n'));
   await interaction.reply({ embeds: [embed], flags: 64, allowedMentions: { parse: [] } });
 }
 

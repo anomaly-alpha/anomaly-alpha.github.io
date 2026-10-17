@@ -40,11 +40,11 @@ module.exports = {
     const progress = getProgress(row);
     const flags = getFlags(user.id, interaction.guildId) || { ai_blocked: 0, ai_limited: 0 };
     const audit = getFlagAudit(user.id, interaction.guildId, 5);
-    const history = audit.length ? audit.map(a => a.flag + ' → ' + (a.value ? 'enabled' : 'cleared') + ' by <@' + a.set_by + '> (<t:' + Math.floor(a.created_at / 1000) + ':R>)').join('
+    const history = audit.length ? audit.map(a => a.flag + ' → ' + (a.value ? 'enabled' : 'cleared') + ' by <@' + a.set_by + '> (<t:' + Math.floor(a.created_at / 1000) + ':R>)').join('\n') : 'No recent permission changes.';
     const embed = new EmbedBuilder().setTitle('Friend record: ' + user.username)
       .addFields(
         { name: 'Computed tier', value: progress.name + ' · ' + progress.tenureDays + ' days · ' + progress.points + ' points', inline: false },
-        { name: 'AI controls', value: 'Blocked: **' + (flags.ai_blocked ? 'yes' : 'no') + '**
+        { name: 'AI controls', value: 'Blocked: **' + (flags.ai_blocked ? 'yes' : 'no') + '**\nLimited: **' + (flags.ai_limited ? 'yes' : 'no') + '**', inline: true },
         { name: 'Recent changes', value: history, inline: false },
       ).setColor(0x00e5ff);
     await interaction.reply({ embeds: [embed], flags: 64, allowedMentions: { parse: [] } });
