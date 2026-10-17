@@ -5,18 +5,18 @@ Ask with `@Skarn` (or just `skarn ...` in a server channel), and he'll recognize
 request and call the matching tool, then answer in character with the real result.
 
 There are **10 tools** today, and through the `run_command` tool Skarn can run
-**any** of the currently registered activation-registry commands that pass the
-filter (dynamically built from `activationRegistry.getAll()` — currently ~38
-in the documented non-interactive subset) from plain speech — any *runnable* one,
-that is: lore and musing stay narrated in character. Everything below is an
-example *phrasing* — Skarn's model understands natural language, so these are
-starters, not an exact script. **Section 11** is the complete reference: every
-command in the bot and how to say it.
+the currently registered text-activation commands that pass its filter
+(dynamically built from `activationRegistry.getAll()`). Slash-only grouped
+workflows are not available as text commands; invoke those directly in Discord.
+Everything below is an example *phrasing* — Skarn's model understands natural
+language, so these are starters, not an exact script. **Section 11** is the
+reference for conversational tools, text-enabled commands, and slash-only workflows.
 
 > **How it works:** when you mention Skarn, he gets the tool list and decides
 > which one fits your request. If a tool fails (weather service down, empty news
-> cache), he says so in character instead of guessing. Tools are an *addition* —
-> exact activation phrases like `skarn weather` still work exactly as before.
+> cache), he says so in character instead of guessing. Dedicated AI tools remain
+> available in conversation; only commands with active text-activation entries
+> can run as text commands.
 
 ---
 
@@ -146,24 +146,20 @@ Ask Skarn what he remembers about you.
 | Example |
 |---|
 | `@Skarn what do you remember about me?` |
-| `skarn, what do you know about me?` |
 | `recall the facts you've saved about me` |
 
 ---
 
 ## 10. Any command, spoken — `run_command`
 
-Skarn can run **any** of the currently registered activation-registry commands
-(not the ~38 documented non-interactive subset — the actual enum is dynamic
-from `activationRegistry.getAll()`) when you ask naturally —
-level, leaderboard, avatar, poll, server setup, the lorebook, omens, the
-chronicle, and more. He picks the right command, executes it for real, and posts
-the result, then adds a one-line in-character comment.
+Skarn can run commands that still have registered text activations (the actual
+set is dynamic from `activationRegistry.getAll()`). He picks the right command,
+executes it for real, and posts the result, then adds a one-line in-character
+comment. Grouped workflows have no text activations; use their slash subcommands
+directly as listed below.
 
 | Example                                                           |
 | ----------------------------------------------------------------- |
-| `@Skarn what's my level?`                                         |
-| `show me the leaderboard`                                         |
 | `set the welcome channel to #welcome`                             |
 | `run a poll: what's for lunch? options: pizza, sushi`             |
 | `skarn ping`                                                      |
@@ -175,7 +171,9 @@ the result, then adds a one-line in-character comment.
   you have the required permission — otherwise Skarn says so.
 - **Chat-first commands:** AI-driven commands (roast, joke, code, recipe...) don't need
   the tool — Skarn just answers in character. Interactive games (realm, tetris,
-  aitrivia, trivia) stay slash-launched; he'll point you to them.
+  trivia) stay slash-launched; he'll point you to them.
+
+Grouped workflows are slash-only. Use /friends list|search|add|remove, /level profile|leaderboard|roles, /memory view|save, /weather current|report|track, /knowledge lookup|search, /history list|thread|search, /consult chat|advice, and /standing directly in Discord.
 
 The complete per-command reference with example phrasings is **Section 11** below.
 
@@ -198,29 +196,19 @@ Say it naturally; he executes the real command and posts the result. Rows marked
 
 | Command | Say it like… |
 | --- | --- |
-| `level` | `what's my level?` · `what level is @kay?` · `how much XP do I have?` |
-| `leaderboard` | `show me the leaderboard` · `who's top of the server?` · `top 10 XP` |
 | `aistats` | `show my AI stats` · `how many AI calls have I used?` · `reset my AI stats` |
 | `preferences` | `turn on proactive messages` · `enable proactive mode for me` · `show my preferences` |
-| `levelroles` 🔑 Administrator | `show the level roles` · `what role do I get at level 10?` |
 
 #### Friends & relationship
 
 | Command | Say it like… |
 | --- | --- |
-| `addfriend` | `add my friend code 1234-5678-9012 as Draco` · `save a friend code` |
-| `friends` | `show my friends` · `do I have Draco in my friends?` |
-| `removefriend` | `remove Draco from my friends` |
 | `relationship` | `how close are we?` · `show my relationship with Skarn` |
 
 #### Knowledge & conversation
 
 | Command | Say it like… |
 | --- | --- |
-| `knowledge` | `what do you know about quantum computing?` |
-| `vault` | `search the vault for realm lore` · `what's in the vault about dragons?` |
-| `find` | `find when we talked about pizza` · `search my past conversations for migraine` |
-| `history` | `show my conversation history` · `what did we talk about last week?` |
 
 #### Chat & fun
 
@@ -242,12 +230,10 @@ Say it naturally; he executes the real command and posts the result. Rows marked
 | `setwelcome` 🔑 Administrator | `set the welcome channel to #welcome` |
 | `setlog` 🔑 Administrator | `set the log channel to #logs` |
 | `setautorole` 🔑 Administrator | `auto-assign @Member to new people` |
-| `setlevelrole` 🔑 Administrator | `grant @Gamer at level 5` |
 | `setnewschannel` 🔑 Administrator | `post the news digest in #news` |
 | `reactionrole` 🔑 ManageRoles | `make a reaction role: 🎮 for @Gamers` |
 | `giveaway` 🔑 ManageMessages | `start a giveaway for a Steam key, 2 winners, 30 minutes` |
 | `ticket` 🔑 Administrator | `create a support ticket panel` |
-| `weathertrack` 🔑 ManageChannels | `track the weather in Tokyo every day` · `stop tracking weather` |
 | `aichat` 🔑 ManageChannels | `turn off AI chat in #general` · `enable AI chat here` |
 | `aichatignore` | `stop responding to me in AI channels` |
 
@@ -270,9 +256,8 @@ Say it naturally; he executes the real command and posts the result. Rows marked
 ### 11.2 Commands with dedicated tools
 
 These have their own tools (Sections 1–9) — ask naturally and Skarn calls the
-tool directly; the activation phrases still work too (`skarn weather`, `skarn
-dice`, `skarn news`, ...). Two break the `<name>` pattern: `skarn remind me`
-and `skarn what do you know about me`.
+tool directly. Dedicated AI tools remain available in conversation, but grouped
+slash commands do not have corresponding text activation phrases.
 
 | Command | Backed by | Section |
 | --- | --- | --- |
@@ -283,9 +268,9 @@ and `skarn what do you know about me`.
 | `stats` | `get_user_stats` | 5 |
 | `search` | `search_web` | 6 |
 | `remind` | `set_reminder` | 7 |
-| `etch` | `etch_memory` | 8 |
-| `memory` | `get_memory` | 9 |
-| `lore` | — | Skarn narrates in character (`skarn lore`) |
+| `/memory save` | `etch_memory` | 8 |
+| `/memory view` | `get_memory` | 9 |
+| `lore` | — | Skarn narrates in character |
 
 ### 11.3 Just ask — Skarn answers in character
 
@@ -330,7 +315,7 @@ launch. Skarn knows them and will guide you.
 | --- | --- | --- |
 | `realm` | `let's play realm` · `start my realm adventure` | `Use /realm — I'll be your DM.` |
 | `tetris` | `let's play tetris` | `Use /tetris — the board awaits.` |
-| `aitrivia` | `play AI trivia with me` | `Use /aitrivia — first question's coming.` |
+| `trivia` | `play AI trivia with me` | `Use /trivia source:AI — first question's coming.` |
 | `trivia` | `play trivia` | `Use /trivia — pick a category.` |
 
 Every command in the bot now has a natural-language path — nothing is
@@ -352,8 +337,9 @@ slash-only anymore.
   examples are starting points, not a script.
 - **Graceful failures:** if a live service is down, Skarn says so in character
   rather than making something up.
-- **Activation phrases still work:** `skarn weather`, `skarn dice`, `skarn
-  news`, `skarn stats`, etc. are unchanged deterministic fast-paths.
+- **Grouped slash workflows are slash-only:** use the slash subcommands for
+  friends, levels, memory, weather tracking, knowledge search, history search,
+  and consult modes; retired text phrases for those groups have been removed.
 
 ---
 

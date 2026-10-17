@@ -133,15 +133,18 @@ client.on('interactionCreate', async interaction => {
   }
   const command = interaction.client.commands.get(interaction.commandName);
   if (!command) return;
-  if (isAiCommand(interaction.commandName)) {
-    const permission = checkAiPermission(interaction.user.id, interaction.guildId, interaction.commandName === 'consult' ? 'consult' : 'command');
+  const isWeatherTracking = interaction.commandName === 'weather' && interaction.options.getSubcommandGroup(false) === 'track';
+  const consultSurface = interaction.commandName === 'consult' && interaction.options.getSubcommand() === 'chat';
+  const aiSurface = consultSurface ? 'consult' : 'command';
+  if (isAiCommand(interaction.commandName) && !isWeatherTracking) {
+    const permission = checkAiPermission(interaction.user.id, interaction.guildId, aiSurface);
     if (!permission.allowed) return interaction.reply({ content: permission.safeMessage, flags: 64, allowedMentions: { parse: [] } });
   }
   try {
     await runWithFriendContext({
       userId: interaction.user.id,
       guildId: interaction.guildId,
-      surface: interaction.commandName === 'consult' ? 'consult' : 'command',
+      surface: aiSurface,
       commandName: interaction.commandName,
     }, () => command.execute(interaction));
     if (interaction.guildId) {

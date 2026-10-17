@@ -38,7 +38,7 @@ npm run audit:gate   # Gate coverage audit — fails if any direct OpenAI chat c
 npm run audit:docs   # Audit documentation vs code (scripts/audit-docs.js)
 ```
 
-## Quick Reference (81 Commands)
+## Quick Reference (70 Commands)
 
 Grouped by the same themes as `/help` — use `/help` in Discord for the live, always-current list.
 
@@ -48,16 +48,14 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 | `/aichat` | Toggle AI auto-reply in a channel |
 | `/aichatignore` | Opt out of AI chat responses |
 | `/aistats` | View or reset AI stats |
-| `/advice` | Ask Skarn for his take on a dilemma |
-| `/consult` | Talk with Skarn — in-character conversation |
+| `/consult` | Chat with Skarn or ask for focused advice |
 | `/confidant` | Opt into and manage a private, persistent DM thread |
-| `/etch` | Tell Skarn something to remember |
-| `/find` | Search past conversations |
 | `/forget` | Delete facts Skarn remembers about you |
-| `/history` | View conversation history |
-| `/memory` | See what Skarn remembers about you |
+| `/history` | List, search, or inspect conversation history |
+| `/memory` | View or save personal memories |
 | `/preferences` | Manage interaction preferences |
 | `/relationship` | Relationship status |
+| `/standing` | Check your Friend Tier status or server leaderboard |
 | `/stats` | Conversation stats |
 | `/vein` | Summarize the conversation so far |
 | `/vibe` | Server emotional climate |
@@ -67,7 +65,6 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 |---------|-------------|
 | `/8ball` | Magic 8-ball |
 | `/adventure` | AI Dungeon Master game |
-| `/aitrivia` | AI trivia on any topic |
 | `/charades` | Word guessing game |
 | `/coinflip` | Flip a coin |
 | `/compare` | Compare anything with AI |
@@ -88,7 +85,7 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 | `/song` | AI writes a song |
 | `/story` | Collaborative story |
 | `/tetris` | Head-to-head Tetris |
-| `/trivia` | Classic trivia game |
+| `/trivia` | Classic or AI trivia, optionally topic-based |
 | `/unpopularopinion` | Hot take voting |
 | `/whatdoesthefoxsay` | Ring-ding-ding-dingeringeding |
 | `/wouldyourather` | Would You Rather |
@@ -114,17 +111,13 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 |---------|-------------|
 | `/news` | Show today's headlines |
 | `/setnewschannel` | Set news digest channel (Admin) |
-| `/weather` | Check the weather |
-| `/weathertrack` | Manage daily weather reports |
+| `/weather` | Current/report weather and scheduled tracking |
 
 ### Leveling
 | Command | Description |
 |---------|-------------|
 | `/daily` | Skarn's daily reading — the state of the realm |
-| `/leaderboard` | XP leaderboard |
-| `/level` | Check your level |
-| `/levelroles` | View level roles (Admin) |
-| `/setlevelrole` | Set role for level (Admin) |
+| `/level` | Profile, XP leaderboard, and level-role settings |
 
 ### Server Setup
 | Command | Description |
@@ -146,14 +139,10 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 ### Friends & Knowledge
 | Command | Description |
 |---------|-------------|
-| `/addfriend` | Add a friend |
-| `/friend` | Check your per-server Skarn tier and leaderboard |
+| `/friends` | List, search, add, and remove game friends |
 | `/friendadmin` | Manage per-server AI access flags (Manage Server) |
-| `/friends` | View friend list |
-| `/knowledge` | Look up a topic in the knowledge base |
+| `/knowledge` | Look up or search Skarn's internal knowledge base |
 | `/lorebook` | Manage lorebook entries (Admin) |
-| `/removefriend` | Remove a friend |
-| `/vault` | Search the knowledge vault |
 
 ---
 
@@ -208,9 +197,6 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 - **Parameters:** `topic` (optional)
 - **Response:** Random meme with image. Topic adds AI caption.
 
-#### `/trivia`
-- **Response:** Trivia question with clickable answer buttons (15s timer)
-
 #### `/giveaway`
 - **Parameters:** `prize` (required), `winners` (required), `minutes` (required)
 - **Permission:** Manage Messages
@@ -221,8 +207,8 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 ### AI Chat
 
 #### `/consult` (Recommended)
-- **Parameters:** `message` (required)
-- **Response:** In-character reply from Skarn with memory and mood awareness; each role has its own **reply target** (character ceiling) and token budget (see `persona/roles.js`)
+- **Subcommands:** `chat` (message required), `advice` (question required)
+- **Response:** Chat uses Skarn's ongoing conversation pipeline; advice gives a focused response using the advice persona and saved memories.
 
 #### `/aichat`
 - **Parameters:** `mode` (on/off)
@@ -237,9 +223,9 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 
 ### AI Games
 
-#### `/aitrivia`
-- **Parameters:** `topic` (optional), `difficulty` (optional)
-- **Response:** AI-generated trivia question with buttons
+#### `/trivia`
+- **Options:** `source` (classic or AI), `topic` (optional for AI), `difficulty` (optional for AI)
+- **Response:** Multiple-choice question with buttons; AI mode uses recent server themes when no topic is given.
 
 #### `/adventure`
 - **Parameters:** `theme` (optional: fantasy, sci-fi, horror, pirate, zombie)
@@ -323,22 +309,10 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 ### Leveling
 
 #### `/level`
-- **Parameters:** `user` (optional)
-- **Response:** Level, XP, progress bar
+- **Subcommands:** `profile` (optional user), `leaderboard`, `roles list|set|remove`
+- **Permission:** Administrator for role management; profile and leaderboard are public.
+- **Response:** Level, XP, progress bar, server leaderboard, or level-role configuration.
 - **Auto-XP:** 15-25 per message (60s cooldown)
-
-#### `/leaderboard`
-- **Response:** Top 10 users by XP
-
-#### `/setlevelrole`
-- **Parameters:** `level` (required), `role` (required)
-- **Permission:** Administrator
-- **Effect:** Role assigned at specific level
-
-#### `/levelroles`
-- **Parameters:** `remove` (optional level number)
-- **Permission:** Administrator
-- **Response:** View or remove level roles
 
 ---
 
@@ -385,17 +359,12 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 ### Friends
 
 #### `/friends`
-- **Parameters:** `search` (optional)
-- **Response:** Friend list with codes and power levels
-- **Storage:** SQLite `friends` table (global / cross-server — no `guild_id` column; the same list is shared across all servers)
+- **Subcommands:** `list`, `search query:`, `add code: name: power: note:`, `remove name:`
+- **Response:** Manage the game friend-code roster (max 30).
+- **Storage:** SQLite `friends` table (global / cross-server — no `guild_id` column; the same list is shared across all servers).
 
-#### `/addfriend`
-- **Parameters:** `code` (required), `name` (required), `power` (required), `note` (optional)
-- **Response:** Adds friend to list (max 30)
-
-#### `/removefriend`
-- **Parameters:** `name` (required)
-- **Response:** Removes friend from list
+#### `/standing`
+- **Response:** Your per-server Skarn Friend Tier and progress.
 
 ---
 
@@ -477,7 +446,7 @@ skarn-bot/
 ├── bot.js                  # Main bot + event handlers
 ├── deploy-commands.js      # Registers slash commands
 ├── rich-presence.js        # Compatibility wrapper for ../skarn-rpc
-├── commands/               # 78 slash command files (thin wrappers)
+├── commands/               # 70 slash command files (thin wrappers)
 ├── features/               # Vertical-slice feature modules
 │   ├── ai/                 # Shared pipeline, condenser, tool runner
 │   ├── activation/         # Text-command activation registry
@@ -617,8 +586,8 @@ const msg = {
   mentions: { users: { first: function() { return null; } }, channels: { first: function() { return { id: 'c9' }; } }, roles: { first: function() { return null; } } },
   reply: async function(payload) { sent.push(payload); return { react: async function() {} }; },
 };
-runTool({ id: 'a', function: { name: 'run_command', arguments: JSON.stringify({ command: 'level' }) } }, { guildId: 'g1', channelId: 'c1', userId: 'u1', sourceMessage: msg })
-  .then(function(r) { console.log(r.content.includes('Level') ? 'run_command OK' : 'run_command FAILED: ' + r.content); });
+runTool({ id: 'a', function: { name: 'run_command', arguments: JSON.stringify({ command: 'ping' }) } }, { guildId: 'g1', channelId: 'c1', userId: 'u1', sourceMessage: msg })
+  .then(function(r) { console.log(r.content.includes('Pong!') ? 'run_command OK' : 'run_command FAILED: ' + r.content); });
 "
 ```
 

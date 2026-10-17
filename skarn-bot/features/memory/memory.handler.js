@@ -2,6 +2,12 @@ const { EmbedBuilder } = require('discord.js');
 const { getMemoryEntries, getRelationship, getUserProfile, getConversationStats } = require('../../db/database');
 
 async function execute(interaction) {
+  if (!interaction.guildId) {
+    return interaction.reply({ content: 'Personal memories are scoped to a server. Use /memory in a server.', flags: 64, allowedMentions: { parse: [] } });
+  }
+  if (interaction.options.getSubcommand() === 'save') {
+    return require('../etch/etch.handler').execute(interaction);
+  }
   const userId = interaction.user.id;
   const guildId = interaction.guild?.id;
 
@@ -21,7 +27,7 @@ async function execute(interaction) {
   } else {
     embed.addFields({
       name: '✍️ Etched',
-      value: 'Nothing yet. Use `/etch` to tell me something to remember.',
+      value: 'Nothing yet. Use `/memory save` to tell me something to remember.',
     });
   }
 

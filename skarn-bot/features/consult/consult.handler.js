@@ -1,8 +1,35 @@
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
 const { shouldEdit, scheduleEdit } = require('../authenticity/messageEditor');
 const { runPipeline } = require('../ai/sharedPipeline');
+const { buildSystemPrompt } = require('../../persona/identity');
+const { roles, roleTokenBudgets } = require('../../persona/roles');
+const { moderatedChatCompletion } = require('../../ai/client');
+
+async function executeAdvice(interaction) {
+  await interaction.deferReply({ flags: 64 });
+  const question = interaction.options.getString('question');
+  try {
+    const memories = require('../../db/database').getMemoryEntries(interaction.user.id, interaction.guildId, 5);
+    const memoryContext = memories.filter(m => m.source === 'etch').map(m => m.content).join('; ');
+    const userMessage = memoryContext ? 'Context about me: ' + memoryContext + '\n\nMy question: ' + question : question;
+    const result = await moderatedChatCompletion({
+      model: process.env.AI_MODEL_COMPLEX || process.env.AI_MODEL || 'gpt-6-luna',
+      messages: [{ role: 'system', content: buildSystemPrompt({ roleLine: roles.advice }) }, { role: 'user', content: userMessage }],
+      max_tokens: roleTokenBudgets.advice,
+      temperature: 0.85,
+      userId: interaction.user.id,
+      guildId: interaction.guildId,
+      surface: 'command',
+    });
+    if (!result.success) throw new Error('AI failed');
+    await interaction.editReply({ content: result.completion.choices[0].message.content, allowedMentions: { parse: [] } });
+  } catch {
+    await interaction.editReply({ content: 'Even the Warmaster needs a moment. Try again in a bit.', allowedMentions: { parse: [] } });
+  }
+}
 
 async function execute(interaction) {
+  if (interaction.options.getSubcommand() === 'advice') return executeAdvice(interaction);
   await interaction.deferReply();
 
   if (!interaction.guild) {

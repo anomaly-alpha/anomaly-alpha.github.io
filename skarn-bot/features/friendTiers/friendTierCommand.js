@@ -41,8 +41,8 @@ async function showLeaderboard(interaction) {
 
 module.exports = {
   data: new SlashCommandBuilder()
-    .setName('friend')
-    .setDescription('See your standing with Skarn')
+    .setName('standing')
+    .setDescription('See your Friend Tier standing with Skarn')
     .addSubcommand(sub => sub.setName('status').setDescription('See your tier and progress'))
     .addSubcommand(sub => sub.setName('leaderboard').setDescription('See this server’s top standings')),
   async execute(interaction) {

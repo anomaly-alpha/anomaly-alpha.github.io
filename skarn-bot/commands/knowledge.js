@@ -1,52 +1,37 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { getKnowledgeBase } = require('../db/database');
+const { getKnowledgeBase, searchKnowledgeBase } = require('../db/database');
 
-function getKnowledgeResponse(args) {
-  const topic = args.topic.toLowerCase();
-  const result = getKnowledgeBase(topic);
-  if (!result) {
-    return { content: `I don't have anything stored about "${topic}". Try /learn to teach me.`, flags: 64 };
-  }
-  const sourceIcon = { wikipedia: '📚', user_taught: '👤', learned: '💡' }[result.source] || '💡';
-  return {
-    embeds: [new EmbedBuilder()
-      .setTitle(`${sourceIcon} ${result.topic}`)
-      .setDescription(result.summary)
-      .setColor(0x00e5ff)
-      .setFooter({ text: `Source: ${result.source} | Confidence: ${Math.round(result.confidence * 100)}%` })],
-    flags: 64,
-  };
+function sourceIcon(source) {
+  return ({ wikipedia: '📚', user_taught: '👤', learned: '💡' })[source] || '💡';
 }
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('knowledge')
-    .setDescription('Query Skarn\'s knowledge base')
-    .addStringOption(option => option.setName('topic').setDescription('Topic to look up').setRequired(true)),
+    .setDescription('Look up or search Skarn’s internal knowledge base')
+    .addSubcommand(sub => sub.setName('lookup').setDescription('Look up one exact topic')
+      .addStringOption(option => option.setName('topic').setDescription('Topic to look up').setRequired(true)))
+    .addSubcommand(sub => sub.setName('search').setDescription('Search across stored topics')
+      .addStringOption(option => option.setName('query').setDescription('Words to search for').setRequired(true))),
   async execute(interaction) {
-    const topic = interaction.options.getString('topic').toLowerCase();
-    const result = getKnowledgeBase(topic);
-    if (!result) {
-      return interaction.reply({ content: `I don't have anything stored about "${topic}". Try /learn to teach me.`, flags: 64, allowedMentions: { parse: ['users'] } });
+    const subcommand = interaction.options.getSubcommand();
+    if (subcommand === 'lookup') {
+      const topic = interaction.options.getString('topic').toLowerCase();
+      const result = getKnowledgeBase(topic);
+      if (!result) return interaction.reply({ content: 'I do not have anything stored about "' + topic + '". Try /learn to teach me.', flags: 64, allowedMentions: { parse: [] } });
+      const embed = new EmbedBuilder().setTitle(sourceIcon(result.source) + ' ' + result.topic).setDescription(result.summary).setColor(0x00e5ff)
+        .setFooter({ text: 'Source: ' + result.source + ' | Confidence: ' + Math.round(result.confidence * 100) + '%' });
+      return interaction.reply({ embeds: [embed], flags: 64, allowedMentions: { parse: [] } });
     }
-    const sourceIcon = { wikipedia: '📚', user_taught: '👤', learned: '💡' }[result.source] || '💡';
-    const embed = new EmbedBuilder()
-      .setTitle(`${sourceIcon} ${result.topic}`)
-      .setDescription(result.summary)
-      .setColor(0x00e5ff)
-      .setFooter({ text: `Source: ${result.source} | Confidence: ${Math.round(result.confidence * 100)}%` });
-    await interaction.reply({ embeds: [embed], flags: 64, allowedMentions: { parse: ['users'] } });
-  },
-  async handleActivation(message, args) {
-    const result = getKnowledgeResponse(args);
-    await message.reply({ ...result, allowedMentions: { parse: ['users'] } });
-  },
-  activation: {
-    type: 'command',
-    phrase: 'skarn knowledge',
-    description: 'Query knowledge base',
-    guildOnly: false,
-    requiredPermissions: [],
-    parseArgs: function(content) { return { topic: content.slice('skarn knowledge'.length).trim() }; },
+
+    const query = interaction.options.getString('query').toLowerCase();
+    const results = searchKnowledgeBase(query) || [];
+    if (!results.length) return interaction.reply({ content: 'Nothing in the knowledge base matched "' + query + '". Try /learn to teach me.', flags: 64, allowedMentions: { parse: [] } });
+    const embed = new EmbedBuilder().setTitle('Knowledge search: ' + query).setColor(0x00e5ff);
+    for (const result of results.slice(0, 5)) {
+      embed.addFields({ name: sourceIcon(result.source) + ' ' + result.topic, value: result.summary.slice(0, 200) + (result.summary.length > 200 ? '...' : ''), inline: false });
+    }
+    embed.setFooter({ text: results.length + ' result' + (results.length === 1 ? '' : 's') + ' found' });
+    return interaction.reply({ embeds: [embed], flags: 64, allowedMentions: { parse: [] } });
   },
 };

@@ -18,12 +18,12 @@ const OTHER = 'other';
 // ===== Theme map (command name -> theme slug) =====
 const THEME_MAP = {
   // AI Chat
-  aichat: 'ai-chat', aichatignore: 'ai-chat', aistats: 'ai-chat', advice: 'ai-chat',
-  consult: 'ai-chat', etch: 'ai-chat', find: 'ai-chat', forget: 'ai-chat',
+  aichat: 'ai-chat', aichatignore: 'ai-chat', aistats: 'ai-chat',
+  consult: 'ai-chat', forget: 'ai-chat',
   history: 'ai-chat', memory: 'ai-chat', preferences: 'ai-chat', relationship: 'ai-chat',
-  stats: 'ai-chat', vein: 'ai-chat', vibe: 'ai-chat',
+  standing: 'ai-chat', stats: 'ai-chat', vein: 'ai-chat', vibe: 'ai-chat',
   // Fun & Games
-  '8ball': 'fun-games', adventure: 'fun-games', aitrivia: 'fun-games', charades: 'fun-games',
+  '8ball': 'fun-games', adventure: 'fun-games', charades: 'fun-games',
   coinflip: 'fun-games', compare: 'fun-games', compliment: 'fun-games', debate: 'fun-games',
   dice: 'fun-games', fortune: 'fun-games', giveaway: 'fun-games', improv: 'fun-games',
   insult: 'fun-games', joke: 'fun-games', lore: 'fun-games', meme: 'fun-games',
@@ -36,34 +36,40 @@ const THEME_MAP = {
   homework: 'learning-utility', ping: 'learning-utility', recipe: 'learning-utility', remind: 'learning-utility',
   search: 'learning-utility', serverinfo: 'learning-utility', translate: 'learning-utility', userinfo: 'learning-utility',
   // News & Weather
-  news: 'news-weather', setnewschannel: 'news-weather', weather: 'news-weather', weathertrack: 'news-weather',
+  news: 'news-weather', setnewschannel: 'news-weather', weather: 'news-weather',
   // Leveling
-  daily: 'leveling', leaderboard: 'leveling', level: 'leveling', levelroles: 'leveling', setlevelrole: 'leveling',
+  daily: 'leveling', level: 'leveling',
   // Server Setup
   embed: 'server-setup', reactionrole: 'server-setup', setautorole: 'server-setup', setlog: 'server-setup',
   setwelcome: 'server-setup', ticket: 'server-setup',
   // Realm of Skarn
   chronicle: 'realm', omen: 'realm', realm: 'realm',
   // Friends & Knowledge
-  addfriend: 'friends-knowledge', friends: 'friends-knowledge', knowledge: 'friends-knowledge',
-  lorebook: 'friends-knowledge', removefriend: 'friends-knowledge', vault: 'friends-knowledge',
+  friendadmin: 'friends-knowledge', friends: 'friends-knowledge', knowledge: 'friends-knowledge',
+  lorebook: 'friends-knowledge',
 };
 
 // ===== Persona-voice description overrides =====
 const DESCRIPTION_OVERRIDES = {
-  advice: 'Ask Skarn for his take on a dilemma',
-  consult: 'Talk with Skarn — in-character conversation',
-  etch: 'Tell Skarn something to remember',
+  consult: 'Chat with Skarn or ask for focused advice',
+  friends: 'Manage the game friend-code roster',
   forget: 'Delete facts Skarn remembers about you',
+  history: 'List, search, or inspect your conversation history',
   insult: 'Playful insult — never mean',
+  knowledge: 'Look up or search Skarn’s internal knowledge base',
+  level: 'View XP, leaderboards, and level-role settings',
   lore: 'Hear Skarn tell a story from his millennia',
+  memory: 'View or save personal memories',
   meme: 'AI meme caption for a topic',
   musing: 'Skarn shares a grounded, in-voice reflection',
   pickup: 'Pickup line generator',
   roast: 'Get roasted by the Warmaster',
   song: 'AI writes a song for you',
   story: 'Collaborative story — you set the scene',
+  standing: 'Check your Friend Tier status or server leaderboard',
+  trivia: 'Play classic or AI-powered trivia',
   vein: 'Summarize the conversation so far',
+  weather: 'Get weather or manage scheduled daily reports',
   whatdoesthefoxsay: 'Ring-ding-ding-dingeringeding',
 };
 
@@ -74,12 +80,16 @@ function renderCommandLine(name, command, activationByCommand) {
   const desc = DESCRIPTION_OVERRIDES[name] || command.data.description;
   let line = '**/' + name + '** — ' + desc;
   // Raw SlashCommandBuilder options have no numeric type until toJSON(); normalize both shapes
-  const subcommands = (command.data.options || [])
+  const entries = (command.data.options || [])
     .map(function(o) { return typeof o.type === 'number' ? o : o.toJSON(); })
-    .filter(function(o) { return o.type === 1; })
+    .filter(function(o) { return o.type === 1 || o.type === 2; })
     .slice(0, MAX_SUBCOMMANDS);
-  if (subcommands.length > 0) {
-    line += '\n└ ' + subcommands.map(function(s) { return '`' + s.name + '`'; }).join(' ');
+  if (entries.length > 0) {
+    line += '\n└ ' + entries.map(function(entry) {
+      if (entry.type === 1) return entry.name;
+      const nested = (entry.options || []).filter(function(option) { return option.type === 1; }).map(function(option) { return option.name; });
+      return entry.name + (nested.length ? ' (' + nested.join(', ') + ')' : '');
+    }).join(' · ');
   }
   const activation = activationByCommand.get(name);
   if (activation) {

@@ -35,7 +35,7 @@ if (fs.existsSync(friendsPath)) {
     const sqliteCount = db.prepare('SELECT COUNT(*) as c FROM friends').get().c;
     console.log('Friends: ' + (jsonFriends.length || 0) + ' in JSON, ' + sqliteCount + ' in SQLite');
     if (sqliteCount === 0 && jsonFriends.length > 0) {
-      console.log('WARN: friends.json has data but friends table is empty. Use /addfriend to re-add.');
+      console.log('WARN: friends.json has data but friends table is empty. Use /friends add to re-add.');
     }
   } catch (e) { /* ignore */ }
 }

@@ -153,17 +153,16 @@ function deleteUserConversation(userId, guildId) {
 
 // ===== Full-Text Search =====
 
-function searchConversations(query, guildId, limit = 10) {
-  if (!query || query.length < 2) return [];
+function searchConversations(query, guildId, userId, limit = 10) {
+  if (!query || query.length < 2 || !guildId || !userId) return [];
   const safe = sanitizeFtsQuery(query);
   if (!safe) return [];
   return db.prepare(
-    `SELECT c.id, c.content, c.role, c.user_id, c.created_at, c.thread_id
-     FROM conversation_fts f
-     JOIN conversation_messages c ON f.rowid = c.id
-     WHERE f.guild_id = ? AND conversation_fts MATCH ?
-     ORDER BY c.created_at DESC LIMIT ?`
-  ).all(guildId, safe, limit);
+    'SELECT c.id, c.content, c.role, c.user_id, c.created_at, c.thread_id ' +
+    'FROM conversation_fts f JOIN conversation_messages c ON f.rowid = c.id ' +
+    'WHERE f.guild_id = ? AND f.user_id = ? AND c.guild_id = ? AND c.user_id = ? AND conversation_fts MATCH ? ' +
+    'ORDER BY c.created_at DESC LIMIT ?'
+  ).all(guildId, userId, guildId, userId, safe, limit);
 }
 
 // ===== Conversation Stats =====

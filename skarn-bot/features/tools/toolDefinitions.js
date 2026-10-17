@@ -9,7 +9,7 @@ const { getAll } = require('../activation/activationRegistry');
 // AI-driven commands whose activation handlers call the LLM and post — the model
 // narrates in character instead of dispatching, keeping run_command free of nested
 // AI and of channel.send reply-capture ambiguity.
-const EXCLUDED_COMMANDS = ['dice', 'coinflip', 'stats', 'weather', 'news', 'etch', 'remind', 'memory', 'search', 'lore', 'musing'];
+const EXCLUDED_COMMANDS = ['dice', 'coinflip', 'stats', 'weather', 'news', 'remind', 'memory', 'search', 'lore', 'musing'];
 
 const coreTools = [
   {
@@ -153,7 +153,7 @@ function getTools() {
     type: 'function',
     function: {
       name: 'run_command',
-      description: 'Run any Skarn command by name. Use when the user asks for a command result — level, leaderboard, avatar, poll, setwelcome, embed, find, help, ping, lorebook, omen, chronicle, and more.',
+      description: 'Run a text-enabled Skarn command by name. Use when the user asks for a command result such as avatar, poll, setwelcome, embed, help, ping, lorebook, omen, chronicle, and more.',
       parameters: {
         type: 'object',
         properties: {
