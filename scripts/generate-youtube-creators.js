@@ -13,6 +13,7 @@ const VALID_STATUSES = ['active', 'pending', 'hidden'];
 const VALID_VIDEO_STATUSES = ['active', 'pending', 'unavailable'];
 const VALID_CREATOR_BADGES = ['New', 'Updates', 'Featured'];
 const VIDEO_ID_RE = /^[A-Za-z0-9_-]{11}$/;
+const CHANNEL_ID_RE = /^UC[A-Za-z0-9_-]{22}$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const KEBAB_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const YT_URL_RE = /^https:\/\/www\.youtube\.com\//;
@@ -210,6 +211,12 @@ function validateData(data) {
     // lastChecked
     if (!isValidDate(c.lastChecked)) {
       errors.push(cp + '.lastChecked must be a valid ISO date (YYYY-MM-DD).');
+    }
+    if (c.channelId !== undefined && !CHANNEL_ID_RE.test(c.channelId)) {
+      errors.push(cp + '.channelId must be a valid YouTube channel ID when provided.');
+    }
+    if (c.feedLastChecked !== undefined && !isValidDate(c.feedLastChecked)) {
+      errors.push(cp + '.feedLastChecked must be a valid ISO date when provided.');
     }
 
     // Active/pending creator required fields

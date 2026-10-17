@@ -503,6 +503,13 @@ test('Invalid creator status rejected', function () {
   assert.ok(errs.some(function (e) { return e.indexOf('.status') !== -1; }), 'Should reject invalid creator status');
 });
 
+test('Invalid stored YouTube channel ID rejected', function () {
+  var data = makeValidData([makeActiveCreator('avatar-shuvd', 1)]);
+  data.creators[0].channelId = 'not-a-channel-id';
+  var errors = gen.validateData(data);
+  assert.ok(errors.some(function (error) { return error.indexOf('.channelId must be a valid YouTube channel ID') !== -1; }));
+});
+
 test('Invalid video status rejected', function () {
   var creator = makeActiveCreator('test-creator', 1, 8);
   creator.videos[0].status = 'deleted';
