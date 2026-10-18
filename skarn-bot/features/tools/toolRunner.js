@@ -144,13 +144,14 @@ async function runTool(toolCall, context) {
       if (!context.guildId) {
         return { role: 'tool', tool_call_id: toolCall.id, content: 'Stats need a server.' };
       }
-      const { getStatsData } = require('../../commands/stats');
+      const { getStatsData } = require('../../commands/relationship');
       try {
         const data = getStatsData(context.userId, context.guildId);
         const lines = [`Messages: ${data.total} · Questions: ${data.questions} · Threads: ${data.threads}`];
         if (data.firstSeen) lines.push(`First conversation: ${data.firstSeen}`);
         if (data.hasProfile) {
           if (data.topTopics) lines.push(`Top topics: ${data.topTopics}`);
+          if (data.hours.length) lines.push(`Most active hours (UTC): ${data.hours.join(', ')}`);
           lines.push(`Engagement: ${data.engagement} · Mood trend: ${data.mood}`);
         }
         return { role: 'tool', tool_call_id: toolCall.id, content: lines.join('\n') };

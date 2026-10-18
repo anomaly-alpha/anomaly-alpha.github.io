@@ -94,18 +94,6 @@ function setGuildConfig(guildId, key, value) {
   db.prepare('INSERT OR REPLACE INTO guild_config (guild_id, key, value) VALUES (?, ?, ?)').run(guildId, key, strVal);
 }
 
-// ===== FRIENDS (migrated from JSON) =====
-function getAllFriends() {
-  return db.prepare('SELECT * FROM friends ORDER BY name ASC').all();
-}
-function getFriendByCode(code) {
-  return db.prepare('SELECT * FROM friends WHERE code = ?').get(code);
-}
-function searchFriends(query) {
-  const escaped = query.toLowerCase().replace(/[%_]/g, m => '\\' + m);
-  return db.prepare("SELECT * FROM friends WHERE LOWER(name) LIKE ? ESCAPE '\\'").all('%' + escaped + '%');
-}
-
 // ===== COOLDOWNS (generic) =====
 function checkCooldown(key) {
   const row = db.prepare('SELECT 1 FROM cooldowns WHERE key = ? AND expires_at > ?').get(key, Date.now());
@@ -233,9 +221,6 @@ module.exports = {
   setAppState,
   getGuildConfig,
   setGuildConfig,
-  getAllFriends,
-  getFriendByCode,
-  searchFriends,
   checkCooldown,
   setCooldown,
   cleanCooldowns,

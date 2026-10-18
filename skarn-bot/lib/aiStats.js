@@ -6,28 +6,31 @@ function currentHour() {
   return Math.floor(Date.now() / 3600000);
 }
 
-function recordMessage(userId) {
+function incrementStat(userId, statType) {
   db.prepare(
-    'INSERT OR REPLACE INTO ai_usage (user_id, stat_type, count) VALUES (?, ?, COALESCE((SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?), 0) + 1)'
-  ).run(userId, 'messages_sent', userId, 'messages_sent');
+    'INSERT INTO ai_usage (user_id, stat_type, count) VALUES (?, ?, 1) ON CONFLICT(user_id, stat_type) DO UPDATE SET count = count + 1'
+  ).run(userId, statType);
+}
+
+function recordMessage(userId) {
+  incrementStat(userId, 'messages_sent');
 }
 
 function recordResponse(userId) {
-  db.prepare(
-    'INSERT OR REPLACE INTO ai_usage (user_id, stat_type, count) VALUES (?, ?, COALESCE((SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?), 0) + 1)'
-  ).run(userId, 'responses_received', userId, 'responses_received');
+  incrementStat(userId, 'responses_received');
 }
 
 function canRespond(userId) {
   const hour = currentHour();
-  const hourly = db.prepare(
-    'SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?'
-  ).get(userId, 'hourly_' + hour);
-  if (hourly && hourly.count >= HOURLY_CAP) return false;
-  db.prepare(
-    'INSERT OR REPLACE INTO ai_usage (user_id, stat_type, count) VALUES (?, ?, COALESCE((SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?), 0) + 1)'
-  ).run(userId, 'hourly_' + hour, userId, 'hourly_' + hour);
-  return true;
+  const statType = 'hourly_' + hour;
+  return db.transaction(function() {
+    const hourly = db.prepare(
+      'SELECT count FROM ai_usage WHERE user_id = ? AND stat_type = ?'
+    ).get(userId, statType);
+    if (hourly && hourly.count >= HOURLY_CAP) return false;
+    incrementStat(userId, statType);
+    return true;
+  })();
 }
 
 function getStats(userId) {

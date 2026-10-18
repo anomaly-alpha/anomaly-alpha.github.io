@@ -38,7 +38,7 @@ npm run audit:gate   # Gate coverage audit — fails if any direct OpenAI chat c
 npm run audit:docs   # Audit documentation vs code (scripts/audit-docs.js)
 ```
 
-## Quick Reference (70 Commands)
+## Quick Reference (67 Commands)
 
 Grouped by the same themes as `/help` — use `/help` in Discord for the live, always-current list.
 
@@ -54,9 +54,8 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 | `/history` | List, search, or inspect conversation history |
 | `/memory` | View or save personal memories |
 | `/preferences` | Manage interaction preferences |
-| `/relationship` | Relationship status |
+| `/relationship` | Relationship and conversation stats |
 | `/standing` | Check your Friend Tier status or server leaderboard |
-| `/stats` | Conversation stats |
 | `/vein` | Summarize the conversation so far |
 | `/vibe` | Server emotional climate |
 
@@ -74,7 +73,6 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 | `/fortune` | AI fortune teller |
 | `/giveaway` | Start a giveaway |
 | `/improv` | AI improv comedy |
-| `/insult` | Playful insult |
 | `/joke` | Custom AI joke |
 | `/lore` | Hear Skarn tell a story |
 | `/meme` | AI meme caption |
@@ -136,10 +134,9 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 | `/omen` | Prophecies |
 | `/realm` | Enter the Realm of Skarn — 11 subcommands (create, start, explore, stats, inventory, quests, rest, trade, delete, leaderboard, help) |
 
-### Friends & Knowledge
+### Knowledge & Access
 | Command | Description |
 |---------|-------------|
-| `/friends` | List, search, add, and remove game friends |
 | `/friendadmin` | Manage per-server AI access flags (Manage Server) |
 | `/knowledge` | Look up or search Skarn's internal knowledge base |
 | `/lorebook` | Manage lorebook entries (Admin) |
@@ -210,6 +207,10 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 - **Subcommands:** `chat` (message required), `advice` (question required)
 - **Response:** Chat uses Skarn's ongoing conversation pipeline; advice gives a focused response using the advice persona and saved memories.
 
+#### `/relationship`
+- **Parameters:** `user` (optional; Administrator only when viewing someone else)
+- **Response:** Relationship familiarity, interactions, milestones, nickname, and conversation totals, questions, threads, topics, active hours, engagement, and mood trend.
+
 #### `/aichat`
 - **Parameters:** `mode` (on/off)
 - **Permission:** Manage Channels
@@ -271,10 +272,6 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 #### `/compliment`
 - **Parameters:** `target` (optional)
 - **Response:** Genuine AI compliment
-
-#### `/insult`
-- **Parameters:** `target` (optional)
-- **Response:** Silly playful insult
 
 #### `/pickup`
 - **Response:** Creative AI pickup line
@@ -355,13 +352,6 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 - **Response:** Head-to-head turn-based Tetris with buttons
 
 ---
-
-### Friends
-
-#### `/friends`
-- **Subcommands:** `list`, `search query:`, `add code: name: power: note:`, `remove name:`
-- **Response:** Manage the game friend-code roster (max 30).
-- **Storage:** SQLite `friends` table (global / cross-server — no `guild_id` column; the same list is shared across all servers).
 
 #### `/standing`
 - **Response:** Your per-server Skarn Friend Tier and progress.
@@ -446,7 +436,7 @@ skarn-bot/
 ├── bot.js                  # Main bot + event handlers
 ├── deploy-commands.js      # Registers slash commands
 ├── rich-presence.js        # Compatibility wrapper for ../skarn-rpc
-├── commands/               # 70 slash command files (thin wrappers)
+├── commands/               # 67 slash command files (thin wrappers)
 ├── features/               # Vertical-slice feature modules
 │   ├── ai/                 # Shared pipeline, condenser, tool runner
 │   ├── activation/         # Text-command activation registry

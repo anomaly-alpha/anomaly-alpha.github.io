@@ -1,6 +1,6 @@
 # Skarn Slash Command Testing Guide
 
-Use this guide to verify the current Discord slash-command registry, especially after command or permission changes. The bot currently exposes 70 top-level slash commands; grouped workflows appear as subcommands in Discord and in `/help`. The README Quick Reference and `/help` are the source for the current full command list.
+Use this guide to verify the current Discord slash-command registry, especially after command or permission changes. The bot currently exposes 67 top-level slash commands; grouped workflows appear as subcommands in Discord and in `/help`. The README Quick Reference and `/help` are the source for the current full command list.
 
 ## 1. Start with local checks
 
@@ -22,11 +22,11 @@ For command-module syntax, check the changed files with `node --check path/to/fi
 - Confirm the bot is online and `/help` opens. Verify the expected commands and subcommands appear in Discord's command picker.
 - `npm run deploy` registers commands globally with Discord and replaces the application's global command set. It is not a test-server-only deploy. Run it only when you intend to publish the registry; global command propagation may take time.
 - Admin and Manage Channels checks must be tested both by an authorized test account and an unauthorized regular account.
-- Use disposable test values. Remove temporary friends, schedules, and role rewards after testing. Avoid `/forget` on an account with real saved memories; it is destructive.
+- Use disposable test values. Remove temporary schedules and role rewards after testing. Avoid `/forget` on an account with real saved memories; it is destructive.
 
 ## 3. Smoke-check every top-level command
 
-Use `/help` or the README Quick Reference to enumerate all 70 top-level commands. For each command, run one normal, low-impact happy path and confirm it responds without an unexpected error. For commands with options, try one valid value and one missing/invalid value when the option permits it. For commands that create messages, roles, schedules, tickets, or persistent records, use only disposable test resources and clean them up afterward.
+Use `/help` or the README Quick Reference to enumerate all 67 top-level commands. For each command, run one normal, low-impact happy path and confirm it responds without an unexpected error. For commands with options, try one valid value and one missing/invalid value when the option permits it. For commands that create messages, roles, schedules, tickets, or persistent records, use only disposable test resources and clean them up afterward.
 
 Also check the broad command families so coverage is not limited to the recently changed roots:
 
@@ -37,7 +37,7 @@ Also check the broad command families so coverage is not limited to the recently
 | Utility and knowledge | `/knowledge lookup`, `/knowledge search`, `/search`, `/translate`, `/remind` |
 | Server configuration | `/setwelcome`, `/setautorole`, `/setlog`, `/setnewschannel`, `/reactionrole`, `/ticket` with authorized and unauthorized accounts |
 | Weather and news | `/weather current`, `/weather report`, `/news`; test scheduled weather only in a disposable channel |
-| Social and leveling | `/friends`, `/standing`, `/level`, `/daily`, `/stats` |
+| Social and leveling | `/standing`, `/level`, `/daily`, `/relationship` |
 | Realm memory | `/chronicle`, `/omen`, `/lorebook` using only test content |
 
 ## 4. Regression checks for consolidated commands
@@ -46,9 +46,7 @@ These checks cover the new command tree and its important boundaries:
 
 | Command | Test | Expected result / cleanup |
 | --- | --- | --- |
-| `/friends list`, `/friends search` | Read the current roster and search a known test entry. | Results reflect the global roster. No server-specific roster is implied. |
-| `/friends add`, `/friends remove` | Add a uniquely named disposable entry, find it, then remove it. | Add/remove confirmation; the entry is gone afterward. This roster is shared across servers, so coordinate if testing against real data. |
-| `/standing status`, `/standing leaderboard` | Check your status and the server ranking. | Tier status and leaderboard work in the current server; this is distinct from the game-friend roster. |
+| `/standing status`, `/standing leaderboard` | Check your status and the server ranking. | Tier status and leaderboard work in the current server. |
 | `/level profile`, `/level leaderboard` | View your profile and server rankings. | Public read commands work without admin permissions. |
 | `/level roles list`, `set`, `remove` | Try as a regular user, then as an Administrator in the test server. | Regular-user changes are denied; authorized changes work. Remove any test role reward. |
 | `/trivia` | Play once with the classic source and once with the generated source/topic. | Each mode presents a question and handles the answer/timeout. |
@@ -62,7 +60,7 @@ These checks cover the new command tree and its important boundaries:
 ## 5. Verify help text and retired commands
 
 - Run `/help`, browse each theme, and confirm the consolidated roots and their subcommands are discoverable with accurate descriptions.
-- Search Discord's command picker for retired roots such as `/friend`, `/etch`, `/aitrivia`, `/weathertrack`, `/find`, and `/advice`. They should not be offered as active slash commands. Their functionality now lives under `/standing`, `/memory save`, `/trivia`, `/weather track`, `/history search`, and `/consult advice` respectively.
+- Search Discord's command picker for retired roots such as `/friends`, `/friend`, `/stats`, `/insult`, `/etch`, `/aitrivia`, `/weathertrack`, `/find`, and `/advice`. They should not be offered as active slash commands. Conversation stats now live under `/relationship`; `/roast` remains available. The game friend-code roster is retired; the other functionality now lives under `/standing`, `/memory save`, `/trivia`, `/weather track`, `/history search`, and `/consult advice` respectively.
 - If old commands remain visible after a registry deployment, first allow time for Discord's global command propagation, then compare against the deployed command payload before attempting another deployment.
 
 ## 6. Record results

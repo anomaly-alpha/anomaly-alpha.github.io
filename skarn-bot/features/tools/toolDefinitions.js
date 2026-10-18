@@ -9,7 +9,7 @@ const { getAll } = require('../activation/activationRegistry');
 // AI-driven commands whose activation handlers call the LLM and post — the model
 // narrates in character instead of dispatching, keeping run_command free of nested
 // AI and of channel.send reply-capture ambiguity.
-const EXCLUDED_COMMANDS = ['dice', 'coinflip', 'stats', 'weather', 'news', 'remind', 'memory', 'search', 'lore', 'musing'];
+const EXCLUDED_COMMANDS = ['dice', 'coinflip', 'relationship', 'weather', 'news', 'remind', 'memory', 'search', 'lore', 'musing'];
 
 const coreTools = [
   {

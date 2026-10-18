@@ -1,4 +1,4 @@
-const { canRespond } = require('../../lib/aiStats');
+const { canRespond, recordMessage, recordResponse } = require('../../lib/aiStats');
 const { analyzeSentiment } = require('../conversation/sentimentAnalyzer');
 const { runPipeline } = require('../ai/sharedPipeline');
 
@@ -44,13 +44,16 @@ async function handleMention(message, turnOptions) {
   }
   if (!cleanMsg) return false;
 
+  try { recordMessage(userId); }
+  catch (error) { console.error('[AIStats] Could not record incoming chat request:', error.message); }
+
   // Hourly cap
   if (!canRespond(userId)) return false;
 
   // Direct mentions/replies are explicit requests; don't randomly substitute a reaction.
   const sentiment = analyzeSentiment(cleanMsg);
 
-  return runPipeline(
+  const delivered = await runPipeline(
     userId,
     guildId,
     channelId,
@@ -112,6 +115,11 @@ async function handleMention(message, turnOptions) {
       },
     }
   );
+  if (delivered) {
+    try { recordResponse(userId); }
+    catch (error) { console.error('[AIStats] Could not record delivered chat reply:', error.message); }
+  }
+  return delivered;
 }
 
 function recordSkarnChannelMessage(sentMessage, sourceMessage, content) {

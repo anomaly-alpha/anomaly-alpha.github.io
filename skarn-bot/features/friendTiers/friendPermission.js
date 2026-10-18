@@ -7,7 +7,7 @@ const ALLOWED_LIMITED_SURFACES = ['consult', 'confidant'];
 const SUPPORT_SURFACES = new Set(['analysis', 'memory-extraction', 'tone-analysis', 'topic-extraction', 'summarizer']);
 const AI_COMMANDS = new Set([
   '8ball', 'adventure', 'charades', 'code', 'compare', 'compliment',
-  'daily', 'debate', 'fortune', 'homework', 'improv', 'insult', 'joke', 'lore', 'meme',
+  'daily', 'debate', 'fortune', 'homework', 'improv', 'joke', 'lore', 'meme',
   'news', 'pickup', 'recipe', 'roast', 'search', 'song', 'story', 'translate', 'trivia',
   'unpopularopinion', 'vein', 'vibe', 'weather', 'wouldyourather', 'consult', 'musing',
 ]);

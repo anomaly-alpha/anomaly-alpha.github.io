@@ -173,7 +173,7 @@ directly as listed below.
   the tool — Skarn just answers in character. Interactive games (realm, tetris,
   trivia) stay slash-launched; he'll point you to them.
 
-Grouped workflows are slash-only. Use /friends list|search|add|remove, /level profile|leaderboard|roles, /memory view|save, /weather current|report|track, /knowledge lookup|search, /history list|thread|search, /consult chat|advice, and /standing directly in Discord.
+Grouped workflows are slash-only. Use /level profile|leaderboard|roles, /memory view|save, /weather current|report|track, /knowledge lookup|search, /history list|thread|search, /consult chat|advice, and /standing directly in Discord.
 
 The complete per-command reference with example phrasings is **Section 11** below.
 
@@ -199,11 +199,11 @@ Say it naturally; he executes the real command and posts the result. Rows marked
 | `aistats` | `show my AI stats` · `how many AI calls have I used?` · `reset my AI stats` |
 | `preferences` | `turn on proactive messages` · `enable proactive mode for me` · `show my preferences` |
 
-#### Friends & relationship
+#### Relationship
 
 | Command | Say it like… |
 | --- | --- |
-| `relationship` | `how close are we?` · `show my relationship with Skarn` |
+| `relationship` | `how close are we?` · `show my relationship with Skarn` · `show my conversation stats` |
 
 #### Knowledge & conversation
 
@@ -265,7 +265,7 @@ slash commands do not have corresponding text activation phrases.
 | `news` | `get_news` | 2 |
 | `dice` | `roll_dice` | 3 |
 | `coinflip` | `flip_coin` | 4 |
-| `stats` | `get_user_stats` | 5 |
+| `relationship` | `get_user_stats` | 5 |
 | `search` | `search_web` | 6 |
 | `remind` | `set_reminder` | 7 |
 | `/memory save` | `etch_memory` | 8 |
@@ -292,7 +292,6 @@ responds in his own voice with the right flavor — no slash command, no tool ca
 | `fortune` | `tell my fortune` · `what does my future hold?` |
 | `homework` | `help me with this algebra problem` · `explain photosynthesis step by step` |
 | `improv` | `start an improv scene about a haunted elevator` |
-| `insult` | `insult me` (playful, never mean) |
 | `joke` | `tell me a joke` · `make up a joke about programmers` |
 | `meme` | `make a meme about Mondays` |
 | `musing` | `ask for a musing` · `skarn musing` (a grounded reflection, ending on a question-hook) |

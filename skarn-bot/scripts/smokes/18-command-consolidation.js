@@ -5,8 +5,8 @@ const path = require('path');
 const { db, createThread, insertMessage, searchConversations } = require('../../db/database');
 
 const commandsDir = path.join(__dirname, '..', '..', 'commands');
+const relationship = require('../../commands/relationship');
 const commands = [
-  require('../../commands/friends'),
   require('../../commands/standing'),
   require('../../commands/level'),
   require('../../commands/trivia'),
@@ -18,12 +18,19 @@ const commands = [
 ];
 const serialized = commands.map(command => command.data.toJSON());
 const byName = new Map(serialized.map(command => [command.name, command]));
-for (const name of ['friends', 'standing', 'level', 'trivia', 'memory', 'weather', 'knowledge', 'history', 'consult']) {
+for (const name of ['standing', 'level', 'trivia', 'memory', 'weather', 'knowledge', 'history', 'consult']) {
   assert.ok(byName.has(name), 'command is registered: ' + name);
 }
+assert.strictEqual(fs.existsSync(path.join(commandsDir, 'friends.js')), false, 'retired game friend roster command is absent');
+assert.strictEqual(byName.has('friends'), false, 'retired game friend roster command is not registered');
+for (const retired of ['stats', 'insult']) {
+  assert.strictEqual(fs.existsSync(path.join(commandsDir, retired + '.js')), false, 'retired command is absent: ' + retired);
+  assert.notStrictEqual(relationship.data.name, retired, 'retired command is not renamed to relationship');
+}
+assert.deepStrictEqual(names(relationship.data.toJSON().options), ['user'], 'relationship retains admin-targeted profile lookup');
+assert.strictEqual(typeof relationship.getStatsData, 'function', 'relationship exports conversation stats for the AI stats tool');
 
 function names(options) { return options.map(option => option.name); }
-assert.deepStrictEqual(names(byName.get('friends').options), ['list', 'search', 'add', 'remove']);
 assert.deepStrictEqual(names(byName.get('level').options), ['profile', 'leaderboard', 'roles']);
 assert.deepStrictEqual(names(byName.get('level').options[2].options), ['list', 'set', 'remove']);
 assert.deepStrictEqual(names(byName.get('trivia').options), ['source', 'topic', 'difficulty']);
@@ -71,18 +78,30 @@ function fakeInteraction(subcommand, options = {}) {
 }
 
 async function runBehaviorChecks() {
-  const friends = byName.get('friends');
-  let ctx = fakeInteraction('add', { guildId: 'roster-server-a', strings: { code: '123456789', name: 'Roster Test', power: '20/30' } });
-  await friends.execute(ctx.interaction);
-  assert.ok(db.prepare('SELECT 1 FROM friends WHERE code = ?').get('123456789'), 'friend add writes to the existing global roster');
-  ctx = fakeInteraction('list', { guildId: 'roster-server-b' });
-  await friends.execute(ctx.interaction);
-  assert.ok(ctx.replies[0].embeds[0].data.description.includes('Roster Test'), 'friend roster remains visible across servers');
-  ctx = fakeInteraction('remove', { strings: { name: 'Roster Test' } });
-  await friends.execute(ctx.interaction);
-  assert.strictEqual(db.prepare('SELECT 1 FROM friends WHERE code = ?').get('123456789'), undefined, 'friend remove deletes from the same roster');
-
+  let ctx;
   const guildId = 'migration-test-guild';
+  const statsUserId = 'ai-stats-smoke-user';
+  const { canRespond, recordMessage, recordResponse, getStats, resetStats } = require('../../lib/aiStats');
+  recordMessage(statsUserId);
+  recordResponse(statsUserId);
+  assert.strictEqual(getStats(statsUserId).messagesSent, 1, 'AI chat request counter increments');
+  assert.strictEqual(getStats(statsUserId).responsesReceived, 1, 'AI delivered-response counter increments');
+  let admittedRequests = 0;
+  for (let i = 0; i < 50; i++) if (canRespond(statsUserId)) admittedRequests++;
+  assert.strictEqual(admittedRequests, 50, 'hourly AI request cap admits 50 requests');
+  assert.strictEqual(canRespond(statsUserId), false, 'hourly AI request cap blocks the next request');
+  assert.strictEqual(getStats(statsUserId).used, 50, 'aistats hourly usage reflects admitted requests');
+  resetStats(statsUserId);
+  assert.strictEqual(getStats(statsUserId).messagesSent, 0, 'AI stats reset clears accumulated counters');
+  assert.strictEqual(getStats(statsUserId).used, 0, 'AI stats reset clears the hourly cap');
+
+  ctx = fakeInteraction(null, { guildId, userId: 'relationship-smoke-user' });
+  await relationship.execute(ctx.interaction);
+  assert.ok(ctx.replies[0].embeds[0].data.fields.some(field => field.name === 'Questions Asked'), 'relationship includes merged conversation stats');
+  ctx = fakeInteraction(null, { guildId, userId: 'relationship-smoke-user', users: { user: { id: 'other-user', username: 'Other' } } });
+  await relationship.execute(ctx.interaction);
+  assert.ok(ctx.replies[0].content.includes('Only admins'), 'relationship protects admin-targeted stats');
+
   const level = byName.get('level');
   ctx = fakeInteraction('set', { guildId, group: 'roles', integers: { level: 5 }, roles: { role: { id: 'role-5', name: 'Level Five' } }, admin: false });
   await level.execute(ctx.interaction);

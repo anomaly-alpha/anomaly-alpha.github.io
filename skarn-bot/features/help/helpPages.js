@@ -10,7 +10,7 @@ const THEMES = [
   { slug: 'leveling', title: 'Leveling', emoji: '⭐', color: 0xf1c40f, blurb: 'XP, levels and leaderboards' },
   { slug: 'server-setup', title: 'Server Setup', emoji: '🛠️', color: 0x1abc9c, blurb: 'Admin tools to configure the server' },
   { slug: 'realm', title: 'Realm of Skarn', emoji: '⚔️', color: 0xff6b35, blurb: 'The persistent AI-driven RPG inside Discord' },
-  { slug: 'friends-knowledge', title: 'Friends & Knowledge', emoji: '📚', color: 0x9b59b6, blurb: 'Friendships and the shared knowledge vault' },
+  { slug: 'friends-knowledge', title: 'Knowledge & Access', emoji: '📚', color: 0x9b59b6, blurb: 'The shared knowledge vault and AI access controls' },
   { slug: 'other', title: 'Other', emoji: '🗂️', color: 0x95a5a6, blurb: 'Commands without a theme yet' },
 ];
 const OTHER = 'other';
@@ -21,12 +21,12 @@ const THEME_MAP = {
   aichat: 'ai-chat', aichatignore: 'ai-chat', aistats: 'ai-chat', confidant: 'ai-chat',
   consult: 'ai-chat', forget: 'ai-chat',
   history: 'ai-chat', memory: 'ai-chat', preferences: 'ai-chat', relationship: 'ai-chat',
-  standing: 'ai-chat', stats: 'ai-chat', vein: 'ai-chat', vibe: 'ai-chat',
+  standing: 'ai-chat', vein: 'ai-chat', vibe: 'ai-chat',
   // Fun & Games
   '8ball': 'fun-games', adventure: 'fun-games', charades: 'fun-games',
   coinflip: 'fun-games', compare: 'fun-games', compliment: 'fun-games', debate: 'fun-games',
   dice: 'fun-games', fortune: 'fun-games', giveaway: 'fun-games', improv: 'fun-games',
-  insult: 'fun-games', joke: 'fun-games', lore: 'fun-games', meme: 'fun-games',
+  joke: 'fun-games', lore: 'fun-games', meme: 'fun-games',
   musing: 'fun-games',
   pickup: 'fun-games', poll: 'fun-games', roast: 'fun-games', song: 'fun-games',
   story: 'fun-games', tetris: 'fun-games', trivia: 'fun-games', unpopularopinion: 'fun-games',
@@ -44,18 +44,16 @@ const THEME_MAP = {
   setwelcome: 'server-setup', ticket: 'server-setup',
   // Realm of Skarn
   chronicle: 'realm', omen: 'realm', realm: 'realm',
-  // Friends & Knowledge
-  friendadmin: 'friends-knowledge', friends: 'friends-knowledge', knowledge: 'friends-knowledge',
+  // Knowledge & Access
+  friendadmin: 'friends-knowledge', knowledge: 'friends-knowledge',
   lorebook: 'friends-knowledge',
 };
 
 // ===== Persona-voice description overrides =====
 const DESCRIPTION_OVERRIDES = {
   consult: 'Chat with Skarn or ask for focused advice',
-  friends: 'Manage the game friend-code roster',
   forget: 'Delete facts Skarn remembers about you',
   history: 'List, search, or inspect your conversation history',
-  insult: 'Playful insult — never mean',
   knowledge: 'Look up or search Skarn’s internal knowledge base',
   level: 'View XP, leaderboards, and level-role settings',
   lore: 'Hear Skarn tell a story from his millennia',
