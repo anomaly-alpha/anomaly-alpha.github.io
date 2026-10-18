@@ -12,7 +12,7 @@ Keep this guide separate from `/help`: `/guide` teaches users how to ask Skarn f
 ## Entry points and Discord constraint
 
 - Add `/guide`, opening the guide as an ephemeral interaction response.
-- Add the natural-language activation phrase `skarn guide`, alongside or replacing `skarn help` only if the existing `/help` text activation continues to mean the command catalog. The phrase should open the same guide content and controls.
+- Add the natural-language activation phrase `skarn guide` alongside the existing `skarn help` command-catalog activation. The phrase should open the same guide content and controls.
 - A typed message cannot receive an ephemeral response in Discord. Therefore `/guide` is private, while `skarn guide` must show the panel publicly in the invoking channel (or use a separately agreed DM-based experience). Do not claim both entry points are ephemeral.
 - Keep `/help` and the existing `skarn help` text activation's command-catalog behavior unchanged. `skarn guide` is a separate activation. Do not silently repurpose either help route.
 - Require the user's AI opt-in and an AI-enabled guild channel before either entry point opens the guide. Guide browsing is therefore not available in DMs or non-enabled channels.
@@ -27,7 +27,7 @@ The panel contains:
 
 1. A title such as `SKARN // NATURAL LANGUAGE INTERFACE`.
 2. A short instruction: select a tool family, choose an example, then either run it or use its wording in chat.
-3. A category selector for the 10 dedicated natural-language tools only.
+3. A category selector for the 9 dedicated natural-language tools only. The live registry currently contains nine dedicated tools plus `run_command`; `run_command` is intentionally excluded.
 4. An example selector populated for the current category.
 5. A detail area showing the selected example, what Skarn will do, any required context, and whether it has side effects.
 6. A `Run example` button and a `Close` button. Disable `Run example` until an example is selected.
@@ -53,10 +53,10 @@ Avoid maintaining a second hand-edited copy of examples in the command handler. 
 - example ID and display label;
 - natural-language phrase shown to the user;
 - explanation and input requirements;
-- route kind (`dedicated-tool`, `text-command`, or conversational intent);
+- dedicated tool name and route metadata;
 - execution eligibility and side-effect/visibility metadata.
 
-Initially migrate the 10 tool sections and representative `run_command` examples from `docs/NL-TOOLS.md`. Keep Markdown as the detailed human-readable guide, but add a consistency test or audit that verifies the interactive catalog's tool/route names against live tool and activation registries. Avoid claiming every guide Markdown example is executable until it has an explicit catalog entry and safe argument handling.
+Initially migrate examples from the 9 dedicated-tool sections in `docs/NL-TOOLS.md`. Keep Markdown as the detailed human-readable guide, but add a consistency test or audit that verifies the interactive catalog's tool names against the live tool registry. Avoid claiming every guide Markdown example is executable until it has an explicit catalog entry and safe argument handling.
 
 ## Execution and safety
 
@@ -64,7 +64,7 @@ Initially migrate the 10 tool sections and representative `run_command` examples
 - Component handlers must use the component interaction's user as the requester and retain guild, channel, and source-interaction context needed by existing routing.
 - Check AI opt-in and enabled-channel eligibility before opening the panel, then re-check them along with route-specific command permissions, guild-only constraints, rate limits/cooldowns, and safety policy at execution time. Opening the guide does not grant or cache access.
 - Never trust client-provided custom IDs as an example definition or arguments. Custom IDs should identify the panel/action; resolve catalog records server-side. Validate all modal input.
-- Scope component interactions to the panel owner and message ID, acknowledge promptly, and handle expired/unknown interactions. Keep the lifetime to 10 minutes. On Close or expiry, delete the panel message (public or ephemeral) and end its collector. Don't create a channel-wide collector that can accept unrelated component interactions.
+- Scope component interactions to the panel owner and message ID, acknowledge promptly, and handle expired/unknown interactions. Keep the lifetime to 5 minutes. On Close or expiry, delete the panel message (public or ephemeral) and end its collector. Don't create a channel-wide collector that can accept unrelated component interactions.
 - Use per-panel state (owner, selected category/example, originating guild/channel, expiry) rather than module-global mutable selection state.
 - Avoid writing panel interactions or sample text to durable conversation history unless the user actually runs an example and the existing pipeline normally records that interaction.
 
@@ -82,11 +82,11 @@ Initially migrate the 10 tool sections and representative `run_command` examples
 1. Both `/guide` and `skarn guide` require AI opt-in and an enabled guild channel. `/guide` opens an ephemeral panel; `skarn guide` opens the same experience as a public message.
 2. `/help` still opens the complete slash-command browser and is not replaced or relabeled as the natural-language guide.
 3. Users can switch categories, select an example, read its purpose/requirements, and close the panel; controls update without posting a new guide message.
-4. The category selector covers the 10 dedicated tools only. No example executes merely by selecting it. Every documented dedicated-tool example is runnable; state-changing examples have editable values and a separate confirmation step.
+4. The category selector covers all 9 dedicated tools only. No example executes merely by selecting it. Every documented dedicated-tool example is runnable; state-changing examples have editable values and a separate confirmation step.
 5. Examples execute as the clicking user through existing routes and respect all current eligibility, permissions, safety, and rate-limit checks.
 6. Results are ephemeral by default; personal or otherwise sensitive output is never leaked into a public channel by a panel interaction.
 7. Empty/missing inputs, expired panels, non-owner clicks, invalid custom IDs, and failed tool executions produce safe, acknowledged responses.
-8. Interactive tool names are checked against the live tool registry, and tests cover category navigation, owner isolation, 10-minute expiry/deletion, validation, confirmation, and execution gating.
+8. Interactive tool names are checked against the live tool registry, and tests cover category navigation, owner isolation, 5-minute expiry/deletion, validation, confirmation, and execution gating.
 9. The panel communicates how to ask naturally, including mention/`skarn` phrasing, opt-in/channel requirements, and the boundary between natural-language routes and slash-only workflows.
 
 ## Verification plan
