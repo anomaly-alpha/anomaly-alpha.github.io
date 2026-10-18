@@ -10,7 +10,7 @@ module.exports = {
         .setDescription('Delete personal memories and your stored channel context/summary details'))
     .addSubcommand(sub =>
       sub.setName('conversation')
-        .setDescription('Delete conversation history and your stored channel context/summary details (keeps explicit memories)')
+        .setDescription('Delete conversation history and channel context; keep explicit memories')
         .addUserOption(option => option.setName('user').setDescription('User to forget (admin only)')))
     .addSubcommand(sub =>
       sub.setName('all')
