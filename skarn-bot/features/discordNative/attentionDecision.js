@@ -349,6 +349,18 @@ function parseAttentionDecision(completionText, eligibility) {
   return result.value;
 }
 
+function makeForcedReplyDecision(userId) {
+  if (typeof userId !== 'string' || userId.length === 0 || userId.length > ATTENTION_LIMITS.maxTargetUserIdChars) {
+    throw new TypeError('userId must be a non-empty Discord user ID');
+  }
+  return {
+    decision: 'respond',
+    target_user_id: userId,
+    category: 'other',
+    reply_intent: 'continue_conversation',
+  };
+}
+
 module.exports = {
   ATTENTION_CATEGORIES,
   ATTENTION_LIMITS,
@@ -359,4 +371,5 @@ module.exports = {
   parseAttentionCompletion: validateAttentionCompletion,
   validateAttentionDecision: validateAttentionCompletion,
   parseAttentionDecision,
+  makeForcedReplyDecision,
 };

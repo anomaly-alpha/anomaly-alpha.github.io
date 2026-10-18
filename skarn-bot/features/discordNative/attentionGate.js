@@ -1,10 +1,8 @@
-const { moderatedChatCompletion } = require('../../ai/client');
 const db = require('../../db/database');
-const { buildAttentionMessages, parseAttentionDecision } = require('./attentionDecision');
+const { makeForcedReplyDecision } = require('./attentionDecision');
 const { buildChannelSnapshot } = require('../conversation/channelTranscript');
 const { checkAiPermission } = require('../friendTiers/friendPermission');
 
-const MODEL = process.env.AI_MODEL || 'gpt-6-luna';
 const METRIC_PREFIX = 'skarn_attention_daily:';
 
 function dailyMetricKey(now) {
@@ -42,26 +40,34 @@ function isEligibleTarget(userId, guildId, ignoredUserIds) {
 }
 
 function getEligibleUsers(snapshot, triggerUserId, guildId, ignoredUserIds) {
-  // Keep personal memory bound to the opted-in user whose message triggered
-  // this turn. The other allowed response mode is an unaddressed channel comment.
+  // Automatic channel replies are only for the opted-in user who triggered this turn.
   return isEligibleTarget(triggerUserId, guildId, ignoredUserIds) ? [triggerUserId] : [];
 }
 
-function getOptedInParticipants(snapshot, triggerUserId, guildId, ignoredUserIds) {
-  const optedIn = new Set();
-  const optedInIds = new Set();
-  try {
-    db.db.prepare('SELECT user_id FROM user_preferences WHERE guild_id = ? AND proactive_opt_in = 1')
-      .all(guildId).forEach(function(row) { optedInIds.add(row.user_id); });
-  } catch (e) { /* consent labels fail closed */ }
-  if (optedInIds.has(triggerUserId) && !ignoredUserIds.has(triggerUserId)) optedIn.add(triggerUserId);
-  const checked = new Set([triggerUserId]);
-  for (const message of snapshot.messages || []) {
-    if (message.is_skarn || !message.author_id || checked.has(message.author_id)) continue;
-    checked.add(message.author_id);
-    if (optedInIds.has(message.author_id) && !ignoredUserIds.has(message.author_id)) optedIn.add(message.author_id);
-  }
-  return Array.from(optedIn);
+function makeCurrentTurnSnapshot(message, currentTurnMessages) {
+  const messages = currentTurnMessages.length > 0 ? currentTurnMessages : [{
+    message_id: message.id,
+    author_id: message.author.id,
+    author_name: message.member && message.member.displayName || message.author.globalName || message.author.username,
+    content: message.content,
+    created_at: message.createdTimestamp || Date.now(),
+    reference_message_id: message.reference && message.reference.messageId || null,
+    is_skarn: false,
+  }];
+  return {
+    channel_summaries: [],
+    messages: messages.map(function(item) {
+      return {
+        message_id: item.message_id,
+        author_id: item.author_id,
+        author_name: item.author_name,
+        content: item.content,
+        created_at: item.created_at,
+        reference_message_id: item.reference_message_id || null,
+        is_skarn: false,
+      };
+    }),
+  };
 }
 
 async function evaluateAttention(message, options) {
@@ -77,23 +83,25 @@ async function evaluateAttention(message, options) {
 
   let snapshot;
   let sourceMessageIds = [];
+  const currentTurnMessages = (options.currentTurnMessages || []).filter(Boolean);
   try {
     if (options.snapshot) {
       snapshot = options.snapshot;
       sourceMessageIds = options.sourceMessageIds || [];
     } else {
       const built = await buildChannelSnapshot(guildId, channelId, userId, {
-        preserveMessageIds: (options.currentTurnMessages || []).map(function(item) { return item && item.message_id; }).filter(Boolean),
+        preserveMessageIds: currentTurnMessages.map(function(item) { return item.message_id; }).filter(Boolean),
       });
       snapshot = built.snapshot;
       sourceMessageIds = built.sourceMessageIds || [];
     }
   } catch (error) {
     recordMetric('context_failure');
-    return Object.assign({}, silent, { failure: 'context_unavailable' });
+    snapshot = makeCurrentTurnSnapshot(message, currentTurnMessages);
+    sourceMessageIds = snapshot.messages.map(function(item) { return item.message_id; }).filter(Boolean);
   }
   const snapshotMessageIds = new Set((snapshot.messages || []).map(function(item) { return item.message_id; }));
-  const missingCurrentMessages = (options.currentTurnMessages || []).filter(function(item) {
+  const missingCurrentMessages = currentTurnMessages.filter(function(item) {
     return item && typeof item.message_id === 'string' && !snapshotMessageIds.has(item.message_id);
   });
   if (missingCurrentMessages.length > 0) {
@@ -119,55 +127,13 @@ async function evaluateAttention(message, options) {
     return silent;
   }
 
-  const metadata = {
-    guild_id: guildId,
-    channel_id: channelId,
-    triggering_user_id: userId,
-    triggering_user_is_opted_in: true,
-    eligible_user_ids: eligibleUserIds,
-    opted_in_user_ids: getOptedInParticipants(snapshot, userId, guildId, ignoredUserIds),
-    ignored_user_ids: Array.from(ignoredUserIds),
-    mode: 'passive_channel_turn',
-  };
-  const messages = buildAttentionMessages(snapshot, metadata);
-  let result;
-  try {
-    result = await moderatedChatCompletion({
-      model: MODEL,
-      messages: messages,
-      max_tokens: 180,
-      temperature: 0.1,
-      userId: userId,
-      guildId: guildId,
-      surface: 'ai-channel',
-      bucket: 'attention',
-    });
-  } catch (error) {
-    recordMetric('model_failure');
-    return Object.assign({}, silent, { failure: 'attention_unavailable' });
-  }
-  if (!result || !result.success) {
-    recordMetric(result && result.budgetExhausted ? 'budget_failure' : 'model_failure');
-    return Object.assign({}, silent, { failure: 'attention_unavailable' });
-  }
-
-  try {
-    const content = result.completion.choices[0]?.message?.content;
-    const decision = parseAttentionDecision(content, eligibleUserIds);
-    if (decision.decision === 'stay_silent') {
-      recordMetric('silent');
-      return Object.assign({}, decision, { snapshot: snapshot, sourceMessageIds: sourceMessageIds });
-    }
-    if (decision.target_user_id && decision.target_user_id !== 'unaddressed' && !isEligibleTarget(decision.target_user_id, guildId, ignoredUserIds)) {
-      recordMetric('invalid_target');
-      return Object.assign({}, silent, { failure: 'invalid_target' });
-    }
-    recordMetric('respond');
-    return Object.assign({}, decision, { snapshot: snapshot, sourceMessageIds: sourceMessageIds });
-  } catch (error) {
-    recordMetric('invalid_output');
-    return Object.assign({}, silent, { failure: 'invalid_output' });
-  }
+  // Enabled AI channels keep the conversation moving: eligibility decides whether
+  // a turn may be answered; there is no model-based silence decision here.
+  recordMetric('respond');
+  return Object.assign({}, makeForcedReplyDecision(userId), {
+    snapshot: snapshot,
+    sourceMessageIds: sourceMessageIds,
+  });
 }
 
 async function shouldRespond(message, client) {

@@ -8,6 +8,7 @@ const {
   buildAttentionMessages,
   buildAttentionPrompt,
   getEligibleOptedInUserIds,
+  makeForcedReplyDecision,
   parseAttentionDecision,
   validateAttentionCompletion,
 } = require('../../features/discordNative/attentionDecision');
@@ -34,6 +35,13 @@ function assertRejected(label, text, eligibility, error) {
 
 const eligible = getEligibleOptedInUserIds(snapshot, metadata);
 assert.deepStrictEqual(eligible, ['opted-user']);
+assert.deepStrictEqual(makeForcedReplyDecision('opted-user'), {
+  decision: 'respond',
+  target_user_id: 'opted-user',
+  category: 'other',
+  reply_intent: 'continue_conversation',
+}, 'eligible turns are forced into reply generation');
+assert.throws(() => makeForcedReplyDecision(''), /userId must be a non-empty Discord user ID/);
 
 const prompt = buildAttentionPrompt(snapshot, metadata);
 assert.ok(Array.isArray(buildAttentionMessages(snapshot, metadata)));
