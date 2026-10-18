@@ -6,7 +6,7 @@
 
 ## Goal
 
-Deliver an interactive Discord panel for all 9 dedicated natural-language tools, opened by ephemeral `/guide` or public invoker-only `skarn guide`. Enforce the agreed opt-in/channel gate at entry and execution, route examples through Skarn's existing AI/tool pipeline, keep results ephemeral, confirm personal-state writes, and delete panels on Close or after 5 minutes. Preserve `/help` and `skarn help` as the complete slash-command catalog.
+Deliver an interactive Discord panel for all 9 dedicated natural-language tools, opened by ephemeral `/guide` or public invoker-only `skarn guide`. Enforce the agreed opt-in/channel gate at entry and execution, dispatch examples through the existing dedicated-tool runner using catalog-fixed arguments, keep results ephemeral, confirm personal-state writes, and delete panels on Close or after 5 minutes. Preserve `/help` and `skarn help` as the complete slash-command catalog.
 
 ## Scope boundaries
 
@@ -20,21 +20,21 @@ Deliver an interactive Discord panel for all 9 dedicated natural-language tools,
 - `bot.js` auto-loads slash command modules from `commands/`; `deploy-commands.js` serializes those modules for Discord registration.
 - `activationRegistry.scanCommands()` reads activation metadata from the same command modules. The message handler invokes command activations directly; it does not make `skarn guide` a normal AI chat turn. The guide handler must enforce its own entry gate.
 - AI opt-in is exposed by `features/proactive/absenceDetector.canInteract(userId, guildId)`. Enabled channels are stored as guild config `aiChannels`; AI access restrictions are checked by `features/friendTiers/friendPermission.checkAiPermission(...)`. No existing shared helper combines all three guide requirements, so implement a small fail-closed guide access helper and call it consistently.
-- `features/ai/sharedPipeline.runPipeline()` already supports `sourceInteraction`, `sendReply`, `sendFollowUp`, and `editReply` adapters; `/consult` demonstrates ephemeral interaction delivery. It passes `sourceInteraction` to `runTool()`. The first pipeline call currently supplies all tools with `tool_choice: 'auto'`; a guide example must constrain the model to its cataloged tool so a click cannot perform a different action.
+- `features/ai/sharedPipeline.runPipeline()` is not the right path for a guide button: it performs a normal conversational turn, offers the model the broad tool catalog, emits visible typing, and includes chat-history/memory/follow-up side effects. Use the existing `features/tools/toolRunner.runTool()` directly with a fixed catalog-selected tool and validated arguments; return its result in an ephemeral interaction response.
 - `features/tools/toolRunner.runTool()` has dedicated dispatch for 9 function tools and uses `userId`, `guildId`, and `channelId` from context. `getTools()` also includes `run_command`, which has source-message/interaction execution behavior and must not be included in guide execution.
 - `/help` uses interaction-scoped message collectors, owner/message filters, and a two-minute timeout. Reuse its interaction pattern where valid, but the guide's chosen lifetime is five minutes and Close/expiry deletes the panel rather than merely disabling controls.
 - Tests are plain Node smoke scripts under `scripts/smokes/`; `scripts/run-smokes.js` discovers all of them.
 
 ## Implementation sequence
 
-### 1. Reconcile the spec and define the execution seam
+### 1. Reconcile the spec and prove direct tool dispatch
 
 1. Keep the companion spec synchronized with the live registry and settled behavior: `skarn guide` is additive to `skarn help`; the interactive catalog has 9 dedicated tools and excludes `run_command`; the timeout is 5 minutes.
-2. Prototype the component-interaction call into `runPipeline()` using `sourceInteraction` and an ephemeral deferred response adapter. Confirm edits and follow-ups stay ephemeral, no visible channel typing indicator is emitted, and the model can be forced to call only the selected dedicated tool.
-3. Add the smallest `runPipeline` guide-execution option needed to expose only the selected dedicated tool and require its invocation. Reject names absent from `getTools()` or the dedicated-tool allowlist. Do not make a general tool-policy redesign.
-4. Bind execution to validated server-side catalog arguments. After any modal and confirmation, pass the exact validated arguments to `runTool()` as the clicking user; do not trust model-generated arguments for a write action. The model may phrase the final response, but it cannot change which action or values are executed. If the constrained tool call is missing or malformed, fail safely without side effects. The final in-character answer is sent through the ephemeral response adapter. Keep any user/assistant conversation-history effects consistent with an explicitly run example; do not write a sample merely because it was selected.
+2. Add a small `guideExecution` wrapper that resolves an example ID against the catalog, checks the tool against the exact dedicated-tool allowlist from `toolDefinitions`, validates/builds the final arguments, and calls `runTool()` once with the clicking user's context. Never accept a tool name or raw arguments from a component custom ID.
+3. Return the `runTool()` result content by editing an ephemeral deferred component response. Do not call `runPipeline`, `channel.send`, `sendTyping`, source-panel `followUp`, or a model tool-selection loop for a guide button.
+4. Consume/lock a successful confirmation before dispatch; malformed catalog values must fail before `runTool()` is called. Keep network services mockable in tests.
 
-**Gate:** do not build the panel's Run action until a smoke proves the selected tool is the only callable tool and the output is ephemeral for a component interaction. If the current pipeline cannot satisfy this without broad side effects, pause and revise the spec/approach before expanding implementation.
+**Gate:** do not build the panel's Run action until a smoke proves the server-resolved catalog entry dispatches exactly one intended dedicated tool with the expected requester/arguments and the result goes only to the ephemeral interaction response.
 
 ### 2. Build the dedicated-tool catalog
 
@@ -71,7 +71,7 @@ Panel states:
 2. **Preview:** selected prompt, purpose, inputs, and side-effect notice shown; selection itself has no side effect.
 3. **Input:** for memory/reminder examples, collect/edit fields in a modal; validate limits and normalize values server-side.
 4. **Confirm:** show the exact memory fact or reminder message/time and require a distinct confirmation click. Cancel returns to preview/browse without execution.
-5. **Run:** defer the component interaction ephemerally, re-check eligibility, invoke the constrained pipeline, and deliver all response chunks ephemerally.
+5. **Run:** defer the component interaction ephemerally, re-check eligibility, invoke the dedicated dispatcher once, and return its result ephemerally.
 6. **Closed/expired:** delete the originating panel and stop the collector.
 
 Store owner ID, original message ID, guild/channel IDs, selected category/example, current modal/confirmation state, execution lock/status, and expiration per session. Use namespaced custom IDs that carry only opaque action/session identifiers; resolve definitions and arguments server-side. Filters must reject non-owner clicks and interactions for another message. Use `awaitModalSubmit` (or an equivalently scoped modal-submit listener) filtered to owner/session, and keep modal handling inside the feature rather than adding a generic global component router. Atomically mark a session as running before tool invocation so double-clicks/replayed interactions cannot repeat memory or reminder writes. On expiry at five minutes or Close, delete the public or ephemeral panel and release collector/state. Handle unknown/expired interactions without uncaught errors.
@@ -99,7 +99,7 @@ Add `scripts/smokes/24-guide-panel.js` (or next unused numeric prefix after chec
 - owner/message isolation, modal validation, confirm/cancel transitions, Close/expiry deletion, and no execution on category/example selection;
 - ephemeral response adapter usage and rejection/error handling.
 
-Mock network-backed services (weather/search/news/LLM) so the smoke suite is deterministic and offline. Add an integration-style pipeline smoke using injected/mocked completion responses to prove the selected example routes to its named tool only.
+Mock network-backed services (weather/search/news) so the smoke suite is deterministic and offline. Add dispatcher tests proving the selected catalog example routes once to its named tool with validated arguments and the current interaction user's context.
 
 ## Verification and release checklist
 
@@ -117,7 +117,7 @@ No push or deployment is included in this plan. Register `/guide` with the exist
 ## Completion criteria
 
 - All acceptance criteria in the companion spec pass.
-- Tool execution is bound to the catalog-selected dedicated tool and clicking user; no natural-language guide action can dispatch `run_command` or post a result publicly.
+- Tool execution is bound to the catalog-selected dedicated tool and clicking user; no natural-language guide action can dispatch `run_command`, invoke the normal conversational pipeline, or post a result publicly.
 - Entry and execution gates are re-evaluated and fail closed.
 - Stateful examples are editable and confirmed before mutation.
 - Five-minute panel lifetime and deletion behavior are tested for both entry points.

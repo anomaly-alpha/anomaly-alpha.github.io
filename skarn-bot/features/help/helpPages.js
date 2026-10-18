@@ -32,7 +32,7 @@ const THEME_MAP = {
   story: 'fun-games', tetris: 'fun-games', trivia: 'fun-games', unpopularopinion: 'fun-games',
   whatdoesthefoxsay: 'fun-games', wouldyourather: 'fun-games',
   // Learning & Utility
-  avatar: 'learning-utility', code: 'learning-utility', hello: 'learning-utility', help: 'learning-utility',
+  avatar: 'learning-utility', code: 'learning-utility', guide: 'learning-utility', hello: 'learning-utility', help: 'learning-utility',
   homework: 'learning-utility', ping: 'learning-utility', recipe: 'learning-utility', remind: 'learning-utility',
   search: 'learning-utility', serverinfo: 'learning-utility', translate: 'learning-utility', userinfo: 'learning-utility',
   // News & Weather

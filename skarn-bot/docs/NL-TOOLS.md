@@ -7,7 +7,16 @@ AI chat in enabled channels requires each user to opt in first: say `skarn opt i
 An administrator can enable an AI channel with `/aichat mode:On`; channel enablement
 does not opt users in automatically.
 
-There are **10 tools** today, and through the `run_command` tool Skarn can run
+Open the interactive natural-language guide with /guide or by typing skarn guide.
+The slash command opens privately; the text trigger posts a public, invoker-only
+panel. Both require your AI opt-in and an enabled AI channel. Select an example to
+preview it; press **Run example** to execute it. Results are private. Memory and
+reminder examples let you edit the values and require a separate confirmation
+before saving. The panel deletes itself when closed or after five minutes. Use
+/help for the complete slash-command catalog; skarn help keeps that same catalog
+behavior.
+
+There are **9 dedicated natural-language tools** today, and through the `run_command` tool Skarn can run
 the currently registered text-activation commands that pass its filter
 (dynamically built from `activationRegistry.getAll()`). Slash-only grouped
 workflows are not available as text commands; invoke those directly in Discord.

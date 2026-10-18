@@ -38,9 +38,9 @@ The category taxonomy should follow the guide's functional groupings, not imply 
 
 - Selecting a category updates the examples and instructions in place. Selecting an example updates the detail area without executing it.
 - The panel must distinguish “copy/use this wording yourself” from “run this example now.” Discord does not allow a bot button to insert text into the user's message composer or to post as the clicking user.
-- `Run example` explicitly asks Skarn to process the selected sample on behalf of the clicking user through the same supported natural-language/tool path. The bot must not fabricate a user-authored message or bypass tool routing. Every listed dedicated-tool example is runnable.
+- `Run example` explicitly runs the selected catalog example on behalf of the clicking user through the existing dedicated-tool dispatcher. The catalog fixes the tool and validated arguments; the model does not choose or alter the action. The bot must not fabricate a user-authored message or bypass tool dispatch. Every listed dedicated-tool example is runnable.
 - For personal-state examples, open a form/modal so the user can review and edit the values before execution. Show a separate confirmation step summarizing the final effect and values. This applies to setting reminders and saving memory. Never run literal placeholder text or an unreviewed sample value as a personal fact.
-- Return results ephemerally by default, including when the panel itself was posted publicly. Do not expose personal memory or conversation stats in the channel.
+- Return the dedicated tool's result ephemerally, including when the panel itself was posted publicly. Do not expose personal memory or conversation stats in the channel. Do not generate a separate public AI chat turn for a button click.
 
 ### Natural-language instructions
 
@@ -60,7 +60,7 @@ Initially migrate examples from the 9 dedicated-tool sections in `docs/NL-TOOLS.
 
 ## Execution and safety
 
-- Reuse the existing AI/tool pipeline and dedicated tool dispatch/validation rather than implementing a parallel execution path. Do not route these examples through `run_command`.
+- Reuse `features/tools/toolRunner.runTool()` as the execution path, with server-resolved catalog records and validated fixed arguments. Do not route these examples through model-selected tool calls, `run_command`, or a normal chat pipeline.
 - Component handlers must use the component interaction's user as the requester and retain guild, channel, and source-interaction context needed by existing routing.
 - Check AI opt-in and enabled-channel eligibility before opening the panel, then re-check them along with route-specific command permissions, guild-only constraints, rate limits/cooldowns, and safety policy at execution time. Opening the guide does not grant or cache access.
 - Never trust client-provided custom IDs as an example definition or arguments. Custom IDs should identify the panel/action; resolve catalog records server-side. Validate all modal input.
@@ -83,7 +83,7 @@ Initially migrate examples from the 9 dedicated-tool sections in `docs/NL-TOOLS.
 2. `/help` still opens the complete slash-command browser and is not replaced or relabeled as the natural-language guide.
 3. Users can switch categories, select an example, read its purpose/requirements, and close the panel; controls update without posting a new guide message.
 4. The category selector covers all 9 dedicated tools only. No example executes merely by selecting it. Every documented dedicated-tool example is runnable; state-changing examples have editable values and a separate confirmation step.
-5. Examples execute as the clicking user through existing routes and respect all current eligibility, permissions, safety, and rate-limit checks.
+5. Examples execute as the clicking user through the existing dedicated-tool dispatcher and respect guide eligibility and route-specific safety/rate limits.
 6. Results are ephemeral by default; personal or otherwise sensitive output is never leaked into a public channel by a panel interaction.
 7. Empty/missing inputs, expired panels, non-owner clicks, invalid custom IDs, and failed tool executions produce safe, acknowledged responses.
 8. Interactive tool names are checked against the live tool registry, and tests cover category navigation, owner isolation, 5-minute expiry/deletion, validation, confirmation, and execution gating.
