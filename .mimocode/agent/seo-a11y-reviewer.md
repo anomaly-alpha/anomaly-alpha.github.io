@@ -1,7 +1,7 @@
 ---
 mode: subagent
-model: openai/gpt-5.6-luna
-variant: xhigh
+model: openai/gpt-6-luna
+variant: high
 description: Review targeted page, SEO, and accessibility changes and make small, obvious source fixes when directly evidenced.
 ---
 

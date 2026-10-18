@@ -11,15 +11,27 @@ const { assertRoleRegistryAligned } = require('./persona/roles');
 const { runWithFriendContext, checkAiPermission, isAiCommand } = require('./features/friendTiers/friendPermission');
 const { recordFriendActivity } = require('./features/friendTiers/friendActivity');
 const { handleConfidantMessage } = require('./features/confidant/confidantConversation');
+const { createTurnCoordinator } = require('./features/conversation/turnCoordinator');
 
 // A rejection from the AI mention pipeline must never take down the whole bot
-async function safeHandleMention(message) {
+async function safeHandleMention(message, turnOptions) {
+  turnOptions = turnOptions || {};
   try {
-    const result = await runWithFriendContext({ userId: message.author.id, guildId: message.guild?.id, surface: 'mention' }, () => handleMention(message));
+    if (!turnOptions.coordinated && message.guild) {
+      const queued = await enqueueChannelTurn(message, true);
+      return queued.status === 'processed' ? queued.result : false;
+    }
+    if (!turnOptions.beforeSend && message.guild) {
+      turnOptions.beforeSend = function() {
+        return isUserOptedIn(message.author.id, message.guild.id) && checkAiPermission(message.author.id, message.guild.id, 'mention').allowed;
+      };
+    }
+    const result = await runWithFriendContext({ userId: message.author.id, guildId: message.guild?.id, surface: 'mention' }, () => handleMention(message, turnOptions));
     if (result && message.guild) {
       try { recordFriendActivity(message.author.id, message.guild.id); }
       catch (activityError) { console.error('[FriendTiers] Could not record mention:', activityError.message); }
     }
+    return result;
   } catch (e) {
     console.error('[Bot] Mention handler error:', e.message);
   }
@@ -47,6 +59,117 @@ const client = new Client({
   ],
   partials: [Partials.Channel],
 });
+
+function isAiChatChannel(guildId, channelId) {
+  try {
+    const channels = getGuildConfig(guildId, 'aiChannels') || [];
+    return Array.isArray(channels) && channels.includes(channelId);
+  } catch (e) { return false; }
+}
+
+function isUserOptedIn(userId, guildId) {
+  if (!userId || !guildId) return false;
+  try {
+    const row = db.prepare('SELECT proactive_opt_in FROM user_preferences WHERE user_id = ? AND guild_id = ?').get(userId, guildId);
+    return !!row && row.proactive_opt_in === 1;
+  } catch (e) { return false; }
+}
+
+async function canContinueChannelTurn(turn, phase) {
+  const metadata = turn.metadata && turn.metadata[0] || {};
+  const guildId = metadata.guildId;
+  const direct = !!(turn.metadata || []).some(function(item) { return item && item.direct; });
+  const userId = turn.userId;
+  if (!guildId) return false;
+  if (isAiChatChannel(guildId, turn.channelId)) {
+    const ignored = getGuildConfig(guildId, 'ignoredUsers') || [];
+    if (Array.isArray(ignored) && ignored.includes(userId)) return false;
+  }
+  if (direct && phase === 'before') return true;
+  if (!isUserOptedIn(userId, guildId)) return false;
+  if (!direct && !isAiChatChannel(guildId, turn.channelId)) return false;
+  const permission = checkAiPermission(userId, guildId, direct ? 'mention' : 'ai-channel');
+  return permission.allowed;
+}
+
+async function processChannelTurn(messages, coordinatorContext) {
+  if (!messages.length) return false;
+  const tail = messages[messages.length - 1];
+  const metadata = tail.metadata || {};
+  const sourceMessage = metadata.sourceMessage;
+  if (!sourceMessage) return false;
+  const direct = messages.some(function(item) { return item.metadata && item.metadata.direct; });
+  const content = messages.map(function(item) { return item.content; }).filter(Boolean).join('\n').trim();
+  if (!content) return false;
+  const userId = tail.userId;
+  const guildId = metadata.guildId;
+  let channelSnapshot = null;
+  let decision = null;
+
+  if (direct) {
+    if (isUserOptedIn(userId, guildId) && isAiChatChannel(guildId, tail.channelId)) {
+      try {
+        channelSnapshot = (await require('./features/conversation/channelTranscript').buildChannelSnapshot(guildId, tail.channelId, userId, {
+          preserveMessageIds: messages.map(function(item) { return item.messageId; }),
+        })).snapshot;
+      } catch (error) {
+        console.error('[ChannelContext] Could not build direct-response context:', error.message);
+      }
+    }
+  } else {
+    const currentTurnMessages = messages.map(function(item) {
+      const source = item.metadata && item.metadata.sourceMessage;
+      return {
+        message_id: item.messageId,
+        author_id: item.userId,
+        author_name: source && (source.member?.displayName || source.author.globalName || source.author.username) || item.userId,
+        content: item.content,
+        created_at: typeof item.createdAt === 'number' ? item.createdAt : Date.now(),
+        reference_message_id: source && source.reference?.messageId || null,
+        is_skarn: false,
+      };
+    });
+    decision = await runWithFriendContext({ userId: userId, guildId: guildId, surface: 'ai-channel' }, () =>
+      require('./features/discordNative/attentionGate').evaluateAttention(sourceMessage, { currentTurnMessages: currentTurnMessages }));
+    if (!(await coordinatorContext.canContinue())) return false;
+    if (decision.decision !== 'respond') return false;
+    channelSnapshot = decision.snapshot;
+  }
+
+  const beforeSend = function() { return coordinatorContext.canContinue(); };
+  const options = {
+    coordinated: true,
+    content: content,
+    channelSnapshot: channelSnapshot,
+    currentMessageIds: messages.map(function(item) { return item.messageId; }),
+    replyIntent: decision && decision.reply_intent,
+    responseTarget: decision && (decision.target_user_id || 'unaddressed'),
+    beforeSend: beforeSend,
+    recordSharedContext: true,
+  };
+  return safeHandleMention(sourceMessage, options);
+}
+
+const channelTurnCoordinator = createTurnCoordinator({
+  debounceMs: 1500,
+  maxQueue: 100,
+  onTurn: processChannelTurn,
+  canContinue: canContinueChannelTurn,
+});
+
+async function enqueueChannelTurn(message, direct) {
+  const result = await channelTurnCoordinator.enqueue({
+    channelId: message.channel.id,
+    userId: message.author.id,
+    messageId: message.id,
+    content: message.content,
+    createdAt: message.createdTimestamp || Date.now(),
+    metadata: { sourceMessage: message, guildId: message.guild && message.guild.id, direct: !!direct },
+  });
+  if (result.status === 'overflow') require('./features/discordNative/attentionGate').recordMetric('queue_overflow');
+  if (result.status === 'error') console.error('[ConversationQueue] Turn failed:', result.error && result.error.message);
+  return result;
+}
 
 // ===== Load slash commands =====
 client.commands = new Collection();
@@ -110,6 +233,15 @@ client.once('clientReady', () => {
   const messageArchiveCleanup = setInterval(pruneMessageArchive, 5 * 60 * 1000);
   messageArchiveCleanup.unref();
 
+  const channelContextStore = require('./db/channelContext');
+  const pruneChannelContext = () => {
+    try { channelContextStore.pruneChannelContextMessages(); }
+    catch (e) { console.error('[ChannelContext] Retention cleanup failed:', e.message); }
+  };
+  pruneChannelContext();
+  const channelContextCleanup = setInterval(pruneChannelContext, 5 * 60 * 1000);
+  channelContextCleanup.unref();
+
   // Schedulers (growth, status rotation, weather, proactive, reminders, news, digest, decay, maintenance, chronicle/omen)
   require('./features/scheduler').startSchedulers(client);
 
@@ -133,6 +265,19 @@ client.on('interactionCreate', async interaction => {
   }
   const command = interaction.client.commands.get(interaction.commandName);
   if (!command) return;
+  if (interaction.commandName === 'forget' && interaction.guildId) {
+    try {
+      const targetUser = interaction.options.getSubcommand() === 'conversation'
+        ? interaction.options.getUser('user') || interaction.user
+        : interaction.user;
+      channelTurnCoordinator.clearUser(targetUser.id);
+    } catch (e) { /* unsupported forget subcommand has no target option */ }
+  }
+  if (interaction.commandName === 'preferences' && interaction.guildId &&
+      interaction.options.getString('setting') === 'proactive' && interaction.options.getString('value') === 'off') {
+    channelTurnCoordinator.clearUser(interaction.user.id);
+    db.prepare("UPDATE follow_ups SET status = 'cancelled' WHERE user_id = ? AND guild_id = ? AND status = 'pending'").run(interaction.user.id, interaction.guildId);
+  }
   const isWeatherTracking = interaction.commandName === 'weather' && interaction.options.getSubcommandGroup(false) === 'track';
   const consultSurface = interaction.commandName === 'consult' && interaction.options.getSubcommand() === 'chat';
   const aiSurface = consultSurface ? 'consult' : 'command';
@@ -211,6 +356,28 @@ client.on('messageCreate', async function(message) {
   // Step 2: Skip messages starting with * or + (prefix markers)
   if (message.content.startsWith('*') || message.content.startsWith('+')) return;
 
+  // Keep a short-lived channel transcript only in explicitly enabled channels.
+  // These messages are shared context, not per-user memory or consent to reply.
+  if (message.guild && isAiChatChannel(message.guild.id, message.channel.id) && message.content.trim()) {
+    const normalizedContent = message.content.toLowerCase().trim();
+    const isControlMessage = /^(?:skarn\s+(?:opt\s+(?:in|out)|status|chat\s*mode|aichat|preferences|forget)\b|!)/.test(normalizedContent);
+    if (!isControlMessage) {
+      try {
+        require('./db/channelContext').insertChannelContextMessage({
+          messageId: message.id,
+          guildId: message.guild.id,
+          channelId: message.channel.id,
+          authorId: message.author.id,
+          authorName: message.member?.displayName || message.author.globalName || message.author.username || message.author.id,
+          content: message.content,
+          createdAt: message.createdTimestamp || Date.now(),
+          capturedAt: Date.now(),
+          referenceMessageId: message.reference?.messageId || null,
+        });
+      } catch (e) { console.error('[ChannelContext] Message capture failed:', e.message); }
+    }
+  }
+
   const handleMention = require('./features/mentionRouter/mentionRouter').handleMention;
   const lookup = require('./features/activation/activationRegistry').lookup;
 
@@ -241,19 +408,25 @@ client.on('messageCreate', async function(message) {
   }
 
   // Step 4: State tracking batch (non-blocking)
+  var hasConversationOptIn = false;
+  try {
+    hasConversationOptIn = isUserOptedIn(message.author.id, message.guild.id);
+  } catch (e) { /* fail closed for user-specific conversation tracking */ }
+
   Promise.allSettled([
     Promise.resolve().then(function() { return require('./features/channelState/stateTracker').onMessageReceived ? require('./features/channelState/stateTracker').onMessageReceived(message) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/relationship/relationshipTracker').updateRelationship ? require('./features/relationship/relationshipTracker').updateRelationship(message.author.id, message.guild.id, 'message') : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return hasConversationOptIn && require('./features/relationship/relationshipTracker').updateRelationship ? require('./features/relationship/relationshipTracker').updateRelationship(message.author.id, message.guild.id, 'message') : null; }).catch(function() {}),
     Promise.resolve().then(function() { return require('./features/culture/cultureTracker').updateCulture ? require('./features/culture/cultureTracker').updateCulture(message.guild.id, message.channel.id, message.content) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/warmth/warmthManager').updateWarmth ? require('./features/warmth/warmthManager').updateWarmth(message.author.id, message.guild.id, message.content) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/humor/callbackEngine').updateCallbacks ? require('./features/humor/callbackEngine').updateCallbacks(message.channel.id, message.author.id, message.content) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/warmth/warmthManager').maybeActiveListen ? require('./features/warmth/warmthManager').maybeActiveListen(message) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/humor/comedyTiming').extendBanterChain ? require('./features/humor/comedyTiming').extendBanterChain(message.author.id, message.guild.id, message.channel.id) : null; }).catch(function() {}),
-    Promise.resolve().then(function() { return require('./features/humor/comedyTiming').recordSetup ? require('./features/humor/comedyTiming').recordSetup(message.channel.id, message.author.id, message.content) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return hasConversationOptIn && require('./features/warmth/warmthManager').updateWarmth ? require('./features/warmth/warmthManager').updateWarmth(message.author.id, message.guild.id, message.content) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return hasConversationOptIn && require('./features/humor/callbackEngine').updateCallbacks ? require('./features/humor/callbackEngine').updateCallbacks(message.channel.id, message.author.id, message.content) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return hasConversationOptIn && require('./features/warmth/warmthManager').maybeActiveListen ? require('./features/warmth/warmthManager').maybeActiveListen(message) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return hasConversationOptIn && require('./features/humor/comedyTiming').extendBanterChain ? require('./features/humor/comedyTiming').extendBanterChain(message.author.id, message.guild.id, message.channel.id) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return hasConversationOptIn && require('./features/humor/comedyTiming').recordSetup ? require('./features/humor/comedyTiming').recordSetup(message.channel.id, message.author.id, message.content) : null; }).catch(function() {}),
+    Promise.resolve().then(function() { return hasConversationOptIn ? require('./features/proactive/absenceDetector').markCheckInsResponded(message.author.id, message.guild.id) : null; }).catch(function() {}),
     Promise.resolve().then(function() {
       var _db = require('./db/database');
       var _aiChannels = _db.getGuildConfig ? _db.getGuildConfig(message.guild.id, 'aiChannels') : [];
-      if (_aiChannels && _aiChannels.includes(message.channel.id) && _db.incrementMsgCount) {
+      if (hasConversationOptIn && _aiChannels && _aiChannels.includes(message.channel.id) && _db.incrementMsgCount) {
         _db.incrementMsgCount(message.author.id, message.guild.id, message.channel.id);
       }
     }).catch(function() {}),
@@ -265,8 +438,14 @@ client.on('messageCreate', async function(message) {
   if (c.startsWith('skarn opt in') || c.startsWith('skarn opt out')) {
     const isOptIn = c.startsWith('skarn opt in');
     try {
+      if (!isOptIn) {
+        channelTurnCoordinator.clearUser(message.author.id);
+        db.prepare("UPDATE follow_ups SET status = 'cancelled' WHERE user_id = ? AND guild_id = ? AND status = 'pending'").run(message.author.id, message.guild.id);
+      }
       require('./db/database').setUserPreference(message.author.id, message.guild.id, 'proactive_opt_in', isOptIn ? '1' : '0');
-      await message.reply({ content: isOptIn ? "You're in. I'll check in now and then." : "Opted out. No proactive messages.", allowedMentions: { parse: ['users'] } });
+      await message.reply({ content: isOptIn
+        ? "Opted in. I'll reply to mentions, join AI chat in channels where it's enabled, and may send occasional check-ins. Use `skarn opt out` to stop; `/forget` deletes remembered data."
+        : "Opted out. I won't join conversations or send check-ins. Data already saved remains until you use `/forget`.", allowedMentions: { parse: ['users'] } });
     } catch (e) { await message.reply({ content: 'Something went wrong.', allowedMentions: { parse: ['users'] } }); }
     return;
   }
@@ -284,7 +463,7 @@ client.on('messageCreate', async function(message) {
     try {
       const prefs = require('./db/database').getUserPreferences ? require('./db/database').getUserPreferences(message.author.id, message.guild.id) : {};
       const optedIn = prefs && prefs.proactive_opt_in === 1;
-      await message.reply({ content: 'Opt-in: ' + (optedIn ? 'ON' : 'OFF') + ' | Use `/aistats` for detailed stats.', allowedMentions: { parse: ['users'] } });
+      await message.reply({ content: 'Opt-in: ' + (optedIn ? 'ON' : 'OFF') + ' | Opt-in controls conversation and check-ins. `/forget` deletes remembered data. Use `/aistats` for detailed stats.', allowedMentions: { parse: ['users'] } });
     } catch (e) { await message.reply({ content: 'Error checking status.', allowedMentions: { parse: ['users'] } }); }
     return;
   }
@@ -317,6 +496,11 @@ client.on('messageCreate', async function(message) {
           }
         }
         try {
+          if (match.command === 'forget') channelTurnCoordinator.clearUser(message.author.id);
+          if (match.command === 'preferences' && match.args.action === 'proactive' && match.args.value === 'off') {
+            channelTurnCoordinator.clearUser(message.author.id);
+            db.prepare("UPDATE follow_ups SET status = 'cancelled' WHERE user_id = ? AND guild_id = ? AND status = 'pending'").run(message.author.id, message.guild.id);
+          }
           await runWithFriendContext({ userId: message.author.id, guildId: message.guild.id, surface: 'command', commandName: match.command }, () => match.handler(message, match.args));
           try { recordFriendActivity(message.author.id, message.guild.id); }
           catch (activityError) { console.error('[FriendTiers] Could not record activation:', activityError.message); }
@@ -347,6 +531,17 @@ client.on('messageCreate', async function(message) {
     return;
   }
 
+  // Replies to Skarn are explicit requests even outside an AI-enabled channel.
+  if (message.reference && message.reference.messageId) {
+    try {
+      const referenced = await message.channel.messages.fetch(message.reference.messageId);
+      if (referenced.author.id === client.user.id) {
+        await safeHandleMention(message);
+        return;
+      }
+    } catch (e) { /* deleted or inaccessible reference; continue normal routing */ }
+  }
+
   // Step 8: Passive reactions (sleep-aware)
   var isSleeping = false;
   var SLEEP_START = process.env.SLEEP_START;
@@ -364,6 +559,7 @@ client.on('messageCreate', async function(message) {
   }
 
   // Step 9: AI channel auto-respond
+  var aiChannelAttentionEvaluated = false;
   try {
     var aiChannels = require('./db/database').getGuildConfig ? require('./db/database').getGuildConfig(message.guild.id, 'aiChannels') : [];
     if (aiChannels && aiChannels.includes(message.channel.id)) {
@@ -371,25 +567,12 @@ client.on('messageCreate', async function(message) {
       var ignoredUsers = require('./db/database').getGuildConfig ? require('./db/database').getGuildConfig(message.guild.id, 'ignoredUsers') : [];
       if (ignoredUsers && ignoredUsers.includes(message.author.id)) return;
       
-      // Reply-to-bot check
-      if (message.reference && message.reference.messageId) {
-        try {
-          var refMsg = await message.channel.messages.fetch(message.reference.messageId);
-          if (refMsg.author.id === client.user.id) {
-            await safeHandleMention(message);
-            return;
-          }
-        } catch (e) {}
+      // Non-opted-in users may contribute context but cannot trigger attention.
+      if (isUserOptedIn(message.author.id, message.guild.id)) {
+        const turnResult = await enqueueChannelTurn(message, false);
+        aiChannelAttentionEvaluated = turnResult.status === 'processed';
+        if (turnResult.status === 'processed' && turnResult.result) return;
       }
-      
-      // Attention gate
-      try {
-        var attentionGate = require('./features/discordNative/attentionGate');
-        if (attentionGate.shouldRespond && await runWithFriendContext({ userId: message.author.id, guildId: message.guild.id, surface: 'ai-channel' }, () => attentionGate.shouldRespond(message, client))) {
-          await safeHandleMention(message);
-          return;
-        }
-      } catch (e) {}
     }
   } catch (e) {}
 
@@ -414,7 +597,7 @@ client.on('messageCreate', async function(message) {
   } catch (e) {}
 
   // Step 11: Passive interjection (if not sleeping)
-  if (!isSleeping) {
+  if (!isSleeping && !aiChannelAttentionEvaluated) {
     try { await runWithFriendContext({ userId: message.author.id, guildId: message.guild.id, surface: 'interjection' }, () => require('./features/presence/interjectionEngine').maybeInterject(message)); } catch (e) {}
   }
 });
@@ -423,6 +606,10 @@ client.on('messageCreate', async function(message) {
 client.on('messageDelete', async message => {
   try { require('./db/messageActivityArchive').recordDeletion(message); }
   catch (e) { console.error('[MessageArchive] Failed to record deleted message:', e.message); }
+  if (message.guild && message.channel) {
+    try { require('./db/channelContext').deleteChannelContextMessage(message.id, message.guild.id, message.channel.id); }
+    catch (e) { console.error('[ChannelContext] Could not remove deleted message:', e.message); }
+  }
   if (message.author?.bot) return;
   const logChanId = getGuildConfig(message.guild?.id, 'logChannel');
   if (!logChanId) return;
@@ -440,8 +627,22 @@ client.on('messageDelete', async message => {
 client.on('messageUpdate', async (oldMessage, newMessage) => {
   // oldMessage is null when the message wasn't cached (no Partials configured)
   if (!oldMessage || !newMessage) return;
-  if (oldMessage.author?.bot) return;
   if (oldMessage.content === newMessage.content) return;
+  if (newMessage.guild && newMessage.channel && typeof newMessage.content === 'string') {
+    try {
+      require('./db/channelContext').editChannelContextMessage({
+        messageId: newMessage.id,
+        guildId: newMessage.guild.id,
+        channelId: newMessage.channel.id,
+        content: newMessage.content,
+        authorName: newMessage.author?.bot
+          ? (newMessage.author.username || 'Skarn')
+          : (newMessage.member?.displayName || newMessage.author.globalName || newMessage.author.username || newMessage.author.id),
+        referenceMessageId: newMessage.reference?.messageId || null,
+      });
+    } catch (e) { console.error('[ChannelContext] Could not update edited message:', e.message); }
+  }
+  if (oldMessage.author?.bot) return;
   try { require('./db/messageActivityArchive').recordEdit(oldMessage, newMessage); }
   catch (e) { console.error('[MessageArchive] Failed to record edited message:', e.message); }
   const logChanId = getGuildConfig(oldMessage.guild?.id, 'logChannel');

@@ -1,4 +1,6 @@
 const { createFollowUp, getPendingFollowUps, markFollowUpSent } = require('../../db/database');
+const { canInteract, shouldSendCheckIn } = require('../proactive/absenceDetector');
+const { isSensitiveMemoryCandidate } = require('../memory/memorySafety');
 
 const TIME_PATTERNS = [
   /(next week|tomorrow|this weekend|in \d+ days)/i,
@@ -8,6 +10,7 @@ const TIME_PATTERNS = [
 ];
 
 function detectFollowUps(userId, guildId, channelId, userMessage) {
+  if (!canInteract(userId, guildId) || isSensitiveMemoryCandidate(userMessage)) return false;
   const lower = userMessage.toLowerCase();
 
   // Check for time-bound statements
@@ -43,12 +46,23 @@ async function processPendingFollowUps(client) {
   const pending = getPendingFollowUps();
   for (const fu of pending) {
     try {
+      if (!canInteract(fu.user_id, fu.guild_id)) {
+        require('../../db/database').db.prepare("UPDATE follow_ups SET status = 'cancelled' WHERE id = ? AND status = 'pending'").run(fu.id);
+        continue;
+      }
+      if (!shouldSendCheckIn(fu.user_id, fu.guild_id)) {
+        require('../../db/database').db.prepare("UPDATE follow_ups SET status = 'cancelled' WHERE id = ? AND status = 'pending'").run(fu.id);
+        continue;
+      }
       const channel = await client.channels.fetch(fu.channel_id);
       if (channel) {
-        const user = await client.users.fetch(fu.user_id);
+        if (!canInteract(fu.user_id, fu.guild_id) || !shouldSendCheckIn(fu.user_id, fu.guild_id)) {
+          require('../../db/database').db.prepare("UPDATE follow_ups SET status = 'cancelled' WHERE id = ? AND status = 'pending'").run(fu.id);
+          continue;
+        }
         await channel.send({
           content: followUpMessage(fu),
-          allowed_mentions: { users: [fu.user_id] },
+          allowedMentions: { users: [fu.user_id] },
         });
         markFollowUpSent(fu.id);
       }
@@ -59,12 +73,7 @@ async function processPendingFollowUps(client) {
 }
 
 function followUpMessage(fu) {
-  const templates = [
-    `hey <@${fu.user_id}>, how'd that go? you mentioned "${fu.topic}"`,
-    `yo <@${fu.user_id}>, circling back — what happened with "${fu.topic}"?`,
-    `<@${fu.user_id}>, you were talking about "${fu.topic}" earlier — update?`,
-  ];
-  return templates[Math.floor(Math.random() * templates.length)];
+  return '<@' + fu.user_id + '> you mentioned "' + fu.topic + '" earlier. if you feel like sharing, how did it go?';
 }
 
 module.exports = { detectFollowUps, processPendingFollowUps };

@@ -1,0 +1,18 @@
+id	kind	category	title	url	credibility	validation	notes
+BASELINE	workspace	all	Current feed registry	skarn-rpc/data/news-sources.json	high	verified	157 total; 146 enabled; enabled topic counts: developer 105, security 14, technology 12, AI 6, gaming 4, science 3, space 2.
+S001	official RSS	world/politics	BBC News - World	https://feeds.bbci.co.uk/news/world/rss.xml	high	passed	Official BBC feed index: https://www.bbc.co.uk/news/10628494; HTTPS/TLS verified; 14 fresh items at final parse, 13 stale.
+S002	publisher RSS	world/politics	Al Jazeera - World News	https://www.aljazeera.com/xml/rss/all.xml	high	passed	Official Al Jazeera RSS page and feed response; HTTPS/TLS verified; 25 fresh items.
+S003	publisher RSS	business/finance	The Guardian - Business	https://www.theguardian.com/uk/business/rss	high	passed	Official Guardian feed guidance: https://www.theguardian.com/help/feeds; HTTPS/TLS verified; 20 fresh items, 17 stale.
+S004	official RSS	business/finance	BBC News - Business	https://feeds.bbci.co.uk/news/business/rss.xml	high	passed	Official BBC feed index; HTTPS/TLS verified; 5 fresh items, 44 stale.
+S005	official RSS	science/health	BBC News - Health	https://feeds.bbci.co.uk/news/health/rss.xml	high	passed	Official BBC feed index; HTTPS/TLS verified; 3 fresh items, 53 stale.
+S006	publisher RSS	science/health	ScienceDaily - Health & Medicine	https://www.sciencedaily.com/rss/top/health.xml	high	passed	ScienceDaily newsfeed index: https://www.sciencedaily.com/newsfeeds.htm; HTTPS/TLS verified; 3 fresh items, 57 stale.
+S007	publisher RSS	gaming/esports	PCGamesN	https://www.pcgamesn.com/mainrss.xml	medium	passed	Publisher RSS endpoint fetched and parsed; HTTPS/TLS verified; 7 fresh items, 68 stale.
+S008	official RSS	culture/general	BBC News - Entertainment & Arts	https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml	high	passed	Official BBC feed index; HTTPS/TLS verified; 1 fresh item, 22 stale.
+S009	publisher RSS	culture/general	The Guardian - Culture	https://www.theguardian.com/uk/culture/rss	high	passed	Official Guardian feed guidance; HTTPS/TLS verified; 14 fresh items, 51 stale.
+S010	publisher RSS	gaming/esports	PC Gamer - Games	https://www.pcgamer.com/feeds/tag/games/	medium	passed	Feed endpoint discovered through Feeder and fetched directly; HTTPS/TLS verified; 7 fresh items, 43 stale.
+S011	official RSS	business/finance	Federal Reserve Press Releases	https://www.federalreserve.gov/feeds/press_all.xml	high	dead-end	Endpoint was reachable on retry but its 20 entries were all older than the 24-hour freshness window; not added.
+S012	publisher RSS	gaming/esports	GamesIndustry.biz - News	https://www.gamesindustry.biz/feed/news	medium	dead-end	Endpoint was HTTPS/TLS valid, but all 100 entries were stale under the 24-hour freshness window; replaced with PC Gamer.
+S013	publisher page	business/finance	SEC Press Releases	https://www.sec.gov/newsroom/press-releases	high	dead-end	WebFetch returned HTTP 403; did not add.
+S014	publisher page	world/politics	Al Jazeera RSS help page	https://www.aljazeera.com/about-us/rss	high	dead-end	HTTP 404; verified and used the official /rss page and feed instead.
+S015	publisher page	culture/general	NPR RSS page	https://www.npr.org/rss	high	dead-end	HTTP 404; no feed added from this candidate.
+S016	search attempt	science/health	CDC RSS feed URL	CDC official news release RSS feed query	medium	inconclusive	Search did not surface an authoritative feed endpoint; did not add.

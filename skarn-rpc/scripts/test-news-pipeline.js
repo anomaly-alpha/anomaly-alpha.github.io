@@ -90,14 +90,14 @@ async function testConfig() {
   assert.equal(config.mode, 'news');
   assert.equal(config.freshnessMode, 'fresh');
   assert.equal(config.maxItemsPerSource, 10);
-  assert.equal(config.newsDwellMs, 30000);
+  assert.equal(config.newsDwellMs, 10000);
   assert.equal(config.enabled, true);
   assert.equal(validateNewsConfig({ ...config, enabled: false }).ok, true);
   assert.equal(validateNewsConfig({ ...config, mode: 'invalid' }).ok, false);
   assert.equal(validateNewsConfig({ ...config, freshnessMode: 'invalid' }).ok, false);
   assert.equal(validateNewsConfig({ ...config, maxItemsPerSource: 0 }).ok, false);
-  assert.equal(validateNewsConfig({ ...config, newsDwellMs: 9999 }).ok, false);
-  assert.equal(config.sources.length, 157);
+  assert.equal(validateNewsConfig({ ...config, newsDwellMs: 4999 }).ok, false);
+  assert.equal(config.sources.length, 167);
   assert.deepEqual(config.sources.slice(0, 15).map(item => item.feedUrl), [
     'https://www.nasa.gov/news-release/feed/',
     'https://github.blog/changelog/feed/',
@@ -115,7 +115,19 @@ async function testConfig() {
     'https://aws.amazon.com/about-aws/whats-new/recent/feed/',
     'https://developer.chrome.com/static/blog/feed.xml',
   ]);
-  assert.equal(new Set(config.sources.map(item => item.feedUrl)).size, 157);
+  assert.deepEqual(config.sources.slice(-10).map(({ id, domain, feedUrl, topicFamily }) => ({ id, domain, feedUrl, topicFamily })), [
+    { id: 'bbc-world', domain: 'feeds.bbci.co.uk', feedUrl: 'https://feeds.bbci.co.uk/news/world/rss.xml', topicFamily: 'world' },
+    { id: 'al-jazeera-world', domain: 'www.aljazeera.com', feedUrl: 'https://www.aljazeera.com/xml/rss/all.xml', topicFamily: 'world' },
+    { id: 'guardian-business', domain: 'www.theguardian.com', feedUrl: 'https://www.theguardian.com/uk/business/rss', topicFamily: 'business' },
+    { id: 'bbc-business', domain: 'feeds.bbci.co.uk', feedUrl: 'https://feeds.bbci.co.uk/news/business/rss.xml', topicFamily: 'business' },
+    { id: 'bbc-health', domain: 'feeds.bbci.co.uk', feedUrl: 'https://feeds.bbci.co.uk/news/health/rss.xml', topicFamily: 'health' },
+    { id: 'sciencedaily-health', domain: 'www.sciencedaily.com', feedUrl: 'https://www.sciencedaily.com/rss/top/health.xml', topicFamily: 'health' },
+    { id: 'pcgamesn', domain: 'www.pcgamesn.com', feedUrl: 'https://www.pcgamesn.com/mainrss.xml', topicFamily: 'gaming' },
+    { id: 'bbc-entertainment-arts', domain: 'feeds.bbci.co.uk', feedUrl: 'https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml', topicFamily: 'culture' },
+    { id: 'guardian-culture', domain: 'www.theguardian.com', feedUrl: 'https://www.theguardian.com/uk/culture/rss', topicFamily: 'culture' },
+    { id: 'pcgamer-news', domain: 'www.pcgamer.com', feedUrl: 'https://www.pcgamer.com/feeds/tag/games/', topicFamily: 'gaming' },
+  ]);
+  assert.equal(new Set(config.sources.map(item => item.feedUrl)).size, 167);
   assert.ok(config.sources.some(item => item.id === 'github-release-oven-sh-bun'));
   assert.ok(config.sources.some(item => item.id === 'pnpm'));
   assert.ok(config.sources.some(item => item.id === 'w3-blog'));

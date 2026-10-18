@@ -40,6 +40,35 @@ const MIGRATIONS = [
       db.prepare('CREATE INDEX IF NOT EXISTS idx_message_activity_archive_message ON message_activity_archive(guild_id, message_id, event_at)').run();
     },
   },
+  {
+    version: 5,
+    name: 'add_channel_context_storage',
+    up(db) {
+      db.prepare('CREATE TABLE IF NOT EXISTS channel_context_messages (message_id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, channel_id TEXT NOT NULL, author_id TEXT NOT NULL, author_name TEXT NOT NULL, content TEXT NOT NULL, created_at INTEGER NOT NULL, captured_at INTEGER NOT NULL, reference_message_id TEXT, related_user_id TEXT, is_skarn INTEGER NOT NULL DEFAULT 0 CHECK (is_skarn IN (0, 1)))').run();
+      db.prepare('CREATE INDEX IF NOT EXISTS idx_channel_context_messages_window ON channel_context_messages(guild_id, channel_id, created_at)').run();
+      db.prepare('CREATE INDEX IF NOT EXISTS idx_channel_context_messages_author ON channel_context_messages(guild_id, author_id, created_at)').run();
+      db.prepare(`CREATE TABLE IF NOT EXISTS channel_context_summary_segments (segment_id TEXT PRIMARY KEY, guild_id TEXT NOT NULL, channel_id TEXT NOT NULL, summary_text TEXT NOT NULL, covers_from INTEGER NOT NULL, covers_to INTEGER NOT NULL, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL, source_author_ids TEXT NOT NULL CHECK (json_valid(source_author_ids) AND json_type(source_author_ids) = 'array'), source_message_ids TEXT NOT NULL CHECK (json_valid(source_message_ids) AND json_type(source_message_ids) = 'array'), CHECK (covers_to >= covers_from))`).run();
+      db.prepare('CREATE INDEX IF NOT EXISTS idx_channel_context_summary_segments_window ON channel_context_summary_segments(guild_id, channel_id, covers_from, covers_to)').run();
+      db.prepare('CREATE INDEX IF NOT EXISTS idx_channel_context_summary_segments_author ON channel_context_summary_segments(guild_id, channel_id, updated_at)').run();
+    },
+  },
+  {
+    version: 6,
+    name: 'mark_skarn_messages_in_channel_context',
+    up(db) {
+      const columns = db.prepare('PRAGMA table_info(channel_context_messages)').all().map(column => column.name);
+      if (!columns.includes('is_skarn')) db.prepare('ALTER TABLE channel_context_messages ADD COLUMN is_skarn INTEGER NOT NULL DEFAULT 0 CHECK (is_skarn IN (0, 1))').run();
+    },
+  },
+  {
+    version: 7,
+    name: 'attribute_shared_skarn_replies_for_forget',
+    up(db) {
+      const columns = db.prepare('PRAGMA table_info(channel_context_messages)').all().map(column => column.name);
+      if (!columns.includes('related_user_id')) db.prepare('ALTER TABLE channel_context_messages ADD COLUMN related_user_id TEXT').run();
+      db.prepare('CREATE INDEX IF NOT EXISTS idx_channel_context_messages_related_user ON channel_context_messages(guild_id, related_user_id, created_at)').run();
+    },
+  },
 ];
 
 function runMigrations(db) {

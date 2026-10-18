@@ -1,9 +1,13 @@
 const assert = require('assert/strict');
 const { EventEmitter } = require('events');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 const config = require('../data/news-sources.json');
-const { createSafeLookup, isUnsafeAddress, requestFeed } = require('../features/news/feedClient');
+const { DEFAULT_ALLOWED_HOSTS, createSafeLookup, isUnsafeAddress, requestFeed } = require('../features/news/feedClient');
 const { validateNewsConfig } = require('../features/news/newsPoller');
 const { auditSources, errorCode } = require('./news-feed-health');
+const { clearCache } = require('./clean-news-cache');
 
 assert.equal(isUnsafeAddress('127.0.0.1'), true);
 assert.equal(isUnsafeAddress('10.0.0.1'), true);
@@ -67,9 +71,15 @@ await assert.rejects(() => requestFeed('https://www.nasa.gov/start', { allowlist
 
 const disabled = config.sources.filter(source => source.enabled === false);
 assert.equal(validateNewsConfig(config).ok, true);
-assert.equal(config.sources.length, 157);
+assert.equal(config.sources.length, 167);
 assert.equal(disabled.length, 11);
-assert.equal(config.sources.filter(source => source.enabled).length, 146);
+assert.equal(config.sources.filter(source => source.enabled).length, 156);
+const newSources = config.sources.slice(-10);
+assert.equal(newSources.every(source => source.enabled && source.trustClass === 'publisher' && source.maxResponseBytes === 1048576), true);
+for (const host of ['www.aljazeera.com', 'www.pcgamer.com', 'www.pcgamesn.com', 'www.theguardian.com']) {
+  assert.equal(DEFAULT_ALLOWED_HOSTS.includes(host), true);
+}
+assert.equal(newSources.every(source => DEFAULT_ALLOWED_HOSTS.includes(source.domain)), true);
 assert.equal(config.sources.find(source => source.id === 'crowdstrike-blog').feedUrl, 'https://www.crowdstrike.com/en-us/blog/feed');
 assert.equal(config.sources.find(source => source.id === 'slack-engineering').feedUrl, 'https://slack.engineering/feed/');
 
@@ -79,7 +89,58 @@ const health = await auditSources({ sources: [config.sources.find(source => sour
 assert.equal(health[0].finding, 'HTTP_403_WAF');
 assert.equal(errorCode(Object.assign(new Error('timeout'), { code: 'FEED_TIMEOUT' })), 'TIMEOUT');
 
-console.log('news security tests passed: immutable host boundary, DNS destination guard, redirect policy, quarantine, and health dispositions');
+const temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'skarn-news-clear-test-'));
+fs.chmodSync(temporaryDirectory, 0o700);
+const temporaryCache = path.join(temporaryDirectory, 'news-state.json');
+const timestamp = new Date().toISOString();
+const cachedItem = {
+  id: 'clear-test-item',
+  title: 'A current test headline',
+  canonicalUrl: 'https://www.nasa.gov/news-release/test-headline',
+  sourceId: 'nasa-breaking-news',
+  sourceName: 'NASA Breaking News',
+  publishedAt: timestamp,
+  updatedAt: timestamp,
+  fetchedAt: timestamp,
+  topic: 'science',
+  confidence: 1,
+  basePriority: 1,
+  salience: 'normal',
+  iconRole: 'world',
+  safetyDecision: 'accepted',
+};
+const cachedState = {
+  schemaVersion: 1,
+  updatedAt: Date.now(),
+  items: [cachedItem],
+  sources: { 'nasa-breaking-news': { etag: 'test-validator' } },
+  lastPollAt: Date.now(),
+  lastSuccessAt: Date.now(),
+  lastError: null,
+};
+fs.writeFileSync(temporaryCache, JSON.stringify(cachedState), { mode: 0o600 });
+let mockServiceActive = true;
+const mockSystemctl = (command, args) => {
+  assert.equal(command, 'systemctl');
+  if (args[1] === 'is-active') return mockServiceActive ? 'active' : 'inactive';
+  if (args[1] === 'stop') { mockServiceActive = false; return ''; }
+  if (args[1] === 'start') { mockServiceActive = true; return ''; }
+  throw new Error('unexpected systemctl operation');
+};
+const cleared = clearCache(temporaryCache, cachedState, { systemctl: mockSystemctl });
+const clearedState = JSON.parse(fs.readFileSync(temporaryCache, 'utf8'));
+const backupState = JSON.parse(fs.readFileSync(cleared.backupPath, 'utf8'));
+assert.equal(cleared.previousArticleCount, 1);
+assert.equal(cleared.previousSourceCount, 1);
+assert.deepEqual(clearedState.items, []);
+assert.deepEqual(clearedState.sources, {});
+assert.equal(clearedState.lastSuccessAt, null);
+assert.equal(backupState.items.length, 1);
+assert.equal(mockServiceActive, true);
+assert.equal(cleared.restarted, true);
+fs.rmSync(temporaryDirectory, { recursive: true, force: true });
+
+console.log('news security tests passed: immutable host boundary, DNS destination guard, redirect policy, quarantine, health dispositions, and recoverable cache clear');
 }
 
 run().catch(error => {

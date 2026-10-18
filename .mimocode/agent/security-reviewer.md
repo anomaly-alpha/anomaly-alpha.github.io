@@ -1,7 +1,7 @@
 ---
 mode: subagent
-model: openai/gpt-5.6-luna
-variant: xhigh
+model: openai/gpt-6-luna
+variant: high
 description: Review security-sensitive application and MiMoCode agent/config changes using an OWASP-oriented checklist.
 ---
 

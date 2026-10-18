@@ -6,12 +6,14 @@
 
 var { moderatedChatCompletion } = require('../../ai/client');
 var { addMemoryEntry } = require('../../db/database');
+var { canInteract } = require('../proactive/absenceDetector');
+var { isSensitiveMemoryCandidate } = require('../memory/memorySafety');
 
 // Allowed types — keep in sync with skarn-schema.sql CHECK constraint.
 var MEMORY_TYPES = ['fact', 'interest', 'project', 'event', 'preference'];
 
 async function postProcessConversation(userId, guildId, channelId, userMessage, aiResponse, analysis) {
-  if (!userMessage || userMessage.length < 50) return;
+  if (!guildId || !canInteract(userId, guildId) || !userMessage || userMessage.length < 50) return;
 
   var analysisContext = '';
   if (analysis && analysis.topics && analysis.topics.length > 0) {
@@ -50,7 +52,7 @@ async function postProcessConversation(userId, guildId, channelId, userMessage, 
     }
     for (var i = 0; i < entities.length; i++) {
       var e = entities[i];
-      if (e.type && e.name && e.name.length < 100) {
+      if (e.type && e.name && e.name.length < 100 && !isSensitiveMemoryCandidate(e.name + ' ' + (e.context || ''))) {
         var type = MEMORY_TYPES.indexOf(e.type) !== -1 ? e.type : 'fact';
         addMemoryEntry(userId, guildId, 'extracted', type, e.name.toLowerCase(), Math.min(1, e.confidence || 0.5), e.context || null);
       }

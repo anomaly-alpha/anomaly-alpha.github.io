@@ -10,12 +10,14 @@ function shouldAnalyze(messageText) {
   return messageText && (messageText.length >= 50 || messageText.indexOf('?') !== -1);
 }
 
-async function runMessageAnalysis(userId, guildId, channelId, messageText, roleNature) {
+async function runMessageAnalysis(userId, guildId, channelId, messageText, roleNature, canContinue) {
   if (!shouldAnalyze(messageText)) return null;
+  if (canContinue && !(await canContinue())) return null;
   var analysis = await analyzeMessage(userId, guildId, channelId, messageText, roleNature);
   if (!analysis) {
     // One retry with 100ms backoff
     await new Promise(function(resolve) { setTimeout(resolve, 100); });
+    if (canContinue && !(await canContinue())) return null;
     analysis = await analyzeMessage(userId, guildId, channelId, messageText, roleNature);
   }
   return analysis || null;

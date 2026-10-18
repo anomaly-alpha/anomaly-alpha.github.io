@@ -18,12 +18,15 @@ const { buildExamplesLine } = require('../persona/examples');
 const { embedText, cosineSimilarity } = require('./intelligence/embeddings');
 const { getResponseInsights } = require('./intelligence/responseLearner');
 const { formatKnowledge } = require('./intelligence/knowledgeGraph');
+const { canInteract } = require('./proactive/absenceDetector');
+const { isSensitiveMemoryCandidate } = require('./memory/memorySafety');
 
 function buildContext(userId, guildId, channelId, opts) {
   opts = opts || {};
   const roleNature = opts.roleNature || 'casual';
   const userContent = opts.userContent || '';
   const interactionCount = opts.interactionCount || 0;
+  const allowPersonalContext = opts.allowPersonalContext !== false && !!guildId && canInteract(userId, guildId);
 
   // Tiered: lightweight for short/no-question, full for substantive
   let isFullTier = userContent.length >= 50 || userContent.indexOf('?') !== -1;
@@ -37,37 +40,41 @@ function buildContext(userId, guildId, channelId, opts) {
   const channelState = getChannelState(channelId, guildId);
   const stateLine = getStateLine(channelState.current_state);
   const moodLine = getMoodLine(guildId);
-  const relationshipLine = getRelationshipLine(userId, guildId);
+  const relationshipLine = allowPersonalContext ? getRelationshipLine(userId, guildId) : '';
   const cultureLine = getCultureLine(guildId, channelId);
 
-  const memory = getMemoryEntries(userId, guildId, 10);
-  const factEntries = memory.filter(function(m) { return m.source === 'etch'; });
+  const memory = allowPersonalContext ? getMemoryEntries(userId, guildId, 30) : [];
+  const factEntries = memory.filter(function(m) {
+    if (m.source === 'etch') return true;
+    return m.source === 'extracted' && ['fact', 'interest', 'project', 'event', 'preference'].includes(m.type) &&
+      !isSensitiveMemoryCandidate(m.content) && (!m.context || !isSensitiveMemoryCandidate(m.context));
+  });
   const memoryLine = factEntries.length > 0 ? 'What Skarn remembers about this person: ' + factEntries.map(function(m) { return m.content; }).join('; ') : '';
-  const knowledgeLine = formatKnowledge(userId, guildId);
+  const knowledgeLine = allowPersonalContext ? formatKnowledge(userId, guildId) : '';
 
-  const warmthLine = getWarmthLine(userId, guildId, roleNature);
-  const rel = getRelationship(userId, guildId);
+  const warmthLine = allowPersonalContext ? getWarmthLine(userId, guildId, roleNature) : '';
+  const rel = allowPersonalContext ? getRelationship(userId, guildId) : null;
   const familiarity = rel ? rel.familiarity : 0;
-  const patienceLine = getPatienceLine(userId, guildId, userContent);
-  const callbackLine = familiarity >= 50 ? getCallbackLine(channelId, userId) : '';
-  const gratitudeLine = familiarity >= 15 ? getGratitudeDirective(userContent) : '';
-  const firstOfDayLine = familiarity >= 15 ? getFirstOfDayLine(userId, guildId) : '';
-  const milestoneLine = familiarity >= 15 ? getMilestoneLine(userId, interactionCount) : '';
-  const apologyLine = familiarity >= 15 ? getApologyLine(userId) : '';
-  const emotionalLine = getEmotionDirective(userId, guildId);
+  const patienceLine = allowPersonalContext ? getPatienceLine(userId, guildId, userContent) : '';
+  const callbackLine = allowPersonalContext && familiarity >= 50 ? getCallbackLine(channelId, userId) : '';
+  const gratitudeLine = allowPersonalContext && familiarity >= 15 ? getGratitudeDirective(userContent) : '';
+  const firstOfDayLine = allowPersonalContext && familiarity >= 15 ? getFirstOfDayLine(userId, guildId) : '';
+  const milestoneLine = allowPersonalContext && familiarity >= 15 ? getMilestoneLine(userId, interactionCount) : '';
+  const apologyLine = allowPersonalContext && familiarity >= 15 ? getApologyLine(userId) : '';
+  const emotionalLine = allowPersonalContext ? getEmotionDirective(userId, guildId) : '';
 
   // Intent detection — infers what the user wants based on emotion + message patterns
   var intentLine = '';
   try {
-    var _ei = getUserEmotion(userId, guildId);
+    var _ei = allowPersonalContext ? getUserEmotion(userId, guildId) : null;
     if (_ei && _ei.emotional_state && _ei.emotional_state !== 'neutral') {
       intentLine = getIntentDirective(userContent, _ei.emotional_state);
     }
   } catch (e) { /* intent detection unavailable */ }
 
   // ===== Emotional Intelligence Upgrades =====
-  const trajectoryLine = getTrajectoryDirective(userId, guildId);
-  const memoryEmotionLine = getMemoryEmotionLine(userId, guildId);
+  const trajectoryLine = allowPersonalContext ? getTrajectoryDirective(userId, guildId) : '';
+  const memoryEmotionLine = allowPersonalContext ? getMemoryEmotionLine(userId, guildId) : '';
   const escalationLine = getEscalationDirective(channelId);
   const climateLine = getClimateLine(guildId);
 
@@ -87,7 +94,7 @@ function buildContext(userId, guildId, channelId, opts) {
   var profileLine = '';
   var kbLine = '';
 
-  if (isFullTier) {
+  if (isFullTier && allowPersonalContext) {
     var recent = getRecentAssistantOrUserMessages(userId, guildId, channelId, 15, 365 * 24 * 60 * 60 * 1000);
 
     if (recent.length > 0) {
@@ -122,7 +129,7 @@ function buildContext(userId, guildId, channelId, opts) {
     // Knowledge base
     var knowledge = searchKnowledge(userContent || '');
     kbLine = knowledge ? formatKnowledgeSnippet(knowledge) : '';
-  } else {
+  } else if (allowPersonalContext) {
     // Lightweight: just last 3 messages
     var recent = getRecentAssistantOrUserMessages(userId, guildId, channelId, 3, 365 * 24 * 60 * 60 * 1000);
 
@@ -131,13 +138,14 @@ function buildContext(userId, guildId, channelId, opts) {
     }
   }
 
-  const channelLine = getChannelActivity(guildId, channelId, userId);
+  const channelLine = allowPersonalContext ? getChannelActivity(guildId, channelId, userId) : '';
   const safetyLine = buildSafetyLine();
-  const growthLine = getGrowthLine(userId, guildId);
+  const growthLine = allowPersonalContext ? getGrowthLine(userId, guildId) : '';
   const loreLine = getLoreLine(userContent);
 
   var followUpLine = '';
   try {
+    if (!allowPersonalContext) throw new Error('personal context disabled');
     var pending = db.prepare(
       "SELECT topic FROM follow_ups WHERE user_id = ? AND guild_id = ? AND status = 'pending' AND due_after < ? ORDER BY due_after ASC LIMIT 1"
     ).get(userId, guildId, Date.now());
@@ -154,7 +162,7 @@ function buildContext(userId, guildId, channelId, opts) {
 
   // ===== Intelligence: Semantic RAG =====
   var ragLine = '';
-  if (isFullTier && guildId && userContent.length >= 10) {
+  if (allowPersonalContext && isFullTier && guildId && userContent.length >= 10) {
     try {
       var recentEmbeds = getRecentMessageEmbeddings(userId, guildId, 60);
       if (recentEmbeds.length >= 5) {
@@ -200,6 +208,7 @@ function buildContext(userId, guildId, channelId, opts) {
   var guidanceLine = '';
   var calibrationLine = '';
   try {
+    if (!allowPersonalContext) throw new Error('personal context disabled');
     var insights = getResponseInsights(userId, guildId);
     if (insights.sampleSize >= 5) {
       guidanceLine = 'Response effectiveness: ' + insights.guidance;
@@ -232,7 +241,7 @@ function buildContext(userId, guildId, channelId, opts) {
 
   const dreamLine = getDreamLine(userContent);
 
-  const examplesLine = (familiarity === 0) ? buildExamplesLine(true) : buildExamplesLine(false);
+  const examplesLine = (!allowPersonalContext || familiarity === 0) ? buildExamplesLine(true) : buildExamplesLine(false);
 
   return {
     examplesLine: examplesLine,

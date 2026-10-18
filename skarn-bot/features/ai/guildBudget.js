@@ -6,11 +6,13 @@ const { db } = require('../../db/database');
 
 const GUILD_AI_DAILY_LIMIT = parseInt(process.env.GUILD_AI_DAILY_LIMIT, 10) || 2000;
 
-// Interactive chat buckets only. NOTE: 'command' is deliberately NOT listed —
+// Conversation and user-facing generation buckets. Attention decisions and
+// opt-in proactive check-ins are included because they consume model calls.
+// NOTE: 'command' is deliberately NOT listed —
 // it is the default bucket for support call sites (vein, search, advice,
 // analyzer, postProcessor) that omit `bucket`, so budgeting it would silently
 // count support calls. Musing/interjection pass explicit buckets (Task 3).
-const BUDGETED_BUCKETS = ['chat', 'musing', 'interjection'];
+const BUDGETED_BUCKETS = ['chat', 'attention', 'proactive', 'musing', 'interjection'];
 
 function _dailyKey() {
   const d = new Date();

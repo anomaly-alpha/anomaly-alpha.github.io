@@ -39,7 +39,8 @@ Discord Gateway
       │
       ├─► Passive reactions → reactionSystem.js
       │
-      ├─► AI channel auto-respond → attentionGate.js → mentionRouter.js
+      ├─► AI channel message capture → 7-day context store → per-channel turnCoordinator.js
+      │     └─ opted-in trigger → attentionGate.js/model decision → sharedPipeline reply or silence
       │
       ├─► Passive interjections → interjectionEngine.js
       │
@@ -57,7 +58,7 @@ User message
 runMessageAnalysis()  — preprocessing/pipeline.js (analyzer + shouldAnalyze gate)
     │  Analyzer output informs model routing + memory extraction
     ▼
-buildContext(userId, guildId, channelId)      — features/promptContext.js
+buildContext(userId, guildId, channelId)      — features/promptContext.js (personal context only for addressed replies)
     │  Returns 32 context lines from ~12+ modules: channel state, guild mood,
     │  relationship, server culture, memory entries, conversation history,
     │  user profile, emotional context, knowledge base, news, lorebook, RAG,
@@ -77,7 +78,7 @@ Friend permission check → OpenAI moderation + tier-aware rate reservation → 
 condenseReply()  — features/ai/condenser.js
     │  Tightens over-target replies to the role's character reply target
     ▼
-storeMessage('assistant') → trackResponse → extractMemory (non-blocking)
+trackResponse/memory extraction (directed replies only) → send → store personal assistant turn and/or shared Skarn channel row
     │
     ▼
 startTypingKeepalive(channel) → getTypingDelay(reply.length) → splitMessage/maybeBurst → send
@@ -111,7 +112,7 @@ features/<name>/
 commands/<name>.js          — Thin wrapper: re-exports command + handler
 ```
 
-The `commands/` directory contains thin wrappers only. `bot.js` loads all 78 command files.
+The `commands/` directory contains thin wrappers only. `bot.js` loads 70 slash-command definitions. Several workflows are grouped under subcommands; see `README.md` or the live `/help` command for the current list.
 
 ## Key Modules
 
@@ -179,7 +180,9 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 78 com
 | Reaction system | `features/discordNative/reactionSystem.js` | Passive emoji reactions (3% chance) |
 | Typing sim | `features/discordNative/typingSim.js` | `startTypingKeepalive()` + `getTypingDelay()` (single length-scaled pre-send pause; `typingController.js` deleted) |
 | Context injector | `features/discordNative/contextInjector.js` | **Zero callers** — conversation context comes from `getRecentAssistantOrUserMessages()`/`getServerBuzz()` in `promptContext.js` instead |
-| Attention gate | `features/discordNative/attentionGate.js` | Probability-based auto-respond gate |
+| Attention gate | `features/discordNative/attentionGate.js` + `attentionDecision.js` | Conversation-aware, validated respond/silence decision; model-agnostic JSON parsing |
+| Turn coordinator | `features/conversation/turnCoordinator.js` | 1.5-second same-author batching, message deduplication, per-channel serialization, eligibility cancellation |
+| Channel transcript | `features/conversation/channelTranscript.js` + `db/channelContext.js` | Seven-day raw shared context, bounded summary compaction, provenance, forget/deletion support |
 | Activation registry | `features/activation/activationRegistry.js` | Text command routing ("skarn weather") |
 | Proactive scheduler | `features/proactive/scheduler.js` | Follow-ups, absence check-ins |
 | Interjection engine | `features/presence/interjectionEngine.js` | AI-driven proactive interjections |
@@ -188,7 +191,7 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 78 com
 ### Data Layer
 | Module | File | Responsibility |
 |--------|------|----------------|
-| Database | `db/` | Facade `db/database.js` + domain modules (`memory`, `conversation`, `relationship`, `channel`, `ops`, `humor`, `stories`) + `db/db.js` connection |
+| Database | `db/` | Facade `db/database.js` + domain modules (`memory`, `conversation`, `relationship`, `channel`, `channelContext`, `ops`, `humor`, `stories`) + `db/db.js` connection |
 | Schema | `db/skarn-schema.sql` | 30+ tables (run on startup via CREATE IF NOT EXISTS) |
 
 ## State Machine: Channel Mood
@@ -226,11 +229,11 @@ Dormant is **only** set by `stateDecay.js` `runDecayPass()` — never by message
 | Hostile content | 10 regex patterns, 3 strikes in 10 min → silence | Blocks AI calls for hostile users |
 | Rate limit | 50 calls per 10 min per user (SQLite, `RATE_LIMIT_MAX_CALLS`) | Prevents abuse across all AI commands |
 | Hourly cap | 50 per hour per user | Controls cost |
-| Per-guild AI spend budget | `GUILD_AI_DAILY_LIMIT` (default 2000/day) on chat buckets (chat [covers mention/consult], musing, interjection), enforced in `moderatedChatCompletion()` after moderation; DMs share a `'dm'` pseudo-guild bucket; support calls unbudgeted | One busy server can't exhaust the shared wallet |
+| Per-guild AI spend budget | `GUILD_AI_DAILY_LIMIT` (default 2000/day) on chat, attention, proactive, musing, and interjection buckets, enforced in `moderatedChatCompletion()` after moderation; DMs share a `'dm'` pseudo-guild bucket; support calls unbudgeted | One busy server can't exhaust the shared wallet |
 | Mention cooldown | `checkMentionCooldown`/`setMentionCooldown` removed 2026-08-08 (dead); `mention_cooldowns` table dropped 2026-08-08 | Mention path uses `canInteract`/`canRespond`/`isHostile`/`isSilenced` instead |
 | Sleep mode | Configurable UTC hours; skips AI responses | Reduces cost during quiet hours |
-| Reaction-only | 10% chance → only emoji reaction, no AI text | Reduces cost for casual messages |
-| Opt-in required | `proactive_opt_in` column defaults to 0 | Users must opt in for proactive messages |
+| Passive reaction | Independent 3% emoji-reaction path | Separate from AI response decisions; an attention silence does not create a filler reply |
+| Opt-in required | `proactive_opt_in` column defaults to 0 | Users must opt in for mentions, enabled-channel conversation, and proactive check-ins |
 | Role line safety | Explicit bans in role lines (gore, romance) | Content safety baked into system prompt |
 | Slur filter Gate 1 | System prompt instruction (safetyLine) + identity edit | Reduces likelihood of AI-generated slurs |
 | Slur filter Gate 2 | **Deleted 2026-08-01** — DB pattern matching removed (`slur_filter` table, cache, CRUD helpers) | No longer applies (CONTEXT.md §13) |
@@ -295,7 +298,7 @@ All state lives in SQLite (`data/skarn.db`). No external database. Key patterns:
 - **Per-user-per-guild** scoping for most tables `(user_id, guild_id)` PK
 - **Ephemeral flags** via `app_flags` with optional TTL (SETs auto-clean via `pruneExpiredFlags()`)
 - **FTS5** on conversation messages and knowledge base for full-text search
-- **Versioned migrations** — `db/migrations.js` runs at startup (`db/db.js:41`), tracked via SQLite `user_version` (3 migrations). Base schema is still `CREATE TABLE IF NOT EXISTS` on every startup (`db/skarn-schema.sql`); column additions use try/catch for idempotency
+- **Versioned migrations** — `db/migrations.js` runs at startup (`db/db.js:41`), tracked via SQLite `user_version` (7 migrations). Base schema is still `CREATE TABLE IF NOT EXISTS` on every startup (`db/skarn-schema.sql`); column additions use try/catch for idempotency
 
 See `docs/DATABASE.md` for the full table reference.
 
@@ -312,6 +315,16 @@ Presence content is deliberately outside the database. Both runtimes consume the
 | `mentionRouter.js` / `consult.handler.js` near-duplicate (fixed 2026-08-01) | Both handlers | Both delegate to `runPipeline()` (`features/ai/sharedPipeline.js`); only the defer/edit and canInteract/canRespond differences remain |
 | Database god module (fixed 2026-08-04) | `db/database.js` → `db/` domain modules | `db/database.js` is now a facade over `db/{db,memory,conversation,relationship,channel,ops,humor,stories}.js`; 111 exports preserved, zero call-site changes |
 | Callback sampling is random | `callbackEngine.js` | 10% random, not gated by sentiment or reactions (per spec) |
+
+## Conversation Attention and Shared Context
+
+A guild user must opt in before Skarn replies or joins an AI-enabled channel. Passive participation additionally requires the channel's aichat-on setting. Only an opted-in user's message triggers the conversation-aware attention call; non-opted-in messages are context only and cannot be direct targets.
+
+Eligible turns are batched for 1.5 seconds and serialized per channel. Attention and reply generation are separate moderated calls; invalid or failed passive attention decisions stay silent. A general unaddressed channel contribution uses no personal relationship, memory, profile, or user-specific conversation context.
+
+Shared channel context is stored in channel_context_messages for seven days, including Skarn replies attributed to the initiating user. Older context is compacted into provenance-bearing channel summary segments that can retain names and exact quotes until forgotten. Personal conversation history and memory remain separate stores. Opt-out suspends future extraction/use without deleting existing personal data; forget removes attributable shared-context data and personal data according to the selected forget scope.
+
+Attention and proactive check-in calls use the configured model through moderatedChatCompletion and are included in the guild AI budget.
 
 ## Environment Variables
 

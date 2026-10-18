@@ -2,7 +2,7 @@
 
 ## Overview
 
-All persistent state lives in a single SQLite file at `data/skarn.db` (auto-created). The schema is `db/skarn-schema.sql`, run on every startup via `CREATE TABLE IF NOT EXISTS`. Migration strategy: additive for column evolution (new columns via `ALTER TABLE ... ADD COLUMN`); v3 `drop_mention_cooldowns` is the first destructive exception (orphaned table). Idempotent startup ALTERs live in `db/db.js` (try/catch, e.g. `user_preferences.proactive_opt_in`, `user_profile` growth columns); versioned migrations in `db/migrations.js` (v1 reminder/giveaway indexes, v2 `daily_news.published_at`, v3 `drop_mention_cooldowns`); `lib/rateLimit.js` auto-adds `rate_limits.bucket`.
+All persistent state lives in a single SQLite file at `data/skarn.db` (auto-created). The schema is `db/skarn-schema.sql`, run on every startup via `CREATE TABLE IF NOT EXISTS`. Migration strategy: additive for column evolution (new columns via `ALTER TABLE ... ADD COLUMN`); v3 `drop_mention_cooldowns` is the first destructive exception (orphaned table). Idempotent startup ALTERs live in `db/db.js` (try/catch, e.g. `user_preferences.proactive_opt_in`, `user_profile` growth columns); versioned migrations in `db/migrations.js` (v1 reminder/giveaway indexes, v2 `daily_news.published_at`, v3 `drop_mention_cooldowns`, v4 archive, v5-v7 channel context); `lib/rateLimit.js` auto-adds `rate_limits.bucket`.
 
 Presence is not a database domain. The shared 5,000-entry phrase catalog is the tracked file `skarn-bot/presence-assets/presence-phrases.json`, consumed read-only by the bot and local RPC. The bot persists only its current ten-minute mood window in the existing `app_state` key `skarn_presence_mood`; it has no presence phrase table, archive, runtime phrase pool, migration, or volume-uploaded catalog. The RPC retains its local IPC artwork and mood state outside this SQLite database.
 
@@ -50,6 +50,13 @@ Per-channel bigram frequency tracking.
 | `last_seen_at` | INTEGER | Most recent occurrence timestamp |
 | **PK** | | `(guild_id, channel_id, ngram)` |
 
+### Shared AI channel context
+
+`channel_context_messages` stores human messages and Skarn replies only in channels where `/aichat on` is enabled. Rows are guild/channel scoped and expire after seven days. `related_user_id` attributes a Skarn reply to the opted-in turn that caused it so `/forget` can remove related messages. Non-opted-in messages are context only; they cannot trigger attention or become reply targets, and are not copied into personal memory.
+
+`channel_context_summary_segments` stores bounded shared summaries with source message/author provenance. They may preserve names and exact quotes and remain until forgotten. A forget request removes attributable summary segments and the author's raw channel rows/Skarn replies for the selected memory or conversation scope. The distinct `/forget memory` and `/forget conversation` commands preserve the other personal store.
+
+Cleanup runs every five minutes and before channel-context reads. When the seven-day transcript exceeds the prompt budget, older discussion is summarized while newest turns remain verbatim. This store is not backfilled from `message_activity_archive`, which has separate scope and retention.
 ### Relationship & Users
 
 #### `user_relationship`
@@ -161,7 +168,7 @@ Unified per-user memory, discriminated by `source`.
 | `updated_at` | INTEGER NOT NULL | Last update timestamp |
 | **UNIQUE** | | `(user_id, guild_id, type, content)` |
 
-- `source='etch'`: confidence always 1.0, exempt from decay. Set via `/etch` command.
+- `source='etch'`: confidence always 1.0, exempt from decay. Set via `/memory save`; `etch` is the retained internal source label.
 - `source='extracted'`: confidence starts at 0.5, decays 0.95× after 30 days, pruned below 0.2.
 - `source='conversation'`: reserved for future conversation-derived memory.
 
@@ -670,6 +677,11 @@ Fulfilled Realm omen records with stored callback text (`features/serverMemory/o
 | `idx_realm_kill_log_user` | `realm_kill_log` | `(user_id, guild_id)` | Kill stats queries |
 | `idx_reminders_due` | `reminders` | `(remind_at, delivered)` | Reminder dispatch (migration v1) |
 | `idx_giveaways_ends` | `giveaways` | `(ends_at, ended)` | Giveaway expiry (migration v1) |
+| `idx_channel_context_messages_window` | `channel_context_messages` | `(guild_id, channel_id, created_at)` | Seven-day channel transcript reads |
+| `idx_channel_context_messages_author` | `channel_context_messages` | `(guild_id, author_id, created_at)` | Author-scoped context deletion |
+| `idx_channel_context_messages_related_user` | `channel_context_messages` | `(guild_id, related_user_id, created_at)` | Forget Skarn replies attributed to a trigger user |
+| `idx_channel_context_summary_segments_window` | `channel_context_summary_segments` | `(guild_id, channel_id, covers_from, covers_to)` | Channel summary retrieval |
+| `idx_channel_context_summary_segments_author` | `channel_context_summary_segments` | `(guild_id, channel_id, updated_at)` | Channel summary replacement/deletion |
 
 ## Maintenance Jobs
 
@@ -680,6 +692,7 @@ Fulfilled Realm omen records with stored callback text (`features/serverMemory/o
 | News fetch | 15min | Fetch articles into `daily_news` |
 | Daily digest | 6pm | Post news digest to configured channels |
 | Proactive scheduler | 10min | Check follow-ups, absence detection |
+| AI channel context cleanup | 5min | Delete raw channel context older than seven days |
 
 ## Scoping Rule
 

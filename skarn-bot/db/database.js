@@ -19,6 +19,7 @@ const memory = require('./memory');
 const conversation = require('./conversation');
 const relationship = require('./relationship');
 const channel = require('./channel');
+const channelContext = require('./channelContext');
 const ops = require('./ops');
 const humor = require('./humor');
 const stories = require('./stories');
@@ -41,6 +42,7 @@ module.exports = Object.assign(
   conversation,
   relationship,
   channel,
+  channelContext,
   ops,
   humor,
   stories,

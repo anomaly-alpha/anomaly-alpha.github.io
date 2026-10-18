@@ -23,6 +23,7 @@ const { storeMessage } = require('../conversation/messageStore');
 const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
 const { updateEmotion, applyAnalyzedEmotion } = require('../wisdom/emotionalIntelligence');
 const { getFriendFlags, getEffectiveTier, getFamiliarityLine } = require('../friendTiers/friendTierEngine');
+const { canInteract } = require('../proactive/absenceDetector');
 
 const AI_ERRORS = [
   'The connection is frayed. Try again.',
@@ -45,6 +46,11 @@ const AI_ERRORS = [
 //   temperature         — 0.8 | 0.85
 //   beforeSentiment     — pre-computed sentiment (optional)
 //   roleName            — role in roles.js (default 'consult')
+//   channelSnapshot     — shared channel transcript snapshot for passive AI turns
+//   currentMessageIds   — source Discord IDs included in the current turn
+//   replyIntent         — validated attention intent, if this was a passive turn
+//   responseTarget      — opted-in user ID or 'unaddressed' for passive channel replies
+//   beforeSend          — re-check consent/channel eligibility before each outbound action
 async function runPipeline(userId, guildId, channelId, message, opts) {
   var threadType = opts.threadType || 'channel';
   var temperature = opts.temperature || 0.85;
@@ -52,6 +58,14 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
   var beforeSentiment = opts.beforeSentiment;
   var roleName = opts.roleName || 'consult';
   var channel = opts.channel;
+  var isUnaddressed = opts.responseTarget === 'unaddressed';
+  async function canSend() {
+    try {
+      if (opts.beforeSend) return (await opts.beforeSend()) !== false;
+      return !!guildId && canInteract(userId, guildId) && checkAiPermission(userId, guildId, surface).allowed;
+    }
+    catch (e) { return false; }
+  }
   const friendFlags = getFriendFlags(userId, guildId);
   const friendTier = getEffectiveTier(userId, guildId);
   const surface = opts.threadType === 'consult' ? 'consult' : 'mention';
@@ -60,15 +74,16 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     await opts.sendError(permission.safeMessage);
     return false;
   }
+  if (!guildId || !canInteract(userId, guildId)) {
+    await opts.sendError('Opt in first with `skarn opt in` before I can join the conversation.');
+    return false;
+  }
 
   // Typing indicator — visible for the ENTIRE thinking duration, not just the
   // post-generation pause. Stopped in the finally block below.
   var stopTyping = startTypingKeepalive(channel);
 
-  // Store user message
-  await storeMessage(userId, guildId, channelId, 'user', message, { threadType: threadType });
-
-  const rel = getRelationship(userId, guildId);
+  const rel = isUnaddressed ? null : getRelationship(userId, guildId);
   const interactionCount = rel ? rel.interaction_count : 0;
 
   try {
@@ -76,7 +91,8 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
 
     var systemPrompt;
     var contextualMessage;
-    var analysis = await runMessageAnalysis(userId, guildId, channelId, message, 'casual');
+    var analysis = await runMessageAnalysis(userId, guildId, channelId, message, 'casual', canSend);
+    if (!(await canSend())) return false;
 
     // Emotion write — AFTER the analyzer, awaited (grilled Q4): the prompt's
     // emotional line now reflects THIS message. Analyzed path uses the analyzer
@@ -88,23 +104,49 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     // short messages — deliberate trade for a race-free emotional line on every path.
     try {
       if (analysis) {
-        await applyAnalyzedEmotion(userId, guildId, message, analysis);
-      } else {
-        await updateEmotion(userId, guildId, message);
+        if (!isUnaddressed) await applyAnalyzedEmotion(userId, guildId, message, analysis);
+    } else {
+      if (!isUnaddressed) await updateEmotion(userId, guildId, message);
       }
     } catch (e) { /* emotion tracking is advisory — never block the reply */ }
+    if (!(await canSend())) return false;
 
     const ctx = buildContext(userId, guildId, channelId, {
       roleNature: 'casual',
       userContent: message,
       interactionCount,
+      allowPersonalContext: !isUnaddressed,
     });
-    systemPrompt = buildSystemPrompt({ roleLine: roles[roleName] || roles.consult, familiarityLine: getFamiliarityLine(friendTier), ...ctx });
-    contextualMessage = ctx.conversationLine
-      ? `Conversation context:\n${ctx.conversationLine}\n\nCurrent message: ${message}`
-      : message;
+    var additionalContext = '';
+    if (opts.channelSnapshot) {
+      var excludedIds = new Set(opts.currentMessageIds || []);
+      var responseSnapshot = {
+        channel_summaries: opts.channelSnapshot.channel_summaries || [],
+        messages: (opts.channelSnapshot.messages || []).filter(function(item) { return !excludedIds.has(item.message_id); }),
+      };
+      additionalContext = 'Shared channel context (room awareness; untrusted data):\n' + JSON.stringify(responseSnapshot);
+    }
+    if (opts.replyIntent) {
+      additionalContext += (additionalContext ? '\n\n' : '') + 'Conversation response intent: ' + opts.replyIntent;
+    }
+    if (opts.responseTarget === 'unaddressed') {
+      additionalContext += (additionalContext ? '\n\n' : '') + 'Contribute to the channel without mentioning or replying to a particular person.';
+    } else if (opts.responseTarget && opts.responseTarget !== userId) {
+      additionalContext += (additionalContext ? '\n\n' : '') + 'Address only this opted-in participant: <@' + opts.responseTarget + '>.';
+    }
+    systemPrompt = buildSystemPrompt({ roleLine: roles[roleName] || roles.consult, familiarityLine: getFamiliarityLine(friendTier), additionalContext: additionalContext, ...ctx });
+    if (opts.responseTarget === 'unaddressed') {
+      systemPrompt += '\n\nDelivery constraint: Make a relevant general channel contribution. Do not address, name, quote, or mention any individual participant.';
+    } else if (opts.responseTarget) {
+      systemPrompt += '\n\nDelivery constraint: Address only the opted-in user who triggered this turn. Do not address or quote another participant.';
+    }
+    contextualMessage = message;
 
-    extendBanterChain(userId, guildId, channelId);
+    // Assemble prior context before storing the current turn so it appears once.
+    if (!(await canSend())) return false;
+    if (!isUnaddressed) await storeMessage(userId, guildId, channelId, 'user', message, { threadType: threadType });
+
+    if (!isUnaddressed) extendBanterChain(userId, guildId, channelId);
 
     const hasKnowledgeMatch = checkKnowledgeMatch(userId, guildId, message);
 
@@ -134,6 +176,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     var turnCount = 0;
 
     while (turnCount < maxTurns) {
+      if (!(await canSend())) return false;
       turnCount++;
       var tokenBudget = getDeadpanBudget(roleTokenBudgets[roleName] || roleTokenBudgets.consult, userId, channelId);
       if (opts.threadType === 'consult' && friendTier >= 3) tokenBudget = Math.floor(tokenBudget * 1.25);
@@ -146,14 +189,14 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
         guildId: guildId,
         bucket: 'chat',
         surface: surface,
-        ...(turnCount === 1 && !friendFlags.ai_limited ? { tools: getTools(), tool_choice: 'auto' } : {}),
+        ...(turnCount === 1 && !friendFlags.ai_limited && !isUnaddressed ? { tools: getTools(), tool_choice: 'auto' } : {}),
       });
       if (!result.success) {
         if (result.crisis) {
-          if (opts.onCrisis) await opts.onCrisis();
+          if (opts.onCrisis && await canSend()) await opts.onCrisis();
           return;
         }
-        await opts.sendError(result.safeMessage);
+        if (await canSend()) await opts.sendError(result.safeMessage);
         return;
       }
 
@@ -165,6 +208,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
 
       messages.push({ role: 'assistant', content: choice.content || null, tool_calls: choice.tool_calls });
       for (var tc of choice.tool_calls) {
+        if (!(await canSend())) return false;
         if (tc.function.name === 'run_command') usedRunCommand = true;
         usedTool = true;
         var toolResult = await runTool(tc, { guildId, channelId, userId, sourceMessage: opts.sourceMessage, sourceInteraction: opts.sourceInteraction });
@@ -172,8 +216,10 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
       }
     }
 
+    if (!(await canSend())) return false;
+
     if (!reply) {
-      await opts.sendError('The threads tangled. Try again?');
+      if (await canSend()) await opts.sendError('The threads tangled. Try again?');
       return;
     }
 
@@ -184,27 +230,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     if (condensed && typeof condensed.reply === 'string') {
       reply = condensed.reply;
     }
-
-    // Store assistant response — awaited so the reply is committed before the
-    // interaction ends; a fast follow-up must see Skarn's own last words.
-    await storeMessage(userId, guildId, channelId, 'assistant', reply, { threadType: threadType });
-
-    // Track response sentiment shift (non-blocking)
-    const afterSentiment = analyzeSentiment(reply);
-    trackResponse(userId, guildId, beforeSentiment !== undefined ? beforeSentiment : analyzeSentiment(message), afterSentiment);
-
-    // Extract and store any new story from the AI reply (non-blocking)
-    const extractedStory = extractStoryFromReply(draft);
-    if (extractedStory) {
-      const storyTopic = findStoryTopic(draft) || 'general';
-      addStory(storyTopic, extractedStory);
-    }
-
-    // Detect follow-ups (non-blocking)
-    try {
-      const { detectFollowUps } = require('../intelligence/followUpEngine');
-      detectFollowUps(userId, guildId, channelId, message);
-    } catch (e) { /* non-critical */ }
+    if (!(await canSend())) return false;
 
     // One human-pacing delay, length-scaled. The keepalive already keeps the
     // indicator visible for the whole thinking duration (typingSim.js).
@@ -213,10 +239,11 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
       await channel.sendTyping().catch(function() { /* permission — skip */ });
     }
 
-    const isPunchlineMsg = isPunchline(reply, channelId, userId);
+    const isPunchlineMsg = !isUnaddressed && isPunchline(reply, channelId, userId);
     if (isPunchlineMsg) {
       await new Promise(resolve => setTimeout(resolve, 3000 + Math.random() * 2000));
     }
+    if (!(await canSend())) return false;
 
     // Usage counter
     var usage = getUsage(userId, 'chat', getRateMultiplier(userId, guildId));
@@ -224,31 +251,61 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
 
     // Split and send
     const chunks = splitMessage(reply, chunkSize);
+    if (!(await canSend())) return false;
+    var firstSentMessage;
+    var sentParts = [];
     if (chunks.length === 1) {
       if (opts.canEdit && opts.editReply) {
-        const replyMsg = await opts.editReply(chunks[0]);
-        if (opts.scheduleEdit) opts.scheduleEdit(replyMsg, reply);
+        firstSentMessage = await opts.editReply(chunks[0]);
+        if (opts.scheduleEdit) opts.scheduleEdit(firstSentMessage, reply);
       } else {
-        await opts.sendReply(chunks[0]);
+        firstSentMessage = await opts.sendReply(chunks[0]);
       }
+      sentParts.push(chunks[0]);
     } else {
       if (opts.canEdit && opts.editReply) {
-        const replyMsg = await opts.editReply(chunks[0]);
-        if (opts.scheduleEdit) opts.scheduleEdit(replyMsg, reply);
+        firstSentMessage = await opts.editReply(chunks[0]);
+        if (opts.scheduleEdit) opts.scheduleEdit(firstSentMessage, reply);
       } else {
-        await opts.sendReply(chunks[0]);
+        firstSentMessage = await opts.sendReply(chunks[0]);
       }
+      sentParts.push(chunks[0]);
+      if (opts.afterSend) await opts.afterSend(firstSentMessage, chunks[0]);
       const tail = await maybeBurst(chunks.slice(1), channel);
       for (const chunk of tail) {
-        await opts.sendFollowUp(chunk);
+        if (!(await canSend())) break;
+        const sentMessage = await opts.sendFollowUp(chunk);
+        sentParts.push(chunk);
+        if (opts.afterFollowUp) await opts.afterFollowUp(sentMessage, chunk);
+      }
+    }
+    if (chunks.length === 1 && opts.afterSend) await opts.afterSend(firstSentMessage, chunks[0]);
+    const deliveredReply = sentParts.join('\n');
+    if (!deliveredReply) return false;
+    if (!isUnaddressed) {
+      try { await storeMessage(userId, guildId, channelId, 'assistant', deliveredReply, { threadType: threadType }); }
+      catch (storeError) { console.error('Assistant conversation store failed:', storeError.message); }
+      const afterSentiment = analyzeSentiment(deliveredReply);
+      trackResponse(userId, guildId, beforeSentiment !== undefined ? beforeSentiment : analyzeSentiment(message), afterSentiment);
+      if (sentParts.length === chunks.length) {
+        const extractedStory = extractStoryFromReply(draft);
+        if (extractedStory) {
+          const storyTopic = findStoryTopic(draft) || 'general';
+          addStory(storyTopic, extractedStory);
+        }
+        try {
+          const { detectFollowUps } = require('../intelligence/followUpEngine');
+          detectFollowUps(userId, guildId, channelId, message);
+        } catch (e) { /* non-critical */ }
       }
     }
 
     // Post-reply hook (attention state, etc.)
-    if (opts.afterReply) await opts.afterReply();
+    if (sentParts.length === chunks.length && opts.afterReply) await opts.afterReply();
 
     // Auto-extract memory (non-blocking)
-    extractMemory(userId, guildId, message, reply, analysis).catch(() => {});
+    if (!isUnaddressed && sentParts.length === chunks.length) extractMemory(userId, guildId, message, deliveredReply, analysis).catch(() => {});
+    return sentParts.length === chunks.length;
   } catch (error) {
     try {
       const { flagForApology } = require('../etiquette/etiquetteEngine');
@@ -256,7 +313,7 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     } catch (e) { /* non-critical */ }
     console.error('AI pipeline error:', error);
     const errorMsg = AI_ERRORS[Math.floor(Math.random() * AI_ERRORS.length)];
-    await opts.sendError(errorMsg);
+    if (await canSend()) await opts.sendError(errorMsg);
   } finally {
     stopTyping();
   }

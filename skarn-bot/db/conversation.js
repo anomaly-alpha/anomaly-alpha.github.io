@@ -63,16 +63,16 @@ function insertMessage(threadId, userId, guildId, channelId, role, content, opts
   return result;
 }
 
-// Matches the inline full-tier/lightweight queries in promptContext.js: includes
-// the user's own messages AND assistant replies.
+// User-specific history only: include this user's own messages and assistant replies
+// stored on that user's thread, never replies from other people in the channel.
 function getRecentAssistantOrUserMessages(userId, guildId, channelId, limit = 15, maxAgeMs = 365 * 24 * 60 * 60 * 1000) {
   const cutoff = Date.now() - maxAgeMs;
   return db.prepare(
     `SELECT m.* FROM conversation_messages m
      JOIN conversation_threads t ON m.thread_id = t.thread_id
-     WHERE m.guild_id = ? AND m.channel_id = ? AND (m.role = ? OR m.user_id = ?) AND m.created_at > ?
+     WHERE m.guild_id = ? AND m.channel_id = ? AND m.user_id = ? AND m.created_at > ?
      ORDER BY m.created_at DESC LIMIT ?`
-  ).all(guildId, channelId, 'assistant', userId, cutoff, limit).reverse();
+  ).all(guildId, channelId, userId, cutoff, limit).reverse();
 }
 
 // Server buzz: recent user messages guild-wide (matches promptContext.js 7-day window).
@@ -123,8 +123,7 @@ function pruneOldMessages(cutoffMs) {
     // Clear referencing rows first — FK enforcement throws otherwise
     db.prepare('DELETE FROM conversation_embeddings WHERE message_id IN (SELECT id FROM conversation_messages WHERE created_at < ?)').run(cutoff);
     db.prepare('DELETE FROM conversation_messages WHERE created_at < ?').run(cutoff);
-    db.prepare('DELETE FROM conversation_summaries WHERE covers_to < ?').run(cutoff);
-    // Keep FTS in sync — orphaned FTS rows break /find
+    // Keep FTS in sync — orphaned FTS rows break /history search
     for (const row of stale) {
       db.prepare('DELETE FROM conversation_fts WHERE rowid = ?').run(row.id);
     }

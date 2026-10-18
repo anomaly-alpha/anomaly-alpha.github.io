@@ -38,6 +38,8 @@ assert('usage reflects new day', getGuildUsage('g1').current === 1);
 
 // 4. Budgeted set is exactly the chat buckets; support/default buckets excluded
 assert('budgeted includes chat', BUDGETED_BUCKETS.indexOf('chat') !== -1);
+assert('budgeted includes attention', BUDGETED_BUCKETS.indexOf('attention') !== -1);
+assert('budgeted includes proactive', BUDGETED_BUCKETS.indexOf('proactive') !== -1);
 assert('budgeted includes musing', BUDGETED_BUCKETS.indexOf('musing') !== -1);
 assert('budgeted includes interjection', BUDGETED_BUCKETS.indexOf('interjection') !== -1);
 assert('command NOT budgeted (support default)', BUDGETED_BUCKETS.indexOf('command') === -1);

@@ -8,7 +8,7 @@ This file serves two roles: a **domain glossary** defining every table, subsyste
 
 Current grouped command roots (2026-10-17): /friends, /standing, /level, /trivia, /memory, /weather, /knowledge, /history, and /consult. Memory saving is exposed as /memory save; tier status is /standing; conversation search is user-scoped under /history search.
 
-The codebase follows a **vertical slice architecture**: each feature lives in `features/<name>/` and owns its handlers and data. For example, `features/etch/etch.handler.js` handles the save action under `/memory save` and writes to `memory_entries`. A command's Discord.js integration (the `.js` file in `commands/`) is a thin wrapper that delegates to its feature handler.
+The codebase follows a **vertical slice architecture**: each feature lives in `features/<name>/` and owns its handlers and data. For example, `features/memory/memory.handler.js` routes `/memory save` to the memory-write handler, which writes to `memory_entries`. The legacy `features/etch/` module name and `source='etch'` value remain internal identifiers, not user-facing commands. A command's Discord.js integration (the `.js` file in `commands/`) is a thin wrapper that delegates to its feature handler.
 
 > **Resolved (2026-08-04) — `db/` god-module decomposition**: `db/database.js` (which hosted all SQLite access behind one module) was split into domain modules — `db/db.js` (shared connection + the 5 dynamic-update builders + `getChannelState` create-on-miss + sentiment-buffer pair + prunes), `db/memory.js`, `db/conversation.js`, `db/relationship.js`, `db/channel.js`, `db/ops.js`, `db/humor.js`, `db/stories.js` — with `db/database.js` rebuilt as a thin re-export facade (`Object.assign` over all of them). Every `require('.../db/database')` call site works unchanged; the export surface is the pre-split 111 names **plus** `getRecentAssistantOrUserMessages`/`getServerBuzz` added by the P1-5 conversation-read consolidation (113 total — a superset, never a subtraction). The invariants below (§9.1 read-modify-write, §9.4 `.run(...vals)` spread) still hold — the dynamic builders live in `db/db.js`.
 
@@ -58,7 +58,7 @@ Every persistent table has a well-defined scope — the columns that form its pr
 >
 > **Still in-memory (2026-08-02 audit):** `activeCombats` (`features/realm/combat.js`), `activeTrades` (`features/realm/economy.js`), `activeGames` (`games/tetris.js`), `banterChains`/`setups` (`features/humor/comedyTiming.js`). These are game sessions, intentionally volatile — lost on restart. The "zero in-memory Maps" claim refers to *cooldowns* specifically.
 >
-> **Implemented (2026-09-09) — Friend Tiers + Confidant Mode**: Friend tiers and AI flags are per-user-per-guild. Confidant is one account-wide, explicitly opted-in DM thread; its origin guild determines tier perks and AI permission flags. Confidant history is stored in plaintext SQLite and disclosed before consent. `/friend`, `/friendadmin`, and `/confidant` manage the feature. See `features/friendTiers/`, `features/confidant/`, and `docs/plans/2026-09-09/gpt-5/friend-tiers-confidant-integration.md`.
+> **Implemented (2026-09-09) — Friend Tiers + Confidant Mode**: Friend tiers and AI flags are per-user-per-guild. Confidant is one account-wide, explicitly opted-in DM thread; its origin guild determines tier perks and AI permission flags. Confidant history is stored in plaintext SQLite and disclosed before consent. Use `/standing` for tier status, `/friendadmin` for administrative controls, and `/confidant` for the private conversation. See `features/friendTiers/`, `features/confidant/`, and `docs/plans/2026-09-09/gpt-5/friend-tiers-confidant-integration.md`.
 
 ## 4. Rate limiting and cost control
 
@@ -115,7 +115,7 @@ The codebase maintains **5 distinct memory stores**, each with a different scope
 
 | # | Store | Tables | Written by | Read by | Scope | Purpose |
 |---|-------|--------|------------|---------|-------|---------|
-| 1 | **Unified memory entries** | `memory_entries` | `features/etch/etch.handler.js` via `/memory save` (source='etch'), `features/tools/toolRunner.js` (source='etch' via the `etch_memory` tool), `features/preprocessing/postProcessor.js` (source='extracted'), `features/wisdom/emotionalIntelligence.js` (source='extracted') | `promptContext.js` via `getMemoryEntries()` for AI context, `knowledgeGraph.js` via `getMemoryByType()` for formatKnowledge | Per-user-per-guild per-type-per-content | The unified persistent memory table for all per-user memory, discriminated by `source` column. |
+| 1 | **Unified memory entries** | `memory_entries` | `features/etch/etch.handler.js` via `/memory save` (legacy internal source='etch'), `features/tools/toolRunner.js` (source='etch' via the `etch_memory` tool), `features/preprocessing/postProcessor.js` (source='extracted'), `features/wisdom/emotionalIntelligence.js` (source='extracted') | `promptContext.js` via `getMemoryEntries()` for AI context, `knowledgeGraph.js` via `getMemoryByType()` for formatKnowledge | Per-user-per-guild per-type-per-content | The unified persistent memory table for all per-user memory, discriminated by `source` column. |
 | 2 | **Conversation graph** | `conversation_threads`, `conversation_messages`, `conversation_summaries`, `conversation_fts` | `db/conversation.js` — `insertMessage()`, `createThread()`, `insertSummary()` (FTS index used by `/history search`) | Context reads use `getRecentAssistantOrUserMessages`/`getOlderSummaries`/`getServerBuzz` from `db/database.js` (consolidated 2026-08-04); `getThreadMessages`/`searchConversations` remain live (history); `getRecentMessages` removed 2026-08-08 (dead) | Per-thread, indexed by user/guild/channel | Full conversation history with user-scoped full-text search. Separate from extracted memory. |
 | 3 | **Realm NPC memory** | `realm_npc_memory` | Realm system NPC interaction handlers | Realm system only | Per-NPC-per-user-per-guild | In-fiction NPC memory. Never bleeds to persona or system prompt. |
 | 4 | **Emotional context** | `user_emotional_context` | `emotionalIntelligence.js` via `setUserEmotion()` | `getEmotionDirective()` for tone guidance in system prompt | Per-user-per-guild | Per-user emotion state. Advisory only — drives tone, not gating. |
@@ -268,7 +268,7 @@ The following bugs have been found, fixed, and could recur. They are documented 
 
 **Files**: `db/memory.js` (formerly `db/database.js`), `db/skarn-schema.sql`
 
-**Root cause**: When `memory_entries` was created as the unified memory table, the write path was migrated (`/etch` → `addMemoryEntry()`) but the read path was not — 19 command files still read from the stale `user_memory` table, and `modelRouter.js` called `getKnowledge()` from the stale `knowledge_graph` table.
+**Root cause**: When `memory_entries` was created as the unified memory table, the write path was migrated to `addMemoryEntry()` but the read path was not — 19 command files still read from the stale `user_memory` table, and `modelRouter.js` called `getKnowledge()` from the stale `knowledge_graph` table. User-entered facts are now saved with `/memory save`.
 
 **Fix**: Both stale tables (`user_memory`, `knowledge_graph`) and the `decayKnowledge()` function operating on `knowledge_graph` were removed. All per-user memory now lives exclusively in `memory_entries`. The read path is **fully migrated** — `getUserMemory()` has zero remaining references; reads go through `getMemoryEntries()` / `applyBaselineFamiliarity()` on `memory_entries` (see the residual note below).
 
@@ -507,9 +507,9 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 
 ### User Preferences
 
-- **proactive_opt_in**: The column (DEFAULT 0) controlling whether users receive proactive messages (check-ins, follow-ups). 0 = opted out by default (no proactive messages), 1 = opted in. Renamed from `proactive_opt_out` which had inverted semantics.
+- **proactive_opt_in**: The column (DEFAULT 0) controlling whether users may receive AI conversation and proactive check-ins/follow-ups. 0 = opted out by default; 1 = opted in. Direct mentions do not grant consent. Renamed from `proactive_opt_out` which had inverted semantics.
 - **Mention cooldown**: ~~1-second cooldown per user per channel for @mentions.~~ **Removed 2026-08-08** — `mention_cooldowns` table dropped; mention path uses `canInteract`/`canRespond`/`isHostile`/`isSilenced` instead.
-- **Proactive cap**: 1 proactive message per user per day maximum.
+- **Proactive cap**: Check-ins are limited to one per user per rolling 72 hours, with an additional existing daily scheduler budget.
 
 ### Command Activation
 
@@ -517,6 +517,16 @@ A censorship system preventing the AI from outputting slurs. Originally three ga
 - **Activation registry**: Central module (`features/activation/activationRegistry.js`) that maps keyword phrases to commands. Built at startup by scanning each command file's `activation` export. Two routing types: `'command'` (runs the slash command handler) and `'ai'` (routes to the AI mention handler with an injected directive).
 - **Fast-path skippers**: The four built-in keyword handlers (`skarn opt in`, `skarn opt out`, `skarn chat mode`, `skarn status`) that run inline before the activation registry and return immediately without AI.
 - **Activation phrase wins**: A registered activation phrase always takes priority over the @mention AI handler and AI channel auto-respond for messages it matches.
+
+### Shared AI channel conversation
+
+Guild conversation participation requires both the user's proactive opt-in and the administrator's AI-channel enablement for passive participation. Direct mention/reply outside an enabled channel is still subject to user opt-in. Non-opted-in direct mentions receive a short opt-in instruction; non-opted-in messages in an enabled channel are context only and never trigger attention or become direct reply targets.
+
+Eligible channel messages are captured with speaker/reply attribution in a separate shared context store, retained raw for seven days. Older context is compressed into channel summary segments with message/author provenance; approved summaries may retain names and exact quotes until forgotten. Skarn's own channel replies are stored with the opted-in triggering user as related provenance so forget can remove them.
+
+Only opted-in user messages trigger the conversation-aware attention model. A per-channel queue batches rapid turns for 1.5 seconds; attention and response generation are separate moderated calls. The model may stay silent or produce a general unaddressed channel comment. Unaddressed comments do not use or update the triggering user's personal memory/profile/history.
+
+Opt-out suspends future participation, automatic memory extraction/use, and check-ins; it does not delete prior personal data. The /forget memory, /forget conversation, and /forget all scopes remove the corresponding personal store plus the user's attributable channel context/summary details. Check-ins use only the opted-in user's own nonsensitive conversation context and have a rolling 72-hour per-user cooldown.
 
 ### Help system
 

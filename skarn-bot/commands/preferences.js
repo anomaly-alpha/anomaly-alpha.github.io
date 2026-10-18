@@ -34,6 +34,12 @@ function getPreferencesResponse(args, userId, guildId) {
 
   setUserPreference(userId, guildId, keyMap[setting], dbValue);
 
+  if (setting === 'proactive') {
+    return { content: value === 'on'
+      ? 'Opted in. I can reply to mentions, join AI chat in enabled channels, and send occasional check-ins. Use skarn preferences proactive off or skarn opt out to stop.'
+      : 'Opted out. I will not join conversations or send check-ins. Data already saved remains until forget.', flags: 64 };
+  }
+
   const extra = setting === 'nickname' ? ` Skarn will use "${value}" from now on.` : '';
   return { content: `Set **${setting}** to \`${value}\`.${extra}`, flags: 64 };
 }
@@ -47,7 +53,7 @@ module.exports = {
         .setDescription('What to change')
         .setRequired(true)
         .addChoices(
-          { name: 'Proactive messages', value: 'proactive' },
+          { name: 'Conversation and check-ins', value: 'proactive' },
           { name: 'Nickname', value: 'nickname' },
           { name: 'Tone', value: 'tone' },
           { name: 'Timezone', value: 'timezone' },
@@ -86,6 +92,13 @@ module.exports = {
 
     setUserPreference(interaction.user.id, interaction.guild.id, keyMap[setting], dbValue);
 
+    if (setting === 'proactive') {
+      const content = value === 'on'
+        ? 'Opted in. I can reply to mentions, join AI chat in enabled channels, and send occasional check-ins. Use skarn preferences proactive off or skarn opt out to stop.'
+        : 'Opted out. I will not join conversations or send check-ins. Data already saved remains until forget.';
+      return interaction.reply({ content: content, flags: 64, allowedMentions: { parse: [] } });
+    }
+
     const extra = setting === 'nickname' ? ` Skarn will use "${value}" from now on.` : '';
     await interaction.reply({
       content: `Set **${setting}** to \`${value}\`.${extra}`,
@@ -103,6 +116,6 @@ module.exports = {
     description: 'View or set preferences',
     guildOnly: false,
     requiredPermissions: [],
-    parseArgs: function(content) { const rest = content.slice('skarn preferences'.length).trim().split(/\s+/); return { action: rest[0] || 'view', key: rest[1] || null, value: rest.slice(2).join(' ') || null }; },
+    parseArgs: function(content) { const rest = content.slice('skarn preferences'.length).trim().split(/\s+/); return { action: rest[0] || 'view', value: rest[1] || null }; },
   },
 };

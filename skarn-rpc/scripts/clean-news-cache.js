@@ -200,6 +200,63 @@ function applyPlan(filePath, state, plan, config, options) {
   }
 }
 
+function clearCache(filePath, state, options) {
+  if (!state) throw new Error('cannot clear because the cache does not exist');
+  assertOwnerOnly(filePath);
+  const runner = options && options.systemctl;
+  const wasActive = serviceIsActive(runner);
+  const before = fingerprint(filePath);
+  systemctl(['stop', SERVICE_NAME], runner);
+  if (serviceIsActive(runner)) throw new Error('service remained active after stop; cache was not changed');
+  const afterStop = fingerprint(filePath);
+  if (JSON.stringify(before) !== JSON.stringify(afterStop)) throw new Error('cache changed while service was stopping; clear aborted');
+  const currentState = readState(filePath);
+  if (!currentState) throw new Error('cache disappeared after service stop');
+
+  const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14) + String(Date.now()).slice(-4);
+  const backupPath = filePath + '.backup-clear-' + timestamp;
+  const temporary = filePath + '.tmp-clear-' + process.pid;
+  assertAbsent(backupPath);
+  assertAbsent(temporary);
+  let restartAttempted = false;
+  try {
+    fs.copyFileSync(filePath, backupPath);
+    fs.chmodSync(backupPath, 0o600);
+    const replacement = {
+      schemaVersion: 1,
+      updatedAt: Date.now(),
+      items: [],
+      sources: {},
+      lastPollAt: null,
+      lastSuccessAt: null,
+      lastError: null,
+    };
+    const validation = validateNewsState(replacement);
+    if (!validation.ok) throw new Error('cleared cache is invalid: ' + validation.errors.join('; '));
+    fs.writeFileSync(temporary, JSON.stringify(replacement, null, 2) + '\n', { encoding: 'utf8', mode: 0o600 });
+    fs.chmodSync(temporary, 0o600);
+    fs.renameSync(temporary, filePath);
+    assertOwnerOnly(filePath);
+    if (readState(filePath).items.length !== 0) throw new Error('cleared cache contains unexpected items');
+    if (wasActive) {
+      restartAttempted = true;
+      systemctl(['start', SERVICE_NAME], runner);
+    }
+    return {
+      backupPath,
+      restarted: wasActive,
+      previousArticleCount: currentState.items.length,
+      previousSourceCount: Object.keys(currentState.sources || {}).length,
+    };
+  } catch (error) {
+    try { if (fs.existsSync(temporary)) fs.unlinkSync(temporary); } catch (cleanupError) {}
+    if (restartAttempted) {
+      try { systemctl(['stop', SERVICE_NAME], runner); } catch (stopError) {}
+    }
+    throw error;
+  }
+}
+
 function formatReport(plan, filePath, mode) {
   const reasons = Object.entries(plan.rejected).map(([reason, count]) => reason + '=' + count).join(', ') || 'none';
   const removed = plan.removed.map(entry => entry.reason).reduce((counts, reason) => { counts[reason] = (counts[reason] || 0) + 1; return counts; }, {});
@@ -224,13 +281,20 @@ function formatReport(plan, filePath, mode) {
 
 function main(argv, options) {
   const args = new Set(argv);
-  if (argv.some(argument => !['--dry-run', '--apply', '--help'].includes(argument))) throw new Error('accepted arguments: --dry-run, --apply, or no argument for a read-only report');
+  if (argv.some(argument => !['--dry-run', '--apply', '--clear', '--help'].includes(argument))) throw new Error('accepted arguments: --dry-run, --apply, --clear, or no argument for a read-only report');
   if (args.has('--help')) {
-    console.log('Usage: node scripts/clean-news-cache.js [--dry-run|--apply]');
+    console.log('Usage: node scripts/clean-news-cache.js [--dry-run|--apply|--clear]');
     return;
   }
+  if (args.has('--clear') && (args.has('--apply') || args.has('--dry-run'))) throw new Error('--clear cannot be combined with --apply or --dry-run');
   const config = loadConfig(CONFIG_PATH);
   const state = readState(CACHE_PATH);
+  if (args.has('--clear')) {
+    const result = clearCache(CACHE_PATH, state, options || {});
+    console.log('Cache cleared; articles removed: ' + result.previousArticleCount + '; source validators cleared: ' + result.previousSourceCount);
+    console.log('Backup: ' + result.backupPath + '; service restarted: ' + result.restarted);
+    return;
+  }
   const plan = buildPlan(state, config, Date.now());
   if (!args.has('--apply')) {
     console.log(formatReport(plan, CACHE_PATH));
@@ -248,4 +312,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { applyPlan, assertOwnerOnly, buildPlan, fingerprint, formatReport, loadConfig, main, readState };
+module.exports = { applyPlan, assertOwnerOnly, buildPlan, clearCache, fingerprint, formatReport, loadConfig, main, readState };

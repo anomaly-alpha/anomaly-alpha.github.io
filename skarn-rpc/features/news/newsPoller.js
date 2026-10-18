@@ -32,11 +32,11 @@ function validateNewsConfig(config) {
   if (config.mode !== undefined && !['ambient', 'news'].includes(config.mode)) errors.push('mode must be ambient or news');
   if (config.freshnessMode !== undefined && !['fresh', 'retroactive'].includes(config.freshnessMode)) errors.push('freshnessMode must be fresh or retroactive');
   if (config.maxItemsPerSource !== undefined && (!Number.isSafeInteger(config.maxItemsPerSource) || config.maxItemsPerSource < 1 || config.maxItemsPerSource > MAX_ITEMS)) errors.push('maxItemsPerSource must be from 1 through ' + MAX_ITEMS);
-  if (config.newsDwellMs !== undefined && (!Number.isSafeInteger(config.newsDwellMs) || config.newsDwellMs < 10000 || config.newsDwellMs > 15 * 60 * 1000)) errors.push('newsDwellMs must be from 10000ms through 900000ms');
+  if (config.newsDwellMs !== undefined && (!Number.isSafeInteger(config.newsDwellMs) || config.newsDwellMs < 5000 || config.newsDwellMs > 15 * 60 * 1000)) errors.push('newsDwellMs must be from 5000ms through 900000ms');
   if (typeof config.enabled !== 'boolean') errors.push('enabled must be boolean');
   if (!Number.isSafeInteger(config.pollIntervalMs) || config.pollIntervalMs < 60000) errors.push('pollIntervalMs must be at least one minute');
   if (!Number.isSafeInteger(config.maxAgeMs) || config.maxAgeMs <= 0 || config.maxAgeMs > DEFAULT_MAX_AGE_MS) errors.push('maxAgeMs must be from 1ms through 24 hours');
-  if (!Array.isArray(config.sources) || config.sources.length !== 157) errors.push('exactly one hundred fifty-seven sources are required');
+  if (!Array.isArray(config.sources) || config.sources.length !== 167) errors.push('exactly one hundred sixty-seven sources are required');
   const ids = new Set();
   const feedUrls = new Set();
   (config.sources || []).forEach((source, index) => {

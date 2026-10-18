@@ -13,7 +13,7 @@ function getAichatResponse(args, message) {
       channels.push(channelId);
       setGuildConfig(guildId, 'aiChannels', channels);
     }
-    return `AI chat enabled in <#${channelId}>. I'll chime in when I have something to say.`;
+    return 'AI chat enabled in <#' + channelId + ">. I'll join conversations for users who opt in with skarn opt in.";
   } else {
     channels = channels.filter(id => id !== channelId);
     setGuildConfig(guildId, 'aiChannels', channels);
@@ -46,7 +46,7 @@ module.exports = {
         channels.push(channelId);
         setGuildConfig(guildId, 'aiChannels', channels);
       }
-      await interaction.reply({ content: `AI chat enabled in <#${channelId}>. I'll chime in when I have something to say.`, allowedMentions: { parse: ['users'] } });
+      await interaction.reply({ content: 'AI chat enabled in <#' + channelId + ">. I'll join conversations for users who opt in with skarn opt in.", allowedMentions: { parse: ['users'] } });
     } else {
       channels = channels.filter(id => id !== channelId);
       setGuildConfig(guildId, 'aiChannels', channels);

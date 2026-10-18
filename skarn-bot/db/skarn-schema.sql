@@ -694,3 +694,48 @@ CREATE TABLE IF NOT EXISTS realm_omens (
   fulfilled_at INTEGER NOT NULL,
   callback_text TEXT NOT NULL
 );
+
+-- ===== Shared Channel Context (seven-day raw messages + indefinite summaries) =====
+
+CREATE TABLE IF NOT EXISTS channel_context_messages (
+  message_id TEXT PRIMARY KEY,
+  guild_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  author_id TEXT NOT NULL,
+  author_name TEXT NOT NULL,
+  content TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  captured_at INTEGER NOT NULL,
+  reference_message_id TEXT,
+  related_user_id TEXT,
+  is_skarn INTEGER NOT NULL DEFAULT 0 CHECK (is_skarn IN (0, 1))
+);
+
+CREATE INDEX IF NOT EXISTS idx_channel_context_messages_window
+  ON channel_context_messages(guild_id, channel_id, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_channel_context_messages_author
+  ON channel_context_messages(guild_id, author_id, created_at);
+
+CREATE INDEX IF NOT EXISTS idx_channel_context_messages_related_user
+  ON channel_context_messages(guild_id, related_user_id, created_at);
+
+CREATE TABLE IF NOT EXISTS channel_context_summary_segments (
+  segment_id TEXT PRIMARY KEY,
+  guild_id TEXT NOT NULL,
+  channel_id TEXT NOT NULL,
+  summary_text TEXT NOT NULL,
+  covers_from INTEGER NOT NULL,
+  covers_to INTEGER NOT NULL,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  source_author_ids TEXT NOT NULL CHECK (json_valid(source_author_ids) AND json_type(source_author_ids) = 'array'),
+  source_message_ids TEXT NOT NULL CHECK (json_valid(source_message_ids) AND json_type(source_message_ids) = 'array'),
+  CHECK (covers_to >= covers_from)
+);
+
+CREATE INDEX IF NOT EXISTS idx_channel_context_summary_segments_window
+  ON channel_context_summary_segments(guild_id, channel_id, covers_from, covers_to);
+
+CREATE INDEX IF NOT EXISTS idx_channel_context_summary_segments_author
+  ON channel_context_summary_segments(guild_id, channel_id, updated_at);
