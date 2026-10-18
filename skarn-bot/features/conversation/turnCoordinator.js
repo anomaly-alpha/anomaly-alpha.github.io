@@ -125,7 +125,7 @@ function createTurnCoordinator(options = {}) {
     );
     const deferred = makeDeferred();
 
-    return {
+    const message = {
       messageId: String(messageId),
       channelId: String(channelId),
       authorId: String(authorId),
@@ -137,6 +137,8 @@ function createTurnCoordinator(options = {}) {
       sequence: ++sequence,
       deferred,
     };
+    if (input.metadata !== undefined) message.metadata = input.metadata;
+    return message;
   }
 
   function pruneSeenMessageIds(currentTime) {
@@ -226,6 +228,7 @@ function createTurnCoordinator(options = {}) {
       receivedAt: message.receivedAt,
     };
     if (message.referenceMessageId !== undefined) result.referenceMessageId = message.referenceMessageId;
+    if (message.metadata !== undefined) result.metadata = message.metadata;
     return result;
   }
 

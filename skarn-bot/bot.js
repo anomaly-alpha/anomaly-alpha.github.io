@@ -75,24 +75,25 @@ function isUserOptedIn(userId, guildId) {
   } catch (e) { return false; }
 }
 
-async function canContinueChannelTurn(turn, phase) {
-  const metadata = turn.metadata && turn.metadata[0] || {};
+async function canContinueChannelTurn(turn) {
+  const messages = turn.messages || [];
+  const metadata = messages.length ? messages[messages.length - 1].metadata || {} : {};
   const guildId = metadata.guildId;
-  const direct = !!(turn.metadata || []).some(function(item) { return item && item.direct; });
-  const userId = turn.userId;
+  const direct = messages.some(function(item) { return item.metadata && item.metadata.direct; });
+  const userId = turn.authorId;
   if (!guildId) return false;
   if (isAiChatChannel(guildId, turn.channelId)) {
     const ignored = getGuildConfig(guildId, 'ignoredUsers') || [];
     if (Array.isArray(ignored) && ignored.includes(userId)) return false;
   }
-  if (direct && phase === 'before') return true;
   if (!isUserOptedIn(userId, guildId)) return false;
   if (!direct && !isAiChatChannel(guildId, turn.channelId)) return false;
   const permission = checkAiPermission(userId, guildId, direct ? 'mention' : 'ai-channel');
   return permission.allowed;
 }
 
-async function processChannelTurn(messages, coordinatorContext) {
+async function processChannelTurn(turn, coordinatorContext) {
+  const messages = turn.messages;
   if (!messages.length) return false;
   const tail = messages[messages.length - 1];
   const metadata = tail.metadata || {};
@@ -101,7 +102,7 @@ async function processChannelTurn(messages, coordinatorContext) {
   const direct = messages.some(function(item) { return item.metadata && item.metadata.direct; });
   const content = messages.map(function(item) { return item.content; }).filter(Boolean).join('\n').trim();
   if (!content) return false;
-  const userId = tail.userId;
+  const userId = tail.authorId;
   const guildId = metadata.guildId;
   let channelSnapshot = null;
   let decision = null;
@@ -121,8 +122,8 @@ async function processChannelTurn(messages, coordinatorContext) {
       const source = item.metadata && item.metadata.sourceMessage;
       return {
         message_id: item.messageId,
-        author_id: item.userId,
-        author_name: source && (source.member?.displayName || source.author.globalName || source.author.username) || item.userId,
+        author_id: item.authorId,
+        author_name: source && (source.member?.displayName || source.author.globalName || source.author.username) || item.authorId,
         content: item.content,
         created_at: typeof item.createdAt === 'number' ? item.createdAt : Date.now(),
         reference_message_id: source && source.reference?.messageId || null,
@@ -131,12 +132,12 @@ async function processChannelTurn(messages, coordinatorContext) {
     });
     decision = await runWithFriendContext({ userId: userId, guildId: guildId, surface: 'ai-channel' }, () =>
       require('./features/discordNative/attentionGate').evaluateAttention(sourceMessage, { currentTurnMessages: currentTurnMessages }));
-    if (!(await coordinatorContext.canContinue())) return false;
+    if (!(await coordinatorContext.isEligible())) return false;
     if (decision.decision !== 'respond') return false;
     channelSnapshot = decision.snapshot;
   }
 
-  const beforeSend = function() { return coordinatorContext.canContinue(); };
+  const beforeSend = function() { return coordinatorContext.isEligible(); };
   const options = {
     coordinated: true,
     content: content,
@@ -152,9 +153,8 @@ async function processChannelTurn(messages, coordinatorContext) {
 
 const channelTurnCoordinator = createTurnCoordinator({
   debounceMs: 1500,
-  maxQueue: 100,
-  onTurn: processChannelTurn,
-  canContinue: canContinueChannelTurn,
+  processTurn: processChannelTurn,
+  isEligible: canContinueChannelTurn,
 });
 
 async function enqueueChannelTurn(message, direct) {

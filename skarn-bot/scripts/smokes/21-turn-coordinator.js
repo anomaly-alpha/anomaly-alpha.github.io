@@ -80,9 +80,14 @@ async function main() {
     },
   });
 
-  const opener = coordinator.enqueue(message('a-1', 'alice', 'channel-a', 0));
+  const sourceMetadata = { sourceMessage: { id: 'discord-a-1' } };
+  const opener = coordinator.enqueue({
+    ...message('a-1', 'alice', 'channel-a', 0),
+    metadata: sourceMetadata,
+  });
   assert.strictEqual(calls.length, 1, 'a new opener starts immediately');
   assert.deepStrictEqual(calls[0].messageIds, ['a-1']);
+  assert.strictEqual(calls[0].messages[0].metadata, sourceMetadata, 'optional message metadata reaches the turn processor');
 
   scheduler.advance(100);
   const aliceSecond = coordinator.enqueue(message('a-2', 'alice', 'channel-a', 100));
@@ -148,10 +153,12 @@ async function main() {
   let eligible = true;
   let sent = 0;
   let processed = 0;
+  let contextEligible = true;
   const suppression = createTurnCoordinator({
     scheduler: suppressionScheduler,
-    processTurn: async () => {
+    processTurn: async (turn, context) => {
       processed += 1;
+      contextEligible = await context.isEligible();
       return 'reply';
     },
     isEligible: () => eligible,
@@ -160,6 +167,7 @@ async function main() {
   eligible = false;
   const suppressed = await suppression.enqueue(message('s-1', 'alice', 'channel-s', 0));
   assert.strictEqual(processed, 1, 'processing remains injectable and transport-free');
+  assert.strictEqual(contextEligible, false, 'the turn context exposes the eligibility recheck');
   assert.strictEqual(suppressed.status, 'suppressed', 'eligibility is rechecked before send');
   assert.strictEqual(sent, 0, 'ineligible turns are not sent');
 
