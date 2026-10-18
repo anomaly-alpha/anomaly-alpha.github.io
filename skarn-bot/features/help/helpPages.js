@@ -18,7 +18,7 @@ const OTHER = 'other';
 // ===== Theme map (command name -> theme slug) =====
 const THEME_MAP = {
   // AI Chat
-  aichat: 'ai-chat', aichatignore: 'ai-chat', aistats: 'ai-chat',
+  aichat: 'ai-chat', aichatignore: 'ai-chat', aistats: 'ai-chat', confidant: 'ai-chat',
   consult: 'ai-chat', forget: 'ai-chat',
   history: 'ai-chat', memory: 'ai-chat', preferences: 'ai-chat', relationship: 'ai-chat',
   standing: 'ai-chat', stats: 'ai-chat', vein: 'ai-chat', vibe: 'ai-chat',
