@@ -11,7 +11,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 | Event Rewards | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~1,850 (varies) | Restricted Arena + Open Arena + Alliance War (Elite II, rank 13 defaults) |
 | Login Rewards | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
-| Promo Codes | Variable | 28 active codes (gems + tickets) |
+| Promo Codes | Variable | 30 active codes (gems + tickets) |
 
 **Total: ~4,043 gems/week** (varies with PvP selections)
 
@@ -19,14 +19,20 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 
 ### Interactive Elements
 - **Animated counter** that counts up on value changes
-- **Promo code reveal** — tap to reveal 28 active codes in a grid, tap any code to copy
-- **Scrolling ticker banner** ("Why Use This") — 44px monochrome newspaper-style ticker showing PvP 1,850+/wk • Codes 28 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk
+- **Promo code reveal** — tap to reveal 30 active codes in a grid, tap any code to copy
+- **Scrolling ticker banner** ("Why Use This") — 44px monochrome newspaper-style ticker showing PvP 1,850+/wk • Codes 30 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk
 - **Mode selector** (5 buttons: All, Code, Event, PvP, Login) — each showing gem total + countdown timer
 - **Multi-select mode filtering** — toggle Event, PvP, Login, Code independently
 - **Mode button hover** — hovering a mode button highlights all matching cards in that mode's color
 - **Individual card hover** — each card highlights in its own category color using `--card-color` CSS variable
 - **Charts toggle** — show/hide charts section
 - **Card modals** — 9 cards each open an info modal via icon button; modal shows hero tagline, description, tips, live PvP data (Escape to close)
+- **Back-to-top button** — progress-ring scroll button (guide pages)
+- **Reading progress bar** — thin top progress indicator on scroll
+- **Code-age timeline** — color-coded freshness bands (NEW / Active / Aging / Old) for active codes (code guide)
+- **League comparator** — side-by-side PvP payout comparison (PvP guide)
+- **Music banner** — collapsible link to the music page (persisted via `gem_music_banner`)
+- **Share buttons** — X/Reddit share intents on the home page and code guide
 
 ### Card Modal System (9 cards)
 Every card has a circular info icon button (top-right) that opens a modal containing:
@@ -68,7 +74,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 - Instant chart updates on filter changes (no animation overhead)
 
 ### Guide Pages (Topical Cluster)
-- `/guide/code/` — Promo code guide: 28 active codes with click-to-copy (`copyCode()`), verification code redemption, 5 tips
+- `/guide/code/` — Promo code guide: 30 active codes with click-to-copy (`copyCode()`), verification code redemption, code-age timeline, 5 tips
 - `/guide/event/` — Event rewards guide: The Long Haul + Earth's Defenders with full strategies
 - `/guide/pvp/` — PvP guide: 14 leagues table, real payout tables, 3 arena modes with demotion zone
 - `/guide/login/` — Login rewards guide: daily (910), weekly (460), monthly (23) with income summary table
@@ -140,10 +146,12 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 
 ## SEO Reports
 
-Live SEO performance analysis from Google Search Console exports at `docs/reports/2026-08-20/unknown/SEO_PERFORMANCE.md`. Updated periodically by running plan 162 (`docs/plans/2026-05-28/deepseek-v4-flash-free/162-gsc-export-analyzer.md`) against new GSC exports in `data/`.
+Live SEO performance analysis from Google Search Console exports at `docs/reports/2026-08-20/unknown/SEO_PERFORMANCE.md` (currently generated from the 2026-10-12 export: 13,897 clicks / 103,854 impressions over 92 days). Updated periodically by running plan 162 (`docs/plans/2026-05-28/deepseek-v4-flash-free/162-gsc-export-analyzer.md`) against new GSC exports in `data/`.
 
 ## Audit Reports
 
+- [GSC Content Optimization (2026-10-12)](reports/2026-10-12/gpt-5/gsc-content-optimization.md) — Landing-page optimization findings from the October GSC export.
+- [Creator Directory Audit (2026-10-12)](reports/2026-10-12/gpt-5/creator-directory-audit.md) — Verified video and creator eligibility evidence.
 - [External-Reference Audit (2026-08-23)](reports/2026-08-23/mimocode/external-reference-audit.md) — Verification of external URLs, platform claims, analytics, and AdSense references across all HTML, JS, and Markdown files.
 
 ## Contributors

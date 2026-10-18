@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
-const REPORT_PATH = path.join(__dirname, '..', 'docs', 'reports', 'SEO_PERFORMANCE.md');
+const REPORT_PATH = path.join(__dirname, '..', 'docs', 'reports', '2026-08-20', 'unknown', 'SEO_PERFORMANCE.md');
 const DASHBOARD_DATA_PATH = path.join(__dirname, '..', 'data', 'generated', 'seo-data.js');
 
 // ===== Export Discovery =====

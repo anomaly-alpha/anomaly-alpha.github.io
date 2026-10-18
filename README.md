@@ -1,6 +1,8 @@
 # anomaly-alpha.github.io
 
-Gem rewards infographic for Invincible Guarding the Globe featuring interactive charts, mode filtering, hover interactions, and a sci-fi aesthetic matching the game's UI.
+Monorepo for the Invincible: Guarding the Globe gem-rewards site — published via GitHub Pages — plus two independently deployed service packages: `skarn-bot/` (Discord bot on Railway) and `skarn-rpc/` (Ubuntu desktop Rich Presence via systemd).
+
+The site itself is a gem rewards infographic featuring interactive charts, mode filtering, hover interactions, and a sci-fi aesthetic matching the game's UI.
 
 ## Gem Summary
 
@@ -9,7 +11,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 | Event | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~1,850 | Varies with league/rank — Restricted Arena, Open Arena, Alliance War (Elite II, rank 13 default) |
 | Login | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
-| Code | Variable | 28 active codes with gems + tickets |
+| Code | Variable | 30 active codes with gems + tickets |
 
 **Total: ~4,043 gems/week** (varies with PvP selections)
 
@@ -19,7 +21,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 
 ### Interactive Elements
 - **Animated counter** that counts up on value changes (PvP selections, mode filtering)
-- **Promo code reveal** — tap to reveal 28 active codes in a grid, tap any code to copy; redeem via verification code at redeem.invincible.ubisoft.barcelona
+- **Promo code reveal** — tap to reveal 30 active codes in a grid, tap any code to copy; redeem via verification code at redeem.invincible.ubisoft.barcelona
 - **Mode selector** — 5 buttons (All, Code, Event, PvP, Login) each showing gem total + countdown timer
 - **Multi-select mode filtering** — toggle Event, PvP, Login, Code independently
 - **Mode button hover** — hovering a mode button highlights all matching cards in that mode's color
@@ -80,11 +82,11 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (136 KB) — Main HTML + inline JSON configs (9 in `<head>`)
+├── index.html           (135 KB) — Main HTML + inline JSON configs (9 in `<head>`)
 ├── script.js            (46 KB) — All JS: charts, filters, PvP, modals, countdowns (minified)
 ├── styles.css           (48 KB) — CSS custom properties + BEM component classes (minified)
 ├── tailwind.css         (16 KB) — Generated Tailwind utility classes (minified)
-├── package.json         — Dependencies and dev dependencies config (tailwindcss, csso, terser, chrome-launcher)
+├── package.json         — Scripts; devDependencies (tailwindcss, csso, terser) + dependency (chrome-launcher)
 ├── tailwind.config.js   — Tailwind config with color aliases + content paths
 ├── src/
 │   └── tailwind-input.css — Tailwind source with @tailwind directives
@@ -95,21 +97,25 @@ anomaly-alpha/
 ├── og-images/*.png      — Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators — 9 total)
 ├── favicon.ico           — Browser favicon for tab
 ├── robots.txt           — Allows all crawlers, references sitemap
-├── sitemap.xml          — 11 URLs (main + 9 guide pages + authors/anomaly/)
+├── sitemap.xml          — 14 URLs (main + 9 guide pages + authors/anomaly + music + privacy + terms)
 ├── _headers             — Cloudflare Pages cache config
 ├── 404.html             — Custom error page
 ├── AGENTS.md            — Agent instructions for this repo
+├── CONTEXT.md           — Domain model and architecture summary
+├── LICENSE              — Project license
 ├── README.md            — This file
 ├── gem_infographic.html — Legacy redirect stub (index.html)
 ├── googleeb60e8e5ee55440e.html — Google Search Console verification
 ├── ads.txt              — Publisher authorization record (AdSense, currently unused)
 ├── advertising.md       — Marketing copy for social channels
 ├── CHANGELOG.md         — Release history (auto-curated from git log)
+├── lighthouse-config.js — Shared Lighthouse audit config (mobile, 3G, 4× CPU)
+├── lighthouserc.js      — CI assertion budget for Lighthouse performance checks
 ├── music/               — Generated music page (dedicated standalone page)
 │   └── index.html
 ├── seo/                 — SEO utilities page
 │   └── index.html
-├── privacy/             — Privacy policy page
+├── privacy/             — Privacy policy page (documents GA4 analytics)
 │   └── index.html
 ├── terms/               — Terms of service page
 │   └── index.html
@@ -129,6 +135,7 @@ anomaly-alpha/
 │   ├── codes.json                — Single source of truth for promo codes
 │   ├── youtube-creators.json     — Approved creator/video records and provenance
 │   ├── playlists.json            — Music playlist data
+│   ├── countries-list.txt        — Country reference data
 │   ├── generated/
 │   │   ├── promo-codes.js        — Generated active codes bundle
 │   │   ├── youtube-creators.js   — Generated public creator bundle
@@ -140,31 +147,42 @@ anomaly-alpha/
 │   ├── generate-codes.js         — Reads data/codes.json, writes promo-codes.js + updates HTML
 │   ├── generate-music.js         — Generates music page data
 │   ├── generate-youtube-creators.js — Validates creator data, generates HTML/JSON-LD/browser data
+│   ├── generate-skarn-index.js   — Regenerates the docs index in skarn-bot/index.html via markers
+│   ├── audit-youtube-creators.js — Audits creator video availability over HTTP
 │   ├── gen-serp-dumps.js         — Generates SERP dump files from GSC query data
 │   ├── analyze-gsc.js            — Analyzes GSC export data
+│   ├── add-meta.js / add-more.js / add-schema.js — Legacy guide-page tag/meta/schema helpers
 │   ├── run-lighthouse.ps1        — Batch Lighthouse audit script
+│   ├── run-psi-audit.js          — PageSpeed Insights audit for all 8 pages
 │   └── serve.js                  — Local development server
 ├── tests/               — Custom test scripts (no standard framework; run via `node tests/<file>`)
 │   ├── ads-fallback.test.js      — Validates ads-config and site-message fallback
 │   ├── ads-txt.test.js           — Validates ads.txt content
 │   ├── promo-codes-generator.test.js — Validates code generation
 │   ├── youtube-creators-generator.test.js — Validates creator generation
+│   ├── youtube-creators-audit.test.js — Validates creator audit output
+│   ├── structured-data.test.js   — Validates JSON-LD structured data
 │   ├── back-to-top.test.js       — Tests back-to-top button behavior
 │   └── test-harness.js           — Shared test helpers
-├── docs/
+├── docs/                — Docs tree: docs/{specs,plans,reports,handoffs,guides}/YYYY-MM-DD/<model>/
 │   ├── DESIGN_SYSTEM.md  — CSS token reference
 │   ├── index.md          — Feature documentation
 │   ├── adr/              — Architecture Decision Records
-│   ├── plans/            — Improvement plans + session plans (YYYY-MM-DD/*.md)
-│   └── reports/          — SEO performance reports (from GSC exports)
-├── journal/              — Daily session journals (YYYY-MM-DD/index.md)
+│   ├── research/         — Research notes
+│   ├── runbooks/         — Operational runbooks
+│   └── prompt/ compose/  — Prompt docs + legacy compose docs
+├── serp-dumps/          — Historical SERP snapshots (YYYY-MM-DD/INDEX.md + per-query files, from gen-serp-dumps.js)
+├── project/             — Ad-hoc project work (e.g. ThaiEnergy-PTT report)
+├── research/            — Research briefs and findings (feed-expansion studies)
+├── skarn-bot/           — Discord bot service (Railway; own package.json, SQLite, docs)
+├── skarn-rpc/           — Ubuntu desktop Rich Presence service (systemd; own package)
 ```
 
 ## Usage
 
 Run `npm install && npm run build` (one-time setup). Then open `index.html` in any browser — the page loads inline JSON configs embedded in the HTML, so it works directly from disk (`file://`) as well as via a local server.
 
-**Node.js requirement:** Tailwind CSS build requires Node.js (any recent LTS). If `npm` isn't available, download from [nodejs.org](https://nodejs.org) for your platform.
+**Node.js requirement:** Tailwind CSS build requires Node.js 18+. If `npm` isn't available, download from [nodejs.org](https://nodejs.org) for your platform.
 
 ## Design System
 
@@ -182,7 +200,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 
 ## Improvement Plans
 
-160 executable plans at `docs/plans/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plans/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
+160 executable plans at `docs/plans/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans (161–162, with INDEX.md) at `docs/plans/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
 
 
 

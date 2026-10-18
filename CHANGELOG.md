@@ -1,5 +1,12 @@
 # Changelog
 
+## Oct 2026
+
+- **October SEO refresh**: GSC-evidence-driven landing page optimization, October-titled SEO metadata across game-content pages, and refreshed code data date. New search-performance exports and a content optimization report recorded under `data/` and `docs/reports/2026-10-12/gpt-5/`.
+- **Promo-code count**: UPDAT3 (500 gems) brings active codes to 30; `data/codes.json` refreshed (date 2026-10-12) and reward table updated.
+- **Creator directory refresh**: Verified video listings refreshed and upload feeds audited, with audit evidence recorded (`docs/reports/2026-10-12/gpt-5/creator-directory-audit.md`).
+- **SEO performance report**: Regenerated from the 2026-10-12 export — 13,897 clicks / 103,854 impressions over 92 days (151.1 clicks/day, 13.38% CTR, avg position 5.2). `scripts/analyze-gsc.js` now writes to the canonical report path.
+
 ## Sep 2026
 
 - **Promo-code refresh**: New active code RAID02 (Bulletproof + Powerplex). GLOB34 corrected and retained as expired (2026-08-28, 500-gem reward). Expanded from 28 to 29 active codes; expired older codes. All promo data regenerated from `data/codes.json`.
