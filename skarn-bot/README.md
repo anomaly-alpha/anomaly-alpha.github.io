@@ -496,7 +496,7 @@ node ../skarn-rpc/rich-presence.js
 
 ### Verification (manual, per project convention)
 
-No test framework — verify with `npm run smoke` (runs every suite in `scripts/smokes/` against its own temp DB; a fresh DB logs `[DB] Migration 1 (add_reminder_giveaway_indexes)`, `[DB] Migration 2 (add_daily_news_published_at)`, and `[DB] Migration 3 (drop_mention_cooldowns)` applied — see `db/migrations.js`) plus syntax checks and a `node bot.js` boot check. Individual blocks below remain for copy-paste debugging.
+No test framework — verify with `npm run smoke` (runs every suite in `scripts/smokes/` against its own temp DB; a fresh DB logs `[DB] Migration 1 (add_reminder_giveaway_indexes)`, `[DB] Migration 2 (add_daily_news_published_at)`, and `[DB] Migration 3 (drop_mention_cooldowns)` applied — see `db/migrations.js`) plus syntax checks and a `node bot.js` boot check. For end-to-end Discord checks of the current command tree, permissions, cleanup, and deployment scope, follow the [Skarn Slash Command Testing Guide](docs/guides/2026-10-17/gpt-6-luna/command-testing.md). Individual blocks below remain for copy-paste debugging.
 
 ```bash
 node -c bot.js                                    # syntax check
