@@ -110,6 +110,7 @@ async function run(options) {
       if (result.checked && options.recordChecks) {
         creator.channelId = result.channelId;
         creator.feedLastChecked = result.checkedAt.slice(0, 10);
+        creator.lastChecked = result.checkedAt.slice(0, 10);
       }
     } catch (error) {
       results.push({ creatorId: creator.id, channelUrl: creator.channelUrl || creator.sourceUrl, checked: false, error: error.message });

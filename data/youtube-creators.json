@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-12",
+  "updated": "2026-10-25",
   "contentMaintainer": "Anomaly Alpha",
   "reviewCadenceDays": 90,
   "featuredCreatorId": "avatar-shuvd",
@@ -310,13 +310,227 @@
       "handle": "@avatarshuvd",
       "channelUrl": "https://www.youtube.com/@avatarshuvd",
       "description": "Invincible GTG tier lists, guides, and update coverage.",
-      "tags": ["Tier Lists", "Guides", "Updates"],
+      "tags": [
+        "Tier Lists",
+        "Guides",
+        "Updates"
+      ],
       "badge": "Featured",
       "status": "active",
       "displayOrder": 1,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@avatarshuvd",
       "videos": [
+        {
+          "id": "Z3N6BceB3TU",
+          "title": "Wolf-Man LIVE SUMMONS!",
+          "description": "Avatar Shuvd livestreams Wolf-Man summons in Invincible: Guarding the Globe.",
+          "category": "Livestreams",
+          "published": "2026-10-24",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=Z3N6BceB3TU",
+          "canonicalUrl": "https://www.youtube.com/watch?v=Z3N6BceB3TU",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "R_BFT9k0cKs",
+          "title": "An AMAZING Event...that Everyone Will Skip... - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd reviews a current event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-20",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=R_BFT9k0cKs",
+          "canonicalUrl": "https://www.youtube.com/watch?v=R_BFT9k0cKs",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "hkWTI3erN2I",
+          "title": "Scarecrow Skill REVIEW! Craziest Reviver in the Game?!",
+          "description": "Avatar Shuvd reviews Scarecrow's skills in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-19",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=hkWTI3erN2I",
+          "canonicalUrl": "https://www.youtube.com/watch?v=hkWTI3erN2I",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "o3spJYPvP-E",
+          "title": "Black Market FULL of Freebies",
+          "description": "Avatar Shuvd covers the Black Market event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-17",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=o3spJYPvP-E",
+          "canonicalUrl": "https://www.youtube.com/watch?v=o3spJYPvP-E",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "iQi8iFx52Pw",
+          "title": "Tier List 3.6 EDITION! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd updates the hero tier list for Invincible: Guarding the Globe.",
+          "category": "Tier Lists",
+          "published": "2026-10-17",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=iQi8iFx52Pw",
+          "canonicalUrl": "https://www.youtube.com/watch?v=iQi8iFx52Pw",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "29GJpWBjEDs",
+          "title": "Two NEW Promo Codes with Great Boss Damagers!",
+          "description": "Avatar Shuvd covers new promo codes for Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-10-17",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=29GJpWBjEDs",
+          "canonicalUrl": "https://www.youtube.com/watch?v=29GJpWBjEDs",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "wouY_njruFM",
+          "title": "Beast TEAMBUILDING Guide! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd shares a Beast team-building guide for Invincible: Guarding the Globe.",
+          "category": "Team Building",
+          "published": "2026-10-15",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=wouY_njruFM",
+          "canonicalUrl": "https://www.youtube.com/watch?v=wouY_njruFM",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "dmmsEqNdQkc",
+          "title": "LOCK In Your Pulls! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd discusses summon planning in Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-10-14",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=dmmsEqNdQkc",
+          "canonicalUrl": "https://www.youtube.com/watch?v=dmmsEqNdQkc",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "vCE19xJbehw",
+          "title": "The Multiplier CONQUERS ALL! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd reviews the multiplier event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-13",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=vCE19xJbehw",
+          "canonicalUrl": "https://www.youtube.com/watch?v=vCE19xJbehw",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "JjytTqc_Jr4",
+          "title": "All Frontier Questions EXPLAINED!",
+          "description": "Avatar Shuvd answers questions about Invincible: Guarding the Globe's Frontier mode.",
+          "category": "Guides",
+          "published": "2026-10-12",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=JjytTqc_Jr4",
+          "canonicalUrl": "https://www.youtube.com/watch?v=JjytTqc_Jr4",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "lbN7SeV1vSM",
+          "title": "Guide to SAVING GEMS! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd shares gem-saving advice for Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-10-11",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=lbN7SeV1vSM",
+          "canonicalUrl": "https://www.youtube.com/watch?v=lbN7SeV1vSM",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "IQmgXG011PM",
+          "title": "Wolf-Man OUT FOR HALLOWEEN! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd covers the Wolf-Man Halloween update in Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-10-24",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=IQmgXG011PM",
+          "canonicalUrl": "https://www.youtube.com/watch?v=IQmgXG011PM",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "8o1KE1_OGO0",
+          "title": "BROKEN New PVP Champ!?",
+          "description": "Avatar Shuvd discusses a new PvP champion in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-23",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=8o1KE1_OGO0",
+          "canonicalUrl": "https://www.youtube.com/watch?v=8o1KE1_OGO0",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "bImw5Xp777E",
+          "title": "DOG IN THE EVENT!? (stay strong, halloween is coming...) - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd covers the current event and Halloween content in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-22",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=bImw5Xp777E",
+          "canonicalUrl": "https://www.youtube.com/watch?v=bImw5Xp777E",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "8xtQsvp3mII",
+          "title": "UPDATE 3.7 Sure is an Update! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd reviews update 3.7 for Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-10-21",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=8xtQsvp3mII",
+          "canonicalUrl": "https://www.youtube.com/watch?v=8xtQsvp3mII",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Avatar Shuvd; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
         {
           "id": "pQ0g77eKL5g",
           "title": "Summon WISELY on Art! - Invincible: Guarding the Globe",
@@ -849,7 +1063,9 @@
           "evidenceNote": "First-party YouTube Atom feed identifies Avatar Shuvd, the standard watch URL, title, and 2026-08-28 publication date; the title explicitly names GTG.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCmhqLp5THAKvldNDO0a1NWw",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "rapid-gtg",
@@ -857,13 +1073,72 @@
       "handle": "@RapidGTG",
       "channelUrl": "https://www.youtube.com/@RapidGTG",
       "description": "Invincible GTG boss and event coverage.",
-      "tags": ["Guides", "Events"],
+      "tags": [
+        "Guides",
+        "Events"
+      ],
       "badge": "New",
       "status": "active",
       "displayOrder": 2,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/watch?v=kPDC78Dv1NI",
       "videos": [
+        {
+          "id": "q4Mwyb74H30",
+          "title": "NOOB to PRO in INVINCIBLE Mobile Game: The ULTIMATE Guide for ALL Players (900+ Days F2P)",
+          "description": "rapid shares a full progression guide for Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-10-24",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=q4Mwyb74H30",
+          "canonicalUrl": "https://www.youtube.com/watch?v=q4Mwyb74H30",
+          "evidenceNote": "YouTube Atom upload feed lists this video for rapid; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "bw2uasycfiQ",
+          "title": "The SECRET to winning INVINCIBLE Boss Raids #invincible #gaming",
+          "description": "rapid shares Boss Raid strategy for Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-10-16",
+          "lastChecked": "2026-10-25",
+          "status": "unavailable",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=bw2uasycfiQ",
+          "canonicalUrl": "https://www.youtube.com/watch?v=bw2uasycfiQ",
+          "evidenceNote": "YouTube Atom upload feed lists this video for rapid; public oEmbed confirms uploader and title. Checked 2026-10-25. Public player metadata confirms duration 58s and isShortsEligible=true. Checked 2026-10-25.",
+          "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory."
+        },
+        {
+          "id": "D6vJjLx06kI",
+          "title": "The BEST Event in Invincible GTG History - Spend Everything NOW | Invincible: Guarding the Globe",
+          "description": "rapid reviews an Invincible GTG event and spending strategy.",
+          "category": "Events",
+          "published": "2026-10-02",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=D6vJjLx06kI",
+          "canonicalUrl": "https://www.youtube.com/watch?v=D6vJjLx06kI",
+          "evidenceNote": "YouTube Atom upload feed lists this video for rapid; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "e7stELBaUcA",
+          "title": "Here's What INVINCIBLE Mobile Game NEEDS! (Community Wishlist)",
+          "description": "rapid discusses community-requested improvements for Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-09-10",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=e7stELBaUcA",
+          "canonicalUrl": "https://www.youtube.com/watch?v=e7stELBaUcA",
+          "evidenceNote": "YouTube Atom upload feed lists this video for rapid; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
         {
           "id": "kPDC78Dv1NI",
           "title": "Boss Raid is Finally Here! | Hail Mary Boss Guide & Strategy | Invincible: Guarding the Globe",
@@ -962,7 +1237,9 @@
           "evidenceNote": "The public RSS feed identifies a standard Invincible GTG event review.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCLvD52j9YDTXJa0WvUJxacw",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "tutaaa-gtg",
@@ -970,11 +1247,15 @@
       "handle": "@TutaaaGTG",
       "channelUrl": "https://www.youtube.com/@TutaaaGTG",
       "description": "Invincible GTG gameplay, team-building, and free-to-play guidance.",
-      "tags": ["Gameplay", "Guides", "Team Building"],
+      "tags": [
+        "Gameplay",
+        "Guides",
+        "Team Building"
+      ],
       "badge": "New",
       "status": "active",
       "displayOrder": 3,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@TutaaaGTG",
       "videos": [
         {
@@ -1131,7 +1412,9 @@
           "evidenceNote": "First-party YouTube Atom feed identifies Tutaaa-GTG, the standard watch URL, title, description, and 2026-09-05 publication date; the entry discusses GTG Alliance Mode.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCMmKlikOnlwSlJETd7BVixw",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "th3o",
@@ -1139,13 +1422,100 @@
       "handle": "@TH3Oyt",
       "channelUrl": "https://www.youtube.com/@TH3Oyt",
       "description": "Invincible GTG event, hero, and team coverage.",
-      "tags": ["Events", "Guides"],
+      "tags": [
+        "Events",
+        "Guides"
+      ],
       "badge": "New",
       "status": "active",
       "displayOrder": 4,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@TH3Oyt",
       "videos": [
+        {
+          "id": "UcgJajY53VQ",
+          "title": "The RAGNARS Are Here!!! - Invincible: Guarding the Globe",
+          "description": "TH3O covers the Ragnar hero release in Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-09-18",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=UcgJajY53VQ",
+          "canonicalUrl": "https://www.youtube.com/watch?v=UcgJajY53VQ",
+          "evidenceNote": "YouTube Atom upload feed lists this video for TH3O; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "MgA9W8gXPDo",
+          "title": "NEW Update 3.6 is AMAZING!! - Invincible: Guarding the Globe",
+          "description": "TH3O reviews update 3.6 for Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-09-15",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=MgA9W8gXPDo",
+          "canonicalUrl": "https://www.youtube.com/watch?v=MgA9W8gXPDo",
+          "evidenceNote": "YouTube Atom upload feed lists this video for TH3O; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "EClXP5eE-bw",
+          "title": "LOCKED and RELOAD is actually GREAT?!! - Invincible: Guarding the Globe",
+          "description": "TH3O reviews the Locked and Reload event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-19",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=EClXP5eE-bw",
+          "canonicalUrl": "https://www.youtube.com/watch?v=EClXP5eE-bw",
+          "evidenceNote": "YouTube Atom upload feed lists this video for TH3O; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "21EmQ4aL8qY",
+          "title": "LOCK IN with X2 SUMMONS!! - Invincible: Guarding the Globe",
+          "description": "TH3O covers the double-summon event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-14",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=21EmQ4aL8qY",
+          "canonicalUrl": "https://www.youtube.com/watch?v=21EmQ4aL8qY",
+          "evidenceNote": "YouTube Atom upload feed lists this video for TH3O; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "PiFQmA3KaLc",
+          "title": "NEW Recruitment Multiplier Event is INSANE!! - Invincible: Guarding the Globe",
+          "description": "TH3O reviews the Recruitment Multiplier event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-09-29",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=PiFQmA3KaLc",
+          "canonicalUrl": "https://www.youtube.com/watch?v=PiFQmA3KaLc",
+          "evidenceNote": "YouTube Atom upload feed lists this video for TH3O; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "WRMBqOv0A2U",
+          "title": "Pick & Drop is BACK!! - Invincible: Guarding the Globe",
+          "description": "TH3O covers the returning Pick & Drop event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-09-22",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=WRMBqOv0A2U",
+          "canonicalUrl": "https://www.youtube.com/watch?v=WRMBqOv0A2U",
+          "evidenceNote": "YouTube Atom upload feed lists this video for TH3O; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
         {
           "id": "EG2jpxYiLlY",
           "title": "Fresh Recruits Event is INSANE! - Invincible: Guarding the Globe",
@@ -1258,7 +1628,9 @@
           "evidenceNote": "The public RSS feed identifies a standard Brit hero review.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCMQhyVbKHF97HiQYt9pwJgA",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "lavamoose",
@@ -1266,13 +1638,127 @@
       "handle": "@LAVAMOOSE1369",
       "channelUrl": "https://www.youtube.com/@LAVAMOOSE1369",
       "description": "Invincible GTG gameplay and story coverage.",
-      "tags": ["Gameplay"],
+      "tags": [
+        "Gameplay"
+      ],
       "badge": "New",
       "status": "active",
       "displayOrder": 5,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@LAVAMOOSE1369",
       "videos": [
+        {
+          "id": "8_CXQ3FSkrE",
+          "title": "Season 3 Chapter 1: Constant Threat || Invincible Guarding The Globe",
+          "description": "LAVAMOOSE plays Chapter 1 of Season 3 in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-09-30",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=8_CXQ3FSkrE",
+          "canonicalUrl": "https://www.youtube.com/watch?v=8_CXQ3FSkrE",
+          "evidenceNote": "YouTube Atom upload feed lists this video for LAVAMOOSE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "5ZvcezDduAI",
+          "title": "Bulletproofs GDA Case File || Invincible Guarding The Globe",
+          "description": "LAVAMOOSE plays Bulletproof's GDA Case File in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-09-25",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=5ZvcezDduAI",
+          "canonicalUrl": "https://www.youtube.com/watch?v=5ZvcezDduAI",
+          "evidenceNote": "YouTube Atom upload feed lists this video for LAVAMOOSE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "aMdPAHQR8t4",
+          "title": "Ragnars Nightmare || Invincible Guarding The Globe",
+          "description": "LAVAMOOSE plays Ragnar's Nightmare in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-09-22",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=aMdPAHQR8t4",
+          "canonicalUrl": "https://www.youtube.com/watch?v=aMdPAHQR8t4",
+          "evidenceNote": "YouTube Atom upload feed lists this video for LAVAMOOSE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "-sS1LA0f18k",
+          "title": "Ragnars Have ARRIVED In Invincible Guarding The Globe",
+          "description": "LAVAMOOSE covers the Ragnar hero release in Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-09-22",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=-sS1LA0f18k",
+          "canonicalUrl": "https://www.youtube.com/watch?v=-sS1LA0f18k",
+          "evidenceNote": "YouTube Atom upload feed lists this video for LAVAMOOSE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "vUNIhdD2mRA",
+          "title": "The GOAT Aquarius' GDA Case File || Invincible Guarding The Globe",
+          "description": "LAVAMOOSE plays Aquarius' GDA Case File in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-19",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=vUNIhdD2mRA",
+          "canonicalUrl": "https://www.youtube.com/watch?v=vUNIhdD2mRA",
+          "evidenceNote": "YouTube Atom upload feed lists this video for LAVAMOOSE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "kDqQ3IfkQzc",
+          "title": "Thraggs GDA Case File || Invincible Guarding The Globe",
+          "description": "LAVAMOOSE covers Thragg's GDA Case File in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-13",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=kDqQ3IfkQzc",
+          "canonicalUrl": "https://www.youtube.com/watch?v=kDqQ3IfkQzc",
+          "evidenceNote": "YouTube Atom upload feed lists this video for LAVAMOOSE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "ALHFAkF29vk",
+          "title": "Season 3 Chapter 3: Practice, Practice, Practice || Invincible Guarding The Globe",
+          "description": "LAVAMOOSE plays Chapter 3 of Season 3 in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-08",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=ALHFAkF29vk",
+          "canonicalUrl": "https://www.youtube.com/watch?v=ALHFAkF29vk",
+          "evidenceNote": "YouTube Atom upload feed lists this video for LAVAMOOSE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "t5iDbRzLdJI",
+          "title": "Season 3 Chapter 2: Behind Closed Doors || Invincible Guarding The Globe",
+          "description": "LAVAMOOSE plays Chapter 2 of Season 3 in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-04",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=t5iDbRzLdJI",
+          "canonicalUrl": "https://www.youtube.com/watch?v=t5iDbRzLdJI",
+          "evidenceNote": "YouTube Atom upload feed lists this video for LAVAMOOSE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
         {
           "id": "H2gEk34g-50",
           "title": "Can Guns Only Beat Cecils Nightmare?? // Invincible Guarding The Globe",
@@ -1399,7 +1885,9 @@
           "evidenceNote": "First-party YouTube Atom feed identifies LAVAMOOSE, the standard watch URL, title, and 2026-08-31 publication date; the title explicitly names GTG.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCr4L3RRjIpKSCC7aaFWosKQ",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "omni-bane",
@@ -1407,13 +1895,156 @@
       "handle": "@BaneApe5",
       "channelUrl": "https://www.youtube.com/@BaneApe5",
       "description": "Invincible GTG hero news and community updates.",
-      "tags": ["Updates", "Gameplay"],
+      "tags": [
+        "Updates",
+        "Gameplay"
+      ],
       "badge": "Updates",
       "status": "active",
       "displayOrder": 6,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@BaneApe5",
       "videos": [
+        {
+          "id": "kj4gAGBFuXU",
+          "title": "Invincible Guarding The Globe - Astounding New Character Teaser!",
+          "description": "OMNI-BANE previews an upcoming character in Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-10-22",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=kj4gAGBFuXU",
+          "canonicalUrl": "https://www.youtube.com/watch?v=kj4gAGBFuXU",
+          "evidenceNote": "YouTube Atom upload feed lists this video for OMNI-BANE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "-7lFT38Df9A",
+          "title": "Invincible Guarding The Globe - New Totem Pass",
+          "description": "OMNI-BANE covers the Totem Pass in Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-10-21",
+          "lastChecked": "2026-10-25",
+          "status": "unavailable",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=-7lFT38Df9A",
+          "canonicalUrl": "https://www.youtube.com/watch?v=-7lFT38Df9A",
+          "evidenceNote": "YouTube Atom upload feed lists this video for OMNI-BANE; public oEmbed confirms uploader and title. Checked 2026-10-25. Public player metadata confirms duration 148s and isShortsEligible=true. Checked 2026-10-25.",
+          "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory."
+        },
+        {
+          "id": "qRfwTXb8OCY",
+          "title": "Invincible Guarding The Globe - TV Show Case File Event!",
+          "description": "OMNI-BANE covers the TV Show Case File event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-20",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=qRfwTXb8OCY",
+          "canonicalUrl": "https://www.youtube.com/watch?v=qRfwTXb8OCY",
+          "evidenceNote": "YouTube Atom upload feed lists this video for OMNI-BANE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "czbqnc8mQJI",
+          "title": "Invincible Guarding The Globe - Patch Notes Update 3.7!",
+          "description": "OMNI-BANE reviews update 3.7 patch notes for Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-10-20",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=czbqnc8mQJI",
+          "canonicalUrl": "https://www.youtube.com/watch?v=czbqnc8mQJI",
+          "evidenceNote": "YouTube Atom upload feed lists this video for OMNI-BANE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "_VoCVROT-mc",
+          "title": "Invincible Guarding The Globe - Lock & Reload Event!!",
+          "description": "OMNI-BANE covers the Lock & Reload event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-19",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=_VoCVROT-mc",
+          "canonicalUrl": "https://www.youtube.com/watch?v=_VoCVROT-mc",
+          "evidenceNote": "YouTube Atom upload feed lists this video for OMNI-BANE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "jwMBZoI3baI",
+          "title": "Invincible Guarding The Globe - Black Market Event! Save your gems!",
+          "description": "OMNI-BANE covers the Black Market event and gem-saving advice.",
+          "category": "Events",
+          "published": "2026-10-17",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=jwMBZoI3baI",
+          "canonicalUrl": "https://www.youtube.com/watch?v=jwMBZoI3baI",
+          "evidenceNote": "YouTube Atom upload feed lists this video for OMNI-BANE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "3VmRUbqhTWs",
+          "title": "Invincible Guarding The Globe - Astoundingly Late Wolf-Man Summons with OMNI-BANE",
+          "description": "OMNI-BANE summons for Wolf-Man in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-24",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=3VmRUbqhTWs",
+          "canonicalUrl": "https://www.youtube.com/watch?v=3VmRUbqhTWs",
+          "evidenceNote": "YouTube Atom upload feed lists this video for OMNI-BANE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "l2HOqJLH2Ww",
+          "title": "Invincible Guarding The Globe - Cursed Protector Event Day 1 - Omnipotent + 3 Star Wolf-Man!",
+          "description": "OMNI-BANE covers day one of the Cursed Protector event and Wolf-Man in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-24",
+          "lastChecked": "2026-10-25",
+          "status": "unavailable",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=l2HOqJLH2Ww",
+          "canonicalUrl": "https://www.youtube.com/watch?v=l2HOqJLH2Ww",
+          "evidenceNote": "YouTube Atom upload feed lists this video for OMNI-BANE; public oEmbed confirms uploader and title. Checked 2026-10-25. Public player metadata confirms duration 31s and isShortsEligible=true. Checked 2026-10-25.",
+          "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory."
+        },
+        {
+          "id": "cNtcMNVOhfc",
+          "title": "Invincible Guarding The Globe - Astounding Wolf-Man Summons!!",
+          "description": "OMNI-BANE summons for Wolf-Man in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-23",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=cNtcMNVOhfc",
+          "canonicalUrl": "https://www.youtube.com/watch?v=cNtcMNVOhfc",
+          "evidenceNote": "YouTube Atom upload feed lists this video for OMNI-BANE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "2MZvESNTCCE",
+          "title": "Invincible Guarding The Globe - The Astounding Wolf-Man: Cursed Protector Event!!",
+          "description": "OMNI-BANE covers the Cursed Protector event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-23",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=2MZvESNTCCE",
+          "canonicalUrl": "https://www.youtube.com/watch?v=2MZvESNTCCE",
+          "evidenceNote": "YouTube Atom upload feed lists this video for OMNI-BANE; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
         {
           "id": "I2pDn30qPpY",
           "title": "Invincible Guarding The Globe - MOST WANTED Event!!",
@@ -1582,7 +2213,9 @@
           "evidenceNote": "First-party YouTube Atom feed identifies OMNI-BANE, the standard watch URL, title, and 2026-08-28 publication date; the title explicitly names GTG.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UC7C8cCP4gdyTULBkZZyVGiQ",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "just-a-guy-named-francis",
@@ -1590,13 +2223,30 @@
       "handle": "@JustaGuynamedFrancis",
       "channelUrl": "https://www.youtube.com/@JustaGuynamedFrancis",
       "description": "Invincible GTG livestream coverage and character-release gameplay.",
-      "tags": ["Livestreams", "Gameplay"],
+      "tags": [
+        "Livestreams",
+        "Gameplay"
+      ],
       "badge": "New",
       "status": "active",
       "displayOrder": 7,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@JustaGuynamedFrancis",
       "videos": [
+        {
+          "id": "AnXSM0liVyw",
+          "title": "I Refreshed the MAX LEVEL Shop 100 TIMES for Ragnars! | Invincible: Guarding the Globe",
+          "description": "Just a Guy named Francis tests the max-level shop and Ragnar refreshes in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-09-20",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=AnXSM0liVyw",
+          "canonicalUrl": "https://www.youtube.com/watch?v=AnXSM0liVyw",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Just a Guy named Francis; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
         {
           "id": "pK9C7mUMceI",
           "title": "NEW CHARACTER RELEASE DAY | Invincible: Guarding the Globe [LIVE]",
@@ -1681,7 +2331,9 @@
           "evidenceNote": "The public RSS feed identifies a replayable GTG Wish Event livestream.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCJqFBhPxl1e0OvTyUo503LA",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "beaoloooo",
@@ -1692,7 +2344,7 @@
       "tags": [],
       "status": "hidden",
       "displayOrder": 8,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/shorts/kGq-Racu8tw",
       "videos": [
         {
@@ -1709,7 +2361,9 @@
           "evidenceNote": "Public YouTube oEmbed identifies a portrait-format Short.",
           "statusReason": "Rejected because this is a YouTube Short; Shorts do not qualify for the directory."
         }
-      ]
+      ],
+      "channelId": "UCUBTokyFQ6TmHhnQQ5AE2mA",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "kingslay727",
@@ -1717,13 +2371,227 @@
       "handle": "@kingslay727",
       "channelUrl": "https://www.youtube.com/@kingslay727",
       "description": "Invincible GTG hero updates, events, and tier-list gameplay.",
-      "tags": ["Updates", "Events", "Tier Lists"],
+      "tags": [
+        "Updates",
+        "Events",
+        "Tier Lists"
+      ],
       "badge": "New",
       "status": "active",
       "displayOrder": 9,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/shorts/sxosoNY7WDU",
       "videos": [
+        {
+          "id": "p4_7nFZqVSU",
+          "title": "OP EVENT or TRASH?",
+          "description": "KingSlay727 reviews an event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-17",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=p4_7nFZqVSU",
+          "canonicalUrl": "https://www.youtube.com/watch?v=p4_7nFZqVSU",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "cDiYl43pawY",
+          "title": "NEW LOCK & LOAD",
+          "description": "KingSlay727 covers the Lock & Load event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-15",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=cDiYl43pawY",
+          "canonicalUrl": "https://www.youtube.com/watch?v=cDiYl43pawY",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "qrtvEGPMcuA",
+          "title": "HUGE RANK UPS! (invincible gtg)",
+          "description": "KingSlay727 shares rank-up gameplay in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-07",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=qrtvEGPMcuA",
+          "canonicalUrl": "https://www.youtube.com/watch?v=qrtvEGPMcuA",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "7jP2sNN9VKg",
+          "title": "HUGE RANK UP",
+          "description": "KingSlay727 shares rank-up gameplay in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-07",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=7jP2sNN9VKg",
+          "canonicalUrl": "https://www.youtube.com/watch?v=7jP2sNN9VKg",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "2NWq-L-HIoY",
+          "title": "Mega rank ups are coming #invincibleGTG",
+          "description": "KingSlay727 previews rank-ups in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-06",
+          "lastChecked": "2026-10-25",
+          "status": "unavailable",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=2NWq-L-HIoY",
+          "canonicalUrl": "https://www.youtube.com/watch?v=2NWq-L-HIoY",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25. Public player metadata confirms duration 47s and isShortsEligible=true. Checked 2026-10-25.",
+          "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory."
+        },
+        {
+          "id": "JERbBuh-eOk",
+          "title": "HUGE RANK UP",
+          "description": "KingSlay727 shares rank-up gameplay in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-06",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=JERbBuh-eOk",
+          "canonicalUrl": "https://www.youtube.com/watch?v=JERbBuh-eOk",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "M8VDHzE28yo",
+          "title": "WE NEED THIS (ARTS SHOP EVENT)",
+          "description": "KingSlay727 discusses the Art's Shop event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-03",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=M8VDHzE28yo",
+          "canonicalUrl": "https://www.youtube.com/watch?v=M8VDHzE28yo",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "D3DzitI4Ivc",
+          "title": "FINAL PUSH FOR NEW (RECRUITMENT MULTIPLIER)",
+          "description": "KingSlay727 covers the Recruitment Multiplier event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-02",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=D3DzitI4Ivc",
+          "canonicalUrl": "https://www.youtube.com/watch?v=D3DzitI4Ivc",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "xozAkJa_Gho",
+          "title": "WE CONTROL OR OWN LUCK? (RECRUITMENT MULTIPLIER)",
+          "description": "KingSlay727 discusses Recruitment Multiplier event odds in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-01",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=xozAkJa_Gho",
+          "canonicalUrl": "https://www.youtube.com/watch?v=xozAkJa_Gho",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "6Fu3nbh7G8k",
+          "title": "WE CONTROL OR OWN LUCK? (RECRUITMENT MULTIPLIER)",
+          "description": "KingSlay727 discusses Recruitment Multiplier event odds in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-09-30",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=6Fu3nbh7G8k",
+          "canonicalUrl": "https://www.youtube.com/watch?v=6Fu3nbh7G8k",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "qKPLZAM3FU0",
+          "title": "NEW CONTROL MULTIPLE EVENT OP",
+          "description": "KingSlay727 covers a control multiplier event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-09-29",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=qKPLZAM3FU0",
+          "canonicalUrl": "https://www.youtube.com/watch?v=qKPLZAM3FU0",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "clp4FcJHmzg",
+          "title": "THE CURSED PROTECTOR",
+          "description": "KingSlay727 covers the Cursed Protector event in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-24",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=clp4FcJHmzg",
+          "canonicalUrl": "https://www.youtube.com/watch?v=clp4FcJHmzg",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "6uiR3s54xCQ",
+          "title": "THE WOLF MAN IS HERE",
+          "description": "KingSlay727 covers Wolf-Man's release in Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-10-23",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=6uiR3s54xCQ",
+          "canonicalUrl": "https://www.youtube.com/watch?v=6uiR3s54xCQ",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "tGVLhso8AXU",
+          "title": "3.7 Update Over Look",
+          "description": "KingSlay727 reviews update 3.7 for Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-10-22",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=tGVLhso8AXU",
+          "canonicalUrl": "https://www.youtube.com/watch?v=tGVLhso8AXU",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "5jCkr4sZIV8",
+          "title": "3.7 Update Over Look",
+          "description": "KingSlay727 reviews update 3.7 for Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-10-21",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=5jCkr4sZIV8",
+          "canonicalUrl": "https://www.youtube.com/watch?v=5jCkr4sZIV8",
+          "evidenceNote": "YouTube Atom upload feed lists this video for KingSlay727; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
         {
           "id": "KUlfNLLY4TE",
           "title": "Invincible GTG: COMMUNITY Suggestions and Predictions!",
@@ -1864,7 +2732,9 @@
           "evidenceNote": "First-party YouTube Atom feed identifies KingSlay727, the standard watch URL, title, and 2026-09-04 publication date; the title explicitly identifies GTG.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCTWNwUOlYOlme4NiJUbkZ1Q",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "invincible-gtg-omni-fan",
@@ -1872,13 +2742,213 @@
       "handle": "@Invincible.gtg.omnifan",
       "channelUrl": "https://www.youtube.com/@Invincible.gtg.omnifan",
       "description": "Invincible GTG event, hero, raid, and gameplay coverage.",
-      "tags": ["Events", "Gameplay", "Livestreams"],
+      "tags": [
+        "Events",
+        "Gameplay",
+        "Livestreams"
+      ],
       "badge": "New",
       "status": "active",
       "displayOrder": 13,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@Invincible.gtg.omnifan",
       "videos": [
+        {
+          "id": "fVuOHMN_8YE",
+          "title": "Live streaming of INVINCIBLE.GTG.OMNI-FAN",
+          "description": "INVINCIBLE GTG OMNI-FAN streams Invincible: Guarding the Globe gameplay.",
+          "category": "Livestreams",
+          "published": "2026-10-23",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=fVuOHMN_8YE",
+          "canonicalUrl": "https://www.youtube.com/watch?v=fVuOHMN_8YE",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "LzON6p-jYR8",
+          "title": "Lock and Reload Event on Invincible Guarding The Globe",
+          "description": "INVINCIBLE GTG OMNI-FAN covers the Lock and Reload event.",
+          "category": "Events",
+          "published": "2026-10-19",
+          "lastChecked": "2026-10-25",
+          "status": "unavailable",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=LzON6p-jYR8",
+          "canonicalUrl": "https://www.youtube.com/watch?v=LzON6p-jYR8",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25. Public player metadata confirms duration 122s and isShortsEligible=true. Checked 2026-10-25.",
+          "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory."
+        },
+        {
+          "id": "wiQtWcBNHts",
+          "title": "Black Market Event on Invincible Guarding The Globe",
+          "description": "INVINCIBLE GTG OMNI-FAN covers the Black Market event.",
+          "category": "Events",
+          "published": "2026-10-16",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=wiQtWcBNHts",
+          "canonicalUrl": "https://www.youtube.com/watch?v=wiQtWcBNHts",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "FXJEVp5DQG4",
+          "title": "Lock and Load Coalition of Planets Event! Invincible: Guarding The Globe",
+          "description": "INVINCIBLE GTG OMNI-FAN covers the Coalition of Planets event.",
+          "category": "Events",
+          "published": "2026-10-13",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=FXJEVp5DQG4",
+          "canonicalUrl": "https://www.youtube.com/watch?v=FXJEVp5DQG4",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "qPlTBMcGDLk",
+          "title": "Live streaming of INVINCIBLE.GTG.OMNI-FAN",
+          "description": "INVINCIBLE GTG OMNI-FAN streams Invincible: Guarding the Globe gameplay.",
+          "category": "Livestreams",
+          "published": "2026-09-26",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=qPlTBMcGDLk",
+          "canonicalUrl": "https://www.youtube.com/watch?v=qPlTBMcGDLk",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "nLlG0w7sUgU",
+          "title": "Ragnars Are Now Available in Invincible: Guarding The Globe",
+          "description": "INVINCIBLE GTG OMNI-FAN covers the Ragnar hero release.",
+          "category": "Updates",
+          "published": "2026-09-18",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=nLlG0w7sUgU",
+          "canonicalUrl": "https://www.youtube.com/watch?v=nLlG0w7sUgU",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "NroWP9Hmnn8",
+          "title": "Thragg's Casefile | Invincible: Guarding The Globe",
+          "description": "INVINCIBLE GTG OMNI-FAN covers Thragg's Casefile.",
+          "category": "Events",
+          "published": "2026-09-15",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=NroWP9Hmnn8",
+          "canonicalUrl": "https://www.youtube.com/watch?v=NroWP9Hmnn8",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "7uTggpahjp0",
+          "title": "Live streaming of INVINCIBLE.GTG.OMNI-FAN",
+          "description": "INVINCIBLE GTG OMNI-FAN streams Invincible: Guarding the Globe gameplay.",
+          "category": "Livestreams",
+          "published": "2026-09-15",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=7uTggpahjp0",
+          "canonicalUrl": "https://www.youtube.com/watch?v=7uTggpahjp0",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "Jd-6TwPQXdM",
+          "title": "Hero Bootcamp Event is Back - Invincible: Guarding The Globe",
+          "description": "INVINCIBLE GTG OMNI-FAN covers the returning Hero Bootcamp event.",
+          "category": "Events",
+          "published": "2026-09-11",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=Jd-6TwPQXdM",
+          "canonicalUrl": "https://www.youtube.com/watch?v=Jd-6TwPQXdM",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "Mu2mGPmnLJc",
+          "title": "A Brand New Recruitment Event! #invinciblegtg",
+          "description": "INVINCIBLE GTG OMNI-FAN covers a new recruitment event.",
+          "category": "Events",
+          "published": "2026-09-07",
+          "lastChecked": "2026-10-25",
+          "status": "unavailable",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=Mu2mGPmnLJc",
+          "canonicalUrl": "https://www.youtube.com/watch?v=Mu2mGPmnLJc",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25. Public player metadata confirms duration 140s and isShortsEligible=true. Checked 2026-10-25.",
+          "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory."
+        },
+        {
+          "id": "mxoicAXNuk0",
+          "title": "A Few PvP Battles #invincible #invinciblegtg",
+          "description": "INVINCIBLE GTG OMNI-FAN shares PvP gameplay.",
+          "category": "Gameplay",
+          "published": "2026-09-06",
+          "lastChecked": "2026-10-25",
+          "status": "unavailable",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=mxoicAXNuk0",
+          "canonicalUrl": "https://www.youtube.com/watch?v=mxoicAXNuk0",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25. Public player metadata confirms duration 176s and isShortsEligible=true. Checked 2026-10-25.",
+          "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory."
+        },
+        {
+          "id": "W0KV5Hf_6x4",
+          "title": "Cecil's Nightmares Halloween Edition - Invincible: Guarding the Globe",
+          "description": "INVINCIBLE GTG OMNI-FAN covers the Halloween edition of Cecil's Nightmares.",
+          "category": "Gameplay",
+          "published": "2026-10-24",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=W0KV5Hf_6x4",
+          "canonicalUrl": "https://www.youtube.com/watch?v=W0KV5Hf_6x4",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "vt4HA9Tv22U",
+          "title": "Wolfman Gameplay - Invincible: Guarding the Globe",
+          "description": "INVINCIBLE GTG OMNI-FAN showcases Wolf-Man gameplay.",
+          "category": "Gameplay",
+          "published": "2026-10-23",
+          "lastChecked": "2026-10-25",
+          "status": "unavailable",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=vt4HA9Tv22U",
+          "canonicalUrl": "https://www.youtube.com/watch?v=vt4HA9Tv22U",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25. Public player metadata confirms duration 138s and isShortsEligible=true. Checked 2026-10-25.",
+          "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory."
+        },
+        {
+          "id": "PQs3dCpC24o",
+          "title": "New Hero Wolfman is Available on Invincible: Guarding the Globe",
+          "description": "INVINCIBLE GTG OMNI-FAN covers the Wolf-Man release.",
+          "category": "Updates",
+          "published": "2026-10-23",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=PQs3dCpC24o",
+          "canonicalUrl": "https://www.youtube.com/watch?v=PQs3dCpC24o",
+          "evidenceNote": "YouTube Atom upload feed lists this video for INVINCIBLE GTG OMNI-FAN; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
         {
           "id": "lVeD_GWwZ6M",
           "title": "Live streaming of INVINCIBLE.GTG.OMNI-FAN",
@@ -2117,7 +3187,9 @@
           "evidenceNote": "First-party YouTube Atom feed identifies INVINCIBLE GTG OMNI-FAN, the standard watch URL, title, and 2026-08-28 publication date; the title explicitly names GTG.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCUlssVj4OfQwbuyBkpCmkOA",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "alexandergzmn-invincible",
@@ -2125,13 +3197,31 @@
       "handle": "@ilovealxxxx0o",
       "channelUrl": "https://www.youtube.com/@ilovealxxxx0o",
       "description": "Invincible GTG updates, Boss Raid analysis, and team challenge gameplay.",
-      "tags": ["Updates", "Guides", "Gameplay"],
+      "tags": [
+        "Updates",
+        "Guides",
+        "Gameplay"
+      ],
       "badge": "New",
       "status": "pending",
       "displayOrder": 14,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@ilovealxxxx0o",
       "videos": [
+        {
+          "id": "FNvlThkB8T4",
+          "title": "Best ways to earn gems in Invincible: Guarding the Globe as a free-to-play player",
+          "description": "AlexanderGZMN shares free-to-play gem strategies for Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-10-02",
+          "lastChecked": "2026-10-25",
+          "status": "unavailable",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=FNvlThkB8T4",
+          "canonicalUrl": "https://www.youtube.com/watch?v=FNvlThkB8T4",
+          "evidenceNote": "YouTube Atom upload feed lists this video for AlexanderGZMN • Invincible; public oEmbed confirms uploader and title. Checked 2026-10-25. Public player metadata confirms duration 92s and isShortsEligible=true. Checked 2026-10-25.",
+          "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory."
+        },
         {
           "id": "Benn_Q0cqRM",
           "title": "Invincible: Guarding the Globe, We Need to Talk",
@@ -2244,7 +3334,9 @@
           "evidenceNote": "The public channel feed identifies a portrait-format Short.",
           "statusReason": "Rejected because this is a YouTube Short; Shorts do not qualify for the directory."
         }
-      ]
+      ],
+      "channelId": "UC1tO0HTQb4T7bgCxJIKJWRA",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "gotcha-beast",
@@ -2252,7 +3344,11 @@
       "handle": "@Gotcha-Beastt",
       "channelUrl": "https://www.youtube.com/@Gotcha-Beastt",
       "description": "Invincible GTG campaign progression and event guides.",
-      "tags": ["Guides", "Events", "Gameplay"],
+      "tags": [
+        "Guides",
+        "Events",
+        "Gameplay"
+      ],
       "badge": "New",
       "status": "pending",
       "displayOrder": 15,
@@ -2309,11 +3405,15 @@
       "handle": "@subsktro",
       "channelUrl": "https://www.youtube.com/@subsktro",
       "description": "Invincible GTG hero showcases, event coverage, and patch updates.",
-      "tags": ["Updates", "Events", "Gameplay"],
+      "tags": [
+        "Updates",
+        "Events",
+        "Gameplay"
+      ],
       "badge": "New",
       "status": "pending",
       "displayOrder": 16,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@subsktro",
       "videos": [
         {
@@ -2414,7 +3514,9 @@
           "evidenceNote": "The public title explicitly names Invincible Guarding the Globe and the RSS feed identifies hero/event coverage.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCcFv-0RerLc6SKUs2NzTeyQ",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "gxlden",
@@ -2422,13 +3524,45 @@
       "handle": "@GxldenYT_",
       "channelUrl": "https://www.youtube.com/@GxldenYT_",
       "description": "Invincible GTG gameplay, hero showcases, and event livestreams.",
-      "tags": ["Gameplay", "Events", "Livestreams"],
+      "tags": [
+        "Gameplay",
+        "Events",
+        "Livestreams"
+      ],
       "badge": "New",
       "status": "pending",
       "displayOrder": 17,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@GxldenYT_",
       "videos": [
+        {
+          "id": "ezcqCuJQg5g",
+          "title": "I Went ALL IN on Art's Outlet in Invincible GTG… 30,000 GEMS SPENT",
+          "description": "Gxlden spends gems on Art's Outlet in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-05",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=ezcqCuJQg5g",
+          "canonicalUrl": "https://www.youtube.com/watch?v=ezcqCuJQg5g",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Gxlden; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
+        {
+          "id": "r5wksZNd7ZY",
+          "title": "I BEAT Thragg's GDA Case File in Invincible GTG… This Happened",
+          "description": "Gxlden plays Thragg's GDA Case File in Invincible: Guarding the Globe.",
+          "category": "Gameplay",
+          "published": "2026-10-03",
+          "lastChecked": "2026-10-25",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=r5wksZNd7ZY",
+          "canonicalUrl": "https://www.youtube.com/watch?v=r5wksZNd7ZY",
+          "evidenceNote": "YouTube Atom upload feed lists this video for Gxlden; public oEmbed confirms uploader and title. Checked 2026-10-25.",
+          "statusReason": ""
+        },
         {
           "id": "5PJRV9ho7G0",
           "title": "I Tested Level 700 THAEDUS in Cecil's Nightmares… This Happened",
@@ -2471,7 +3605,9 @@
           "evidenceNote": "Tavily and public oEmbed identify a standard GTG Thragg gameplay and spending video.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCqMtiju2fBNalh-u0j5zKiA",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "x-gamers-asylum",
@@ -2479,11 +3615,15 @@
       "handle": "@XGamersAsylum",
       "channelUrl": "https://www.youtube.com/@XGamersAsylum",
       "description": "Archived Invincible: Guarding the Globe tier lists, faction guides, and event coverage.",
-      "tags": ["Tier Lists", "Guides", "Events"],
+      "tags": [
+        "Tier Lists",
+        "Guides",
+        "Events"
+      ],
       "badge": "New",
       "status": "pending",
       "displayOrder": 18,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@XGamersAsylum",
       "videos": [
         {
@@ -2584,7 +3724,9 @@
           "evidenceNote": "Public YouTube search metadata identifies a standard GTG beginner guide.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCvRdsCkDI-uLZGUoizo85Xw",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "hero-haven-gtg",
@@ -2592,11 +3734,15 @@
       "handle": "@HeroHavenGTG",
       "channelUrl": "https://www.youtube.com/@HeroHavenGTG",
       "description": "Invincible GTG hero releases, events, and gameplay coverage.",
-      "tags": ["Updates", "Events", "Gameplay"],
+      "tags": [
+        "Updates",
+        "Events",
+        "Gameplay"
+      ],
       "badge": "New",
       "status": "active",
       "displayOrder": 12,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/@HeroHavenGTG",
       "videos": [
         {
@@ -2767,7 +3913,9 @@
           "evidenceNote": "The public channel feed identifies a standard Hero Haven account overview video.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCHOsg6dbodLHETXRAlCKK1g",
+      "feedLastChecked": "2026-10-25"
     },
     {
       "id": "pops-meta",
@@ -2775,11 +3923,14 @@
       "handle": "@PopsMeta",
       "channelUrl": "https://www.youtube.com/@PopsMeta",
       "description": "Invincible GTG beginner and team-building guidance.",
-      "tags": ["Guides", "Team Building"],
+      "tags": [
+        "Guides",
+        "Team Building"
+      ],
       "badge": "New",
       "status": "pending",
       "displayOrder": 11,
-      "lastChecked": "2026-10-12",
+      "lastChecked": "2026-10-25",
       "sourceUrl": "https://www.youtube.com/shorts/lujXnD4flNw",
       "videos": [
         {
@@ -2810,7 +3961,9 @@
           "evidenceNote": "The public channel feed identifies a standard GTG beginner and faction guide.",
           "statusReason": ""
         }
-      ]
+      ],
+      "channelId": "UCp-FE7SsLvVI0Juonu7GEHQ",
+      "feedLastChecked": "2026-10-25"
     }
   ]
 }
