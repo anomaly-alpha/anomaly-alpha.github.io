@@ -1,5 +1,11 @@
 window.__PROMO_CODES=[
   {
+    "code": "SAVE37",
+    "gems": 500,
+    "tickets": 0,
+    "dateAdded": "2026-10-24"
+  },
+  {
     "code": "UPDAT3",
     "gems": 500,
     "tickets": 0,
@@ -57,12 +63,6 @@ window.__PROMO_CODES=[
   {
     "code": "BULL3T",
     "gems": 500,
-    "tickets": 0,
-    "dateAdded": "2026-05-19"
-  },
-  {
-    "code": "HALMRY",
-    "gems": 750,
     "tickets": 0,
     "dateAdded": "2026-05-19"
   },

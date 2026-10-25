@@ -1,6 +1,12 @@
 {
-  "updated": "2026-10-12",
+  "updated": "2026-10-24",
   "codes": [
+    {
+      "code": "SAVE37",
+      "gems": 500,
+      "tickets": 0,
+      "dateAdded": "2026-10-24"
+    },
     {
       "code": "UPDAT3",
       "gems": 500,
@@ -38,6 +44,8 @@
       "code": "HALMRY",
       "gems": 750,
       "tickets": 0,
+      "expired": true,
+      "expiredDate": "2026-10-16",
       "dateAdded": "2026-05-19"
     },
     {

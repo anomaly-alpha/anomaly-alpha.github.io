@@ -23,9 +23,9 @@ expired.sort((a, b) => new Date(b.expiredDate) - new Date(a.expiredDate));
 
 const activeCount = active.length;
 const expiredCount = expired.length;
-const activeCodeItems = active.slice(0, 3).map((c, index) =>
+const activeCodeItems = active.map((c, index) =>
   `            { "@type": "ListItem", "position": ${index + 1}, "item": { "@type": "Code", "name": "${c.code}" } }`
-).join(',\n');
+).join(',\n') + '\n';
 
 // Generate promo-codes.js — only active codes in the bundle
 const jsContent = 'window.__PROMO_CODES=' + JSON.stringify(active, null, 2) + ';';
@@ -233,7 +233,7 @@ indexHtml = indexHtml.replace(
   `          "description": "${activeCount} active Invincible Guarding the Globe promo codes",\n          "numberOfItems": ${activeCount},`
 );
 indexHtml = indexHtml.replace(
-  /            \{ "@type": "ListItem", "position": 1, "item": \{ "@type": "Code", "name": "[^"]+" \} \},?\r?\n            \{ "@type": "ListItem", "position": 2, "item": \{ "@type": "Code", "name": "[^"]+" \} \},?\r?\n            \{ "@type": "ListItem", "position": 3, "item": \{ "@type": "Code", "name": "[^"]+" \} \}/,
+  /(?:            \{ "@type": "ListItem", "position": \d+, "item": \{ "@type": "Code", "name": "[^"]+" \} \},?\r?\n?)+/,
   activeCodeItems
 );
 indexHtml = indexHtml.replace(
