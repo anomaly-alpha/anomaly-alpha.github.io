@@ -25,7 +25,12 @@ active.sort((a, b) => {
   if (aPos !== bPos) return aPos < bPos ? -1 : 1;
   return addedDate(b) - addedDate(a);
 });
-expired.sort((a, b) => new Date(b.expiredDate) - new Date(a.expiredDate));
+// Codes with an unknown expiry date sort last rather than producing NaN comparisons.
+expired.sort((a, b) => {
+  const aDate = a.expiredDate ? new Date(a.expiredDate).getTime() : -Infinity;
+  const bDate = b.expiredDate ? new Date(b.expiredDate).getTime() : -Infinity;
+  return bDate - aDate;
+});
 
 const pinned = active.filter(c => c.position !== undefined);
 const newestPinned = pinned.length ? Math.max(...pinned.map(addedDate)) : null;
@@ -39,11 +44,6 @@ const expiredCount = expired.length;
 const activeCodeItems = active.map((c, index) =>
   `            { "@type": "ListItem", "position": ${index + 1}, "item": { "@type": "Code", "name": "${c.code}" } }`
 ).join(',\n') + '\n';
-
-// Generate promo-codes.js — only active codes in the bundle
-const jsContent = 'window.__PROMO_CODES=' + JSON.stringify(active, null, 2) + ';';
-fs.writeFileSync(jsOutputPath, jsContent, 'utf8');
-console.log(`Wrote ${activeCount} active codes to data/generated/promo-codes.js`);
 
 // Build code chips
 const SVG_REACTIVATED = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L317 154c-6.9 6.9-8.6 17.2-4.9 26.2s12.5 14.8 22.2 14.8z"/></svg>';
@@ -68,6 +68,75 @@ function expiredChip(c) {
 
 const activeChips = active.map(activeChip).join('');
 const expiredChips = expired.map(expiredChip).join('');
+
+// ===== Reward display =====
+
+const REWARD_KINDS = {
+  hero: r => `${formatQty(r.qty)} x ${r.hero}`,
+  dossier: r => `${formatQty(r.qty)} x Hero Dossiers`,
+  gold_dossier: r => `${formatQty(r.qty)} x Gold Dossiers`,
+  equipment_ticket: r => `${formatQty(r.qty)} x Equipment Tickets`,
+  dna_sequencer: r => `${formatQty(r.qty)} x DNA Sequencers`,
+  molecular: r => `${formatQty(r.qty)} x Molecular Enhancements`,
+  special_molecular: r => `${formatQty(r.qty)} x Special Molecular Enhancements`,
+  gear_piece: r => `${formatQty(r.qty)} x ${r.gear} pieces`,
+};
+
+function formatQty(n) {
+  return Number(n).toLocaleString('en-US');
+}
+
+function formatRewardItem(item) {
+  if (item.label) return `${formatQty(item.qty)} x ${item.label}`;
+  const build = REWARD_KINDS[item.kind];
+  if (!build) throw new Error(`unknown reward kind "${item.kind}"`);
+  return build(item);
+}
+
+function formatReward(c) {
+  if (Array.isArray(c.rewards) && c.rewards.length) return c.rewards.map(formatRewardItem).join(', ');
+  if (c.reward) return c.reward;
+  if (c.gems > 0) return `${formatQty(c.gems)} Gems`;
+  if (c.tickets > 0) return `${formatQty(c.tickets)} Tickets`;
+  return '';
+}
+
+// Every active code must describe its reward and carry a tier. This blocks the
+// regression where codes fell back to a blanket gems:300 default.
+const undescribed = active.filter(c => !formatReward(c));
+if (undescribed.length) {
+  throw new Error('active codes missing a reward: ' + undescribed.map(c => c.code).join(', '));
+}
+const untiered = active.filter(c => c.tier !== 'HIGH' && c.tier !== 'MEDIUM');
+if (untiered.length) {
+  throw new Error('active codes missing a tier (HIGH|MEDIUM): ' + untiered.map(c => c.code).join(', '));
+}
+
+// A gem-only code is legitimate, but an *unreviewed* one is how the old gems:300
+// placeholder hid. List them on every build so each is a deliberate choice.
+const gemOnly = active.filter(c => c.gems > 0 && !c.reward && !(Array.isArray(c.rewards) && c.rewards.length));
+if (gemOnly.length) {
+  console.log(`Note: ${gemOnly.length} active codes are gem-only (no item reward) — confirm each is intended: ` +
+    gemOnly.map(c => `${c.code}(${c.gems})`).join(', '));
+}
+
+function codeTableRow(c) {
+  const tierClass = c.tier === 'HIGH' ? ' gem-text--code' : '';
+  return `<tr class="border-b border-white/5"><td class="p-2 gem-text--code font-mono font-bold">${c.code}</td><td class="p-2">${formatReward(c)}</td><td class="p-2${tierClass}">${c.tier}</td></tr>`;
+}
+
+const codeTableRows = active.map(codeTableRow).join('\n');
+
+// Generate promo-codes.js — only active codes in the bundle.
+// The runtime reward modal reads `reward` (singular); derive it for entries modelled
+// with `rewards[]` so codes.json stays structured without a second hand-written string.
+const activeForBundle = active.map(c => {
+  if (c.reward || !Array.isArray(c.rewards) || !c.rewards.length) return c;
+  return Object.assign({}, c, { reward: formatReward(c) });
+});
+const jsContent = 'window.__PROMO_CODES=' + JSON.stringify(activeForBundle, null, 2) + ';';
+fs.writeFileSync(jsOutputPath, jsContent, 'utf8');
+console.log(`Wrote ${activeCount} active codes to data/generated/promo-codes.js`);
 
 // Date formatting from codes.json updated field
 const d = new Date(updated + 'T00:00:00Z');
@@ -139,6 +208,10 @@ const replacements = [
   // GUIDE_CODES_ACTIVE
   [/<!--GUIDE_CODES_ACTIVE_START-->[\s\S]*?<!--GUIDE_CODES_ACTIVE_END-->/,
    `<!--GUIDE_CODES_ACTIVE_START-->\n${activeChips}\n<!--GUIDE_CODES_ACTIVE_END-->`],
+
+  // GUIDE_CODES_TABLE
+  [/<!--GUIDE_CODES_TABLE_START-->[\s\S]*?<!--GUIDE_CODES_TABLE_END-->/,
+   `<!--GUIDE_CODES_TABLE_START-->\n${codeTableRows}\n<!--GUIDE_CODES_TABLE_END-->`],
 
   // GUIDE_CODES_EXPIRED
   [/<!--GUIDE_CODES_EXPIRED_START-->[\s\S]*?<!--GUIDE_CODES_EXPIRED_END-->/,
@@ -249,7 +322,7 @@ fs.writeFileSync(sitemapPath, sitemap, 'utf8');
 // Update inline promo codes in index.html
 let indexHtml = fs.readFileSync(indexPath, 'utf8');
 const indexEol = indexHtml.includes('\r\n') ? '\r\n' : '\n';
-const inlineCodes = 'window.__PROMO_CODES=' + JSON.stringify(active) + ';';
+const inlineCodes = 'window.__PROMO_CODES=' + JSON.stringify(activeForBundle) + ';';
 indexHtml = indexHtml.replace(
   /<!--PROMO_CODES_INLINE_START-->[\s\S]*?<!--PROMO_CODES_INLINE_END-->/,
   `<!--PROMO_CODES_INLINE_START-->\n    <script>${inlineCodes}</script>\n    <!--PROMO_CODES_INLINE_END-->`
