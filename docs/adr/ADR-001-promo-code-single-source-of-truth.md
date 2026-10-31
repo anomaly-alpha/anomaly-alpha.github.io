@@ -1,8 +1,16 @@
 # ADR-001: Promo Code Single Source of Truth
 
-**Status:** Accepted
+**Status:** Accepted — amended 2026-10-31 (see Amendment)
 **Date:** 2026-05-31
 **Author:** Anomaly
+
+## Amendment (2026-10-31)
+
+The single-source-of-truth decision stands unchanged; three implementation details recorded below have since moved on:
+
+- **Active sort order** is no longer A-Z. `scripts/generate-codes.js` now leads with hand-positioned codes (`position` field, used for hot drops and reactivations), then sorts the rest newest-first by `dateAdded`.
+- **Item rewards** are modelled alongside gems and tickets. Active codes must carry a reward description and a HIGH/MEDIUM tier — the generator fails the build otherwise.
+- **One-time helpers are gone.** `scripts/migrate-codes.js` and `scripts/update-code-count.js` were removed after the migration; `scripts/generate-codes.js` is the only code-data writer. Expired-chip and marker behaviour described here is still current.
 
 ## Context
 

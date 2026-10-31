@@ -11,7 +11,7 @@ The site itself is a gem rewards infographic featuring interactive charts, mode 
 | Event | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~1,850 | Varies with league/rank — Restricted Arena, Open Arena, Alliance War (Elite II, rank 13 default) |
 | Login | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
-| Code | Variable | 30 active codes with gems + tickets |
+| Code | Variable | 35 active codes with gems + tickets |
 
 **Total: ~4,043 gems/week** (varies with PvP selections)
 
@@ -21,7 +21,7 @@ The site itself is a gem rewards infographic featuring interactive charts, mode 
 
 ### Interactive Elements
 - **Animated counter** that counts up on value changes (PvP selections, mode filtering)
-- **Promo code reveal** — tap to reveal 30 active codes in a grid, tap any code to copy; redeem via verification code at redeem.invincible.ubisoft.barcelona
+- **Promo code reveal** — tap to reveal 35 active codes in a grid, tap any code to copy; redeem via verification code at redeem.invincible.ubisoft.barcelona
 - **Mode selector** — 5 buttons (All, Code, Event, PvP, Login) each showing gem total + countdown timer
 - **Multi-select mode filtering** — toggle Event, PvP, Login, Code independently
 - **Mode button hover** — hovering a mode button highlights all matching cards in that mode's color
@@ -194,7 +194,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 
 - **Tailwind CSS** (local build via `npm run build`) — utility-first styling
 - **Chart.js** 4.4.1 (doughnut, bar, radar charts) — self-hosted in `vendor/chart.umd.js`, animations disabled
-- **Icons** — inline SVGs (32 icons, replaced Font Awesome)
+- **Icons** — inline SVGs (replaced Font Awesome)
 - **Fonts** — self-hosted Rajdhani + Orbitron woff2 files
 - **Creator directory** — static, approval-gated YouTube creator data with YouTube-hosted thumbnails and user-initiated privacy-enhanced playback
 

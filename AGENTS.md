@@ -30,8 +30,11 @@ Open `index.html` in a browser. Works from `file://`.
 | `robots.txt` | Crawl directives, sitemap reference |
 | `.editorconfig` | Editor formatting defaults (indent, line endings, charset) |
 | `CHANGELOG.md` | Release history (auto-curated from git log) |
-| `sitemap.xml` | All public URLs (home, guide pages, authors/anomaly, music, privacy, terms) |
+| `sitemap.xml` | 14 canonical URLs (home, 9 guide pages, authors/anomaly, music, privacy, terms). `/seo/`, `/skarn-bot/`, and `404.html` are intentionally excluded |
 | `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators) |
+| `404.html` | Custom 404 error page (GA4-tagged, no `og:site_name`) |
+| `_headers` | Cloudflare Pages cache-control and security headers |
+| `ads.txt` | AdSense publisher authorization record (no ad runtime loaded) |
 | `googleeb60e8e5ee55440e.html` | Google Search Console verification |
 | `seo/index.html` | SEO utilities page |
 | `privacy/index.html` | Privacy policy (documents GA4 analytics) |
@@ -42,17 +45,36 @@ Open `index.html` in a browser. Works from `file://`.
 | `data/multiverse_war_payouts.txt` | Multiverse War payout tables |
 | `data/codes.json` | Single source of truth for promo codes (hand-edited only) |
 | `data/generated/promo-codes.js` | Generated active-codes bundle (from `npm run update-codes`) |
+| `data/generated/seo-data.js` | Generated SEO data bundle (`npm run pull-gsc` / `npm run analyze-gsc`) |
+| `data/gsc-api/YYYY-MM-DD/` | Search Console API snapshots (summary, queries, pages, sitemaps, URL inspection) written by `npm run pull-gsc` |
+| `data/playlists.json` | Music playlist source data for `npm run update-music` |
+| `data/countries-list.txt` | Country reference data used by GSC analysis |
 | `scripts/generate-codes.js` | Generator: reads `data/codes.json`, writes `data/generated/promo-codes.js` + updates `guide/code/index.html` via markers + updates `index.html` inline promo codes |
 | `data/youtube-creators.json` | Approved creator/video source data with provenance and status history |
 | `data/generated/youtube-creators.js` | Generated public creator data loaded by the creators guide |
 | `scripts/generate-youtube-creators.js` | Validates creator data and generates creator HTML, JSON-LD, noscript links, and browser data |
+| `scripts/audit-youtube-creators.js` | Audits creator video availability over HTTP (`npm run audit-creators`) |
 | `scripts/generate-music.js` | Generates music page data from source playlists |
+| `scripts/generate-skarn-index.js` | Regenerates the docs index inside `skarn-bot/index.html` via markers (`npm run skarn-index`) |
+| `scripts/pull-gsc.js` | Pulls Search Analytics API data into `data/gsc-api/<date>/` (`npm run pull-gsc`) |
+| `scripts/analyze-gsc.js` | Analyzes GSC exports and rewrites `docs/reports/2026-08-20/unknown/SEO_PERFORMANCE.md` (`npm run analyze-gsc`) |
+| `scripts/add-meta.js` / `add-more.js` / `add-schema.js` | Legacy guide-page meta/tag/schema helpers |
+| `scripts/run-psi-audit.js` | PageSpeed Insights audit across the 8 audited pages |
+| `scripts/serve.js` | Local development server (`npm start`) |
 | `music/index.html` | Generated music page (standalone, inline `music-config` block; playlists sourced from `data/playlists.json`) |
 | `vendor/chart.umd.js` | Self-hosted Chart.js (downloaded via `npm run update-assets`) |
 | `lighthouse-config.js` | Shared Lighthouse audit config (mobile, 3G, 4× CPU) |
 | `lighthouserc.js` | CI assertion budget for Lighthouse performance checks |
 | `scripts/run-lighthouse.ps1` | Batch PowerShell script auditing all 8 pages |
 | `fonts/` | Self-hosted Rajdhani + Orbitron woff2 files |
+| `tests/ads-fallback.test.js` | Validates ads-config and site-message fallback |
+| `tests/ads-txt.test.js` | Validates ads.txt content |
+| `tests/promo-codes-generator.test.js` | Validates promo code generation from `data/codes.json` |
+| `tests/youtube-creators-generator.test.js` | Validates creator data and generated output |
+| `tests/youtube-creators-audit.test.js` | Validates creator audit output |
+| `tests/structured-data.test.js` | Validates JSON-LD structured data across pages |
+| `tests/back-to-top.test.js` | Tests back-to-top button behavior |
+| `tests/test-harness.js` | Shared test helpers |
 | `serp-dumps/YYYY-MM-DD/` | Historical SERP snapshot directories (INDEX.md + 40 query files, regenerated periodically) |
 | `serp-dumps/YYYY-MM-DD/INDEX.md` | Index of all 40 tracked queries with rank/impressions/clicks + instructions for new dumps |
 | `serp-dumps/YYYY-MM-DD/queries/*.txt` | Per-query SERP competitor analysis files (generated via `scripts/gen-serp-dumps.js`) |
@@ -74,18 +96,26 @@ Open `index.html` in a browser. Works from `file://`.
 ## Commands
 
 - `npm install` — Install dev dependencies (tailwindcss, csso, terser)
-- `npm run build` — Full build: generate codes + generate music + Tailwind + CSS minification + JS minification
+- `npm start` — Serve the site locally via `scripts/serve.js`
+- `npm run build` — Full build: generate codes + generate music + generate creators + Tailwind + CSS minification + JS minification
 - `npm run build:css` — Tailwind + CSS minification only (skip code gen and JS minification)
 - `npm run build:js` — JS minification only (via terser)
 - `npm run build:tailwind` — Tailwind rebuild only (skip minification)
 - `npm run update-codes` — Regenerate `data/generated/promo-codes.js` and update all code counts/descriptions/chips in `guide/code/index.html` from `data/codes.json`
 - `npm run generate-creators` — Validate creator source data and regenerate the static creators guide and browser data
+- `npm run audit-creators` — Audit creator video availability over HTTP
 - `npm run update-music` — Regenerate music page data from source playlists
+- `npm run skarn-index` — Regenerate the docs index inside `skarn-bot/index.html` via markers
+- `npm run pull-gsc` — Pull Search Console API data into `data/gsc-api/<date>/`
+- `npm run analyze-gsc` — Analyze GSC exports and rewrite the SEO performance report
 - `npm run test:creators` — Run the built-in creator generator and validation tests
+- `npm run test:creator-audit` — Validate creator audit output
 - `npm run test:ads-txt` — Validate ads.txt content
 - `npm run test:ads-fallback` — Validate ads-config and site-message fallback across pages
+- `npm run test:structured-data` — Validate JSON-LD structured data across pages
 - `npm run update-assets` — Download latest vendor assets (Chart.js, fonts)
 - `npm run lighthouse:home` — Run Lighthouse audit on homepage
+- `npm run lighthouse:single` — Run Lighthouse against an arbitrary URL with the shared config
 - `npm run lighthouse:all` — Batch audit all 8 pages via PowerShell script
 - `npm run lighthouse:report` — Print score table from saved JSON reports
 - `npm run lighthouse:budget` — Check against performance budgets (lighthouserc.js)
@@ -105,11 +135,11 @@ After any major HTML/CSS/JS changes, always:
 - **CSS**: BEM (`.gem-block__element--modifier`), custom property tokens (`--gem-*`), category suffixes (`--event`, `--pvp`, `--login`, `--code`)
 - **Config**: inline JSON in HTML, always use `loadConfig(id)` to parse
 - **State**: `selectedModes` array (defaults: event, pvp, login — CODE inactive) + `currentChartFilter` string, persisted via `savePageState()`/`loadPageState()`
-- **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`, `gem_copiedCode`, `gem_music_banner`, `gem_visits`
+- **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`, `gem_copiedCode`, `gem_music_banner`, `gem_visits`, `gem_beacon` (changelog freshness beacon)
 - **URL params**: `?theme=light&mode=<name>&chart=<name>` restored on page load
 - **Code rewards**: defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; `promo` card total animates via `animateValue()`
 - **Single source of truth**: `data/codes.json` is the only hand-edited file for promo codes. Run `npm run update-codes` to regenerate `data/generated/promo-codes.js` (active codes) and update all dynamic content in `guide/code/index.html` via markers
-- **Guide code page markers**: 9 marker pairs (`GUIDE_DESC`, `GUIDE_OG_DESC`, `GUIDE_OG_IMAGE_ALT`, `GUIDE_TWITTER_DESC`, `GUIDE_LD_DESC`, `GUIDE_TAB`, `GUIDE_UPDATED`, `GUIDE_CODES_ACTIVE`, `GUIDE_CODES_EXPIRED`) — generated by `scripts/generate-codes.js` from `data/codes.json`
+- **Guide code page markers**: 11 injected regions in `guide/code/index.html` (`GUIDE_DESC`, `GUIDE_OG_DESC`, `GUIDE_OG_IMAGE_ALT`, `GUIDE_TWITTER_DESC`, `GUIDE_TAB`, `GUIDE_UPDATED`, `GUIDE_DATE_META`, `GUIDE_ARTICLE_MODIFIED`, `GUIDE_CODES_TABLE`, `GUIDE_CODES_ACTIVE`, `GUIDE_CODES_EXPIRED`), written by `scripts/generate-codes.js` from `data/codes.json`. The generator also writes `"dateModified"` in the JSON-LD block via `GUIDE_LD_DATEMODIFIED` or a bare-field fallback. Required markers are asserted at generation time.
 - **Guide code page must include `script.js`** — `guide/code/index.html` needs `<script src="../../script.js">` before `</body>` for `copyCode()` to work on code chips
 - **OG images**: 9 per-page PNG files in `og-images/` (`home.png`, `code.png`, `event.png`, `pvp.png`, `login.png`, `faq.png`, `beginners.png`, `xp.png`, `creators.png`); SVGs previously served as editable sources
 
@@ -134,7 +164,7 @@ After any major HTML/CSS/JS changes, always:
 - **HTML**: scrolling `<section class="gem-ticker">` in `index.html` with duplicated content for seamless loop
 - **CSS**: BEM classes `.gem-ticker`, `__track`, `__content`, `__item`, `__label`, `__sep` + `@keyframes gem-ticker` (0%→-50% X translation)
 - **Height**: 44px, monochrome (no category colors), old-school newspaper scroll
-- **Content**: "PvP 1,850+/wk • Codes 30 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk" repeated twice
+- **Content**: "PvP 1,850+/wk • Codes 35 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk" repeated twice
 - **Duration**: 40s linear infinite, will-change:transform
 
 ## Category colors
@@ -267,6 +297,6 @@ This repository is one monorepo with three separately deployed surfaces:
 - Root files and directories: the public anomaly-alpha.github.io website published by GitHub Pages.
 - skarn-bot/: the Railway Discord bot package, including its SQLite/runtime data and Railway-specific lifecycle.
 - skarn-rpc/: the Ubuntu desktop Rich Presence package, including its own package.json, runtime data directory, and systemd lifecycle.
-- skarn-bot/data/presence-mood-contract.json: the tracked shared mood-policy contract loaded by both service packages; runtime mood state and phrase datasets remain process-owned.
+- skarn-bot/presence-assets/: tracked shared presence assets read by both service packages — `presence-mood-contract.json` (mood policy, sleep window, dwell, weights), `presence-phrases.json` (5,000 mood-tagged phrases, ≥500 per mood), and `railway-symbol-palette.json`. Each process owns only its current mood state; the datasets themselves are Git-tracked and shared, not process-local.
 
 Deployments must keep the service boundaries intact. Railway uses skarn-bot/ as its service root. Ubuntu checks out the full repository into the user's home directory and runs skarn-rpc/rich-presence.js from that checkout. Do not treat the Ubuntu runtime as a second copy of the repository or place its source outside the checkout.

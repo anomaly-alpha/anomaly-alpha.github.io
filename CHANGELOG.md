@@ -1,5 +1,15 @@
 # Changelog
 
+## Nov 2026
+
+- **Promo-code expansion**: Active codes grew from 30 to 35 (54 tracked, 19 expired). `data/codes.json` now models item rewards alongside gems/tickets, and `scripts/generate-codes.js` emits a per-code reward table with HIGH/MEDIUM tiers. Ticker, home page, and `guide/code/` all regenerated.
+- **Codes accuracy audit**: `docs/reports/2026-10-31/deepseek-v4.1-flash/codes-audit.md` checked `data/codes.json` against external lists — findings 1, 3 and 4 applied, finding 2 left open pending in-game verification.
+- **Search Console API puller**: New `scripts/pull-gsc.js` (`npm run pull-gsc`) pulls Search Analytics, sitemaps, and URL inspection into `data/gsc-api/<date>/`; the resulting 181-day report lives at `docs/reports/2026-10-31/deepseek-v4.1-flash/search-console-report.md` (6,774 clicks in the latest 28 days, +54.2%).
+- **Redeem intent targeting**: `/guide/redeem/` rewritten against redeem-query impressions, author profile linked, and app store ratings sourced.
+- **Code pinning**: Newest codes pinned to the top of listings; KREGG4 retagged as reactivated.
+- **Creator refresh**: Verified YouTube uploads re-audited and the creator directory regenerated.
+- **Deferred localization**: A five-language localization plan was written and deliberately parked in favour of the codes cluster (`docs/plans/2026-10-31/deepseek-v4.1-flash/`).
+
 ## Oct 2026
 
 - **October SEO refresh**: GSC-evidence-driven landing page optimization, October-titled SEO metadata across game-content pages, and refreshed code data date. New search-performance exports and a content optimization report recorded under `data/` and `docs/reports/2026-10-12/gpt-5/`.
@@ -23,6 +33,8 @@
 ## Jul 2026
 
 - **Site-wide SEO growth**: Interactive gem income forecaster (Chart.js line chart, 3 scenarios, milestones, shareable URL). New XP & progression guide (`/guide/xp/`) with Hero Rank-Up table. PvP league comparator (side-by-side payout comparison). Code age timeline (green/yellow/orange/red bands by release date). "What's New" changelog + localStorage freshness beacon. Meta refresh for event [Jul 2026] and PvP "Guide & Gems" title. Redeem portal rewrite targeting 840 impressions. 5 contextual internal links. FAQ rephrase for GSC query matching.
+
+  > _Correction (2026-10-31): the forecaster was never shipped to users. Its JS (`initForecaster`, `initForecastChart`) is present in `script.js` but guarded on `#gem-forecast-panel`, which was never added to `index.html` — the feature is unreachable dead code. See `CONTEXT.md` and `AGENTS.md`._
 - **GSC 0704 audit**: 410 clicks (+242%), 11,402 impressions (+174%), 28 active codes. Per-day normalized: 6.6 clicks/day (+109%).
 
 ## Jun 2026

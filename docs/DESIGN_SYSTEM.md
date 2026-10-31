@@ -168,12 +168,14 @@ All `@font-face` declarations use `font-display: optional` (was `swap`, changed 
 | `.gem-card--pvp` | Modifier | PvP category card |
 | `.gem-card--login` | Modifier | Login category card |
 | `.gem-card--code` | Modifier | Code category card |
-| `.gem-card--hover` | Modifier | Hover effect enabled |
+| `.gem-card--cyan` | Modifier | Cyan accent card |
+| `.gem-card--purple` | Modifier | Purple accent card |
 | `.gem-card--fade-in` | Modifier | Entrance animation |
 | `.gem-card--delay-0` through `.gem-card--delay-8` | Modifier | Staggered animation delay |
 | `.gem-card__body` | Element | Card content area |
 | `.gem-card__info-btn` | Element | Info icon button (triggers modal) |
-| `.gem-card__divider` | Element | Section divider |
+
+Hover styling is applied per category (`.gem-card--event:hover`, `--pvp:hover`, `--login:hover`, `--code:hover`), not by a standalone modifier. `gem-card--hover` still appears in some markup but has no CSS rule.
 
 **Mode highlight modifiers (added dynamically via JS):**
 - `.gem-card--mode-highlight--event`
@@ -560,7 +562,7 @@ Interactive state styles are defined per component. Below is the consolidated re
 | State | Style |
 |-------|-------|
 | Default | Category-colored accent, translucent background |
-| Active (`.gem-mode-btn--active`) | Solid category-colored border, brighter background |
+| Active (`.gem-mode-btn.active`) | Solid category-colored border, brighter background |
 | Hover | Category-colored glow overlay, scale(1.05) |
 | Focus | Cyan focus ring |
 
@@ -569,11 +571,11 @@ Interactive state styles are defined per component. Below is the consolidated re
 ## File Structure
 ```
 anomaly-alpha/
-├── index.html       (114 KB) — HTML with inline JSON configs + critical CSS inlined
-├── script.js        (29 KB)  — JavaScript (minified via terser)
-├── styles.css       (33 KB)  — Design tokens + BEM classes + animations (minified via csso)
-├── tailwind.css     (12 KB)  — Generated + minified Tailwind utility classes
-├── package.json         — Dev dependencies (tailwindcss, csso, terser)
+├── index.html       (143 KB) — HTML with inline JSON configs + critical CSS inlined
+├── script.js        (46 KB)  — JavaScript (minified via terser)
+├── styles.css       (48 KB)  — Design tokens + BEM classes + animations (minified via csso)
+├── tailwind.css     (16 KB)  — Generated + minified Tailwind utility classes
+├── package.json         — devDependencies (tailwindcss, csso, terser) + dependency (chrome-launcher)
 ├── tailwind.config.js   — Tailwind config with color aliases + content paths
 ├── src/
 │   └── tailwind-input.css — Tailwind source directives
@@ -581,20 +583,23 @@ anomaly-alpha/
 │   └── chart.umd.js     — Self-hosted Chart.js 4.4.1 (lazy-loaded)
 ├── fonts/               — Self-hosted Rajdhani + Orbitron woff2 files
 ├── favicon.svg          — Custom cyan-to-pink gradient gem SVG
-├── og-images/*.png      — Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners)
+├── og-images/*.png      — 9 per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators)
 ├── _headers             — Cloudflare Pages cache-control config
 ├── 404.html             — Custom error page
 ├── data/
+│   ├── codes.json            — Single source of truth for promo codes
+│   ├── generated/            — Generated bundles (promo-codes, youtube-creators, seo-data)
 │   ├── arena_payouts.txt     — Open + Restricted arena payout tables
 │   └── multiverse_war_payouts.txt — Alliance War payout tables
-├── guide/               — 6 detail guide pages (code, event, pvp, login, faq, beginners)
+├── guide/               — 9 detail guide pages (code, event, pvp, login, faq, beginners, xp, redeem, creators)
 ├── journal/             — Daily session journals (YYYY-MM-DD/index.md)
 ├── docs/
 │   ├── DESIGN_SYSTEM.md   — This file
-│   ├── CONFIG_SCHEMA.md   — Config shape reference
 │   ├── adr/               — Architecture Decision Records
-│   └── plan/              — Improvement plans + session plans (YYYY-MM-DD/*.md)
+│   └── plans/             — Improvement plans (YYYY-MM-DD/<model>/)
 ```
+
+The authoritative, complete file map lives in `README.md`; this block covers only files relevant to styling.
 
 ---
 
