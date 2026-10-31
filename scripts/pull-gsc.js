@@ -318,8 +318,8 @@ async function main() {
     ok: sitemapsOk,
     kind: 'sitemap-status',
     count: sitemaps.length,
-    errors: sitemaps.reduce((sum, s) => sum + (s.errors || 0), 0),
-    warnings: sitemaps.reduce((sum, s) => sum + (s.warnings || 0), 0),
+    errors: sitemaps.reduce((sum, s) => sum + Number(s.errors || 0), 0),
+    warnings: sitemaps.reduce((sum, s) => sum + Number(s.warnings || 0), 0),
   });
 
   let inspections = [];
