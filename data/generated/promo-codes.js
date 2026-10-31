@@ -1,6 +1,7 @@
 window.__PROMO_CODES=[
   {
     "code": "TRICKY",
+    "position": 1,
     "gems": 500,
     "tickets": 0,
     "reward": "500 Gems + 2 x Gold Dossiers",
@@ -8,9 +9,20 @@ window.__PROMO_CODES=[
   },
   {
     "code": "SAVE37",
+    "position": 2,
     "gems": 500,
     "tickets": 0,
     "dateAdded": "2026-10-24"
+  },
+  {
+    "code": "KREGG4",
+    "position": 3,
+    "gems": 0,
+    "tickets": 0,
+    "reward": "1 x Kregg",
+    "reactivated": true,
+    "reactivatedDate": "2026-10-31",
+    "dateAdded": "2026-04-01"
   },
   {
     "code": "UPDAT3",
@@ -133,13 +145,6 @@ window.__PROMO_CODES=[
     "code": "KIGTV4",
     "gems": 300,
     "tickets": 0,
-    "dateAdded": "2026-04-01"
-  },
-  {
-    "code": "KREGG4",
-    "gems": 0,
-    "tickets": 0,
-    "reward": "1 x Kregg",
     "dateAdded": "2026-04-01"
   },
   {

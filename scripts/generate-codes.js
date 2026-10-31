@@ -14,12 +14,25 @@ const { codes, updated, seoMonth } = JSON.parse(fs.readFileSync(codesPath, 'utf8
 const active = codes.filter(c => !c.expired);
 const expired = codes.filter(c => c.expired);
 
+function addedDate(code) {
+  return code.dateAdded ? new Date(code.dateAdded) : new Date(0);
+}
+
+// Hand-positioned codes lead the list (reactivations, hot drops); everything else follows newest-first.
 active.sort((a, b) => {
-  const aDate = a.dateAdded ? new Date(a.dateAdded) : new Date(0);
-  const bDate = b.dateAdded ? new Date(b.dateAdded) : new Date(0);
-  return bDate - aDate;
+  const aPos = a.position === undefined ? Infinity : a.position;
+  const bPos = b.position === undefined ? Infinity : b.position;
+  if (aPos !== bPos) return aPos < bPos ? -1 : 1;
+  return addedDate(b) - addedDate(a);
 });
 expired.sort((a, b) => new Date(b.expiredDate) - new Date(a.expiredDate));
+
+const pinned = active.filter(c => c.position !== undefined);
+const newestPinned = pinned.length ? Math.max(...pinned.map(addedDate)) : null;
+const stalePins = newestPinned ? active.filter(c => c.position === undefined && addedDate(c) > newestPinned) : [];
+if (stalePins.length) {
+  console.warn(`WARN: newer than the pinned codes but unpositioned — they will list after them: ${stalePins.map(c => c.code).join(', ')}`);
+}
 
 const activeCount = active.length;
 const expiredCount = expired.length;
@@ -33,10 +46,20 @@ fs.writeFileSync(jsOutputPath, jsContent, 'utf8');
 console.log(`Wrote ${activeCount} active codes to data/generated/promo-codes.js`);
 
 // Build code chips
-function activeChip(c) {
+const SVG_REACTIVATED = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" aria-hidden="true"><path d="M463.5 224H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1c-87.5 87.5-87.5 229.3 0 316.8s229.3 87.5 316.8 0c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0c-62.5 62.5-163.8 62.5-226.3 0s-62.5-163.8 0-226.3c62.2-62.2 162.7-62.5 225.3-1L317 154c-6.9 6.9-8.6 17.2-4.9 26.2s12.5 14.8 22.2 14.8z"/></svg>';
+
+function codeBadge(c) {
+  if (c.reactivated) {
+    return `<span class="gem-code--badge gem-code--badge--reactivated">${SVG_REACTIVATED}Reactivated</span>`;
+  }
   const daysOld = Math.floor((new Date() - new Date(c.dateAdded + 'T00:00:00Z')) / (1000 * 60 * 60 * 24));
-  const badge = daysOld < 7 ? '<span class="gem-code--badge gem-code--badge--new">NEW</span>' : daysOld < 14 ? '<span class="gem-code--badge gem-code--badge--recent">Recent</span>' : '';
-  return `<span class="gem-code__chip gem-text--code text-sm font-bold tracking-widest bg-white/5 px-3 py-1.5 rounded border border-white/10 cursor-pointer" onclick="event.stopPropagation();copyCode('${c.code}',this)">${c.code}${badge}</span>`;
+  if (daysOld < 7) return '<span class="gem-code--badge gem-code--badge--new">NEW</span>';
+  if (daysOld < 14) return '<span class="gem-code--badge gem-code--badge--recent">Recent</span>';
+  return '';
+}
+
+function activeChip(c) {
+  return `<span class="gem-code__chip gem-text--code text-sm font-bold tracking-widest bg-white/5 px-3 py-1.5 rounded border border-white/10 cursor-pointer" onclick="event.stopPropagation();copyCode('${c.code}',this)">${c.code}${codeBadge(c)}</span>`;
 }
 
 function expiredChip(c) {
