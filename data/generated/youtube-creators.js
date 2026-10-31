@@ -15,6 +15,62 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 1,
     "videos": [
       {
+        "id": "AuXyUTL85cI",
+        "title": "PUMPKIN WHALING! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd chases Halloween pumpkins and showcases event pulls in Invincible: Guarding the Globe.",
+        "category": "Livestreams",
+        "published": "2026-10-31",
+        "featured": false
+      },
+      {
+        "id": "CvGfH0fJn-8",
+        "title": "40,000 Gems Sacrificed to Halloween!",
+        "description": "Avatar Shuvd spends 40,000 gems during the Halloween event in Invincible: Guarding the Globe.",
+        "category": "Livestreams",
+        "published": "2026-10-31",
+        "featured": false
+      },
+      {
+        "id": "qb6hWWX1Kr0",
+        "title": "HALLOWEEN WISH EVENT AT LAST! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd covers the Halloween Wish event and its restrictions in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-30",
+        "featured": false
+      },
+      {
+        "id": "f9aYtlaq7d4",
+        "title": "Answering YOUR Questions!",
+        "description": "Avatar Shuvd answers community questions about Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-10-29",
+        "featured": false
+      },
+      {
+        "id": "-2BF6pSmbTE",
+        "title": "Hero Boot Camp Re-THIS AIN'T HALLOWEEN!! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd reviews the returning Hero Boot Camp event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-28",
+        "featured": false
+      },
+      {
+        "id": "45Znt_CCOjM",
+        "title": "Wolf-Man SKILL REVIEW! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd reviews Wolf-Man's skills in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-10-26",
+        "featured": false
+      },
+      {
+        "id": "CsBpoj0h2kc",
+        "title": "Summoning the Wolf! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd does budget summons for Wolf-Man in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-10-25",
+        "featured": false
+      },
+      {
         "id": "Z3N6BceB3TU",
         "title": "Wolf-Man LIVE SUMMONS!",
         "description": "Avatar Shuvd livestreams Wolf-Man summons in Invincible: Guarding the Globe.",
@@ -52,62 +108,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "Avatar Shuvd reviews update 3.7 for Invincible: Guarding the Globe.",
         "category": "Updates",
         "published": "2026-10-21",
-        "featured": false
-      },
-      {
-        "id": "R_BFT9k0cKs",
-        "title": "An AMAZING Event...that Everyone Will Skip... - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd reviews a current event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-20",
-        "featured": false
-      },
-      {
-        "id": "hkWTI3erN2I",
-        "title": "Scarecrow Skill REVIEW! Craziest Reviver in the Game?!",
-        "description": "Avatar Shuvd reviews Scarecrow's skills in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-10-19",
-        "featured": false
-      },
-      {
-        "id": "o3spJYPvP-E",
-        "title": "Black Market FULL of Freebies",
-        "description": "Avatar Shuvd covers the Black Market event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-17",
-        "featured": false
-      },
-      {
-        "id": "iQi8iFx52Pw",
-        "title": "Tier List 3.6 EDITION! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd updates the hero tier list for Invincible: Guarding the Globe.",
-        "category": "Tier Lists",
-        "published": "2026-10-17",
-        "featured": false
-      },
-      {
-        "id": "29GJpWBjEDs",
-        "title": "Two NEW Promo Codes with Great Boss Damagers!",
-        "description": "Avatar Shuvd covers new promo codes for Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-10-17",
-        "featured": false
-      },
-      {
-        "id": "wouY_njruFM",
-        "title": "Beast TEAMBUILDING Guide! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd shares a Beast team-building guide for Invincible: Guarding the Globe.",
-        "category": "Team Building",
-        "published": "2026-10-15",
-        "featured": false
-      },
-      {
-        "id": "dmmsEqNdQkc",
-        "title": "LOCK In Your Pulls! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd discusses summon planning in Invincible: Guarding the Globe.",
-        "category": "Guides",
-        "published": "2026-10-14",
         "featured": false
       }
     ]
@@ -229,6 +229,14 @@ window.__YOUTUBE_CREATORS=[
         "description": "Tutaaa-GTG shares lessons for new players of Invincible: Guarding the Globe.",
         "category": "Guides",
         "published": "2026-10-04",
+        "featured": false
+      },
+      {
+        "id": "G6yRvEUcRX4",
+        "title": "THE ULTIMATE PROGRESSION GUIDE — BEGINNER TO ENDGAME - Invincible Guarding The Globe - TutaaaGTG",
+        "description": "Tutaaa-GTG breaks down progression from beginner to endgame in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-09-27",
         "featured": false
       },
       {
@@ -376,6 +384,14 @@ window.__YOUTUBE_CREATORS=[
         "featured": false
       },
       {
+        "id": "CQP4_tjekoE",
+        "title": "This NEW Event is AMAZING!!! - Invincible: Guarding the Globe",
+        "description": "TH3O covers the new Recruitment Range event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-09-07",
+        "featured": false
+      },
+      {
         "id": "EG2jpxYiLlY",
         "title": "Fresh Recruits Event is INSANE! - Invincible: Guarding the Globe",
         "description": "TH3O covers the Fresh Recruits event in Invincible: Guarding the Globe.",
@@ -413,14 +429,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "TH3O covers the Viltrumite recruitment event and summons in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-08-07",
-        "featured": true
-      },
-      {
-        "id": "Iq5neDgReL0",
-        "title": "INSANE New Boss Battle and Crazy Event just dropped!! - Invincible: Guarding the Globe",
-        "description": "TH3O covers a new Boss Raid battle and event in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-08-04",
         "featured": true
       }
     ]
@@ -551,6 +559,46 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 6,
     "videos": [
       {
+        "id": "HFeNbDaxfV0",
+        "title": "Invincible Guarding The Globe- Wish Event Summons!!",
+        "description": "OMNI-BANE chases Halloween Wish event pulls in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-30",
+        "featured": false
+      },
+      {
+        "id": "bQDZczWx0u0",
+        "title": "Invincible Guarding The Globe - Trick or Treat !!",
+        "description": "OMNI-BANE covers the Trick or Treat Halloween event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-29",
+        "featured": false
+      },
+      {
+        "id": "bHNhQvcTslA",
+        "title": "Invincible Guarding The Globe - Hero Boot Camp Event / Astounding Wolf-Man Compensation!",
+        "description": "OMNI-BANE covers the Hero Boot Camp event and Wolf-Man compensation in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-27",
+        "featured": false
+      },
+      {
+        "id": "RKqNLOzB44g",
+        "title": "Invincible Guarding The Globe - High Risk GDA Alert Criminal Organization Issues and Compensation!",
+        "description": "OMNI-BANE reports on the High Risk GDA Alert and compensation issues in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-10-26",
+        "featured": false
+      },
+      {
+        "id": "X4dq1ff6JQA",
+        "title": "Invincible Guarding The Globe - Astounding Wolf-Man In 354 Refresh Tokens !",
+        "description": "OMNI-BANE pulls Astounding Wolf-Man with 354 refresh tokens in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-10-25",
+        "featured": false
+      },
+      {
         "id": "3VmRUbqhTWs",
         "title": "Invincible Guarding The Globe - Astoundingly Late Wolf-Man Summons with OMNI-BANE",
         "description": "OMNI-BANE summons for Wolf-Man in Invincible: Guarding the Globe.",
@@ -604,46 +652,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "OMNI-BANE covers the Lock & Reload event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-10-19",
-        "featured": false
-      },
-      {
-        "id": "jwMBZoI3baI",
-        "title": "Invincible Guarding The Globe - Black Market Event! Save your gems!",
-        "description": "OMNI-BANE covers the Black Market event and gem-saving advice.",
-        "category": "Events",
-        "published": "2026-10-17",
-        "featured": false
-      },
-      {
-        "id": "I2pDn30qPpY",
-        "title": "Invincible Guarding The Globe - MOST WANTED Event!!",
-        "description": "OMNI-BANE covers the Most Wanted event and summons in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-09-09",
-        "featured": false
-      },
-      {
-        "id": "06upXNh41R0",
-        "title": "Invincible Guarding The Globe- Triple Pick Event!!",
-        "description": "OMNI-BANE covers the Triple Pick Event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-08-31",
-        "featured": false
-      },
-      {
-        "id": "fvFDH5i2E8Y",
-        "title": "Invincible Guarding The Globe Fresh Recruit Event!!!",
-        "description": "OMNI-BANE covers the Fresh Recruit Event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-08-28",
-        "featured": false
-      },
-      {
-        "id": "fxIVp3QKMyk",
-        "title": "Invincible Guarding The Globe- BANES Fresh Recruit Summons!!",
-        "description": "OMNI-BANE covers Fresh Recruit summons in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-08-23",
         "featured": false
       }
     ]
@@ -736,6 +744,46 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 9,
     "videos": [
       {
+        "id": "IoI-mak2p5I",
+        "title": "TRICK OR TREAT",
+        "description": "KingSlay727 breaks down the Trick or Treat event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-30",
+        "featured": false
+      },
+      {
+        "id": "4Xs3tvA7M3c",
+        "title": "BOOT CAMP IS BACK",
+        "description": "KingSlay727 explains the returning Boot Camp event and its new feature in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-28",
+        "featured": false
+      },
+      {
+        "id": "2baCGmxSLb0",
+        "title": "THE CURSED PROTECTOR FINAL PUSH",
+        "description": "KingSlay727's final push for the Cursed Protector event in Invincible: Guarding the Globe.",
+        "category": "Livestreams",
+        "published": "2026-10-27",
+        "featured": false
+      },
+      {
+        "id": "dkzq2FVg_UY",
+        "title": "THE CURSED PROTECTOR",
+        "description": "KingSlay727 streams the Cursed Protector event and Wolf-Man launch in Invincible: Guarding the Globe.",
+        "category": "Livestreams",
+        "published": "2026-10-25",
+        "featured": false
+      },
+      {
+        "id": "Yuxu3uiSnpI",
+        "title": "THE CURSED PROTECTOR",
+        "description": "KingSlay727 covers the Cursed Protector event and new Wolf-Man hero in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-25",
+        "featured": false
+      },
+      {
         "id": "clp4FcJHmzg",
         "title": "THE CURSED PROTECTOR",
         "description": "KingSlay727 covers the Cursed Protector event in Invincible: Guarding the Globe.",
@@ -789,46 +837,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "KingSlay727 shares rank-up gameplay in Invincible: Guarding the Globe.",
         "category": "Gameplay",
         "published": "2026-10-07",
-        "featured": false
-      },
-      {
-        "id": "7jP2sNN9VKg",
-        "title": "HUGE RANK UP",
-        "description": "KingSlay727 shares rank-up gameplay in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-10-07",
-        "featured": false
-      },
-      {
-        "id": "JERbBuh-eOk",
-        "title": "HUGE RANK UP",
-        "description": "KingSlay727 shares rank-up gameplay in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-10-06",
-        "featured": false
-      },
-      {
-        "id": "M8VDHzE28yo",
-        "title": "WE NEED THIS (ARTS SHOP EVENT)",
-        "description": "KingSlay727 discusses the Art's Shop event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-03",
-        "featured": false
-      },
-      {
-        "id": "D3DzitI4Ivc",
-        "title": "FINAL PUSH FOR NEW (RECRUITMENT MULTIPLIER)",
-        "description": "KingSlay727 covers the Recruitment Multiplier event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-02",
-        "featured": false
-      },
-      {
-        "id": "xozAkJa_Gho",
-        "title": "WE CONTROL OR OWN LUCK? (RECRUITMENT MULTIPLIER)",
-        "description": "KingSlay727 discusses Recruitment Multiplier event odds in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-01",
         "featured": false
       }
     ]
@@ -962,6 +970,22 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 13,
     "videos": [
       {
+        "id": "C3lp_4ZEZv4",
+        "title": "Happy Halloween 🎃 Trick or Treat Event on INVINCIBLE: Guarding The Globe 🌎",
+        "description": "INVINCIBLE GTG OMNI-FAN covers the Halloween Trick or Treat event and event shop in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-29",
+        "featured": false
+      },
+      {
+        "id": "ib2YWK5Hdnc",
+        "title": "Hero Bootcamp Event is back 🙌🏻",
+        "description": "INVINCIBLE GTG OMNI-FAN covers the returning Hero Bootcamp event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-27",
+        "featured": false
+      },
+      {
         "id": "W0KV5Hf_6x4",
         "title": "Cecil's Nightmares Halloween Edition - Invincible: Guarding the Globe",
         "description": "INVINCIBLE GTG OMNI-FAN covers the Halloween edition of Cecil's Nightmares.",
@@ -1039,22 +1063,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "INVINCIBLE GTG OMNI-FAN covers the returning Hero Bootcamp event.",
         "category": "Events",
         "published": "2026-09-11",
-        "featured": false
-      },
-      {
-        "id": "lVeD_GWwZ6M",
-        "title": "Live streaming of INVINCIBLE.GTG.OMNI-FAN",
-        "description": "OMNI-FAN livestreams Invincible: Guarding the Globe gameplay.",
-        "category": "Livestreams",
-        "published": "2026-09-10",
-        "featured": false
-      },
-      {
-        "id": "l0CHsWcE3mY",
-        "title": "New Event ! Fresh Recruits Event on INVINCIBLE: Guarding The Globe 🌎 Farm as many Brit while you can",
-        "description": "INVINCIBLE GTG OMNI-FAN covers the Fresh Recruits Event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-08-28",
         "featured": false
       }
     ]
@@ -1253,6 +1261,30 @@ window.__YOUTUBE_CREATORS=[
     "status": "pending",
     "displayOrder": 17,
     "videos": [
+      {
+        "id": "92hAb_bvofM",
+        "title": "I Spent 12,000 TOKENS on Halloween Wish in Invincible GTG… This Happened 💀🎃",
+        "description": "Gxlden spends 12,000 tokens on the Halloween Wish event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-31",
+        "featured": false
+      },
+      {
+        "id": "E9TqBxmTuM4",
+        "title": "I Got Armored Atom Eve AND Blue Invincible to LEVEL 1,000 in Invincible GTG… This Happened 👀🔥",
+        "description": "Gxlden takes Armored Atom Eve and Blue Invincible to level 1,000 in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-10-30",
+        "featured": false
+      },
+      {
+        "id": "3F42EHpUx0U",
+        "title": "NEW Wolf-Man! Is He Worth Building? | Invincible: Guarding the Globe",
+        "description": "Gxlden evaluates whether the new Wolf-Man hero is worth building in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-10-27",
+        "featured": false
+      },
       {
         "id": "ezcqCuJQg5g",
         "title": "I Went ALL IN on Art's Outlet in Invincible GTG… 30,000 GEMS SPENT",

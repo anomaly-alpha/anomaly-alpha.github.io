@@ -9,7 +9,7 @@ const faqGuidePath = path.join(rootDir, 'guide', 'faq', 'index.html');
 const indexPath = path.join(rootDir, 'index.html');
 const sitemapPath = path.join(rootDir, 'sitemap.xml');
 
-const { codes, updated } = JSON.parse(fs.readFileSync(codesPath, 'utf8'));
+const { codes, updated, seoMonth } = JSON.parse(fs.readFileSync(codesPath, 'utf8'));
 
 const active = codes.filter(c => !c.expired);
 const expired = codes.filter(c => c.expired);
@@ -49,13 +49,16 @@ const expiredChips = expired.map(expiredChip).join('');
 // Date formatting from codes.json updated field
 const d = new Date(updated + 'T00:00:00Z');
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const fullMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const month = months[d.getUTCMonth()];
-const fullMonth = fullMonths[d.getUTCMonth()];
 const day = d.getUTCDate();
 const year = d.getUTCFullYear();
 const formattedDate = `${month} ${day}, ${year}`;
-const monthYear = `${month} ${year}`;
+let seoDate = d;
+if (typeof seoMonth === 'string' && /^\d{4}-\d{2}$/.test(seoMonth)) {
+  const parsed = new Date(seoMonth + '-01T00:00:00Z');
+  if (!isNaN(parsed.getTime())) seoDate = parsed;
+}
+const monthYear = `${months[seoDate.getUTCMonth()]} ${seoDate.getUTCFullYear()}`;
 const guideDescription = `${activeCount} active Invincible GTG codes with gem and hero rewards. Redeem codes at the official Ubisoft Barcelona portal. Updated ${monthYear}.`;
 const guideOgDescription = `Find ${activeCount} active Invincible GTG codes, rewards, and the official Ubisoft Barcelona redemption portal. Copy and redeem them today.`;
 const guideTwitterDescription = `Invincible GTG: ${activeCount} active codes, gem and hero rewards, plus the Ubisoft Barcelona redemption portal. Copy and redeem now.`;

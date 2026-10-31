@@ -1,5 +1,12 @@
 window.__PROMO_CODES=[
   {
+    "code": "TRICKY",
+    "gems": 500,
+    "tickets": 0,
+    "reward": "500 Gems + 2 x Gold Dossiers",
+    "dateAdded": "2026-10-31"
+  },
+  {
     "code": "SAVE37",
     "gems": 500,
     "tickets": 0,
@@ -126,6 +133,13 @@ window.__PROMO_CODES=[
     "code": "KIGTV4",
     "gems": 300,
     "tickets": 0,
+    "dateAdded": "2026-04-01"
+  },
+  {
+    "code": "KREGG4",
+    "gems": 0,
+    "tickets": 0,
+    "reward": "1 x Kregg",
     "dateAdded": "2026-04-01"
   },
   {
