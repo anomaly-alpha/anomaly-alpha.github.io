@@ -81,6 +81,14 @@ async function getAccessToken(adc) {
 
 // ===== Search Analytics API =====
 
+function authHeaders(token, quotaProject) {
+  return {
+    Authorization: 'Bearer ' + token,
+    'Content-Type': 'application/json',
+    'x-goog-user-project': quotaProject,
+  };
+}
+
 function queryUrl(site) {
   return API_BASE + '/' + encodeURIComponent(site) + '/searchAnalytics/query';
 }
@@ -93,11 +101,7 @@ async function queryAll(token, site, quotaProject, payload) {
     const body = Object.assign({}, payload, { rowLimit: ROW_LIMIT, startRow });
     const res = await fetch(queryUrl(site), {
       method: 'POST',
-      headers: {
-        Authorization: 'Bearer ' + token,
-        'Content-Type': 'application/json',
-        'x-goog-user-project': quotaProject,
-      },
+      headers: authHeaders(token, quotaProject),
       body: JSON.stringify(body),
     });
     const text = await res.text();
@@ -124,6 +128,75 @@ async function queryAll(token, site, quotaProject, payload) {
     if (pages >= 20) throw new Error('Pagination safety limit reached');
   }
   return rows;
+}
+
+// ===== Sitemaps API =====
+
+function sitemapsUrl(site) {
+  return API_BASE + '/' + encodeURIComponent(site) + '/sitemaps';
+}
+
+async function fetchSitemaps(token, quotaProject, site) {
+  const res = await fetch(sitemapsUrl(site), { headers: authHeaders(token, quotaProject) });
+  const text = await res.text();
+  if (!res.ok) throw new Error('HTTP ' + res.status + ': ' + text.slice(0, 300));
+  return JSON.parse(text).sitemap || [];
+}
+
+// ===== URL Inspection API =====
+
+const INSPECT_URL = 'https://searchconsole.googleapis.com/v1/urlInspection/index:inspect';
+const INSPECT_LIMIT = 25;
+
+function sitemapUrlsFromRepo() {
+  const file = path.join(__dirname, '..', 'sitemap.xml');
+  if (!fs.existsSync(file)) return [];
+  return [...fs.readFileSync(file, 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1].trim());
+}
+
+function richResultIssues(detectedItems) {
+  return (detectedItems || []).flatMap(item =>
+    (item.items || []).flatMap(entry => (entry.issues || []).map(issue => ({
+      type: item.richResultType || null,
+      message: issue.issueMessage || null,
+      severity: issue.severity || null,
+    })))
+  );
+}
+
+async function inspectUrl(token, quotaProject, site, inspectionUrl) {
+  const res = await fetch(INSPECT_URL, {
+    method: 'POST',
+    headers: authHeaders(token, quotaProject),
+    body: JSON.stringify({ inspectionUrl, siteUrl: site, languageCode: 'en-US' }),
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error('HTTP ' + res.status + ': ' + text.slice(0, 300));
+  const result = JSON.parse(text).inspectionResult || {};
+  const index = result.indexStatusResult || {};
+  const mobile = result.mobileUsabilityResult || {};
+  const rich = result.richResultsResult || {};
+  const issues = richResultIssues(rich.detectedItems);
+  return {
+    url: inspectionUrl,
+    verdict: index.verdict || null,
+    coverageState: index.coverageState || null,
+    robotsTxtState: index.robotsTxtState || null,
+    indexingState: index.indexingState || null,
+    pageFetchState: index.pageFetchState || null,
+    lastCrawlTime: index.lastCrawlTime || null,
+    crawledAs: index.crawledAs || null,
+    googleCanonical: index.googleCanonical || null,
+    userCanonical: index.userCanonical || null,
+    canonicalMatches: !index.googleCanonical || !index.userCanonical || index.googleCanonical === index.userCanonical,
+    referringUrls: index.referringUrls || [],
+    sitemaps: index.sitemaps || [],
+    mobileUsabilityVerdict: mobile.verdict || null,
+    richResultsVerdict: rich.verdict || null,
+    richResultTypes: (rich.detectedItems || []).map(item => item.richResultType).filter(Boolean),
+    richResultIssues: issues,
+    richResultErrors: issues.filter(issue => issue.severity === 'ERROR').length,
+  };
 }
 
 // ===== Aggregation =====
@@ -228,6 +301,62 @@ async function main() {
   datasets.push(await pull('discover-daily-full', ['date'], start, end, { type: 'discover' }));
   datasets.push(await pull('image-daily-full', ['date'], start, end, { type: 'image' }));
 
+  process.stdout.write('  ' + 'sitemaps'.padEnd(30) + ' ');
+  let sitemaps = [];
+  let sitemapsOk = true;
+  try {
+    sitemaps = await fetchSitemaps(token, quotaProject, site);
+    writeJson('sitemaps', sitemaps);
+    console.log(sitemaps.length ? String(sitemaps.length).padStart(6) + ' registered' : 'none registered');
+  } catch (err) {
+    sitemapsOk = false;
+    console.log('FAILED: ' + err.message);
+    writeJson('sitemaps', { error: err.message });
+  }
+  datasets.push({
+    name: 'sitemaps',
+    ok: sitemapsOk,
+    kind: 'sitemap-status',
+    count: sitemaps.length,
+    errors: sitemaps.reduce((sum, s) => sum + (s.errors || 0), 0),
+    warnings: sitemaps.reduce((sum, s) => sum + (s.warnings || 0), 0),
+  });
+
+  let inspections = [];
+  if (args['skip-inspection']) {
+    console.log('  ' + 'url-inspection'.padEnd(30) + ' skipped (--skip-inspection)');
+  } else {
+    const limit = Number(args['inspect-limit'] || INSPECT_LIMIT);
+    const targets = [...new Set([site, ...sitemapUrlsFromRepo()])].slice(0, limit);
+    console.log('  ' + 'url-inspection'.padEnd(30) + String(targets.length).padStart(6) + ' urls');
+    for (const target of targets) {
+      try {
+        const row = await inspectUrl(token, quotaProject, site, target);
+        inspections.push(row);
+        console.log('    ' + String(row.verdict || '?').padEnd(13) + (row.coverageState || '').padEnd(30) +
+          target.replace(site, '/').padEnd(26) + (row.canonicalMatches ? '' : 'CANONICAL MISMATCH'));
+      } catch (err) {
+        inspections.push({ url: target, error: err.message });
+        console.log('    ' + 'FAILED'.padEnd(13) + target.replace(site, '/') + '  ' + err.message.slice(0, 80));
+      }
+    }
+    writeJson('url-inspection', inspections);
+    datasets.push({
+      name: 'url-inspection',
+      ok: inspections.every(row => !row.error),
+      kind: 'url-inspection',
+      count: inspections.length,
+      failures: inspections.filter(row => row.error).length,
+      verdicts: inspections.reduce((counts, row) => {
+        const key = row.verdict || 'UNKNOWN';
+        counts[key] = (counts[key] || 0) + 1;
+        return counts;
+      }, {}),
+      canonicalMismatches: inspections.filter(row => row.canonicalMatches === false).map(row => row.url),
+      richResultErrors: inspections.reduce((sum, row) => sum + (row.richResultErrors || 0), 0),
+    });
+  }
+
   const daily = datasets.find(d => d.name === 'daily-full');
   let summary = null;
   if (daily && daily.ok) {
@@ -269,6 +398,13 @@ async function main() {
     console.log('  Change:   ' + summary.change.clicksPct + '% clicks, ' + summary.change.impressionsPct + '% impressions, ' + summary.change.ctrPct + 'pp CTR, ' + summary.change.positionDelta + ' position');
     console.log('');
   }
+  const unhealthy = inspections.filter(row => !row.error && (row.verdict !== 'PASS' || row.canonicalMatches === false));
+  console.log('Index checks:');
+  console.log('  Sitemaps:  ' + (sitemapsOk
+    ? (sitemaps.length ? sitemaps.map(s => s.path).join(', ') : 'none registered (submit in Search Console UI; API PUT needs the webmasters write scope)')
+    : 'FAILED'));
+  console.log('  Inspected: ' + inspections.length + ' urls, ' + unhealthy.length + ' not healthy, ' +
+    inspections.filter(row => row.canonicalMatches === false).length + ' canonical mismatches');
   const failed = datasets.filter(d => !d.ok);
   console.log('Metadata: ' + path.join(outDir, 'meta.json'));
   if (failed.length) console.log('Warnings: ' + failed.map(f => f.name).join(', '));
