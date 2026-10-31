@@ -438,15 +438,26 @@ client.on('messageCreate', async function(message) {
   if (c.startsWith('skarn opt in') || c.startsWith('skarn opt out')) {
     const isOptIn = c.startsWith('skarn opt in');
     try {
-      if (!isOptIn) {
+      require('./db/database').setUserPreference(message.author.id, message.guild.id, 'proactive_opt_in', isOptIn ? '1' : '0');
+    } catch (e) {
+      console.error('[Bot] Could not persist ' + (isOptIn ? 'opt-in' : 'opt-out') + ':', e && e.stack ? e.stack : e);
+      await message.reply({ content: 'Something went wrong saving that preference.', allowedMentions: { parse: ['users'] } }).catch(function(replyError) {
+        console.error('[Bot] Could not report opt-in/out failure:', replyError.message);
+      });
+      return;
+    }
+    if (!isOptIn) {
+      // Best-effort: dropping queued turns must never block the opt-out itself.
+      try {
         channelTurnCoordinator.clearUser(message.author.id);
         db.prepare("UPDATE follow_ups SET status = 'cancelled' WHERE user_id = ? AND guild_id = ? AND status = 'pending'").run(message.author.id, message.guild.id);
-      }
-      require('./db/database').setUserPreference(message.author.id, message.guild.id, 'proactive_opt_in', isOptIn ? '1' : '0');
-      await message.reply({ content: isOptIn
-        ? "Opted in. I'll reply to mentions, join AI chat in channels where it's enabled, and may send occasional check-ins. Use `skarn opt out` to stop; `/forget` deletes remembered data."
-        : "Opted out. I won't join conversations or send check-ins. Data already saved remains until you use `/forget`.", allowedMentions: { parse: ['users'] } });
-    } catch (e) { await message.reply({ content: 'Something went wrong.', allowedMentions: { parse: ['users'] } }); }
+      } catch (e) { console.error('[Bot] Opt-out cleanup failed:', e && e.stack ? e.stack : e); }
+    }
+    await message.reply({ content: isOptIn
+      ? "Opted in. I'll reply to mentions, join AI chat in channels where it's enabled, and may send occasional check-ins. Use `skarn opt out` to stop; `/forget` deletes remembered data."
+      : "Opted out. I won't join conversations or send check-ins. Data already saved remains until you use `/forget`.", allowedMentions: { parse: ['users'] } }).catch(function(replyError) {
+      console.error('[Bot] Could not confirm opt-in/out:', replyError.message);
+    });
     return;
   }
   

@@ -473,6 +473,36 @@ function createTurnCoordinator(options = {}) {
     return count;
   }
 
+  // Drops one author's queued messages across every channel and aborts that
+  // author's in-flight turn. Other authors in those channels are untouched.
+  function clearUser(userId) {
+    const key = String(userId);
+    let removed = 0;
+    for (const state of channels.values()) {
+      if (state.processing && state.processing.turn.authorId === key) {
+        state.cancelVersion += 1;
+      }
+      if (state.pending.length === 0) continue;
+      const kept = [];
+      const dropped = [];
+      for (const message of state.pending) {
+        if (message.authorId === key) dropped.push(message);
+        else kept.push(message);
+      }
+      if (dropped.length === 0) continue;
+      state.pending = kept;
+      settleBatch(dropped, { status: 'cancelled', reason: 'user-cleared', turn: null });
+      removed += dropped.length;
+      if (kept.length === 0 && !state.processing) {
+        clearTimer(state);
+        clearCleanupTimer(state);
+        state.debouncing = false;
+        cleanupIfIdle(state);
+      }
+    }
+    return removed;
+  }
+
   function whenIdle(channelId) {
     const key = String(channelId);
     const state = channels.get(key);
@@ -516,6 +546,7 @@ function createTurnCoordinator(options = {}) {
     enqueue,
     submit: enqueue,
     cancel,
+    clearUser,
     whenIdle,
     getState,
     getStats,

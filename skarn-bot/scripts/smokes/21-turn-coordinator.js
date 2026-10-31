@@ -189,6 +189,51 @@ async function main() {
   await cancellationScheduler.advance(1500);
   assert.strictEqual(cancellable.channelCount, 0);
 
+  const clearScheduler = fakeScheduler();
+  const clearCalls = [];
+  const clearRunning = [];
+  const clearSent = [];
+  const clearable = createTurnCoordinator({
+    scheduler: clearScheduler,
+    processTurn: (turn) => {
+      clearCalls.push(turn);
+      const work = deferred();
+      clearRunning.push(work);
+      return work.promise;
+    },
+    send: async (payload) => { clearSent.push(payload); },
+  });
+  assert.strictEqual(typeof clearable.clearUser, 'function', 'opt-in revocations can drop a single author');
+
+  const clearAliceOpener = clearable.enqueue(message('cu-a1', 'alice', 'channel-cu-a', 0));
+  const clearAliceQueued = clearable.enqueue(message('cu-a2', 'alice', 'channel-cu-a', 0));
+  const clearBobQueued = clearable.enqueue(message('cu-b1', 'bob', 'channel-cu-a', 0));
+  const clearAliceOtherChannel = clearable.enqueue(message('cu-a3', 'alice', 'channel-cu-other', 0));
+  assert.deepStrictEqual(clearable.getState('channel-cu-a').pendingMessageIds, ['cu-a2', 'cu-b1']);
+
+  const dropped = clearable.clearUser('alice');
+  assert.strictEqual(dropped, 1, 'only alice messages are dropped');
+  assert.deepStrictEqual(clearable.getState('channel-cu-a').pendingMessageIds, ['cu-b1'], 'other authors keep their queue');
+  assert.strictEqual(clearable.clearUser('alice'), 0, 'a second clear is a no-op');
+
+  const clearAliceQueuedOutcome = await clearAliceQueued;
+  assert.strictEqual(clearAliceQueuedOutcome.status, 'cancelled', 'queued messages for a cleared user are cancelled');
+  assert.strictEqual(clearAliceQueuedOutcome.reason, 'user-cleared');
+
+  clearRunning.shift().resolve('opener reply');
+  clearRunning.shift().resolve('other channel reply');
+  assert.strictEqual((await clearAliceOpener).status, 'cancelled', 'an in-flight turn is aborted');
+  assert.strictEqual((await clearAliceOtherChannel).status, 'cancelled', 'the abort spans every channel');
+  assert.deepStrictEqual(clearSent, [], 'no reply is delivered for the cleared user');
+
+  await clearScheduler.advance(1500);
+  assert.deepStrictEqual(clearCalls.map((turn) => turn.authorId), ['alice', 'alice', 'bob'], 'bob still gets his turn');
+  assert.deepStrictEqual(clearCalls[2].messageIds, ['cu-b1']);
+  clearRunning.shift().resolve('bob reply');
+  await clearBobQueued;
+  await clearable.whenIdle('channel-cu-a');
+  await clearScheduler.advance(1500);
+
   console.log('turn coordinator smoke passed');
 }
 
