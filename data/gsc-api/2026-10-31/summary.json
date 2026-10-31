@@ -1,7 +1,7 @@
 {
   "site": "https://anomaly-alpha.github.io/",
   "quotaProject": "anomaly-alpha-gsc",
-  "generatedAt": "2026-10-31T14:39:26.118Z",
+  "generatedAt": "2026-10-31T16:58:43.143Z",
   "periods": {
     "full": {
       "start": "2026-05-02",
@@ -259,6 +259,27 @@
         "date"
       ],
       "type": "image"
+    },
+    {
+      "name": "sitemaps",
+      "ok": true,
+      "kind": "sitemap-status",
+      "count": 1,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "name": "url-inspection",
+      "ok": true,
+      "kind": "url-inspection",
+      "count": 14,
+      "failures": 0,
+      "verdicts": {
+        "PASS": 10,
+        "NEUTRAL": 4
+      },
+      "canonicalMismatches": [],
+      "richResultErrors": 0
     }
   ],
   "firstDate": "2026-05-02",

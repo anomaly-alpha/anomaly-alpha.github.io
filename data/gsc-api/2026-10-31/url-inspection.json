@@ -1,0 +1,1540 @@
+[
+  {
+    "url": "https://anomaly-alpha.github.io/",
+    "verdict": "PASS",
+    "coverageState": "Submitted and indexed",
+    "robotsTxtState": "ALLOWED",
+    "indexingState": "INDEXING_ALLOWED",
+    "pageFetchState": "SUCCESSFUL",
+    "lastCrawlTime": "2026-10-26T07:46:45Z",
+    "crawledAs": "MOBILE",
+    "googleCanonical": "https://anomaly-alpha.github.io/",
+    "userCanonical": "https://anomaly-alpha.github.io/",
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": "PASS",
+    "richResultTypes": [
+      "Breadcrumbs",
+      "Image Metadata",
+      "Review snippets"
+    ],
+    "richResultIssues": [
+      {
+        "type": "Review snippets",
+        "message": "A nested '<parent_node>' object can't contain the 'itemReviewed' field. Remove 'itemReviewed' to avoid directional conflict. Object type '<parent_node>' is incompatible with this object",
+        "severity": "WARNING"
+      }
+    ],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/guide/code/",
+    "verdict": "PASS",
+    "coverageState": "Submitted and indexed",
+    "robotsTxtState": "ALLOWED",
+    "indexingState": "INDEXING_ALLOWED",
+    "pageFetchState": "SUCCESSFUL",
+    "lastCrawlTime": "2026-10-30T00:00:42Z",
+    "crawledAs": "MOBILE",
+    "googleCanonical": "https://anomaly-alpha.github.io/guide/code/",
+    "userCanonical": "https://anomaly-alpha.github.io/guide/code/",
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": "PASS",
+    "richResultTypes": [
+      "Breadcrumbs",
+      "Image Metadata"
+    ],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/guide/beginners/",
+    "verdict": "PASS",
+    "coverageState": "Submitted and indexed",
+    "robotsTxtState": "ALLOWED",
+    "indexingState": "INDEXING_ALLOWED",
+    "pageFetchState": "SUCCESSFUL",
+    "lastCrawlTime": "2026-10-22T17:31:20Z",
+    "crawledAs": "MOBILE",
+    "googleCanonical": "https://anomaly-alpha.github.io/guide/beginners/",
+    "userCanonical": "https://anomaly-alpha.github.io/guide/beginners/",
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": "PASS",
+    "richResultTypes": [
+      "Breadcrumbs",
+      "Image Metadata"
+    ],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/guide/event/",
+    "verdict": "PASS",
+    "coverageState": "Submitted and indexed",
+    "robotsTxtState": "ALLOWED",
+    "indexingState": "INDEXING_ALLOWED",
+    "pageFetchState": "SUCCESSFUL",
+    "lastCrawlTime": "2026-10-27T11:03:32Z",
+    "crawledAs": "MOBILE",
+    "googleCanonical": "https://anomaly-alpha.github.io/guide/event/",
+    "userCanonical": "https://anomaly-alpha.github.io/guide/event/",
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": "PASS",
+    "richResultTypes": [
+      "Breadcrumbs",
+      "Image Metadata"
+    ],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/guide/pvp/",
+    "verdict": "PASS",
+    "coverageState": "Submitted and indexed",
+    "robotsTxtState": "ALLOWED",
+    "indexingState": "INDEXING_ALLOWED",
+    "pageFetchState": "SUCCESSFUL",
+    "lastCrawlTime": "2026-10-25T02:19:36Z",
+    "crawledAs": "MOBILE",
+    "googleCanonical": "https://anomaly-alpha.github.io/guide/pvp/",
+    "userCanonical": "https://anomaly-alpha.github.io/guide/pvp/",
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": "PASS",
+    "richResultTypes": [
+      "Breadcrumbs",
+      "Image Metadata"
+    ],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/guide/login/",
+    "verdict": "PASS",
+    "coverageState": "Submitted and indexed",
+    "robotsTxtState": "ALLOWED",
+    "indexingState": "INDEXING_ALLOWED",
+    "pageFetchState": "SUCCESSFUL",
+    "lastCrawlTime": "2026-10-23T22:07:39Z",
+    "crawledAs": "MOBILE",
+    "googleCanonical": "https://anomaly-alpha.github.io/guide/login/",
+    "userCanonical": "https://anomaly-alpha.github.io/guide/login/",
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": "PASS",
+    "richResultTypes": [
+      "Breadcrumbs",
+      "Image Metadata"
+    ],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/guide/faq/",
+    "verdict": "PASS",
+    "coverageState": "Submitted and indexed",
+    "robotsTxtState": "ALLOWED",
+    "indexingState": "INDEXING_ALLOWED",
+    "pageFetchState": "SUCCESSFUL",
+    "lastCrawlTime": "2026-10-04T22:45:01Z",
+    "crawledAs": "MOBILE",
+    "googleCanonical": "https://anomaly-alpha.github.io/guide/faq/",
+    "userCanonical": "https://anomaly-alpha.github.io/guide/faq/",
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": "PASS",
+    "richResultTypes": [
+      "Breadcrumbs",
+      "Image Metadata"
+    ],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/guide/xp/",
+    "verdict": "PASS",
+    "coverageState": "Submitted and indexed",
+    "robotsTxtState": "ALLOWED",
+    "indexingState": "INDEXING_ALLOWED",
+    "pageFetchState": "SUCCESSFUL",
+    "lastCrawlTime": "2026-10-20T19:01:13Z",
+    "crawledAs": "MOBILE",
+    "googleCanonical": "https://anomaly-alpha.github.io/guide/xp/",
+    "userCanonical": "https://anomaly-alpha.github.io/guide/xp/",
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": "PASS",
+    "richResultTypes": [
+      "Breadcrumbs",
+      "Image Metadata"
+    ],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/guide/redeem/",
+    "verdict": "PASS",
+    "coverageState": "Submitted and indexed",
+    "robotsTxtState": "ALLOWED",
+    "indexingState": "INDEXING_ALLOWED",
+    "pageFetchState": "SUCCESSFUL",
+    "lastCrawlTime": "2026-10-20T03:06:52Z",
+    "crawledAs": "MOBILE",
+    "googleCanonical": "https://anomaly-alpha.github.io/guide/redeem/",
+    "userCanonical": "https://anomaly-alpha.github.io/guide/redeem/",
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": "PASS",
+    "richResultTypes": [
+      "Breadcrumbs",
+      "Image Metadata"
+    ],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/guide/creators/",
+    "verdict": "PASS",
+    "coverageState": "Submitted and indexed",
+    "robotsTxtState": "ALLOWED",
+    "indexingState": "INDEXING_ALLOWED",
+    "pageFetchState": "SUCCESSFUL",
+    "lastCrawlTime": "2026-10-12T19:14:52Z",
+    "crawledAs": "MOBILE",
+    "googleCanonical": "https://anomaly-alpha.github.io/guide/creators/",
+    "userCanonical": "https://anomaly-alpha.github.io/guide/creators/",
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": "PASS",
+    "richResultTypes": [
+      "Breadcrumbs",
+      "Videos"
+    ],
+    "richResultIssues": [
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Invalid datetime value for \"uploadDate\"",
+        "severity": "WARNING"
+      },
+      {
+        "type": "Videos",
+        "message": "Datetime property \"uploadDate\" is missing a timezone",
+        "severity": "WARNING"
+      }
+    ],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/authors/anomaly/",
+    "verdict": "NEUTRAL",
+    "coverageState": "URL is unknown to Google",
+    "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED",
+    "indexingState": "INDEXING_STATE_UNSPECIFIED",
+    "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+    "lastCrawlTime": null,
+    "crawledAs": null,
+    "googleCanonical": null,
+    "userCanonical": null,
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": null,
+    "richResultTypes": [],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/music/",
+    "verdict": "NEUTRAL",
+    "coverageState": "URL is unknown to Google",
+    "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED",
+    "indexingState": "INDEXING_STATE_UNSPECIFIED",
+    "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+    "lastCrawlTime": null,
+    "crawledAs": null,
+    "googleCanonical": null,
+    "userCanonical": null,
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": null,
+    "richResultTypes": [],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/privacy/",
+    "verdict": "NEUTRAL",
+    "coverageState": "URL is unknown to Google",
+    "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED",
+    "indexingState": "INDEXING_STATE_UNSPECIFIED",
+    "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+    "lastCrawlTime": null,
+    "crawledAs": null,
+    "googleCanonical": null,
+    "userCanonical": null,
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": null,
+    "richResultTypes": [],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  },
+  {
+    "url": "https://anomaly-alpha.github.io/terms/",
+    "verdict": "NEUTRAL",
+    "coverageState": "URL is unknown to Google",
+    "robotsTxtState": "ROBOTS_TXT_STATE_UNSPECIFIED",
+    "indexingState": "INDEXING_STATE_UNSPECIFIED",
+    "pageFetchState": "PAGE_FETCH_STATE_UNSPECIFIED",
+    "lastCrawlTime": null,
+    "crawledAs": null,
+    "googleCanonical": null,
+    "userCanonical": null,
+    "canonicalMatches": true,
+    "referringUrls": [],
+    "sitemaps": [],
+    "mobileUsabilityVerdict": "VERDICT_UNSPECIFIED",
+    "richResultsVerdict": null,
+    "richResultTypes": [],
+    "richResultIssues": [],
+    "richResultErrors": 0
+  }
+]
