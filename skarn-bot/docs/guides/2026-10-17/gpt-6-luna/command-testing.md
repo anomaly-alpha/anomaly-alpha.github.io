@@ -1,6 +1,6 @@
 # Skarn Slash Command Testing Guide
 
-Use this guide to verify the current Discord slash-command registry, especially after command or permission changes. The bot currently exposes 67 top-level slash commands; grouped workflows appear as subcommands in Discord and in `/help`. The README Quick Reference and `/help` are the source for the current full command list.
+Use this guide to verify the current Discord slash-command registry, especially after command or permission changes. The bot currently exposes 68 top-level slash commands; grouped workflows appear as subcommands in Discord and in `/help`. The README Quick Reference and `/help` are the source for the current full command list.
 
 ## 1. Start with local checks
 
@@ -26,7 +26,7 @@ For command-module syntax, check the changed files with `node --check path/to/fi
 
 ## 3. Smoke-check every top-level command
 
-Use `/help` or the README Quick Reference to enumerate all 67 top-level commands. For each command, run one normal, low-impact happy path and confirm it responds without an unexpected error. For commands with options, try one valid value and one missing/invalid value when the option permits it. For commands that create messages, roles, schedules, tickets, or persistent records, use only disposable test resources and clean them up afterward.
+Use `/help` or the README Quick Reference to enumerate all 68 top-level commands. For each command, run one normal, low-impact happy path and confirm it responds without an unexpected error. For commands with options, try one valid value and one missing/invalid value when the option permits it. For commands that create messages, roles, schedules, tickets, or persistent records, use only disposable test resources and clean them up afterward.
 
 Also check the broad command families so coverage is not limited to the recently changed roots:
 

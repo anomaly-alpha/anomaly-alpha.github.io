@@ -377,10 +377,10 @@ you to the right command, or start them directly with the slash command shown.
 | `/charades` | `start a charades game` · `give us an animal charades round` · `let's play movie charades` | `/charades category:animals` |
 | `/confidant` | `start a private Confidant conversation` · `how do I talk privately with Skarn?` · `show me the Confidant options` | `/confidant` |
 
-The examples above focus on conversational use. Section 12 below lists all 67
+The examples above focus on conversational use. Section 12 below lists all 68
 slash-command roots; `/help` in Discord remains the live, interactive reference.
 
-## 12. Complete slash-command catalog (67 commands)
+## 12. Complete slash-command catalog (68 commands)
 
 Use these in Discord's slash-command picker. Options shown in brackets are
 optional; names after a colon are the option values to choose or enter. Commands
@@ -435,12 +435,13 @@ commands have a caution note.
 | `/whatdoesthefoxsay` | Hear the fox catchphrase: `/whatdoesthefoxsay`. |
 | `/wouldyourather` | Get an A/B dilemma: `/wouldyourather`. |
 
-### Learning & Utility (12)
+### Learning & Utility (13)
 
 | Command | Options / subcommands and examples |
 | --- | --- |
 | `/avatar` | Optional `user`: `/avatar` · `/avatar user:@member`. |
 | `/code` | Required `request`; optional `language` (`JavaScript`, `Python`, `Java`, `C++`, `HTML/CSS`, `SQL`, `Other`): `/code request:Explain async and await language:JavaScript` · `/code request:Write a SQL query for the top 10 rows`. |
+| `/guide` | Browse and try Skarn's natural-language examples: `/guide`. Opens the interactive guide panel; the `skarn guide` text shortcut opens the same panel in chat. |
 | `/hello` | Get a greeting: `/hello`. |
 | `/help` | Browse commands; optional `theme`: `/help` · `/help theme:AI Chat`. Theme choices follow the help menu; interactive select and page buttons navigate the results. |
 | `/homework` | Required `question`: `/homework question:How do I solve a quadratic equation?` · `/homework question:Explain photosynthesis step by step`. |
@@ -494,9 +495,9 @@ commands have a caution note.
 | `/knowledge` | `lookup` requires exact `topic`; `search` requires `query`: `/knowledge lookup topic:dragons` · `/knowledge search query:server rules`. |
 | `/lorebook` 🔑 Manage Messages | `add` requires `keywords` and `content`, optional `category` and `priority` (−10 to 10); `remove` requires `id`; `list`: `/lorebook list` · `/lorebook add keywords:storm dragons content:They guard the peaks` · `/lorebook remove id:3`. Changes persistent server lore. |
 
-There are 67 slash-command roots in this catalog; retired `/friends`, `/stats`,
+There are 68 slash-command roots in this catalog; retired `/friends`, `/stats`,
 and `/insult` are intentionally excluded. `/help` in Discord remains the live
-command browser, and the [README quick reference](../README.md#quick-reference-67-commands)
+command browser, and the [README quick reference](../README.md#quick-reference-68-commands)
 provides a concise index.
 
 ---

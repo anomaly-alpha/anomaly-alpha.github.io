@@ -38,7 +38,7 @@ npm run audit:gate   # Gate coverage audit — fails if any direct OpenAI chat c
 npm run audit:docs   # Audit documentation vs code (scripts/audit-docs.js)
 ```
 
-## Quick Reference (67 Commands)
+## Quick Reference (68 Commands)
 
 Grouped by the same themes as `/help` — use `/help` in Discord for the live, always-current list.
 
@@ -93,6 +93,7 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 |---------|-------------|
 | `/avatar` | Show user avatar |
 | `/code` | Code helper |
+| `/guide` | Browse and try Skarn's natural-language examples |
 | `/hello` | Get a greeting |
 | `/help` | Browse Skarn's commands |
 | `/homework` | Homework helper |
@@ -436,7 +437,7 @@ skarn-bot/
 ├── bot.js                  # Main bot + event handlers
 ├── deploy-commands.js      # Registers slash commands
 ├── rich-presence.js        # Compatibility wrapper for ../skarn-rpc
-├── commands/               # 67 slash command files (thin wrappers)
+├── commands/               # 68 slash command files (thin wrappers)
 ├── features/               # Vertical-slice feature modules
 │   ├── ai/                 # Shared pipeline, condenser, tool runner
 │   ├── activation/         # Text-command activation registry

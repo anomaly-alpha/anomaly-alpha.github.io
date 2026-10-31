@@ -6,7 +6,7 @@
 
 ## System Overview
 
-Skarn is a Discord.js v14 bot with an LLM-powered AI persona ("Skarn, the Warmaster of the Abyss"). It runs on Node.js, stores state in SQLite, and calls OpenAI for AI features. The bot has 81 slash commands spanning AI conversation, games, server management, fun, and utilities.
+Skarn is a Discord.js v14 bot with an LLM-powered AI persona ("Skarn, the Warmaster of the Abyss"). It runs on Node.js, stores state in SQLite, and calls OpenAI for AI features. The bot has 68 slash commands spanning AI conversation, games, server management, fun, and utilities.
 
 ## High-Level Data Flow
 
@@ -112,7 +112,7 @@ features/<name>/
 commands/<name>.js          — Thin wrapper: re-exports command + handler
 ```
 
-The `commands/` directory contains thin wrappers only. `bot.js` loads 70 slash-command definitions. Several workflows are grouped under subcommands; see `README.md` or the live `/help` command for the current list.
+The `commands/` directory contains thin wrappers only. `bot.js` loads all 68 slash-command definitions from it. Several workflows are grouped under subcommands; see `README.md` or the live `/help` command for the current list.
 
 ## Key Modules
 

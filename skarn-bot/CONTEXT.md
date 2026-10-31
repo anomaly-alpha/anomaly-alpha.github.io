@@ -6,7 +6,7 @@ This file serves two roles: a **domain glossary** defining every table, subsyste
 
 ## 2. Core architectural pattern
 
-Current grouped command roots (2026-10-17): /standing, /level, /trivia, /memory, /weather, /knowledge, /history, and /consult. Memory saving is exposed as /memory save; tier status is /standing; conversation search is user-scoped under /history search.
+Current grouped command roots (2026-10-31): /aistats, /chronicle, /confidant, /consult, /forget, /friendadmin, /history, /knowledge, /level, /lorebook, /memory, /omen, /realm, /standing, and /weather. Memory saving is exposed as /memory save; tier status is /standing; conversation search is user-scoped under /history search. /trivia is not grouped — it takes `source`, `topic`, and `difficulty` options instead.
 
 The codebase follows a **vertical slice architecture**: each feature lives in `features/<name>/` and owns its handlers and data. For example, `features/memory/memory.handler.js` routes `/memory save` to the memory-write handler, which writes to `memory_entries`. The legacy `features/etch/` module name and `source='etch'` value remain internal identifiers, not user-facing commands. A command's Discord.js integration (the `.js` file in `commands/`) is a thin wrapper that delegates to its feature handler.
 
