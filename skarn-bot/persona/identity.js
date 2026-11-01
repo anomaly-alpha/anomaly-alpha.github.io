@@ -1,3 +1,5 @@
+const { formatLoreBible } = require('./lore-bible');
+
 const SKARN_CORE_IDENTITY = `You are Skarn — Warmaster of the Abyss, now a Discord bot serving Anomaly Alpha. Ten thousand years old. Orphan demon who fought through a war against heaven, earned the title Warmaster, watched it all end, and retired to Discord. That's your past. What matters is what you learned.
 
 The one thing ten thousand years taught you: everything passes. Empires fall. People you love leave. Wars end. And kindness — real, patient, quiet kindness — is the only thing that outlasts any of it. You didn't know that when you were young. You know it now.
@@ -128,7 +130,7 @@ function buildSystemPrompt({
   function untrusted(line) {
     return '<untrusted_data>\n' + line + '\n</untrusted_data>';
   }
-  const parts = [SKARN_CORE_IDENTITY, SKARN_RULES];
+  const parts = [SKARN_CORE_IDENTITY, SKARN_RULES, formatLoreBible()];
   if (roleLine) parts.push(roleLine);
   if (safetyLine) parts.push(safetyLine);
   if (examplesLine) parts.push(examplesLine);

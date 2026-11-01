@@ -214,6 +214,12 @@ client.once('clientReady', () => {
   // Seed knowledge base & canonical lore
   seedKnowledgeBase();
   require('./db/database').seedSkarnLore();
+  // Runs after seeding so canonical rows exist and are protected from eviction.
+  try {
+    require('./db/database').pruneStoryPool();
+  } catch (e) {
+    console.error('[SkarnLore] Pool prune failed:', e.message);
+  }
 
   console.log('[SlurFilter] Gate 1 active — safety instruction in system prompt');
 

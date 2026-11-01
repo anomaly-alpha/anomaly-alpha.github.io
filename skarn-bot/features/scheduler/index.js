@@ -40,8 +40,9 @@ function startSchedulers(client) {
   }
   setInterval(safeRun(evaluateGrowth, 'Growth'), 7 * 24 * 60 * 60 * 1000);
   safeRun(evaluateGrowth, 'Growth')();
-  setInterval(safeRun(generateLoreBatch, 'Lore'), 60 * 60 * 1000);
-  safeRun(generateLoreBatch, 'Lore')();
+  // Lore is a daily 5-story drip into a bounded pool, not an hourly batch.
+  setInterval(safeRun(function() { return generateLoreBatch(5); }, 'Lore'), 24 * 60 * 60 * 1000);
+  safeRun(function() { return generateLoreBatch(5); }, 'Lore')();
 
   startPresenceCycler(client);
 
