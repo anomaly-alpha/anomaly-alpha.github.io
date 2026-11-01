@@ -18,6 +18,8 @@ const commands = [
 ];
 const serialized = commands.map(command => command.data.toJSON());
 const byName = new Map(serialized.map(command => [command.name, command]));
+// Behavior checks need the live module; byName only carries serialized JSON.
+const modules = new Map(commands.map(command => [command.data.name, command]));
 for (const name of ['standing', 'level', 'trivia', 'memory', 'weather', 'knowledge', 'history', 'consult']) {
   assert.ok(byName.has(name), 'command is registered: ' + name);
 }
@@ -102,7 +104,7 @@ async function runBehaviorChecks() {
   await relationship.execute(ctx.interaction);
   assert.ok(ctx.replies[0].content.includes('Only admins'), 'relationship protects admin-targeted stats');
 
-  const level = byName.get('level');
+  const level = modules.get('level');
   ctx = fakeInteraction('set', { guildId, group: 'roles', integers: { level: 5 }, roles: { role: { id: 'role-5', name: 'Level Five' } }, admin: false });
   await level.execute(ctx.interaction);
   assert.ok(ctx.replies[0].content.includes('Administrator'), 'level-role mutation denies non-admins');
@@ -111,7 +113,7 @@ async function runBehaviorChecks() {
   await level.execute(ctx.interaction);
   assert.ok(ctx.replies[0].embeds, 'administrator can set a level role');
 
-  const weather = byName.get('weather');
+  const weather = modules.get('weather');
   ctx = fakeInteraction('add', { guildId, group: 'track', strings: { location: 'Tokyo', time: '08:00' }, channels: { channel: { id: 'weather-channel' } }, admin: false });
   await weather.execute(ctx.interaction);
   assert.ok(ctx.replies[0].content.includes('Manage Channels'), 'weather tracking denies users without Manage Channels');
@@ -120,7 +122,7 @@ async function runBehaviorChecks() {
   await weather.execute(ctx.interaction);
   assert.ok(ctx.replies[0].content.includes('scheduled'), 'Manage Channels can schedule weather tracking');
 
-  const memory = byName.get('memory');
+  const memory = modules.get('memory');
   ctx = fakeInteraction('save', { strings: { fact: 'DM must not write memory' }, userId: 'memory-user' });
   await memory.execute(ctx.interaction);
   assert.ok(ctx.replies[0].content.includes('scoped to a server'), 'memory save handles DMs with a clear server-scope response');
@@ -131,7 +133,7 @@ async function runBehaviorChecks() {
   await memory.execute(ctx.interaction);
   assert.ok(ctx.replies[0].embeds[0].data.fields.some(field => field.value.includes('Retain this memory')), 'memory view shows saved facts');
 
-  const history = byName.get('history');
+  const history = modules.get('history');
   ctx = fakeInteraction('search', { guildId, strings: { query: 'private conversation' }, users: { user: { id: 'other-user', username: 'Other' } }, admin: false });
   await history.execute(ctx.interaction);
   assert.ok(ctx.replies[0].content.includes('administrators'), 'history search cannot target another user without admin permission');

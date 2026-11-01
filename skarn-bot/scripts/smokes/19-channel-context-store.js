@@ -127,7 +127,7 @@ persistChannelContextSummarySegment({
   segmentId: 'segment-other-guild', guildId: 'guild-b', channelId: 'channel-a', summaryText: 'other guild',
   coversFrom: base, coversTo: base, sourceAuthorIds: ['author-a'], sourceMessageIds: ['message-4'],
 });
-assert.strictEqual(deleteChannelContextSummarySegmentsByAuthor('author-a', 'guild-a'), 1, 'provenance deletion removes matching segments across that guild');
+assert.strictEqual(deleteChannelContextSummarySegmentsByAuthor('author-a', 'guild-a'), 2, 'provenance deletion removes every attributed segment in that guild, across channels');
 assert.strictEqual(listChannelContextSummarySegments('guild-a', 'channel-a').length, 1, 'author deletion removes only attributed segments');
 assert.strictEqual(listChannelContextSummarySegments('guild-a', 'channel-b').length, 0, 'author deletion removes attributed segments in other guild channels');
 assert.strictEqual(listChannelContextSummarySegments('guild-b', 'channel-a').length, 1, 'author deletion does not cross guild scope');
