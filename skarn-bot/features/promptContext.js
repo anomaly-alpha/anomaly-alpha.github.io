@@ -1,7 +1,7 @@
 const { getChannelState, getMemoryEntries, getRelationship, getUserEmotion, db, findLoreForMessage, getRecentMessageEmbeddings, getRecentAssistantOrUserMessages, getOlderSummaries, getServerBuzz } = require('../db/database');
 const { getStateLine } = require('./channelState/stateTracker');
 const { getRelationshipLine } = require('./relationship/relationshipTracker');
-const { getMoodLine } = require('./mood/moodManager');
+const { evaluateMood } = require('./mood/moodManager');
 const { getCultureLine } = require('./culture/cultureTracker');
 const { getWarmthLine, getPatienceLine } = require('./warmth/warmthManager');
 const { getCallbackLine } = require('./humor/callbackEngine');
@@ -12,6 +12,9 @@ const { getRecentNews, CATEGORIES } = require('./news/newsFetcher');
 const { getChannelActivity } = require('./channelContext/channelContext');
 const { buildSafetyLine } = require('./safety/slurFilter');
 const { getSocraticQuestion } = require('./wisdom/socraticEngine');
+const { resolveStance } = require('./wisdom/stance');
+const { getPositions, matchPosition } = require('./wisdom/positions');
+const { classifyPendingQuestion } = require('./wisdom/pendingQuestion');
 const { getGrowthLine } = require('./wisdom/growthTracker');
 const { getLoreLine, getDreamLine } = require('./wisdom/loreAssembler');
 const { buildExamplesLine } = require('../persona/examples');
@@ -31,20 +34,49 @@ function buildContext(userId, guildId, channelId, opts) {
   // Tiered: lightweight for short/no-question, full for substantive
   let isFullTier = userContent.length >= 50 || userContent.indexOf('?') !== -1;
 
-  const socraticLine = getSocraticQuestion(userContent);
+  const rel = allowPersonalContext ? getRelationship(userId, guildId) : null;
+  const familiarity = rel ? rel.familiarity : 0;
+  const currentEmotion = allowPersonalContext ? getUserEmotion(userId, guildId) : null;
+
+  // ===== Wisdom: one stance lever (2026-11-01 spec §3.1) =====
+  // Replaces the per-guild mood line. Mood survives as an energy read only — its six
+  // canned strings described behaviour that the mechanism now actually decides.
+  // Stance is resolved from the MESSAGE even when personal context is unavailable:
+  // whether Skarn may use stored data is a separate question from whether this turn
+  // is an advice request. Only the lines that carry personal data are gated.
+  const stanceInfo = guildId
+    ? resolveStance({
+      userContent: userContent,
+      emotionState: currentEmotion,
+      familiarity: familiarity,
+      volumeEnergy: guildId ? evaluateMood(guildId) : 'neutral',
+    })
+    : { stance: '', line: '', allowHold: false, pushbackLine: '' };
+  const stance = stanceInfo.stance;
+  const stanceLine = allowPersonalContext ? stanceInfo.line : '';
+
+  // Socratic hold, vetoed by stance (spec D9): a question back is only ever offered on
+  // the challenge stance. Someone who is hurting gets presence, not homework.
+  var socraticLine = getSocraticQuestion(userContent);
+  if (socraticLine && !stanceInfo.allowHold) socraticLine = '';
   if (socraticLine && !isFullTier) {
     isFullTier = true;
   }
+  const adviceRequested = !!socraticLine;
+  // Pushback is for claims. A request for advice gets the question instead.
+  const pushbackLine = allowPersonalContext && stanceInfo.pushbackLine && !socraticLine ? stanceInfo.pushbackLine : '';
 
   // === Directive lines (always included) ===
   const channelState = getChannelState(channelId, guildId);
   const stateLine = getStateLine(channelState.current_state);
-  const moodLine = getMoodLine(guildId);
   const relationshipLine = allowPersonalContext ? getRelationshipLine(userId, guildId) : '';
   const cultureLine = getCultureLine(guildId, channelId);
 
+  // Positions are stored as prefixed preferences and surfaced deliberately through
+  // positionClaim below, so keep them out of the raw memory dump (no double telling).
   const memory = allowPersonalContext ? getMemoryEntries(userId, guildId, 30) : [];
   const factEntries = memory.filter(function(m) {
+    if (m.content && m.content.indexOf('position: ') === 0) return false;
     if (m.source === 'etch') return true;
     return m.source === 'extracted' && ['fact', 'interest', 'project', 'event', 'preference'].includes(m.type) &&
       !isSensitiveMemoryCandidate(m.content) && (!m.context || !isSensitiveMemoryCandidate(m.context));
@@ -52,9 +84,28 @@ function buildContext(userId, guildId, channelId, opts) {
   const memoryLine = factEntries.length > 0 ? 'What Skarn remembers about this person: ' + factEntries.map(function(m) { return m.content; }).join('; ') : '';
   const knowledgeLine = allowPersonalContext ? formatKnowledge(userId, guildId) : '';
 
+  // Contradiction surface (spec §3.4): ONE recalled claim, or nothing at all.
+  var positionClaim = '';
+  var positionInstruction = '';
+  if (allowPersonalContext) {
+    try {
+      const match = matchPosition(userContent, getPositions(userId, guildId));
+      if (match) {
+        positionClaim = match.claim;
+        positionInstruction = match.instruction;
+      }
+    } catch (e) { /* positions unavailable — skip */ }
+  }
+
+  // Ask-twice state (spec §3.5): the answer is owed once they have dodged.
+  var pendingQuestionLine = '';
+  if (allowPersonalContext) {
+    try {
+      pendingQuestionLine = classifyPendingQuestion(userId, channelId, userContent).line || '';
+    } catch (e) { /* pending state unavailable — skip */ }
+  }
+
   const warmthLine = allowPersonalContext ? getWarmthLine(userId, guildId, roleNature) : '';
-  const rel = allowPersonalContext ? getRelationship(userId, guildId) : null;
-  const familiarity = rel ? rel.familiarity : 0;
   const patienceLine = allowPersonalContext ? getPatienceLine(userId, guildId, userContent) : '';
   const callbackLine = allowPersonalContext && familiarity >= 50 ? getCallbackLine(channelId, userId) : '';
   const gratitudeLine = allowPersonalContext && familiarity >= 15 ? getGratitudeDirective(userContent) : '';
@@ -66,9 +117,8 @@ function buildContext(userId, guildId, channelId, opts) {
   // Intent detection — infers what the user wants based on emotion + message patterns
   var intentLine = '';
   try {
-    var _ei = allowPersonalContext ? getUserEmotion(userId, guildId) : null;
-    if (_ei && _ei.emotional_state && _ei.emotional_state !== 'neutral') {
-      intentLine = getIntentDirective(userContent, _ei.emotional_state);
+    if (currentEmotion && currentEmotion.emotional_state && currentEmotion.emotional_state !== 'neutral') {
+      intentLine = getIntentDirective(userContent, currentEmotion.emotional_state);
     }
   } catch (e) { /* intent detection unavailable */ }
 
@@ -247,7 +297,7 @@ function buildContext(userId, guildId, channelId, opts) {
     examplesLine: examplesLine,
     growthLine: growthLine,
     newsLine: newsLine,
-    stateLine: stateLine, moodLine: moodLine, relationshipLine: relationshipLine,
+    stateLine: stateLine, stanceLine: stanceLine, relationshipLine: relationshipLine,
     cultureLine: cultureLine, memoryLine: memoryLine,
     warmthLine: warmthLine, patienceLine: patienceLine, callbackLine: callbackLine,
     gratitudeLine: gratitudeLine, firstOfDayLine: firstOfDayLine,
@@ -258,6 +308,14 @@ function buildContext(userId, guildId, channelId, opts) {
     channelLine: channelLine,
     safetyLine: safetyLine,
     socraticLine: socraticLine,
+    pushbackLine: pushbackLine,
+    pendingQuestionLine: pendingQuestionLine,
+    positionClaim: positionClaim,
+    positionInstruction: positionInstruction,
+    // Not a prompt line: sharedPipeline reads these to pick the role (and with it the
+    // reply target and token budget). buildSystemPrompt ignores unknown keys.
+    stance: stance,
+    adviceRequested: adviceRequested,
     followUpLine: followUpLine,
     loreLine: loreLine,
     dreamLine: dreamLine,

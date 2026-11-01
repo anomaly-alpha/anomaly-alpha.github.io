@@ -12,6 +12,7 @@
     "test:presence": "node scripts/smokes/14-presence-mood.js && node scripts/smokes/15-railway-presence.js && node scripts/smokes/16-presence-catalog.js",
     "audit:gate": "node scripts/audit-ai-gate.js && SKARN_DB_PATH=$(mktemp -d)/gate.db node scripts/smoke-gate.js",
     "smoke": "node scripts/run-smokes.js",
+    "eval:wisdom": "node scripts/wisdom-eval.js",
     "audit:docs": "node scripts/audit-docs.js"
   },
   "dependencies": {

@@ -21,6 +21,7 @@ const { getTools } = require('../tools/toolDefinitions');
 const { runTool } = require('../tools/toolRunner');
 const { storeMessage } = require('../conversation/messageStore');
 const { findStoryTopic, getExistingStory, extractStoryFromReply } = require('../wisdom/storyEngine');
+const { recordPendingQuestion } = require('../wisdom/pendingQuestion');
 const { updateEmotion, applyAnalyzedEmotion } = require('../wisdom/emotionalIntelligence');
 const { getFriendFlags, getEffectiveTier, getFamiliarityLine } = require('../friendTiers/friendTierEngine');
 const { canInteract } = require('../proactive/absenceDetector');
@@ -117,6 +118,15 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
       interactionCount,
       allowPersonalContext: !isUnaddressed,
     });
+
+    // Wisdom tier (2026-11-01, wisdom-pushback spec §3.6). An advice turn earns the
+    // advice role: 400-char target, 500-token budget, 'serious' nature, and the
+    // "don't sugarcoat" role line. All four existed in persona/roles.js but nothing
+    // ever selected roleName 'advice' — every live path hardcoded 'consult', so a
+    // pushback was being rewritten down to 200 chars by the condenser.
+    if (!isUnaddressed && ctx.stance === 'challenge' && ctx.adviceRequested) {
+      roleName = 'advice';
+    }
     var additionalContext = '';
     if (opts.channelSnapshot) {
       var excludedIds = new Set(opts.currentMessageIds || []);
@@ -285,6 +295,15 @@ async function runPipeline(userId, guildId, channelId, message, opts) {
     if (!isUnaddressed) {
       try { await storeMessage(userId, guildId, channelId, 'assistant', deliveredReply, { threadType: threadType }); }
       catch (storeError) { console.error('Assistant conversation store failed:', storeError.message); }
+
+      // Ask-twice state (2026-11-01 spec §3.5). If this reply carried the Socratic
+      // hold, remember the question it asked so the next turn can tell answered from
+      // dodged. No hold, no question, no write. Best-effort: state must never cost a
+      // delivered reply.
+      if (ctx.socraticLine) {
+        try { recordPendingQuestion(userId, channelId, deliveredReply); }
+        catch (e) { /* pending-question state is advisory */ }
+      }
       const afterSentiment = analyzeSentiment(deliveredReply);
       trackResponse(userId, guildId, beforeSentiment !== undefined ? beforeSentiment : analyzeSentiment(message), afterSentiment);
       if (sentParts.length === chunks.length) {

@@ -1,14 +1,8 @@
-const { getGuildInteractionStats, getGuildMood, updateGuildMood } = require('../../db/database');
+const { getGuildInteractionStats } = require('../../db/database');
 
-const MOOD_LINES = {
-  refreshed: "You're feeling alert and present. The static is clear today.",
-  neutral: '',
-  tired: "You've been busy. Responses are a bit shorter today. You're present but conserving energy.",
-  amused: "Something about the conversation today has you amused. You're playing along.",
-  focused: "The conversation has been substantive. You're keeping it direct and grounded.",
-  wrath: "The old fire is up. Patience held in check - controlled wrath. Shorter sentences, sharper edges, but the restraint stays.",
-};
-
+// ===== Volume energy =====
+// Mood is an input to the stance lever (features/wisdom/stance.js), not a prompt
+// line: the canned line and its table are gone, only the energy read survives.
 function evaluateMood(guildId) {
   const stats = getGuildInteractionStats(guildId, Date.now() - 2 * 60 * 60 * 1000);
   const totalInteractions = stats.total_interactions || 0;
@@ -22,19 +16,4 @@ function evaluateMood(guildId) {
   return 'neutral';
 }
 
-function getMoodLine(guildId) {
-  const guildMood = getGuildMood(guildId);
-  const now = Date.now();
-
-  if (now - guildMood.last_mood_shift_at > 10 * 60 * 1000) {
-    const newMood = evaluateMood(guildId);
-    if (newMood !== guildMood.current_mood) {
-      updateGuildMood(guildId, newMood);
-      guildMood.current_mood = newMood;
-    }
-  }
-
-  return MOOD_LINES[guildMood.current_mood] || '';
-}
-
-module.exports = { getMoodLine, evaluateMood };
+module.exports = { evaluateMood };
