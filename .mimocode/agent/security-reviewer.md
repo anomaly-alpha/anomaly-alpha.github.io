@@ -1,7 +1,7 @@
 ---
 mode: subagent
-model: openai/gpt-6-luna
-variant: high
+model: opencode-go/deepseek-v4.1-flash
+variant: max
 description: Review security-sensitive application and MiMoCode agent/config changes using an OWASP-oriented checklist.
 ---
 

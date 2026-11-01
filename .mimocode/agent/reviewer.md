@@ -1,7 +1,7 @@
 ---
 mode: subagent
-model: openai/gpt-6-luna
-variant: high
+model: opencode-go/deepseek-v4.1-flash
+variant: max
 description: Perform the final read-only review of the working diff and specialist changes.
 ---
 

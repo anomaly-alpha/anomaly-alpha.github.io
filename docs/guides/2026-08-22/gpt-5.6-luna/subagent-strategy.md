@@ -10,9 +10,9 @@ Route agent tasks to the most cost-effective capable model:
 
 | Task group | Model | Variant | Reason |
 |------------|-------|---------|--------|
-| build, plan, compose | `openai/gpt-5.6-luna` | `xhigh` | Complex orchestration, multi-file edits, security review |
-| general, explore, browser-qa, reviewer, seo-a11y | `openai/gpt-5.6-luna` | `medium` | General reasoning, read-only review, browser testing |
-| lite model group | `openai/gpt-5.6-luna` | `medium` | Fallback / low-cost tasks |
+| build, plan, compose | `opencode-go/deepseek-v4.1-flash` | `max` | Complex orchestration, multi-file edits, security review |
+| general, explore, browser-qa, reviewer, seo-a11y | `opencode-go/deepseek-v4.1-flash` | `max` | General reasoning, read-only review, browser testing |
+| lite model group | `opencode-go/deepseek-v4.1-flash` | `max` | Fallback / low-cost tasks |
 
 ---
 
@@ -38,14 +38,14 @@ MiMoCode merges configuration from two scopes:
 ### 3.1 Top-level model default
 
 ```json
-"model": "openai/gpt-5.6-luna"
+"model": "opencode-go/deepseek-v4.1-flash"
 ```
 
 ### 3.2 Model groups
 
 ```json
 "model_groups": {
-  "lite": "openai/gpt-5.6-luna"
+  "lite": "opencode-go/deepseek-v4.1-flash"
 }
 ```
 
@@ -54,24 +54,24 @@ MiMoCode merges configuration from two scopes:
 ```json
 "agent": {
   "build": {
-    "model": "openai/gpt-5.6-luna",
-    "variant": "xhigh"
+    "model": "opencode-go/deepseek-v4.1-flash",
+    "variant": "max"
   },
   "plan": {
-    "model": "openai/gpt-5.6-luna",
-    "variant": "xhigh"
+    "model": "opencode-go/deepseek-v4.1-flash",
+    "variant": "max"
   },
   "compose": {
-    "model": "openai/gpt-5.6-luna",
-    "variant": "xhigh"
+    "model": "opencode-go/deepseek-v4.1-flash",
+    "variant": "max"
   },
   "general": {
-    "model": "openai/gpt-5.6-luna",
-    "variant": "medium"
+    "model": "opencode-go/deepseek-v4.1-flash",
+    "variant": "max"
   },
   "explore": {
-    "model": "openai/gpt-5.6-luna",
-    "variant": "medium"
+    "model": "opencode-go/deepseek-v4.1-flash",
+    "variant": "max"
   }
 }
 ```
@@ -95,10 +95,10 @@ Four specialist roles are defined as `.mimocode/agent/*.md` prompt files. Each u
 
 | File | Model | Variant | Role |
 |------|-------|---------|------|
-| `security-reviewer.md` | `openai/gpt-5.6-luna` | `xhigh` | Security-sensitive review (OWASP checklist) |
-| `browser-qa.md` | `openai/gpt-5.6-luna` | `medium` | Playwright/Lighthouse browser testing |
-| `reviewer.md` | `openai/gpt-5.6-luna` | `medium` | Final read-only code review |
-| `seo-a11y-reviewer.md` | `openai/gpt-5.6-luna` | `medium` | SEO + accessibility audit + small fixes |
+| `security-reviewer.md` | `opencode-go/deepseek-v4.1-flash` | `max` | Security-sensitive review (OWASP checklist) |
+| `browser-qa.md` | `opencode-go/deepseek-v4.1-flash` | `max` | Playwright/Lighthouse browser testing |
+| `reviewer.md` | `opencode-go/deepseek-v4.1-flash` | `max` | Final read-only code review |
+| `seo-a11y-reviewer.md` | `opencode-go/deepseek-v4.1-flash` | `max` | SEO + accessibility audit + small fixes |
 
 ### 4.2 Frontmatter format
 
@@ -111,8 +111,8 @@ description: <one-line purpose>
 ---
 ```
 
-- `model` can be a full model ID (`openai/gpt-5.6-luna`) or a model group reference (`lite`).
-- `variant` is optional; use `xhigh` for highest quality, `high` for standard quality.
+- `model` can be a full model ID (`opencode-go/deepseek-v4.1-flash`) or a model group reference (`lite`).
+- `variant` is optional; `opencode-go/deepseek-v4.1-flash` defines `low`, `high`, and `max`. Use `max` for highest reasoning effort.
 
 ### 4.3 Triggers
 

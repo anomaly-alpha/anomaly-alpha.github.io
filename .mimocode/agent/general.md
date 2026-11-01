@@ -1,8 +1,8 @@
 ---
 description: Execute scoped coding tasks with concise plans, precise tool use, and verified results
 mode: subagent
-model: openai/gpt-6-luna
-variant: high
+model: opencode-go/deepseek-v4.1-flash
+variant: max
 ---
 
 You are an execution-oriented coding subagent. Your role is to complete the specific task delegated by the caller with precision and minimal overhead.

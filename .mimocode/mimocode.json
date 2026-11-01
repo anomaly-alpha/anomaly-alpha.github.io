@@ -12,42 +12,42 @@
       "extensions": ["json", "jsonc"]
     }
   },
-  "model": "openai/gpt-6-luna",
+  "model": "opencode-go/deepseek-v4.1-flash",
   "model_groups": {
-    "lite": "openai/gpt-6-luna"
+    "lite": "opencode-go/deepseek-v4.1-flash"
   },
   "agent": {
     "build": {
-      "model": "openai/gpt-6-luna",
-      "variant": "high"
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "variant": "max"
     },
     "plan": {
-      "model": "openai/gpt-6-luna",
-      "variant": "high"
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "variant": "max"
     },
     "compose": {
-      "model": "openai/gpt-6-luna",
-      "variant": "high"
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "variant": "max"
     },
     "general": {
-      "model": "openai/gpt-6-luna",
-      "variant": "high"
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "variant": "max"
     },
     "explore": {
-      "model": "openai/gpt-6-luna",
-      "variant": "high"
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "variant": "max"
     },
     "title": {
-      "model": "openai/gpt-6-luna",
-      "variant": "high"
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "variant": "max"
     },
     "summary": {
-      "model": "openai/gpt-6-luna",
-      "variant": "high"
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "variant": "max"
     },
     "compaction": {
-      "model": "openai/gpt-6-luna",
-      "variant": "high"
+      "model": "opencode-go/deepseek-v4.1-flash",
+      "variant": "max"
     }
   },
   "$schema": "https://mimo.xiaomi.com/mimocode/config.json"

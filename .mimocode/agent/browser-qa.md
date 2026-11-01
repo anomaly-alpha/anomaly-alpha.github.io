@@ -1,7 +1,7 @@
 ---
 mode: subagent
-model: openai/gpt-6-luna
-variant: high
+model: opencode-go/deepseek-v4.1-flash
+variant: max
 description: Test UI changes in a real browser and make only small, obvious source fixes when directly evidenced.
 ---
 
