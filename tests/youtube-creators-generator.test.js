@@ -299,18 +299,19 @@ test('Hidden creator absent from all output', function () {
   assert.ok(jsonLd.indexOf('hidden-one') === -1, 'Hidden not in JSON-LD');
 });
 
-test('VideoObject JSON-LD generated for active videos', function () {
+test('Directory JSON-LD indexes watch pages instead of declaring videos', function () {
   var creator = makeActiveCreator('test-creator', 1, 8);
   var data = makeValidData([creator]);
   var jsonLd = gen.renderJsonLdHtml(data);
+  assert.ok(jsonLd.indexOf('CollectionPage') !== -1, 'Should be a CollectionPage');
   assert.ok(jsonLd.indexOf('ItemList') !== -1, 'Should contain ItemList');
-  assert.ok(jsonLd.indexOf('VideoObject') !== -1, 'Should contain VideoObject');
   assert.ok(jsonLd.indexOf('application/ld+json') !== -1, 'Should be in script tag');
-  assert.ok(jsonLd.indexOf('youtube-nocookie.com') !== -1, 'Should use privacy-enhanced embed');
-  assert.ok(jsonLd.indexOf('i.ytimg.com') !== -1, 'Should reference ytimg thumbnails');
-  // Check 8 videos in JSON-LD (all active, up to 12)
-  var videoMatches = jsonLd.match(/VideoObject/g);
-  assert.ok(videoMatches && videoMatches.length === 8, 'Should have 8 VideoObject entries');
+  // A directory page carrying VideoObjects is not a watch page, so Google refuses to
+  // index any of its videos. The directory must list watch page URLs only.
+  assert.strictEqual(jsonLd.indexOf('VideoObject'), -1, 'Must not declare VideoObject on the directory');
+  var listItems = jsonLd.match(/"ListItem"/g);
+  assert.ok(listItems && listItems.length === 8, 'Should list 8 watch pages');
+  assert.strictEqual((jsonLd.match(/\/watch\//g) || []).length, 8, 'Each item should link to a watch page');
 });
 
 test('JSON-LD includes pending creator videos', function () {
@@ -318,10 +319,10 @@ test('JSON-LD includes pending creator videos', function () {
   var pending = makePendingCreator('pending-one', 2);
   var data = makeValidData([active, pending]);
   var jsonLd = gen.renderJsonLdHtml(data);
-  // Should include videos from both active and pending creators
-  var videoMatches = jsonLd.match(/VideoObject/g);
+  // Should include watch page entries from both active and pending creators
+  var listItems = jsonLd.match(/"ListItem"/g);
   // 8 from active + 1 from pending = 9
-  assert.ok(videoMatches && videoMatches.length === 9, 'Should have 9 VideoObject entries (8 active + 1 pending)');
+  assert.ok(listItems && listItems.length === 9, 'Should have 9 list items (8 active + 1 pending)');
 });
 
 test('Noscript fallback lists all visible active videos', function () {
@@ -820,7 +821,8 @@ test('generate() produces valid output for complete valid data', function () {
 
     // Check JSON-LD
     assert.ok(result.html.indexOf('ItemList') !== -1, 'Should have ItemList in JSON-LD');
-    assert.ok(result.html.indexOf('VideoObject') !== -1, 'Should have VideoObject');
+    assert.ok(result.html.indexOf('CollectionPage') !== -1, 'Should be a CollectionPage');
+    assert.strictEqual(result.html.indexOf('VideoObject'), -1, 'Directory must not declare VideoObject');
 
     // Check noscript
     assert.ok(result.html.indexOf('<noscript>') !== -1, 'Should have noscript');
@@ -967,10 +969,10 @@ test('generate() fails on template with duplicated markers', function () {
 
 test('JSON-LD escaping prevents script injection', function () {
   var creator = makeActiveCreator('test-creator', 1);
-  creator.videos[0].description = 'Test </script><script>alert(1)</script> desc';
+  creator.videos[0].title = 'Test </script><script>alert(1)</script> desc';
   var data = makeValidData([creator]);
   var jsonLd = gen.renderJsonLdHtml(data);
-  // The </script> in the description should be escaped
+  // The </script> in the title should be escaped
   assert.ok(jsonLd.indexOf('</script><script>') === -1, 'Should not contain raw script close');
   assert.ok(jsonLd.indexOf('&lt;/script') !== -1 || jsonLd.indexOf('<\\/script') !== -1, 'Should escape script close');
 });
@@ -1044,8 +1046,8 @@ test('JSON-LD caps at 12 items per creator', function () {
   var creator = makeActiveCreator('test-creator', 1, 15);
   var data = makeValidData([creator]);
   var jsonLd = gen.renderJsonLdHtml(data);
-  var videoMatches = jsonLd.match(/VideoObject/g);
-  assert.strictEqual(videoMatches ? videoMatches.length : 0, 12, 'Should cap at 12 videos per creator');
+  var listItems = jsonLd.match(/"ListItem"/g);
+  assert.strictEqual(listItems ? listItems.length : 0, 12, 'Should cap at 12 watch pages per creator');
 });
 
 test('JS output caps at 12 items per creator', function () {

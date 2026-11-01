@@ -165,7 +165,14 @@ const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   assert(sitemap.includes('https://anomaly-alpha.github.io' + url), 'sitemap missing ' + url);
 });
 const locCount = (sitemap.match(/<loc>/g) || []).length;
-assert.strictEqual(locCount, 14, 'sitemap must contain exactly 14 <loc> entries, found ' + locCount);
+// 14 editorial pages + the /watch/ hub + one watch page per indexed creator video.
+const watchPageDirs = fs.existsSync(path.join(ROOT, 'watch'))
+  ? fs.readdirSync(path.join(ROOT, 'watch')).filter(name => /^[A-Za-z0-9_-]{11}$/.test(name)).length
+  : 0;
+const expectedLocCount = 14 + 1 + watchPageDirs;
+assert.strictEqual(locCount, expectedLocCount,
+  'sitemap must contain exactly ' + expectedLocCount + ' <loc> entries, found ' + locCount);
+assert(sitemap.includes('https://anomaly-alpha.github.io/watch/'), 'sitemap missing the watch hub');
 INDEXABLE.forEach(file => {
   const html = fs.readFileSync(path.join(ROOT, file), 'utf8');
   assert(!/<meta[^>]+name=["']robots["'][^>]+noindex/i.test(html), file + ': indexable page still has noindex');

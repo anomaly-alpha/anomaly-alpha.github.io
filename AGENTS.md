@@ -25,12 +25,12 @@ Open `index.html` in a browser. Works from `file://`.
 | `styles.css` | CSS custom property tokens + BEM classes (minified via csso) |
 | `tailwind.css` | Generated Tailwind utility classes (from `npm run build`, minified via csso) |
 | `package.json` | Dependencies (`chrome-launcher`) and devDependencies (`tailwindcss`, `csso`, `terser`) |
-| `tailwind.config.js` | Tailwind content paths configuration |
+| `tailwind.config.js` | Tailwind content paths configuration (root, `guide/`, `music/`, `watch/`, `script.js`) |
 | `src/tailwind-input.css` | Tailwind source with `@tailwind` directives |
 | `robots.txt` | Crawl directives, sitemap reference |
 | `.editorconfig` | Editor formatting defaults (indent, line endings, charset) |
 | `CHANGELOG.md` | Release history (auto-curated from git log) |
-| `sitemap.xml` | 14 canonical URLs (home, 9 guide pages, authors/anomaly, music, privacy, terms). `/seo/`, `/skarn-bot/`, and `404.html` are intentionally excluded |
+| `sitemap.xml` | 157 URLs: 14 editorial pages (home, 9 guide pages, authors/anomaly, music, privacy, terms) + `/watch/` hub + one watch page per indexed creator video, injected between `<!--WATCH_SITEMAP_START-->` / `_END` markers. `/seo/`, `/skarn-bot/`, and `404.html` are intentionally excluded |
 | `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators) |
 | `404.html` | Custom 404 error page (GA4-tagged, no `og:site_name`) |
 | `_headers` | Cloudflare Pages cache-control and security headers |
@@ -52,7 +52,11 @@ Open `index.html` in a browser. Works from `file://`.
 | `scripts/generate-codes.js` | Generator: reads `data/codes.json`, writes `data/generated/promo-codes.js` + updates `guide/code/index.html` via markers + updates `index.html` inline promo codes |
 | `data/youtube-creators.json` | Approved creator/video source data with provenance and status history |
 | `data/generated/youtube-creators.js` | Generated public creator data loaded by the creators guide |
-| `scripts/generate-youtube-creators.js` | Validates creator data and generates creator HTML, JSON-LD, noscript links, and browser data |
+| `scripts/generate-youtube-creators.js` | Validates creator data and generates creator HTML, JSON-LD, noscript links, and browser data. Exports `buildVideoObject()` / `toIsoDateTime()` used by the watch page generator |
+| `scripts/generate-watch-pages.js` | Generates `watch/<videoId>/index.html` per indexed video plus the `/watch/` hub, prunes stale directories, and rewrites the watch region of `sitemap.xml` |
+| `watch/watch.css` | Shared stylesheet for watch pages and the hub |
+| `watch/index.html` | Generated watch page hub, grouped by creator |
+| `watch/<videoId>/index.html` | Generated per-video watch page: one `VideoObject`, eager player, breadcrumbs, related videos |
 | `scripts/audit-youtube-creators.js` | Audits creator video availability over HTTP (`npm run audit-creators`) |
 | `scripts/generate-music.js` | Generates music page data from source playlists |
 | `scripts/generate-skarn-index.js` | Regenerates the docs index inside `skarn-bot/index.html` via markers (`npm run skarn-index`) |
@@ -71,6 +75,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `tests/ads-txt.test.js` | Validates ads.txt content |
 | `tests/promo-codes-generator.test.js` | Validates promo code generation from `data/codes.json` |
 | `tests/youtube-creators-generator.test.js` | Validates creator data and generated output |
+| `tests/youtube-watch-pages.test.js` | Validates watch page VideoObject shape, uploadDate format, SEO head, meta uniqueness, sitemap coverage, pruning |
 | `tests/youtube-creators-audit.test.js` | Validates creator audit output |
 | `tests/structured-data.test.js` | Validates JSON-LD structured data across pages |
 | `tests/back-to-top.test.js` | Tests back-to-top button behavior |
@@ -92,23 +97,28 @@ Open `index.html` in a browser. Works from `file://`.
 - **Never use JSDoc** — minimal inline comments, section headers (`// ===== NAME =====`) only
 - **Build tools (npm scripts) generate local Tailwind CSS** — output is committed, no runtime build needed
 - **Prefer local assets over CDN dependencies** when practical for performance
+- **One `VideoObject` per page, on watch pages only** — Google indexes videos only from *watch pages*: a page whose main purpose is a single video. `guide/creators/` is a category page, so it must declare a `CollectionPage` + `ItemList` of **links** to watch pages and must **never** emit `VideoObject` (doing so triggered "Video isn't on a watch page" for all 142 videos). Watch pages carry exactly one `VideoObject` whose `@id` is the target of `WebPage.mainEntity`.
+- **Watch pages need no JavaScript** — the player is a plain `<iframe>` with `loading="eager"` placed directly after the `<h1>`, so it exists at load without user interaction. A click-to-load facade would re-trigger "Cannot determine video position and size".
+- **`uploadDate` must carry a timezone** — source `published` values are date-only, so always pass them through `toIsoDateTime()` (`YYYY-MM-DDT00:00:00+00:00`). Bare dates fail Google's datetime validation.
 
 ## Commands
 
 - `npm install` — Install dev dependencies (tailwindcss, csso, terser)
 - `npm start` — Serve the site locally via `scripts/serve.js`
-- `npm run build` — Full build: generate codes + generate music + generate creators + Tailwind + CSS minification + JS minification
+- `npm run build` — Full build: generate codes + generate music + generate creators + generate watch pages + Tailwind + CSS minification + JS minification
 - `npm run build:css` — Tailwind + CSS minification only (skip code gen and JS minification)
 - `npm run build:js` — JS minification only (via terser)
 - `npm run build:tailwind` — Tailwind rebuild only (skip minification)
 - `npm run update-codes` — Regenerate `data/generated/promo-codes.js` and update all code counts/descriptions/chips in `guide/code/index.html` from `data/codes.json`
 - `npm run generate-creators` — Validate creator source data and regenerate the static creators guide and browser data
+- `npm run generate-watch` — Regenerate all `/watch/` pages, the hub, and the watch region of `sitemap.xml`
 - `npm run audit-creators` — Audit creator video availability over HTTP
 - `npm run update-music` — Regenerate music page data from source playlists
 - `npm run skarn-index` — Regenerate the docs index inside `skarn-bot/index.html` via markers
 - `npm run pull-gsc` — Pull Search Console API data into `data/gsc-api/<date>/`
 - `npm run analyze-gsc` — Analyze GSC exports and rewrite the SEO performance report
 - `npm run test:creators` — Run the built-in creator generator and validation tests
+- `npm run test:watch-pages` — Validate watch page output (schema, SEO head, sitemap, pruning)
 - `npm run test:creator-audit` — Validate creator audit output
 - `npm run test:ads-txt` — Validate ads.txt content
 - `npm run test:ads-fallback` — Validate ads-config and site-message fallback across pages

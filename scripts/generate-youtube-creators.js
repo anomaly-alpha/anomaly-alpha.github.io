@@ -20,6 +20,8 @@ const YT_URL_RE = /^https:\/\/www\.youtube\.com\//;
 const MAX_VIDEOS_PER_CREATOR = 12;
 const FEATURED_PER_CREATOR = 6;
 const RECENT_DAYS = 180;
+const SITE_ORIGIN = 'https://anomaly-alpha.github.io';
+const GAME_NAME = 'Invincible Guarding the Globe';
 
 const MARKER_PAIRS = [
   'FEATURED_CREATOR',
@@ -79,6 +81,13 @@ function daysBetween(d1, d2) {
   var date1 = new Date(d1 + 'T00:00:00Z');
   var date2 = new Date(d2 + 'T00:00:00Z');
   return Math.abs(date2 - date1) / (1000 * 60 * 60 * 24);
+}
+
+// Source data is date-only (YYYY-MM-DD). schema.org uploadDate requires a timezone;
+// UTC midnight is the neutral encoding for a date whose offset is unknown.
+function toIsoDateTime(dateStr) {
+  if (!isValidDate(dateStr)) return '';
+  return dateStr + 'T00:00:00+00:00';
 }
 
 // ===== VALIDATION =====
@@ -391,6 +400,7 @@ function renderVideoCard(video, creator) {
   var badgeModifier = getCreatorBadgeModifier(creator);
 
   var html = '';
+  html += '        <div class="gem-creator-video-shell">\n';
   html += '        <button\n';
   html += '          type="button"\n';
   html += '          class="gem-creator-video"\n';
@@ -420,6 +430,8 @@ function renderVideoCard(video, creator) {
   html += '            <span class="gem-creator-video__meta"><time datetime="' + escapeHtml(video.published) + '">' + escapeHtml(video.published) + '</time> &middot; ' + escapeHtml(video.category) + '</span>\n';
   html += '          </div>\n';
   html += '        </button>\n';
+  html += '        <a class="gem-creator-video__watch" href="../../watch/' + escapeHtml(video.id) + '/" aria-label="Open the video page for ' + escapeHtml(video.title) + ' by ' + escapeHtml(creator.name) + '">Video page</a>\n';
+  html += '        </div>\n';
   return html;
 }
 
@@ -684,49 +696,89 @@ function renderCreatorFeedHtml(data) {
   return html;
 }
 
+// ===== VIDEO OBJECT + WATCH URLS =====
+
+function watchPageUrl(video) {
+  return SITE_ORIGIN + '/watch/' + video.id + '/';
+}
+
+function thumbnailUrl(video) {
+  return 'https://i.ytimg.com/vi/' + video.id + '/hqdefault.jpg';
+}
+
+// Single source of the VideoObject shape. Only watch pages emit this: a page carrying
+// many VideoObjects at once is not a watch page and cannot get its videos indexed.
+function buildVideoObject(video, creator) {
+  var object = {
+    '@type': 'VideoObject',
+    '@id': watchPageUrl(video) + '#video',
+    'name': video.title,
+    'description': video.description,
+    'thumbnailUrl': thumbnailUrl(video),
+    'uploadDate': toIsoDateTime(video.published),
+    'embedUrl': 'https://www.youtube-nocookie.com/embed/' + video.id,
+    'url': watchPageUrl(video),
+    'inLanguage': 'en',
+    'author': {
+      '@type': 'Person',
+      'name': creator.name,
+      'url': creator.channelUrl
+    },
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'Anomaly Alpha',
+      '@id': SITE_ORIGIN + '/#organization',
+      'url': SITE_ORIGIN + '/',
+      'logo': {
+        '@type': 'ImageObject',
+        'url': SITE_ORIGIN + '/og-images/home.png',
+        'width': 1200,
+        'height': 630
+      }
+    },
+    'about': { '@id': SITE_ORIGIN + '/#game' }
+  };
+
+  return object;
+}
+
 // ===== RENDERING: JSON-LD =====
 
 function renderJsonLdHtml(data) {
-  var allVideoObjects = [];
   var feedItems = getVisibleFeedItems(data);
+  if (feedItems.length === 0) return '';
 
-  for (var i = 0; i < feedItems.length; i++) {
-    var item = feedItems[i];
-    var creator = item.creator;
-    var video = item.video;
-    allVideoObjects.push({
-      '@type': 'VideoObject',
-      'name': video.title,
-      'description': video.description,
-      'thumbnailUrl': 'https://i.ytimg.com/vi/' + video.id + '/hqdefault.jpg',
-      'uploadDate': video.published,
-      'contentUrl': 'https://www.youtube.com/watch?v=' + video.id,
-      'embedUrl': 'https://www.youtube-nocookie.com/embed/' + video.id,
-      'author': {
-        '@type': 'Person',
-        'name': creator.name,
-        'url': creator.channelUrl
-      },
-      'about': { '@id': '#game' }
-    });
-  }
-
-  if (allVideoObjects.length === 0) return '';
-
-  var itemList = {
+  // The directory is an index of watch pages, not a video container. Listing VideoObjects
+  // here is what triggered "Video isn't on a watch page" for every video on the site.
+  var collectionUrl = SITE_ORIGIN + '/guide/creators/';
+  var collection = {
     '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    'name': 'Invincible GTG Creator Videos',
-    'itemListElement': allVideoObjects.map(function (vo, i) {
-      return {
-        '@type': 'ListItem',
-        'position': i + 1,
-        'item': vo
-      };
-    })
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': collectionUrl,
+        'url': collectionUrl,
+        'name': 'Invincible GTG Creator Videos',
+        'isPartOf': { '@id': SITE_ORIGIN + '/#game' },
+        'mainEntity': { '@id': collectionUrl + '#video-index' }
+      },
+      {
+        '@type': 'ItemList',
+        '@id': collectionUrl + '#video-index',
+        'numberOfItems': feedItems.length,
+        'itemListElement': feedItems.map(function (item, i) {
+          return {
+            '@type': 'ListItem',
+            'position': i + 1,
+            'name': item.video.title,
+            'url': watchPageUrl(item.video)
+          };
+        })
+      }
+    ]
   };
 
-  var jsonLd = JSON.stringify(itemList, null, 2);
+  var jsonLd = JSON.stringify(collection, null, 2);
   var escaped = escapeJsonLd(jsonLd);
 
   var html = '';
@@ -1005,11 +1057,18 @@ module.exports = {
   renderFeedSummaryHtml: renderFeedSummaryHtml,
   renderCreatorFeedHtml: renderCreatorFeedHtml,
   getVisibleFeedItems: getVisibleFeedItems,
+  getVisibleCreators: getVisibleCreators,
   renderJsonLdHtml: renderJsonLdHtml,
   renderNoscriptHtml: renderNoscriptHtml,
   renderDisclaimerHtml: renderDisclaimerHtml,
   renderJsOutput: renderJsOutput,
   renderVideoCard: renderVideoCard,
+  // Video objects + watch pages
+  buildVideoObject: buildVideoObject,
+  watchPageUrl: watchPageUrl,
+  thumbnailUrl: thumbnailUrl,
+  toIsoDateTime: toIsoDateTime,
+  formatFeedDate: formatFeedDate,
   // Escaping
   escapeHtml: escapeHtml,
   escapeJsonLd: escapeJsonLd,
@@ -1031,5 +1090,7 @@ module.exports = {
   MAX_VIDEOS_PER_CREATOR: MAX_VIDEOS_PER_CREATOR,
   FEATURED_PER_CREATOR: FEATURED_PER_CREATOR,
   RECENT_DAYS: RECENT_DAYS,
+  SITE_ORIGIN: SITE_ORIGIN,
+  GAME_NAME: GAME_NAME,
   getCreatorBadge: getCreatorBadge
 };

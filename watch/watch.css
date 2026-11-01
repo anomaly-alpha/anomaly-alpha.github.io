@@ -1,0 +1,147 @@
+/* Watch page styles. Shared by /watch/index.html and every /watch/<videoId>/ page.
+   Kept out of styles.css because that file is committed minified. */
+
+.gem-watch__player {
+  width: 100%;
+  margin: 0 0 1.5rem;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--gem-border--subtle);
+  border-radius: .5rem;
+  overflow: hidden;
+  background: rgba(0, 0, 0, .45);
+}
+
+.gem-watch__player iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.gem-watch__caption {
+  margin: 0;
+  padding: .5rem .75rem;
+  color: var(--gem-text--muted);
+  font-size: .75rem;
+  line-height: 1.5;
+  background: rgba(255, 255, 255, .03);
+}
+
+.gem-watch__caption a {
+  color: var(--gem-cyan);
+  text-decoration: underline;
+}
+
+/* Keep the separator glued to the item that follows it, so a wrap never orphans a dot. */
+.gem-watch__meta-group {
+  white-space: nowrap;
+}
+
+.gem-watch__facts {
+  display: grid;
+  gap: .75rem 1.5rem;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .gem-watch__facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.gem-watch__fact {
+  min-width: 0;
+}
+
+.gem-watch__fact dt {
+  margin-bottom: .15rem;
+  color: var(--gem-cyan);
+  font-family: "Orbitron", sans-serif;
+  font-size: .64rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.gem-watch__fact dd {
+  margin: 0;
+  color: var(--gem-text--secondary);
+  font-size: .92rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.gem-watch__fact dd a {
+  color: var(--gem-cyan);
+  text-decoration: underline;
+}
+
+.gem-watch__related {
+  display: grid;
+  gap: .5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.gem-watch__related-link {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  padding: .65rem .9rem;
+  border: 1px solid var(--gem-border--subtle);
+  border-radius: .5rem;
+  background: rgba(255, 255, 255, .03);
+  transition: border-color .15s ease, background-color .15s ease;
+}
+
+.gem-watch__related-link:hover,
+.gem-watch__related-link:focus-visible {
+  border-color: var(--gem-cyan);
+  background: rgba(0, 229, 255, .08);
+}
+
+.gem-watch__related-title {
+  color: #fff;
+  font-weight: 600;
+  font-size: .92rem;
+  line-height: 1.35;
+}
+
+.gem-watch__related-meta {
+  color: var(--gem-text--muted);
+  font-size: .75rem;
+  letter-spacing: .04em;
+}
+
+.gem-watch__note {
+  display: grid;
+  gap: .75rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--gem-border--subtle);
+  border-left: 3px solid var(--gem-cyan);
+  border-radius: .5rem;
+  background: linear-gradient(135deg, rgba(0, 229, 255, .08), rgba(255, 255, 255, .03));
+}
+
+.gem-watch__note-item {
+  margin: 0;
+  color: var(--gem-text--secondary);
+  font-size: .82rem;
+  line-height: 1.55;
+}
+
+.gem-watch__note-item strong {
+  display: block;
+  margin-bottom: .15rem;
+  color: var(--gem-cyan);
+  font-family: "Orbitron", sans-serif;
+  font-size: .64rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gem-watch__related-link {
+    transition: none;
+  }
+}
