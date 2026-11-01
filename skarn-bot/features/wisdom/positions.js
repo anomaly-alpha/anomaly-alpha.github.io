@@ -11,7 +11,7 @@ var { db } = require('../../db/database');
 var POSITION_PREFIX = 'position: ';
 var POSITION_LIMIT = 20;
 var MIN_TOKEN_LENGTH = 4;
-var POSITION_INSTRUCTION = 'That is what they told you before. If what they just said conflicts with it, name the contradiction in your first sentence and do not let it stand. If it genuinely is not the same topic, ignore this.';
+var POSITION_INSTRUCTION = 'That is what they said before, on this same subject. Open by naming the difference against it ("last time you said...") before you argue the claim itself. Ignore this only if your reply fully agrees with what they said.';
 
 var STOPWORDS = {
   about: 1, after: 1, again: 1, also: 1, another: 1, because: 1, been: 1, before: 1,

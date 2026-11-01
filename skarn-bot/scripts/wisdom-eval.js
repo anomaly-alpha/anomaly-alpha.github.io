@@ -46,6 +46,39 @@ function seed() {
   addMemoryEntry(USER, GUILD, 'extracted', 'preference', 'position: working for someone else is a waste of a life', 0.5, 'said during a rant about jobs');
 }
 
+// ===== Objective voice metrics =====
+// Deterministic, judge-free. These exist because the first instrument scored Skarn
+// 19/48 on "ancient demonic diction" — a register the owner-approved persona
+// explicitly forbids. Measured facts cannot drift like a judge's taste can. The banned
+// lists live in persona/voice-contract.js so the rule and its enforcement share one
+// source of truth.
+const { BANNED_OPENERS, BANNED_PHRASES } = require('../persona/voice-contract');
+
+// Apostrophes normalised so "i’m here" and "i'm here" hit the same rule.
+function normalizeVoice(text) {
+  return String(text || '').toLowerCase().replace(/[\u2018\u2019']/g, "'");
+}
+
+function voiceMetrics(reply) {
+  const t = normalizeVoice(reply);
+  const hits = [];
+  BANNED_OPENERS.forEach(function(p) { if (t.indexOf(p) === 0) hits.push('opener:' + p); });
+  BANNED_PHRASES.forEach(function(p) { if (t.indexOf(p) !== -1) hits.push(p); });
+  // Opener check must also catch one-word preambles like "yeah, i'm so sorry".
+  BANNED_OPENERS.forEach(function(p) {
+    if (t.indexOf(p) > 0 && t.indexOf(p) < 12 && hits.indexOf('opener:' + p) === -1) hits.push('early:' + p);
+  });
+  const sentences = String(reply || '').split(/(?<=[.!?])\s+/).filter(function(s) { return s.trim().length > 0; });
+  return {
+    banned: hits,
+    bannedCount: hits.length,
+    sentences: sentences.length,
+    exclamations: (String(reply || '').match(/!/g) || []).length,
+    opener: String(reply || '').trim().split(/\s+/).slice(0, 4).join(' ').toLowerCase(),
+    endsQuestion: /\?\s*$/.test(String(reply || '').trim()),
+  };
+}
+
 // ===== Prompt set =====
 // `expect` is what the mechanism is supposed to DO, handed to the judge verbatim.
 
@@ -85,7 +118,11 @@ const PROMPTS = [
     id: 'P06-grief',
     emotion: 'sad',
     text: 'my mum died last week and i cant focus on anything, everything feels pointless',
-    expect: 'Present and gentle. No advice, no pushback, no question that demands work from them. Short and warm.',
+    // Revised 2026-11-01: the original expectation demanded "no advice", which was the
+    // pre-decision aesthetic. Register B answers grief with concrete practical care
+    // ("eat, sleep, let people do things for you") and no comfort formulas. That is the
+    // target now, so the mechanism criterion measures it.
+    expect: 'Present and concrete. No comfort formulas, no sympathy openers, no demand that they find meaning or work out their feelings. Short.',
   },
   {
     id: 'P07-win',
@@ -169,6 +206,7 @@ async function rollout(p) {
     target,
     chars: reply.length,
     asksQuestion: reply.includes('?'),
+    metrics: voiceMetrics(reply),
     stance: ctx.stance || '',
     lines: {
       socratic: !!ctx.socraticLine,
@@ -184,6 +222,14 @@ async function rollout(p) {
 const JUDGE_SYSTEM = 'You are grading a fictional character\'s reply. Be strict and literal. '
   + 'Return ONLY a JSON object, no prose, no markdown fences.';
 
+// Voice anchored to the OWNER-APPROVED register (2026-11-01 decision B): understated,
+// unsentimental, economical, concrete. Deliberately NOT "ancient fantasy diction" —
+// the first instrument asked for that and punished the persona it was meant to protect.
+const VOICE_ANCHOR = 'the reply should sound like someone very old who stopped performing: '
+  + 'understated, unsentimental, concrete, economical. short sentences. no sympathy or '
+  + 'reassurance formulas, no motivational filler, no therapy phrasing, no summarising their '
+  + 'feelings back at them, no "ancient wizard" diction.';
+
 async function judge(r) {
   const rubric = 'SITUATION the character was responding to:\n"' + r.text + '"\n\n'
     + 'WHAT THE MECHANISM SHOULD DO:\n' + r.expect + '\n\n'
@@ -191,7 +237,7 @@ async function judge(r) {
     + 'Score each 1-4 (1 = failed, 2 = weak, 3 = adequate, 4 = exactly right):\n'
     + 'substance: does it engage the actual substance rather than only the mood?\n'
     + 'restraint: free of lecturing, fortune-cookie aphorism, and therapy-speak?\n'
-    + 'voice: recognisably an ancient, dry, economical voice rather than a generic assistant?\n'
+    + 'voice: ' + VOICE_ANCHOR + ' how well does it hit that?\n'
     + 'mechanism: did the expected move happen?\n\n'
     + 'Return {"substance":n,"restraint":n,"voice":n,"mechanism":n,"note":"<12 words max>"}';
 
@@ -274,7 +320,7 @@ async function main() {
     const r = await rollout(p);
     if (r.failed) {
       // Never silently skip: a failed rollout is a reported zero, not an absence.
-      rows.push({ id: p.id, reply: '<CALL FAILED: ' + r.error + '>', chars: 0, asksQuestion: false, role: '-', target: 0, stance: '-', lines: {}, scores: { substance: 0, restraint: 0, voice: 0, mechanism: 0, note: 'no reply' } });
+      rows.push({ id: p.id, reply: '<CALL FAILED: ' + r.error + '>', chars: 0, asksQuestion: false, role: '-', target: 0, stance: '-', lines: {}, metrics: { banned: [], bannedCount: 0, sentences: 0, exclamations: 0, opener: '-', endsQuestion: false }, scores: { substance: 0, restraint: 0, voice: 0, mechanism: 0, note: 'no reply' } });
       continue;
     }
     r.scores = await judge(r);
@@ -291,25 +337,32 @@ async function main() {
 
   const line = function(r) {
     const l = r.lines || {};
+    const m = r.metrics || {};
     return [
       r.id.padEnd(20),
       String(r.role).padEnd(8),
       String(r.chars + '/' + r.target).padEnd(9),
-      (r.asksQuestion ? 'asks' : '  - ').padEnd(6),
       (l.socratic ? 'S' : '-') + (l.pushback ? 'P' : '-') + (l.position ? 'O' : '-') + (l.pending ? 'Q' : '-'),
+      ('bann' + m.bannedCount).padEnd(5),
+      ('s' + m.sentences).padEnd(3),
+      ('!' + m.exclamations).padEnd(3),
       ' sub' + r.scores.substance + ' res' + r.scores.restraint + ' voi' + r.scores.voice + ' mec' + r.scores.mechanism,
       ' ' + r.scores.note,
     ].join(' ');
   };
 
   console.log('');
-  console.log('id                   role     chars/tgt Q?     lines  scores');
+  console.log('id                   role     chars/tgt lines bann s  !   scores');
   console.log('------------------------------------------------------------------------------------------');
   rows.forEach(function(r) { console.log(line(r)); });
   console.log('------------------------------------------------------------------------------------------');
   console.log('TOTALS /' + (rows.length * 4) + '  substance ' + totals.substance + '  restraint ' + totals.restraint
     + '  voice ' + totals.voice + '  mechanism ' + totals.mechanism);
-  console.log('lines legend: S=socratic P=pushback O=position Q=pending-question');
+  const bannedTotal = rows.reduce(function(n, r) { return n + ((r.metrics && r.metrics.bannedCount) || 0); }, 0);
+  const sentencesTotal = rows.reduce(function(n, r) { return n + ((r.metrics && r.metrics.sentences) || 0); }, 0);
+  console.log('VOICE OBJECTIVE  banned-phrase hits ' + bannedTotal + ' (target 0)   sentences ' + sentencesTotal
+    + ' (avg ' + (sentencesTotal / rows.length).toFixed(1) + ')');
+  console.log('lines legend: S=socratic P=pushback O=position Q=pending-question   bann=banned hits  s=sentences  !=exclamations');
 
   const avg = ((totals.substance + totals.restraint + totals.voice + totals.mechanism) / (rows.length * 4)).toFixed(2);
   console.log('OVERALL ' + avg + ' / 4');
@@ -317,15 +370,20 @@ async function main() {
   if (process.argv.includes('--report')) {
     const dir = path.join(__dirname, '..', 'docs', 'reports', '2026-11-01', 'deepseek-v4-flash');
     fs.mkdirSync(dir, { recursive: true });
-    const out = ['# Wisdom eval', '', 'Model: `' + MODEL + '`', '', '| id | role | chars/target | asks? | lines | substance | restraint | voice | mechanism | note |', '|---|---|---|---|---|---|---|---|---|---|'];
+    const out = ['# Wisdom eval', '', 'Model: `' + MODEL + '`', '', 'Voice register: understated / unsentimental / economical (owner decision 2026-11-01, option B)', '', '| id | role | chars/target | lines | banned | sentences | ! | substance | restraint | voice | mechanism | note |', '|---|---|---|---|---|---|---|---|---|---|---|---|'];
     rows.forEach(function(r) {
       const l = r.lines || {};
-      out.push('| ' + [r.id, r.role, r.chars + '/' + r.target, r.asksQuestion ? 'yes' : 'no',
+      const m = r.metrics || {};
+      out.push('| ' + [r.id, r.role, r.chars + '/' + r.target,
         (l.socratic ? 'S' : '-') + (l.pushback ? 'P' : '-') + (l.position ? 'O' : '-') + (l.pending ? 'Q' : '-'),
+        (m.bannedCount || 0) + (m.banned && m.banned.length ? ' (' + m.banned.join(', ') + ')' : ''),
+        m.sentences || 0, m.exclamations || 0,
         r.scores.substance, r.scores.restraint, r.scores.voice, r.scores.mechanism, r.scores.note].join(' | ') + ' |');
     });
     out.push('', '**Totals** substance ' + totals.substance + ' / restraint ' + totals.restraint + ' / voice ' + totals.voice
-      + ' / mechanism ' + totals.mechanism + ' out of ' + (rows.length * 4) + '.', '', '**Overall ' + avg + ' / 4**', '', '## Replies');
+      + ' / mechanism ' + totals.mechanism + ' out of ' + (rows.length * 4) + '.', '',
+      '**Voice objective** banned-phrase hits ' + bannedTotal + ' (target 0), sentences ' + sentencesTotal
+      + ' (avg ' + (sentencesTotal / rows.length).toFixed(1) + ').', '', '**Overall ' + avg + ' / 4**', '', '## Replies');
     rows.forEach(function(r) { out.push('', '### ' + r.id, '', '> ' + r.text, '', r.reply); });
     fs.writeFileSync(path.join(dir, 'wisdom-eval.md'), out.join('\n') + '\n');
     console.log('report: docs/reports/2026-11-01/deepseek-v4-flash/wisdom-eval.md');

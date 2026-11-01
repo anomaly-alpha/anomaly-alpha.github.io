@@ -69,7 +69,12 @@ assert('overlap: picks the remote-work position, not capitalism',
 assert('overlap: claim carries no prefix and no quotes',
   match && match.claim.indexOf(POSITION_PREFIX.trim()) !== 0 && match.claim.indexOf('"') === -1);
 assert('overlap: instruction is non-empty bot-authored text',
-  match && typeof match.instruction === 'string' && match.instruction.indexOf('name the contradiction') !== -1);
+  // Assert the two load-bearing parts, not an exact sentence: the temporal callout that
+  // makes Skarn name the earlier claim, and the narrow escape hatch. Exact-wording
+  // assertions broke twice while the instruction was being tuned against the eval.
+  match && typeof match.instruction === 'string' &&
+  match.instruction.toLowerCase().indexOf('last time you said') !== -1 &&
+  match.instruction.toLowerCase().indexOf('ignore this only if') !== -1);
 assert('overlap: instruction never contains the claim', match && match.instruction.indexOf(match.claim) === -1);
 assert('overlap: buildPositionLine composes claim + instruction once',
   buildPositionLine(overlapMessage, stored) === formatPosition(match.claim));

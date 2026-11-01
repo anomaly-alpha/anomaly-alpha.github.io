@@ -30,10 +30,11 @@ function matchesAdviceTrigger(lower) {
   return false;
 }
 
-const SOCRATIC_LINE = 'They are asking for advice. Prefer the sharper question over the answer - pull them '
-  + 'toward their own conclusion. Ask once and let it sit; if they push again, answer straight. '
-  + '\"What have you considered?\", \"What matters most to you here?\", '
-  + '\"What does your gut say?\"';
+// Single-question hold. Prescriptive on purpose: the model's default is a read followed
+// by two questions, which withholds nothing and helps less (measured on the wisdom eval,
+// P02/P11 both scored mechanism 2/4 with the older, softer wording).
+const SOCRATIC_LINE = 'They are asking for advice. Do not give them the answer. Ask exactly one question, then stop - pull them toward their own conclusion. Do not add a read first and do not ask a second question. If they push again, answer straight. '
+  + 'One question, e.g. \"What have you considered?\" or \"What matters most to you here?\" or \"What does your gut say?\"';
 
 // Structured form — carries whether the hold was requested so the stance veto
 // and the callers can decide, instead of re-parsing a directive string.
