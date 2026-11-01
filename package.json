@@ -17,6 +17,7 @@
     "update-music": "node scripts/generate-music.js",
     "skarn-index": "node scripts/generate-skarn-index.js",
     "audit-creators": "node scripts/audit-youtube-creators.js",
+    "enrich-creators": "node scripts/enrich-youtube-creators.js",
     "generate-creators": "node scripts/generate-youtube-creators.js",
     "generate-watch": "node scripts/generate-watch-pages.js",
     "test:creators": "node tests/youtube-creators-generator.test.js",

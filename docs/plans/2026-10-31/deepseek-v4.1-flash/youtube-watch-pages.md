@@ -155,3 +155,75 @@ GSC re-crawl requires a deployment. After the push, re-inspect a watch page with
 URL Inspection API and confirm the `uploadDate` warnings are gone; then check that the
 Video indexing report stops reporting `/guide/creators/` as "not a watch page".
 
+## Phase 2 — richer source data (2026-11-01)
+
+The pages above were unique but shallow (median 78-character editorial descriptions).
+Phase 2 replaced guesswork with harvested fact.
+
+### Real metadata (`scripts/enrich-youtube-creators.js`, new)
+
+Fetches each video's public watch page and caches the result under `video.youtube`:
+
+| Field | Coverage |
+|---|---|
+| `durationSeconds` | 258 / 261 |
+| `publishedAt` (true timestamp **with the creator's real UTC offset**) | 259 / 261 |
+| `viewCount` | 258 / 261 |
+| `descriptionExcerpt` (creator's own text, CTA/URL/hashtag scrubbed) | 212 / 261 |
+| `playabilityStatus`, `embeddable`, `isUpcoming` | all reachable videos |
+
+Effect on the 140 published watch pages: **140/140** now carry a real timestamped
+`uploadDate`, an ISO 8601 `duration`, and an `interactionStatistic` view count. Visible
+prose rose from ~200 to **365–629 words** (avg 502).
+
+### Verified game context (`data/game-context.json`, new)
+
+Tavily research produced 13 entities, each citing a publisher-controlled source (Ubisoft
+Mobile Support, the official Invincible GTG social accounts, or the official App Store
+listing). An entity is surfaced only when its name literally appears in a video's title,
+description, or creator excerpt — **61/140** pages matched at least one. Events and modes
+outrank always-on systems, so a Hail Mary video leads with Boss Raid, not "Recruitment
+Department".
+
+A fact-checking sub-agent reviewed all 13 summaries against their cited URLs and returned
+6 as **overstated** (for example, claiming the Hero Boot Camp shop is "where the event's
+value sits" when the source only says a shop exists) plus 1 with a stronger official
+source. All six were rewritten down to what the source actually supports, and
+Cecil's Nightmares was re-sourced to the Ubisoft support FAQ.
+
+### Dead embeds removed (3 videos)
+
+An embeddability sweep found three active videos that could not play, which would have
+shipped three broken watch pages:
+
+| Video | Problem | Action |
+|---|---|---|
+| `L5jWfcFqhFg` | Removed from YouTube (404) | `status: unavailable` |
+| `CQP4_tjekoE` | Owner disabled embedding (oEmbed 401) | `status: unavailable` |
+| `08A6hDoz60c` | `LIVE_STREAM_OFFLINE`; scheduled 2026-05-30, never started | `status: unavailable` |
+
+Consequences handled: `Pops` was left with no playable video and moved to `hidden`
+(validation rejects a pending creator with zero eligible items); `Hero Haven` lost a
+featured item, so the newest remaining video was promoted to keep the required 6;
+`renderCreatorSectionsHtml` now skips creators with nothing playable instead of emitting
+an empty card. The enricher now detects and reports all three failure modes so this
+cannot silently regress.
+
+### Phase 2 verification
+
+- 140 watch pages, **0** broken links across directory, hub, and sitemap.
+- `npm run test:watch-pages` — 31/31 (10 new assertions: duration, statistics, context
+  matching, KB integrity).
+- All other suites pass; creator generator idempotency passed.
+- Browser QA: enriched page renders runtime, view count, creator quote, and sourced game
+  context; guide cards fill two clean rows.
+
+### Honest ceiling
+
+The knowledge base covers events, modes, and systems, not individual videos. It cannot
+describe what happens inside a given video, because no transcripts are available and
+inventing that would be fabrication. 17 pages still have no creator excerpt and 79 carry
+no matched context; the only real fix for those is richer source descriptions from the
+creators themselves.
+
+

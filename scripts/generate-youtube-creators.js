@@ -538,6 +538,9 @@ function renderCreatorSectionsHtml(data) {
     var displayVideos = activeVideos.slice(0, MAX_VIDEOS_PER_CREATOR);
     var hasMore = activeVideos.length > displayVideos.length;
 
+    // Nothing playable left to show: omit the section rather than render an empty card.
+    if (displayVideos.length === 0) continue;
+
     html += '        <section class="gem-creator' + (isPending ? ' gem-creator--pending' : '') + '" id="creator-' + escapeHtml(creator.id) + '">\n';
     html += '          <div class="gem-creator__meta">\n';
     html += '            <h2>' + escapeHtml(creator.name);
@@ -706,16 +709,30 @@ function thumbnailUrl(video) {
   return 'https://i.ytimg.com/vi/' + video.id + '/hqdefault.jpg';
 }
 
+function isoduration(seconds) {
+  if (!seconds || seconds <= 0) return '';
+  var h = Math.floor(seconds / 3600);
+  var m = Math.floor((seconds % 3600) / 60);
+  var s = seconds % 60;
+  return 'PT' + (h ? h + 'H' : '') + (m ? m + 'M' : '') + (s ? s + 'S' : '');
+}
+
 // Single source of the VideoObject shape. Only watch pages emit this: a page carrying
 // many VideoObjects at once is not a watch page and cannot get its videos indexed.
 function buildVideoObject(video, creator) {
+  var meta = video.youtube || {};
+
+  // The harvested publish timestamp carries the creator's real UTC offset; the editorial
+  // field is date-only, so it is only a fallback.
+  var uploadDate = meta.publishedAt || toIsoDateTime(video.published);
+
   var object = {
     '@type': 'VideoObject',
     '@id': watchPageUrl(video) + '#video',
     'name': video.title,
     'description': video.description,
     'thumbnailUrl': thumbnailUrl(video),
-    'uploadDate': toIsoDateTime(video.published),
+    'uploadDate': uploadDate,
     'embedUrl': 'https://www.youtube-nocookie.com/embed/' + video.id,
     'url': watchPageUrl(video),
     'inLanguage': 'en',
@@ -738,6 +755,17 @@ function buildVideoObject(video, creator) {
     },
     'about': { '@id': SITE_ORIGIN + '/#game' }
   };
+
+  var duration = isoduration(meta.durationSeconds);
+  if (duration) object.duration = duration;
+
+  if (typeof meta.viewCount === 'number' && meta.viewCount >= 0) {
+    object.interactionStatistic = {
+      '@type': 'InteractionCounter',
+      'interactionType': { '@type': 'WatchAction' },
+      'userInteractionCount': meta.viewCount
+    };
+  }
 
   return object;
 }
@@ -1068,6 +1096,7 @@ module.exports = {
   watchPageUrl: watchPageUrl,
   thumbnailUrl: thumbnailUrl,
   toIsoDateTime: toIsoDateTime,
+  isoduration: isoduration,
   formatFeedDate: formatFeedDate,
   // Escaping
   escapeHtml: escapeHtml,

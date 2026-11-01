@@ -198,6 +198,37 @@ test('buildVideoObject omits contentUrl instead of declaring a page URL as media
   assert.strictEqual(vo.contentUrl, undefined, 'contentUrl must not be the watch page URL');
 });
 
+test('buildVideoObject prefers the harvested publish timestamp', function () {
+  var video = makeVideo();
+  video.youtube = { publishedAt: '2026-07-27T10:13:20-07:00' };
+  var vo = gen.buildVideoObject(video, { name: 'C', channelUrl: 'https://www.youtube.com/@c' });
+  assert.strictEqual(vo.uploadDate, '2026-07-27T10:13:20-07:00', 'real offset wins over the date-only field');
+});
+
+test('buildVideoObject emits an ISO 8601 duration and watch statistics', function () {
+  var video = makeVideo();
+  video.youtube = { durationSeconds: 2482, viewCount: 2421 };
+  var vo = gen.buildVideoObject(video, { name: 'C', channelUrl: 'https://www.youtube.com/@c' });
+  assert.strictEqual(vo.duration, 'PT41M22S');
+  assert.strictEqual(vo.interactionStatistic['@type'], 'InteractionCounter');
+  assert.strictEqual(vo.interactionStatistic.interactionType['@type'], 'WatchAction');
+  assert.strictEqual(vo.interactionStatistic.userInteractionCount, 2421);
+});
+
+test('buildVideoObject omits duration and statistics when absent', function () {
+  var vo = gen.buildVideoObject(makeVideo(), { name: 'C', channelUrl: 'https://www.youtube.com/@c' });
+  assert.strictEqual(vo.duration, undefined, 'no fabricated duration');
+  assert.strictEqual(vo.interactionStatistic, undefined, 'no fabricated view count');
+});
+
+test('isoduration formats hours, minutes, and seconds', function () {
+  assert.strictEqual(gen.isoduration(2482), 'PT41M22S');
+  assert.strictEqual(gen.isoduration(3725), 'PT1H2M5S');
+  assert.strictEqual(gen.isoduration(45), 'PT45S');
+  assert.strictEqual(gen.isoduration(0), '');
+  assert.strictEqual(gen.isoduration(null), '');
+});
+
 // =====================================================================
 // WATCH PAGE RENDERING
 // =====================================================================
@@ -403,6 +434,78 @@ test('same-category selection only returns matching categories', function () {
   var related = watch.sameCategoryVideos(items, current);
   assert.ok(related.every(function (i) { return i.video.category === 'Events'; }), 'only same category');
   assert.ok(related.every(function (i) { return i.video.id !== current.id; }), 'current excluded');
+});
+
+// =====================================================================
+// GAME CONTEXT MATCHING
+// =====================================================================
+
+console.log('\nGame context tests:');
+
+function makeContext() {
+  return {
+    entities: [
+      {
+        id: 'boss-raid', name: 'Boss Raid', type: 'mode', aliases: ['boss raid', 'hail mary'],
+        summary: 'A limited-time Alliance mode.', guideHref: '/guide/pvp/', guideLabel: 'PvP',
+        source: { publisher: 'Ubisoft Mobile Support', url: 'https://example.com/boss-raid' }
+      },
+      {
+        id: 'recruitment-shops', name: "Cecil's Recruitment Department", type: 'system', aliases: ['recruitment'],
+        summary: 'The shop where new heroes are recruited.', guideHref: '/guide/beginners/', guideLabel: 'Guide',
+        source: { publisher: 'App Store', url: 'https://example.com/recruitment' }
+      }
+    ]
+  };
+}
+
+test('context matches only when the alias appears in the video text', function () {
+  var video = makeVideo({ title: 'HAIL MARY BOSS RAID GAMEPLAY' });
+  var matched = watch.matchEntities(video, makeContext());
+  assert.strictEqual(matched.length, 1, 'one entity matched');
+  assert.strictEqual(matched[0].id, 'boss-raid');
+});
+
+test('context does not match on substrings inside other words', function () {
+  var video = makeVideo({ title: 'Pulling heroes', description: 'A pre-recruitmentment note.' });
+  var matched = watch.matchEntities(video, makeContext());
+  assert.strictEqual(matched.length, 0, 'must respect word boundaries');
+});
+
+test('context is capped and prefers longer entity names', function () {
+  var video = makeVideo({ title: 'Boss Raid recruitment', description: 'Hail mary and recruitment talk.' });
+  var matched = watch.matchEntities(video, makeContext());
+  assert.ok(matched.length <= 3, 'respects the cap');
+  assert.strictEqual(matched[0].id, 'boss-raid', 'longer name sorts first');
+});
+
+test('context section renders the cited source', function () {
+  var entities = watch.matchEntities(makeVideo({ title: 'Boss Raid' }), makeContext());
+  var html = watch.renderGameContext(entities);
+  assert.ok(html.indexOf('Boss Raid') !== -1, 'entity name rendered');
+  assert.ok(html.indexOf('https://example.com/boss-raid') !== -1, 'source link rendered');
+  assert.ok(html.indexOf('Ubisoft Mobile Support') !== -1, 'publisher attributed');
+});
+
+test('context section renders nothing when no entity matched', function () {
+  assert.strictEqual(watch.renderGameContext([]), '');
+  assert.strictEqual(watch.renderGameContext(undefined), '');
+});
+
+test('the shipped knowledge base is well formed', function () {
+  var context = watch.loadContext();
+  assert.ok(context.entities.length > 0, 'knowledge base has entities');
+  context.entities.forEach(function (entity) {
+    assert.ok(entity.id, 'entity has an id');
+    assert.ok(entity.name, entity.id + ' has a name');
+    assert.ok(entity.summary, entity.id + ' has a summary');
+    assert.ok(Array.isArray(entity.aliases) && entity.aliases.length > 0, entity.id + ' has aliases');
+    assert.ok(entity.source && entity.source.url, entity.id + ' cites a source URL');
+    assert.ok(/^https:\/\//.test(entity.source.url), entity.id + ' source must be https');
+    assert.ok(entity.source.publisher, entity.id + ' names a publisher');
+  });
+  var ids = context.entities.map(function (e) { return e.id; });
+  assert.strictEqual(new Set(ids).size, ids.length, 'entity ids must be unique');
 });
 
 // =====================================================================

@@ -57,7 +57,9 @@ Open `index.html` in a browser. Works from `file://`.
 | `watch/watch.css` | Shared stylesheet for watch pages and the hub |
 | `watch/index.html` | Generated watch page hub, grouped by creator |
 | `watch/<videoId>/index.html` | Generated per-video watch page: one `VideoObject`, eager player, breadcrumbs, related videos |
+| `scripts/enrich-youtube-creators.js` | Harvests real per-video metadata (duration, view count, true upload timestamp, creator description, playability, embeddability) from the public watch page into `data/youtube-creators.json` under each video's `youtube` key (`npm run enrich-creators`). Re-runs skip records refreshed within 14 days; `--force` re-checks all |
 | `scripts/audit-youtube-creators.js` | Audits creator video availability over HTTP (`npm run audit-creators`) |
+| `data/game-context.json` | Verified game-context knowledge base: one entry per game event/mode/system, each with aliases for matching against video text and a publisher-controlled `source.url`. Watch pages surface an entry only when its name actually appears in the video's title, description, or creator excerpt |
 | `scripts/generate-music.js` | Generates music page data from source playlists |
 | `scripts/generate-skarn-index.js` | Regenerates the docs index inside `skarn-bot/index.html` via markers (`npm run skarn-index`) |
 | `scripts/pull-gsc.js` | Pulls Search Analytics API data into `data/gsc-api/<date>/` (`npm run pull-gsc`) |
@@ -99,7 +101,8 @@ Open `index.html` in a browser. Works from `file://`.
 - **Prefer local assets over CDN dependencies** when practical for performance
 - **One `VideoObject` per page, on watch pages only** — Google indexes videos only from *watch pages*: a page whose main purpose is a single video. `guide/creators/` is a category page, so it must declare a `CollectionPage` + `ItemList` of **links** to watch pages and must **never** emit `VideoObject` (doing so triggered "Video isn't on a watch page" for all 142 videos). Watch pages carry exactly one `VideoObject` whose `@id` is the target of `WebPage.mainEntity`.
 - **Watch pages need no JavaScript** — the player is a plain `<iframe>` with `loading="eager"` placed directly after the `<h1>`, so it exists at load without user interaction. A click-to-load facade would re-trigger "Cannot determine video position and size".
-- **`uploadDate` must carry a timezone** — source `published` values are date-only, so always pass them through `toIsoDateTime()` (`YYYY-MM-DDT00:00:00+00:00`). Bare dates fail Google's datetime validation.
+- **`uploadDate` must carry a timezone** — prefer the harvested `youtube.publishedAt`, which already carries the creator's real UTC offset. Fall back to `toIsoDateTime(published)` (`YYYY-MM-DDT00:00:00+00:00`) only when metadata is missing. Bare dates fail Google's datetime validation.
+- **Never publish a watch page for an unplayable video** — `npm run enrich-creators` flags active videos that are removed, embedding-disabled, or zero-duration (streams that never went live). Mark those `status: "unavailable"` with a `statusReason`; the generators then skip their watch page, card, and sitemap entry automatically. A watch page with a dead player cannot be indexed.
 
 ## Commands
 
@@ -112,6 +115,7 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run update-codes` — Regenerate `data/generated/promo-codes.js` and update all code counts/descriptions/chips in `guide/code/index.html` from `data/codes.json`
 - `npm run generate-creators` — Validate creator source data and regenerate the static creators guide and browser data
 - `npm run generate-watch` — Regenerate all `/watch/` pages, the hub, and the watch region of `sitemap.xml`
+- `npm run enrich-creators` — Refresh real YouTube metadata for creator videos (duration, views, upload timestamp, description, playability)
 - `npm run audit-creators` — Audit creator video availability over HTTP
 - `npm run update-music` — Regenerate music page data from source playlists
 - `npm run skarn-index` — Regenerate the docs index inside `skarn-bot/index.html` via markers

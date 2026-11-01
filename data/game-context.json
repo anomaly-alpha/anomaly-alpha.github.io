@@ -1,0 +1,274 @@
+{
+  "_comment": "Verified game-context knowledge base. Every entry must cite a publisher-controlled source (Ubisoft Mobile support, the official Invincible GTG social accounts, or the official store listing). Do not add entries sourced only from creator videos: those describe one player's run, not the game's rules. Watch pages match entities by alias against a video's real title, description, and creator excerpt.",
+  "game": "Invincible Guarding the Globe",
+  "updated": "2026-11-01",
+  "entities": [
+    {
+      "id": "boss-raid",
+      "name": "Boss Raid",
+      "type": "mode",
+      "aliases": [
+        "boss raid",
+        "boss raids",
+        "alliance boss raid",
+        "hail mary"
+      ],
+      "summary": "A limited-time Alliance mode where members work together to battle a powerful boss. Each attack reduces the boss's shared health and advances progress toward rewards.",
+      "guideHref": "/guide/pvp/",
+      "guideLabel": "PvP and alliance payouts",
+      "source": {
+        "publisher": "Ubisoft Mobile Support",
+        "title": "What is Boss Raid?",
+        "url": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2528-what-is-boss-raid?p=ios",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "hero-boot-camp",
+      "name": "Hero Boot Camp",
+      "type": "event",
+      "aliases": [
+        "hero boot camp",
+        "boot camp",
+        "bootcamp"
+      ],
+      "summary": "A limited-time Hero Boot Camp event featuring a shop stocked with XP and upgrade resources for powering up a roster.",
+      "guideHref": "/guide/xp/",
+      "guideLabel": "XP and rank-up reference",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe (official)",
+        "title": "Hero Bootcamp is back with a shop full of upgrades",
+        "url": "https://www.facebook.com/InvincibleGtG/posts/time-to-put-your-heroes-through-their-paces-hero-bootcamp-is-back-with-a-shop-fu/928959493611674",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "gda-case-files",
+      "name": "GDA Case Files",
+      "type": "event",
+      "aliases": [
+        "gda case file",
+        "gda case files",
+        "case file",
+        "case files",
+        "casefile",
+        "casefiles"
+      ],
+      "summary": "A story event that reopens GDA case files on specific characters. While it runs, the featured heroes have a higher chance of appearing in the recruitment shop, so the event doubles as a targeted recruitment window.",
+      "guideHref": "/guide/creators/",
+      "guideLabel": "Creator directory",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe (official)",
+        "title": "GDA Case Files event is now active",
+        "url": "https://www.facebook.com/InvincibleGtG/posts/the-gda-has-reopened-several-case-files-and-apparently-they-come-with-recruitmen/932380866602870",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "trick-or-treat",
+      "name": "Trick or Treat",
+      "type": "event",
+      "aliases": [
+        "trick or treat",
+        "halloween event",
+        "halloween wish"
+      ],
+      "summary": "The Halloween event: gather as many pumpkins as you can and trade them in for a variety of rewards before the window closes.",
+      "guideHref": "/guide/event/",
+      "guideLabel": "Event rewards guide",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe official App Store listing",
+        "title": "Events: Trick or Treat",
+        "url": "https://apps.apple.com/us/app/invincible-guarding-the-globe/id6449294809",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "cursed-protector",
+      "name": "Cursed Protector",
+      "type": "event",
+      "aliases": [
+        "cursed protector"
+      ],
+      "summary": "An Astounding Wolf-Man event: Wolf-Man tears through evil while fighting to master the savage beast within. It runs alongside Wolf-Man's release window, so most coverage of it doubles as hero evaluation.",
+      "guideHref": "/guide/event/",
+      "guideLabel": "Event rewards guide",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe official App Store listing",
+        "title": "Events: Cursed Protector",
+        "url": "https://apps.apple.com/us/app/invincible-guarding-the-globe/id6449294809",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "cecils-nightmares",
+      "name": "Cecil's Nightmares",
+      "type": "mode",
+      "aliases": [
+        "cecil's nightmares",
+        "cecils nightmares",
+        "cecil nightmare",
+        "cecil's nightmare"
+      ],
+      "summary": "A challenge mode built from time-restricted simulations, each with specific challenges. Runs can be replayed and are ranked on a leaderboard per simulation.",
+      "guideHref": "/guide/pvp/",
+      "guideLabel": "PvP and alliance payouts",
+      "source": {
+        "publisher": "Ubisoft Mobile Support",
+        "title": "What is Cecil's Nightmares?",
+        "url": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2122-what-is-cecil-s-nightmares",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "lock-and-reload",
+      "name": "Lock & Reload",
+      "type": "event",
+      "aliases": [
+        "lock and reload",
+        "lock & reload",
+        "locked and reload",
+        "locked & reload",
+        "lock and load",
+        "lock & load",
+        "locked and load"
+      ],
+      "summary": "A recruitment event with a twist on the usual shop refresh: find powerful heroes, lock the ones you want to keep, and let everything you did not lock refresh after each purchase.",
+      "guideHref": "/guide/creators/",
+      "guideLabel": "Creator directory",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe (official)",
+        "title": "Locked & Reload event is here",
+        "url": "https://www.instagram.com/p/DanJD2wjErt",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "black-market",
+      "name": "Black Market",
+      "type": "event",
+      "aliases": [
+        "black market"
+      ],
+      "summary": "A limited-time shop event offering elite and rare heroes, XP, Totems, and other items.",
+      "guideHref": "/guide/event/",
+      "guideLabel": "Event rewards guide",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe (official)",
+        "title": "The Black Market is open",
+        "url": "https://www.facebook.com/InvincibleGtG/posts/not-everything-valuable-passes-through-official-channels-the-black-market-is-ope/960536363787320",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "arts-outlet",
+      "name": "Art's Outlet",
+      "type": "event",
+      "aliases": [
+        "art's outlet",
+        "arts outlet",
+        "art's shop",
+        "arts shop",
+        "art's tailor",
+        "arts tailor",
+        "art event"
+      ],
+      "summary": "A limited-time equipment-shop event run by Art Rosenbaum, featuring gear for players to obtain.",
+      "guideHref": "/guide/beginners/",
+      "guideLabel": "Beginner progression guide",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe (official)",
+        "title": "Art Rosenbaum got inspired and the equipment shop will never be the same",
+        "url": "https://www.facebook.com/InvincibleGtG/posts/art-rosenbaum-got-inspired-and-the-equipment-shop-will-never-be-the-sameswing-by/642054355635524",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "faction-recruitment",
+      "name": "Faction Recruitment",
+      "type": "event",
+      "aliases": [
+        "faction recruitment",
+        "earth's defenders",
+        "earth defenders",
+        "fresh recruit",
+        "fresh recruits"
+      ],
+      "summary": "A limited-time recruitment section that opens up one faction's roster, such as Earth's Defenders, so you can pull heroes from that faction while the window is open.",
+      "guideHref": "/guide/beginners/",
+      "guideLabel": "Beginner progression guide",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe (official)",
+        "title": "Faction Recruitment is open for a limited time",
+        "url": "https://x.com/InvincibleGtG/status/1796209959325323691",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "artifacts",
+      "name": "Artifacts",
+      "type": "system",
+      "aliases": [
+        "artifact",
+        "artifacts",
+        "golden apple",
+        "ragnar's claws",
+        "ragnars claws"
+      ],
+      "summary": "Unique gear pieces that add stat bonuses or passive effects on top of a hero's own kit. Every artifact has a rarity level and can be upgraded further to strengthen its benefit.",
+      "guideHref": "/guide/beginners/",
+      "guideLabel": "Beginner progression guide",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe official App Store listing",
+        "title": "Artifacts: unique gear with passive effects",
+        "url": "https://apps.apple.com/us/app/invincible-guarding-the-globe/id6449294809",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "recruitment-shops",
+      "name": "Cecil's Recruitment Department",
+      "type": "system",
+      "aliases": [
+        "recruitment",
+        "recruit",
+        "summons",
+        "summon",
+        "recruit shop"
+      ],
+      "summary": "The shop where new heroes are recruited. The game describes its stores as transparent alternatives to lootboxes rather than random pulls.",
+      "guideHref": "/guide/beginners/",
+      "guideLabel": "Beginner progression guide",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe official App Store listing",
+        "title": "Shops, not lootboxes: Cecil's Recruitment Department",
+        "url": "https://apps.apple.com/us/app/invincible-guarding-the-globe/id6449294809",
+        "verifiedAt": "2026-11-01"
+      }
+    },
+    {
+      "id": "patch-notes",
+      "name": "Patch notes",
+      "type": "update",
+      "aliases": [
+        "patch notes",
+        "patch update",
+        "update 3.7",
+        "update 3.5",
+        "3.7 update",
+        "3.5 update",
+        "patch 2.12",
+        "patch notes 2.3"
+      ],
+      "summary": "Ubisoft publishes per-version patch notes for the game through its mobile support site, covering new characters, GDA Case Files, campaign chapters, and balance changes.",
+      "guideHref": "/guide/code/",
+      "guideLabel": "Codes and update notes",
+      "source": {
+        "publisher": "Ubisoft Mobile Support",
+        "title": "Patch Notes",
+        "url": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/section/493-patch-notes",
+        "verifiedAt": "2026-11-01"
+      }
+    }
+  ]
+}

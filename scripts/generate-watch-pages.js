@@ -14,9 +14,13 @@ const WATCH_DIR = 'watch';
 const WATCH_CSS = 'watch.css';
 const MAX_RELATED_FROM_CREATOR = 5;
 const MAX_RELATED_SAME_CATEGORY = 6;
+const MAX_CONTEXT_ENTITIES = 3;
 const META_DESC_LIMIT = 158;
 const SITEMAP_START = '<!--WATCH_SITEMAP_START-->';
 const SITEMAP_END = '<!--WATCH_SITEMAP_END-->';
+const CONTEXT_PATH = path.join(__dirname, '..', 'data', 'game-context.json');
+// Events and modes are the specific, searchable thing; systems are background context.
+const TYPE_PRIORITY = { event: 0, mode: 1, update: 2, system: 3 };
 
 const CATEGORY_NOUN = {
   'Guides': 'guide',
@@ -67,6 +71,88 @@ function metaDescription(video, creator) {
 
 function humanDate(dateStr) {
   return gen.formatFeedDate(dateStr);
+}
+
+// ===== REAL YOUTUBE METADATA =====
+
+// Populated by scripts/enrich-youtube-creators.js. Absent for videos that could not be
+// read, in which case every helper degrades to the editorial fields.
+function youtube(video) {
+  return video.youtube || {};
+}
+
+function formatDuration(seconds) {
+  if (!seconds || seconds <= 0) return '';
+  var h = Math.floor(seconds / 3600);
+  var m = Math.floor((seconds % 3600) / 60);
+  var s = seconds % 60;
+  if (h > 0) return h + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  return m + ':' + String(s).padStart(2, '0');
+}
+
+// schema.org duration must be an ISO 8601 duration, e.g. PT41M22S.
+function isoduration(seconds) {
+  if (!seconds || seconds <= 0) return '';
+  var h = Math.floor(seconds / 3600);
+  var m = Math.floor((seconds % 3600) / 60);
+  var s = seconds % 60;
+  return 'PT' + (h ? h + 'H' : '') + (m ? m + 'M' : '') + (s ? s + 'S' : '');
+}
+
+function formatViews(count) {
+  if (typeof count !== 'number' || count < 0) return '';
+  return count.toLocaleString('en-US');
+}
+
+// ===== GAME CONTEXT KNOWLEDGE BASE =====
+
+function loadContext(contextPath) {
+  var file = contextPath || CONTEXT_PATH;
+  if (!fs.existsSync(file)) return { entities: [] };
+  return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+function entityHaystack(video) {
+  var meta = youtube(video);
+  return [
+    video.title || '',
+    video.description || '',
+    meta.descriptionExcerpt || ''
+  ].join(' ').toLowerCase();
+}
+
+// Alias matching is deliberately literal: an entity is only surfaced when its name
+// actually appears in the video's real text. No guessing from category alone.
+function matchEntities(video, context) {
+  var haystack = entityHaystack(video);
+  var matched = [];
+  var entities = (context && context.entities) || [];
+
+  for (var i = 0; i < entities.length; i++) {
+    var entity = entities[i];
+    for (var a = 0; a < entity.aliases.length; a++) {
+      var alias = entity.aliases[a];
+      var idx = haystack.indexOf(alias);
+      if (idx === -1) continue;
+      var before = idx === 0 ? ' ' : haystack.charAt(idx - 1);
+      var after = haystack.charAt(idx + alias.length) || ' ';
+      if (!/[a-z0-9]/.test(before) && !/[a-z0-9]/.test(after)) {
+        matched.push(entity);
+        break;
+      }
+    }
+  }
+
+  // Specific named events and modes outrank generic always-on systems, so a page about
+  // Hail Mary leads with Boss Raid rather than "Recruitment Department". Longer names
+  // break ties inside a tier.
+  matched.sort(function (a, b) {
+    var pa = TYPE_PRIORITY[a.type] === undefined ? 9 : TYPE_PRIORITY[a.type];
+    var pb = TYPE_PRIORITY[b.type] === undefined ? 9 : TYPE_PRIORITY[b.type];
+    if (pa !== pb) return pa - pb;
+    return b.name.length - a.name.length;
+  });
+  return matched.slice(0, MAX_CONTEXT_ENTITIES);
 }
 
 // Creators post identically-titled videos (livestream VODs especially), so <title> and
@@ -131,7 +217,20 @@ function sameCategoryVideos(items, video) {
 
 // ===== SCHEMA =====
 
-function buildGraph(video, creator, meta) {
+// Built only from facts on the page: matched game entities, the video's real category,
+// the creator, and the game itself.
+function buildKeywords(video, creator, entities) {
+  var terms = [];
+  if (entities) {
+    for (var i = 0; i < entities.length; i++) terms.push(entities[i].name);
+  }
+  terms.push(video.category);
+  terms.push(GAME_NAME_ARTICLE);
+  terms.push(plainText(creator.name));
+  return terms.filter(Boolean).join(', ');
+}
+
+function buildGraph(video, creator, meta, entities) {
   var watchUrl = gen.watchPageUrl(video);
   var title = meta.title;
   var description = meta.description;
@@ -175,7 +274,8 @@ function buildGraph(video, creator, meta) {
         },
         'breadcrumb': { '@id': watchUrl + '#breadcrumb' },
         'datePublished': isoTimestamp,
-        'dateModified': isoTimestamp
+        'dateModified': isoTimestamp,
+        'keywords': buildKeywords(video, creator, entities)
       },
       gen.buildVideoObject(video, creator),
       {
@@ -193,7 +293,7 @@ function buildGraph(video, creator, meta) {
 
 // ===== RENDERING: HEAD =====
 
-function renderHead(video, creator, meta) {
+function renderHead(video, creator, meta, entities) {
   var title = meta.title;
   var description = meta.description;
   var watchUrl = gen.watchPageUrl(video);
@@ -243,7 +343,7 @@ function renderHead(video, creator, meta) {
   h.push('    <link rel="preload" href="../../fonts/Orbitron-Variable.woff2" as="font" type="font/woff2" crossorigin>');
   h.push('    <link rel="preload" href="../../fonts/Rajdhani-Regular.woff2" as="font" type="font/woff2" crossorigin>');
   h.push('    <script type="application/ld+json">');
-  h.push(gen.escapeJsonLd(JSON.stringify(buildGraph(video, creator, meta), null, 2)));
+  h.push(gen.escapeJsonLd(JSON.stringify(buildGraph(video, creator, meta, entities), null, 2)));
   h.push('    </script>');
   return h.join('\n');
 }
@@ -253,7 +353,7 @@ function renderHead(video, creator, meta) {
 function renderGuideNav(video) {
   var categoryGuide = CATEGORY_GUIDE[video.category] || CATEGORY_GUIDE['Guides'];
   var h = [];
-  h.push('        <nav class="flex flex-wrap gap-4 items-center text-sm gem-text--cyan mb-6 p-4 border-b border-white/10">');
+  h.push('        <nav aria-label="Video sections" class="flex flex-wrap gap-4 items-center text-sm gem-text--cyan mb-6 p-4 border-b border-white/10">');
   h.push('            <a href="../../" class="hover:text-white transition-colors">&larr; Calculate Your Gems</a>');
   h.push('            <span class="text-white/30">|</span>');
   h.push('            <a href="../../guide/creators/" class="hover:text-white transition-colors gem-text--cyan">Creators</a>');
@@ -310,6 +410,10 @@ function renderAbout(video, creator) {
 }
 
 function renderFacts(video, creator) {
+  var meta = youtube(video);
+  var runtime = formatDuration(meta.durationSeconds);
+  var views = formatViews(meta.viewCount);
+
   var h = [];
   h.push('        <section class="mx-4 mb-8" aria-labelledby="factsTitle">');
   h.push('            <h2 id="factsTitle" class="text-xl font-bold text-white mb-4 tracking-wider">Video details</h2>');
@@ -322,9 +426,63 @@ function renderFacts(video, creator) {
   h.push('                <div class="gem-watch__fact"><dt>Channel</dt><dd><a href="' + gen.escapeHtml(creator.channelUrl) + '" target="_blank" rel="noopener noreferrer" class="gem-text--cyan underline">' + gen.escapeHtml(plainText(creator.name)) + ' on YouTube</a></dd></div>');
   h.push('                <div class="gem-watch__fact"><dt>Published</dt><dd><time datetime="' + gen.escapeHtml(video.published) + '">' + gen.escapeHtml(humanDate(video.published)) + '</time></dd></div>');
   h.push('                <div class="gem-watch__fact"><dt>Category</dt><dd>' + gen.escapeHtml(video.category) + '</dd></div>');
+  if (runtime) {
+    h.push('                <div class="gem-watch__fact"><dt>Runtime</dt><dd>' + gen.escapeHtml(runtime) + '</dd></div>');
+  }
+  if (views) {
+    h.push('                <div class="gem-watch__fact"><dt>Views</dt><dd>' + gen.escapeHtml(views) + ' <span class="opacity-60">as of ' + gen.escapeHtml(humanDate(meta.checkedAt)) + '</span></dd></div>');
+  }
+  if (meta.isLive === true) {
+    h.push('                <div class="gem-watch__fact"><dt>Format</dt><dd>Livestream recording</dd></div>');
+  }
   h.push('                <div class="gem-watch__fact"><dt>Game</dt><dd><a href="../../" class="gem-text--cyan underline">' + GAME_NAME_ARTICLE + '</a></dd></div>');
   h.push('                <div class="gem-watch__fact"><dt>Last verified</dt><dd><time datetime="' + gen.escapeHtml(video.lastChecked) + '">' + gen.escapeHtml(humanDate(video.lastChecked)) + '</time></dd></div>');
   h.push('            </dl>');
+  h.push('        </section>');
+  return h.join('\n');
+}
+
+function renderCreatorExcerpt(video, creator) {
+  var meta = youtube(video);
+  var excerpt = plainText(meta.descriptionExcerpt);
+  if (excerpt.length < 24) return '';
+
+  var h = [];
+  h.push('        <section class="mx-4 mb-8" aria-labelledby="excerptTitle">');
+  h.push('            <h2 id="excerptTitle" class="text-xl font-bold text-white mb-4 tracking-wider">From the creator\'s description</h2>');
+  h.push('            <blockquote class="gem-card p-5 gem-watch__quote">');
+  h.push('                <p class="text-white/80 leading-relaxed">&ldquo;' + gen.escapeHtml(excerpt) + '&rdquo;</p>');
+  h.push('                <footer class="text-sm gem-text--muted mt-3">&mdash; ' + gen.escapeHtml(plainText(creator.name)) +
+    ', <a href="https://www.youtube.com/watch?v=' + gen.escapeHtml(video.id) + '" target="_blank" rel="noopener noreferrer" class="gem-text--cyan underline">video description on YouTube</a></footer>');
+  h.push('            </blockquote>');
+  h.push('        </section>');
+  return h.join('\n');
+}
+
+function renderGameContext(entities) {
+  if (!entities || entities.length === 0) return '';
+
+  var h = [];
+  h.push('        <section class="mx-4 mb-8" aria-labelledby="contextTitle">');
+  h.push('            <h2 id="contextTitle" class="text-xl font-bold text-white mb-4 tracking-wider">Game context</h2>');
+  h.push('            <p class="text-sm gem-text--muted mb-4">Background on the game systems named in this video. Written from publisher sources, not from the video itself.</p>');
+  h.push('            <div class="gem-watch__context">');
+  for (var i = 0; i < entities.length; i++) {
+    var entity = entities[i];
+    var source = entity.source || {};
+    h.push('                <article class="gem-card p-5 gem-watch__context-item">');
+    h.push('                    <h3 class="text-lg font-bold gem-text--cyan mb-2">' + gen.escapeHtml(entity.name) + '</h3>');
+    h.push('                    <p class="text-white/80 leading-relaxed">' + gen.escapeHtml(entity.summary) + '</p>');
+    h.push('                    <p class="text-sm gem-text--muted mt-3">');
+    h.push('                        Source: <a href="' + gen.escapeHtml(source.url || '#') + '" target="_blank" rel="noopener noreferrer" class="gem-text--cyan underline">' + gen.escapeHtml(source.publisher || 'publisher') + '</a>');
+    if (entity.guideHref) {
+      h.push('                        <span class="mx-2 opacity-30">&middot;</span>');
+      h.push('                        <a href="../..' + gen.escapeHtml(entity.guideHref) + '" class="gem-text--cyan underline">' + gen.escapeHtml(entity.guideLabel || 'Related guide') + '</a>');
+    }
+    h.push('                    </p>');
+    h.push('                </article>');
+  }
+  h.push('            </div>');
   h.push('        </section>');
   return h.join('\n');
 }
@@ -392,7 +550,7 @@ function renderGuideCards() {
 function renderFooter() {
   var h = [];
   h.push('        <footer class="mx-4 mt-8 mb-4">');
-  h.push('            <nav class="flex flex-wrap gap-4 justify-center text-sm gem-text--cyan border-t border-white/10 pt-4">');
+  h.push('            <nav aria-label="Guide links" class="flex flex-wrap gap-4 justify-center text-sm gem-text--cyan border-t border-white/10 pt-4">');
   h.push('                <a href="../../" class="gem-text--cyan hover:text-white transition-colors">&larr; Calculate Your Gems</a>');
   h.push('                <a href="../../guide/creators/" class="hover:text-white transition-colors gem-text--cyan">Creators</a>');
   h.push('                <a href="../../guide/code/" class="hover:text-white transition-colors gem-text--code">Codes</a>');
@@ -434,7 +592,7 @@ function renderBreadcrumbs(video) {
 
 // ===== RENDERING: PAGE =====
 
-function renderPage(data, video, creator, meta) {
+function renderPage(data, video, creator, meta, entities) {
   var items = gen.getVisibleFeedItems(data);
   if (!meta) {
     meta = { title: pageTitle(video, creator), description: metaDescription(video, creator) };
@@ -458,7 +616,7 @@ function renderPage(data, video, creator, meta) {
   h.push('<!DOCTYPE html>');
   h.push('<html lang="en">');
   h.push('<head>');
-  h.push(renderHead(video, creator, meta));
+  h.push(renderHead(video, creator, meta, entities));
   h.push('</head>');
   h.push('<body class="relative min-h-screen p-5 md:p-10 gem-grid-bg">');
   h.push('    <div class="relative gem-container gem-container__shadow max-w-4xl mx-auto">');
@@ -486,6 +644,13 @@ function renderPage(data, video, creator, meta) {
   h.push('');
   h.push(renderAbout(video, creator));
   h.push('');
+  var excerpt = renderCreatorExcerpt(video, creator);
+  if (excerpt) {
+    h.push(excerpt);
+    h.push('');
+  }
+  h.push(renderGameContext(entities));
+  if (entities && entities.length > 0) h.push('');
   h.push(renderFacts(video, creator));
   h.push('');
   if (fromCreator.length > 0) {
@@ -699,6 +864,11 @@ function generate(rootDir) {
   var data = result.data;
   var items = gen.getVisibleFeedItems(data);
   var meta = assignUniqueMeta(items);
+  var context = loadContext(path.join(rootDir, 'data', 'game-context.json'));
+  var entities = {};
+  for (var m = 0; m < items.length; m++) {
+    entities[items[m].video.id] = matchEntities(items[m].video, context);
+  }
   var watchDir = path.join(rootDir, WATCH_DIR);
   fs.mkdirSync(watchDir, { recursive: true });
 
@@ -711,7 +881,7 @@ function generate(rootDir) {
     var creator = item.creator;
     var dir = path.join(watchDir, video.id);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'index.html'), renderPage(data, video, creator, meta[video.id]), 'utf8');
+    fs.writeFileSync(path.join(dir, 'index.html'), renderPage(data, video, creator, meta[video.id], entities[video.id]), 'utf8');
     keep[video.id] = true;
     written++;
   }
@@ -780,6 +950,14 @@ module.exports = {
   renderSitemapEntries: renderSitemapEntries,
   updateSitemap: updateSitemap,
   buildGraph: buildGraph,
+  matchEntities: matchEntities,
+  renderGameContext: renderGameContext,
+  renderCreatorExcerpt: renderCreatorExcerpt,
+  loadContext: loadContext,
+  buildKeywords: buildKeywords,
+  formatDuration: formatDuration,
+  isoduration: isoduration,
+  formatViews: formatViews,
   pageTitle: pageTitle,
   metaDescription: metaDescription,
   assignUniqueMeta: assignUniqueMeta,

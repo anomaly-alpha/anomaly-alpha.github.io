@@ -384,14 +384,6 @@ window.__YOUTUBE_CREATORS=[
         "featured": false
       },
       {
-        "id": "CQP4_tjekoE",
-        "title": "This NEW Event is AMAZING!!! - Invincible: Guarding the Globe",
-        "description": "TH3O covers the new Recruitment Range event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-09-07",
-        "featured": false
-      },
-      {
         "id": "EG2jpxYiLlY",
         "title": "Fresh Recruits Event is INSANE! - Invincible: Guarding the Globe",
         "description": "TH3O covers the Fresh Recruits event in Invincible: Guarding the Globe.",
@@ -429,6 +421,14 @@ window.__YOUTUBE_CREATORS=[
         "description": "TH3O covers the Viltrumite recruitment event and summons in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-08-07",
+        "featured": true
+      },
+      {
+        "id": "Iq5neDgReL0",
+        "title": "INSANE New Boss Battle and Crazy Event just dropped!! - Invincible: Guarding the Globe",
+        "description": "TH3O covers a new Boss Raid battle and event in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-08-04",
         "featured": true
       }
     ]
@@ -889,14 +889,6 @@ window.__YOUTUBE_CREATORS=[
         "featured": true
       },
       {
-        "id": "08A6hDoz60c",
-        "title": "Hero Haven Live Stream",
-        "description": "Hero Haven livestreams Invincible: Guarding the Globe community coverage.",
-        "category": "Livestreams",
-        "published": "2026-05-30",
-        "featured": true
-      },
-      {
         "id": "7TaH3gBEOGA",
         "title": "Patch Notes 2.3 | Invincible Guarding the Globe",
         "description": "Hero Haven covers Invincible: Guarding the Globe Patch 2.3 and its new additions.",
@@ -910,7 +902,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Hero Haven covers the Tech Jacket hero event and team implications.",
         "category": "Events",
         "published": "2026-05-05",
-        "featured": false
+        "featured": true
       },
       {
         "id": "LxGSldX72KQ",
@@ -1063,30 +1055,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "INVINCIBLE GTG OMNI-FAN covers the returning Hero Bootcamp event.",
         "category": "Events",
         "published": "2026-09-11",
-        "featured": false
-      }
-    ]
-  },
-  {
-    "id": "pops-meta",
-    "name": "Pops",
-    "handle": "@PopsMeta",
-    "channelUrl": "https://www.youtube.com/@PopsMeta",
-    "description": "Invincible GTG beginner and team-building guidance.",
-    "tags": [
-      "Guides",
-      "Team Building"
-    ],
-    "badge": "New",
-    "status": "pending",
-    "displayOrder": 11,
-    "videos": [
-      {
-        "id": "L5jWfcFqhFg",
-        "title": "Invincible Guarding the Globe: Where to Start - Best Heroes Each Faction",
-        "description": "Pops explains where new players should start and which heroes to build in Invincible: Guarding the Globe.",
-        "category": "Guides",
-        "published": "2026-08-16",
         "featured": false
       }
     ]
