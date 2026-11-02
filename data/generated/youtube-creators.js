@@ -1480,5 +1480,447 @@ window.__YOUTUBE_CREATORS=[
         "featured": false
       }
     ]
+  },
+  {
+    "id": "chernandez88",
+    "name": "CHernandez88",
+    "handle": "@Chernandez1288",
+    "channelUrl": "https://www.youtube.com/@Chernandez1288",
+    "description": "Long-form Invincible GTG event and update videos, posted alongside his TikTok clips.",
+    "tags": [
+      "Events",
+      "Updates"
+    ],
+    "badge": "Updates",
+    "status": "pending",
+    "displayOrder": 20,
+    "videos": [
+      {
+        "id": "WZKb4_2Xbi0",
+        "title": "SPENDING SPREE FOR RAGNARS!",
+        "description": "CHernandez88 spends gems chasing Ragnar pulls in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-09-19",
+        "featured": false
+      },
+      {
+        "id": "DFmOISvkUeI",
+        "title": "NEW UPDATE 3.6 FOR INVINCIBLE GUARDING THE GLOBE!",
+        "description": "CHernandez88 runs through the changes in update 3.6 for Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-09-15",
+        "featured": false
+      },
+      {
+        "id": "l6QTGhi0zaw",
+        "title": "FRESH RECRUITS EVENT! #invincibleguardingtheglobe",
+        "description": "CHernandez88 covers the Fresh Recruits event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-08-28",
+        "featured": false
+      }
+    ]
+  },
+  {
+    "id": "mompish",
+    "name": "mompish",
+    "handle": "@mompish",
+    "channelUrl": "https://www.youtube.com/@mompish",
+    "description": "Spanish-language Invincible GTG guides covering team building, farming, and update breakdowns.",
+    "tags": [
+      "Guides",
+      "Team Building",
+      "Updates"
+    ],
+    "badge": "Updates",
+    "status": "pending",
+    "displayOrder": 21,
+    "videos": [
+      {
+        "id": "LybFKAVm6v0",
+        "title": "¡+70,000 CHIPS VERDES con este TRUCO de NIVEL 1! | Invincible GTG",
+        "description": "mompish shows a level-one trick for farming large amounts of green chips in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-08-06",
+        "featured": false
+      },
+      {
+        "id": "pGJO75TuYtk",
+        "title": "Gameplay nuevo modo de juego | Invincible guarding the globe",
+        "description": "mompish plays the new game mode in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-07-27",
+        "featured": false
+      },
+      {
+        "id": "zVRvMNgLasU",
+        "title": "Mejores Equipos para conseguir XP rosa | Invincible: guarding the globe",
+        "description": "mompish builds the best teams for farming pink XP in Invincible: Guarding the Globe.",
+        "category": "Team Building",
+        "published": "2026-07-18",
+        "featured": false
+      },
+      {
+        "id": "VDSd50ckvz8",
+        "title": "Expediente y platica con ustedes | Invincible guarding the globe",
+        "description": "mompish works through a case file while talking with viewers in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-07-12",
+        "featured": false
+      },
+      {
+        "id": "uFFd_2osIJA",
+        "title": "Todo lo nuevo de la actualización + expediente de Shapesmith | Invincible guarding the globe",
+        "description": "mompish reviews everything new in the update and the Shapesmith case file in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-06-23",
+        "featured": false
+      },
+      {
+        "id": "z6C5yvy4e9c",
+        "title": "Guía completa para thaedus | Invincible guarding the globe",
+        "description": "mompish gives a complete guide to Thaedus in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-06-06",
+        "featured": false
+      },
+      {
+        "id": "CMzyO-Z1wOY",
+        "title": "Mostrando mi cuenta en Invincible | guarding the globe",
+        "description": "mompish walks through his own account in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-05-12",
+        "featured": false
+      },
+      {
+        "id": "BAlF2ozGucc",
+        "title": "Guía de composición de equipos | Invincible: guarding the globe",
+        "description": "mompish explains team composition choices for Invincible: Guarding the Globe.",
+        "category": "Team Building",
+        "published": "2026-05-09",
+        "featured": false
+      },
+      {
+        "id": "4D97ryZaofg",
+        "title": "¿Como subir de rango a tus héroes? | Invincible: guarding the globe",
+        "description": "mompish explains how to rank up heroes in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-04-21",
+        "featured": false
+      },
+      {
+        "id": "vYNDwDOtbi0",
+        "title": "Los mejores equipos para conseguir más moléculas | Invincible: guarding the globe",
+        "description": "mompish builds teams for farming molecules in Invincible: Guarding the Globe.",
+        "category": "Team Building",
+        "published": "2026-02-12",
+        "featured": false
+      },
+      {
+        "id": "jM0G0pgEnGE",
+        "title": "Los mejores equipos para conseguir XP | Invincible: guarding the globe",
+        "description": "mompish builds teams for farming XP in Invincible: Guarding the Globe.",
+        "category": "Team Building",
+        "published": "2026-01-30",
+        "featured": false
+      },
+      {
+        "id": "dMmDIVV7bvg",
+        "title": "Gastando gemitas en el nuevo evento | Invincible: guarding the globe",
+        "description": "mompish spends gems on the new event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2025-10-06",
+        "featured": false
+      }
+    ]
+  },
+  {
+    "id": "theseenpix-gtg",
+    "name": "TheSeeNpiX_GTG",
+    "handle": "@TheSeenpiX_GTG",
+    "channelUrl": "https://www.youtube.com/@TheSeenpiX_GTG",
+    "description": "Spanish-language Invincible GTG guides, strategies, and event coverage.",
+    "tags": [
+      "Guides",
+      "Events"
+    ],
+    "badge": "New",
+    "status": "pending",
+    "displayOrder": 22,
+    "videos": [
+      {
+        "id": "DAF-Vk_2tUY",
+        "title": "Que personajes te gustarian para la parte 2? #Invincible #Invinciblegtg #invincibleguardingtheglobe",
+        "description": "TheSeeNpiX_GTG asks viewers which characters they want in part two of Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-07-10",
+        "featured": false
+      },
+      {
+        "id": "WN-eDij45Wk",
+        "title": "El fin de este video te prometo que te volara la cabeza. Es largo, PERO VALE LA PENA.#invinciblegtg",
+        "description": "TheSeeNpiX_GTG closes a long-form guide with a payoff for Invincible: Guarding the Globe players.",
+        "category": "Guides",
+        "published": "2026-07-08",
+        "featured": false
+      },
+      {
+        "id": "yZhHetVXYAg",
+        "title": "Gaste 10K Créditos y me tocó… #invincible #invinciblegtg #invincibleguardingtheglobe #viral",
+        "description": "TheSeeNpiX_GTG spends 10,000 credits and shows what dropped in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-07-02",
+        "featured": false
+      },
+      {
+        "id": "u_qi_xePzLA",
+        "title": "SÁCALE EL MEJOR PROVECHO A LAS PESADILLAS DE CECIL 🔥",
+        "description": "TheSeeNpiX_GTG explains how to get the most out of Cecil’s Nightmares in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-06-29",
+        "featured": false
+      }
+    ]
+  },
+  {
+    "id": "omni-tactics",
+    "name": "Omni-tactics",
+    "handle": "@Omni-tactics",
+    "channelUrl": "https://www.youtube.com/@Omni-tactics",
+    "description": "Italian-language Invincible GTG coverage of updates, events, and top characters.",
+    "tags": [
+      "Updates",
+      "Events",
+      "Guides"
+    ],
+    "badge": "Updates",
+    "status": "pending",
+    "displayOrder": 23,
+    "videos": [
+      {
+        "id": "qsAcfDMxXxQ",
+        "title": "Ultimi aggiornamenti! Invincible guarding the globe (GTG)",
+        "description": "Omni-tactics covers the latest updates to Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-05-27",
+        "featured": false
+      },
+      {
+        "id": "HxD6BBw7XF8",
+        "title": "NUOVO EVENTO?! Invincible guarding the globe (GTG)",
+        "description": "Omni-tactics looks at a new event in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-05-23",
+        "featured": false
+      },
+      {
+        "id": "AsQD2OboyBI",
+        "title": "3 Migliori personaggi su Invincible Guarding the Globe",
+        "description": "Omni-tactics ranks the three best characters in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-05-12",
+        "featured": false
+      }
+    ]
+  },
+  {
+    "id": "omni-m1ke",
+    "name": "Omni-M1ke",
+    "handle": "@omnim1ke",
+    "channelUrl": "https://www.youtube.com/@omnim1ke",
+    "description": "Summon sessions and new-character coverage for Invincible: Guarding the Globe.",
+    "tags": [
+      "Events",
+      "Gameplay"
+    ],
+    "badge": "New",
+    "status": "pending",
+    "displayOrder": 24,
+    "videos": [
+      {
+        "id": "UTGlZFFbQEg",
+        "title": "Tech Jacket MEGA Summoning | Invincible: Guarding the Globe",
+        "description": "Omni-M1ke runs a large Tech Jacket summon session in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-05-03",
+        "featured": false
+      },
+      {
+        "id": "Whj3pwqY5QE",
+        "title": "THRAGG SUMMONS! - Invincible Guarding the Globe",
+        "description": "Omni-M1ke summons for Thragg in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-04-20",
+        "featured": false
+      },
+      {
+        "id": "pys8kE7PQ6k",
+        "title": "THRAGG IS HERE! - Invincible Guarding the Globe",
+        "description": "Omni-M1ke covers Thragg’s release in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-04-17",
+        "featured": false
+      }
+    ]
+  },
+  {
+    "id": "kabraxis-512",
+    "name": "Kabraxis 512",
+    "handle": "@kabraxis5129",
+    "channelUrl": "https://www.youtube.com/@kabraxis5129",
+    "description": "Arena match logs and team experiments from the Invincible GTG PvP leagues.",
+    "tags": [
+      "Gameplay",
+      "Team Building"
+    ],
+    "badge": "New",
+    "status": "pending",
+    "displayOrder": 25,
+    "videos": [
+      {
+        "id": "QPwukT8mj8c",
+        "title": "Difficult Supporter Week - Restricted Arena - Invincible League",
+        "description": "Kabraxis 512 plays a difficult supporter week in Restricted Arena of Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-02-21",
+        "featured": false
+      },
+      {
+        "id": "EdEMKD6H5OU",
+        "title": "Open Arena - Main Team - Invincible League",
+        "description": "Kabraxis 512 fields his main team in Open Arena of Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-02-21",
+        "featured": false
+      },
+      {
+        "id": "6Hhdy_X3Q0Y",
+        "title": "Ranged Week in Restricted Arena. The opposing big Uni, Uni, big Eve1, Dog are almost invincible.",
+        "description": "Kabraxis 512 takes on a stacked ranged-week opponent in Restricted Arena of Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-02-09",
+        "featured": false
+      },
+      {
+        "id": "Kzp-wZs7kdU",
+        "title": "12 wins, 1 loss, due to a mistake - Open Arena Invincible League",
+        "description": "Kabraxis 512 reviews a twelve-win arena run with a single loss in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-02-06",
+        "featured": false
+      },
+      {
+        "id": "J-OdvCwXhdg",
+        "title": "Muliversal Week, many players are unprepared.",
+        "description": "Kabraxis 512 plays Multiversal week against unprepared opponents in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-01-12",
+        "featured": false
+      },
+      {
+        "id": "rxUiBEuBqgs",
+        "title": "A Good Day to Die Hard! Melee Power!",
+        "description": "Kabraxis 512 runs a melee-power arena squad in Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-01-10",
+        "featured": false
+      },
+      {
+        "id": "Fzm-T6TqlAk",
+        "title": "Attacker's week in Restricted Arena - Invincible League",
+        "description": "Kabraxis 512 plays attacker week in Restricted Arena of Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2026-01-05",
+        "featured": false
+      },
+      {
+        "id": "Kssz4ulnsMw",
+        "title": "Test Capevincible in the Open Arena - Invincible League",
+        "description": "Kabraxis 512 tests Capevincible in Open Arena of Invincible: Guarding the Globe.",
+        "category": "Team Building",
+        "published": "2026-01-02",
+        "featured": false
+      },
+      {
+        "id": "oAwU30_kklI",
+        "title": "Komodo Dragon Solo Action - Restricted Arena Invincible League",
+        "description": "Kabraxis 512 runs a Komodo Dragon solo in Restricted Arena of Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2025-12-29",
+        "featured": false
+      },
+      {
+        "id": "EQPUT_Ds_6g",
+        "title": "A relaxed week in Criminals Restricted Arena with Lizard League.",
+        "description": "Kabraxis 512 fields a Lizard League squad in Criminals Restricted Arena of Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2025-12-29",
+        "featured": false
+      },
+      {
+        "id": "Q-sMCndzXgM",
+        "title": "Successful test - Lizard League + Nolan and Blue Mark in Open Arena Invincible League",
+        "description": "Kabraxis 512 tests a Lizard League, Nolan, and Blue Mark lineup in Open Arena of Invincible: Guarding the Globe.",
+        "category": "Team Building",
+        "published": "2025-12-23",
+        "featured": false
+      },
+      {
+        "id": "y180cHdm0dI",
+        "title": "Last Line of Defense Week - Restricted Arena Invincible League.",
+        "description": "Kabraxis 512 plays Last Line of Defense week in Restricted Arena of Invincible: Guarding the Globe.",
+        "category": "Gameplay",
+        "published": "2025-12-23",
+        "featured": false
+      }
+    ]
+  },
+  {
+    "id": "connor",
+    "name": "Connor",
+    "handle": "@CanineMaker967",
+    "channelUrl": "https://www.youtube.com/@CanineMaker967",
+    "description": "Update, code, and event coverage for Invincible: Guarding the Globe.",
+    "tags": [
+      "Updates",
+      "Events"
+    ],
+    "badge": "Updates",
+    "status": "pending",
+    "displayOrder": 26,
+    "videos": [
+      {
+        "id": "6J0Mf-jc4IE",
+        "title": "New Alliance update to Invincible Guarding The Globe and free 500 gems code.",
+        "description": "Connor covers the alliance update and a free 500-gem code in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2025-08-19",
+        "featured": false
+      },
+      {
+        "id": "PSKuso_Pfks",
+        "title": "Invincible GTG Blue Suit is here with a shop event and New Cecil's Nightmare.",
+        "description": "Connor covers Blue Suit’s release, the shop event, and a new Cecil’s Nightmare in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2025-05-16",
+        "featured": false
+      },
+      {
+        "id": "nK1_Ah9mabk",
+        "title": "Invincible Guarding The Globe New Code and New mode.",
+        "description": "Connor shares a new code and covers a new mode in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2025-05-06",
+        "featured": false
+      },
+      {
+        "id": "vMplHZZNdDA",
+        "title": "Invincible Guarding The Globe New Update. New Arena, New Code, and New Cecil's Nightmare.",
+        "description": "Connor covers a new arena, code, and Cecil’s Nightmare in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2025-03-18",
+        "featured": false
+      }
+    ]
   }
 ];
