@@ -87,9 +87,15 @@
   <!--WATCH_SITEMAP_START-->
   <url>
     <loc>https://anomaly-alpha.github.io/watch/</loc>
-    <lastmod>2026-10-31</lastmod>
+    <lastmod>2026-11-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://anomaly-alpha.github.io/watch/YZXV62mJFWM/</loc>
+    <lastmod>2026-11-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
   </url>
   <url>
     <loc>https://anomaly-alpha.github.io/watch/AuXyUTL85cI/</loc>
@@ -99,6 +105,12 @@
   </url>
   <url>
     <loc>https://anomaly-alpha.github.io/watch/CvGfH0fJn-8/</loc>
+    <lastmod>2026-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://anomaly-alpha.github.io/watch/v6VSgbnO6RA/</loc>
     <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
@@ -188,6 +200,12 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://anomaly-alpha.github.io/watch/xTGiN5kleDE/</loc>
+    <lastmod>2026-10-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://anomaly-alpha.github.io/watch/45Znt_CCOjM/</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
@@ -260,6 +278,12 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://anomaly-alpha.github.io/watch/pN4tKDmdIKs/</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://anomaly-alpha.github.io/watch/8o1KE1_OGO0/</loc>
     <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
@@ -314,13 +338,13 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://anomaly-alpha.github.io/watch/8xtQsvp3mII/</loc>
+    <loc>https://anomaly-alpha.github.io/watch/5jCkr4sZIV8/</loc>
     <lastmod>2026-10-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://anomaly-alpha.github.io/watch/5jCkr4sZIV8/</loc>
+    <loc>https://anomaly-alpha.github.io/watch/SCt9DHfqtjs/</loc>
     <lastmod>2026-10-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
@@ -345,12 +369,6 @@
   </url>
   <url>
     <loc>https://anomaly-alpha.github.io/watch/vUNIhdD2mRA/</loc>
-    <lastmod>2026-10-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://anomaly-alpha.github.io/watch/_VoCVROT-mc/</loc>
     <lastmod>2026-10-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
@@ -794,14 +812,68 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://anomaly-alpha.github.io/watch/W5iv4dHwc9M/</loc>
+    <lastmod>2026-06-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://anomaly-alpha.github.io/watch/Fp1D-y0s0f8/</loc>
+    <lastmod>2026-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://anomaly-alpha.github.io/watch/Ss-Mcp8V9lk/</loc>
     <lastmod>2026-05-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://anomaly-alpha.github.io/watch/rG6dZ6uTokg/</loc>
+    <lastmod>2026-05-29</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://anomaly-alpha.github.io/watch/7TaH3gBEOGA/</loc>
     <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://anomaly-alpha.github.io/watch/8rXgBnHdFzU/</loc>
+    <lastmod>2026-05-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://anomaly-alpha.github.io/watch/AYPmYUiYOzU/</loc>
+    <lastmod>2026-05-26</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://anomaly-alpha.github.io/watch/Q6f5qoZUwsc/</loc>
+    <lastmod>2026-05-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://anomaly-alpha.github.io/watch/8DyoAzqvr0w/</loc>
+    <lastmod>2026-05-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://anomaly-alpha.github.io/watch/rMYI7h_EsCQ/</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://anomaly-alpha.github.io/watch/MBIYvBiYre0/</loc>
+    <lastmod>2026-05-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>

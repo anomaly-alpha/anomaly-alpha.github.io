@@ -1,5 +1,5 @@
 {
-  "updated": "2026-10-31",
+  "updated": "2026-11-02",
   "contentMaintainer": "Anomaly Alpha",
   "reviewCadenceDays": 90,
   "featuredCreatorId": "avatar-shuvd",
@@ -293,6 +293,16 @@
       "resolutionStatus": "verified",
       "evidenceNote": "The public Pops channel feed identifies a standard GTG beginner and faction guide.",
       "statusReason": ""
+    },
+    {
+      "sourceUrl": "https://www.youtube.com/watch?v=xTGiN5kleDE",
+      "canonicalUrl": "https://www.youtube.com/watch?v=xTGiN5kleDE",
+      "kind": "video-seed",
+      "resolvedCreatorId": "punho-viltrumita",
+      "lastChecked": "2026-11-02",
+      "resolutionStatus": "verified",
+      "evidenceNote": "Posted in the Invincible: Guarding the Globe #community-content channel; public YouTube metadata identifies the Punho Viltrumita channel and GTG titles.",
+      "statusReason": ""
     }
   ],
   "ogImageSources": [
@@ -318,9 +328,35 @@
       "badge": "Featured",
       "status": "active",
       "displayOrder": 1,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@avatarshuvd",
       "videos": [
+        {
+          "id": "YZXV62mJFWM",
+          "title": "Guide to Event OPs! - Invincible: Guarding the Globe",
+          "description": "Avatar Shuvd walks through event OPs and how to approach them in Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-11-01",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=YZXV62mJFWM",
+          "canonicalUrl": "https://www.youtube.com/watch?v=YZXV62mJFWM",
+          "evidenceNote": "Channel videos page lists this video for Avatar Shuvd; public player metadata confirms uploader, title, and 1011s runtime. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 1011,
+            "viewCount": 2137,
+            "publishedAt": "2026-11-01T09:00:32-08:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "Maximize your wave count!",
+            "checkedAt": "2026-11-02"
+          }
+        },
         {
           "id": "AuXyUTL85cI",
           "title": "PUMPKIN WHALING! - Invincible: Guarding the Globe",
@@ -336,7 +372,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 2482,
-            "viewCount": 2521,
+            "viewCount": 3442,
             "publishedAt": "2026-10-31T04:00:10-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -344,7 +380,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "I need them all!...but why that number?",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -362,7 +398,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 5679,
-            "viewCount": 2334,
+            "viewCount": 2516,
             "publishedAt": "2026-10-30T17:12:53-07:00",
             "isLive": true,
             "isUpcoming": null,
@@ -370,7 +406,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Stand Ready for Shuvd's Arrival!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -388,7 +424,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1361,
-            "viewCount": 5291,
+            "viewCount": 5752,
             "publishedAt": "2026-10-30T04:00:02-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -396,7 +432,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "YEEEEEEES! But where did those restrictions come from?....hm.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -414,7 +450,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 795,
-            "viewCount": 3105,
+            "viewCount": 3148,
             "publishedAt": "2026-10-29T04:00:23-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -422,7 +458,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "I'm sure every answer is very satisfying!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -440,7 +476,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 599,
-            "viewCount": 7324,
+            "viewCount": 7429,
             "publishedAt": "2026-10-28T04:00:08-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -448,7 +484,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Am sad. Am mad.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -466,7 +502,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1156,
-            "viewCount": 8249,
+            "viewCount": 8336,
             "publishedAt": "2026-10-26T04:00:35-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -474,7 +510,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Our first non-alt ED Defender! (wait, seriously? How the heck did that happen?)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -492,7 +528,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1107,
-            "viewCount": 4970,
+            "viewCount": 4983,
             "publishedAt": "2026-10-25T04:00:36-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -500,7 +536,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Doing summons on a budget because HALLOWEEN IS COMING, OH MY GOD!!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -518,7 +554,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 3861,
-            "viewCount": 3119,
+            "viewCount": 3125,
             "publishedAt": "2026-10-24T04:57:40-07:00",
             "isLive": true,
             "isUpcoming": null,
@@ -526,7 +562,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Stand Ready for Shuvd's Arrival!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -544,7 +580,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 770,
-            "viewCount": 3871,
+            "viewCount": 3874,
             "publishedAt": "2026-10-20T03:00:36-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -552,7 +588,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Halloween is almost here. Stay strong.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -570,7 +606,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 533,
-            "viewCount": 894,
+            "viewCount": 895,
             "publishedAt": "2026-10-19T03:00:18-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -578,7 +614,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "🔥 BEST START EVER! 🔥 Download RAID today using my link: Get a MASSIVE head start with 2 amazing Legendaries + 3 S-Tier Epics instantly via my link only! Promocode: SUPERVICTORY - Pelops The Victor (Legendary) lv01 - Mavara The Web Diviner (Legendary) lv15 - Fahrakin the Fat (Epic) lv20 - Tagoar (Epic) lv30 - Venomage (Epic) The Oz champs are just so much fun, y'all.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -596,7 +632,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 667,
-            "viewCount": 3443,
+            "viewCount": 3446,
             "publishedAt": "2026-10-17T11:28:56-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -604,7 +640,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Want XP? Want Totems? Want Thragg? Machine Head has got you.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -622,7 +658,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 827,
-            "viewCount": 14089,
+            "viewCount": 14243,
             "publishedAt": "2026-10-17T11:28:27-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -630,7 +666,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "okay yeah, an update is coming probably.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -656,7 +692,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "🔥 BEST START EVER! 🔥 Download RAID today using my link: Get a MASSIVE head start with 2 amazing Legendaries + 3 S-Tier Epics instantly via my link only! Promocode: SUPERVICTORY - Pelops The Victor (Legendary) lv01 - Mavara The Web Diviner (Legendary) lv15 - Fahrakin the Fat (Epic) lv20 - Tagoar (Epic) lv30 - Venomage (Epic) These two are kinda awesome actually.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -674,7 +710,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1699,
-            "viewCount": 6001,
+            "viewCount": 6025,
             "publishedAt": "2026-10-15T04:00:02-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -682,7 +718,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Beasts are so cool!...but is that it?",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -700,7 +736,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 721,
-            "viewCount": 4530,
+            "viewCount": 4538,
             "publishedAt": "2026-10-14T04:00:11-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -708,7 +744,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Another new event! This one is quirky, but I kinda like it!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -726,7 +762,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 564,
-            "viewCount": 2239,
+            "viewCount": 2240,
             "publishedAt": "2026-10-13T00:00:27-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -734,7 +770,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "They are adding it to everything, and I am completely down for it.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -760,7 +796,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "🔥 BEST START EVER! 🔥 Download RAID today using my link: Get a MASSIVE head start with 2 amazing Legendaries + 3 S-Tier Epics instantly via my link only! Promocode: SUPERVICTORY - Pelops The Victor (Legendary) lv01 - Mavara The Web Diviner (Legendary) lv15 - Fahrakin the Fat (Epic) lv20 - Tagoar (Epic) lv30 - Venomage (Epic) Woof, these are tough.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -778,7 +814,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1073,
-            "viewCount": 9844,
+            "viewCount": 9886,
             "publishedAt": "2026-10-11T04:00:15-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -786,7 +822,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "We're gonna need them!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -804,7 +840,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 814,
-            "viewCount": 5314,
+            "viewCount": 5329,
             "publishedAt": "2026-10-24T04:00:01-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -812,7 +848,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "I do love a seasonal character.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -838,7 +874,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "🔥 BEST START EVER! 🔥 Download RAID today using my link: Get a MASSIVE head start with 2 amazing Legendaries + 3 S-Tier Epics instantly via my link only! Promocode: SUPERVICTORY - Pelops The Victor (Legendary) lv01 - Septimus (Legendary) lv15 - Tagoar (Epic) lv20 - Venomage (Epic) lv30 - Fahrakin (Epic) This guy is wild!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -856,7 +892,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 697,
-            "viewCount": 5893,
+            "viewCount": 5903,
             "publishedAt": "2026-10-22T04:00:28-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -864,7 +900,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Halloween cannot come soon enough, I swear.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -882,7 +918,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 764,
-            "viewCount": 5418,
+            "viewCount": 5421,
             "publishedAt": "2026-10-21T04:00:23-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -890,7 +926,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "I mean, I'm not wrong. (Stay strong until Halloween)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -916,7 +952,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "This timing is perfect!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -942,7 +978,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Time to burn my horde!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -968,7 +1004,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "A nice little look under the hood for old and new players alike!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -994,7 +1030,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Yeah, no Kanzlok, no gems.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1012,7 +1048,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 602,
-            "viewCount": 7084,
+            "viewCount": 7086,
             "publishedAt": "2026-09-16T04:00:01-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1020,7 +1056,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Lots of new toys to play with and a HUGE debuff change!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1038,7 +1074,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 798,
-            "viewCount": 22181,
+            "viewCount": 22196,
             "publishedAt": "2026-09-09T04:00:36-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1046,7 +1082,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Time to add a new character to the list and correct some placements!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1064,7 +1100,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 543,
-            "viewCount": 4518,
+            "viewCount": 4519,
             "publishedAt": "2026-10-10T04:00:39-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1072,7 +1108,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hey, not a bad time for a good excuse to save gems.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1090,7 +1126,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 608,
-            "viewCount": 4388,
+            "viewCount": 4393,
             "publishedAt": "2026-10-09T00:00:14-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1098,7 +1134,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "The return of an old favorite, but without the shine.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1124,7 +1160,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Here are my thoughts on the new mode!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1142,7 +1178,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 851,
-            "viewCount": 17724,
+            "viewCount": 17726,
             "publishedAt": "2026-07-12T10:00:32-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1150,7 +1186,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Oooo, the meta has had a big shift!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1168,7 +1204,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 952,
-            "viewCount": 21490,
+            "viewCount": 21492,
             "publishedAt": "2026-06-10T04:00:03-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1176,7 +1212,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Shifting some characters around and adding the Leader of the Coalition!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1194,7 +1230,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1429,
-            "viewCount": 48703,
+            "viewCount": 48706,
             "publishedAt": "2026-05-06T04:00:46-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1202,7 +1238,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "I think I am doing this on time! Please God don't let there be an update tomorrow...",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1228,7 +1264,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "A new tier list is here!...which means an update is probably around the corner to change things.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1246,7 +1282,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1360,
-            "viewCount": 6587,
+            "viewCount": 6589,
             "publishedAt": "2026-07-27T04:00:37-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1254,7 +1290,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "What do I even type here? This dude is nuts. The end.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1272,7 +1308,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 2669,
-            "viewCount": 33563,
+            "viewCount": 33564,
             "publishedAt": "2026-02-22T03:01:31-08:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1280,7 +1316,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "An overview of EVERY hero in the game!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1306,7 +1342,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Let's see what I've been up to!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1324,7 +1360,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1892,
-            "viewCount": 6522,
+            "viewCount": 6527,
             "publishedAt": "2026-08-27T04:00:30-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1332,7 +1368,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Okay, I don't know if this was intended, but it is great!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1350,7 +1386,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 822,
-            "viewCount": 5517,
+            "viewCount": 5520,
             "publishedAt": "2024-05-20T02:00:31-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1358,7 +1394,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "I wish I could have gotten this out sooner, but basically, a perfect storm happened that allows anyone to easily max the equipment shop and get awesome loot!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1376,7 +1412,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 862,
-            "viewCount": 3117,
+            "viewCount": 3118,
             "publishedAt": "2026-08-26T04:00:31-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1384,7 +1420,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "It's a brand-new shop!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1410,7 +1446,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "This went well!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1428,7 +1464,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 652,
-            "viewCount": 4997,
+            "viewCount": 4998,
             "publishedAt": "2025-04-18T08:01:26-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1436,7 +1472,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "He finally made it!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1454,7 +1490,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 644,
-            "viewCount": 3223,
+            "viewCount": 3224,
             "publishedAt": "2025-08-23T05:01:54-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1462,7 +1498,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Our first Viltrumite support and leader is here!! And he looks great!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1488,7 +1524,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Multiple days of events are here, started with free Agency characters and a fan favorite character finally added to the pool!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1514,7 +1550,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "You asked! And I have answered! Let's see how these characters rank!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1540,7 +1576,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "This was way too good. I don't deserve this at all!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1558,7 +1594,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 887,
-            "viewCount": 4778,
+            "viewCount": 4779,
             "publishedAt": "2026-08-22T04:00:02-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1566,7 +1602,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Quite the surprised, but hey! He looks cool!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1592,7 +1628,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Boot camp is amazing! But with a new hero coming, does it matter...?",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1610,7 +1646,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 609,
-            "viewCount": 3837,
+            "viewCount": 3839,
             "publishedAt": "2026-08-19T04:00:15-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1618,7 +1654,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "FINALLY! This was for me!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1636,7 +1672,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1061,
-            "viewCount": 4982,
+            "viewCount": 4985,
             "publishedAt": "2026-08-18T04:00:35-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1644,7 +1680,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Get the DOG!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1662,7 +1698,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 668,
-            "viewCount": 13915,
+            "viewCount": 13920,
             "publishedAt": "2026-08-16T04:00:33-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1670,7 +1706,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Let's get into this brand-new tier list!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1688,7 +1724,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 589,
-            "viewCount": 2034,
+            "viewCount": 2035,
             "publishedAt": "2026-08-15T04:00:03-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1696,7 +1732,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Clone mixed with Faction event is good times!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1722,7 +1758,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "FINALLY!! YES!! YEEEEES!!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1748,7 +1784,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Well, this is funky.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1766,7 +1802,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 755,
-            "viewCount": 5916,
+            "viewCount": 5917,
             "publishedAt": "2026-09-02T04:00:20-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1774,7 +1810,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "They listened!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1800,7 +1836,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Oh this is a good one!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1818,7 +1854,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1904,
-            "viewCount": 2318,
+            "viewCount": 2321,
             "publishedAt": "2026-08-31T00:00:06-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1826,7 +1862,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "The pulls don't lie!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1852,7 +1888,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Such a basic event...and yet...",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1878,12 +1914,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Our newest subsoil is here! What do we think!?",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCmhqLp5THAKvldNDO0a1NWw",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "rapid-gtg",
@@ -1898,7 +1934,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 2,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/watch?v=kPDC78Dv1NI",
       "videos": [
         {
@@ -1916,7 +1952,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 2900,
-            "viewCount": 10318,
+            "viewCount": 10628,
             "publishedAt": "2026-10-23T21:57:45-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1924,7 +1960,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "From COMPLETE noob to fully equipped, omnipotent beast! This is the ultimate noob to pro guide and walkthrough for the Invincible mobile game (Invincible: Guarding the Globe / Invincible GTG), built for ALL players. 900+ days, £0 spent, and everything I know in one video.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1942,7 +1978,7 @@
           "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory.",
           "youtube": {
             "durationSeconds": 58,
-            "viewCount": 7310,
+            "viewCount": 7312,
             "publishedAt": "2026-10-16T15:41:56-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1950,7 +1986,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "These are the TOP 5 heroes and artifacts I'd lock in for Boss Raids in Invincible: Guarding the Globe! If you're stuck on the Hail Mary boss, wasting artifacts, or wondering who is actually worth your resources for Boss Raids, this video covers the picks, why they work, and how to set them up.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -1968,7 +2004,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 351,
-            "viewCount": 1829,
+            "viewCount": 1834,
             "publishedAt": "2026-10-01T19:36:35-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -1976,7 +2012,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible: Guarding the Globe just dropped what I genuinely believe is the best event this game has ever seen - and you have less than 24 hours to make the most of it. In this video, I break down exactly what to spend, where to spend it, and how to maximise every single reward before the event closes. Where YouTube Members also get SPECIAL access!!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2002,7 +2038,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "After hitting 1K subscribers, I compiled the ENTIRE Invincible : Guarding the Globe community's wishlist - game modes, QOL improvements, and creator-backed ideas that could transform the game. In this video, I break down: 🎮 Custom 1v1 competitive league (inspired by Clash Royale & Pokémon GO) 🌍 Global community events (like Fortnite challenges) 📊 Journey Mode & account level rewards ⚙️ Game-cha…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2028,7 +2064,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Ubisoft gave me exclusive early access to Boss Raid...👀 THE most anticipated Alliance mode in Invincible: Guarding the Globe! This is my first look at Hail Mary, the first kaiju boss, breaking down all three phases with strategy guides, team comp analysis, and gameplay footage you won't see anywhere else until August 3rd.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2046,7 +2082,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 2231,
-            "viewCount": 41937,
+            "viewCount": 42011,
             "publishedAt": "2026-08-15T16:03:41-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2054,7 +2090,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Ranking ALL 62 INVINCIBLE: Guarding the Globe characters from worst to best as a free-to-play player with 800+ days of experience. This tier list covers every faction, every role, and every use case—so you know exactly who to build. Check out the FINAL TIERLIST here!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2072,7 +2108,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 310,
-            "viewCount": 2064,
+            "viewCount": 2065,
             "publishedAt": "2026-07-27T09:35:29-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2080,7 +2116,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Brit just landed in Invincible: Guarding the Globe, and in this video, I break down absolutely everything you need to know about him in under 5 minutes. We cover his full kit — Bombs Away, Forever Agent, True Leader, and Cannonball — plus the best team to run him in (Tech Jacket, Space Racer, and Anissa or Doc Seismic), the artifacts that make him work, and whether he's actually worth pulling for.…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2098,7 +2134,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 2563,
-            "viewCount": 21426,
+            "viewCount": 21477,
             "publishedAt": "2026-07-13T22:58:21-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2106,7 +2142,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "I've spent over 2 years building my Invincible: Guarding the Globe account completely free to play — $0 spent. So I linked up with EdwardKratos, the ranked whale in the entire game, who's put over $100,000 into his account, to see exactly how far money actually takes you in this game.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2124,7 +2160,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 419,
-            "viewCount": 1585,
+            "viewCount": 1595,
             "publishedAt": "2026-06-29T07:58:54-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2132,7 +2168,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Volcanikka just dropped in Invincible: Guarding the Globe — and in JUST 7 minutes! I'm covering EVERYTHING. Her skills, the battle-start combo, best team comp, event tips, and whether she's actually worth pulling for as a free-to-play player. ⏱ CHAPTERS Intro 7 Minute Countdown Begins Who is Volcanikka?",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2150,7 +2186,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1919,
-            "viewCount": 31969,
+            "viewCount": 32050,
             "publishedAt": "2026-06-24T20:54:30-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2158,7 +2194,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "832 days. £0 spent. This is what free to play actually looks like in Invincible: Guarding the Globe — a squad idle RPG by Ubisoft based on the Invincible comic and TV series. I created an account with one mission: spend absolutely no money and see how competitive I could actually become. No purchases. No shortcuts. Just 832 days of grinding it out completely free to play.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2184,12 +2220,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Ubisoft just dropped the Strategy Directive event, and it is genuinely one of the strangest things they've ever released. A pay-to-play nightmare locked behind access cards, a shop with some of the best rates we've ever seen, and an event that was only saved because the servers broke. Let's talk about all of it. ⏱ CHAPTERS: - What Is the Strategy Directive Event?",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCLvD52j9YDTXJa0WvUJxacw",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "tutaaa-gtg",
@@ -2205,7 +2241,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 3,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@TutaaaGTG",
       "videos": [
         {
@@ -2223,7 +2259,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 853,
-            "viewCount": 7144,
+            "viewCount": 7177,
             "publishedAt": "2026-09-27T06:43:02-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2231,7 +2267,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "In this guide, I'm breaking down IGTG progression from beginner all the way to end game, covering what you should prioritise at each stage, how to manage your resources, when to start building multiple teams, and how to avoid wasting valuable resources. I'm deliberately not telling you which exact heroes to build, because the meta is constantly changing.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2249,7 +2285,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 939,
-            "viewCount": 2026,
+            "viewCount": 2037,
             "publishedAt": "2026-10-04T07:15:26-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2257,7 +2293,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "If you're new to Invincible: Guarding the Globe, there are A LOT of things I wish I knew when I first started playing. This isn't another progression guide, tier list or resource guide. Instead, I'm going through 10 things I wish I knew before playing IGTG — from understanding the community and the meta, to character interactions, experimenting with teams, setting your own goals and even knowing w…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2275,7 +2311,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1045,
-            "viewCount": 14589,
+            "viewCount": 14671,
             "publishedAt": "2026-09-13T04:58:14-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2283,7 +2319,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Are you getting the most out of your GDA Ops? 👀 GDA Ops are one of the biggest ways to progress your account in Invincible: Guarding the Globe, but knowing which operations to prioritise, what teams to use and where to focus your waves can make a HUGE difference.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2301,7 +2337,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 706,
-            "viewCount": 814,
+            "viewCount": 817,
             "publishedAt": "2026-08-09T08:13:26-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2309,7 +2345,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Boss Raid is finally HERE in Invincible: Guarding the Globe… but after actually playing it, I have to say I’m disappointed. Hail Mary looks incredible, and I LOVE the idea of having a massive Kaiju boss for the entire alliance to work towards defeating. But the actual gameplay? The restrictions? The lack of strategy? And most importantly… the rewards?",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2327,7 +2363,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 791,
-            "viewCount": 1662,
+            "viewCount": 1664,
             "publishedAt": "2026-08-16T06:06:14-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2335,7 +2371,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "I'm officially going FREE TO PLAY in Invincible: Guarding the Globe… well, mostly. After spending money on packs, offers, events and progression over time, I've reached the point where I just don't think the value is there anymore. I'm NOT quitting Invincible GTG, and I'm still going to allow myself to buy Alliance Boosters and Gem Packs when I think they're genuinely worth it.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2353,7 +2389,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1005,
-            "viewCount": 1569,
+            "viewCount": 1571,
             "publishedAt": "2026-08-23T04:58:46-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2361,7 +2397,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "After spending money on the game for a long time, I've decided to massively cut back on my spending. From now on, I'm only allowing myself to buy Gem Packs and Alliance Boosters while everything else is off the table. But if I'm going to play this way, I need some BIG goals... And I've come up with one that is absolutely ridiculous.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2379,7 +2415,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 642,
-            "viewCount": 2083,
+            "viewCount": 2084,
             "publishedAt": "2026-08-02T08:16:51-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2387,7 +2423,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Is Hero XP actually the biggest problem in Invincible: Guarding the Globe... or is the real issue the way XP rewards scale as your account progresses? In today's video, I break down why I think the Hero XP system isn't fundamentally broken, but instead why GDA Ops and event rewards lose their value for late-game players as Hero XP requirements continue to increase.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2405,7 +2441,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 436,
-            "viewCount": 2699,
+            "viewCount": 2700,
             "publishedAt": "2026-07-27T10:13:20-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2413,7 +2449,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "🚨 Boss Raid Mode has FINALLY been revealed in **Invincible: Guarding the Globe** after weeks of the developers teasing us with \"Something BIG is coming!\" In this video, we're breaking down everything we know so far, how I think the mode will work, the heroes that could become meta, and why this could be the biggest update the game has ever seen.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2431,7 +2467,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 517,
-            "viewCount": 10610,
+            "viewCount": 10625,
             "publishedAt": "2026-07-26T07:41:58-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2439,7 +2475,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "After making my video on the 10 characters I regret investing in, it only felt right to make the opposite list! Today I'm counting down the 10 BEST character investments I've ever made on my whale account in Invincible: Guarding the Globe. ⚠️ This is NOT a tier list. These are simply the characters that have given my account the best return on investment throughout my time playing competitively.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2457,7 +2493,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 666,
-            "viewCount": 8272,
+            "viewCount": 8285,
             "publishedAt": "2026-07-19T07:19:24-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2465,7 +2501,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Have you ever looked back at your account and thought... \"Yeah, that was a mistake.\" In today's video, I'm counting down the 10 characters I personally regret investing in on my whale account in Invincible: Guarding the Globe. This isn't a tier list, and I'm not saying these characters are bad. Some of them are actually really strong.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2491,7 +2527,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "YouTube Description Is The Ones In Charge the worst weekend event we've seen in Invincible: Guarding the Globe? In this video, I break down why I think this event completely misses the mark, from the weak GDA faction and the lack of a Double Elite Rate, to the disappointing milestone rewards featuring Cecil and Donald.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2517,12 +2553,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "We HAVE to talk about Alliance Mode in Invincible: Guarding the Globe... With Alliance Regions continuing to expand, I think there could be **so much more potential** here than what we're currently getting. I've got a few ideas for what could make this mode genuinely worth grinding — and one of them could completely change how Alliances work in IGTG. 👀 What do you think?",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCMmKlikOnlwSlJETd7BVixw",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "th3o",
@@ -2537,7 +2573,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 4,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@TH3Oyt",
       "videos": [
         {
@@ -2555,7 +2591,7 @@
           "statusReason": "Owner has disabled embedding, so this video cannot play in an embedded player.",
           "youtube": {
             "durationSeconds": 1652,
-            "viewCount": 5927,
+            "viewCount": 5932,
             "publishedAt": "2026-09-07T10:25:39-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2563,7 +2599,7 @@
             "playable": true,
             "embeddable": false,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new Recruitment Range Event! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2581,7 +2617,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1691,
-            "viewCount": 5277,
+            "viewCount": 5284,
             "publishedAt": "2026-09-18T10:37:40-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2589,7 +2625,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new Ragnars Hero! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2607,7 +2643,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1368,
-            "viewCount": 4836,
+            "viewCount": 4846,
             "publishedAt": "2026-09-15T08:30:41-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2615,7 +2651,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new Update 3.6! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2633,7 +2669,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 573,
-            "viewCount": 1181,
+            "viewCount": 1182,
             "publishedAt": "2026-10-19T06:22:25-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2641,7 +2677,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering then New Lock and Reload event! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2659,7 +2695,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 681,
-            "viewCount": 622,
+            "viewCount": 626,
             "publishedAt": "2026-10-14T10:55:10-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2667,7 +2703,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new Lock and Load event! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2685,7 +2721,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1265,
-            "viewCount": 2939,
+            "viewCount": 2943,
             "publishedAt": "2026-09-29T11:38:16-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2693,7 +2729,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new Recruitment Multiplier Event! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2719,7 +2755,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new Pick & Drop event! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2745,7 +2781,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the Fresh Recruits Event! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2763,7 +2799,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 558,
-            "viewCount": 1505,
+            "viewCount": 1506,
             "publishedAt": "2026-08-11T10:10:01-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2771,7 +2807,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new Recruitment Road Event! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2789,7 +2825,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 814,
-            "viewCount": 2268,
+            "viewCount": 2269,
             "publishedAt": "2026-08-21T11:47:47-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2797,7 +2833,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new Damien Darkblood Event! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2815,7 +2851,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1462,
-            "viewCount": 10155,
+            "viewCount": 10177,
             "publishedAt": "2026-08-18T09:21:43-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2823,7 +2859,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new best team! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2849,7 +2885,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new Viltrumite Event! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2875,7 +2911,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new Boss Battle and New Pick n Drop event! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2901,7 +2937,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering Arts Outlet event! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2919,7 +2955,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1480,
-            "viewCount": 2359,
+            "viewCount": 2362,
             "publishedAt": "2026-07-25T11:08:09-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -2927,12 +2963,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Welcome back to my coverage on Invincible: Guarding the Globe and today I'm going to be covering the new hero Brit! If you enjoy this video then please consider liking the video, leaving a comment and subscribing to the channel for more content soon! :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCMQhyVbKHF97HiQYt9pwJgA",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "lavamoose",
@@ -2946,7 +2982,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 5,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@LAVAMOOSE1369",
       "videos": [
         {
@@ -2972,7 +3008,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -2998,7 +3034,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3024,7 +3060,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3050,7 +3086,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3068,7 +3104,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1034,
-            "viewCount": 61,
+            "viewCount": 62,
             "publishedAt": "2026-10-19T04:50:54-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -3076,7 +3112,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3102,7 +3138,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3120,7 +3156,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1309,
-            "viewCount": 43,
+            "viewCount": 44,
             "publishedAt": "2026-10-08T15:35:31-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -3128,7 +3164,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3154,7 +3190,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3180,7 +3216,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3206,7 +3242,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3232,7 +3268,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3258,7 +3294,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3284,7 +3320,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3310,7 +3346,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3336,7 +3372,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3362,7 +3398,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3388,12 +3424,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hello and welcome to my channel, where I play all sorts of games, and make content for Invincible Guarding The Globe. I hope you like my content enough to like, comment, subscribe, and share! Thanks for watching and have a nice morning, afternoon, evening and night Keywords: Invincible Invincible Guarding The Globe Invincible Game Invincible Season 1 Invincible Season 2 Invincible Season 3 Invinci…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCr4L3RRjIpKSCC7aaFWosKQ",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "omni-bane",
@@ -3408,9 +3444,35 @@
       "badge": "Updates",
       "status": "active",
       "displayOrder": 6,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@BaneApe5",
       "videos": [
+        {
+          "id": "v6VSgbnO6RA",
+          "title": "Invincible Guarding The Globe - Happy Halloween !! Massive Wish Event Summons!!",
+          "description": "OMNI-BANE opens a large Halloween Wish event summon session in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-10-31",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=v6VSgbnO6RA",
+          "canonicalUrl": "https://www.youtube.com/watch?v=v6VSgbnO6RA",
+          "evidenceNote": "Channel videos page lists this video for OMNI-BANE; public player metadata confirms uploader, title, and 1411s runtime. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 1411,
+            "viewCount": 103,
+            "publishedAt": "2026-10-31T18:40:43-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "",
+            "checkedAt": "2026-11-02"
+          }
+        },
         {
           "id": "HFeNbDaxfV0",
           "title": "Invincible Guarding The Globe- Wish Event Summons!!",
@@ -3426,7 +3488,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 633,
-            "viewCount": 280,
+            "viewCount": 290,
             "publishedAt": "2026-10-30T05:28:41-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -3434,7 +3496,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "What’s good everyone! This will be the first part chasing after these pumpkins!! be sure to let me know your luck in the comment section below. Thank you again for all the love and support and happy Halloween! ￼",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3452,7 +3514,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 326,
-            "viewCount": 1128,
+            "viewCount": 1138,
             "publishedAt": "2026-10-29T09:37:50-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -3460,7 +3522,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3478,7 +3540,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 381,
-            "viewCount": 598,
+            "viewCount": 602,
             "publishedAt": "2026-10-27T08:40:43-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -3486,7 +3548,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3504,7 +3566,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 201,
-            "viewCount": 277,
+            "viewCount": 278,
             "publishedAt": "2026-10-26T05:12:14-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -3512,7 +3574,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3530,7 +3592,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 892,
-            "viewCount": 262,
+            "viewCount": 263,
             "publishedAt": "2026-10-24T20:43:13-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -3538,7 +3600,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3556,7 +3618,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 225,
-            "viewCount": 644,
+            "viewCount": 645,
             "publishedAt": "2026-10-22T06:46:21-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -3564,7 +3626,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3590,7 +3652,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3616,7 +3678,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3642,7 +3704,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3668,7 +3730,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3694,7 +3756,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3712,7 +3774,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 3102,
-            "viewCount": 610,
+            "viewCount": 612,
             "publishedAt": "2026-10-24T11:26:57-07:00",
             "isLive": true,
             "isUpcoming": null,
@@ -3720,7 +3782,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "what it do baby! invincible GTg!🔥🔥🤝",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3738,7 +3800,7 @@
           "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory.",
           "youtube": {
             "durationSeconds": 31,
-            "viewCount": 578,
+            "viewCount": 581,
             "publishedAt": "2026-10-24T05:04:58-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -3746,7 +3808,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3764,7 +3826,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 850,
-            "viewCount": 151,
+            "viewCount": 152,
             "publishedAt": "2026-10-23T16:32:06-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -3772,7 +3834,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible Guarding The Globe - Astounding Wolf-Man Summons!!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3790,7 +3852,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 311,
-            "viewCount": 682,
+            "viewCount": 686,
             "publishedAt": "2026-10-23T06:36:30-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -3798,7 +3860,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3824,7 +3886,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3850,7 +3912,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3876,7 +3938,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3902,7 +3964,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3928,7 +3990,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Did ya miss me ⚡️",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3954,7 +4016,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "ALL IS OURS! 🔥 Show ya boy some love! like comment & subcribe!! ⚡️",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -3980,7 +4042,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4006,7 +4068,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible Guarding The Globe - The Ones in Charge Event!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4032,7 +4094,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible! ALL IS OURS! 🔥 Show ya boy some love! like comment & subcribe!! ⚡️",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4058,7 +4120,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Season 4 is so exciting! But at this point I’m just itching to finally get ….😈",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4084,7 +4146,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4110,12 +4172,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Did ya miss me ⚡️💪",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UC7C8cCP4gdyTULBkZZyVGiQ",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "just-a-guy-named-francis",
@@ -4130,7 +4192,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 7,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@JustaGuynamedFrancis",
       "videos": [
         {
@@ -4156,7 +4218,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "The Ragnars have arrived in Invincible: Guarding the Globe! In today's video, I'm putting the MAX LEVEL event shop to the test with 100 refreshes to see just how often the Ragnars actually appear! How many Ragnars will show up? How many Elites will we see along the way? And are event shop refreshes actually worth it?",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4182,7 +4244,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "A brand new character is releasing today! 👀 We’re jumping in live to check them out, test where they fit into the roster, try some teams, and see whether they’re actually worth investing in. What a lovely day.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4208,7 +4270,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Boss Raids are finally here! 👀 Today we’re jumping into the new mode, testing it out, seeing how it works, and finding out whether we’re actually ready for it. What a lovely day. 👇 Some links Official Invincible: Guarding the Globe Discord 👍 Like the like button if you liked the video or stream that I liked making or streaming (I ain't making two description templates to copy and paste) 💬 Drop…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4234,7 +4296,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "The new Boss Raid event has arrived in Invincible: Guarding the Globe! In this video, I go through the official Boss Raid FAQ and explain everything you need to know about this new limited-time Alliance mode. We’ll cover how to unlock Boss Raid, how energy and attacks work, changing Alliances, Backup Heroes, Boss phases, damage calculations and Trophy Road rewards.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4260,7 +4322,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "What a lovely day 👇 Some links Official Invincible: Guarding the Globe Discord 👍 Like the like button if you liked the video or stream that I liked making or streaming (I ain't making two description templates to copy and paste) 💬 Drop a comment — I'm trying to reply to EVERYONE!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4278,7 +4340,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 555,
-            "viewCount": 1970,
+            "viewCount": 1971,
             "publishedAt": "2026-07-01T12:34:47-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -4286,7 +4348,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Camera Lighting, I'm working on that Should you invest in the current wish event? 👇 Some links Official Invincible: Guarding the Globe Discord 👍 Like the like button if you liked the video or stream that I liked making or streaming 💬 Drop a comment — I'm trying to reply to EVERYONE!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4312,12 +4374,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "New wish event here 👇 Some links Official Invincible: Guarding the Globe Discord 👍 Like the like button if you liked the video or stream that I liked making or streaming (I ain't making two description templates to copy and paste) 💬 Drop a comment — I'm trying to reply to EVERYONE!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCJqFBhPxl1e0OvTyUo503LA",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "beaoloooo",
@@ -4328,7 +4390,7 @@
       "tags": [],
       "status": "hidden",
       "displayOrder": 8,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/shorts/kGq-Racu8tw",
       "videos": [
         {
@@ -4354,12 +4416,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCUBTokyFQ6TmHhnQQ5AE2mA",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "kingslay727",
@@ -4375,7 +4437,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 9,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/shorts/sxosoNY7WDU",
       "videos": [
         {
@@ -4393,7 +4455,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1092,
-            "viewCount": 38,
+            "viewCount": 43,
             "publishedAt": "2026-10-30T01:30:37-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -4401,7 +4463,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "NEW EVENT BREAKDOWN",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4427,7 +4489,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "guide for new and vet players about boot camp and its new feature.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4453,7 +4515,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "NEW HERO-WOLF MAN NEW TV SHOW SEASON FILES ADDED PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4479,7 +4541,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "NEW HERO-WOLF MAN NEW TV SHOW SEASON FILES ADDED PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4505,7 +4567,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "NEW HERO-WOLF MAN NEW TV SHOW SEASON FILES ADDED PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4531,7 +4593,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "my summons in the new Lock and Load event",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4557,7 +4619,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "SHOWCASING NEW EVENT AND SAYING MY THOUGHTS",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4583,7 +4645,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "mas rank up of Brit, Tech Jacket, Ragnars and Volcanikka come see how strong we got! and if you want to show off your strength join my Discord",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4609,7 +4671,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "THE BIGEST RANK UP STREAM EVER PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4627,7 +4689,7 @@
           "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory.",
           "youtube": {
             "durationSeconds": 47,
-            "viewCount": 13627,
+            "viewCount": 13733,
             "publishedAt": "2026-10-06T16:27:25-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -4635,7 +4697,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4661,7 +4723,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "THE BIGEST RANK UP STREAM EVER PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4687,7 +4749,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "TRYING OUT ART\"S SHOP EVENT! WITH NEW MULTPLIER FEATURE WHERE IT SEEMS MIGHT GET A LITTLE MORE CONTROLOVER OUR OWN FATE IN PULL RATE IS IT WORTH IT OR NOT? PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4713,7 +4775,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "TRYING OUT NEW RECRUTMENT MULTPLIER EVENT! WHERE IT SEEMS WE CONTROL OUR OWN FATE IN PULL RATE IS IT WORTH IT OR NOT? PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4739,7 +4801,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "TRYING OUT NEW RECRUTMENT MULTPLIER EVENT! WHERE IT SEEMS WE CONTROL OUR OWN FATE IN PULL RATE IS IT WORTH IT OR NOT? PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4765,7 +4827,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "TRYING OUT NEW RECRUTMENT MULTPLIER EVENT! WHERE IT SEEMS WE CONTROL OUR OWN FATE IN PULL RATE IS IT WORTH IT OR NOT? PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4791,7 +4853,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "SHOWING OFFF NEW EVENT!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4817,7 +4879,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "NEW HERO-WOLF MAN NEW TV SHOW SEASON FILES ADDED PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4843,7 +4905,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "going over EVERYTHING you'll need to know for this wolf man event LIVE TONIGHT 9PM EST @KingSlay727 on Youtube",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4869,7 +4931,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "NEW TV SHOW SEASON FILES ADDED HERO REWORKS BUG FIXES TV SHOW CASE FILES EVENT PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4895,7 +4957,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "NEW TV SHOW SEASON FILES ADDED HERO REWORKS BUG FIXES TV SHOW CASE FILES EVENT PLZ SUB (404/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4913,7 +4975,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 5510,
-            "viewCount": 70,
+            "viewCount": 71,
             "publishedAt": "2026-07-24T01:20:37-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -4921,7 +4983,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "RAPID BANE AND ALEXANDER ALL HOPE ON THIS VID TO TALK ABOUT THE FUTRUE OF GTG WE WILL ALL LIKE TO SEE! @ilovealxxxx0o @BaneApe5 @RapidGTG",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4947,7 +5009,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "NEW ITEMS ADDED! NEW CASE FILES! NEW HERO!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4973,7 +5035,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -4999,7 +5061,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "DARKBLOOD UNDER WORLD EVENT SUMMONS",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5025,7 +5087,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "going over new hero's skill kit. witch level is best break away point.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5051,7 +5113,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "BOOT CAMP EVENT SUMMONS",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5077,7 +5139,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "GOING OVER NEW UPDATE PATCH NOTES",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5103,7 +5165,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "NEW PATCH 3.5 & BOOT CAMP EVENT ALSO A LOT! OF HERO RANK UPS DONT MISS IT",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5129,7 +5191,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "GTG CLONING CRIMINALS EVENT",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5155,12 +5217,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "RANK UPS, ARENA, BOSS RAIDS AND QnA (385/500 subs)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCTWNwUOlYOlme4NiJUbkZ1Q",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "invincible-gtg-omni-fan",
@@ -5176,7 +5238,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 13,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@Invincible.gtg.omnifan",
       "videos": [
         {
@@ -5194,7 +5256,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 495,
-            "viewCount": 138,
+            "viewCount": 139,
             "publishedAt": "2026-10-29T12:32:32-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -5202,7 +5264,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "This year's Halloween 🎃 event is now Live! on INVINCIBLE Guarding The Globe 🌎 👌🏻 try your hand at obtaining the small pumpkins during the event in the event shop for high rewards!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5228,7 +5290,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Hero Bootcamp Event is back live on INVINCIBLE: Guarding The Globe grab some much needed XP while you can!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5254,7 +5316,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "INVINCIBLE: Guarding The Globe 🌎This stream is created",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5272,7 +5334,7 @@
           "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory.",
           "youtube": {
             "durationSeconds": 122,
-            "viewCount": 172,
+            "viewCount": 173,
             "publishedAt": "2026-10-19T06:43:05-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -5280,7 +5342,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5298,7 +5360,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 298,
-            "viewCount": 53,
+            "viewCount": 54,
             "publishedAt": "2026-10-16T06:12:58-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -5306,7 +5368,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5332,7 +5394,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Thanks to this event i managed to rank my Omni-Man to 3K!!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5358,7 +5420,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "INVINCIBLE: Guarding The Globe 🌎This stream is created",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5384,7 +5446,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5410,7 +5472,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5436,7 +5498,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "INVINCIBLE: Guarding The Globe 🌎This stream is created",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5462,7 +5524,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5480,7 +5542,7 @@
           "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory.",
           "youtube": {
             "durationSeconds": 140,
-            "viewCount": 113,
+            "viewCount": 114,
             "publishedAt": "2026-09-07T10:55:57-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -5488,7 +5550,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5514,7 +5576,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5532,7 +5594,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 784,
-            "viewCount": 73,
+            "viewCount": 74,
             "publishedAt": "2026-10-24T06:28:43-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -5540,7 +5602,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Cecil's Nightmares Halloween Edition 🎃 'Fright Night' available to complete on invinciblegtg. Get some gems 💎 from completing it! Like, Comment and Subcribe it all really helps. Thank you 😊.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5558,7 +5620,7 @@
           "statusReason": "Rejected because YouTube player metadata identifies it as a Short; Shorts are excluded from the creator directory.",
           "youtube": {
             "durationSeconds": 138,
-            "viewCount": 124,
+            "viewCount": 137,
             "publishedAt": "2026-10-23T12:26:51-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -5566,7 +5628,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5592,7 +5654,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5618,7 +5680,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "INVINCIBLE: Guarding The Globe 🌎This stream is created",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5644,7 +5706,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Damien Darkblood (Under Realm) is now available to obtain on @invinciblegtg i managed to get my 1st Damien in this video! What luck 😂",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5670,7 +5732,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "well there goes my 10K Gems 💎 I saved up 😅😂",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5696,7 +5758,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "INVINCIBLE: Guarding The Globe 🌎This stream is created",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5722,7 +5784,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5748,7 +5810,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5774,7 +5836,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5800,7 +5862,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "INVINCIBLE: Guarding The Globe 🌎This stream is created",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5826,7 +5888,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5852,7 +5914,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Update 3.4 new campaign missions and a new social hub section in the game, new patch notes are in the link below. I got wrecked in the campaign cause none of my the order heroes are high level 😩😭",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5878,7 +5940,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "From World's Beyond Recruitment Event or as I like to call it Thragg Event! on @invinciblegtg would have posted this yesterday but I already posted the Cecil's Nightmares Comic-con Event video.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5904,7 +5966,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5922,7 +5984,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 273,
-            "viewCount": 190,
+            "viewCount": 191,
             "publishedAt": "2026-07-08T05:18:50-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -5930,7 +5992,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5956,7 +6018,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -5982,7 +6044,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6008,7 +6070,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6034,12 +6096,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCUlssVj4OfQwbuyBkpCmkOA",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "alexandergzmn-invincible",
@@ -6055,7 +6117,7 @@
       "badge": "New",
       "status": "pending",
       "displayOrder": 14,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@ilovealxxxx0o",
       "videos": [
         {
@@ -6081,7 +6143,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Best ways to earn gems in Invincible: Guarding the Globe as a free-to-play player: Daily Missions: 100 gems per day, or 700 per week. Weekly Missions: Around 400 gems per week. Case Files: Getting a character to Level 150 gives roughly 115 gems. With 34 characters, that’s around 3,910 gems. Cecil’s Nightmares: Some GDA Ops give 100 gems every 5 levels.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6099,7 +6161,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 563,
-            "viewCount": 144,
+            "viewCount": 145,
             "publishedAt": "2026-08-18T14:03:49-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -6107,7 +6169,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "In this video, we’re checking out the new Lucan Case File, going over the latest update, and taking a closer look at Tech Jacket’s updated character model. The Tech Jacket changes are definitely interesting. Her proportions have been adjusted across the board, including her thighs, hips, waist, torso, legs, head, eyes, and overall facial design.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6133,7 +6195,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "In this video, we take an early look at the upcoming Boss Raid feature, explain how the new Alliance game mode works, showcase what we know so far, and answer common questions players may have. Boss Raid is a new limited-time Alliance mode where players work together to defeat powerful bosses, contribute damage to a shared health bar, and earn rewards through the Trophy Road.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6159,7 +6221,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6177,7 +6239,7 @@
           "statusReason": "Rejected because this is a YouTube Short; Shorts do not qualify for the directory.",
           "youtube": {
             "durationSeconds": 81,
-            "viewCount": 1066,
+            "viewCount": 1069,
             "publishedAt": "2026-04-23T22:37:23-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -6185,7 +6247,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6211,7 +6273,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6229,7 +6291,7 @@
           "statusReason": "Rejected because this is a YouTube Short; Shorts do not qualify for the directory.",
           "youtube": {
             "durationSeconds": 60,
-            "viewCount": 2762,
+            "viewCount": 2764,
             "publishedAt": "2026-04-14T22:06:40-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -6237,7 +6299,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6255,7 +6317,7 @@
           "statusReason": "Rejected because this is a YouTube Short; Shorts do not qualify for the directory.",
           "youtube": {
             "durationSeconds": 56,
-            "viewCount": 1427,
+            "viewCount": 1428,
             "publishedAt": "2026-04-13T21:49:41-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -6263,7 +6325,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6289,12 +6351,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UC1tO0HTQb4T7bgCxJIKJWRA",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "gotcha-beast",
@@ -6336,7 +6398,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Wondering if the Cloning Machine Event shop packs are actually worth your gems and money? In this video, we completely buy out the gem pack options to amass over 8,000+ cloning tickets! Because these cloning events return frequently in Invincible GTG, use this video as a blueprint to see exactly how many duplicate Epics (like the Mauler Twins, Volcanika, Dinosaurus, and Angstrom Levy) you can real…",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6354,7 +6416,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 516,
-            "viewCount": 829,
+            "viewCount": 844,
             "publishedAt": "2026-07-31T07:21:45-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -6362,7 +6424,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Are you completely stuck on a main campaign stage or hitting a massive progression wall in Invincible: Guarding the Globe? You do not need to spend real money to fix it! In this ultimate progression guide, we break down the best strategies to increase your power level, optimize your team, and smash through campaign stages fast.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6380,7 +6442,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 806,
-            "viewCount": 489,
+            "viewCount": 490,
             "publishedAt": "2026-07-29T14:13:39-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -6388,7 +6450,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Stop struggling with early progression walls in Invincible Guarding the Globe! This is the ultimate Invincible Guarding the Globe beginner guide to help you unlock a massive day-one advantage, including how to use an auto redeemer to claim over 2.5k free gems instantly.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ]
@@ -6407,7 +6469,7 @@
       "badge": "New",
       "status": "pending",
       "displayOrder": 16,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@subsktro",
       "videos": [
         {
@@ -6433,7 +6495,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Checking out the latest hero added to the Guarding the Globe roster, Tech Jacket!!!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6459,7 +6521,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Checking out the latest character added to the Invincible guarding the globe roster, Dinosaurus!!! Hope you enjoy :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6485,7 +6547,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Checking out the newest addition to the invincible guarding the globe roster, CAPEVINCIBLE! Hope you enjoy :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6511,7 +6573,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Checking out the newest hero added to the Invincible Guarding the Globe roster, ATOME EVE (ARMORED)! Hope you enjoy :)",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6537,7 +6599,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Checking out the newest patch update thats brings in a lot of new additions to the Invincible Guarding the Globe Game! Hope you enjoy! Use Reward Code: TOTEMS at For your FREE 500 GEMS",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6563,7 +6625,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Checking out the newest hero added to the Invincible Guarding the Globe roster, Robot (Life Pod) AKA Connors!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6589,12 +6651,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Checking out the latest hero announcement event for the newest edition to the Invincible Guarding the Globe roster and a brand new event!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCcFv-0RerLc6SKUs2NzTeyQ",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "gxlden",
@@ -6610,7 +6672,7 @@
       "badge": "New",
       "status": "pending",
       "displayOrder": 17,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@GxldenYT_",
       "videos": [
         {
@@ -6628,7 +6690,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 381,
-            "viewCount": 92,
+            "viewCount": 137,
             "publishedAt": "2026-10-31T06:00:09-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -6636,7 +6698,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "The Halloween Wish event is HERE in Invincible: Guarding the Globe! And this time I decided to go ALL IN and spend *12,000 TOKENS* to see what I could get out of the event! 👀💀 I went into Halloween Wish hoping for some crazy luck, but let's just say things didn't exactly go how I expected...",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6654,7 +6716,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 616,
-            "viewCount": 300,
+            "viewCount": 375,
             "publishedAt": "2026-10-30T06:00:08-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -6662,7 +6724,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Armored Atom Eve and Blue Invincible have BOTH reached LEVEL 1,000 in Invincible: Guarding the Globe! 🔥 We've hit another HUGE milestone on the account, and this time I managed to get TWO characters to LEVEL 1,000!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6680,7 +6742,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 540,
-            "viewCount": 233,
+            "viewCount": 242,
             "publishedAt": "2026-10-27T02:00:05-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -6688,7 +6750,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "The Astounding Wolf-Man has arrived in Invincible: Guarding the Globe! Is this new hero worth your resources—or should you save for someone else? In this video, I take a closer look at Wolf-Man and share my recruitment journey, AND focus on his GDA op to see how he performs! Are you building Wolf-Man or skipping him? Drop your thoughts and your team lineup in the comments!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6714,7 +6776,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "The Art’s Outlet event is BACK in Invincible: Guarding the Globe! 🔥 This time I decided to go ALL IN and spend nearly 30,000 GEMS on Art’s Outlet to see just how much Hero XP and Special Hero XP I could walk away with! 👀💎 I started the event with 502.2 MILLION Hero XP and only 851.3K Special Hero XP… and by the end, I had 2.5 BILLION Hero XP and 5.3 MILLION Special Hero XP!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6732,7 +6794,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 765,
-            "viewCount": 634,
+            "viewCount": 635,
             "publishedAt": "2026-10-03T08:30:10-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -6740,7 +6802,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Thragg’s NEW GDA Case File is here in Invincible: Guarding the Globe… and I BEAT IT! 🔥 The newest GTG update added brand-new GDA Case Files for Thragg and Aquarus, and you already know I had to jump straight into Thragg’s and see just how tough it really is. Thragg has been one of the biggest characters we’ve covered on the channel, so there was NO WAY I was skipping his Case File.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6766,7 +6828,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "We're back with another episode of testing units in Invincible: Guarding the Globe… and this one got intense FAST 💀🔥 This time, I took my Level 700 THAEDUS into Cecil's Nightmares to see how far he could actually go in one of the hardest pieces of content in the game. After spending over 32,000 gems unlocking and building him, it was finally time to put him to the ultimate test.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6792,7 +6854,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Brit is FINALLY HERE in Invincible: Guarding the Globe! After waiting for him to finally make his way into the game, Brit has officially been added to Invincible GTG — and I came prepared with 40,000 GEMS to try and get him 👀🔥 We’ve been testing teams, characters, Cecil’s Nightmares, and every new event that drops — but now it’s finally BRIT’S TURN.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6810,7 +6872,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 787,
-            "viewCount": 51192,
+            "viewCount": 51210,
             "publishedAt": "2026-04-17T14:20:05-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -6818,12 +6880,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "THRAGG has JUST been added in Invincible: Guarding the Globe, and this update completely changes the game. In this video, I use 20,000 gems to pull for Thragg and test how strong he actually is in gameplay. We go through the summons, check drop results, and see how many we can pull on the FIRST day...",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCqMtiju2fBNalh-u0j5zKiA",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "x-gamers-asylum",
@@ -6839,7 +6901,7 @@
       "badge": "New",
       "status": "pending",
       "displayOrder": 18,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@XGamersAsylum",
       "videos": [
         {
@@ -6865,7 +6927,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible: Guarding the Globe is an idle squad RPG set in the Invincible universe featuring a new storyline never seen in the comics or Amazon Prime TV series, with graphic multi-battle action, character collection, squad management, idle features and, of course, super-powered visuals.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6891,7 +6953,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible: Guarding the Globe is an idle squad RPG set in the Invincible universe featuring a new storyline never seen in the comics or Amazon Prime TV series, with graphic multi-battle action, character collection, squad management, idle features and, of course, super-powered visuals.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6917,7 +6979,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible: Guarding the Globe is an idle squad RPG set in the Invincible universe featuring a new storyline never seen in the comics or Amazon Prime TV series, with graphic multi-battle action, character collection, squad management, idle features and, of course, super-powered visuals.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6943,7 +7005,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible: Guarding the Globe is an idle squad RPG set in the Invincible universe featuring a new storyline never seen in the comics or Amazon Prime TV series, with graphic multi-battle action, character collection, squad management, idle features and, of course, super-powered visuals.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6969,7 +7031,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible: Guarding the Globe is an idle squad RPG set in the Invincible universe featuring a new storyline never seen in the comics or Amazon Prime TV series, with graphic multi-battle action, character collection, squad management, idle features and, of course, super-powered visuals.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -6995,7 +7057,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible: Guarding the Globe is an idle squad RPG set in the Invincible universe featuring a new storyline never seen in the comics or Amazon Prime TV series, with graphic multi-battle action, character collection, squad management, idle features and, of course, super-powered visuals.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7013,7 +7075,7 @@
           "statusReason": "",
           "youtube": {
             "durationSeconds": 1163,
-            "viewCount": 855,
+            "viewCount": 858,
             "publishedAt": "2025-04-29T15:52:37-07:00",
             "isLive": false,
             "isUpcoming": null,
@@ -7021,12 +7083,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible: Guarding the Globe is an idle squad RPG set in the Invincible universe featuring a new storyline never seen in the comics or Amazon Prime TV series, with graphic multi-battle action, character collection, squad management, idle features and, of course, super-powered visuals.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCvRdsCkDI-uLZGUoizo85Xw",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "hero-haven-gtg",
@@ -7042,7 +7104,7 @@
       "badge": "New",
       "status": "active",
       "displayOrder": 12,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/@HeroHavenGTG",
       "videos": [
         {
@@ -7068,7 +7130,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Invincible GTG Brit Hero Release Overview",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7094,7 +7156,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "We cover the event and do dossier pulls to strengthen our roster. How did you guys enjoy these double events!? Happy 250th Birthday USA",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7120,7 +7182,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Today we cover the new character Volcanikka! We discuss her skills and team compositions. | Invincible Guardian the Globe |",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7146,7 +7208,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Lets get some Thaddeus copies!",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7172,7 +7234,7 @@
             "playable": false,
             "embeddable": true,
             "descriptionExcerpt": "",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7198,7 +7260,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "We cover Invincible Guarding the Globe Patch 2.3 and discuss the new additions to the game. Check back Saturday 5/30 for a Live Stream! Time TBA It will be both live here on YouTube and on Twitch.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7224,7 +7286,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Tech Jacket Hero Event! We cover the Hero, we do some pulls, and we discuss future meta changes and uses for the ultimate weapon Tech Jacket.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7250,7 +7312,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "We cover the new Hero Space Racer! Lets discuss his skills and recruit him! Outro Music by Lakey Inspired Song: Better Days",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7276,7 +7338,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Today we do some easter egg hunting and we chat about the game! Official Invincible GTG Outro Music by Lakey Inspired Song: Better Days",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7302,7 +7364,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Today we cover the Easter Event. Brief overview, tips and tricks. Pulls video or shortform shorts video instead? let me know! Outro Music by Lakey Inspired Song: Better Days",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7328,7 +7390,7 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Today we cover the new Hero from S4 E1 Dinosaurus! Hope you guys have as good as luck as I did.",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         },
         {
@@ -7354,12 +7416,12 @@
             "playable": true,
             "embeddable": true,
             "descriptionExcerpt": "Today we check in and chat about the progress my account has made since Dec 2025! WE also cover some potential new releases this year like Thragg, Space Racer and Tech Jacket. So many awesome new Hero's and content coming out, its a great time to be an Invincible fan :D",
-            "checkedAt": "2026-11-01"
+            "checkedAt": "2026-11-02"
           }
         }
       ],
       "channelId": "UCHOsg6dbodLHETXRAlCKK1g",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
     },
     {
       "id": "pops-meta",
@@ -7374,7 +7436,7 @@
       "badge": "New",
       "status": "hidden",
       "displayOrder": 11,
-      "lastChecked": "2026-10-31",
+      "lastChecked": "2026-11-02",
       "sourceUrl": "https://www.youtube.com/shorts/lujXnD4flNw",
       "videos": [
         {
@@ -7407,7 +7469,339 @@
         }
       ],
       "channelId": "UCp-FE7SsLvVI0Juonu7GEHQ",
-      "feedLastChecked": "2026-10-31"
+      "videosLastChecked": "2026-11-02"
+    },
+    {
+      "id": "punho-viltrumita",
+      "name": "Punho Viltrumita",
+      "handle": "@PunhoViltrumita_Ofc",
+      "channelUrl": "https://www.youtube.com/@PunhoViltrumita_Ofc",
+      "description": "Portuguese-language Invincible GTG guides, event breakdowns, and update coverage.",
+      "tags": [
+        "Guides",
+        "Updates",
+        "Events"
+      ],
+      "status": "pending",
+      "displayOrder": 19,
+      "lastChecked": "2026-11-02",
+      "sourceUrl": "https://www.youtube.com/@PunhoViltrumita_Ofc",
+      "channelId": "UCMG5LSf_0ByrecCywRfSYhg",
+      "videosLastChecked": "2026-11-02",
+      "videos": [
+        {
+          "id": "xTGiN5kleDE",
+          "title": "VOCÊ ESTÁ EVOLUINDO SEUS PERSONAGENS ERRADO! | Invencível Guardiões do Globo",
+          "description": "Punho Viltrumita explains which character progression mistakes hold players back in Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-10-27",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=xTGiN5kleDE",
+          "canonicalUrl": "https://www.youtube.com/watch?v=xTGiN5kleDE",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 1263,
+            "viewCount": 369,
+            "publishedAt": "2026-10-27T15:21:39-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "Está na hora de evoluir seus personagens da maneira certa em Invencível: Guardiões do Globo! Neste vídeo, você confere um guia completo para iniciantes e veteranos, com dicas essenciais para acelerar seu progresso, aproveitar melhor seus recursos e fortalecer sua equipe sem cometer erros desnecessários.",
+            "checkedAt": "2026-11-02"
+          }
+        },
+        {
+          "id": "pN4tKDmdIKs",
+          "title": "NOVO EVENTO + WOLF-MAN! Tudo Sobre a Atualização de Invencível Guardiões do Globo!",
+          "description": "Punho Viltrumita walks through the new event and the Wolf-Man release in Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-10-24",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=pN4tKDmdIKs",
+          "canonicalUrl": "https://www.youtube.com/watch?v=pN4tKDmdIKs",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 1316,
+            "viewCount": 406,
+            "publishedAt": "2026-10-24T13:14:43-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "O NOVO EVENTO chegou em Invencível: Guardiões do Globo, e junto dele temos o Wolf-Man, o mais novo personagem do jogo! Neste vídeo, você vai conferir os detalhes do evento, entender como ele funciona e descobrir como aproveitar melhor as oportunidades disponíveis. Também vamos analisar o Wolf-Man em detalhes: suas habilidades especiais, habilidades passivas, características e marcadores.",
+            "checkedAt": "2026-11-02"
+          }
+        },
+        {
+          "id": "SCt9DHfqtjs",
+          "title": "A ATUALIZAÇÃO 3.7 VAI MUDAR MUITA COISA!? Tudo Sobre as Novidades do Invincible GTG",
+          "description": "Punho Viltrumita reviews the changes arriving in update 3.7 of Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-10-21",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=SCt9DHfqtjs",
+          "canonicalUrl": "https://www.youtube.com/watch?v=SCt9DHfqtjs",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 1080,
+            "viewCount": 226,
+            "publishedAt": "2026-10-21T07:01:01-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "A atualização 3.7 de Invincible: Guarding the Globe chegou trazendo novidades, mudanças nos sistemas do jogo e recursos que podem fazer diferença na experiência dos jogadores! Neste vídeo do Punho Viltrumita, vamos analisar as Patch Notes 3.7 e conversar sobre os principais anúncios: o novo personagem, a sincronização de contas na nuvem entre Android e iPhone, as alterações nos sistemas do jogo e…",
+            "checkedAt": "2026-11-02"
+          }
+        },
+        {
+          "id": "W5iv4dHwc9M",
+          "title": "THAEDUS ESTÁ MUITO QUEBRADO?! Testei o NOVO PERSONAGEM no Invencível Guardiões do Globo!",
+          "description": "Punho Viltrumita tests the new Thaedus character and weighs whether the release is worth building in Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-06-02",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=W5iv4dHwc9M",
+          "canonicalUrl": "https://www.youtube.com/watch?v=W5iv4dHwc9M",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 618,
+            "viewCount": 621,
+            "publishedAt": "2026-06-02T16:47:08-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "No vídeo de hoje eu trago uma análise completa do Thaedus, o novo personagem de Invencível Guardiões do Globo! 🚀 Testei ele em batalha, explorei todas as suas habilidades e mostro na prática se ele realmente vale a pena investir seus recursos.",
+            "checkedAt": "2026-11-02"
+          }
+        },
+        {
+          "id": "Fp1D-y0s0f8",
+          "title": "AS MELHORES HABILIDADES DE CADA PERSONAGEM! DOMINE O META E EVOLUA RÁPIDO | Invencível GTG",
+          "description": "Punho Viltrumita ranks the strongest skills per character for faster progression in Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-06-01",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=Fp1D-y0s0f8",
+          "canonicalUrl": "https://www.youtube.com/watch?v=Fp1D-y0s0f8",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 2586,
+            "viewCount": 2484,
+            "publishedAt": "2026-06-01T05:07:05-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "Quer evoluir rápido no Invencível: Guardiões do Globo e dominar todos os modos do jogo? Neste vídeo, eu te mostro as melhores habilidades individuais de cada personagem, destacando exatamente quais você deve priorizar para crescer mais rápido e ter vantagem nas batalhas!",
+            "checkedAt": "2026-11-02"
+          }
+        },
+        {
+          "id": "rG6dZ6uTokg",
+          "title": "NOVO EVENTO + THAEDUS CHEGOU! Como DOMINAR e VALE A PENA? | Invencível Guardiões do Globo",
+          "description": "Punho Viltrumita covers the Thaedus event and how to approach it in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-05-29",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=rG6dZ6uTokg",
+          "canonicalUrl": "https://www.youtube.com/watch?v=rG6dZ6uTokg",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 1091,
+            "viewCount": 876,
+            "publishedAt": "2026-05-29T18:17:40-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "Neste vídeo, apresento uma análise completa do novo evento adicionado em Invencível: Guardiões do Globo, detalhando seu funcionamento, mecânicas principais e as melhores estratégias para obter o máximo desempenho e recompensas.",
+            "checkedAt": "2026-11-02"
+          }
+        },
+        {
+          "id": "8rXgBnHdFzU",
+          "title": "ATUALIZAÇÃO 3.2.13 CHEGOU! | Novo Personagem, Modo de Amigos, Artefatos e MUITO MAIS!",
+          "description": "Punho Viltrumita breaks down update 3.2.13, including the new character, friends mode, and artifacts in Invincible: Guarding the Globe.",
+          "category": "Updates",
+          "published": "2026-05-27",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=8rXgBnHdFzU",
+          "canonicalUrl": "https://www.youtube.com/watch?v=8rXgBnHdFzU",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 1345,
+            "viewCount": 436,
+            "publishedAt": "2026-05-27T17:00:25-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "A atualização 3.2.13 de Invencível: Guardiões do Globo finalmente chegou e trouxe MUITA novidade! 🚀 Nesse vídeo eu te mostro TUDO que mudou: ✔️ Novo personagem chegando no jogo ✔️ Novo sistema de interação entre amigos ✔️ Arquivos da ADG explicados ✔️ Mudanças e balanceamentos em personagens ✔️ Novos artefatos e totens ✔️ O que realmente vale a pena nessa atualização Se você quer sair na frente e…",
+            "checkedAt": "2026-11-02"
+          }
+        },
+        {
+          "id": "AYPmYUiYOzU",
+          "title": "INVENCÍVEL AZUL E PRETO AINDA É META? ME SURPREENDEU! | Invencível Guardiões do Globo",
+          "description": "Punho Viltrumita tests whether Blue Suit Invincible still competes in Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-05-26",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=AYPmYUiYOzU",
+          "canonicalUrl": "https://www.youtube.com/watch?v=AYPmYUiYOzU",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 599,
+            "viewCount": 553,
+            "publishedAt": "2026-05-26T17:11:53-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "Fala, galera! 🚀 No vídeo de hoje eu trago um guia COMPLETO do Invencível (traje azul e preto) em Invencível: Guardiões do Globo! Mesmo sendo um personagem mais antigo… será que ele ainda é forte no meta atual?",
+            "checkedAt": "2026-11-02"
+          }
+        },
+        {
+          "id": "Q6f5qoZUwsc",
+          "title": "ISSO ESTÁ TE ATRASANDO! ERROS que ACABAM com SEU JOGO | Invencível Guardiões do Globo!",
+          "description": "Punho Viltrumita lists the mistakes that stall account progress in Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-05-25",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=Q6f5qoZUwsc",
+          "canonicalUrl": "https://www.youtube.com/watch?v=Q6f5qoZUwsc",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 664,
+            "viewCount": 685,
+            "publishedAt": "2026-05-25T16:12:23-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "Você está cometendo erros que estão ATRASANDO seu progresso no Invencível Guardiões do Globo? 😱 Neste vídeo, eu te mostro os principais erros que todo jogador iniciante (e até veterano!) comete — e como evitar cada um deles para evoluir MUITO mais rápido no jogo!",
+            "checkedAt": "2026-11-02"
+          }
+        },
+        {
+          "id": "8DyoAzqvr0w",
+          "title": "FINALMENTE! COMO FARMAR XP RÁPIDO na ADG | Invencível Guardiões do Globo",
+          "description": "Punho Viltrumita shows the fastest XP farming routes in Invincible: Guarding the Globe.",
+          "category": "Guides",
+          "published": "2026-05-19",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=8DyoAzqvr0w",
+          "canonicalUrl": "https://www.youtube.com/watch?v=8DyoAzqvr0w",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 402,
+            "viewCount": 944,
+            "publishedAt": "2026-05-19T09:04:47-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "O vídeo MAIS AGUARDADO chegou! 🔥 Hoje eu te ensino como dominar a operação da ADG \"Treinar e Ganhar\" no Invencível Guardiões do Globo e farmar MUITO XP para evoluir seus personagens rapidamente! Se você quer pegar as melhores recompensas da operação, esse guia vai te mostrar: - Os melhores personagens para usar - Os artefatos ideais pra maximizar o XP - Estratégias pra farmar mais rápido e sem er…",
+            "checkedAt": "2026-11-02"
+          }
+        },
+        {
+          "id": "rMYI7h_EsCQ",
+          "title": "NOVA LOJA DOS DEFENSORES VALE A PENA? | Invencível Guardiões do Globo",
+          "description": "Punho Viltrumita evaluates whether the new Defenders store is worth the spend in Invincible: Guarding the Globe.",
+          "category": "Events",
+          "published": "2026-05-17",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=rMYI7h_EsCQ",
+          "canonicalUrl": "https://www.youtube.com/watch?v=rMYI7h_EsCQ",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 734,
+            "viewCount": 319,
+            "publishedAt": "2026-05-17T06:16:30-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "🚨 CHEGOU EVENTO NOVO! 🚨 A Loja dos Defensores da Terra chegou no Invencível: Guardiões do Globo — mas será que realmente vale a pena investir? Nesse vídeo eu te explico TUDO sobre o evento: - Como funciona a Loja dos Defensores da Terra. - Como conseguir os recursos do evento. - As MELHORES formas de aproveitar ao máximo. - Se compensa ou não investir nos personagens.",
+            "checkedAt": "2026-11-02"
+          }
+        },
+        {
+          "id": "MBIYvBiYre0",
+          "title": "AS MELHORES EQUIPES que DOMINAM o META! | Invencível Guardiões do Globo",
+          "description": "Punho Viltrumita builds the strongest teams for the current meta in Invincible: Guarding the Globe.",
+          "category": "Team Building",
+          "published": "2026-05-14",
+          "lastChecked": "2026-11-02",
+          "status": "active",
+          "featured": false,
+          "sourceUrl": "https://www.youtube.com/watch?v=MBIYvBiYre0",
+          "canonicalUrl": "https://www.youtube.com/watch?v=MBIYvBiYre0",
+          "evidenceNote": "Channel videos page lists this video for Punho Viltrumita; public player metadata confirms uploader and title. Checked 2026-11-02.",
+          "statusReason": "",
+          "youtube": {
+            "durationSeconds": 675,
+            "viewCount": 1799,
+            "publishedAt": "2026-05-14T13:41:43-07:00",
+            "isLive": false,
+            "isUpcoming": null,
+            "playabilityStatus": "OK",
+            "playable": true,
+            "embeddable": true,
+            "descriptionExcerpt": "Quer dominar o meta de Invencível: Guardiões do Globo? 👀 Nesse vídeo eu te mostro as MELHORES equipes do jogo atualmente, explicando cada sinergia, como elas funcionam em batalha e por que são tão fortes!",
+            "checkedAt": "2026-11-02"
+          }
+        }
+      ]
     }
   ]
 }

@@ -15,6 +15,14 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 1,
     "videos": [
       {
+        "id": "YZXV62mJFWM",
+        "title": "Guide to Event OPs! - Invincible: Guarding the Globe",
+        "description": "Avatar Shuvd walks through event OPs and how to approach them in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-11-01",
+        "featured": false
+      },
+      {
         "id": "AuXyUTL85cI",
         "title": "PUMPKIN WHALING! - Invincible: Guarding the Globe",
         "description": "Avatar Shuvd chases Halloween pumpkins and showcases event pulls in Invincible: Guarding the Globe.",
@@ -100,14 +108,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "Avatar Shuvd covers the current event and Halloween content in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-10-22",
-        "featured": false
-      },
-      {
-        "id": "8xtQsvp3mII",
-        "title": "UPDATE 3.7 Sure is an Update! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd reviews update 3.7 for Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-10-21",
         "featured": false
       }
     ]
@@ -559,6 +559,14 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 6,
     "videos": [
       {
+        "id": "v6VSgbnO6RA",
+        "title": "Invincible Guarding The Globe - Happy Halloween !! Massive Wish Event Summons!!",
+        "description": "OMNI-BANE opens a large Halloween Wish event summon session in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-10-31",
+        "featured": false
+      },
+      {
         "id": "HFeNbDaxfV0",
         "title": "Invincible Guarding The Globe- Wish Event Summons!!",
         "description": "OMNI-BANE chases Halloween Wish event pulls in Invincible: Guarding the Globe.",
@@ -644,14 +652,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "OMNI-BANE reviews update 3.7 patch notes for Invincible: Guarding the Globe.",
         "category": "Updates",
         "published": "2026-10-20",
-        "featured": false
-      },
-      {
-        "id": "_VoCVROT-mc",
-        "title": "Invincible Guarding The Globe - Lock & Reload Event!!",
-        "description": "OMNI-BANE covers the Lock & Reload event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-19",
         "featured": false
       }
     ]
@@ -1364,6 +1364,119 @@ window.__YOUTUBE_CREATORS=[
         "description": "X-Gamers Asylum ranks the Invincible: Guarding the Globe roster in a full tier list.",
         "category": "Tier Lists",
         "published": "2024-02-27",
+        "featured": false
+      }
+    ]
+  },
+  {
+    "id": "punho-viltrumita",
+    "name": "Punho Viltrumita",
+    "handle": "@PunhoViltrumita_Ofc",
+    "channelUrl": "https://www.youtube.com/@PunhoViltrumita_Ofc",
+    "description": "Portuguese-language Invincible GTG guides, event breakdowns, and update coverage.",
+    "tags": [
+      "Guides",
+      "Updates",
+      "Events"
+    ],
+    "badge": "Updates",
+    "status": "pending",
+    "displayOrder": 19,
+    "videos": [
+      {
+        "id": "xTGiN5kleDE",
+        "title": "VOCÊ ESTÁ EVOLUINDO SEUS PERSONAGENS ERRADO! | Invencível Guardiões do Globo",
+        "description": "Punho Viltrumita explains which character progression mistakes hold players back in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-10-27",
+        "featured": false
+      },
+      {
+        "id": "pN4tKDmdIKs",
+        "title": "NOVO EVENTO + WOLF-MAN! Tudo Sobre a Atualização de Invencível Guardiões do Globo!",
+        "description": "Punho Viltrumita walks through the new event and the Wolf-Man release in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-10-24",
+        "featured": false
+      },
+      {
+        "id": "SCt9DHfqtjs",
+        "title": "A ATUALIZAÇÃO 3.7 VAI MUDAR MUITA COISA!? Tudo Sobre as Novidades do Invincible GTG",
+        "description": "Punho Viltrumita reviews the changes arriving in update 3.7 of Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-10-21",
+        "featured": false
+      },
+      {
+        "id": "W5iv4dHwc9M",
+        "title": "THAEDUS ESTÁ MUITO QUEBRADO?! Testei o NOVO PERSONAGEM no Invencível Guardiões do Globo!",
+        "description": "Punho Viltrumita tests the new Thaedus character and weighs whether the release is worth building in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-06-02",
+        "featured": false
+      },
+      {
+        "id": "Fp1D-y0s0f8",
+        "title": "AS MELHORES HABILIDADES DE CADA PERSONAGEM! DOMINE O META E EVOLUA RÁPIDO | Invencível GTG",
+        "description": "Punho Viltrumita ranks the strongest skills per character for faster progression in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-06-01",
+        "featured": false
+      },
+      {
+        "id": "rG6dZ6uTokg",
+        "title": "NOVO EVENTO + THAEDUS CHEGOU! Como DOMINAR e VALE A PENA? | Invencível Guardiões do Globo",
+        "description": "Punho Viltrumita covers the Thaedus event and how to approach it in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-05-29",
+        "featured": false
+      },
+      {
+        "id": "8rXgBnHdFzU",
+        "title": "ATUALIZAÇÃO 3.2.13 CHEGOU! | Novo Personagem, Modo de Amigos, Artefatos e MUITO MAIS!",
+        "description": "Punho Viltrumita breaks down update 3.2.13, including the new character, friends mode, and artifacts in Invincible: Guarding the Globe.",
+        "category": "Updates",
+        "published": "2026-05-27",
+        "featured": false
+      },
+      {
+        "id": "AYPmYUiYOzU",
+        "title": "INVENCÍVEL AZUL E PRETO AINDA É META? ME SURPREENDEU! | Invencível Guardiões do Globo",
+        "description": "Punho Viltrumita tests whether Blue Suit Invincible still competes in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-05-26",
+        "featured": false
+      },
+      {
+        "id": "Q6f5qoZUwsc",
+        "title": "ISSO ESTÁ TE ATRASANDO! ERROS que ACABAM com SEU JOGO | Invencível Guardiões do Globo!",
+        "description": "Punho Viltrumita lists the mistakes that stall account progress in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-05-25",
+        "featured": false
+      },
+      {
+        "id": "8DyoAzqvr0w",
+        "title": "FINALMENTE! COMO FARMAR XP RÁPIDO na ADG | Invencível Guardiões do Globo",
+        "description": "Punho Viltrumita shows the fastest XP farming routes in Invincible: Guarding the Globe.",
+        "category": "Guides",
+        "published": "2026-05-19",
+        "featured": false
+      },
+      {
+        "id": "rMYI7h_EsCQ",
+        "title": "NOVA LOJA DOS DEFENSORES VALE A PENA? | Invencível Guardiões do Globo",
+        "description": "Punho Viltrumita evaluates whether the new Defenders store is worth the spend in Invincible: Guarding the Globe.",
+        "category": "Events",
+        "published": "2026-05-17",
+        "featured": false
+      },
+      {
+        "id": "MBIYvBiYre0",
+        "title": "AS MELHORES EQUIPES que DOMINAM o META! | Invencível Guardiões do Globo",
+        "description": "Punho Viltrumita builds the strongest teams for the current meta in Invincible: Guarding the Globe.",
+        "category": "Team Building",
+        "published": "2026-05-14",
         "featured": false
       }
     ]

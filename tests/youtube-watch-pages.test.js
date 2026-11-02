@@ -92,7 +92,7 @@ function makeCreator(id, displayOrder, videoOverrides) {
     status: 'active',
     displayOrder: displayOrder,
     lastChecked: today(),
-    feedLastChecked: today(),
+    videosLastChecked: today(),
     videos: videos,
     channelId: 'UC' + 'a'.repeat(22),
     sourceUrl: 'https://www.youtube.com/@' + id

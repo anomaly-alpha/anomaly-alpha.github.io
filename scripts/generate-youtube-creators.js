@@ -224,8 +224,8 @@ function validateData(data) {
     if (c.channelId !== undefined && !CHANNEL_ID_RE.test(c.channelId)) {
       errors.push(cp + '.channelId must be a valid YouTube channel ID when provided.');
     }
-    if (c.feedLastChecked !== undefined && !isValidDate(c.feedLastChecked)) {
-      errors.push(cp + '.feedLastChecked must be a valid ISO date when provided.');
+    if (c.videosLastChecked !== undefined && !isValidDate(c.videosLastChecked)) {
+      errors.push(cp + '.videosLastChecked must be a valid ISO date when provided.');
     }
 
     // Active/pending creator required fields
