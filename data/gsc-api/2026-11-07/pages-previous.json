@@ -1,0 +1,101 @@
+[
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/code/"
+    ],
+    "clicks": 4499,
+    "impressions": 20396,
+    "ctr": 0.22058246715042165,
+    "position": 3.8701215924691117
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/"
+    ],
+    "clicks": 126,
+    "impressions": 2390,
+    "ctr": 0.052719665271966525,
+    "position": 7.130543933054393
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/xp/"
+    ],
+    "clicks": 117,
+    "impressions": 3130,
+    "ctr": 0.03738019169329074,
+    "position": 5.368690095846645
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/beginners/"
+    ],
+    "clicks": 27,
+    "impressions": 1788,
+    "ctr": 0.015100671140939598,
+    "position": 6.75503355704698
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/pvp/"
+    ],
+    "clicks": 23,
+    "impressions": 1229,
+    "ctr": 0.01871440195280716,
+    "position": 5.7436940602115545
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/redeem/"
+    ],
+    "clicks": 18,
+    "impressions": 447,
+    "ctr": 0.040268456375838924,
+    "position": 7.214765100671141
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/event/"
+    ],
+    "clicks": 9,
+    "impressions": 925,
+    "ctr": 0.00972972972972973,
+    "position": 7.0864864864864865
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/faq/"
+    ],
+    "clicks": 8,
+    "impressions": 906,
+    "ctr": 0.008830022075055188,
+    "position": 6.977924944812362
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/login/"
+    ],
+    "clicks": 3,
+    "impressions": 339,
+    "ctr": 0.008849557522123894,
+    "position": 5.492625368731564
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/creators/"
+    ],
+    "clicks": 2,
+    "impressions": 107,
+    "ctr": 0.018691588785046728,
+    "position": 7.91588785046729
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/codes/"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 2
+  }
+]

@@ -1,0 +1,254 @@
+{
+  "generatedAt": "2026-11-07T17:36:52.648Z",
+  "site": "https://anomaly-alpha.github.io/",
+  "quotaProject": "anomaly-alpha-gsc",
+  "adc": "C:\\Users\\petra\\AppData\\Roaming\\gcloud\\application_default_credentials.json",
+  "periods": {
+    "full": {
+      "start": "2026-05-09",
+      "end": "2026-11-05"
+    },
+    "current": {
+      "start": "2026-10-09",
+      "end": "2026-11-05"
+    },
+    "previous": {
+      "start": "2026-09-11",
+      "end": "2026-10-08"
+    }
+  },
+  "datasets": [
+    {
+      "name": "daily-full",
+      "ok": true,
+      "rows": 181,
+      "startDate": "2026-05-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "date"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "queries-current",
+      "ok": true,
+      "rows": 608,
+      "startDate": "2026-10-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "query"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "queries-previous",
+      "ok": true,
+      "rows": 525,
+      "startDate": "2026-09-11",
+      "endDate": "2026-10-08",
+      "dimensions": [
+        "query"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "queries-full",
+      "ok": true,
+      "rows": 1335,
+      "startDate": "2026-05-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "query"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "pages-current",
+      "ok": true,
+      "rows": 10,
+      "startDate": "2026-10-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "page"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "pages-previous",
+      "ok": true,
+      "rows": 11,
+      "startDate": "2026-09-11",
+      "endDate": "2026-10-08",
+      "dimensions": [
+        "page"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "pages-full",
+      "ok": true,
+      "rows": 11,
+      "startDate": "2026-05-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "page"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "countries-current",
+      "ok": true,
+      "rows": 165,
+      "startDate": "2026-10-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "country"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "countries-previous",
+      "ok": true,
+      "rows": 147,
+      "startDate": "2026-09-11",
+      "endDate": "2026-10-08",
+      "dimensions": [
+        "country"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "countries-full",
+      "ok": true,
+      "rows": 196,
+      "startDate": "2026-05-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "country"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "devices-current",
+      "ok": true,
+      "rows": 3,
+      "startDate": "2026-10-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "device"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "devices-previous",
+      "ok": true,
+      "rows": 3,
+      "startDate": "2026-09-11",
+      "endDate": "2026-10-08",
+      "dimensions": [
+        "device"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "devices-full",
+      "ok": true,
+      "rows": 3,
+      "startDate": "2026-05-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "device"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "query-pages-current",
+      "ok": true,
+      "rows": 880,
+      "startDate": "2026-10-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "query",
+        "page"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "query-pages-previous",
+      "ok": true,
+      "rows": 740,
+      "startDate": "2026-09-11",
+      "endDate": "2026-10-08",
+      "dimensions": [
+        "query",
+        "page"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "search-appearance-current",
+      "ok": true,
+      "rows": 1,
+      "startDate": "2026-10-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "searchAppearance"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "search-appearance-full",
+      "ok": true,
+      "rows": 1,
+      "startDate": "2026-05-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "searchAppearance"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "discover-daily-full",
+      "ok": true,
+      "rows": 181,
+      "startDate": "2026-05-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "date"
+      ],
+      "type": "discover"
+    },
+    {
+      "name": "image-daily-full",
+      "ok": true,
+      "rows": 181,
+      "startDate": "2026-05-09",
+      "endDate": "2026-11-05",
+      "dimensions": [
+        "date"
+      ],
+      "type": "image"
+    },
+    {
+      "name": "sitemaps",
+      "ok": true,
+      "kind": "sitemap-status",
+      "count": 1,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "name": "url-inspection",
+      "ok": true,
+      "kind": "url-inspection",
+      "count": 25,
+      "failures": 0,
+      "verdicts": {
+        "PASS": 10,
+        "NEUTRAL": 15
+      },
+      "canonicalMismatches": [],
+      "richResultErrors": 0
+    }
+  ]
+}

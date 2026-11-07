@@ -1,0 +1,92 @@
+[
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/code/"
+    ],
+    "clicks": 7252,
+    "impressions": 31875,
+    "ctr": 0.22751372549019608,
+    "position": 3.570886274509804
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/redeem/"
+    ],
+    "clicks": 106,
+    "impressions": 4585,
+    "ctr": 0.02311886586695747,
+    "position": 7.806761177753544
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/xp/"
+    ],
+    "clicks": 97,
+    "impressions": 3071,
+    "ctr": 0.03158580267014002,
+    "position": 5.630739172907847
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/"
+    ],
+    "clicks": 87,
+    "impressions": 1559,
+    "ctr": 0.055805003207184095,
+    "position": 6.540089801154586
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/event/"
+    ],
+    "clicks": 47,
+    "impressions": 1703,
+    "ctr": 0.02759835584263065,
+    "position": 6.869054609512625
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/beginners/"
+    ],
+    "clicks": 37,
+    "impressions": 1780,
+    "ctr": 0.020786516853932586,
+    "position": 6.8269662921348315
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/pvp/"
+    ],
+    "clicks": 33,
+    "impressions": 1178,
+    "ctr": 0.02801358234295416,
+    "position": 5.66213921901528
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/creators/"
+    ],
+    "clicks": 14,
+    "impressions": 1274,
+    "ctr": 0.01098901098901099,
+    "position": 7.987441130298273
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/faq/"
+    ],
+    "clicks": 9,
+    "impressions": 951,
+    "ctr": 0.00946372239747634,
+    "position": 8.319663512092534
+  },
+  {
+    "keys": [
+      "https://anomaly-alpha.github.io/guide/login/"
+    ],
+    "clicks": 0,
+    "impressions": 228,
+    "ctr": 0,
+    "position": 6.2105263157894735
+  }
+]
