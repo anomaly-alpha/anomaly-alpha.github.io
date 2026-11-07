@@ -220,6 +220,9 @@ const replacements = [
   [/<!--GUIDE_CODES_EXPIRED_START-->[\s\S]*?<!--GUIDE_CODES_EXPIRED_END-->/,
    `<!--GUIDE_CODES_EXPIRED_START-->\n${expiredChips}\n<!--GUIDE_CODES_EXPIRED_END-->`],
 
+  // Expired section heading — kept in sync so adding archive codes cannot leave a stale number
+  [/EXPIRED CODES \(\d+\)/g, `EXPIRED CODES (${expired.length})`],
+
   // Title, og:title, twitter:title — replace with new "GTG" format
   // Match an optional existing "New " prefix (consume it, don't block) so the [Month Year] still refreshes
   [/(?:\bNew\s+)?(Invincible Guarding the Globe|Invincible GTG).*?— .*?\[[A-Z][a-z]{2} \d{4}\]/g, `Invincible GTG Codes & Redeem Portal — Active [${monthYear}]`],
@@ -271,6 +274,11 @@ const freshnessMarkers = [
 for (const m of freshnessMarkers) {
   const count = (html.match(new RegExp(`<!--${m}_START-->`, 'g')) || []).length;
   if (count !== 1) throw new Error(`${m} marker expected 1 occurrence, found ${count}`);
+}
+
+const expiredHeading = html.match(/EXPIRED CODES \((\d+)\)/g) || [];
+if (expiredHeading.length !== 1 || expiredHeading[0] !== `EXPIRED CODES (${expired.length})`) {
+  throw new Error(`expired heading count expected once as ${expired.length}, found ${expiredHeading.join(', ') || 'none'}`);
 }
 
 const ldDateMarkerCount = (html.match(/<!--GUIDE_LD_DATEMODIFIED_START-->/g) || []).length;
