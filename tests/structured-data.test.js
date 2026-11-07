@@ -10,6 +10,7 @@ const PAGES = [
   'guide/code/index.html',
   'guide/beginners/index.html',
   'guide/event/index.html',
+  'guide/wish-event/index.html',
   'guide/pvp/index.html',
   'guide/login/index.html',
   'guide/faq/index.html',
@@ -105,6 +106,7 @@ const canonicalUrls = {
   'guide/code/index.html': 'https://anomaly-alpha.github.io/guide/code/',
   'guide/beginners/index.html': 'https://anomaly-alpha.github.io/guide/beginners/',
   'guide/event/index.html': 'https://anomaly-alpha.github.io/guide/event/',
+  'guide/wish-event/index.html': 'https://anomaly-alpha.github.io/guide/wish-event/',
   'guide/pvp/index.html': 'https://anomaly-alpha.github.io/guide/pvp/',
   'guide/login/index.html': 'https://anomaly-alpha.github.io/guide/login/',
   'guide/faq/index.html': 'https://anomaly-alpha.github.io/guide/faq/',
@@ -122,6 +124,7 @@ const requiredTypes = {
   'guide/code/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'HowTo', 'FAQPage', 'DefinedTerm'],
   'guide/beginners/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
   'guide/event/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
+  'guide/wish-event/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
   'guide/pvp/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
   'guide/login/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
   'guide/faq/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
@@ -169,11 +172,11 @@ const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   assert(sitemap.includes('https://anomaly-alpha.github.io' + url), 'sitemap missing ' + url);
 });
 const locCount = (sitemap.match(/<loc>/g) || []).length;
-// 15 editorial pages + the /watch/ hub + one watch page per indexed creator video.
+// 16 editorial pages + the /watch/ hub + one watch page per indexed creator video.
 const watchPageDirs = fs.existsSync(path.join(ROOT, 'watch'))
   ? fs.readdirSync(path.join(ROOT, 'watch')).filter(name => /^[A-Za-z0-9_-]{11}$/.test(name)).length
   : 0;
-const expectedLocCount = 15 + 1 + watchPageDirs;
+const expectedLocCount = 16 + 1 + watchPageDirs;
 assert.strictEqual(locCount, expectedLocCount,
   'sitemap must contain exactly ' + expectedLocCount + ' <loc> entries, found ' + locCount);
 assert(sitemap.includes('https://anomaly-alpha.github.io/watch/'), 'sitemap missing the watch hub');

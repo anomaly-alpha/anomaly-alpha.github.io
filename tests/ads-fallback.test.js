@@ -9,6 +9,7 @@ const eligible = {
   'guide/code/index.html': '../redeem/',
   'guide/beginners/index.html': '../code/',
   'guide/event/index.html': '../pvp/',
+  'guide/wish-event/index.html': '../event/',
   'guide/faq/index.html': '../beginners/',
   'guide/login/index.html': '../beginners/',
   'guide/pvp/index.html': '../faq/',
