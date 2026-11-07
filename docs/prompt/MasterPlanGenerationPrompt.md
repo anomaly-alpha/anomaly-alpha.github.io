@@ -1,4 +1,4 @@
-Generate 160 improvement plan files for the project at `/Users/prime/Desktop/Gems/anomaly-alpha/`. All plans go as flat `.md` files in a single folder named after your own model ID.
+Generate improvement plan files for the project at the repository root (this checkout). All plans go as flat `.md` files in a single folder named after your own model ID.
 
 ## Output Directory
 
@@ -23,17 +23,17 @@ docs/plans/YYYY-MM-DD/<model>/
 Static HTML/JS/CSS site for "Invincible: Guarding the Globe." Calculates weekly gem income from Events, PvP, Login, Promo Codes.
 
 **Architecture:**
-- 8 HTML pages: `index.html` + 6 guides at `guide/{code,event,pvp,login,faq,beginners}/index.html` + `404.html`
-- Single JS file: `script.js` — all functions global scope, ES5, `onclick` attributes, ~40 functions
-- CSS: `styles.css` (BEM + custom props, ~33 KB) + `tailwind.css` (utilities, ~12 KB)
-- 7 inline JSON configs in `index.html <head>`: game-config, rewards-config, contributors-config, chart-config, countdown-config, ui-config, theme-config
+- 10 guide pages at `guide/{code,event,wish-event,pvp,login,faq,beginners,xp,redeem,creators}/index.html`, plus `index.html`, `about/`, `authors/anomaly/`, `music/`, `privacy/`, `terms/`, `seo/`, the generated `watch/` tree (193 per-video pages + hub), and `404.html`
+- Single JS file: `script.js` — global scope, no modules; ES2017+ (46 arrow functions, 31 optional-chaining uses) with `onclick` attributes, ~65 named functions
+- CSS: `styles.css` (BEM + custom props, ~48 KB) + `tailwind.css` (utilities, ~16 KB)
+- 9 inline JSON configs in `index.html <head>`: game-config, rewards-config, contributors-config, chart-config, countdown-config, ui-config, theme-config, ads-config, music-config
 - No `fetch()` — all data inline. No CDN — all assets self-hosted.
-- State: localStorage keys `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`. URL params `?theme=&mode=&chart=`.
-- Build: `npm run build` = Tailwind + csso + terser. Generated files committed.
+- State: localStorage keys `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`, `gem_theme`, `gem_copiedCode`, `gem_music_banner`, `gem_visits`, `gem_beacon`. URL params `?theme=&mode=&chart=`.
+- Build: `npm run build` = 4 generators (`generate-codes`, `generate-music`, `generate-youtube-creators`, `generate-watch-pages`) → Tailwind → csso → terser. Generated files committed.
 - 9 cards: promo-code, the-long-haul, earths-defenders, restricted-arena, open-arena, multiverse-war, daily-login, weekly-login, monthly-login
 - PvP: 14 leagues (Intern→Invincible), 120 ranks, 3 arenas (restricted/open/multiverse), demotion at rank 86
 - Category colors: event=#ff6b35, pvp=#e91e8a, login=#f39c12, code=#2ecc71, cyan=#00e5ff
-- No tests exist — all verification is manual
+- Tests: custom Node scripts in `tests/` wired to `npm run test:creators|watch-pages|creator-audit|structured-data|ads-txt|ads-fallback` (plus `node tests/promo-codes-generator.test.js` and `node tests/back-to-top.test.js`, which have no npm alias). CSS/JS changes still need manual browser QA.
 
 **Hard constraints (plans must NOT violate):**
 1. No `fetch()` — data only from inline `<script type="application/json">` loaded via `loadConfig(id)`
@@ -139,6 +139,8 @@ Known: Plan 09 (ESLint) vs Plan 132 (Biome). Plan 01 uses csso, Plan 133 replace
 
 ```bash
 ls docs/plans/YYYY-MM-DD/<model>/*.md | grep -v INDEX | wc -l
-for i in $(seq -w 1 160); do found=$(ls docs/plans/YYYY-MM-DD/<model>/${i}-*.md 2>/dev/null | head -1); if [ -z "$found" ]; then echo "MISSING: $i"; fi; done
-test -f docs/plans/YYYY-MM-DD/<model>/INDEX.md && echo "INDEX OK" || echo "INDEX MISSING"
+for n in $(seq 1 99); do i=$(printf %02d $n); found=$(ls docs/plans/YYYY-MM-DD/<model>/${i}-*.md 2>/dev/null | head -1); if [ -z "$found" ]; then echo "MISSING: $i"; fi; done
+test -f docs/plans/YYYY-MM-DD/<model>/00-INDEX.md && echo "INDEX OK" || echo "INDEX MISSING"
 ```
+Plan filenames use a two-digit zero-padded prefix (`01-...` through `99-...`), then three digits from `100-...` onward. The index file is `00-INDEX.md` (the 2026-05-20 batch also carries a `00-INDEX-2.md` covering plans 51-100), never `INDEX.md`.
+

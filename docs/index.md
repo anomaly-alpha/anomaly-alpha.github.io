@@ -11,7 +11,7 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 | Event Rewards | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~1,850 (varies) | Restricted Arena + Open Arena + Alliance War (Elite II, rank 13 defaults) |
 | Login Rewards | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
-| Promo Codes | Variable | 35 active codes (gems + item rewards) |
+| Promo Codes | Variable | 36 active codes (gems + item rewards) |
 
 **Total: ~4,043 gems/week** (varies with PvP selections)
 
@@ -19,8 +19,8 @@ Gem rewards infographic for Invincible Guarding the Globe featuring interactive 
 
 ### Interactive Elements
 - **Animated counter** that counts up on value changes
-- **Promo code reveal** — tap to reveal 35 active codes in a grid, tap any code to copy
-- **Scrolling ticker banner** ("Why Use This") — 44px monochrome newspaper-style ticker showing PvP 1,850+/wk • Codes 35 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk
+- **Promo code reveal** — tap to reveal 36 active codes in a grid, tap any code to copy
+- **Scrolling ticker banner** ("Why Use This") — 44px monochrome newspaper-style ticker showing PvP 1,850+/wk • Codes 36 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk
 - **Mode selector** (5 buttons: All, Code, Event, PvP, Login) — each showing gem total + countdown timer
 - **Multi-select mode filtering** — toggle Event, PvP, Login, Code independently
 - **Mode button hover** — hovering a mode button highlights all matching cards in that mode's color
@@ -74,16 +74,17 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 - Instant chart updates on filter changes (no animation overhead)
 
 ### Guide Pages (Topical Cluster)
-- `/guide/code/` — Promo code guide: 35 active codes with click-to-copy (`copyCode()`), verification code redemption, code-age timeline, 5 tips
+- `/guide/code/` — Promo code guide: 36 active codes with click-to-copy (`copyCode()`), verification code redemption, code-age timeline, 5 tips
 - `/guide/event/` — Event rewards guide: The Long Haul + Earth's Defenders with full strategies
+- `/guide/wish-event/` — Wish Event guide: event mechanics, wish targets, and reward expectations
 - `/guide/pvp/` — PvP guide: 14 leagues table, real payout tables, 3 arena modes with demotion zone
 - `/guide/login/` — Login rewards guide: daily (910), weekly (460), monthly (23) with income summary table
 - `/guide/faq/` — Gem rewards FAQ with FAQPage schema
 - `/guide/beginners/` — New player guide with priority checklist and gem spending tips
 - `/guide/xp/` — XP & progression guide: Hero XP, Agent XP, Hero Rank-Up table (Rare→Omnipotent+)
 - `/guide/redeem/` — Promo-code redemption walkthrough
-- `/guide/creators/` — Curated YouTube creators, verified videos, and privacy-enhanced user-initiated playback
-- Each guide links to all 8 other guides + back to main page for topical relevance
+- `/guide/creators/` — Curated YouTube creators, verified videos, and links to per-video watch pages
+- Each guide links to all 9 other guides + back to main page for topical relevance
 
 ### Visual Effects
 - Floating particles in background (9 particles)
@@ -94,7 +95,7 @@ Every card has a circular info icon button (top-right) that opens a modal contai
 
 ## Tech Stack
 
-- **Structure**: Main HTML + inline JSON configs, 9 guide pages + music, seo, privacy, terms, authors pages
+- **Structure**: Main HTML + inline JSON configs, 10 guide pages plus music, seo, privacy, terms, about, authors pages
 - **Styling**: Tailwind CSS (local build via npm) + custom CSS design token system
 - **Charts**: Chart.js (doughnut, bar, radar) — self-hosted in `vendor/chart.umd.js`, lazy-loaded on first toggle
 - **Icons**: Inline SVGs (no icon font or CDN — replaced Font Awesome)
@@ -125,7 +126,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 
 ## Improvement Plans
 
-160 executable improvement plans at `docs/plans/2026-05-20/deepseek-v4-flash/` cover every aspect of the project:
+161 executable improvement plans at `docs/plans/2026-05-20/deepseek-v4-flash/` cover every aspect of the project:
 
 | Category | Plans | Focus |
 |----------|-------|-------|
@@ -144,19 +145,22 @@ Full token reference: [docs/DESIGN_SYSTEM.md](DESIGN_SYSTEM.md)
 | Build | 132-133 | Biome, Lightning CSS |
 | Code Quality | 46-48, 121-124 | JSDoc, magic numbers, AbortController, Error.cause |
 
-Post-160 plans (161–162, with `INDEX.md`) live at `docs/plans/2026-05-28/deepseek-v4-flash-free/`: 161 covers the gems/codes SEO overhaul (breadcrumbs, Article schema, meta refresh), 162 the GSC export analyzer.
+The later 2026-05-28 batch (plans 161–162, with `INDEX.md`) lives at `docs/plans/2026-05-28/deepseek-v4-flash-free/`: 161 covers the gems/codes SEO overhaul (breadcrumbs, Article schema, meta refresh), 162 the GSC export analyzer. Plan numbers are per-batch — the 2026-05-20 folder also has a `161-add-codes-update-rewards.md`.
 
 ## SEO Reports
 
 Two complementary views of Google Search Console data:
 
 - **Export-based** — `docs/reports/2026-08-20/unknown/SEO_PERFORMANCE.md`, generated from CSV exports in `data/https___anomaly-alpha-<date>/`. Regenerated by `npm run analyze-gsc`. Current content is from the 2026-10-12 export: 13,897 clicks / 103,854 impressions over 92 days.
-- **API-based** — `docs/reports/2026-10-31/deepseek-v4.1-flash/search-console-report.md`, generated from the Search Analytics API by `npm run pull-gsc` (snapshots land in `data/gsc-api/<date>/`). Latest window: 2026-05-02 → 2026-10-29 (181 days), with a 28-day comparison.
+- **API-based** — generated from the Search Analytics API by `npm run pull-gsc` (snapshots land in `data/gsc-api/<date>/`). Two reports exist:
+  - `docs/reports/2026-10-31/deepseek-v4.1-flash/search-console-report.md` — 181-day window 2026-05-02 → 2026-10-29 (19,505 clicks / 148,258 impressions) with a 28-day comparison.
+  - `docs/reports/2026-11-07/deepseek-v4.1-flash/search-console-ctr-report.md` — **latest**; window 2026-05-09 → 2026-11-05, comparing 2026-10-09 → 2026-11-05 against 2026-09-11 → 2026-10-08 (7,664 clicks, +59.2%).
 
 Plan 162 (`docs/plans/2026-05-28/deepseek-v4-flash-free/162-gsc-export-analyzer.md`) documents the export analyzer workflow.
 
 ## Audit Reports
 
+- [Search Console CTR Report (2026-11-07)](reports/2026-11-07/deepseek-v4.1-flash/search-console-ctr-report.md) — latest API-sourced CTR analysis; portal-intent leak clusters.
 - [Codes Audit (2026-10-31)](reports/2026-10-31/deepseek-v4.1-flash/codes-audit.md) — `data/codes.json` accuracy against external code lists; findings 1, 3, 4 applied, finding 2 open.
 - [Search Console Report (2026-10-31)](reports/2026-10-31/deepseek-v4.1-flash/search-console-report.md) — 181-day API-sourced performance analysis.
 - [GSC Content Optimization (2026-10-12)](reports/2026-10-12/gpt-5/gsc-content-optimization.md) — Landing-page optimization findings from the October GSC export.

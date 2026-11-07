@@ -11,6 +11,8 @@ commits: 8de0006..a311a93
 
 # September 2026 Site Freshness Update - Final Report
 
+> **Currency note (verified 2026-11-07).** This is the delivery record for the 2026-09-04 freshness run, so the counts below describe that snapshot, not the site today. Current state: **36 active / 19 expired codes** (not 29 / 19); **10 guide pages** (not nine — `/guide/wish-event/` was added); **17 editorial routes** in the sitemap (the above plus `/about/` and the `/watch/` hub); **193 generated watch pages**; the structured-data suite now covers **16 pages** (not 14). The architectural statements in this report still hold.
+
 ## What Was Built
 
 The public Invincible GTG site now reflects the 2026-09-04 freshness snapshot across source data, generated outputs, guide and policy copy, SEO metadata, indexation signals, and structured data. The code catalog contains 29 active and 19 expired records, including the active RAID02 reward and corrected expired GLOB34 record. Creator data remains source-driven and preserves the existing eligibility thresholds and rendered cap.

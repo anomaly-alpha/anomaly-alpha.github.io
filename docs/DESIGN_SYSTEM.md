@@ -300,7 +300,7 @@ Hover styling is applied per category (`.gem-card--event:hover`, `--pvp:hover`, 
 
 | Class | Type | Description |
 |-------|------|-------------|
-| `.gem-icon--gem` | Block | Small gem icon (12×12) |
+| `.gem-icon--gem` | Block | Small gem icon (20×20 / `1.25rem`) |
 | `.gem-icon--star` | Block | Star badge |
 
 ### Orb Component
@@ -410,7 +410,7 @@ Hover styling is applied per category (`.gem-card--event:hover`, `--pvp:hover`, 
 
 ## Light Mode
 
-Light mode is activated by adding `light-mode` class to `<body>`. All tokens with light mode overrides are defined in `:root.light-mode`.
+Light mode is activated by adding the `light-mode` class to `<body>` — but all light-mode token overrides are defined on `:root.light-mode` (i.e. `<html>`). That selector mismatch is a known defect in the current code: a class on `<body>` never matches `:root.light-mode`, so the overrides do not currently apply.
 
 ### Key Differences
 
@@ -421,11 +421,12 @@ Light mode is activated by adding `light-mode` class to `<body>`. All tokens wit
 | Card backgrounds | Category-colored translucent | Cyan-tinted translucent |
 | Borders | White with opacity | Dark slate with opacity |
 
-### Toggle Behavior
+### Activation
+
+There is no theme toggle in the UI. `script.js` only ever **adds** the class, on page load, from either the legacy `gem_theme` localStorage key or the `?theme=light` URL parameter:
 
 ```javascript
-document.body.classList.toggle('light-mode');
-// Icon swaps between moon/sun
+if (theme === 'light') document.body.classList.add('light-mode');
 ```
 
 ### URL Parameter
@@ -444,10 +445,10 @@ The following color aliases are defined in `tailwind.config.js` for use in gradi
 | `green-accent` | `#2ecc71` | Code category gradient bars (`via-green-accent`) |
 | `yellow-accent` | `#f39c12` | Login category gradient bars (`via-yellow-accent`) |
 | `pink-glow` | `#e91e8a` | PvP/Alliance War gradient bars (`via-pink-glow`) |
-| `cyan-glow` | `#00e5ff` | Cyan accent gradient bars (`via-cyan-glow`) |
+| `cyan-glow` | `#00e5ff` | Cyan accent — defined but not currently emitted by any class in use |
 | `purple-accent` | `#9b59b6` | Special gradient bars (`via-purple-accent`) |
 
-These use Tailwind's `theme.extend.colors` and are detected via the JIT engine from content patterns in `index.html` and `guide/*/index.html`.
+These use Tailwind's `theme.extend.colors` and are detected via the JIT engine from these content paths (`tailwind.config.js`): `./*.html`, `./about/**/*.html`, `./guide/**/*.html`, `./music/**/*.html`, `./watch/**/*.html`, `./script.js`.
 
 ### FOUC Visibility Guard
 
@@ -477,12 +478,7 @@ Tokens that need different values in light mode are overridden in `:root.light-m
 
 ### Per-Component Dynamic Values
 
-Some components use CSS variables set dynamically via JavaScript:
-
-```javascript
-// Card hover uses --card-color set per card
-card.style.setProperty('--card-color', colorMap[card.dataset.category]);
-```
+Card hover does **not** use a CSS variable — each category's hover border and glow are hard-coded per modifier in `styles.css` (e.g. `.gem-card--pvp:hover { border-color: rgba(233,30,138,.8); box-shadow: 0 0 20px rgba(233,30,138,.5), … }`). There is no `.gem-card:hover` base rule and no `--card-color` custom property anywhere in the codebase.
 
 ### CSS Custom Property Advantages
 
@@ -505,7 +501,7 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 | `gem-code--copied` | 0.4s | ease-out | Copied flash |
 | `gem-float-particle` | 15s | linear | Background particles (infinite, GPU-composited via `translate3d`) |
 | `pulse` | 3s | cubic-bezier(0.4, 0, 0.6, 1) | Header icon pulse (infinite) |
-| `gem-countdown-pulse` | 1s | ease-out infinite | Countdown second tick (CSS-only) |
+| `gem-animate--countdown-pulse` | 3s | ease-in-out | Countdown second tick (infinite, CSS-only) |
 | `gem-modal--pop-in` | 0.3s | cubic-bezier(0.34, 1.56, 0.64, 1) | Modal entry |
 
 ---
@@ -514,22 +510,26 @@ card.style.setProperty('--card-color', colorMap[card.dataset.category]);
 
 Interactive state styles are defined per component. Below is the consolidated reference.
 
-### Buttons (`.gem-btn`)
+### Buttons (`.gem-btn--icon`)
+
+There is no `.gem-btn` base block — only the icon-button variants below.
 
 | State | Style |
 |-------|-------|
-| Default | `background: var(--gem-btn-bg); border: 1px solid var(--gem-btn-border);` |
-| Hover | `background: var(--gem-btn-hover);` |
-| Focus | `outline: none; box-shadow: 0 0 0 2px var(--gem-cyan);` |
-| Active | `transform: scale(0.97);` |
+| Default | `padding: .75rem; border-radius: 9999px; background-color: var(--gem-btn-bg); border: 1px solid var(--gem-btn-border);` |
+| Hover | `background-color: var(--gem-btn-hover);` |
+| Focus | No custom rule — browser default focus ring |
+| Active | No custom rule |
+
+`.gem-btn--icon-glow` adds the cyan glow treatment; `.gem-btn--clear:hover` is the only other hover rule.
 
 ### Select Inputs (`.gem-select`)
 
 | State | Style |
 |-------|-------|
 | Default | Category-colored background + border; custom chevron arrow via `background-image` |
-| Hover | Border brightens (category color at higher opacity); arrow brightens |
-| Focus | Cyan border ring (`box-shadow: 0 0 0 2px var(--gem-cyan)`) |
+| Hover | Border brightens to `rgba(255,255,255,.4)`; `.gem-select--{cat}:hover` also swaps the chevron to a category-tinted fill |
+| Focus | Cyan border + 25% cyan ring (`box-shadow: 0 0 0 2px rgba(0,229,255,.25)`) |
 | Disabled | Not used — all selects are always enabled |
 
 ### Code Chips (`.gem-code__chip`)
@@ -537,16 +537,16 @@ Interactive state styles are defined per component. Below is the consolidated re
 | State | Style |
 |-------|-------|
 | Default | Green tint, rounded, pointer cursor |
-| Hover | `transform: scale(1.05);` green glow |
+| Hover | No hover rule — chips react only via `.copied` |
 | Focus | Visible outline ring (browser default) |
 | Copied (`.copied`) | Brief scale pulse via `@keyframes gem-code--copied` (0.4s, ease-out) |
-| Expired (`.gem-code__chip--expired`) | Red tint, muted opacity, no pointer cursor (display-only) |
+| Expired (`.gem-code__chip--expired`) | Red tint via rgba border/background/color; inherits the pointer cursor |
 
 ### Card Hover (`.gem-card`)
 
 | State | Style |
 |-------|-------|
-| Hover | Category-colored glow border + shadow using JS-set `--card-color` variable |
+| Hover | Category-colored glow border + shadow, hard-coded per `.gem-card--{cat}:hover` modifier (no CSS variable) |
 | `.gem-card--mode-highlight--{cat}` | Subtle category-colored overlay (applied by mode hover via JS) |
 
 ### Links (`.gem-breadcrumb__link`, inline `<a>`)
@@ -564,7 +564,7 @@ Interactive state styles are defined per component. Below is the consolidated re
 | Default | Category-colored accent, translucent background |
 | Active (`.gem-mode-btn.active`) | Solid category-colored border, brighter background |
 | Hover | Category-colored glow overlay, scale(1.05) |
-| Focus | Cyan focus ring |
+| Focus | No custom rule — browser default focus ring |
 
 ---
 
@@ -591,7 +591,7 @@ anomaly-alpha/
 │   ├── generated/            — Generated bundles (promo-codes, youtube-creators, seo-data)
 │   ├── arena_payouts.txt     — Open + Restricted arena payout tables
 │   └── multiverse_war_payouts.txt — Alliance War payout tables
-├── guide/               — 9 detail guide pages (code, event, pvp, login, faq, beginners, xp, redeem, creators)
+├── guide/               — 10 detail guide pages (code, event, wish-event, pvp, login, faq, beginners, xp, redeem, creators)
 ├── journal/             — Daily session journals (YYYY-MM-DD/index.md)
 ├── docs/
 │   ├── DESIGN_SYSTEM.md   — This file
@@ -627,8 +627,9 @@ To update a color across the entire application, change the token value in `styl
 ### Browser Support
 
 - CSS custom properties (tokens): All modern browsers
-- `color-mix()` function: Safari 15.4+, Chrome 111+, Firefox 113+
 - `backdrop-filter`: All modern browsers (graceful degradation)
+
+`color-mix()` is not currently used anywhere in `styles.css`, `tailwind.css`, or the page markup.
 
 ---
 
@@ -636,8 +637,7 @@ To update a color across the entire application, change the token value in `styl
 
 - [MDN: CSS Custom Properties](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
 - [BEM Naming Convention](http://getbem.com/introduction/)
-- [color-mix() Function](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/color-mix())
 
 ## Improvement Plans
 
-160 executable plans covering architecture, security, performance, accessibility, SEO, testing, PWA, CSS, JS quality, and new features are available at `docs/plans/2026-05-20/deepseek-v4-flash/`.
+161 executable plans covering architecture, security, performance, accessibility, SEO, testing, PWA, CSS, JS quality, and new features are available at `docs/plans/2026-05-20/deepseek-v4-flash/`.

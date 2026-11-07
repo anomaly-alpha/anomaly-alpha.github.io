@@ -446,7 +446,7 @@ skarn-bot/
 │   ├── mood/               # Guild mood evaluation
 │   ├── realm/              # Realm of Skarn RPG (combat, NPC, economy, etc.)
 │   ├── tools/              # AI tool definitions + runner
-│   ├── preprocess/         # Message analyzer, post-processor
+│   ├── preprocessing/      # Message analyzer, post-processor, analysis pipeline
 │   └── ...                 # channelState, relationship, culture, warmth, humor, etc.
 ├── ai/                     # OpenAI client singleton
 ├── persona/                # Core identity (identity.js) + roles (roles.js)
@@ -487,7 +487,7 @@ node ../skarn-rpc/rich-presence.js
 
 ### Verification (manual, per project convention)
 
-No test framework — verify with `npm run smoke` (runs every suite in `scripts/smokes/` against its own temp DB; a fresh DB logs `[DB] Migration 1 (add_reminder_giveaway_indexes)`, `[DB] Migration 2 (add_daily_news_published_at)`, and `[DB] Migration 3 (drop_mention_cooldowns)` applied — see `db/migrations.js`) plus syntax checks and a `node bot.js` boot check. For end-to-end Discord checks of the current command tree, permissions, cleanup, and deployment scope, follow the [Skarn Slash Command Testing Guide](docs/guides/2026-10-17/gpt-6-luna/command-testing.md). Individual blocks below remain for copy-paste debugging.
+No test framework — verify with `npm run smoke` (runs every suite in `scripts/smokes/` against its own temp DB; a fresh DB logs `[DB] Migration 1 …` through `[DB] Migration 7 (attribute_shared_skarn_replies_for_forget)` applied — see `db/migrations.js`) plus syntax checks and a `node bot.js` boot check. For end-to-end Discord checks of the current command tree, permissions, cleanup, and deployment scope, follow the [Skarn Slash Command Testing Guide](docs/guides/2026-10-17/gpt-6-luna/command-testing.md). Individual blocks below remain for copy-paste debugging.
 
 ```bash
 node -c bot.js                                    # syntax check
@@ -560,7 +560,7 @@ global.fetch = async () => ({ ok: true, text: async () => '<rss><channel><item><
 "
 ```
 
-Expected: `user_version 3`, `baseline OK`, `dup rejected: true`, `trade done: true 0 2`, `condense long uses gate output: true`, `condense short unchanged: true`, `condense tool unchanged: true`, `weather tool returns live data: true`, `dice tool returns a real roll: true`, `news parses + dedupes: true`.
+Expected: `user_version 7`, `baseline OK`, `dup rejected: true`, `trade done: true 0 2`, `condense long uses gate output: true`, `condense short unchanged: true`, `condense tool unchanged: true`, `weather tool returns live data: true`, `dice tool returns a real roll: true`, `news parses + dedupes: true`.
 
 ### run_command smoke
 

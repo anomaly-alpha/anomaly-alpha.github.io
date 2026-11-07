@@ -49,7 +49,7 @@ Discord Gateway
 
 ## AI Call Flow (every `/consult` or `@Skarn` mention)
 
-Both handlers delegate to the shared pipeline `runPipeline()` (`features/ai/sharedPipeline.js:46`):
+Both handlers delegate to the shared pipeline `runPipeline()` (`features/ai/sharedPipeline.js:55`):
 
 ```
 User message
@@ -59,7 +59,7 @@ runMessageAnalysis()  — preprocessing/pipeline.js (analyzer + shouldAnalyze ga
     │  Analyzer output informs model routing + memory extraction
     ▼
 buildContext(userId, guildId, channelId)      — features/promptContext.js (personal context only for addressed replies)
-    │  Returns 32 context lines from ~12+ modules: channel state, guild mood,
+    │  Returns 37 context lines from ~12+ modules: channel state, guild mood,
     │  relationship, server culture, memory entries, conversation history,
     │  user profile, emotional context, knowledge base, news, lorebook, RAG,
     │  socratic guidance, safety line, server wisdom, etc.
@@ -94,7 +94,7 @@ The persona system is assembled from 5 layers, fused into a single system prompt
 ```
 Layer 1: Identity         persona/identity.js     SKARN_CORE_IDENTITY (invariant)
 Layer 2: Role             persona/roles.js         Per-command role instruction
-Layer 3: Context          features/promptContext.js 32 context lines from ~12+ modules
+Layer 3: Context          features/promptContext.js 37 context lines from ~12+ modules
 Layer 4: Post-processing  features/discordNative/postProcess.js  Probabilistic text transform
 Layer 5: Behaviors        features/{warmth,humor,etiquette,wisdom}/  Memory, timing, warmth
 ```
@@ -120,12 +120,12 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 68 sla
 | Module | File | Responsibility |
 |--------|------|----------------|
 | Core identity | `persona/identity.js` | `SKARN_CORE_IDENTITY` + `buildSystemPrompt()` |
-| Role registry | `persona/roles.js` | 41 role lines, 41 token budgets, 41 nature classifications (roles/roleTokenBudgets/ROLE_NATURE keys aligned) |
+| Role registry | `persona/roles.js` | 40 role lines, 40 token budgets, 40 nature classifications (roles/roleTokenBudgets/ROLE_NATURE keys aligned) |
 
 ### Context Assembly
 | Module | File | Responsibility |
 |--------|------|----------------|
-| Context collector | `features/promptContext.js` | Fetches all dynamic context — `buildContext()` returns 32 context lines from ~12+ modules (channel state, mood, relationship, culture, memory, warmth, humor, etiquette, emotion, news, knowledge, lorebook, RAG, etc.) |
+| Context collector | `features/promptContext.js` | Fetches all dynamic context — `buildContext()` returns 37 context lines from ~12+ modules (channel state, mood, relationship, culture, memory, warmth, humor, etiquette, emotion, news, knowledge, lorebook, RAG, etc.) |
 | Channel state | `features/channelState/` | Dormant/Attentive/Charged/Weathering state machine |
 | Relationship | `features/relationship/` | Familiarity, tags, banter level per user |
 | Mood | `features/mood/` | Per-guild mood (neutral/tired/amused/focused/refreshed/wrath) |
@@ -138,7 +138,7 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 68 sla
 ### AI Orchestration
 | Module | File | Responsibility |
 |--------|------|----------------|
-| Shared pipeline | `features/ai/sharedPipeline.js` | `runPipeline()` (:46) — single consult/mention AI flow: analysis → `buildContext()` → `buildSystemPrompt()` → tool loop → `condenseReply()` → `storeMessage()` → typing → `splitMessage`/`maybeBurst` |
+| Shared pipeline | `features/ai/sharedPipeline.js` | `runPipeline()` (:55) — single consult/mention AI flow: analysis → `buildContext()` → `buildSystemPrompt()` → tool loop → `condenseReply()` → `storeMessage()` → typing → `splitMessage`/`maybeBurst` |
 | AI client | `ai/client.js` | Singleton OpenAI instance + `moderatedChatCompletion()` (central admission gate: `isSilenced()` + rate-limit reserve) |
 | Mention router | `features/mentionRouter/` | @mention handling, delegates to `runPipeline()` |
 | Consult handler | `features/consult/` | `/consult` command handler, delegates to `runPipeline()` |
@@ -180,7 +180,7 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 68 sla
 | Reaction system | `features/discordNative/reactionSystem.js` | Passive emoji reactions (3% chance) |
 | Typing sim | `features/discordNative/typingSim.js` | `startTypingKeepalive()` + `getTypingDelay()` (single length-scaled pre-send pause; `typingController.js` deleted) |
 | Context injector | `features/discordNative/contextInjector.js` | **Zero callers** — conversation context comes from `getRecentAssistantOrUserMessages()`/`getServerBuzz()` in `promptContext.js` instead |
-| Attention gate | `features/discordNative/attentionGate.js` + `attentionDecision.js` | Conversation-aware, validated respond/silence decision; model-agnostic JSON parsing |
+| Attention gate | `features/discordNative/attentionGate.js` + `attentionDecision.js` | Deterministic eligibility gate (opt-in, ignore list, AI permission) that forces a reply for the opted-in triggering user; `attentionDecision.js` supplies the validated JSON decision parser, currently exercised only by smoke 20 |
 | Turn coordinator | `features/conversation/turnCoordinator.js` | 1.5-second same-author batching, message deduplication, per-channel serialization, eligibility cancellation |
 | Channel transcript | `features/conversation/channelTranscript.js` + `db/channelContext.js` | Seven-day raw shared context, bounded summary compaction, provenance, forget/deletion support |
 | Activation registry | `features/activation/activationRegistry.js` | Text command routing ("skarn weather") |
@@ -192,7 +192,7 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 68 sla
 | Module | File | Responsibility |
 |--------|------|----------------|
 | Database | `db/` | Facade `db/database.js` + domain modules (`memory`, `conversation`, `relationship`, `channel`, `channelContext`, `ops`, `humor`, `stories`) + `db/db.js` connection |
-| Schema | `db/skarn-schema.sql` | 30+ tables (run on startup via CREATE IF NOT EXISTS) |
+| Schema | `db/skarn-schema.sql` | 58 tables + 2 FTS5 virtual tables (run on startup via CREATE IF NOT EXISTS) |
 
 ## State Machine: Channel Mood
 
@@ -253,7 +253,7 @@ The persona system uses a **tiered `buildContext()`** function in `features/prom
 | **Full** | Messages ≥ 50 chars or contains `?` | All directive lines + 15 messages + 2 summaries + profile + knowledge + server buzz | ~3,000 |
 | **Advice** (implemented 2026-08-01) | Matches "should I"/"what should" | Full + socratic directive | ~3,100 |
 
-The Advice tier is implemented (2026-08-01): `buildContext()` (`features/promptContext.js:30-33`) calls `getSocraticQuestion()` (`features/wisdom/socraticEngine.js`, 18 trigger phrasings) and promotes the message to full tier. See CONTEXT.md §5 (socraticLine).
+The Advice tier is implemented (2026-08-01): `buildContext()` (`features/promptContext.js:60`) calls `getSocraticQuestion()` (`features/wisdom/socraticEngine.js`, 15 trigger phrasings) and promotes the message to full tier. See CONTEXT.md §5 (socraticLine).
 
 ## Realm of Skarn — RPG Architecture
 
@@ -298,7 +298,7 @@ All state lives in SQLite (`data/skarn.db`). No external database. Key patterns:
 - **Per-user-per-guild** scoping for most tables `(user_id, guild_id)` PK
 - **Ephemeral flags** via `app_flags` with optional TTL (SETs auto-clean via `pruneExpiredFlags()`)
 - **FTS5** on conversation messages and knowledge base for full-text search
-- **Versioned migrations** — `db/migrations.js` runs at startup (`db/db.js:41`), tracked via SQLite `user_version` (7 migrations). Base schema is still `CREATE TABLE IF NOT EXISTS` on every startup (`db/skarn-schema.sql`); column additions use try/catch for idempotency
+- **Versioned migrations** — `db/migrations.js` runs at startup (`db/db.js:43`), tracked via SQLite `user_version` (7 migrations). Base schema is still `CREATE TABLE IF NOT EXISTS` on every startup (`db/skarn-schema.sql`); column additions use try/catch for idempotency
 
 See `docs/DATABASE.md` for the full table reference.
 
@@ -320,7 +320,7 @@ Presence content is deliberately outside the database. Both runtimes consume the
 
 A guild user must opt in before Skarn replies or joins an AI-enabled channel. Passive participation additionally requires the channel's aichat-on setting. Only an opted-in user's message triggers the conversation-aware attention call; non-opted-in messages are context only and cannot be direct targets.
 
-Eligible turns are batched for 1.5 seconds and serialized per channel. Attention and reply generation are separate moderated calls; invalid or failed passive attention decisions stay silent. A general unaddressed channel contribution uses no personal relationship, memory, profile, or user-specific conversation context.
+Eligible turns are batched for 1.5 seconds and serialized per channel. Reply generation is a moderated call; the attention decision itself is deterministic (no model call) — `evaluateAttention()` returns a forced reply decision once eligibility passes, and silence otherwise. A general unaddressed channel contribution uses no personal relationship, memory, profile, or user-specific conversation context.
 
 Shared channel context is stored in channel_context_messages for seven days, including Skarn replies attributed to the initiating user. Older context is compacted into provenance-bearing channel summary segments that can retain names and exact quotes until forgotten. Personal conversation history and memory remain separate stores. Opt-out suspends future extraction/use without deleting existing personal data; forget removes attributable shared-context data and personal data according to the selected forget scope.
 

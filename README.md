@@ -11,7 +11,7 @@ The site itself is a gem rewards infographic featuring interactive charts, mode 
 | Event | 500 | The Long Haul (300) + Earth's Defenders (200) |
 | PvP | ~1,850 | Varies with league/rank — Restricted Arena, Open Arena, Alliance War (Elite II, rank 13 default) |
 | Login | 1,393 | Daily (910) + Weekly (460) + Monthly (23) |
-| Code | Variable | 35 active codes with gems + tickets |
+| Code | Variable | 36 active codes with gems + tickets |
 
 **Total: ~4,043 gems/week** (varies with PvP selections)
 
@@ -21,7 +21,7 @@ The site itself is a gem rewards infographic featuring interactive charts, mode 
 
 ### Interactive Elements
 - **Animated counter** that counts up on value changes (PvP selections, mode filtering)
-- **Promo code reveal** — tap to reveal 35 active codes in a grid, tap any code to copy; redeem via verification code at redeem.invincible.ubisoft.barcelona
+- **Promo code reveal** — tap to reveal 36 active codes in a grid, tap any code to copy; redeem via verification code at redeem.invincible.ubisoft.barcelona
 - **Mode selector** — 5 buttons (All, Code, Event, PvP, Login) each showing gem total + countdown timer
 - **Multi-select mode filtering** — toggle Event, PvP, Login, Code independently
 - **Mode button hover** — hovering a mode button highlights all matching cards in that mode's color
@@ -82,7 +82,7 @@ All cards have an info icon button (top-right corner) that opens a modal with:
 
 ```
 anomaly-alpha/
-├── index.html           (135 KB) — Main HTML + inline JSON configs (9 in `<head>`)
+├── index.html           (144 KB) — Main HTML + inline JSON configs (9 in `<head>`)
 ├── script.js            (46 KB) — All JS: charts, filters, PvP, modals, countdowns (minified)
 ├── styles.css           (48 KB) — CSS custom properties + BEM component classes (minified)
 ├── tailwind.css         (16 KB) — Generated Tailwind utility classes (minified)
@@ -97,7 +97,7 @@ anomaly-alpha/
 ├── og-images/*.png      — Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators — 9 total)
 ├── favicon.ico           — Browser favicon for tab
 ├── robots.txt           — Allows all crawlers, references sitemap
-├── sitemap.xml          — 14 URLs (main + 9 guide pages + authors/anomaly + music + privacy + terms)
+├── sitemap.xml          — 210 URLs (16 editorial: main + 10 guide pages + authors/anomaly + music + about + privacy + terms, plus the /watch/ hub and 193 watch pages)
 ├── _headers             — Cloudflare Pages cache config
 ├── 404.html             — Custom error page
 ├── AGENTS.md            — Agent instructions for this repo
@@ -121,25 +121,31 @@ anomaly-alpha/
 │   └── index.html
 ├── authors/             — Author profile pages
 │   └── anomaly/index.html
+├── about/               — About page
+│   └── index.html
 ├── guide/               — Topical cluster guide pages
 │   ├── code/index.html  — Promo code guide (current code, redemption steps)
 │   ├── event/index.html — Event rewards guide (The Long Haul, Earth's Defenders)
+│   ├── wish-event/index.html — Wish Event guide
 │   ├── pvp/index.html   — PvP guide (14 leagues, payout tables, 3 arena modes)
 │   ├── login/index.html — Login rewards guide (daily, weekly, monthly breakdown)
 │   ├── faq/index.html   — Gem rewards FAQ
 │   ├── beginners/index.html — New player guide
 │   ├── xp/index.html    — XP & progression guide (Hero Rank-Up reference)
 │   ├── redeem/index.html — Promo-code redemption guide
-│   └── creators/index.html — Curated YouTube creator directory with lazy modal playback
+│   └── creators/index.html — Curated YouTube creator directory (CollectionPage that links to watch pages)
+├── watch/               — Generated per-video watch pages (one VideoObject each), hub, and shared watch.css
 ├── data/                — Source data files
 │   ├── codes.json                — Single source of truth for promo codes
 │   ├── youtube-creators.json     — Approved creator/video records and provenance
+│   ├── game-context.json         — Verified game-context knowledge base for watch pages
 │   ├── playlists.json            — Music playlist data
 │   ├── countries-list.txt        — Country reference data
 │   ├── generated/
 │   │   ├── promo-codes.js        — Generated active codes bundle
 │   │   ├── youtube-creators.js   — Generated public creator bundle
 │   │   └── seo-data.js           — Generated SEO data
+│   ├── gsc-api/<date>/           — Search Console API snapshots from `npm run pull-gsc`
 │   ├── arena_payouts.txt         — Open + Restricted arena payout data
 │   ├── multiverse_war_payouts.txt — Multiverse War payout data
 │   └── https___anomaly-alpha*/   — Google Search Console export folders
@@ -147,28 +153,32 @@ anomaly-alpha/
 │   ├── generate-codes.js         — Reads data/codes.json, writes promo-codes.js + updates HTML
 │   ├── generate-music.js         — Generates music page data
 │   ├── generate-youtube-creators.js — Validates creator data, generates HTML/JSON-LD/browser data
+│   ├── generate-watch-pages.js   — Generates watch/<videoId>/ pages, the hub, and the sitemap watch region
+│   ├── enrich-youtube-creators.js — Harvests real video metadata (duration, views, publishedAt, playability)
 │   ├── generate-skarn-index.js   — Regenerates the docs index in skarn-bot/index.html via markers
 │   ├── audit-youtube-creators.js — Audits creator video availability over HTTP
 │   ├── gen-serp-dumps.js         — Generates SERP dump files from GSC query data
 │   ├── analyze-gsc.js            — Analyzes GSC export data
+│   ├── pull-gsc.js               — Pulls Search Console API data into data/gsc-api/<date>/
 │   ├── add-meta.js / add-more.js / add-schema.js — Legacy guide-page tag/meta/schema helpers
 │   ├── run-lighthouse.ps1        — Batch Lighthouse audit script
 │   ├── run-psi-audit.js          — PageSpeed Insights audit for all 8 pages
 │   └── serve.js                  — Local development server
-├── tests/               — Custom test scripts (no standard framework; run via `node tests/<file>`)
+├── tests/               — Custom test scripts (no standard framework; run via `node tests/<file>`, except the browser-only back-to-top suite)
 │   ├── ads-fallback.test.js      — Validates ads-config and site-message fallback
 │   ├── ads-txt.test.js           — Validates ads.txt content
 │   ├── promo-codes-generator.test.js — Validates code generation
 │   ├── youtube-creators-generator.test.js — Validates creator generation
 │   ├── youtube-creators-audit.test.js — Validates creator audit output
-│   ├── structured-data.test.js   — Validates JSON-LD structured data
-│   ├── back-to-top.test.js       — Tests back-to-top button behavior
-│   └── test-harness.js           — Shared test helpers
-├── docs/                — Docs tree: docs/{specs,plans,reports,handoffs,guides}/YYYY-MM-DD/<model>/
+│   ├── youtube-watch-pages.test.js — Validates watch page VideoObject, SEO head, sitemap
+│   ├── structured-data.test.js   — Validates JSON-LD structured data across 16 pages
+│   ├── back-to-top.test.js       — Back-to-top button behavior; browser-only, open tests/back-to-top.html
+│   └── test-harness.js           — Shared test helpers (describe/it/assert, used by the browser suite)
+├── docs/                — Docs tree: docs/{specs,plans,reports,handoffs,guides,runbooks,research}/YYYY-MM-DD/<model>/
 │   ├── DESIGN_SYSTEM.md  — CSS token reference
 │   ├── index.md          — Feature documentation
 │   ├── adr/              — Architecture Decision Records
-│   ├── research/         — Research notes
+│   ├── research/         — Research data notes
 │   ├── runbooks/         — Operational runbooks
 │   └── prompt/ compose/  — Prompt docs + legacy compose docs
 ├── serp-dumps/          — Historical SERP snapshots (YYYY-MM-DD/INDEX.md + per-query files, from gen-serp-dumps.js)
@@ -200,7 +210,7 @@ Full token reference: [docs/DESIGN_SYSTEM.md](docs/DESIGN_SYSTEM.md)
 
 ## Improvement Plans
 
-160 executable plans at `docs/plans/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans (161–162, with INDEX.md) at `docs/plans/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
+161 executable plans at `docs/plans/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. The later 2026-05-28 batch (plans 161–162, with INDEX.md) is at `docs/plans/2026-05-28/deepseek-v4-flash-free/`. Plan numbers are per-batch. Each is self-contained with file paths, code snippets, and verification steps.
 
 
 

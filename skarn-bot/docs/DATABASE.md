@@ -194,7 +194,7 @@ AI-generated stories from Skarn's past, keyed by topic.
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | INTEGER PK AUTO | Row ID |
-| `topic` | TEXT NOT NULL | Story topic (war, loss, change, technology, time, power, dreams, stillness, wonder, regret, humans) |
+| `topic` | TEXT NOT NULL | Story topic (war, loss, change, technology, time, power, dreams, stillness, wonder, regret, humans, retirement) |
 | `story_text` | TEXT NOT NULL | The story content |
 | `source` | TEXT | Origin of the story |
 | `used_count` | INTEGER DEFAULT 0 | Number of times referenced |

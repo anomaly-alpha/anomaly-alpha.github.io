@@ -2,6 +2,11 @@
 
 ## Nov 2026
 
+- **Wish Event guide**: New `/guide/wish-event/` page covering event mechanics, wish targets, and reward expectations; added to the guide cluster nav and sitemap.
+- **Watch-page hardening**: Every generated watch page now carries a timezone-qualified `uploadDate` (harvested `youtube.publishedAt`, else `YYYY-MM-DDT00:00:00+00:00`), and watch pages are enriched with real video metadata plus verified game context from `data/game-context.json`.
+- **About page**: New `/about/` page (indexable, in sitemap) documenting the project and where the reward numbers come from.
+- **Codes**: STACHE leads the list as the newest code, taking active codes from 35 to 36 (55 tracked, 19 expired), and the redeem portal address now appears in the `/guide/code/` SERP snippet.
+- **Creator refresh**: Seven additional creators found in the community channel's full history; upload discovery reworked to read the channel page after the feed endpoint disappeared.
 - **Promo-code expansion**: Active codes grew from 30 to 35 (54 tracked, 19 expired). `data/codes.json` now models item rewards alongside gems/tickets, and `scripts/generate-codes.js` emits a per-code reward table with HIGH/MEDIUM tiers. Ticker, home page, and `guide/code/` all regenerated.
 - **Codes accuracy audit**: `docs/reports/2026-10-31/deepseek-v4.1-flash/codes-audit.md` checked `data/codes.json` against external lists — findings 1, 3 and 4 applied, finding 2 left open pending in-game verification.
 - **Search Console API puller**: New `scripts/pull-gsc.js` (`npm run pull-gsc`) pulls Search Analytics, sitemaps, and URL inspection into `data/gsc-api/<date>/`; the resulting 181-day report lives at `docs/reports/2026-10-31/deepseek-v4.1-flash/search-console-report.md` (6,774 clicks in the latest 28 days, +54.2%).
@@ -12,6 +17,8 @@
 
 ## Oct 2026
 
+- **Per-video watch pages**: `scripts/generate-watch-pages.js` now generates one `/watch/<videoId>/` page per indexed creator video (plus a `/watch/` hub), each declaring exactly one `VideoObject` with a timezone-correct upload date, and rewrites the watch region of `sitemap.xml`. The creator directory became a `CollectionPage` linking to those pages instead of emitting `VideoObject` itself. Sitemap grew from 14 to 210 URLs.
+- **Watch metadata enrichment**: `scripts/enrich-youtube-creators.js` (`npm run enrich-creators`) harvests real per-video duration, view count, true upload timestamp, creator description, playability, and embeddability; unplayable videos are marked `status: "unavailable"` so no dead watch page is ever published.
 - **October SEO refresh**: GSC-evidence-driven landing page optimization, October-titled SEO metadata across game-content pages, and refreshed code data date. New search-performance exports and a content optimization report recorded under `data/` and `docs/reports/2026-10-12/gpt-5/`.
 - **Promo-code count**: UPDAT3 (500 gems) brings active codes to 30; `data/codes.json` refreshed (date 2026-10-12) and reward table updated.
 - **Creator directory refresh**: Verified video listings refreshed and upload feeds audited, with audit evidence recorded (`docs/reports/2026-10-12/gpt-5/creator-directory-audit.md`).

@@ -12,7 +12,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Event** — Time-limited game events with ranking thresholds (500 gems: The Long Haul 300 top 5%, Earth's Defenders 200 top 10%)
 - **PvP (Player vs Player)** — Arena competition with league/rank system affecting payout (3 cards: Restricted Arena + Open Arena + Alliance War; ~1,850 at Elite II rank 13 defaults)
 - **Login** — Daily/weekly/monthly login rewards with streak mechanics (1,393/week: 910 daily + 460 weekly + 23 monthly)
-- **Code** — Promotional codes distributed through official channels. Single source of truth: `data/codes.json`. Generated outputs: `data/generated/promo-codes.js` and `guide/code/index.html` chips (via injection markers). Active leads with hand-positioned codes (`position`) then sorts newest-first by `dateAdded`; expired sort by `expiredDate` descending. 35 active codes + 19 expired, variable rewards including gems, Hero Shop Tickets, and hero shards. Redeemed via verification code at redeem.invincible.ubisoft.barcelona. See [ADR-001](docs/adr/ADR-001-promo-code-single-source-of-truth.md).
+- **Code** — Promotional codes distributed through official channels. Single source of truth: `data/codes.json`. Generated outputs: `data/generated/promo-codes.js` and `guide/code/index.html` chips (via injection markers). Active leads with hand-positioned codes (`position`) then sorts newest-first by `dateAdded`; expired sort by `expiredDate` descending. 36 active codes + 19 expired, variable rewards including gems, Hero Shop Tickets, and hero shards. Redeemed via verification code at redeem.invincible.ubisoft.barcelona. See [ADR-001](docs/adr/ADR-001-promo-code-single-source-of-truth.md).
   - **Code age indicator** (not expiry): Active codes show age bands based on `dateAdded`: green <10 days, yellow 10-20, orange 20-30, red >30. No claim about actual remaining days — the game doesn't publish expiry dates. Expired codes use the authoritative `expiredDate` field.
 
 ### Key Terms
@@ -49,8 +49,9 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Hero Rank Up** — Separate from XP: requires hero duplicates or same-faction heroes. Progression: Rare → Rare+ → Elite → Elite+ → Exceptional → Exceptional+ → Epic → Epic+ → Legendary → Legendary+ → Seismic → Seismic+ → Omnipotent → Omnipotent+.
 
 ### Guide Pages (Topical Cluster)
-- `/guide/code/` — Promo code guide: 35 active codes with click-to-copy (`copyCode()`), redemption steps (verification code + redeem site), 5 tips
+- `/guide/code/` — Promo code guide: 36 active codes with click-to-copy (`copyCode()`), redemption steps (verification code + redeem site), 5 tips
 - `/guide/event/` — Event rewards guide: The Long Haul + Earth's Defenders strategies
+- `/guide/wish-event/` — Wish Event guide: event mechanics, wish targets, and reward expectations
 - `/guide/pvp/` — PvP guide: 14 leagues, payout tables, 3 arena modes, demotion zone
 - `/guide/login/` — Login rewards guide: daily/weekly/monthly breakdown with income table
 - `/guide/faq/` — Gem rewards FAQ with FAQPage schema
@@ -77,7 +78,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 - **Counter CLS prevention** — `.gem-counter` uses `min-width: 6ch` + `font-variant-numeric: tabular-nums` + `display: inline-block` to prevent width changes during `animateValue()` rAF
 - **Animation timing** — `filterCards()` runs before `updateAllPageTotals()` so counter animation starts on settled layout
 - **Critical CSS inlined** — Above-fold CSS in `<style>`, full CSS loaded async via `<link rel="preload" as="style" onload="this.rel='stylesheet'">`, FOUC guarded by `html { visibility: hidden/visible }`
-- **Chart.js lazy-loaded** — `vendor/chart.umd.js` (205KB) loaded on first "Show Charts" click
+- **Chart.js lazy-loaded** — `vendor/chart.umd.js` (200 KB) loaded on first "Show Charts" click
 - **Deferred init** — `DOMContentLoaded` handler wrapped in `requestAnimationFrame` for first-paint priority
 - **Minified assets** — CSS via csso, JS via terser (`npm run build`)
 - **Font loading** — Preloaded woff2, `font-display: optional` to prevent CLS
@@ -93,7 +94,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 CSS custom properties in `:root` with dark/light mode support (`:root.light-mode`). Categories: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, `--gem-purple`. Semantic: `--gem-star`, `--gem-gem`. Background, orb, alert, and shadow tokens also defined. Full reference: `docs/DESIGN_SYSTEM.md`.
 
 ### Organization Entity
-- **Anomaly Alpha** — The organization that publishes and maintains the site. Schema.org `Organization` type. Named "Anomaly Alpha" in JSON-LD publisher/provider fields across all pages. Previously used "Gem Rewards Calculator" as the organization name (changed Jul 2026). Pages that define `og:site_name` all use "Invincible GTG" — homepage, all 9 guide pages, music, privacy, and terms. Pages without the tag (`/authors/anomaly/`, `/seo/`, `/skarn-bot/`, `404.html`) do not claim to set it.
+- **Anomaly Alpha** — The organization that publishes and maintains the site. Schema.org `Organization` type. Named "Anomaly Alpha" in JSON-LD publisher/provider fields across all pages. Previously used "Gem Rewards Calculator" as the organization name (changed Jul 2026). Pages that define `og:site_name` all use "Invincible GTG" — homepage, all 10 guide pages, about, music, privacy, and terms. Pages without the tag (`/authors/anomaly/`, `/seo/`, `/skarn-bot/`, `404.html`) do not claim to set it.
 - **Anomaly** — Person (founder/developer). Schema.org `Person` type at `/authors/anomaly/`. Not to be confused with the publishing Organization.
 
 ## Architecture Decision Records
@@ -107,7 +108,7 @@ ADRs live in `docs/adr/`. Each records a hard-to-reverse decision with context, 
 
 ## Improvement Plans
 
-160 executable plans at `docs/plans/2026-05-20/deepseek-v4-flash/` covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. Post-160 plans at `docs/plans/2026-05-28/deepseek-v4-flash-free/`. Each is self-contained with file paths, code snippets, and verification steps.
+161 executable plans at `docs/plans/2026-05-20/deepseek-v4-flash/` (files `01-…` through `161-…`, plus two `00-INDEX` files) covering architecture, SEO, UX, performance, features, accessibility, security, modern CSS, Web APIs, PWA, build, monitoring, game content, and code quality. The later 2026-05-28 batch (plans 161–162) is at `docs/plans/2026-05-28/deepseek-v4-flash-free/`; plan numbers are per-batch. Each is self-contained with file paths, code snippets, and verification steps.
 
 ## Constraints
 - Build step (npm run build) generates local Tailwind CSS. Output is committed. Works from file:// after build.
@@ -115,5 +116,5 @@ ADRs live in `docs/adr/`. Each records a hard-to-reverse decision with context, 
 - Zero CDN dependencies — all assets self-hosted (fonts, Chart.js, SVGs)
 - Supports dark and light modes via `:root.light-mode` token overrides
 - Guide pages share the same CSS and design system as the main page
-- **Analytics**: GA4 (`G-21RZK3GKKZ`) is active on all pages (homepage, 9 guides, music, seo, privacy, terms, authors, 404, skarn-bot)
+- **Analytics**: GA4 (`G-21RZK3GKKZ`) is active on all pages (homepage, 10 guides, about, music, seo, privacy, terms, authors, 404, skarn-bot)
 - **Ads**: Ads are currently disabled (`ads-config.enabled: false`). `ads.txt` exists but no ad-serving runtime is loaded. A static `gem-site-message` fallback appears on eligible pages

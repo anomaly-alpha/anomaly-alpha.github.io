@@ -30,7 +30,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `robots.txt` | Crawl directives, sitemap reference |
 | `.editorconfig` | Editor formatting defaults (indent, line endings, charset) |
 | `CHANGELOG.md` | Release history (auto-curated from git log) |
-| `sitemap.xml` | 157 URLs: 14 editorial pages (home, 9 guide pages, authors/anomaly, music, privacy, terms) + `/watch/` hub + one watch page per indexed creator video, injected between `<!--WATCH_SITEMAP_START-->` / `_END` markers. `/seo/`, `/skarn-bot/`, and `404.html` are intentionally excluded |
+| `sitemap.xml` | 210 URLs: 16 editorial pages (home, 10 guide pages, authors/anomaly, music, about, privacy, terms) + `/watch/` hub + 193 watch pages (one per indexed creator video), injected between `<!--WATCH_SITEMAP_START-->` / `_END` markers. `/seo/`, `/skarn-bot/`, and `404.html` are intentionally excluded |
 | `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators) |
 | `404.html` | Custom 404 error page (GA4-tagged, no `og:site_name`) |
 | `_headers` | Cloudflare Pages cache-control and security headers |
@@ -40,7 +40,8 @@ Open `index.html` in a browser. Works from `file://`.
 | `privacy/index.html` | Privacy policy (documents GA4 analytics) |
 | `terms/index.html` | Terms of service |
 | `authors/anomaly/index.html` | Author profile (Schema.org ProfilePage + Person) |
-| `guide/*/index.html` | Detail guides for code, event, pvp, login, faq, beginners, xp, redeem, creators |
+| `about/index.html` | About page (indexable, in sitemap) |
+| `guide/*/index.html` | Detail guides for code, event, wish-event, pvp, login, faq, beginners, xp, redeem, creators |
 | `data/arena_payouts.txt` | Open + Restricted arena payout tables |
 | `data/multiverse_war_payouts.txt` | Multiverse War payout tables |
 | `data/codes.json` | Single source of truth for promo codes (hand-edited only) |
@@ -80,12 +81,12 @@ Open `index.html` in a browser. Works from `file://`.
 | `tests/youtube-watch-pages.test.js` | Validates watch page VideoObject shape, uploadDate format, SEO head, meta uniqueness, sitemap coverage, pruning |
 | `tests/youtube-creators-audit.test.js` | Validates creator audit output |
 | `tests/structured-data.test.js` | Validates JSON-LD structured data across pages |
-| `tests/back-to-top.test.js` | Tests back-to-top button behavior |
+| `tests/back-to-top.test.js` | Tests back-to-top button behavior. **Browser-only** — it uses `document`/`window`/`getComputedStyle`, so `node tests/back-to-top.test.js` fails with `describe is not defined`. Open `tests/back-to-top.html` (which loads `test-harness.js` first) in a browser to run it |
 | `tests/test-harness.js` | Shared test helpers |
 | `serp-dumps/YYYY-MM-DD/` | Historical SERP snapshot directories (INDEX.md + 40 query files, regenerated periodically) |
 | `serp-dumps/YYYY-MM-DD/INDEX.md` | Index of all 40 tracked queries with rank/impressions/clicks + instructions for new dumps |
 | `serp-dumps/YYYY-MM-DD/queries/*.txt` | Per-query SERP competitor analysis files (generated via `scripts/gen-serp-dumps.js`) |
-| `scripts/gen-serp-dumps.js` | Generator: reads GSC query data, writes 40 SERP dump files + INDEX.md |
+| `scripts/gen-serp-dumps.js` | Generator: reads GSC query data and writes the 40 per-query SERP dump files into `queries/`. Writes **only** the `.txt` dumps — `INDEX.md` is hand-maintained, and the target `serp-dumps/2026-07-05/queries` path plus the `Date:` header are hard-coded, so a new dump needs a new directory and a manual `INDEX.md` |
 | `CONTEXT.md` | Domain model, architecture summary |
 
 ## Architecture rules
@@ -127,7 +128,8 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run test:ads-txt` — Validate ads.txt content
 - `npm run test:ads-fallback` — Validate ads-config and site-message fallback across pages
 - `npm run test:structured-data` — Validate JSON-LD structured data across pages
-- `npm run update-assets` — Download latest vendor assets (Chart.js, fonts)
+- `node tests/promo-codes-generator.test.js` — Validate promo code generation from `data/codes.json` (no npm alias)
+- `npm run update-assets` — Download the pinned Chart.js build into `vendor/chart.umd.js` (fonts are committed by hand, not fetched by this script)
 - `npm run lighthouse:home` — Run Lighthouse audit on homepage
 - `npm run lighthouse:single` — Run Lighthouse against an arbitrary URL with the shared config
 - `npm run lighthouse:all` — Batch audit all 8 pages via PowerShell script
@@ -178,7 +180,7 @@ After any major HTML/CSS/JS changes, always:
 - **HTML**: scrolling `<section class="gem-ticker">` in `index.html` with duplicated content for seamless loop
 - **CSS**: BEM classes `.gem-ticker`, `__track`, `__content`, `__item`, `__label`, `__sep` + `@keyframes gem-ticker` (0%→-50% X translation)
 - **Height**: 44px, monochrome (no category colors), old-school newspaper scroll
-- **Content**: "PvP 1,850+/wk • Codes 35 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk" repeated twice
+- **Content**: "PvP 1,850+/wk • Codes 36 active • Login 1,393/wk • Events 500/wk • Total ~4,043/wk" repeated twice; the code count is rewritten by `npm run update-codes` (`scripts/generate-codes.js` patches the `gem-ticker__label">Codes</span> N active` pattern)
 - **Duration**: 40s linear infinite, will-change:transform
 
 ## Category colors
@@ -213,11 +215,16 @@ Always save every new or updated spec, plan, report, handoff, and guide directly
 
 ```
 docs/
+├── adr/                        # Architecture Decision Records (sequential, undated)
 ├── specs/YYYY-MM-DD/<model>/   # Design specs
 ├── plans/YYYY-MM-DD/<model>/   # Implementation plans
 ├── reports/YYYY-MM-DD/<model>/ # Audit reports, findings
 ├── handoffs/YYYY-MM-DD/<model>/ # Agent handoffs and delivery context
-└── guides/YYYY-MM-DD/<model>/  # Agent workflow guides
+├── guides/YYYY-MM-DD/<model>/  # Agent workflow guides
+├── runbooks/YYYY-MM-DD/<model>/ # Operational runbooks
+├── research/YYYY-MM-DD/<model>/ # Raw research data (e.g. TSV feeds)
+├── prompt/                     # Reusable generation prompts
+└── compose/                    # Legacy compose skill output (do not add new files)
 ```
 
 - **Model name**: use the model ID from the system prompt (e.g. `opencode-go/deepseek-v4-flash`), dropping the org prefix (e.g. `deepseek-v4-flash`)
@@ -229,7 +236,7 @@ docs/
 
 ### Existing plans
 
-A comprehensive set of 160 executable improvement plans exists at:
+A comprehensive set of 161 executable improvement plans exists at:
 **`docs/plans/2026-05-20/deepseek-v4-flash/`**
 
 | File | Focus |
@@ -249,10 +256,13 @@ Each plan is self-contained with file paths, code snippets, and verification ste
 
 ### Post-160 plans
 
+Plans 161–162 for the 2026-05-28 batch. Note the 2026-05-20 folder also contains a `161-add-codes-update-rewards.md`; plan numbers are per-batch, not global.
+
 | Plan | Date | Focus |
 |------|------|-------|
 | `161` | 2026-05-28 | Gems/Codes SEO, Breadcrumbs, Article Schema (copywriting overhaul + meta refresh + dynamic code count + breadcrumb nav + Article schema) |
 | `162` | 2026-05-28 | GSC Export Analyzer (standalone plan for AI models to analyze Google Search Console exports and update SEO performance report) |
+| `161` | 2026-05-20 | Add New Codes & Update Reward System |
 
 Located at `docs/plans/2026-05-28/deepseek-v4-flash-free/` with INDEX.md.
 
@@ -264,7 +274,7 @@ Located at `docs/plans/2026-05-28/deepseek-v4-flash-free/` with INDEX.md.
 - `docs/DESIGN_SYSTEM.md` — complete CSS token reference
 - `docs/reports/2026-08-20/unknown/SEO_PERFORMANCE.md` — SEO performance report (updated from GSC exports)
 - `docs/reports/2026-07-26/unknown/LIGHTHOUSE_AUDIT.md` — Lighthouse performance audit scores + fix plan
-- `docs/plans/2026-05-20/deepseek-v4-flash/` — 160 improvement plans
+- `docs/plans/2026-05-20/deepseek-v4-flash/` — 161 improvement plans
 
 ---
 

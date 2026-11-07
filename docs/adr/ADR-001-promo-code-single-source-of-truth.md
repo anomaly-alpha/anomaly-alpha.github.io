@@ -6,11 +6,12 @@
 
 ## Amendment (2026-10-31)
 
-The single-source-of-truth decision stands unchanged; three implementation details recorded below have since moved on:
+The single-source-of-truth decision stands unchanged; four implementation details recorded below have since moved on:
 
 - **Active sort order** is no longer A-Z. `scripts/generate-codes.js` now leads with hand-positioned codes (`position` field, used for hot drops and reactivations), then sorts the rest newest-first by `dateAdded`.
 - **Item rewards** are modelled alongside gems and tickets. Active codes must carry a reward description and a HIGH/MEDIUM tier — the generator fails the build otherwise.
 - **One-time helpers are gone.** `scripts/migrate-codes.js` and `scripts/update-code-count.js` were removed after the migration; `scripts/generate-codes.js` is the only code-data writer. Expired-chip and marker behaviour described here is still current.
+- **`index.html` is now written in place.** The generator injects the same array inline between `<!--PROMO_CODES_INLINE_START-->` / `_END` markers (`generate-codes.js:326-347`), which is exactly the "markers in index.html" alternative the Decision rejected — the bundle `data/generated/promo-codes.js` is still emitted and test-asserted, but **no page loads it** any more. It also rewrites `guide/code/index.html`, `guide/faq/index.html`, and the sitemap.
 
 ## Context
 
@@ -27,7 +28,7 @@ A secondary concern: the `promoCodes` array was embedded in a larger `rewards-co
 
 Create `data/codes.json` as the single source of truth. A generator script (`scripts/generate-codes.js`) reads it and:
 
-1. Writes `data/generated/promo-codes.js` — a JS file setting `window.__PROMO_CODES`, loaded by `index.html` via `<script>` tag
+1. Writes `data/generated/promo-codes.js` — a JS file setting `window.__PROMO_CODES`. As originally shipped this was loaded by `index.html` via a `<script>` tag; as of the fourth amendment below, `index.html` instead carries the array inline and the bundle is no longer referenced by any page.
 2. Injects chip HTML into `guide/code/index.html` via HTML comment markers (`<!--GUIDE_CODES_ACTIVE_START-->` / `<!--..._END-->`)
 3. Updates meta descriptions, tab badge, "Last updated" date, and all count references in the guide page via the same marker mechanism
 
@@ -74,7 +75,7 @@ Key design details:
 - **Fetch from external JSON file** — Rejected: Violates the "no fetch" constraint (ADR-001 predecessor / existing architecture). The site works from `file://` without a server.
 - **Server-side generation** — Rejected: The site is static and hosted on GitHub Pages. No server available.
 - **Keep manual sync** — Rejected: Proven error-prone (3 locations diverge silently).
-- **Generator writes directly into index.html** — Rejected: Less clean than a separate file, and `index.html` is already 114 KB monolithic — fewer structural changes is better.
+- **Generator writes directly into index.html** — Rejected at the time: Less clean than a separate file, and `index.html` was already 114 KB monolithic — fewer structural changes is better. **Superseded by the fourth amendment above — this is now the shipped behaviour.**
 
 ## Migration
 
@@ -83,10 +84,10 @@ One-time migration script: `scripts/migrate-codes.js` extracts the existing inli
 Manual one-time edits to `index.html`:
 1. Remove `cards[0].codes` key (dead data, line 441)
 2. Remove `promoCodes` key from `rewards-config` (line 646)
-3. Add `<script src="data/generated/promo-codes.js">` before `rewards-config`
+3. Add the promo-code script tag before `rewards-config` (since replaced — `index.html` now carries an inline `window.__PROMO_CODES` block between the `PROMO_CODES_INLINE` markers)
 
 ## References
 
-- Plan 163: Promo Code Single Source of Truth (`docs/plans/2026-05-31/deepseek-v4-flash-free/163-promo-code-single-source-of-truth.md`)
+- Plan 163 does not exist in this repository — no `docs/plans/2026-05-31/` directory and no plan file numbered 163 was ever committed. The change shipped without a plan document.
 - Plan 13: Promo Code Data Deduplication (removed `cards[0].codes` usage from `script.js`, making it dead data)
 - `script.js` — `loadAllConfigs()` reads `REWARDS.promoCodes`; all render functions guard with `REWARDS&&REWARDS.promoCodes?...`
