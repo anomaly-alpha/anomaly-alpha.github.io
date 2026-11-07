@@ -134,7 +134,7 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run lighthouse:single` — Run Lighthouse against an arbitrary URL with the shared config
 - `npm run lighthouse:all` — Batch audit all 8 pages via PowerShell script
 - `npm run lighthouse:report` — Print score table from saved JSON reports
-- `npm run lighthouse:budget` — Check against performance budgets (lighthouserc.js)
+- `npm run lighthouse:budget` — Collect fresh runs of all 8 pages with `@lhci/cli` and assert them against the budgets in `lighthouserc.js` (results land in the gitignored `.lighthouseci/`)
 - No runtime build — all generated files are committed
 
 ### Post-change verification

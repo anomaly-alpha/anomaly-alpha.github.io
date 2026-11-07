@@ -19,6 +19,7 @@ chrome/
 _dream_tmp*.py
 .compose/
 .lhci/
+.lighthouseci/
 .playwright-mcp/
 journal/
 scripts/start-mimo-with-github-agent.sh
