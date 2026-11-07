@@ -175,6 +175,61 @@ test('toIsoDateTime rejects malformed input', function () {
   assert.strictEqual(gen.toIsoDateTime(null), '');
 });
 
+test('normalizeDateTime preserves a real offset', function () {
+  assert.strictEqual(gen.normalizeDateTime('2026-07-27T10:13:20-07:00'), '2026-07-27T10:13:20-07:00');
+  assert.strictEqual(gen.normalizeDateTime('2026-07-27T10:13:20Z'), '2026-07-27T10:13:20Z');
+});
+
+test('normalizeDateTime canonicalizes a compact offset', function () {
+  assert.strictEqual(gen.normalizeDateTime('2026-07-27T10:13:20-0700'), '2026-07-27T10:13:20-07:00');
+});
+
+test('normalizeDateTime anchors an offset-less timestamp to UTC', function () {
+  assert.strictEqual(gen.normalizeDateTime('2026-07-27T10:13:20'), '2026-07-27T10:13:20+00:00');
+  assert.strictEqual(gen.normalizeDateTime('2026-07-27T10:13'), '2026-07-27T10:13:00+00:00');
+});
+
+test('normalizeDateTime upgrades a bare date to UTC midnight', function () {
+  assert.strictEqual(gen.normalizeDateTime('2026-10-31'), '2026-10-31T00:00:00+00:00');
+});
+
+test('normalizeDateTime rejects unusable input instead of emitting it', function () {
+  assert.strictEqual(gen.normalizeDateTime('31-10-2026'), '');
+  assert.strictEqual(gen.normalizeDateTime('not a date'), '');
+  assert.strictEqual(gen.normalizeDateTime(''), '');
+  assert.strictEqual(gen.normalizeDateTime(null), '');
+  assert.strictEqual(gen.normalizeDateTime(undefined), '');
+});
+
+test('buildVideoObject repairs a timezone-less harvested timestamp', function () {
+  var video = makeVideo({ published: '2026-10-31' });
+  video.youtube = { publishedAt: '2026-07-27' };
+  var vo = gen.buildVideoObject(video, { name: 'C', channelUrl: 'https://www.youtube.com/@c' });
+  assert.strictEqual(vo.uploadDate, '2026-07-27T00:00:00+00:00', 'bare harvested date must gain an offset');
+  assert.ok(/(Z|[+-]\d{2}:\d{2})$/.test(vo.uploadDate), 'uploadDate must carry a timezone');
+});
+
+test('buildVideoObject falls back when the harvest is unusable', function () {
+  var video = makeVideo({ published: '2026-10-31' });
+  video.youtube = { publishedAt: 'garbage' };
+  var vo = gen.buildVideoObject(video, { name: 'C', channelUrl: 'https://www.youtube.com/@c' });
+  assert.strictEqual(vo.uploadDate, '2026-10-31T00:00:00+00:00', 'editorial date wins when the harvest is malformed');
+});
+
+test('resolveUploadDate always returns a timezone-qualified value', function () {
+  var offset = { published: '2026-10-31', youtube: { publishedAt: '2026-07-27T10:13:20-07:00' } };
+  assert.strictEqual(gen.resolveUploadDate(offset), '2026-07-27T10:13:20-07:00');
+
+  var naive = { published: '2026-10-31', youtube: { publishedAt: '2026-07-27T10:13:20' } };
+  assert.strictEqual(gen.resolveUploadDate(naive), '2026-07-27T10:13:20+00:00');
+
+  var bare = { published: '2026-10-31' };
+  assert.strictEqual(gen.resolveUploadDate(bare), '2026-10-31T00:00:00+00:00');
+
+  var none = { published: '2026-10-31', youtube: {} };
+  assert.strictEqual(gen.resolveUploadDate(none), '2026-10-31T00:00:00+00:00');
+});
+
 test('buildVideoObject emits a timezone-qualified uploadDate', function () {
   var creator = makeCreator('c1', 1).name;
   var video = makeVideo({ published: '2026-10-31' });
@@ -248,6 +303,19 @@ test('watch page wires WebPage.mainEntity to its VideoObject', function () {
   var vo = graph['@graph'].find(function (n) { return n['@type'] === 'VideoObject'; });
   assert.ok(page && vo, 'both nodes present');
   assert.strictEqual(page.mainEntity['@id'], vo['@id'], 'mainEntity must reference the video');
+});
+
+test('watch page emits only timezone-qualified datetimes', function () {
+  var data = makeData([makeCreator('c1', 1)]);
+  var video = data.creators[0].videos[0];
+  var html = watch.renderPage(data, video, data.creators[0]);
+  var raw = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1];
+  var fields = raw.match(/"(?:uploadDate|datePublished|dateModified)":\s*"[^"]*"/g) || [];
+  assert.ok(fields.length >= 3, 'expected uploadDate, datePublished and dateModified, got ' + fields.length);
+  fields.forEach(function (field) {
+    assert.ok(/(Z|[+-]\d{2}:\d{2})"$/.test(field), 'missing timezone in ' + field);
+    assert.ok(!/T\d{2}:\d{2}(?::\d{2})?"$/.test(field), 'datetime without offset in ' + field);
+  });
 });
 
 test('watch page player is present at load without user interaction', function () {

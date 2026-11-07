@@ -15,6 +15,7 @@ const VALID_CREATOR_BADGES = ['New', 'Updates', 'Featured'];
 const VIDEO_ID_RE = /^[A-Za-z0-9_-]{11}$/;
 const CHANNEL_ID_RE = /^UC[A-Za-z0-9_-]{22}$/;
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const DATE_TIME_TZ_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,3})?)?(?:Z|[+-]\d{2}:?\d{2})$/;
 const KEBAB_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const YT_URL_RE = /^https:\/\/www\.youtube\.com\//;
 const MAX_VIDEOS_PER_CREATOR = 12;
@@ -88,6 +89,30 @@ function daysBetween(d1, d2) {
 function toIsoDateTime(dateStr) {
   if (!isValidDate(dateStr)) return '';
   return dateStr + 'T00:00:00+00:00';
+}
+
+// Google rejects an uploadDate without a timezone, and harvested timestamps are not
+// uniformly offset-qualified: YouTube's microformat exposes date-only and naive local
+// times alongside full ones. Normalize every candidate into a tz-qualified ISO 8601
+// string so no bare or offset-less value can reach the JSON-LD.
+function normalizeDateTime(value) {
+  if (typeof value !== 'string') return '';
+  var raw = value.trim();
+  if (!raw) return '';
+  if (DATE_TIME_TZ_RE.test(raw)) return raw.replace(/([+-]\d{2})(\d{2})$/, '$1:$2');
+
+  // Naive timestamp: the offset was not captured, so anchor it to UTC instead of dropping it.
+  var naive = raw.match(/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})(?::(\d{2}))?(?:\.\d{1,3})?$/);
+  if (naive) return naive[1] + 'T' + naive[2] + ':' + (naive[3] || '00') + '+00:00';
+
+  return toIsoDateTime(raw);
+}
+
+// The harvested publish timestamp carries the creator's real UTC offset; the editorial
+// field is date-only, so it is only a fallback.
+function resolveUploadDate(video) {
+  var meta = (video && video.youtube) || {};
+  return normalizeDateTime(meta.publishedAt) || toIsoDateTime(video && video.published);
 }
 
 // ===== VALIDATION =====
@@ -722,9 +747,7 @@ function isoduration(seconds) {
 function buildVideoObject(video, creator) {
   var meta = video.youtube || {};
 
-  // The harvested publish timestamp carries the creator's real UTC offset; the editorial
-  // field is date-only, so it is only a fallback.
-  var uploadDate = meta.publishedAt || toIsoDateTime(video.published);
+  var uploadDate = resolveUploadDate(video);
 
   var object = {
     '@type': 'VideoObject',
@@ -1096,6 +1119,8 @@ module.exports = {
   watchPageUrl: watchPageUrl,
   thumbnailUrl: thumbnailUrl,
   toIsoDateTime: toIsoDateTime,
+  normalizeDateTime: normalizeDateTime,
+  resolveUploadDate: resolveUploadDate,
   isoduration: isoduration,
   formatFeedDate: formatFeedDate,
   // Escaping

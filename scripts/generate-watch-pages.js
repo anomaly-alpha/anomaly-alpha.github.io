@@ -234,7 +234,7 @@ function buildGraph(video, creator, meta, entities) {
   var watchUrl = gen.watchPageUrl(video);
   var title = meta.title;
   var description = meta.description;
-  var isoTimestamp = gen.toIsoDateTime(video.published);
+  var isoTimestamp = gen.resolveUploadDate(video);
 
   return {
     '@context': 'https://schema.org',
