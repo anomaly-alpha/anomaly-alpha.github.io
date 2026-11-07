@@ -64,6 +64,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `scripts/generate-music.js` | Generates music page data from source playlists |
 | `scripts/generate-skarn-index.js` | Regenerates the docs index inside `skarn-bot/index.html` via markers (`npm run skarn-index`) |
 | `scripts/pull-gsc.js` | Pulls Search Analytics API data into `data/gsc-api/<date>/` (`npm run pull-gsc`) |
+| `scripts/check-code-sources.js` | Diffs the publisher's patch-note reward codes and dates against `data/codes.json` (`npm run check-codes`); exits 1 on drift |
 | `scripts/analyze-gsc.js` | Analyzes GSC exports and rewrites `docs/reports/2026-08-20/unknown/SEO_PERFORMANCE.md` (`npm run analyze-gsc`) |
 | `scripts/add-meta.js` / `add-more.js` / `add-schema.js` | Legacy guide-page meta/tag/schema helpers |
 | `scripts/run-psi-audit.js` | PageSpeed Insights audit across the 8 audited pages |
@@ -114,6 +115,7 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run build:js` — JS minification only (via terser)
 - `npm run build:tailwind` — Tailwind rebuild only (skip minification)
 - `npm run update-codes` — Regenerate `data/generated/promo-codes.js` and update all code counts/descriptions/chips in `guide/code/index.html` from `data/codes.json`
+- `npm run check-codes` — Diff the publisher's patch-note reward codes and release dates against `data/codes.json`; exits non-zero on drift. Run before shipping any code update
 - `npm run generate-creators` — Validate creator source data and regenerate the static creators guide and browser data
 - `npm run generate-watch` — Regenerate all `/watch/` pages, the hub, and the watch region of `sitemap.xml`
 - `npm run enrich-creators` — Refresh real YouTube metadata for creator videos (duration, views, upload timestamp, description, playability)
@@ -155,6 +157,7 @@ After any major HTML/CSS/JS changes, always:
 - **URL params**: `?theme=light&mode=<name>&chart=<name>` restored on page load
 - **Code rewards**: defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; `promo` card total animates via `animateValue()`
 - **Single source of truth**: `data/codes.json` is the only hand-edited file for promo codes. Run `npm run update-codes` to regenerate `data/generated/promo-codes.js` (active codes) and update all dynamic content in `guide/code/index.html` via markers
+- **`dateAdded` is the publisher's release date, never an aggregator's listing date**: patch-note codes take theirs from the help-centre article (the section index slug carries the date, each article ends with `Reward Code: XXX`), social codes from the dated official post on `x.com/InvincibleGtG`. Code-aggregator "added" columns lag by 3–10 days and caused the site to trail real drops by 3–4 days. `npm run check-codes` verifies every patch-note code against the source
 - **Guide code page markers**: 11 injected regions in `guide/code/index.html` (`GUIDE_DESC`, `GUIDE_OG_DESC`, `GUIDE_OG_IMAGE_ALT`, `GUIDE_TWITTER_DESC`, `GUIDE_TAB`, `GUIDE_UPDATED`, `GUIDE_DATE_META`, `GUIDE_ARTICLE_MODIFIED`, `GUIDE_CODES_TABLE`, `GUIDE_CODES_ACTIVE`, `GUIDE_CODES_EXPIRED`), written by `scripts/generate-codes.js` from `data/codes.json`. The generator also writes `"dateModified"` in the JSON-LD block via `GUIDE_LD_DATEMODIFIED` or a bare-field fallback. Required markers are asserted at generation time.
 - **Guide code page must include `script.js`** — `guide/code/index.html` needs `<script src="../../script.js">` before `</body>` for `copyCode()` to work on code chips
 - **OG images**: 9 per-page PNG files in `og-images/` (`home.png`, `code.png`, `event.png`, `pvp.png`, `login.png`, `faq.png`, `beginners.png`, `xp.png`, `creators.png`); SVGs previously served as editable sources

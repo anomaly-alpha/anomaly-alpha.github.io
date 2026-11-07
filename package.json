@@ -31,6 +31,7 @@
     "update-assets": "curl -Lo vendor/chart.umd.js https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js",
     "analyze-gsc": "node scripts/analyze-gsc.js",
     "pull-gsc": "node scripts/pull-gsc.js",
+    "check-codes": "node scripts/check-code-sources.js",
     "lighthouse:single": "lighthouse --config-path=lighthouse-config.js --output html --output json --chrome-flags=\"--headless --no-sandbox --disable-gpu --disable-dev-shm-usage\"",
     "lighthouse:home": "npm run lighthouse:single -- https://anomaly-alpha.github.io/ --output-path ./lighthouse-reports/home",
     "lighthouse:all": "pwsh -NoProfile -File scripts/run-lighthouse.ps1",
