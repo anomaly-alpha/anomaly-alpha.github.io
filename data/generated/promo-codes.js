@@ -1,7 +1,28 @@
 window.__PROMO_CODES=[
   {
-    "code": "TRICKY",
+    "code": "STACHE",
     "position": 1,
+    "gems": 0,
+    "tickets": 0,
+    "rewards": [
+      {
+        "kind": "hero",
+        "qty": 1,
+        "hero": "Lucan"
+      },
+      {
+        "kind": "hero",
+        "qty": 1,
+        "hero": "Nolan"
+      }
+    ],
+    "tier": "HIGH",
+    "dateAdded": "2026-11-07",
+    "reward": "1 x Lucan, 1 x Nolan"
+  },
+  {
+    "code": "TRICKY",
+    "position": 2,
     "gems": 500,
     "tickets": 0,
     "reward": "500 Gems + 2 x Gold Dossiers",
@@ -10,7 +31,7 @@ window.__PROMO_CODES=[
   },
   {
     "code": "SAVE37",
-    "position": 2,
+    "position": 3,
     "gems": 500,
     "tickets": 0,
     "tier": "HIGH",
@@ -18,7 +39,7 @@ window.__PROMO_CODES=[
   },
   {
     "code": "KREGG4",
-    "position": 3,
+    "position": 4,
     "gems": 0,
     "tickets": 0,
     "reward": "1 x Kregg",

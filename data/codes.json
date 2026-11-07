@@ -1,10 +1,30 @@
 {
-  "updated": "2026-10-31",
+  "updated": "2026-11-07",
   "seoMonth": "2026-11",
   "codes": [
     {
+      "code": "STACHE",
+      "position": 1,
+      "gems": 0,
+      "tickets": 0,
+      "rewards": [
+        {
+          "kind": "hero",
+          "qty": 1,
+          "hero": "Lucan"
+        },
+        {
+          "kind": "hero",
+          "qty": 1,
+          "hero": "Nolan"
+        }
+      ],
+      "tier": "HIGH",
+      "dateAdded": "2026-11-07"
+    },
+    {
       "code": "SAVE37",
-      "position": 2,
+      "position": 3,
       "gems": 500,
       "tickets": 0,
       "tier": "HIGH",
@@ -50,7 +70,7 @@
     },
     {
       "code": "TRICKY",
-      "position": 1,
+      "position": 2,
       "gems": 500,
       "tickets": 0,
       "reward": "500 Gems + 2 x Gold Dossiers",
@@ -260,7 +280,7 @@
     },
     {
       "code": "KREGG4",
-      "position": 3,
+      "position": 4,
       "gems": 0,
       "tickets": 0,
       "reward": "1 x Kregg",

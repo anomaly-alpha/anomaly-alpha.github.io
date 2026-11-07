@@ -151,9 +151,12 @@ if (typeof seoMonth === 'string' && /^\d{4}-\d{2}$/.test(seoMonth)) {
   if (!isNaN(parsed.getTime())) seoDate = parsed;
 }
 const monthYear = `${months[seoDate.getUTCMonth()]} ${seoDate.getUTCFullYear()}`;
-const guideDescription = `${activeCount} active Invincible GTG codes with gem and hero rewards. Redeem codes at the official Ubisoft Barcelona portal. Updated ${monthYear}.`;
-const guideOgDescription = `Find ${activeCount} active Invincible GTG codes, rewards, and the official Ubisoft Barcelona redemption portal. Copy and redeem them today.`;
-const guideTwitterDescription = `Invincible GTG: ${activeCount} active codes, gem and hero rewards, plus the Ubisoft Barcelona redemption portal. Copy and redeem now.`;
+// The snippet carries the literal portal domain: the growing "code redeem" query
+// cluster and the portal-navigational queries both rank this page and convert on
+// seeing the exact redeem address, not on the word "portal".
+const guideDescription = `${activeCount} active Invincible GTG codes for the mobile game: gem and hero rewards, plus redeem steps for redeem.invincible.ubisoft.barcelona. Updated ${monthYear}.`;
+const guideOgDescription = `Find ${activeCount} active Invincible GTG codes, rewards, and redeem steps for the official Ubisoft Barcelona portal. Copy and redeem them today.`;
+const guideTwitterDescription = `Invincible GTG: ${activeCount} active codes, gem and hero rewards, plus how to redeem at redeem.invincible.ubisoft.barcelona.`;
 
 // Read guide page
 let html = fs.readFileSync(codeGuidePath, 'utf8');
