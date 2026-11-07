@@ -18,6 +18,7 @@ const PAGES = [
   'guide/creators/index.html',
   'authors/anomaly/index.html',
   'music/index.html',
+  'about/index.html',
   'privacy/index.html',
   'terms/index.html'
 ];
@@ -54,6 +55,7 @@ function visibleText(html) {
 const INDEXABLE = [
   'authors/anomaly/index.html',
   'music/index.html',
+  'about/index.html',
   'privacy/index.html',
   'terms/index.html'
 ];
@@ -111,6 +113,7 @@ const canonicalUrls = {
   'guide/creators/index.html': 'https://anomaly-alpha.github.io/guide/creators/',
   'authors/anomaly/index.html': 'https://anomaly-alpha.github.io/authors/anomaly/',
   'music/index.html': 'https://anomaly-alpha.github.io/music/',
+  'about/index.html': 'https://anomaly-alpha.github.io/about/',
   'privacy/index.html': 'https://anomaly-alpha.github.io/privacy/',
   'terms/index.html': 'https://anomaly-alpha.github.io/terms/'
 };
@@ -127,6 +130,7 @@ const requiredTypes = {
   'guide/creators/index.html': ['BreadcrumbList', 'VideoGame', 'CollectionPage', 'ItemList'],
   'authors/anomaly/index.html': ['ProfilePage'],
   'music/index.html': ['CollectionPage', 'BreadcrumbList', 'ItemList'],
+  'about/index.html': ['AboutPage', 'Person'],
   'privacy/index.html': ['Article'],
   'terms/index.html': ['Article']
 };
@@ -165,11 +169,11 @@ const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
   assert(sitemap.includes('https://anomaly-alpha.github.io' + url), 'sitemap missing ' + url);
 });
 const locCount = (sitemap.match(/<loc>/g) || []).length;
-// 14 editorial pages + the /watch/ hub + one watch page per indexed creator video.
+// 15 editorial pages + the /watch/ hub + one watch page per indexed creator video.
 const watchPageDirs = fs.existsSync(path.join(ROOT, 'watch'))
   ? fs.readdirSync(path.join(ROOT, 'watch')).filter(name => /^[A-Za-z0-9_-]{11}$/.test(name)).length
   : 0;
-const expectedLocCount = 14 + 1 + watchPageDirs;
+const expectedLocCount = 15 + 1 + watchPageDirs;
 assert.strictEqual(locCount, expectedLocCount,
   'sitemap must contain exactly ' + expectedLocCount + ' <loc> entries, found ' + locCount);
 assert(sitemap.includes('https://anomaly-alpha.github.io/watch/'), 'sitemap missing the watch hub');

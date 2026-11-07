@@ -19,6 +19,7 @@ const eligible = {
 const excluded = [
   'guide/creators/index.html',
   'authors/anomaly/index.html',
+  'about/index.html',
   'privacy/index.html',
   'terms/index.html',
   'music/index.html',
