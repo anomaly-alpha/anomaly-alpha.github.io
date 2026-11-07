@@ -1,7 +1,14 @@
 # ADR-001: Tiered Context Assembly for Prompt Efficiency
 
-**Status:** Accepted
+**Status:** Accepted — amended 2026-11-07 (see Amendment)
 **Date:** 2026-07-19
+
+## Amendment (2026-11-07)
+
+Two claims in the original text are now historical rather than current:
+
+1. **Line count.** The Context section says "~18 context lines". `buildContext()` has grown since: it now returns **39 keys, of which 37 are prompt lines** (`features/promptContext.js:296-330`); the other two (`stance`, `adviceRequested`) drive role selection and are ignored by `buildSystemPrompt()`.
+2. **`moodLine` is gone.** The Decision section lists "mood" among the directive lines. `MOOD_LINES`/`getMoodLine()` were deleted 2026-11-01; mood survives only as the `volumeEnergy` *input* to `resolveStance()`, and the line it used to produce is now **`stanceLine`** (`features/promptContext.js:300`). The tier logic itself (≥50 chars or `?` → full tier; 3 messages light, 15 messages + 2 summaries + profile + knowledge on full) still matches the code.
 
 ## Context
 

@@ -35,7 +35,7 @@ Per-guild Skarn mood (neutral / tired / amused / focused / refreshed / wrath).
 | `last_activity_at` | INTEGER | Timestamp of last activity |
 | `last_mood_shift_at` | INTEGER | Timestamp of last mood change |
 
-Evaluated every 10min during decay cycle based on aggregate user_relationship stats.
+Not written by the decay cycle. `evaluateMood()` (`features/mood/moodManager.js`) reads 2h interaction stats on every prompt build and **returns** a mood string, which feeds `volumeEnergy` into `resolveStance()` — it never persists anything. `updateGuildMood()` (`db/relationship.js:34`) has zero call sites, so `current_mood` keeps its `'neutral'` default.
 
 #### `server_culture`
 Per-channel bigram frequency tracking.

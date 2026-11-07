@@ -192,7 +192,7 @@ The `commands/` directory contains thin wrappers only. `bot.js` loads all 68 sla
 | Module | File | Responsibility |
 |--------|------|----------------|
 | Database | `db/` | Facade `db/database.js` + domain modules (`memory`, `conversation`, `relationship`, `channel`, `channelContext`, `ops`, `humor`, `stories`) + `db/db.js` connection |
-| Schema | `db/skarn-schema.sql` | 58 tables + 2 FTS5 virtual tables (run on startup via CREATE IF NOT EXISTS) |
+| Schema | `db/skarn-schema.sql` | 60 tables + 2 FTS5 virtual tables (run on startup via CREATE IF NOT EXISTS) |
 
 ## State Machine: Channel Mood
 

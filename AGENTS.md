@@ -151,7 +151,7 @@ After any major HTML/CSS/JS changes, always:
 - **CSS**: BEM (`.gem-block__element--modifier`), custom property tokens (`--gem-*`), category suffixes (`--event`, `--pvp`, `--login`, `--code`)
 - **Config**: inline JSON in HTML, always use `loadConfig(id)` to parse
 - **State**: `selectedModes` array (defaults: event, pvp, login — CODE inactive) + `currentChartFilter` string, persisted via `savePageState()`/`loadPageState()`
-- **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`, `gem_copiedCode`, `gem_music_banner`, `gem_visits`, `gem_beacon` (changelog freshness beacon)
+- **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`, `gem_copiedCode`, `gem_music_banner`, `gem_visits`. `gem_beacon` (changelog freshness beacon) is a **sessionStorage** key, not localStorage
 - **URL params**: `?theme=light&mode=<name>&chart=<name>` restored on page load
 - **Code rewards**: defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; `promo` card total animates via `animateValue()`
 - **Single source of truth**: `data/codes.json` is the only hand-edited file for promo codes. Run `npm run update-codes` to regenerate `data/generated/promo-codes.js` (active codes) and update all dynamic content in `guide/code/index.html` via markers

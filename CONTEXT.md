@@ -94,7 +94,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 CSS custom properties in `:root` with dark/light mode support (`:root.light-mode`). Categories: `--gem-event`, `--gem-pvp`, `--gem-login`, `--gem-code`, `--gem-cyan`, `--gem-purple`. Semantic: `--gem-star`, `--gem-gem`. Background, orb, alert, and shadow tokens also defined. Full reference: `docs/DESIGN_SYSTEM.md`.
 
 ### Organization Entity
-- **Anomaly Alpha** — The organization that publishes and maintains the site. Schema.org `Organization` type. Named "Anomaly Alpha" in JSON-LD publisher/provider fields across all pages. Previously used "Gem Rewards Calculator" as the organization name (changed Jul 2026). Pages that define `og:site_name` all use "Invincible GTG" — homepage, all 10 guide pages, about, music, privacy, and terms. Pages without the tag (`/authors/anomaly/`, `/seo/`, `/skarn-bot/`, `404.html`) do not claim to set it.
+- **Anomaly Alpha** — The organization that publishes and maintains the site. Schema.org `Organization` type. Named "Anomaly Alpha" in JSON-LD publisher/provider fields across all pages. Previously used "Gem Rewards Calculator" as the organization name (changed Jul 2026). Pages that define `og:site_name` all use "Invincible GTG" — 209 pages: homepage, all 10 guide pages, about, music, privacy, terms, and the whole generated watch tree (the `/watch/` hub plus all 193 watch pages). Pages without the tag (`/authors/anomaly/`, `/seo/`, `/skarn-bot/`, `404.html`) do not claim to set it.
 - **Anomaly** — Person (founder/developer). Schema.org `Person` type at `/authors/anomaly/`. Not to be confused with the publishing Organization.
 
 ## Architecture Decision Records
@@ -116,5 +116,5 @@ ADRs live in `docs/adr/`. Each records a hard-to-reverse decision with context, 
 - Zero CDN dependencies — all assets self-hosted (fonts, Chart.js, SVGs)
 - Supports dark and light modes via `:root.light-mode` token overrides
 - Guide pages share the same CSS and design system as the main page
-- **Analytics**: GA4 (`G-21RZK3GKKZ`) is active on all pages (homepage, 10 guides, about, music, seo, privacy, terms, authors, 404, skarn-bot)
+- **Analytics**: GA4 (`G-21RZK3GKKZ`) is active on the 19 editorial and utility pages (homepage, 10 guides, about, music, seo, privacy, terms, authors, 404, skarn-bot). The generated watch tree — the `/watch/` hub and all 193 watch pages — carries **no** analytics tag, so watch-page traffic is visible in GSC but not in GA4
 - **Ads**: Ads are currently disabled (`ads-config.enabled: false`). `ads.txt` exists but no ad-serving runtime is loaded. A static `gem-site-message` fallback appears on eligible pages

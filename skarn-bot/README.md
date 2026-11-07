@@ -169,8 +169,8 @@ Grouped by the same themes as `/help` — use `/help` in Discord for the live, a
 - **Response:** Embed with avatar image
 
 #### `/help`
-- **Parameters:** `category` (optional)
-- **Response:** Lists all commands by category
+- **Parameters:** `theme` (optional — jump straight to one of the 8 named themes; `other` is not offered as a choice)
+- **Response:** Paginated help menu grouped by theme, navigated with a dropdown and prev/next buttons
 
 ---
 
