@@ -17,7 +17,7 @@ window.__PROMO_CODES=[
       }
     ],
     "tier": "HIGH",
-    "dateAdded": "2026-11-07",
+    "dateAdded": "2026-11-03",
     "reward": "1 x Lucan, 1 x Nolan"
   },
   {
@@ -27,7 +27,7 @@ window.__PROMO_CODES=[
     "tickets": 0,
     "reward": "500 Gems + 2 x Gold Dossiers",
     "tier": "HIGH",
-    "dateAdded": "2026-10-31"
+    "dateAdded": "2026-10-28"
   },
   {
     "code": "SAVE37",
@@ -35,7 +35,7 @@ window.__PROMO_CODES=[
     "gems": 500,
     "tickets": 0,
     "tier": "HIGH",
-    "dateAdded": "2026-10-24"
+    "dateAdded": "2026-10-20"
   },
   {
     "code": "KREGG4",
@@ -70,6 +70,13 @@ window.__PROMO_CODES=[
     "reward": "1 x Space Racer",
     "tier": "HIGH",
     "dateAdded": "2026-08-21"
+  },
+  {
+    "code": "BULL3T",
+    "gems": 500,
+    "tickets": 0,
+    "tier": "HIGH",
+    "dateAdded": "2026-08-18"
   },
   {
     "code": "THAEDS",
@@ -110,13 +117,6 @@ window.__PROMO_CODES=[
     "reward": "1 x Armoured Eve",
     "tier": "HIGH",
     "dateAdded": "2026-06-07"
-  },
-  {
-    "code": "BULL3T",
-    "gems": 500,
-    "tickets": 0,
-    "tier": "HIGH",
-    "dateAdded": "2026-05-19"
   },
   {
     "code": "DINOSR",

@@ -20,7 +20,7 @@
         }
       ],
       "tier": "HIGH",
-      "dateAdded": "2026-11-07"
+      "dateAdded": "2026-11-03"
     },
     {
       "code": "SAVE37",
@@ -28,7 +28,7 @@
       "gems": 500,
       "tickets": 0,
       "tier": "HIGH",
-      "dateAdded": "2026-10-24"
+      "dateAdded": "2026-10-20"
     },
     {
       "code": "UPDAT3",
@@ -66,7 +66,7 @@
       "gems": 500,
       "tickets": 0,
       "tier": "HIGH",
-      "dateAdded": "2026-05-19"
+      "dateAdded": "2026-08-18"
     },
     {
       "code": "TRICKY",
@@ -75,7 +75,7 @@
       "tickets": 0,
       "reward": "500 Gems + 2 x Gold Dossiers",
       "tier": "HIGH",
-      "dateAdded": "2026-10-31"
+      "dateAdded": "2026-10-28"
     },
     {
       "code": "HALMRY",
@@ -496,7 +496,7 @@
       "tickets": 0,
       "expired": true,
       "expiredDate": "2026-04-21",
-      "dateAdded": "2026-02-01"
+      "dateAdded": "2026-04-14"
     },
     {
       "code": "POTENT",
@@ -513,7 +513,7 @@
       "tickets": 0,
       "expired": true,
       "expiredDate": "2026-03-03",
-      "dateAdded": "2025-12-01"
+      "dateAdded": "2025-12-03"
     },
     {
       "code": "FILES3",
@@ -521,7 +521,7 @@
       "tickets": 0,
       "expired": true,
       "expiredDate": "2026-03-03",
-      "dateAdded": "2025-12-01"
+      "dateAdded": "2026-01-13"
     },
     {
       "code": "TROPHY",
@@ -529,7 +529,7 @@
       "tickets": 0,
       "expired": true,
       "expiredDate": "2026-03-03",
-      "dateAdded": "2025-11-01"
+      "dateAdded": "2026-02-10"
     },
     {
       "code": "YEAR26",
@@ -547,7 +547,8 @@
       "code": "PATCH3",
       "gems": 0,
       "tickets": 0,
-      "expired": true
+      "expired": true,
+      "dateAdded": "2026-03-17"
     }
   ]
 }
