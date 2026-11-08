@@ -23,3 +23,10 @@ _dream_tmp*.py
 .playwright-mcp/
 journal/
 scripts/start-mimo-with-github-agent.sh
+
+# Google credential files — keys live outside the repo (e.g. %APPDATA%\gcloud\),
+# these patterns are a backstop so a copied-in key can never be committed.
+application_default_credentials*
+*service-account*.json
+*sa-key*.json
+google-credentials*.json

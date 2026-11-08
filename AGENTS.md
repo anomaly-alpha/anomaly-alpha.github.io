@@ -48,6 +48,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `data/generated/promo-codes.js` | Generated active-codes bundle (from `npm run update-codes`) |
 | `data/generated/seo-data.js` | Generated SEO data bundle (`npm run pull-gsc` / `npm run analyze-gsc`) |
 | `data/gsc-api/YYYY-MM-DD/` | Search Console API snapshots (summary, queries, pages, sitemaps, URL inspection) written by `npm run pull-gsc` |
+| `data/ga4-api/YYYY-MM-DD/` | Google Analytics 4 snapshots (daily, pages, countries, events, summary) written by `npm run pull-ga4` |
 | `data/playlists.json` | Music playlist source data for `npm run update-music` |
 | `data/countries-list.txt` | Country reference data used by GSC analysis |
 | `scripts/generate-codes.js` | Generator: reads `data/codes.json`, writes `data/generated/promo-codes.js` + updates `guide/code/index.html` via markers + updates `index.html` inline promo codes |
@@ -63,7 +64,9 @@ Open `index.html` in a browser. Works from `file://`.
 | `data/game-context.json` | Verified game-context knowledge base: one entry per game event/mode/system, each with aliases for matching against video text and a publisher-controlled `source.url`. Watch pages surface an entry only when its name actually appears in the video's title, description, or creator excerpt |
 | `scripts/generate-music.js` | Generates music page data from source playlists |
 | `scripts/generate-skarn-index.js` | Regenerates the docs index inside `skarn-bot/index.html` via markers (`npm run skarn-index`) |
-| `scripts/pull-gsc.js` | Pulls Search Analytics API data into `data/gsc-api/<date>/` (`npm run pull-gsc`) |
+| `scripts/pull-gsc.js` | Pulls Search Analytics API data into `data/gsc-api/<date>/` (`npm run pull-gsc`; service-account auth, `--key <path>` overrides the key) |
+| `scripts/pull-ga4.js` | Pulls GA4 Data API data into `data/ga4-api/<date>/` (`npm run pull-ga4`); requires Viewer access for the service account on the property |
+| `scripts/lib/google-auth.js` | Shared credential discovery and service-account JWT minting for the two pullers; service-account key only (no user ADC), keys live outside the repo |
 | `scripts/check-code-sources.js` | Diffs the publisher's patch-note reward codes and dates against `data/codes.json` (`npm run check-codes`); exits 1 on drift |
 | `scripts/analyze-gsc.js` | Analyzes GSC exports and rewrites `docs/reports/2026-08-20/unknown/SEO_PERFORMANCE.md` (`npm run analyze-gsc`) |
 | `scripts/add-meta.js` / `add-more.js` / `add-schema.js` | Legacy guide-page meta/tag/schema helpers |
@@ -105,6 +108,7 @@ Open `index.html` in a browser. Works from `file://`.
 - **Watch pages need no JavaScript** — the player is a plain `<iframe>` with `loading="eager"` placed directly after the `<h1>`, so it exists at load without user interaction. A click-to-load facade would re-trigger "Cannot determine video position and size".
 - **`uploadDate` must carry a timezone** — prefer the harvested `youtube.publishedAt`, which already carries the creator's real UTC offset. Fall back to `toIsoDateTime(published)` (`YYYY-MM-DDT00:00:00+00:00`) only when metadata is missing. Bare dates fail Google's datetime validation.
 - **Never publish a watch page for an unplayable video** — `npm run enrich-creators` flags active videos that are removed, embedding-disabled, or zero-duration (streams that never went live). Mark those `status: "unavailable"` with a `statusReason`; the generators then skip their watch page, card, and sitemap entry automatically. A watch page with a dead player cannot be indexed.
+- **Both data pullers use a service-account key, never user ADC** — `scripts/lib/google-auth.js` resolves `%APPDATA%\gcloud\service-account.json` (then `GOOGLE_APPLICATION_CREDENTIALS`, then `--key`) and refuses any other credential type. ADC is unsupported by design: the OAuth client is unverified/Testing, so its refresh token expires every ~7 days and Google blocks `analytics.readonly` outright. The service account needs **Full** on the Search Console property and **Viewer** on GA4 property `541253821`. Keys stay outside the repo; never write a credential path into `data/`.
 
 ## Commands
 
@@ -122,7 +126,8 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run audit-creators` — Audit creator video availability over HTTP
 - `npm run update-music` — Regenerate music page data from source playlists
 - `npm run skarn-index` — Regenerate the docs index inside `skarn-bot/index.html` via markers
-- `npm run pull-gsc` — Pull Search Console API data into `data/gsc-api/<date>/`
+- `npm run pull-gsc` — Pull Search Console API data into `data/gsc-api/<date>/` (service-account key only: `%APPDATA%\gcloud\service-account.json`, `GOOGLE_APPLICATION_CREDENTIALS`, or `--key <path>`)
+- `npm run pull-ga4` — Pull Google Analytics 4 data into `data/ga4-api/<date>/` (same key; the service account needs Viewer on the GA4 property)
 - `npm run analyze-gsc` — Analyze GSC exports and rewrite the SEO performance report
 - `npm run test:creators` — Run the built-in creator generator and validation tests
 - `npm run test:watch-pages` — Validate watch page output (schema, SEO head, sitemap, pruning)
@@ -158,6 +163,7 @@ After any major HTML/CSS/JS changes, always:
 - **Code rewards**: defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; `promo` card total animates via `animateValue()`
 - **Single source of truth**: `data/codes.json` is the only hand-edited file for promo codes. Run `npm run update-codes` to regenerate `data/generated/promo-codes.js` (active codes) and update all dynamic content in `guide/code/index.html` via markers
 - **`dateAdded` is the publisher's release date, never an aggregator's listing date**: patch-note codes take theirs from the help-centre article (the section index slug carries the date, each article ends with `Reward Code: XXX`), social codes from the dated official post on `x.com/InvincibleGtG`. Code-aggregator "added" columns lag by 3–10 days and caused the site to trail real drops by 3–4 days. `npm run check-codes` verifies every patch-note code against the source
+- **`expiredDate` is an observation date, not a published one** — no source publishes expiry dates (no Ubisoft page, and every aggregator lists expired codes with `Rewards not listed`). It means "observed dead by", and its only effect is ordering the expired chip list, since `expiredChip()` renders the code name alone. Take it from git history: the first commit where the code carries `"expired": true` is a provable upper bound, and a value later than the last commit that still listed the code as active is impossible. Leave the field absent when neither bound is known rather than inventing one
 - **Guide code page markers**: 11 injected regions in `guide/code/index.html` (`GUIDE_DESC`, `GUIDE_OG_DESC`, `GUIDE_OG_IMAGE_ALT`, `GUIDE_TWITTER_DESC`, `GUIDE_TAB`, `GUIDE_UPDATED`, `GUIDE_DATE_META`, `GUIDE_ARTICLE_MODIFIED`, `GUIDE_CODES_TABLE`, `GUIDE_CODES_ACTIVE`, `GUIDE_CODES_EXPIRED`), written by `scripts/generate-codes.js` from `data/codes.json`. The generator also writes `"dateModified"` in the JSON-LD block via `GUIDE_LD_DATEMODIFIED` or a bare-field fallback. Required markers are asserted at generation time.
 - **Guide code page must include `script.js`** — `guide/code/index.html` needs `<script src="../../script.js">` before `</body>` for `copyCode()` to work on code chips
 - **OG images**: 9 per-page PNG files in `og-images/` (`home.png`, `code.png`, `event.png`, `pvp.png`, `login.png`, `faq.png`, `beginners.png`, `xp.png`, `creators.png`); SVGs previously served as editable sources

@@ -2,7 +2,8 @@
   "generatedAt": "2026-10-31T16:58:43.144Z",
   "site": "https://anomaly-alpha.github.io/",
   "quotaProject": "anomaly-alpha-gsc",
-  "adc": "C:\\Users\\petra\\AppData\\Roaming\\gcloud\\application_default_credentials.json",
+  "credentialFile": "application_default_credentials.json",
+  "credentialType": "authorized_user",
   "periods": {
     "full": {
       "start": "2026-05-02",

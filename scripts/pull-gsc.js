@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
+const auth = require('./lib/google-auth');
 
 const API_BASE = 'https://searchconsole.googleapis.com/webmasters/v3/sites';
-const TOKEN_URL = 'https://oauth2.googleapis.com/token';
+const SCOPE = 'https://www.googleapis.com/auth/webmasters.readonly';
 const DEFAULT_SITE = 'https://anomaly-alpha.github.io/';
-const ADC_PATH = process.env.GOOGLE_APPLICATION_CREDENTIALS ||
-  path.join(process.env.HOME || '', '.config', 'gcloud', 'application_default_credentials.json');
+const CREDENTIAL_PATH = auth.resolveCredentialPath();
 const ROW_LIMIT = 25000;
 
 // ===== CLI =====
@@ -50,42 +50,17 @@ function todayUtc() {
 
 // ===== Auth =====
 
-function loadAdc(filePath) {
-  if (!fs.existsSync(filePath)) {
-    throw new Error('ADC file not found: ' + filePath + ' (run: gcloud auth application-default login --no-launch-browser)');
-  }
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-}
-
-async function getAccessToken(adc) {
-  if (adc.type !== 'authorized_user' || !adc.refresh_token) {
-    throw new Error('Unsupported ADC type: ' + (adc.type || 'unknown') + ' (expected authorized_user)');
-  }
-  const body = new URLSearchParams({
-    grant_type: 'refresh_token',
-    client_id: adc.client_id,
-    client_secret: adc.client_secret,
-    refresh_token: adc.refresh_token,
-  });
-  const res = await fetch(TOKEN_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body,
-  });
-  const text = await res.text();
-  if (!res.ok) throw new Error('Token refresh failed: HTTP ' + res.status + ' ' + text.slice(0, 200));
-  const json = JSON.parse(text);
-  if (!json.access_token) throw new Error('Token refresh returned no access_token');
-  return json.access_token;
-}
+// Credential loading and token minting live in scripts/lib/google-auth.js so the GSC and
+// GA4 pullers cannot drift apart on the service-account JWT flow.
 
 // ===== Search Analytics API =====
 
-function authHeaders(token, quotaProject) {
+// Service accounts bill their own project, so no x-goog-user-project quota header is sent —
+// including it makes Google demand serviceusage.services.use on that project.
+function authHeaders(token) {
   return {
     Authorization: 'Bearer ' + token,
     'Content-Type': 'application/json',
-    'x-goog-user-project': quotaProject,
   };
 }
 
@@ -93,7 +68,7 @@ function queryUrl(site) {
   return API_BASE + '/' + encodeURIComponent(site) + '/searchAnalytics/query';
 }
 
-async function queryAll(token, site, quotaProject, payload) {
+async function queryAll(token, site, payload) {
   const rows = [];
   let startRow = 0;
   let pages = 0;
@@ -101,7 +76,7 @@ async function queryAll(token, site, quotaProject, payload) {
     const body = Object.assign({}, payload, { rowLimit: ROW_LIMIT, startRow });
     const res = await fetch(queryUrl(site), {
       method: 'POST',
-      headers: authHeaders(token, quotaProject),
+      headers: authHeaders(token),
       body: JSON.stringify(body),
     });
     const text = await res.text();
@@ -136,8 +111,8 @@ function sitemapsUrl(site) {
   return API_BASE + '/' + encodeURIComponent(site) + '/sitemaps';
 }
 
-async function fetchSitemaps(token, quotaProject, site) {
-  const res = await fetch(sitemapsUrl(site), { headers: authHeaders(token, quotaProject) });
+async function fetchSitemaps(token, site) {
+  const res = await fetch(sitemapsUrl(site), { headers: authHeaders(token) });
   const text = await res.text();
   if (!res.ok) throw new Error('HTTP ' + res.status + ': ' + text.slice(0, 300));
   return JSON.parse(text).sitemap || [];
@@ -164,10 +139,10 @@ function richResultIssues(detectedItems) {
   );
 }
 
-async function inspectUrl(token, quotaProject, site, inspectionUrl) {
+async function inspectUrl(token, site, inspectionUrl) {
   const res = await fetch(INSPECT_URL, {
     method: 'POST',
-    headers: authHeaders(token, quotaProject),
+    headers: authHeaders(token),
     body: JSON.stringify({ inspectionUrl, siteUrl: site, languageCode: 'en-US' }),
   });
   const text = await res.text();
@@ -229,8 +204,12 @@ function deltaPct(current, previous) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   const site = args.site || DEFAULT_SITE;
-  const quotaProject = args['quota-project'] || loadAdc(args.adc || ADC_PATH).quota_project_id;
-  if (!quotaProject) throw new Error('No quota project in ADC; pass --quota-project');
+  if (args.adc || args['quota-project']) {
+    throw new Error('--adc and --quota-project were removed with the ADC path; ' +
+      'these pullers use a service-account key (--key <path> to override the default).');
+  }
+  const credentialPath = args.key || CREDENTIAL_PATH;
+  const credential = auth.loadCredential(credentialPath);
 
   const end = args.end || addDays(todayUtc(), -2);
   const start = args.start || addDays(end, -180);
@@ -250,9 +229,8 @@ async function main() {
   console.log('Output:   ' + outDir);
   console.log('');
 
-  const adc = loadAdc(args.adc || ADC_PATH);
-  const token = await getAccessToken(adc);
-  console.log('Access token acquired from ADC');
+  const token = await auth.getAccessToken(credential, SCOPE);
+  console.log('Access token acquired for ' + credential.client_email);
   console.log('');
 
   function writeJson(name, data) {
@@ -269,7 +247,7 @@ async function main() {
         type: 'web',
         dataState: 'all',
       }, extra || {});
-      const rows = await queryAll(token, site, quotaProject, payload);
+      const rows = await queryAll(token, site, payload);
       writeJson(name, rows);
       console.log(String(rows.length).padStart(6) + ' rows');
       return { name, ok: true, rows: rows.length, startDate, endDate, dimensions, type: payload.type };
@@ -305,7 +283,7 @@ async function main() {
   let sitemaps = [];
   let sitemapsOk = true;
   try {
-    sitemaps = await fetchSitemaps(token, quotaProject, site);
+    sitemaps = await fetchSitemaps(token, site);
     writeJson('sitemaps', sitemaps);
     console.log(sitemaps.length ? String(sitemaps.length).padStart(6) + ' registered' : 'none registered');
   } catch (err) {
@@ -331,7 +309,7 @@ async function main() {
     console.log('  ' + 'url-inspection'.padEnd(30) + String(targets.length).padStart(6) + ' urls');
     for (const target of targets) {
       try {
-        const row = await inspectUrl(token, quotaProject, site, target);
+        const row = await inspectUrl(token, site, target);
         inspections.push(row);
         console.log('    ' + String(row.verdict || '?').padEnd(13) + (row.coverageState || '').padEnd(30) +
           target.replace(site, '/').padEnd(26) + (row.canonicalMatches ? '' : 'CANONICAL MISMATCH'));
@@ -366,7 +344,6 @@ async function main() {
     const previous = totals(rows.filter(r => r.keys[0] >= previousStart && r.keys[0] <= previousEnd));
     summary = {
       site,
-      quotaProject,
       generatedAt: new Date().toISOString(),
       periods: {
         full: { start, end, days: daysBetween(start, end) },
@@ -411,8 +388,8 @@ async function main() {
   writeJson('meta', {
     generatedAt: new Date().toISOString(),
     site,
-    quotaProject,
-    adc: args.adc || ADC_PATH,
+    credentialFile: credentialPath ? path.basename(credentialPath) : null,
+    credentialType: credential.type || 'unknown',
     periods: {
       full: { start, end },
       current: { start: currentStart, end },
