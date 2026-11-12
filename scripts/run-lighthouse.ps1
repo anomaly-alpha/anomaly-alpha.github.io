@@ -1,20 +1,35 @@
 param(
-  [string]$OutputDir = "./lighthouse-reports"
+  [string]$OutputDir = "./lighthouse-reports",
+  # Point this at a local server (e.g. http://127.0.0.1:8123) to audit the working tree
+  # before pushing. GitHub Pages only serves committed-and-pushed code, so a production
+  # sweep cannot see local changes.
+  [string]$BaseUrl = "https://anomaly-alpha.github.io"
 )
 
 # Anchor to the repo root. An interactive PowerShell profile can Set-Location elsewhere,
 # which would put the reports in the wrong folder and make --config-path miss its file.
 Set-Location (Split-Path -Parent $PSScriptRoot)
 
+$base = $BaseUrl.TrimEnd('/')
+
+# Run the repo-local Lighthouse, never a global one. A global install silently shipped a
+# different engine (13.3.0) than the one @lhci/cli's budget gate uses (13.6.0), so the two
+# documented entry points scored the same pages on different code.
+$lighthouseCli = "node_modules/lighthouse/cli/index.js"
+if (-not (Test-Path $lighthouseCli)) {
+  Write-Host "Lighthouse is not installed. Run 'npm install' first." -ForegroundColor Red
+  exit 1
+}
+
 $pages = @(
-  @{name="home"; url="https://anomaly-alpha.github.io/"},
-  @{name="code"; url="https://anomaly-alpha.github.io/guide/code/"},
-  @{name="event"; url="https://anomaly-alpha.github.io/guide/event/"},
-  @{name="pvp"; url="https://anomaly-alpha.github.io/guide/pvp/"},
-  @{name="login"; url="https://anomaly-alpha.github.io/guide/login/"},
-  @{name="faq"; url="https://anomaly-alpha.github.io/guide/faq/"},
-  @{name="beginners"; url="https://anomaly-alpha.github.io/guide/beginners/"},
-  @{name="xp"; url="https://anomaly-alpha.github.io/guide/xp/"}
+  @{name="home"; url="$base/"},
+  @{name="code"; url="$base/guide/code/"},
+  @{name="event"; url="$base/guide/event/"},
+  @{name="pvp"; url="$base/guide/pvp/"},
+  @{name="login"; url="$base/guide/login/"},
+  @{name="faq"; url="$base/guide/faq/"},
+  @{name="beginners"; url="$base/guide/beginners/"},
+  @{name="xp"; url="$base/guide/xp/"}
 )
 
 $chromeFlags = "--headless --no-sandbox --disable-gpu --disable-dev-shm-usage"
@@ -35,7 +50,7 @@ foreach ($page in $pages) {
 
   # Redirect stderr to a file, not to $null: suppressing a native command's stderr makes
   # PowerShell close the pipe, which kills lighthouse before it writes the report.
-  lighthouse $url `
+  node $lighthouseCli $url `
     --config-path=lighthouse-config.js `
     --output html --output json `
     --output-path "$OutputDir/$name" `

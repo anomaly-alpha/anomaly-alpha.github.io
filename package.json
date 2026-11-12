@@ -33,7 +33,7 @@
     "pull-gsc": "node scripts/pull-gsc.js",
     "pull-ga4": "node scripts/pull-ga4.js",
     "check-codes": "node scripts/check-code-sources.js",
-    "lighthouse:single": "lighthouse --config-path=lighthouse-config.js --output html --output json --chrome-flags=\"--headless --no-sandbox --disable-gpu --disable-dev-shm-usage\"",
+    "lighthouse:single": "node node_modules/lighthouse/cli/index.js --config-path=lighthouse-config.js --output html --output json --chrome-flags=\"--headless --no-sandbox --disable-gpu --disable-dev-shm-usage\"",
     "lighthouse:home": "npm run lighthouse:single -- https://anomaly-alpha.github.io/ --output-path ./lighthouse-reports/home",
     "lighthouse:all": "pwsh -NoProfile -File scripts/run-lighthouse.ps1",
     "lighthouse:report": "node -e \"var f=require('fs'),p=['home','code','event','pvp','login','faq','beginners','xp'];console.log('| Page | Perf | A11y | BP | SEO | LCP | TBT | CLS |');console.log('|------|------|------|-----|-----|-----|-----|-----|');p.forEach(function(n){var file='./lighthouse-reports/'+n+'.report.json';if(!f.existsSync(file)){console.log('| '+n+' | missing report | | | | | | |');return}var r=JSON.parse(f.readFileSync(file,'utf8')),m=r.audits;console.log('| '+n+' | '+Math.round(r.categories.performance.score*100)+' | '+Math.round(r.categories.accessibility.score*100)+' | '+Math.round(r.categories['best-practices'].score*100)+' | '+Math.round(r.categories.seo.score*100)+' | '+m['largest-contentful-paint'].displayValue+' | '+m['total-blocking-time'].displayValue+' | '+m['cumulative-layout-shift'].displayValue+' |')});\"",
@@ -42,6 +42,7 @@
   "devDependencies": {
     "@lhci/cli": "^0.16.0",
     "csso": "^5.0.5",
+    "lighthouse": "13.6.0",
     "tailwindcss": "^3.4.17",
     "terser": "^5.46.2"
   },
