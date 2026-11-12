@@ -42,8 +42,15 @@ module.exports = {
         'categories:accessibility': ['warn', { minScore: 0.95 }], // measured 100 everywhere
         'categories:seo': ['error', { minScore: 1 }], // measured 100 everywhere
         'categories:best-practices': ['warn', { minScore: 0.9 }], // measured 100 everywhere
-        // CLS is the one stable metric (0 on 6 of 7 runs), so it stays strict: the single
-        // 0.194 reading came from the same slow-mode outlier above and is worth seeing.
+        // CLS was never stable, and this budget is what proved it. Across 24 runs of the
+        // same bytes it came back bimodal: 0.000 on 22 runs, exactly 1.0000 on 2 (code and
+        // login), always blaming the same node, body > div.gem-container. The cause was
+        // the FOUC guard: html{visibility:hidden} and html{visibility:visible} sat in one
+        // <style> block, so "visible" won immediately and guarded nothing, while both
+        // stylesheets arrived async (preload + onload="this.rel='stylesheet'"). Whether
+        // they landed before or after first paint was the coin flip. They are render-
+        // blocking now, so this stays strict at 0.1: it is the tripwire that catches the
+        // pattern being reintroduced, and it should never need the noise-band treatment.
         'cumulative-layout-shift': ['warn', { maxNumericValue: 0.1 }],
         'largest-contentful-paint': ['warn', { maxNumericValue: 4500 }], // slow mode max 3.9 s
         'total-blocking-time': ['warn', { maxNumericValue: 500 }], // measured 80-330 ms

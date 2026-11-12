@@ -77,7 +77,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 ## Performance Architecture
 - **Counter CLS prevention** — `.gem-counter` uses `min-width: 6ch` + `font-variant-numeric: tabular-nums` + `display: inline-block` to prevent width changes during `animateValue()` rAF
 - **Animation timing** — `filterCards()` runs before `updateAllPageTotals()` so counter animation starts on settled layout
-- **Critical CSS inlined** — Above-fold CSS in `<style>`, full CSS loaded async via `<link rel="preload" as="style" onload="this.rel='stylesheet'">`, FOUC guarded by `html { visibility: hidden/visible }`
+- **Critical CSS inlined, full CSS render-blocking** — Above-fold CSS stays in `<style>`, and `tailwind.css` + `styles.css` load as plain `<link rel="stylesheet">`. Do **not** reintroduce `rel="preload" as="style" onload="this.rel='stylesheet'"` here: nothing in the document is render-blocking, so first paint fired before the sheets applied and the whole `div.gem-container` re-laid-out afterwards, giving a bimodal CLS of 0 or 1.0 (2 of 24 measured runs). A `html { visibility: hidden/visible }` pair cannot guard this when both rules live in the same `<style>` block — the later declaration wins instantly — so the guard was removed rather than fixed
 - **Chart.js lazy-loaded** — `vendor/chart.umd.js` (200 KB) loaded on first "Show Charts" click
 - **Deferred init** — `DOMContentLoaded` handler wrapped in `requestAnimationFrame` for first-paint priority
 - **Minified assets** — CSS via csso, JS via terser (`npm run build`)
