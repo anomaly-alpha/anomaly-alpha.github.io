@@ -142,6 +142,7 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run lighthouse:all` — Batch audit all 8 pages via PowerShell script
 - `npm run lighthouse:report` — Print score table from saved JSON reports
 - `npm run lighthouse:budget` — Collect fresh runs of all 8 pages with `@lhci/cli` and assert them against the budgets in `lighthouserc.js` (results land in the gitignored `.lighthouseci/`)
+- `node scripts/run-psi-audit.js` — Hosted PageSpeed Insights audit of the 8 audited pages (no npm alias). Requires a key: `PSI_API_KEY`, else `%APPDATA%\gcloud\psi-api-key.txt` or `~/.config/gcloud/psi-api-key.txt` — the key lives outside the repo and is never committed. The anonymous shared quota answers HTTP 429 most days, so a key is mandatory. PSI shares workers with every other caller, so a single low score is noise: re-run before acting on anything below ~90
 - No runtime build — all generated files are committed
 
 ### Post-change verification

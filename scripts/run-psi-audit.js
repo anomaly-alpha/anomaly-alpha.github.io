@@ -1,7 +1,33 @@
 // Run PageSpeed Insights audit for all 8 pages
 // Usage: node scripts/run-psi-audit.js
+//
+// The API requires a key: the anonymous shared quota is exhausted most days and
+// answers HTTP 429 "Quota exceeded ... Queries per day". The key is read from
+// PSI_API_KEY, else from %APPDATA%\gcloud\psi-api-key.txt (or
+// ~/.config/gcloud/psi-api-key.txt). It is never read from inside the repo and
+// never committed — see the credential patterns in .gitignore.
 
 const https = require('https');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+
+const CATEGORIES = ['PERFORMANCE', 'ACCESSIBILITY', 'BEST_PRACTICES', 'SEO'];
+
+function loadApiKey() {
+  if (process.env.PSI_API_KEY) return process.env.PSI_API_KEY.trim();
+  const candidates = [
+    process.env.APPDATA && path.join(process.env.APPDATA, 'gcloud', 'psi-api-key.txt'),
+    path.join(os.homedir(), '.config', 'gcloud', 'psi-api-key.txt'),
+  ].filter(Boolean);
+  for (const file of candidates) {
+    if (fs.existsSync(file)) return fs.readFileSync(file, 'utf8').trim();
+  }
+  throw new Error(
+    'No PageSpeed Insights API key. Set PSI_API_KEY, or write the key to ' +
+    candidates.join(' or ') + '. Create one at https://console.cloud.google.com/apis/credentials'
+  );
+}
 
 const pages = [
   { name: 'home', url: 'https://anomaly-alpha.github.io/' },
@@ -14,16 +40,13 @@ const pages = [
   { name: 'xp', url: 'https://anomaly-alpha.github.io/guide/xp/' },
 ];
 
-function fetchPSI(page) {
+function fetchPSI(page, apiKey) {
   return new Promise((resolve, reject) => {
-    const params = new URLSearchParams({
-      url: page.url,
-      strategy: 'mobile',
-      category: 'PERFORMANCE',
-      category: 'ACCESSIBILITY',
-      category: 'BEST_PRACTICES',
-      category: 'SEO',
-    });
+    // URLSearchParams built from an object literal keeps only the last duplicate
+    // key, so each category has to be appended or the response carries none of
+    // the requested category blocks and every score read below is undefined.
+    const params = new URLSearchParams({ url: page.url, strategy: 'mobile', key: apiKey });
+    for (const category of CATEGORIES) params.append('category', category);
     const url = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?${params}`;
     https.get(url, { headers: { 'Accept': 'application/json' } }, (res) => {
       let data = '';
@@ -64,11 +87,19 @@ function fetchPSI(page) {
 }
 
 async function run() {
+  let apiKey;
+  try {
+    apiKey = loadApiKey();
+  } catch (e) {
+    console.error(e.message);
+    process.exit(1);
+  }
+
   const results = [];
   for (const page of pages) {
     process.stdout.write(`Auditing ${page.name}... `);
     try {
-      const result = await fetchPSI(page);
+      const result = await fetchPSI(page, apiKey);
       results.push(result);
       process.stdout.write(`Perf=${result.scores.performance} A11y=${result.scores.accessibility} SEO=${result.scores.seo}\n`);
     } catch (e) {
@@ -109,7 +140,6 @@ async function run() {
   }
 
   // Save JSON
-  const fs = require('fs');
   fs.mkdirSync('./lighthouse-reports', { recursive: true });
   fs.writeFileSync('./lighthouse-reports/psi-summary.json', JSON.stringify(results, null, 2));
   console.log('\nResults saved to lighthouse-reports/psi-summary.json');
