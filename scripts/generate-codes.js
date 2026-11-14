@@ -353,8 +353,43 @@ indexHtml = indexHtml.replace(
   /(<span class="gem-ticker__label">Codes<\/span> )\d+ active/g,
   `$1${activeCount} active`
 );
+// The homepage JSON-LD dateModified tracks the same refresh; without this it can lag the
+// code dates the page itself renders.
+const indexPathDateMatches = indexHtml.match(/"dateModified": "[^"]*"/g) || [];
+if (indexPathDateMatches.length !== 1) throw new Error(`index.html JSON-LD dateModified expected once, found ${indexPathDateMatches.length}`);
+indexHtml = indexHtml.replace(/"dateModified": "[^"]*"/, `"dateModified": "${updatedIso}"`);
 // Normalize line endings back to original style
 if (indexEol === '\r\n') indexHtml = indexHtml.replace(/(?<!\r)\n/g, '\r\n');
 fs.writeFileSync(indexPath, indexHtml, 'utf8');
 console.log(`Updated index.html inline promo codes — ${activeCount} active`);
+
+// The [Mon YYYY] token in titles, social cards, and JSON-LD headlines is a freshness claim.
+// Only the code and FAQ pages used to rewrite it, so every other page kept claiming whatever
+// month it was last hand-edited. Sync them all from the same seoMonth source.
+const monthTokenPages = [
+  indexPath,
+  codeGuidePath,
+  faqGuidePath,
+  path.join(rootDir, 'guide', 'beginners', 'index.html'),
+  path.join(rootDir, 'guide', 'creators', 'index.html'),
+  path.join(rootDir, 'guide', 'event', 'index.html'),
+  path.join(rootDir, 'guide', 'login', 'index.html'),
+  path.join(rootDir, 'guide', 'pvp', 'index.html'),
+  path.join(rootDir, 'guide', 'redeem', 'index.html'),
+  path.join(rootDir, 'guide', 'wish-event', 'index.html'),
+  path.join(rootDir, 'guide', 'xp', 'index.html')
+];
+const monthTokenPattern = /\[(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{4}\]/g;
+let monthTokenTotal = 0;
+for (const pagePath of monthTokenPages) {
+  const pageSource = fs.readFileSync(pagePath, 'utf8');
+  const pageTokens = pageSource.match(monthTokenPattern) || [];
+  if (pageTokens.length === 0) {
+    throw new Error(`month token missing in ${path.relative(rootDir, pagePath)}; add one or drop the page from monthTokenPages`);
+  }
+  const pageSynced = pageSource.replace(monthTokenPattern, `[${monthYear}]`);
+  if (pageSynced !== pageSource) fs.writeFileSync(pagePath, pageSynced, 'utf8');
+  monthTokenTotal += pageTokens.length;
+}
+console.log(`Synced [${monthYear}] across ${monthTokenPages.length} pages (${monthTokenTotal} tokens)`);
 console.log(`Updated guide/code/index.html — ${activeCount} active, ${expiredCount} expired, ${monthYear}`);

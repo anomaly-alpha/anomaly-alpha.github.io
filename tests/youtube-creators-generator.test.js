@@ -46,9 +46,15 @@ function makeTemplate() {
   return [
     '<!DOCTYPE html>',
     '<html lang="en">',
-    '<head><title>Test Page</title></head>',
+    '<head>',
+    '<!--CREATORS_META_DATE_START-->',
+    '<!--CREATORS_META_DATE_END-->',
+    '<title>Test Page</title></head>',
     '<body>',
     '<main>',
+    '<!--CREATORS_UPDATED_START-->',
+    '<!--CREATORS_UPDATED_END-->',
+    '',
     '<!--RECENT_VIDEOS_START-->',
     '<!--RECENT_VIDEOS_END-->',
     '',
@@ -775,7 +781,7 @@ test('Duplicated marker pair detected', function () {
   );
 });
 
-test('All 5 marker pairs accepted when present exactly once', function () {
+test('All 7 marker pairs accepted when present exactly once', function () {
   var html = makeTemplate();
   // Should not throw
   gen.assertMarkers(html, gen.MARKER_PAIRS);

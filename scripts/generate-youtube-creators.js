@@ -30,7 +30,9 @@ const MARKER_PAIRS = [
   'CREATOR_SECTIONS',
   'CREATORS_JSON_LD',
   'CREATORS_NOSCRIPT',
-  'CREATORS_NOTE'
+  'CREATORS_NOTE',
+  'CREATORS_UPDATED',
+  'CREATORS_META_DATE'
 ];
 
 // ===== ESCAPING =====
@@ -821,6 +823,7 @@ function renderJsonLdHtml(data) {
         'url': collectionUrl,
         'name': 'Invincible GTG Creator Videos',
         'isPartOf': { '@id': SITE_ORIGIN + '/#website' },
+        'dateModified': toIsoDateTime(updatedDate(data)),
         'mainEntity': { '@id': collectionUrl + '#video-index' }
       },
       {
@@ -897,6 +900,23 @@ function renderDisclaimerHtml() {
   html += '        <p class="gem-creators__note-item"><strong>Independence note</strong> Creators listed here are independent community members and are not necessarily endorsed by Ubisoft, Skybound, YouTube, or Anomaly Alpha. Inclusion is based on content eligibility thresholds, not sponsorship.</p>\n';
   html += '      </div>\n';
   return html;
+}
+
+// ===== RENDERING: FRESHNESS =====
+
+// The visible byline and the meta date both derive from the top-level "updated" field, so a
+// directory refresh can never leave the page claiming an older date than its own data.
+function updatedDate(data) {
+  return data.updated || new Date().toISOString().slice(0, 10);
+}
+
+function renderUpdatedHtml(data) {
+  var updated = updatedDate(data);
+  return 'Updated <time datetime="' + escapeHtml(updated) + '">' + escapeHtml(formatFeedDate(updated)) + '</time>';
+}
+
+function renderMetaDateHtml(data) {
+  return '    <meta name="date" content="' + escapeHtml(updatedDate(data)) + '">';
 }
 
 // ===== RENDERING: WINDOW.__YOUTUBE_CREATORS JS =====
@@ -1051,6 +1071,8 @@ function generate(sourcePath, templatePath) {
   templateHtml = replaceMarker(templateHtml, 'CREATORS_JSON_LD', jsonLdHtml);
   templateHtml = replaceMarker(templateHtml, 'CREATORS_NOSCRIPT', noscriptHtml);
   templateHtml = replaceMarker(templateHtml, 'CREATORS_NOTE', disclaimerHtml);
+  templateHtml = replaceMarker(templateHtml, 'CREATORS_UPDATED', renderUpdatedHtml(data));
+  templateHtml = replaceMarker(templateHtml, 'CREATORS_META_DATE', renderMetaDateHtml(data));
 
   // Normalize to template's original EOL style
   if (hasCrlf) {
@@ -1062,6 +1084,29 @@ function generate(sourcePath, templatePath) {
   }
 
   return { success: true, errors: [], html: templateHtml, js: jsOutput };
+}
+
+// ===== SITEMAP =====
+
+// Editorial sitemap entries are hand-maintained, so the directory's entry drifts ahead of or
+// behind the page unless the refresh that rewrites the page also rewrites it.
+function updateSitemapLastmod(sitemapPath, pageUrl, lastmod) {
+  if (!fs.existsSync(sitemapPath)) return false;
+  var xml = fs.readFileSync(sitemapPath, 'utf8');
+  var matched = false;
+  var next = xml.replace(/<url>[\s\S]*?<\/url>/g, function (block) {
+    var loc = block.match(/<loc>([^<]+)<\/loc>/);
+    if (!loc || loc[1] !== pageUrl) return block;
+    var lastmodMatches = block.match(/<lastmod>[^<]*<\/lastmod>/g) || [];
+    if (lastmodMatches.length !== 1) {
+      throw new Error('sitemap entry must have exactly one lastmod for ' + pageUrl);
+    }
+    matched = true;
+    return block.replace(/<lastmod>[^<]*<\/lastmod>/, '<lastmod>' + lastmod + '</lastmod>');
+  });
+  if (!matched) throw new Error('sitemap.xml has no entry for ' + pageUrl);
+  fs.writeFileSync(sitemapPath, next, 'utf8');
+  return true;
 }
 
 // ===== CLI =====
@@ -1097,6 +1142,11 @@ if (require.main === module) {
   if (result.html) {
     fs.writeFileSync(templatePath, result.html, 'utf8');
     console.log('Updated ' + templatePath);
+
+    var sitemapPath = path.join(rootDir, 'sitemap.xml');
+    var sitemapLastmod = updatedDate(JSON.parse(fs.readFileSync(sourcePath, 'utf8')));
+    updateSitemapLastmod(sitemapPath, SITE_ORIGIN + '/guide/creators/', sitemapLastmod);
+    console.log('Updated sitemap lastmod for /guide/creators/ -> ' + sitemapLastmod);
   }
 
   // Idempotency check
@@ -1132,6 +1182,9 @@ module.exports = {
   renderJsonLdHtml: renderJsonLdHtml,
   renderNoscriptHtml: renderNoscriptHtml,
   renderDisclaimerHtml: renderDisclaimerHtml,
+  renderUpdatedHtml: renderUpdatedHtml,
+  renderMetaDateHtml: renderMetaDateHtml,
+  updatedDate: updatedDate,
   renderJsOutput: renderJsOutput,
   renderVideoCard: renderVideoCard,
   // Video objects + watch pages

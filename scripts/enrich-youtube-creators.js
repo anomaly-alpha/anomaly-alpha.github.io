@@ -222,6 +222,10 @@ async function main() {
 
     if (result.ok) {
       target.youtube = result.data;
+      // Watch pages render lastChecked as "Last verified", so it has to move with the check that
+      // just happened. Nothing else writes it, and leaving it behind made pages claim dates
+      // months older than the metadata they were showing.
+      target.lastChecked = result.data.checkedAt;
       updated++;
       if (result.data.durationSeconds) durations++;
       if (result.data.publishedAt) dates++;
