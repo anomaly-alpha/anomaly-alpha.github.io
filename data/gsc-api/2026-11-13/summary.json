@@ -1,0 +1,287 @@
+{
+  "site": "https://anomaly-alpha.github.io/",
+  "generatedAt": "2026-11-13T23:47:22.927Z",
+  "periods": {
+    "full": {
+      "start": "2026-05-15",
+      "end": "2026-11-11",
+      "days": 181
+    },
+    "current": {
+      "start": "2026-10-15",
+      "end": "2026-11-11",
+      "days": 28
+    },
+    "previous": {
+      "start": "2026-09-17",
+      "end": "2026-10-14",
+      "days": 28
+    }
+  },
+  "totals": {
+    "full": {
+      "clicks": 23555,
+      "impressions": 168740,
+      "ctr": 13.96,
+      "position": 5.05,
+      "rows": 181
+    },
+    "current": {
+      "clicks": 7883,
+      "impressions": 42875,
+      "ctr": 18.39,
+      "position": 4.13,
+      "rows": 28
+    },
+    "previous": {
+      "clicks": 5359,
+      "impressions": 28732,
+      "ctr": 18.65,
+      "position": 4.27,
+      "rows": 28
+    }
+  },
+  "change": {
+    "clicksPct": 47.1,
+    "impressionsPct": 49.2,
+    "ctrPct": -0.26,
+    "positionDelta": -0.14
+  },
+  "datasets": [
+    {
+      "name": "daily-full",
+      "ok": true,
+      "rows": 181,
+      "startDate": "2026-05-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "date"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "queries-current",
+      "ok": true,
+      "rows": 605,
+      "startDate": "2026-10-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "query"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "queries-previous",
+      "ok": true,
+      "rows": 547,
+      "startDate": "2026-09-17",
+      "endDate": "2026-10-14",
+      "dimensions": [
+        "query"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "queries-full",
+      "ok": true,
+      "rows": 1375,
+      "startDate": "2026-05-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "query"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "pages-current",
+      "ok": true,
+      "rows": 10,
+      "startDate": "2026-10-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "page"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "pages-previous",
+      "ok": true,
+      "rows": 10,
+      "startDate": "2026-09-17",
+      "endDate": "2026-10-14",
+      "dimensions": [
+        "page"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "pages-full",
+      "ok": true,
+      "rows": 11,
+      "startDate": "2026-05-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "page"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "countries-current",
+      "ok": true,
+      "rows": 172,
+      "startDate": "2026-10-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "country"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "countries-previous",
+      "ok": true,
+      "rows": 152,
+      "startDate": "2026-09-17",
+      "endDate": "2026-10-14",
+      "dimensions": [
+        "country"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "countries-full",
+      "ok": true,
+      "rows": 198,
+      "startDate": "2026-05-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "country"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "devices-current",
+      "ok": true,
+      "rows": 3,
+      "startDate": "2026-10-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "device"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "devices-previous",
+      "ok": true,
+      "rows": 3,
+      "startDate": "2026-09-17",
+      "endDate": "2026-10-14",
+      "dimensions": [
+        "device"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "devices-full",
+      "ok": true,
+      "rows": 3,
+      "startDate": "2026-05-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "device"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "query-pages-current",
+      "ok": true,
+      "rows": 861,
+      "startDate": "2026-10-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "query",
+        "page"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "query-pages-previous",
+      "ok": true,
+      "rows": 808,
+      "startDate": "2026-09-17",
+      "endDate": "2026-10-14",
+      "dimensions": [
+        "query",
+        "page"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "search-appearance-current",
+      "ok": true,
+      "rows": 1,
+      "startDate": "2026-10-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "searchAppearance"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "search-appearance-full",
+      "ok": true,
+      "rows": 1,
+      "startDate": "2026-05-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "searchAppearance"
+      ],
+      "type": "web"
+    },
+    {
+      "name": "discover-daily-full",
+      "ok": true,
+      "rows": 181,
+      "startDate": "2026-05-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "date"
+      ],
+      "type": "discover"
+    },
+    {
+      "name": "image-daily-full",
+      "ok": true,
+      "rows": 181,
+      "startDate": "2026-05-15",
+      "endDate": "2026-11-11",
+      "dimensions": [
+        "date"
+      ],
+      "type": "image"
+    },
+    {
+      "name": "sitemaps",
+      "ok": true,
+      "kind": "sitemap-status",
+      "count": 1,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "name": "url-inspection",
+      "ok": true,
+      "kind": "url-inspection",
+      "count": 45,
+      "failures": 0,
+      "verdicts": {
+        "PASS": 10,
+        "NEUTRAL": 35
+      },
+      "canonicalMismatches": [],
+      "richResultErrors": 0
+    }
+  ],
+  "firstDate": "2026-05-15",
+  "lastDate": "2026-11-11",
+  "note": "Search Analytics API (web type unless named otherwise). Queries are anonymized in aggregate; row sums may be below daily totals."
+}

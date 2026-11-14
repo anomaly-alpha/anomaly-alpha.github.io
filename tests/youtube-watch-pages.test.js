@@ -248,6 +248,15 @@ test('buildVideoObject satisfies Google required properties', function () {
   assert.ok(vo.embedUrl.indexOf('youtube-nocookie.com/embed/' + video.id) !== -1, 'privacy-enhanced embedUrl');
 });
 
+test('buildVideoObject credits the creator as a Person with the channel URL', function () {
+  var creator = { name: 'Creator c1', channelUrl: 'https://www.youtube.com/@c1' };
+  var vo = gen.buildVideoObject(makeVideo(), creator);
+  assert.strictEqual(vo.author['@type'], 'Person', 'author must stay a Person');
+  assert.strictEqual(vo.creator['@type'], 'Person', 'creator must be a Person');
+  assert.strictEqual(vo.creator.name, creator.name, 'creator name must match');
+  assert.strictEqual(vo.creator.url, creator.channelUrl, 'creator url must be the channel URL');
+});
+
 test('buildVideoObject omits contentUrl instead of declaring a page URL as media', function () {
   var vo = gen.buildVideoObject(makeVideo(), { name: 'C', channelUrl: 'https://www.youtube.com/@c' });
   assert.strictEqual(vo.contentUrl, undefined, 'contentUrl must not be the watch page URL');
@@ -316,6 +325,17 @@ test('watch page emits only timezone-qualified datetimes', function () {
     assert.ok(/(Z|[+-]\d{2}:\d{2})"$/.test(field), 'missing timezone in ' + field);
     assert.ok(!/T\d{2}:\d{2}(?::\d{2})?"$/.test(field), 'datetime without offset in ' + field);
   });
+});
+
+test('watch hub defines the WebSite node it references', function () {
+  var data = makeData([makeCreator('c1', 1)]);
+  var graph = pageGraph(watch.renderHub(data).html);
+  var sites = graph['@graph'].filter(function (n) { return n['@type'] === 'WebSite'; });
+  assert.strictEqual(sites.length, 1, 'hub must define exactly one WebSite, found ' + sites.length);
+  assert.strictEqual(sites[0]['@id'], 'https://anomaly-alpha.github.io/#website', 'canonical WebSite @id');
+  var collection = graph['@graph'].filter(function (n) { return n['@type'] === 'CollectionPage'; })[0];
+  assert.ok(collection, 'hub CollectionPage present');
+  assert.strictEqual(collection.isPartOf['@id'], sites[0]['@id'], 'isPartOf must resolve to the defined WebSite');
 });
 
 test('watch page player is present at load without user interaction', function () {

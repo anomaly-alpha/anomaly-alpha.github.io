@@ -36,25 +36,52 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ProfilePage",
-      "headline": "Anomaly — Author Profile",
-      "description": "Creator of the Invincible GTG Gem Calculator and guide pages.",
-      "url": "https://anomaly-alpha.github.io/authors/anomaly/",
-      "mainEntity": {
-        "@type": "Person",
-        "@id": "https://anomaly-alpha.github.io/authors/anomaly/#person",
-        "name": "Anomaly",
-        "url": "https://anomaly-alpha.github.io/authors/anomaly/",
-        "description": "Creator of the Invincible GTG Gem Calculator, a community-driven fan site for Invincible Guarding the Globe players.",
-        "sameAs": ["https://github.com/anomaly-alpha"]
-      },
-      "about": {
-        "@type": "WebApplication",
-        "name": "Invincible GTG Gem Calculator",
-        "url": "https://anomaly-alpha.github.io/",
-        "applicationCategory": "Utilities",
-        "operatingSystem": "Web"
-      }
+      "@graph": [
+        {
+          "@type": "ProfilePage",
+          "@id": "https://anomaly-alpha.github.io/authors/anomaly/",
+          "headline": "Anomaly — Author Profile",
+          "description": "Creator of the Invincible GTG Gem Calculator and guide pages.",
+          "url": "https://anomaly-alpha.github.io/authors/anomaly/",
+          "dateCreated": "2025-01-01T00:00:00+00:00",
+          "dateModified": "2026-11-13T00:00:00+00:00",
+          "inLanguage": "en",
+          "isPartOf": {
+            "@id": "https://anomaly-alpha.github.io/#website"
+          },
+          "mainEntity": {
+            "@type": "Person",
+            "@id": "https://anomaly-alpha.github.io/authors/anomaly/#person",
+            "name": "Anomaly",
+            "url": "https://anomaly-alpha.github.io/authors/anomaly/",
+            "image": "https://anomaly-alpha.github.io/og-images/home.png",
+            "jobTitle": "Founder and editor",
+            "description": "Creator of the Invincible GTG Gem Calculator, a community-driven fan site for Invincible Guarding the Globe players.",
+            "knowsAbout": [
+              "Invincible: Guarding the Globe",
+              "Mobile game promo codes",
+              "PvP reward payouts",
+              "Gacha progression"
+            ],
+            "sameAs": ["https://github.com/anomaly-alpha"]
+          },
+          "about": {
+            "@type": "WebApplication",
+            "name": "Invincible GTG Gem Calculator",
+            "url": "https://anomaly-alpha.github.io/",
+            "applicationCategory": "Utilities",
+            "operatingSystem": "Web"
+          }
+        },
+        {
+          "@id": "https://anomaly-alpha.github.io/#website",
+          "@type": "WebSite",
+          "name": "Invincible GTG",
+          "alternateName": "Invincible Guarding the Globe Guides",
+          "url": "https://anomaly-alpha.github.io/",
+          "inLanguage": "en"
+        }
+      ]
     }
     </script>
     <style>

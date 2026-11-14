@@ -47,42 +47,59 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Privacy Policy — Invincible GTG",
-      "description": "Privacy Policy for the Invincible GTG Gem Calculator. We use Google Analytics to understand pseudonymous site usage. No user registration or forms are provided.",
-      "datePublished": "2026-07-17",
-      "dateModified": "2026-09-04",
-      "author": {
-        "@type": "Person",
-        "@id": "https://anomaly-alpha.github.io/authors/anomaly/#person",
-        "name": "Anomaly",
-        "url": "https://anomaly-alpha.github.io/authors/anomaly/"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "@id": "https://anomaly-alpha.github.io/#organization",
-        "name": "Anomaly Alpha",
-        "url": "https://anomaly-alpha.github.io/",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://anomaly-alpha.github.io/og-images/home.png",
-          "width": 1200,
-          "height": 630,
-          "license": "https://anomaly-alpha.github.io/",
-          "acquireLicensePage": "https://anomaly-alpha.github.io/",
-          "creditText": "Anomaly Alpha",
-          "copyrightNotice": "© Anomaly Alpha",
-          "creator": { "@type": "Organization", "name": "Anomaly Alpha" }
+      "@graph": [
+        {
+          "@type": "Article",
+          "headline": "Privacy Policy — Invincible GTG",
+          "description": "Privacy Policy for the Invincible GTG Gem Calculator. We use Google Analytics to understand pseudonymous site usage. No user registration or forms are provided.",
+          "url": "https://anomaly-alpha.github.io/privacy/",
+          "datePublished": "2026-07-17T00:00:00+00:00",
+          "dateModified": "2026-09-04T00:00:00+00:00",
+          "author": {
+            "@type": "Person",
+            "@id": "https://anomaly-alpha.github.io/authors/anomaly/#person",
+            "name": "Anomaly",
+            "url": "https://anomaly-alpha.github.io/authors/anomaly/"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "@id": "https://anomaly-alpha.github.io/#organization",
+            "name": "Anomaly Alpha",
+            "url": "https://anomaly-alpha.github.io/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://anomaly-alpha.github.io/og-images/home.png",
+              "width": 1200,
+              "height": 630,
+              "license": "https://anomaly-alpha.github.io/",
+              "acquireLicensePage": "https://anomaly-alpha.github.io/",
+              "creditText": "Anomaly Alpha",
+              "copyrightNotice": "© Anomaly Alpha",
+              "creator": { "@type": "Organization", "name": "Anomaly Alpha" }
+            },
+            "sameAs": ["https://github.com/anomaly-alpha/anomaly-alpha.github.io"]
+          },
+          "isAccessibleForFree": true,
+          "about": {
+            "@type": "VideoGame",
+            "@id": "https://anomaly-alpha.github.io/#game",
+            "name": "Invincible Guarding the Globe"
+          },
+          "image": "https://anomaly-alpha.github.io/og-images/home.png",
+          "inLanguage": "en",
+          "isPartOf": {
+            "@id": "https://anomaly-alpha.github.io/#website"
+          }
         },
-        "sameAs": ["https://github.com/anomaly-alpha/anomaly-alpha.github.io"]
-      },
-      "isAccessibleForFree": true,
-      "about": {
-        "@type": "VideoGame",
-        "@id": "https://anomaly-alpha.github.io/#game",
-        "name": "Invincible Guarding the Globe"
-      },
-      "image": "https://anomaly-alpha.github.io/og-images/home.png"
+        {
+          "@id": "https://anomaly-alpha.github.io/#website",
+          "@type": "WebSite",
+          "name": "Invincible GTG",
+          "alternateName": "Invincible Guarding the Globe Guides",
+          "url": "https://anomaly-alpha.github.io/",
+          "inLanguage": "en"
+        }
+      ]
     }
     </script>
 </head>

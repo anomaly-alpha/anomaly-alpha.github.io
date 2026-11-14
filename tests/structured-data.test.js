@@ -80,6 +80,26 @@ function allNodes(value) {
   return result;
 }
 
+function nodeTypes(node) {
+  return Array.isArray(node['@type']) ? node['@type'] : [node['@type']];
+}
+
+// Same traversal as allNodes, but carries the property path so a rule can exempt nested
+// payloads such as publisher.logo (a logo is not a page image).
+function walkWithPath(value, visit, trail) {
+  const here = trail || [];
+  if (!value || typeof value !== 'object') return;
+  if (Array.isArray(value)) { value.forEach((item, i) => walkWithPath(item, visit, here.concat(i))); return; }
+  visit(value, here);
+  for (const [key, child] of Object.entries(value)) walkWithPath(child, visit, here.concat(key));
+}
+
+const SITE_ROOT = 'https://anomaly-alpha.github.io/';
+
+function normalizeId(id) {
+  return typeof id === 'string' && id.startsWith('#') ? SITE_ROOT + id.slice(1) : id;
+}
+
 // ===== JSON-LD presence and @context =====
 
 for (const file of PAGES) {
@@ -121,7 +141,7 @@ const canonicalUrls = {
 };
 const requiredTypes = {
   'index.html': ['WebPage'],
-  'guide/code/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'HowTo', 'FAQPage', 'DefinedTerm'],
+  'guide/code/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
   'guide/beginners/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
   'guide/event/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
   'guide/wish-event/index.html': ['BreadcrumbList', 'VideoGame', 'Article', 'FAQPage', 'DefinedTerm'],
@@ -230,46 +250,85 @@ for (const url of ['https://anomaly-alpha.github.io/', 'https://anomaly-alpha.gi
 }
 
 // ===== Local reference resolution =====
-// Defined IDs collected only from top-level JSON-LD nodes (standalone blocks or @graph members).
-// Nested property values inspected recursively; @context and top-level nodes skipped.
-// Fragment IDs normalized against SITE_ROOT. Dangling untyped references fail.
+// A reference is an object carrying @id plus @type and nothing else; an object carrying @id
+// plus any other property is an inline definition and defines its own id. Fragment IDs are
+// normalized against SITE_ROOT. Every reference must resolve inside its own page's graph.
 
-const SITE_ROOT = 'https://anomaly-alpha.github.io/';
 for (const file of PAGES) {
   const blocks = blocksFor(file);
+  const definedIds = new Set(nodesFor(blocks).filter(node => node['@id']).map(node => normalizeId(node['@id'])));
+  walkWithPath(blocks, node => {
+    if (!node['@id']) return;
+    if (Object.keys(node).some(key => key !== '@id' && key !== '@type')) definedIds.add(normalizeId(node['@id']));
+  });
+  walkWithPath(blocks, node => {
+    if (!node['@id'] || !node['@type']) return;
+    if (Object.keys(node).some(key => key !== '@id' && key !== '@type')) return;
+    assert(definedIds.has(normalizeId(node['@id'])),
+      file + ': dangling ' + nodeTypes(node).join('/') + ' reference @id "' + node['@id'] + '"');
+  });
+}
 
-  const topLevelNodes = new Set();
-  const definedIds = new Set();
-  for (const block of blocks) {
-    if (block['@graph']) {
-      for (const node of block['@graph']) {
-        topLevelNodes.add(node);
-        if (node['@id']) {
-          definedIds.add(node['@id'].startsWith('#') ? SITE_ROOT + node['@id'] : node['@id']);
-        }
-      }
-    } else {
-      topLevelNodes.add(block);
-      if (block['@id']) {
-        definedIds.add(block['@id'].startsWith('#') ? SITE_ROOT + block['@id'] : block['@id']);
-      }
+// ===== Entity graph invariants (I1-I6) =====
+// Mirrors scripts/verify-structured-data.js so the static and browser suites cannot drift.
+
+const PAGE_NODE_TYPES = new Set(['WebPage', 'CollectionPage', 'ProfilePage', 'AboutPage', 'Article', 'ItemPage']);
+const FORBIDDEN_TYPES = new Set(['HowTo', 'SearchAction', 'Product', 'Review']);
+const DATE_PROPERTIES = ['datePublished', 'dateModified', 'dateCreated', 'uploadDate', 'expires'];
+const OFFSET_QUALIFIED_DATE = /T\d{2}:\d{2}(:\d{2})?([+-]\d{2}:\d{2}|Z)$/;
+
+for (const file of PAGES) {
+  const blocks = blocksFor(file);
+  const nodes = nodesFor(blocks);
+  const pageUrl = canonicalUrls[file];
+
+  // I1 - exactly one WebSite node, canonical @id, name and language
+  const websites = nodes.filter(node => nodeTypes(node).includes('WebSite'));
+  assert.strictEqual(websites.length, 1, file + ': expected exactly one WebSite node, found ' + websites.length);
+  assert.strictEqual(websites[0]['@id'], SITE_ROOT + '#website', file + ': WebSite @id must be ' + SITE_ROOT + '#website');
+  assert(websites[0].name, file + ': WebSite missing name');
+  assert(websites[0].inLanguage, file + ': WebSite missing inLanguage');
+
+  // I2 - exactly one page-level node, describing this page URL directly or by fragment
+  const pageNodes = nodes.filter(node => {
+    if (!nodeTypes(node).some(type => PAGE_NODE_TYPES.has(type))) return false;
+    return [node.url, node['@id']]
+      .filter(value => typeof value === 'string')
+      .map(normalizeId)
+      .some(value => value === pageUrl || value.indexOf(pageUrl + '#') === 0);
+  });
+  assert.strictEqual(pageNodes.length, 1,
+    file + ': expected exactly one page-level node for ' + pageUrl + ', found ' + pageNodes.length);
+
+  // I4 - every datetime carries a timezone offset
+  for (const node of allNodes(blocks)) {
+    for (const key of DATE_PROPERTIES) {
+      const value = node[key];
+      if (typeof value !== 'string') continue;
+      assert(OFFSET_QUALIFIED_DATE.test(value), file + ': ' + key + ' lacks a timezone offset: ' + value);
     }
   }
 
-  (function checkRefs(obj) {
-    if (!obj || typeof obj !== 'object') return;
-    if (Array.isArray(obj)) { obj.forEach(checkRefs); return; }
-    if (obj['@id'] && !topLevelNodes.has(obj)) {
-      const refId = obj['@id'].startsWith('#') ? SITE_ROOT + obj['@id'] : obj['@id'];
-      if (!definedIds.has(refId)) {
-        assert(obj['@type'], file + ': dangling reference @id "' + obj['@id'] + '"');
-      }
-    }
-    for (const [k, v] of Object.entries(obj)) {
-      if (k === '@context') continue;
-      if (typeof v === 'object' && v !== null) checkRefs(v);
-    }
-  })(blocks);
+  // I5 - owned images carry dimensions and a licence or credit. Publisher logos are not page
+  // images and YouTube thumbnails are third-party assets that must not claim a licence.
+  walkWithPath(blocks, (node, trail) => {
+    if (!nodeTypes(node).includes('ImageObject')) return;
+    const imageUrl = node.contentUrl || node.url;
+    if (typeof imageUrl !== 'string' || imageUrl.indexOf(SITE_ROOT) !== 0) return;
+    if (trail.indexOf('logo') !== -1) return;
+    assert(node.width, file + ': ImageObject missing width: ' + imageUrl);
+    assert(node.height, file + ': ImageObject missing height: ' + imageUrl);
+    assert(node.license || node.creator || node.creditText || node.copyrightNotice,
+      file + ': ImageObject missing license/creator/creditText/copyrightNotice: ' + imageUrl);
+  });
+
+  // I6 - retired and policy-risky markup
+  walkWithPath(blocks, node => {
+    nodeTypes(node).forEach(type => {
+      assert(!FORBIDDEN_TYPES.has(type), file + ': forbidden @type ' + type);
+    });
+    assert.strictEqual(node.aggregateRating, undefined, file + ': forbidden property aggregateRating');
+  });
 }
 
 // ===== Generator idempotency =====

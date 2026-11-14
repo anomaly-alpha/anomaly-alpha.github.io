@@ -230,6 +230,18 @@ function buildKeywords(video, creator, entities) {
   return terms.filter(Boolean).join(', ');
 }
 
+// Canonical WebSite entity. Every graph that references /#website defines it here.
+function websiteNode() {
+  return {
+    '@id': SITE_ORIGIN + '/#website',
+    '@type': 'WebSite',
+    'name': 'Invincible GTG',
+    'alternateName': 'Invincible Guarding the Globe Guides',
+    'url': SITE_ORIGIN + '/',
+    'inLanguage': 'en'
+  };
+}
+
 function buildGraph(video, creator, meta, entities) {
   var watchUrl = gen.watchPageUrl(video);
   var title = meta.title;
@@ -239,13 +251,7 @@ function buildGraph(video, creator, meta, entities) {
   return {
     '@context': 'https://schema.org',
     '@graph': [
-      {
-        '@id': SITE_ORIGIN + '/#website',
-        '@type': 'WebSite',
-        'name': 'Invincible GTG',
-        'url': SITE_ORIGIN + '/',
-        'inLanguage': 'en'
-      },
+      websiteNode(),
       {
         '@id': SITE_ORIGIN + '/#game',
         '@type': 'VideoGame',
@@ -728,28 +734,33 @@ function renderHub(data) {
   h.push('    <script type="application/ld+json">');
   h.push(gen.escapeJsonLd(JSON.stringify({
     '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    '@id': SITE_ORIGIN + '/watch/',
-    'url': SITE_ORIGIN + '/watch/',
-    'name': 'Invincible GTG Video Watch Pages',
-    'description': 'Index of dedicated watch pages for tracked Invincible: Guarding the Globe creator videos.',
-    'inLanguage': 'en',
-    'isPartOf': { '@id': SITE_ORIGIN + '/#website' },
-    'mainEntity': {
-      '@type': 'ItemList',
-      'numberOfItems': total,
-      'itemListElement': groups.reduce(function (acc, group) {
-        for (var vi = 0; vi < group.videos.length; vi++) {
-          acc.push({
-            '@type': 'ListItem',
-            'position': acc.length + 1,
-            'name': group.videos[vi].title,
-            'url': gen.watchPageUrl(group.videos[vi])
-          });
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': SITE_ORIGIN + '/watch/',
+        'url': SITE_ORIGIN + '/watch/',
+        'name': 'Invincible GTG Video Watch Pages',
+        'description': 'Index of dedicated watch pages for tracked Invincible: Guarding the Globe creator videos.',
+        'inLanguage': 'en',
+        'isPartOf': { '@id': SITE_ORIGIN + '/#website' },
+        'mainEntity': {
+          '@type': 'ItemList',
+          'numberOfItems': total,
+          'itemListElement': groups.reduce(function (acc, group) {
+            for (var vi = 0; vi < group.videos.length; vi++) {
+              acc.push({
+                '@type': 'ListItem',
+                'position': acc.length + 1,
+                'name': group.videos[vi].title,
+                'url': gen.watchPageUrl(group.videos[vi])
+              });
+            }
+            return acc;
+          }, [])
         }
-        return acc;
-      }, [])
-    }
+      },
+      websiteNode()
+    ]
   }, null, 2)));
   h.push('    </script>');
   h.push('</head>');

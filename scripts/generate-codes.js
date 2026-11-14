@@ -11,6 +11,9 @@ const sitemapPath = path.join(rootDir, 'sitemap.xml');
 
 const { codes, updated, seoMonth } = JSON.parse(fs.readFileSync(codesPath, 'utf8'));
 
+// JSON-LD datetimes need an offset; a bare YYYY-MM-DD fails Google's datetime validation.
+const updatedIso = updated + 'T00:00:00+00:00';
+
 const active = codes.filter(c => !c.expired);
 const expired = codes.filter(c => c.expired);
 
@@ -233,8 +236,8 @@ const replacements = [
   // JSON-LD dateModified
   [/<!--GUIDE_LD_DATEMODIFIED_START-->[^]*?<!--GUIDE_LD_DATEMODIFIED_END-->|^([ ]*)"dateModified": "[^"]*"/m,
     (match, indent) => match.startsWith('<!--')
-      ? '<!--GUIDE_LD_DATEMODIFIED_START-->' + String.fromCharCode(10) + '          "dateModified": "' + updated + '"' + String.fromCharCode(10) + '<!--GUIDE_LD_DATEMODIFIED_END-->'
-      : (indent || '') + '"dateModified": "' + updated + '"'],
+      ? '<!--GUIDE_LD_DATEMODIFIED_START-->' + String.fromCharCode(10) + '          "dateModified": "' + updatedIso + '"' + String.fromCharCode(10) + '<!--GUIDE_LD_DATEMODIFIED_END-->'
+      : (indent || '') + '"dateModified": "' + updatedIso + '"'],
 
   // Subtitle: "N Active Promo Codes — Tap, Copy, Redeem"
   [/\d+ Active Promo Codes — Tap, Copy, Redeem/g, `${activeCount} Active Promo Codes — Tap, Copy, Redeem`],
@@ -304,7 +307,7 @@ faqHtml = faqHtml.replace(/<meta name="date" content="[^"]*">/, `<meta name="dat
 faqHtml = faqHtml.replace(/<meta property="article:modified_time" content="[^"]*">/, `<meta property="article:modified_time" content="${updated}T00:00:00Z">`);
 const faqLdDateMatches = faqHtml.match(/"dateModified": "[^"]*"/g) || [];
 if (faqLdDateMatches.length !== 1) throw new Error(`FAQ JSON-LD dateModified expected once, found ${faqLdDateMatches.length}`);
-faqHtml = faqHtml.replace(/"dateModified": "[^"]*"/, `"dateModified": "${updated}"`);
+faqHtml = faqHtml.replace(/"dateModified": "[^"]*"/, `"dateModified": "${updatedIso}"`);
 const faqBylineMatches = faqHtml.match(/Updated <time datetime="[^"]*">[^<]*<\/time>/g) || [];
 if (faqBylineMatches.length !== 1) throw new Error(`FAQ byline date expected once, found ${faqBylineMatches.length}`);
 faqHtml = faqHtml.replace(/Updated <time datetime="[^"]*">[^<]*<\/time>/, `Updated <time datetime="${updated}">${formattedDate}</time>`);

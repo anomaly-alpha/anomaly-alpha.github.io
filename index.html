@@ -862,12 +862,16 @@
       "@context": "https://schema.org",
       "@graph": [
         {
-          "@id": "#webpage",
+          "@id": "https://anomaly-alpha.github.io/#webpage",
           "@type": "WebPage",
           "name": "Invincible GTG Gem Calculator — Codes & Rewards [Nov 2026]",
           "description": "Free Invincible Guarding the Globe gem calculator. Enter PvP rank, promo codes, and login streak to get your exact weekly gems — ~4,043/week combined.",
           "url": "https://anomaly-alpha.github.io/",
-          "dateModified": "2026-10-31",
+          "isPartOf": { "@id": "https://anomaly-alpha.github.io/#website" },
+          "mainEntityOfPage": "https://anomaly-alpha.github.io/",
+          "primaryImageOfPage": { "@id": "https://anomaly-alpha.github.io/og-images/home.png" },
+          "inLanguage": "en",
+          "dateModified": "2026-10-31T00:00:00+00:00",
           "speakable": {
             "@type": "SpeakableSpecification",
             "cssSelector": [".gem-counter", ".gem-mode-btn__count", ".gem-subtitle--hero"]
@@ -880,10 +884,7 @@
             { "@type": "WebPageElement", "name": "Event Rewards", "url": "https://anomaly-alpha.github.io/guide/event/" },
             { "@type": "WebPageElement", "name": "Beginner's Guide", "url": "https://anomaly-alpha.github.io/guide/beginners/" }
           ],
-          "about": {
-            "@type": "VideoGame",
-            "name": "Invincible Guarding the Globe"
-          },
+          "about": { "@id": "https://anomaly-alpha.github.io/#game" },
           "audience": {
             "@type": "Audience",
             "audienceType": "Mobile gamers and Invincible fans"
@@ -927,17 +928,12 @@
           }
         },
         {
+          "@id": "https://anomaly-alpha.github.io/#website",
           "@type": "WebSite",
           "name": "Invincible GTG",
+          "alternateName": "Invincible Guarding the Globe Guides",
           "url": "https://anomaly-alpha.github.io/",
-          "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-              "@type": "EntryPoint",
-              "urlTemplate": "https://www.google.com/search?q=site:anomaly-alpha.github.io+{search_term_string}"
-            },
-            "query-input": "required name=search_term_string"
-          }
+          "inLanguage": "en"
         },
         {
           "@type": "BreadcrumbList",
@@ -960,20 +956,18 @@
           "browserRequirements": "Requires JavaScript"
         },
         {
-          "@type": "WebPageElement",
-          "name": "Image",
-          "image": {
-            "@type": "ImageObject",
-            "contentUrl": "https://anomaly-alpha.github.io/og-images/home.png",
-            "width": 1200,
-            "height": 630,
-            "caption": "Gem Rewards & PvP Guide — ~4,043 GEMS/WEEK",
-            "license": "https://anomaly-alpha.github.io/",
-            "acquireLicensePage": "https://anomaly-alpha.github.io/",
-            "creditText": "Anomaly Alpha",
-            "copyrightNotice": "© Anomaly Alpha",
-            "creator": { "@type": "Organization", "name": "Anomaly Alpha" }
-          }
+          "@id": "https://anomaly-alpha.github.io/og-images/home.png",
+          "@type": "ImageObject",
+          "contentUrl": "https://anomaly-alpha.github.io/og-images/home.png",
+          "url": "https://anomaly-alpha.github.io/og-images/home.png",
+          "width": 1200,
+          "height": 630,
+          "caption": "Gem Rewards & PvP Guide — ~4,043 GEMS/WEEK",
+          "license": "https://anomaly-alpha.github.io/",
+          "acquireLicensePage": "https://anomaly-alpha.github.io/",
+          "creditText": "Anomaly Alpha",
+          "copyrightNotice": "© Anomaly Alpha",
+          "creator": { "@type": "Organization", "name": "Anomaly Alpha", "@id": "https://anomaly-alpha.github.io/#organization" }
         },
         {
           "@type": "Organization",
@@ -1017,13 +1011,7 @@
           "applicationCategory": "GameApplication",
           "author": { "@type": "Organization", "name": "Ubisoft Barcelona" },
           "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
-          "sameAs": "https://apps.apple.com/us/app/invincible-guarding-the-globe/id6449294809",
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.8",
-            "bestRating": "5",
-            "ratingCount": "63000"
-          }
+          "sameAs": "https://apps.apple.com/us/app/invincible-guarding-the-globe/id6449294809"
         },
         {
           "@type": "MobileApplication",
@@ -1032,13 +1020,7 @@
           "applicationCategory": "GameApplication",
           "author": { "@type": "Organization", "name": "Ubisoft Barcelona" },
           "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
-          "sameAs": "https://play.google.com/store/apps/details?id=com.ubisoft.invincible.guardians.globe.idle.superhero.rpg.battle.afk",
-          "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.4",
-            "bestRating": "5",
-            "ratingCount": "86000"
-          }
+          "sameAs": "https://play.google.com/store/apps/details?id=com.ubisoft.invincible.guardians.globe.idle.superhero.rpg.battle.afk"
         },
         {
           "@type": "SoftwareSourceCode",
@@ -1092,22 +1074,6 @@
             { "@type": "ListItem", "position": 34, "item": { "@type": "Code", "name": "CONQST" } },
             { "@type": "ListItem", "position": 35, "item": { "@type": "Code", "name": "NOLAN4" } },
             { "@type": "ListItem", "position": 36, "item": { "@type": "Code", "name": "THKMRK" } }
-          ]
-        },
-        {
-          "@type": "CollectionPage",
-          "name": "Invincible Guarding the Globe Guides",
-          "description": "Complete collection of gem reward guides for Invincible Guarding the Globe.",
-          "url": "https://anomaly-alpha.github.io/",
-          "hasPart": [
-            { "@type": "WebPageElement", "name": "Code Guide", "url": "https://anomaly-alpha.github.io/guide/code/" },
-            { "@type": "WebPageElement", "name": "Event Guide", "url": "https://anomaly-alpha.github.io/guide/event/" },
-            { "@type": "WebPageElement", "name": "PvP Guide", "url": "https://anomaly-alpha.github.io/guide/pvp/" },
-            { "@type": "WebPageElement", "name": "Login Guide", "url": "https://anomaly-alpha.github.io/guide/login/" },
-            { "@type": "WebPageElement", "name": "FAQ Guide", "url": "https://anomaly-alpha.github.io/guide/faq/" },
-            { "@type": "WebPageElement", "name": "XP Guide", "url": "https://anomaly-alpha.github.io/guide/xp/" },
-            { "@type": "WebPageElement", "name": "Beginner Guide", "url": "https://anomaly-alpha.github.io/guide/beginners/" },
-            { "@type": "WebPageElement", "name": "YouTube Creators", "url": "https://anomaly-alpha.github.io/guide/creators/" }
           ]
         },
         {

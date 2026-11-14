@@ -3,6 +3,7 @@ const path = require('path');
 
 const DATA_PATH = path.join(__dirname, '..', 'data', 'playlists.json');
 const PAGE_PATH = path.join(__dirname, '..', 'music', 'index.html');
+const SITE_ORIGIN = 'https://anomaly-alpha.github.io';
 
 function escHtml(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -22,6 +23,11 @@ function formatDate(dateStr) {
 
 function isDateOnly(value) {
   return typeof value === 'string' && /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(value) && !isNaN(new Date(value + 'T00:00:00Z').getTime());
+}
+
+// JSON-LD datetimes need an offset; a bare YYYY-MM-DD fails Google's datetime validation.
+function isoDateTime(dateStr) {
+  return dateStr + 'T00:00:00+00:00';
 }
 
 function validatePlaylists(data) {
@@ -122,14 +128,9 @@ var schema = {
       'name': 'Music & Playlists — Invincible GTG',
       'url': 'https://anomaly-alpha.github.io/music/',
       // Hardcoded original page publication date — must not track reviewed/updated
-      'datePublished': '2026-07-17',
-      'dateModified': playlistData.reviewed,
-      'isPartOf': {
-        '@type': 'WebSite',
-        '@id': 'https://anomaly-alpha.github.io/#website',
-        'name': 'Invincible GTG',
-        'url': 'https://anomaly-alpha.github.io/'
-      }
+      'datePublished': isoDateTime('2026-07-17'),
+      'dateModified': isoDateTime(playlistData.reviewed),
+      'isPartOf': { '@id': SITE_ORIGIN + '/#website' }
     },
     {
       '@type': 'ItemList',
@@ -143,6 +144,14 @@ var schema = {
           'url': 'https://open.spotify.com/playlist/' + playlist.id
         };
       })
+    },
+    {
+      '@id': SITE_ORIGIN + '/#website',
+      '@type': 'WebSite',
+      'name': 'Invincible GTG',
+      'alternateName': 'Invincible Guarding the Globe Guides',
+      'url': SITE_ORIGIN + '/',
+      'inLanguage': 'en'
     }
   ]
 };

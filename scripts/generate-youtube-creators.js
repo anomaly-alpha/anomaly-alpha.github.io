@@ -764,6 +764,11 @@ function buildVideoObject(video, creator) {
       'name': creator.name,
       'url': creator.channelUrl
     },
+    'creator': {
+      '@type': 'Person',
+      'name': creator.name,
+      'url': creator.channelUrl
+    },
     'publisher': {
       '@type': 'Organization',
       'name': 'Anomaly Alpha',
@@ -810,7 +815,7 @@ function renderJsonLdHtml(data) {
         '@id': collectionUrl,
         'url': collectionUrl,
         'name': 'Invincible GTG Creator Videos',
-        'isPartOf': { '@id': SITE_ORIGIN + '/#game' },
+        'isPartOf': { '@id': SITE_ORIGIN + '/#website' },
         'mainEntity': { '@id': collectionUrl + '#video-index' }
       },
       {
@@ -825,6 +830,14 @@ function renderJsonLdHtml(data) {
             'url': watchPageUrl(item.video)
           };
         })
+      },
+      {
+        '@id': SITE_ORIGIN + '/#website',
+        '@type': 'WebSite',
+        'name': 'Invincible GTG',
+        'alternateName': 'Invincible Guarding the Globe Guides',
+        'url': SITE_ORIGIN + '/',
+        'inLanguage': 'en'
       }
     ]
   };
