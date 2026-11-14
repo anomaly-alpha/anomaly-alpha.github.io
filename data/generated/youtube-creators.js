@@ -15,6 +15,62 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 1,
     "videos": [
       {
+        "id": "8CZd5S2BkiQ",
+        "title": "All Shine, No Substance? - Invincible: Guarding the Globe",
+        "description": "First look at the new lock event and whether the reward rate is worth the gems.",
+        "category": "Events",
+        "published": "2026-11-12",
+        "featured": false
+      },
+      {
+        "id": "d_AMR6vMqgs",
+        "title": "AMAZING Event Returns! - Invincible: Guarding the Globe",
+        "description": "Coverage of the returning Wolf-Man event and the rewards on offer.",
+        "category": "Events",
+        "published": "2026-11-10",
+        "featured": false
+      },
+      {
+        "id": "xMxqySf-jNo",
+        "title": "Season Files Levels are TOO MUCH! - Invincible: Guarding the Globe",
+        "description": "Why the Season Files level curve is punishing and where the walls sit.",
+        "category": "Gameplay",
+        "published": "2026-11-09",
+        "featured": false
+      },
+      {
+        "id": "4dx2t-wmJsA",
+        "title": "MEGA GDA SUMMONS! - Invincible: Guarding the Globe",
+        "description": "A large GDA summons session and what the pulls returned.",
+        "category": "Gameplay",
+        "published": "2026-11-08",
+        "featured": false
+      },
+      {
+        "id": "_N_4zobsTWA",
+        "title": "Improved Cloning Frenzy! - Invincible: Guarding the Globe",
+        "description": "What changed in the reworked Cloning Frenzy event.",
+        "category": "Events",
+        "published": "2026-11-07",
+        "featured": false
+      },
+      {
+        "id": "cJoKvjn71Ps",
+        "title": "Golden Apple RETURNS! - Invincible: Guarding the Globe",
+        "description": "The Golden Apple event returns alongside the Flea Market.",
+        "category": "Events",
+        "published": "2026-11-05",
+        "featured": false
+      },
+      {
+        "id": "E9U_8VmKJG4",
+        "title": "Triple Pick WENT CRAZY! - Invincible: Guarding the Globe",
+        "description": "Triple Pick event results and a look at the drop rates.",
+        "category": "Events",
+        "published": "2026-11-04",
+        "featured": false
+      },
+      {
         "id": "YZXV62mJFWM",
         "title": "Guide to Event OPs! - Invincible: Guarding the Globe",
         "description": "Avatar Shuvd walks through event OPs and how to approach them in Invincible: Guarding the Globe.",
@@ -53,62 +109,6 @@ window.__YOUTUBE_CREATORS=[
         "category": "Guides",
         "published": "2026-10-29",
         "featured": false
-      },
-      {
-        "id": "-2BF6pSmbTE",
-        "title": "Hero Boot Camp Re-THIS AIN'T HALLOWEEN!! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd reviews the returning Hero Boot Camp event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-28",
-        "featured": false
-      },
-      {
-        "id": "45Znt_CCOjM",
-        "title": "Wolf-Man SKILL REVIEW! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd reviews Wolf-Man's skills in Invincible: Guarding the Globe.",
-        "category": "Guides",
-        "published": "2026-10-26",
-        "featured": false
-      },
-      {
-        "id": "CsBpoj0h2kc",
-        "title": "Summoning the Wolf! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd does budget summons for Wolf-Man in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-10-25",
-        "featured": false
-      },
-      {
-        "id": "Z3N6BceB3TU",
-        "title": "Wolf-Man LIVE SUMMONS!",
-        "description": "Avatar Shuvd livestreams Wolf-Man summons in Invincible: Guarding the Globe.",
-        "category": "Livestreams",
-        "published": "2026-10-24",
-        "featured": false
-      },
-      {
-        "id": "IQmgXG011PM",
-        "title": "Wolf-Man OUT FOR HALLOWEEN! - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd covers the Wolf-Man Halloween update in Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-10-24",
-        "featured": false
-      },
-      {
-        "id": "8o1KE1_OGO0",
-        "title": "BROKEN New PVP Champ!?",
-        "description": "Avatar Shuvd discusses a new PvP champion in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-10-23",
-        "featured": false
-      },
-      {
-        "id": "bImw5Xp777E",
-        "title": "DOG IN THE EVENT!? (stay strong, halloween is coming...) - Invincible: Guarding the Globe",
-        "description": "Avatar Shuvd covers the current event and Halloween content in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-22",
-        "featured": false
       }
     ]
   },
@@ -126,6 +126,14 @@ window.__YOUTUBE_CREATORS=[
     "status": "active",
     "displayOrder": 2,
     "videos": [
+      {
+        "id": "DpBpsKG3BO8",
+        "title": "so my neighbor got arrested...",
+        "description": "Storytime over a long Invincible GTG session.",
+        "category": "Gameplay",
+        "published": "2026-11-09",
+        "featured": false
+      },
       {
         "id": "q4Mwyb74H30",
         "title": "NOOB to PRO in INVINCIBLE Mobile Game: The ULTIMATE Guide for ALL Players (900+ Days F2P)",
@@ -336,6 +344,22 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 4,
     "videos": [
       {
+        "id": "tn3i3TWASi4",
+        "title": "FREE Hero Locks Best in Slot Event!! - Invincible: Guarding the Globe",
+        "description": "Best In Slot event with the free hero lock, and how to use it.",
+        "category": "Events",
+        "published": "2026-11-11",
+        "featured": false
+      },
+      {
+        "id": "bhrEdHFdx6A",
+        "title": "Is Pick & Drop the BEST F2P Event?! - Invincible: Guarding the Globe",
+        "description": "Whether Pick & Drop is the best value event for free-to-play players.",
+        "category": "Events",
+        "published": "2026-11-09",
+        "featured": false
+      },
+      {
         "id": "EClXP5eE-bw",
         "title": "LOCKED and RELOAD is actually GREAT?!! - Invincible: Guarding the Globe",
         "description": "TH3O reviews the Locked and Reload event in Invincible: Guarding the Globe.",
@@ -414,22 +438,6 @@ window.__YOUTUBE_CREATORS=[
         "category": "Events",
         "published": "2026-08-11",
         "featured": false
-      },
-      {
-        "id": "odADE4pjnlI",
-        "title": "Viltrumite Recruitment Event and Summons! - Invincible: Guarding the Globe",
-        "description": "TH3O covers the Viltrumite recruitment event and summons in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-08-07",
-        "featured": true
-      },
-      {
-        "id": "Iq5neDgReL0",
-        "title": "INSANE New Boss Battle and Crazy Event just dropped!! - Invincible: Guarding the Globe",
-        "description": "TH3O covers a new Boss Raid battle and event in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-08-04",
-        "featured": true
       }
     ]
   },
@@ -446,6 +454,54 @@ window.__YOUTUBE_CREATORS=[
     "status": "active",
     "displayOrder": 5,
     "videos": [
+      {
+        "id": "1OaG7uyXcLU",
+        "title": "How Far Can This META Team Go?? Invincible Guarding The Globe",
+        "description": "Testing how far the current META team can push before it falls over.",
+        "category": "Team Building",
+        "published": "2026-11-13",
+        "featured": false
+      },
+      {
+        "id": "2THLKq7F7vM",
+        "title": "Earth Defenders Nightmare || Invincible Guarding The Globe",
+        "description": "Earth Defenders Nightmare run against the current roster.",
+        "category": "Gameplay",
+        "published": "2026-11-12",
+        "featured": false
+      },
+      {
+        "id": "VFc8lRTGulw",
+        "title": "Beasts Ready For BATTLE || Invincible Guarding The Globe",
+        "description": "Beasts stage run and the team used to clear it.",
+        "category": "Gameplay",
+        "published": "2026-11-09",
+        "featured": false
+      },
+      {
+        "id": "W9WFai_Feag",
+        "title": "Viltrumites Don't Have Nightmares || Invincible Guarding The Globe",
+        "description": "Viltrumite enemies in Nightmare mode and how the team holds up.",
+        "category": "Gameplay",
+        "published": "2026-11-06",
+        "featured": false
+      },
+      {
+        "id": "BDwSIIUzjjY",
+        "title": "Nightmarishly Astounding || Invincible Guarding The Globe",
+        "description": "Astounding Wolf-Man Nightmare attempt with the current lineup.",
+        "category": "Gameplay",
+        "published": "2026-11-04",
+        "featured": false
+      },
+      {
+        "id": "rWiIpQH4cHw",
+        "title": "The Astounding Arrival In Invincible Guarding The Globe (I'm finally back)",
+        "description": "Return to Invincible GTG coverage with the Astounding Wolf-Man arrival.",
+        "category": "Gameplay",
+        "published": "2026-11-02",
+        "featured": false
+      },
       {
         "id": "vUNIhdD2mRA",
         "title": "The GOAT Aquarius' GDA Case File || Invincible Guarding The Globe",
@@ -493,54 +549,6 @@ window.__YOUTUBE_CREATORS=[
         "category": "Gameplay",
         "published": "2026-09-25",
         "featured": false
-      },
-      {
-        "id": "aMdPAHQR8t4",
-        "title": "Ragnars Nightmare || Invincible Guarding The Globe",
-        "description": "LAVAMOOSE plays Ragnar's Nightmare in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-09-22",
-        "featured": false
-      },
-      {
-        "id": "-sS1LA0f18k",
-        "title": "Ragnars Have ARRIVED In Invincible Guarding The Globe",
-        "description": "LAVAMOOSE covers the Ragnar hero release in Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-09-22",
-        "featured": false
-      },
-      {
-        "id": "_8VqAmjI_hg",
-        "title": "The Entire Second Season Part 2 || Invincible Guarding The Globe",
-        "description": "LAVAMOOSE covers the second season of Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-08-31",
-        "featured": false
-      },
-      {
-        "id": "YSxoKnFRF_Y",
-        "title": "Hurm Has Arrived In Invincible Guarding The Globe",
-        "description": "LAVAMOOSE covers the Hurm hero arrival in Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-08-23",
-        "featured": true
-      },
-      {
-        "id": "r4c19_n0wr4",
-        "title": "The Entire Second Season of Invincible In Invincible Guarding The Globe",
-        "description": "LAVAMOOSE covers the second season content in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-08-14",
-        "featured": false
-      },
-      {
-        "id": "ww7n8PRvF7Q",
-        "title": "The Entire First Season of Invincible In Invincible Guarding The Globe",
-        "description": "LAVAMOOSE covers the first season of Invincible: Guarding the Globe content.",
-        "category": "Gameplay",
-        "published": "2026-08-06",
-        "featured": true
       }
     ]
   },
@@ -558,6 +566,46 @@ window.__YOUTUBE_CREATORS=[
     "status": "active",
     "displayOrder": 6,
     "videos": [
+      {
+        "id": "bFvbFlZ7LKw",
+        "title": "Invincible Guarding The Globe - Nightmare: The Astounding Wolf-Man| lvl 599 OMNIPOTENT+ 10 Stars⭐️",
+        "description": "Astounding Wolf-Man Nightmare clear at lvl 599 OMNIPOTENT+ with 10 stars.",
+        "category": "Gameplay",
+        "published": "2026-11-10",
+        "featured": false
+      },
+      {
+        "id": "G_4oAeU9ymA",
+        "title": "Invincible Guarding The Globe - Pick&Drop Event!",
+        "description": "Pick & Drop event run and the rewards collected.",
+        "category": "Events",
+        "published": "2026-11-09",
+        "featured": false
+      },
+      {
+        "id": "a7sNvdvYuPE",
+        "title": "Invincible Guarding The Globe - Clone Frenzy!!!",
+        "description": "Clone Frenzy event coverage.",
+        "category": "Events",
+        "published": "2026-11-06",
+        "featured": false
+      },
+      {
+        "id": "wf4_YWijOk8",
+        "title": "Invincible Guarding The Globe - Flea Market Event Returns !!",
+        "description": "The Flea Market event returns, with a look at the stock.",
+        "category": "Events",
+        "published": "2026-11-04",
+        "featured": false
+      },
+      {
+        "id": "QcFdhySuwZA",
+        "title": "Invincible Guarding The Globe- Triple Pick Event featuring….Tech Jacket!?",
+        "description": "Triple Pick event featuring Tech Jacket.",
+        "category": "Events",
+        "published": "2026-11-03",
+        "featured": false
+      },
       {
         "id": "v6VSgbnO6RA",
         "title": "Invincible Guarding The Globe - Happy Halloween !! Massive Wish Event Summons!!",
@@ -612,46 +660,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "OMNI-BANE summons for Wolf-Man in Invincible: Guarding the Globe.",
         "category": "Gameplay",
         "published": "2026-10-24",
-        "featured": false
-      },
-      {
-        "id": "cNtcMNVOhfc",
-        "title": "Invincible Guarding The Globe - Astounding Wolf-Man Summons!!",
-        "description": "OMNI-BANE summons for Wolf-Man in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-10-23",
-        "featured": false
-      },
-      {
-        "id": "2MZvESNTCCE",
-        "title": "Invincible Guarding The Globe - The Astounding Wolf-Man: Cursed Protector Event!!",
-        "description": "OMNI-BANE covers the Cursed Protector event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-23",
-        "featured": false
-      },
-      {
-        "id": "kj4gAGBFuXU",
-        "title": "Invincible Guarding The Globe - Astounding New Character Teaser!",
-        "description": "OMNI-BANE previews an upcoming character in Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-10-22",
-        "featured": false
-      },
-      {
-        "id": "qRfwTXb8OCY",
-        "title": "Invincible Guarding The Globe - TV Show Case File Event!",
-        "description": "OMNI-BANE covers the TV Show Case File event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-20",
-        "featured": false
-      },
-      {
-        "id": "czbqnc8mQJI",
-        "title": "Invincible Guarding The Globe - Patch Notes Update 3.7!",
-        "description": "OMNI-BANE reviews update 3.7 patch notes for Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-10-20",
         "featured": false
       }
     ]
@@ -744,6 +752,46 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 9,
     "videos": [
       {
+        "id": "Vvfn_eTjxng",
+        "title": "FLEA MARKET TRASH?",
+        "description": "Thoughts on whether the Flea Market stock is worth spending on.",
+        "category": "Events",
+        "published": "2026-11-09",
+        "featured": false
+      },
+      {
+        "id": "fG50HubO1ls",
+        "title": "TOP 5 ARENA TEAMS",
+        "description": "The top five arena teams for high-tier arena.",
+        "category": "Team Building",
+        "published": "2026-11-09",
+        "featured": false
+      },
+      {
+        "id": "s-C6avp3mJg",
+        "title": "NEW UPDATED HERO TIER LIST",
+        "description": "Updated hero tier list including new heroes and move changes.",
+        "category": "Tier Lists",
+        "published": "2026-11-06",
+        "featured": false
+      },
+      {
+        "id": "BcRRt-rUmRI",
+        "title": "Best Totem Tierlist",
+        "description": "Totem tier list covering new and existing totems.",
+        "category": "Tier Lists",
+        "published": "2026-11-06",
+        "featured": false
+      },
+      {
+        "id": "vhSv1V0yhhI",
+        "title": "UPDATED ARTIFACT TEIRLEST",
+        "description": "Updated artifact tier list with the newly added artifacts.",
+        "category": "Tier Lists",
+        "published": "2026-11-05",
+        "featured": false
+      },
+      {
         "id": "IoI-mak2p5I",
         "title": "TRICK OR TREAT",
         "description": "KingSlay727 breaks down the Trick or Treat event in Invincible: Guarding the Globe.",
@@ -797,46 +845,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "KingSlay727 covers Wolf-Man's release in Invincible: Guarding the Globe.",
         "category": "Updates",
         "published": "2026-10-23",
-        "featured": false
-      },
-      {
-        "id": "tGVLhso8AXU",
-        "title": "3.7 Update Over Look",
-        "description": "KingSlay727 reviews update 3.7 for Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-10-22",
-        "featured": false
-      },
-      {
-        "id": "5jCkr4sZIV8",
-        "title": "3.7 Update Over Look",
-        "description": "KingSlay727 reviews update 3.7 for Invincible: Guarding the Globe.",
-        "category": "Updates",
-        "published": "2026-10-21",
-        "featured": false
-      },
-      {
-        "id": "p4_7nFZqVSU",
-        "title": "OP EVENT or TRASH?",
-        "description": "KingSlay727 reviews an event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-17",
-        "featured": false
-      },
-      {
-        "id": "cDiYl43pawY",
-        "title": "NEW LOCK & LOAD",
-        "description": "KingSlay727 covers the Lock & Load event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-10-15",
-        "featured": false
-      },
-      {
-        "id": "qrtvEGPMcuA",
-        "title": "HUGE RANK UPS! (invincible gtg)",
-        "description": "KingSlay727 shares rank-up gameplay in Invincible: Guarding the Globe.",
-        "category": "Gameplay",
-        "published": "2026-10-07",
         "featured": false
       }
     ]
@@ -962,6 +970,30 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 13,
     "videos": [
       {
+        "id": "BDdBEzLtSYA",
+        "title": "Criminal Faction Recruitment Event on INVINCIBLE: Guarding The Globe 🌎",
+        "description": "Criminal Faction Recruitment event walkthrough.",
+        "category": "Events",
+        "published": "2026-11-13",
+        "featured": false
+      },
+      {
+        "id": "2iQvZa8WHMg",
+        "title": "Best In Slot Event on INVINCIBLE: Guarding The Globe 🌎",
+        "description": "Best In Slot event coverage.",
+        "category": "Events",
+        "published": "2026-11-11",
+        "featured": false
+      },
+      {
+        "id": "IbFs7BI6ybw",
+        "title": "Cloning Machine Frenzy Event on INVINCIBLE: Guarding The Globe 🌎",
+        "description": "Cloning Machine Frenzy event coverage.",
+        "category": "Events",
+        "published": "2026-11-06",
+        "featured": false
+      },
+      {
         "id": "C3lp_4ZEZv4",
         "title": "Happy Halloween 🎃 Trick or Treat Event on INVINCIBLE: Guarding The Globe 🌎",
         "description": "INVINCIBLE GTG OMNI-FAN covers the Halloween Trick or Treat event and event shop in Invincible: Guarding the Globe.",
@@ -1031,30 +1063,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "INVINCIBLE GTG OMNI-FAN covers the Ragnar hero release.",
         "category": "Updates",
         "published": "2026-09-18",
-        "featured": false
-      },
-      {
-        "id": "NroWP9Hmnn8",
-        "title": "Thragg's Casefile | Invincible: Guarding The Globe",
-        "description": "INVINCIBLE GTG OMNI-FAN covers Thragg's Casefile.",
-        "category": "Events",
-        "published": "2026-09-15",
-        "featured": false
-      },
-      {
-        "id": "7uTggpahjp0",
-        "title": "Live streaming of INVINCIBLE.GTG.OMNI-FAN",
-        "description": "INVINCIBLE GTG OMNI-FAN streams Invincible: Guarding the Globe gameplay.",
-        "category": "Livestreams",
-        "published": "2026-09-15",
-        "featured": false
-      },
-      {
-        "id": "Jd-6TwPQXdM",
-        "title": "Hero Bootcamp Event is Back - Invincible: Guarding The Globe",
-        "description": "INVINCIBLE GTG OMNI-FAN covers the returning Hero Bootcamp event.",
-        "category": "Events",
-        "published": "2026-09-11",
         "featured": false
       }
     ]
@@ -1384,6 +1392,22 @@ window.__YOUTUBE_CREATORS=[
     "displayOrder": 19,
     "videos": [
       {
+        "id": "FHeyeAMaXvs",
+        "title": "VOCÊ ESTÁ USANDO O THARGG ERRADO! | MONTE ESSA EQUIPE!",
+        "description": "How to build around Thragg to extract his full potential.",
+        "category": "Team Building",
+        "published": "2026-11-09",
+        "featured": false
+      },
+      {
+        "id": "FLfZZgPUZ-E",
+        "title": "ESSES SÃO OS 5 PERSONAGENS MAIS FORTES DO INVENCÍVEL GTG!",
+        "description": "The five strongest characters in the game right now, ranked.",
+        "category": "Tier Lists",
+        "published": "2026-11-05",
+        "featured": false
+      },
+      {
         "id": "xTGiN5kleDE",
         "title": "VOCÊ ESTÁ EVOLUINDO SEUS PERSONAGENS ERRADO! | Invencível Guardiões do Globo",
         "description": "Punho Viltrumita explains which character progression mistakes hold players back in Invincible: Guarding the Globe.",
@@ -1462,22 +1486,6 @@ window.__YOUTUBE_CREATORS=[
         "category": "Guides",
         "published": "2026-05-19",
         "featured": false
-      },
-      {
-        "id": "rMYI7h_EsCQ",
-        "title": "NOVA LOJA DOS DEFENSORES VALE A PENA? | Invencível Guardiões do Globo",
-        "description": "Punho Viltrumita evaluates whether the new Defenders store is worth the spend in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2026-05-17",
-        "featured": false
-      },
-      {
-        "id": "MBIYvBiYre0",
-        "title": "AS MELHORES EQUIPES que DOMINAM o META! | Invencível Guardiões do Globo",
-        "description": "Punho Viltrumita builds the strongest teams for the current meta in Invincible: Guarding the Globe.",
-        "category": "Team Building",
-        "published": "2026-05-14",
-        "featured": false
       }
     ]
   },
@@ -1495,6 +1503,62 @@ window.__YOUTUBE_CREATORS=[
     "status": "pending",
     "displayOrder": 20,
     "videos": [
+      {
+        "id": "13IACa54UIQ",
+        "title": "CRIMINALS RECRUITMENT EVENT IN IGTG!",
+        "description": "Criminal Faction Recruitment event run.",
+        "category": "Events",
+        "published": "2026-11-13",
+        "featured": false
+      },
+      {
+        "id": "Gtk7IanJULU",
+        "title": "CLONING MACHINE FRENZY EVENT IGTG",
+        "description": "Cloning Machine Frenzy event run.",
+        "category": "Events",
+        "published": "2026-11-06",
+        "featured": false
+      },
+      {
+        "id": "MUlDGEW7eBA",
+        "title": "TRICK OR TREAT PT.3!!",
+        "description": "Trick or Treat event, part three.",
+        "category": "Events",
+        "published": "2026-11-01",
+        "featured": false
+      },
+      {
+        "id": "ejLWNWAYgyw",
+        "title": "NEW EVENT TRICK OR TREAT PART 2!",
+        "description": "Trick or Treat event, part two.",
+        "category": "Events",
+        "published": "2026-10-31",
+        "featured": false
+      },
+      {
+        "id": "z2aG7UMHQv8",
+        "title": "NEW EVENT TRICK OR TREAT PT.1",
+        "description": "Trick or Treat event, part one.",
+        "category": "Events",
+        "published": "2026-10-31",
+        "featured": false
+      },
+      {
+        "id": "Z8YncH-ZfRY",
+        "title": "HERO BOOTCAMP IS MANDATORY🚨",
+        "description": "Hero Bootcamp event coverage.",
+        "category": "Events",
+        "published": "2026-10-28",
+        "featured": false
+      },
+      {
+        "id": "rFRVUyKk4jk",
+        "title": "NEW HERO RELEASED IN IGTG!",
+        "description": "First look at the newly released hero.",
+        "category": "Updates",
+        "published": "2026-10-27",
+        "featured": false
+      },
       {
         "id": "WZKb4_2Xbi0",
         "title": "SPENDING SPREE FOR RAGNARS!",
@@ -1536,6 +1600,14 @@ window.__YOUTUBE_CREATORS=[
     "status": "pending",
     "displayOrder": 21,
     "videos": [
+      {
+        "id": "xqJaAABIx7M",
+        "title": "Así es el Equipo Invencible: La alineación que rompe el PvP en Guarding the Globe",
+        "description": "The Invincible team lineup currently dominating PvP arena.",
+        "category": "Team Building",
+        "published": "2026-11-11",
+        "featured": false
+      },
       {
         "id": "LybFKAVm6v0",
         "title": "¡+70,000 CHIPS VERDES con este TRUCO de NIVEL 1! | Invincible GTG",
@@ -1622,14 +1694,6 @@ window.__YOUTUBE_CREATORS=[
         "description": "mompish builds teams for farming XP in Invincible: Guarding the Globe.",
         "category": "Team Building",
         "published": "2026-01-30",
-        "featured": false
-      },
-      {
-        "id": "dMmDIVV7bvg",
-        "title": "Gastando gemitas en el nuevo evento | Invincible: guarding the globe",
-        "description": "mompish spends gems on the new event in Invincible: Guarding the Globe.",
-        "category": "Events",
-        "published": "2025-10-06",
         "featured": false
       }
     ]
