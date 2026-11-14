@@ -20,12 +20,13 @@ const KEBAB_RE = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const YT_URL_RE = /^https:\/\/www\.youtube\.com\//;
 const MAX_VIDEOS_PER_CREATOR = 12;
 const FEATURED_PER_CREATOR = 6;
+const RECENT_TICKER_DAYS = 14;
 const RECENT_DAYS = 180;
 const SITE_ORIGIN = 'https://anomaly-alpha.github.io';
 const GAME_NAME = 'Invincible Guarding the Globe';
 
 const MARKER_PAIRS = [
-  'FEATURED_CREATOR',
+  'RECENT_VIDEOS',
   'CREATOR_SECTIONS',
   'CREATORS_JSON_LD',
   'CREATORS_NOSCRIPT',
@@ -460,66 +461,70 @@ function renderVideoCard(video, creator) {
   return html;
 }
 
-// ===== RENDERING: FEATURED CREATOR (HERO) =====
+// ===== RENDERING: RECENT VIDEO TICKER =====
 
-function renderFeaturedCreatorHtml(data) {
-  var creator = null;
-  for (var i = 0; i < data.creators.length; i++) {
-    if (data.creators[i].id === data.featuredCreatorId) {
-      creator = data.creators[i];
-      break;
-    }
+// One card per creator: their newest playable video, dropped once it is older than the window.
+function recentVideosForTicker(data) {
+  var today = data.updated || new Date().toISOString().slice(0, 10);
+  var creators = getVisibleCreators(data);
+  var items = [];
+  for (var ci = 0; ci < creators.length; ci++) {
+    var creator = creators[ci];
+    var newest = creator.videos
+      .filter(function (video) {
+        var meta = video.youtube || {};
+        return video.status === 'active' && meta.playable !== false && meta.embeddable !== false;
+      })
+      .sort(function (a, b) { return new Date(b.published) - new Date(a.published); })[0];
+    if (!newest) continue;
+    if (daysBetween(newest.published, today) > RECENT_TICKER_DAYS) continue;
+    items.push({ creator: creator, video: newest });
   }
-  if (!creator) return '';
+  items.sort(function (a, b) {
+    var dateSort = new Date(b.video.published) - new Date(a.video.published);
+    if (dateSort !== 0) return dateSort;
+    return a.creator.displayOrder - b.creator.displayOrder;
+  });
+  return items;
+}
 
-  var featuredVideos = creator.videos
-    .filter(function (v) { return v.status === 'active' && v.featured === true; })
-    .sort(function (a, b) { return new Date(b.published) - new Date(a.published); })
-    .slice(0, FEATURED_PER_CREATOR);
+function renderTickerCard(video, creator, duplicate) {
+  var html = '';
+  html += '            <a class="gem-video-ticker__card" href="../../watch/' + escapeHtml(video.id) + '/"' +
+    (duplicate ? ' tabindex="-1" aria-hidden="true"' : '') +
+    ' aria-label="Open the video page for ' + escapeHtml(video.title) + ' by ' + escapeHtml(creator.name) + '">\n';
+  html += '              <span class="gem-video-ticker__thumb">\n';
+  html += '                <img src="https://i.ytimg.com/vi/' + escapeHtml(video.id) + '/hqdefault.jpg" alt="Thumbnail for ' + escapeHtml(video.title) + ' by ' + escapeHtml(creator.name) + '" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">\n';
+  html += '                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>\n';
+  html += '              </span>\n';
+  html += '              <span class="gem-video-ticker__title">' + escapeHtml(video.title) + '</span>\n';
+  html += '              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">' + escapeHtml(creator.name) + '</span> &middot; <time datetime="' + escapeHtml(video.published) + '">' + escapeHtml(formatFeedDate(video.published)) + '</time></span>\n';
+  html += '            </a>\n';
+  return html;
+}
+
+// Auto-scrolling marquee: the card set is rendered twice and the track translates by -50%, so
+// the loop has no seam. The copy is hidden from assistive tech and untabbable.
+function renderRecentVideosHtml(data) {
+  var items = recentVideosForTicker(data);
+  if (items.length < 2) return '';
+
+  var cards = '';
+  for (var i = 0; i < items.length; i++) {
+    cards += renderTickerCard(items[i].video, items[i].creator, false);
+  }
+  var duplicateCards = '';
+  for (var d = 0; d < items.length; d++) {
+    duplicateCards += renderTickerCard(items[d].video, items[d].creator, true);
+  }
 
   var html = '';
-  html += '      <section class="gem-creators__featured gem-creator gem-creator--featured" id="creator-hero-' + escapeHtml(creator.id) + '">\n';
-  html += '        <div class="gem-creator__meta">\n';
-  html += '          <h2>' + escapeHtml(creator.name) + '</h2>\n';
-  if (creator.handle) {
-    html += '          <p class="gem-creator__handle">' + escapeHtml(creator.handle) + '</p>\n';
-  }
-  if (creator.description) {
-    html += '          <p class="gem-creator__desc">' + escapeHtml(creator.description) + '</p>\n';
-  }
-  if (Array.isArray(creator.tags) && creator.tags.length > 0) {
-    html += '          <ul class="gem-creator__tags">\n';
-    for (var t = 0; t < creator.tags.length; t++) {
-      html += '            <li class="gem-creator__tag">' + escapeHtml(creator.tags[t]) + '</li>\n';
-    }
-    html += '          </ul>\n';
-  }
-  html += '          <p class="gem-creator__checked">Last checked: <time datetime="' + escapeHtml(creator.lastChecked) + '">' + escapeHtml(creator.lastChecked) + '</time></p>\n';
-  if (creator.channelUrl) {
-    html += '          <a href="' + escapeHtml(creator.channelUrl) + '" target="_blank" rel="noopener noreferrer" class="gem-creator__channel">Visit Channel</a>\n';
-  }
-  html += '        </div>\n';
-  html += '        <div class="gem-creator__videos">\n';
-  for (var vi = 0; vi < featuredVideos.length; vi++) {
-    html += renderVideoCard(featuredVideos[vi], creator);
-  }
-  var additionalVideos = creator.videos
-    .filter(function (v) { return v.status === 'active' && v.featured !== true; })
-    .sort(function (a, b) { return new Date(b.published) - new Date(a.published); })
-    .slice(0, MAX_VIDEOS_PER_CREATOR - featuredVideos.length);
-  if (additionalVideos.length > 0) {
-    html += '          <details class="gem-creator__expand">\n';
-    html += '            <summary>Show more videos</summary>\n';
-    html += '            <div class="gem-creator__expanded">\n';
-    for (var ai = 0; ai < additionalVideos.length; ai++) {
-      html += renderVideoCard(additionalVideos[ai], creator);
-    }
-    html += '            </div>\n';
-    html += '          </details>\n';
-  }
+  html += '      <section class="gem-video-ticker" aria-label="Newest video from each creator in the last ' + RECENT_TICKER_DAYS + ' days">\n';
+  html += '        <div class="gem-video-ticker__track">\n';
+  html += '          <div class="gem-video-ticker__group">\n' + cards + '          </div>\n';
+  html += '          <div class="gem-video-ticker__group" aria-hidden="true">\n' + duplicateCards + '          </div>\n';
   html += '        </div>\n';
   html += '      </section>\n';
-
   return html;
 }
 
@@ -1009,7 +1014,9 @@ function generate(sourcePath, templatePath) {
 
   var data = result.data;
 
-  var featuredHtml = renderFeedSummaryHtml(data);
+  // The FEATURED_CREATOR region holds the featured creator's hero, then the feed summary that
+  // frames the timeline below it.
+  var recentHtml = renderRecentVideosHtml(data) + renderFeedSummaryHtml(data);
   var sectionsHtml = renderCreatorFeedHtml(data);
   var jsonLdHtml = renderJsonLdHtml(data);
   var noscriptHtml = renderNoscriptHtml(data);
@@ -1039,7 +1046,7 @@ function generate(sourcePath, templatePath) {
   var hasCrlf = /\r\n/.test(templateHtml);
 
   // Replace markers (idempotent)
-  templateHtml = replaceMarker(templateHtml, 'FEATURED_CREATOR', featuredHtml);
+  templateHtml = replaceMarker(templateHtml, 'RECENT_VIDEOS', recentHtml);
   templateHtml = replaceMarker(templateHtml, 'CREATOR_SECTIONS', sectionsHtml);
   templateHtml = replaceMarker(templateHtml, 'CREATORS_JSON_LD', jsonLdHtml);
   templateHtml = replaceMarker(templateHtml, 'CREATORS_NOSCRIPT', noscriptHtml);
@@ -1116,7 +1123,7 @@ module.exports = {
   // Validation
   validateData: validateData,
   // Rendering
-  renderFeaturedCreatorHtml: renderFeaturedCreatorHtml,
+  renderRecentVideosHtml: renderRecentVideosHtml,
   renderCreatorSectionsHtml: renderCreatorSectionsHtml,
   renderFeedSummaryHtml: renderFeedSummaryHtml,
   renderCreatorFeedHtml: renderCreatorFeedHtml,
@@ -1156,6 +1163,7 @@ module.exports = {
   KEBAB_RE: KEBAB_RE,
   MAX_VIDEOS_PER_CREATOR: MAX_VIDEOS_PER_CREATOR,
   FEATURED_PER_CREATOR: FEATURED_PER_CREATOR,
+  RECENT_TICKER_DAYS: RECENT_TICKER_DAYS,
   RECENT_DAYS: RECENT_DAYS,
   SITE_ORIGIN: SITE_ORIGIN,
   GAME_NAME: GAME_NAME,

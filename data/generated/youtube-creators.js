@@ -20,7 +20,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "First look at the new lock event and whether the reward rate is worth the gems.",
         "category": "Events",
         "published": "2026-11-12",
-        "featured": false
+        "featured": true
       },
       {
         "id": "d_AMR6vMqgs",
@@ -28,7 +28,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Coverage of the returning Wolf-Man event and the rewards on offer.",
         "category": "Events",
         "published": "2026-11-10",
-        "featured": false
+        "featured": true
       },
       {
         "id": "xMxqySf-jNo",
@@ -36,7 +36,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Why the Season Files level curve is punishing and where the walls sit.",
         "category": "Gameplay",
         "published": "2026-11-09",
-        "featured": false
+        "featured": true
       },
       {
         "id": "4dx2t-wmJsA",
@@ -44,7 +44,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "A large GDA summons session and what the pulls returned.",
         "category": "Gameplay",
         "published": "2026-11-08",
-        "featured": false
+        "featured": true
       },
       {
         "id": "_N_4zobsTWA",
@@ -52,7 +52,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "What changed in the reworked Cloning Frenzy event.",
         "category": "Events",
         "published": "2026-11-07",
-        "featured": false
+        "featured": true
       },
       {
         "id": "cJoKvjn71Ps",
@@ -60,7 +60,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "The Golden Apple event returns alongside the Flea Market.",
         "category": "Events",
         "published": "2026-11-05",
-        "featured": false
+        "featured": true
       },
       {
         "id": "E9U_8VmKJG4",
@@ -132,7 +132,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Storytime over a long Invincible GTG session.",
         "category": "Gameplay",
         "published": "2026-11-09",
-        "featured": false
+        "featured": true
       },
       {
         "id": "q4Mwyb74H30",
@@ -140,7 +140,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "rapid shares a full progression guide for Invincible: Guarding the Globe.",
         "category": "Guides",
         "published": "2026-10-24",
-        "featured": false
+        "featured": true
       },
       {
         "id": "D6vJjLx06kI",
@@ -148,7 +148,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "rapid reviews an Invincible GTG event and spending strategy.",
         "category": "Events",
         "published": "2026-10-02",
-        "featured": false
+        "featured": true
       },
       {
         "id": "e7stELBaUcA",
@@ -156,7 +156,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "rapid discusses community-requested improvements for Invincible: Guarding the Globe.",
         "category": "Updates",
         "published": "2026-09-10",
-        "featured": false
+        "featured": true
       },
       {
         "id": "YfU7wSiLegk",
@@ -172,7 +172,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "rapid explains the Hail Mary Boss Raid in Invincible: Guarding the Globe.",
         "category": "Guides",
         "published": "2026-07-31",
-        "featured": false
+        "featured": true
       },
       {
         "id": "quqoF9PjsOs",
@@ -180,7 +180,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "rapid breaks down Brit's kit, best team, and investment value in Invincible GTG.",
         "category": "Guides",
         "published": "2026-07-27",
-        "featured": true
+        "featured": false
       },
       {
         "id": "RB4pqQgoOwY",
@@ -188,7 +188,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "rapid compares a free-to-play account with a high-spend Invincible GTG account.",
         "category": "Gameplay",
         "published": "2026-07-14",
-        "featured": true
+        "featured": false
       },
       {
         "id": "Y45WOVJiC8A",
@@ -196,7 +196,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "rapid evaluates Volcanikka for free-to-play Invincible: Guarding the Globe players.",
         "category": "Guides",
         "published": "2026-06-29",
-        "featured": true
+        "featured": false
       },
       {
         "id": "5nEENaqB92E",
@@ -204,7 +204,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "rapid showcases a long-running free-to-play Invincible: Guarding the Globe account.",
         "category": "Gameplay",
         "published": "2026-06-25",
-        "featured": true
+        "featured": false
       },
       {
         "id": "BKJXqCJg9OQ",
@@ -212,7 +212,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "rapid reviews the event paywall and its impact on Invincible GTG players.",
         "category": "Updates",
         "published": "2026-06-04",
-        "featured": true
+        "featured": false
       }
     ]
   },
@@ -237,7 +237,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Tutaaa-GTG shares lessons for new players of Invincible: Guarding the Globe.",
         "category": "Guides",
         "published": "2026-10-04",
-        "featured": false
+        "featured": true
       },
       {
         "id": "G6yRvEUcRX4",
@@ -245,7 +245,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Tutaaa-GTG breaks down progression from beginner to endgame in Invincible: Guarding the Globe.",
         "category": "Guides",
         "published": "2026-09-27",
-        "featured": false
+        "featured": true
       },
       {
         "id": "YuL1k9LVTRk",
@@ -253,7 +253,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Tutaaa-GTG explains GDA Ops teams and priorities in Invincible: Guarding the Globe.",
         "category": "Guides",
         "published": "2026-09-13",
-        "featured": false
+        "featured": true
       },
       {
         "id": "zXQuufSmxUU",
@@ -261,7 +261,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Tutaaa-GTG discusses Alliance Mode in Invincible: Guarding the Globe.",
         "category": "Updates",
         "published": "2026-09-05",
-        "featured": false
+        "featured": true
       },
       {
         "id": "jChfgcbDUcU",
@@ -277,7 +277,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Tutaaa-GTG explains a free-to-play approach to Invincible: Guarding the Globe.",
         "category": "Guides",
         "published": "2026-08-16",
-        "featured": false
+        "featured": true
       },
       {
         "id": "1NF0U3lJYoo",
@@ -293,7 +293,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Tutaaa-GTG discusses XP progression and scaling in Invincible: Guarding the Globe.",
         "category": "Updates",
         "published": "2026-08-02",
-        "featured": true
+        "featured": false
       },
       {
         "id": "192yKBOQ-fw",
@@ -301,7 +301,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Tutaaa-GTG reacts to the launch of Boss Raid mode in Invincible: Guarding the Globe.",
         "category": "Updates",
         "published": "2026-07-27",
-        "featured": true
+        "featured": false
       },
       {
         "id": "0YlDnhMbdrA",
@@ -309,7 +309,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Tutaaa-GTG ranks his best Invincible GTG character investments.",
         "category": "Tier Lists",
         "published": "2026-07-26",
-        "featured": true
+        "featured": false
       },
       {
         "id": "A50SrEUlKp8",
@@ -317,7 +317,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Tutaaa-GTG reviews character investments he would avoid in Invincible GTG.",
         "category": "Tier Lists",
         "published": "2026-07-19",
-        "featured": true
+        "featured": false
       },
       {
         "id": "Ol817ImArik",
@@ -325,7 +325,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Tutaaa-GTG reviews The Ones In Charge event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-07-12",
-        "featured": true
+        "featured": false
       }
     ]
   },
@@ -349,7 +349,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Best In Slot event with the free hero lock, and how to use it.",
         "category": "Events",
         "published": "2026-11-11",
-        "featured": false
+        "featured": true
       },
       {
         "id": "bhrEdHFdx6A",
@@ -357,7 +357,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Whether Pick & Drop is the best value event for free-to-play players.",
         "category": "Events",
         "published": "2026-11-09",
-        "featured": false
+        "featured": true
       },
       {
         "id": "EClXP5eE-bw",
@@ -365,7 +365,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "TH3O reviews the Locked and Reload event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-10-19",
-        "featured": false
+        "featured": true
       },
       {
         "id": "21EmQ4aL8qY",
@@ -373,7 +373,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "TH3O covers the double-summon event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-10-14",
-        "featured": false
+        "featured": true
       },
       {
         "id": "PiFQmA3KaLc",
@@ -381,7 +381,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "TH3O reviews the Recruitment Multiplier event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-09-29",
-        "featured": false
+        "featured": true
       },
       {
         "id": "WRMBqOv0A2U",
@@ -389,7 +389,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "TH3O covers the returning Pick & Drop event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-09-22",
-        "featured": false
+        "featured": true
       },
       {
         "id": "UcgJajY53VQ",
@@ -421,7 +421,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "TH3O covers the Damien Darkblood hero event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-08-21",
-        "featured": true
+        "featured": false
       },
       {
         "id": "QS4fxdrUVC4",
@@ -429,7 +429,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "TH3O explains a powerful team build in Invincible: Guarding the Globe.",
         "category": "Team Building",
         "published": "2026-08-18",
-        "featured": true
+        "featured": false
       },
       {
         "id": "P6yTQHW6YFA",
@@ -460,7 +460,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Testing how far the current META team can push before it falls over.",
         "category": "Team Building",
         "published": "2026-11-13",
-        "featured": false
+        "featured": true
       },
       {
         "id": "2THLKq7F7vM",
@@ -468,7 +468,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Earth Defenders Nightmare run against the current roster.",
         "category": "Gameplay",
         "published": "2026-11-12",
-        "featured": false
+        "featured": true
       },
       {
         "id": "VFc8lRTGulw",
@@ -476,7 +476,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Beasts stage run and the team used to clear it.",
         "category": "Gameplay",
         "published": "2026-11-09",
-        "featured": false
+        "featured": true
       },
       {
         "id": "W9WFai_Feag",
@@ -484,7 +484,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Viltrumite enemies in Nightmare mode and how the team holds up.",
         "category": "Gameplay",
         "published": "2026-11-06",
-        "featured": false
+        "featured": true
       },
       {
         "id": "BDwSIIUzjjY",
@@ -492,7 +492,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Astounding Wolf-Man Nightmare attempt with the current lineup.",
         "category": "Gameplay",
         "published": "2026-11-04",
-        "featured": false
+        "featured": true
       },
       {
         "id": "rWiIpQH4cHw",
@@ -500,7 +500,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Return to Invincible GTG coverage with the Astounding Wolf-Man arrival.",
         "category": "Gameplay",
         "published": "2026-11-02",
-        "featured": false
+        "featured": true
       },
       {
         "id": "vUNIhdD2mRA",
@@ -572,7 +572,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Astounding Wolf-Man Nightmare clear at lvl 599 OMNIPOTENT+ with 10 stars.",
         "category": "Gameplay",
         "published": "2026-11-10",
-        "featured": false
+        "featured": true
       },
       {
         "id": "G_4oAeU9ymA",
@@ -580,7 +580,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Pick & Drop event run and the rewards collected.",
         "category": "Events",
         "published": "2026-11-09",
-        "featured": false
+        "featured": true
       },
       {
         "id": "a7sNvdvYuPE",
@@ -588,7 +588,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Clone Frenzy event coverage.",
         "category": "Events",
         "published": "2026-11-06",
-        "featured": false
+        "featured": true
       },
       {
         "id": "wf4_YWijOk8",
@@ -596,7 +596,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "The Flea Market event returns, with a look at the stock.",
         "category": "Events",
         "published": "2026-11-04",
-        "featured": false
+        "featured": true
       },
       {
         "id": "QcFdhySuwZA",
@@ -604,7 +604,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Triple Pick event featuring Tech Jacket.",
         "category": "Events",
         "published": "2026-11-03",
-        "featured": false
+        "featured": true
       },
       {
         "id": "v6VSgbnO6RA",
@@ -612,7 +612,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "OMNI-BANE opens a large Halloween Wish event summon session in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-10-31",
-        "featured": false
+        "featured": true
       },
       {
         "id": "HFeNbDaxfV0",
@@ -684,7 +684,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Just a Guy named Francis tests the max-level shop and Ragnar refreshes in Invincible: Guarding the Globe.",
         "category": "Gameplay",
         "published": "2026-09-20",
-        "featured": false
+        "featured": true
       },
       {
         "id": "pK9C7mUMceI",
@@ -732,7 +732,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Just a Guy named Francis livestreams the Wish Event in Invincible: Guarding the Globe.",
         "category": "Livestreams",
         "published": "2026-07-01",
-        "featured": true
+        "featured": false
       }
     ]
   },
@@ -757,7 +757,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Thoughts on whether the Flea Market stock is worth spending on.",
         "category": "Events",
         "published": "2026-11-09",
-        "featured": false
+        "featured": true
       },
       {
         "id": "fG50HubO1ls",
@@ -765,7 +765,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "The top five arena teams for high-tier arena.",
         "category": "Team Building",
         "published": "2026-11-09",
-        "featured": false
+        "featured": true
       },
       {
         "id": "s-C6avp3mJg",
@@ -773,7 +773,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Updated hero tier list including new heroes and move changes.",
         "category": "Tier Lists",
         "published": "2026-11-06",
-        "featured": false
+        "featured": true
       },
       {
         "id": "BcRRt-rUmRI",
@@ -781,7 +781,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Totem tier list covering new and existing totems.",
         "category": "Tier Lists",
         "published": "2026-11-06",
-        "featured": false
+        "featured": true
       },
       {
         "id": "vhSv1V0yhhI",
@@ -789,7 +789,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Updated artifact tier list with the newly added artifacts.",
         "category": "Tier Lists",
         "published": "2026-11-05",
-        "featured": false
+        "featured": true
       },
       {
         "id": "IoI-mak2p5I",
@@ -797,7 +797,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "KingSlay727 breaks down the Trick or Treat event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-10-30",
-        "featured": false
+        "featured": true
       },
       {
         "id": "4Xs3tvA7M3c",
@@ -975,7 +975,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Criminal Faction Recruitment event walkthrough.",
         "category": "Events",
         "published": "2026-11-13",
-        "featured": false
+        "featured": true
       },
       {
         "id": "2iQvZa8WHMg",
@@ -983,7 +983,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Best In Slot event coverage.",
         "category": "Events",
         "published": "2026-11-11",
-        "featured": false
+        "featured": true
       },
       {
         "id": "IbFs7BI6ybw",
@@ -991,7 +991,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "Cloning Machine Frenzy event coverage.",
         "category": "Events",
         "published": "2026-11-06",
-        "featured": false
+        "featured": true
       },
       {
         "id": "C3lp_4ZEZv4",
@@ -999,7 +999,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "INVINCIBLE GTG OMNI-FAN covers the Halloween Trick or Treat event and event shop in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-10-29",
-        "featured": false
+        "featured": true
       },
       {
         "id": "ib2YWK5Hdnc",
@@ -1007,7 +1007,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "INVINCIBLE GTG OMNI-FAN covers the returning Hero Bootcamp event in Invincible: Guarding the Globe.",
         "category": "Events",
         "published": "2026-10-27",
-        "featured": false
+        "featured": true
       },
       {
         "id": "W0KV5Hf_6x4",
@@ -1015,7 +1015,7 @@ window.__YOUTUBE_CREATORS=[
         "description": "INVINCIBLE GTG OMNI-FAN covers the Halloween edition of Cecil's Nightmares.",
         "category": "Gameplay",
         "published": "2026-10-24",
-        "featured": false
+        "featured": true
       },
       {
         "id": "fVuOHMN_8YE",

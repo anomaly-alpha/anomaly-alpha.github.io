@@ -232,6 +232,139 @@
       .gem-creator-video__watch:focus-visible {
         color: #fff;
       }
+
+      /* Video ticker: the card set is rendered twice and the track slides by -50%, so the loop
+         has no seam. Hover or focus pauses it so a card can actually be clicked. */
+      .gem-video-ticker {
+        overflow: hidden;
+        margin-bottom: 2rem;
+        mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+      }
+
+      .gem-video-ticker__track {
+        display: flex;
+        width: max-content;
+        animation: gem-video-ticker 60s linear infinite;
+        will-change: transform;
+      }
+
+      .gem-video-ticker:hover .gem-video-ticker__track,
+      .gem-video-ticker:focus-within .gem-video-ticker__track {
+        animation-play-state: paused;
+      }
+
+      .gem-video-ticker__group {
+        display: flex;
+        align-items: flex-start;
+        gap: .75rem;
+        padding-right: .75rem;
+      }
+
+      .gem-video-ticker__card {
+        display: flex;
+        flex-direction: column;
+        gap: .35rem;
+        width: 10.5rem;
+        flex: 0 0 auto;
+        color: inherit;
+        text-decoration: none;
+        border-radius: .4rem;
+      }
+
+      .gem-video-ticker__card:focus-visible {
+        outline: 2px solid var(--gem-cyan);
+        outline-offset: 3px;
+      }
+
+      .gem-video-ticker__thumb {
+        position: relative;
+        display: block;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border: 1px solid var(--gem-border--subtle);
+        border-radius: .4rem;
+        background: var(--gem-bg-dark);
+        transition: border-color .2s;
+      }
+
+      .gem-video-ticker__thumb img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .gem-video-ticker__play {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--gem-modal-overlay);
+        color: var(--gem-cyan);
+      }
+
+      .gem-video-ticker__play svg {
+        width: 1.6rem;
+        height: 1.6rem;
+      }
+
+      .gem-video-ticker__title {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        min-height: 2.5em;
+        color: var(--gem-text--primary);
+        font-size: .78rem;
+        font-weight: 600;
+        line-height: 1.25;
+      }
+
+      .gem-video-ticker__meta {
+        max-width: 100%;
+        overflow: hidden;
+        color: var(--gem-text--secondary);
+        font-size: .68rem;
+        line-height: 1.2;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .gem-video-ticker__creator {
+        color: var(--gem-cyan);
+        font-family: "Orbitron", sans-serif;
+        font-size: .62rem;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
+
+      .gem-video-ticker__card:hover .gem-video-ticker__thumb,
+      .gem-video-ticker__card:focus-visible .gem-video-ticker__thumb {
+        border-color: var(--gem-border--accent);
+      }
+
+      @keyframes gem-video-ticker {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+      }
+
+      /* No motion: stop the marquee and let the row scroll instead. */
+      @media (prefers-reduced-motion: reduce) {
+        .gem-video-ticker {
+          overflow-x: auto;
+        }
+
+        .gem-video-ticker__track {
+          animation: none;
+          transform: none;
+        }
+
+        .gem-video-ticker__group[aria-hidden="true"] {
+          display: none;
+        }
+      }
     </style>
     <script type="application/ld+json">
     {
@@ -1571,7 +1704,191 @@
             </p>
         </div>
 
-<!--FEATURED_CREATOR_START-->
+<!--RECENT_VIDEOS_START-->
+      <section class="gem-video-ticker" aria-label="Newest video from each creator in the last 14 days">
+        <div class="gem-video-ticker__track">
+          <div class="gem-video-ticker__group">
+            <a class="gem-video-ticker__card" href="../../watch/1OaG7uyXcLU/" aria-label="Open the video page for How Far Can This META Team Go?? Invincible Guarding The Globe by LAVAMOOSE">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/1OaG7uyXcLU/hqdefault.jpg" alt="Thumbnail for How Far Can This META Team Go?? Invincible Guarding The Globe by LAVAMOOSE" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">How Far Can This META Team Go?? Invincible Guarding The Globe</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">LAVAMOOSE</span> &middot; <time datetime="2026-11-13">Nov 13, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/BDdBEzLtSYA/" aria-label="Open the video page for Criminal Faction Recruitment Event on INVINCIBLE: Guarding The Globe 🌎 by INVINCIBLE GTG OMNI-FAN">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/BDdBEzLtSYA/hqdefault.jpg" alt="Thumbnail for Criminal Faction Recruitment Event on INVINCIBLE: Guarding The Globe 🌎 by INVINCIBLE GTG OMNI-FAN" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">Criminal Faction Recruitment Event on INVINCIBLE: Guarding The Globe 🌎</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">INVINCIBLE GTG OMNI-FAN</span> &middot; <time datetime="2026-11-13">Nov 13, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/13IACa54UIQ/" aria-label="Open the video page for CRIMINALS RECRUITMENT EVENT IN IGTG! by CHernandez88">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/13IACa54UIQ/hqdefault.jpg" alt="Thumbnail for CRIMINALS RECRUITMENT EVENT IN IGTG! by CHernandez88" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">CRIMINALS RECRUITMENT EVENT IN IGTG!</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">CHernandez88</span> &middot; <time datetime="2026-11-13">Nov 13, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/8CZd5S2BkiQ/" aria-label="Open the video page for All Shine, No Substance? - Invincible: Guarding the Globe by Avatar Shuvd">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/8CZd5S2BkiQ/hqdefault.jpg" alt="Thumbnail for All Shine, No Substance? - Invincible: Guarding the Globe by Avatar Shuvd" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">All Shine, No Substance? - Invincible: Guarding the Globe</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">Avatar Shuvd</span> &middot; <time datetime="2026-11-12">Nov 12, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/tn3i3TWASi4/" aria-label="Open the video page for FREE Hero Locks Best in Slot Event!! - Invincible: Guarding the Globe by TH3O">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/tn3i3TWASi4/hqdefault.jpg" alt="Thumbnail for FREE Hero Locks Best in Slot Event!! - Invincible: Guarding the Globe by TH3O" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">FREE Hero Locks Best in Slot Event!! - Invincible: Guarding the Globe</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">TH3O</span> &middot; <time datetime="2026-11-11">Nov 11, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/xqJaAABIx7M/" aria-label="Open the video page for Así es el Equipo Invencible: La alineación que rompe el PvP en Guarding the Globe by mompish">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/xqJaAABIx7M/hqdefault.jpg" alt="Thumbnail for Así es el Equipo Invencible: La alineación que rompe el PvP en Guarding the Globe by mompish" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">Así es el Equipo Invencible: La alineación que rompe el PvP en Guarding the Globe</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">mompish</span> &middot; <time datetime="2026-11-11">Nov 11, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/bFvbFlZ7LKw/" aria-label="Open the video page for Invincible Guarding The Globe - Nightmare: The Astounding Wolf-Man| lvl 599 OMNIPOTENT+ 10 Stars⭐️ by OMNI-BANE">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/bFvbFlZ7LKw/hqdefault.jpg" alt="Thumbnail for Invincible Guarding The Globe - Nightmare: The Astounding Wolf-Man| lvl 599 OMNIPOTENT+ 10 Stars⭐️ by OMNI-BANE" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">Invincible Guarding The Globe - Nightmare: The Astounding Wolf-Man| lvl 599 OMNIPOTENT+ 10 Stars⭐️</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">OMNI-BANE</span> &middot; <time datetime="2026-11-10">Nov 10, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/DpBpsKG3BO8/" aria-label="Open the video page for so my neighbor got arrested... by rapid">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/DpBpsKG3BO8/hqdefault.jpg" alt="Thumbnail for so my neighbor got arrested... by rapid" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">so my neighbor got arrested...</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">rapid</span> &middot; <time datetime="2026-11-09">Nov 9, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/Vvfn_eTjxng/" aria-label="Open the video page for FLEA MARKET TRASH? by KingSlay727">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/Vvfn_eTjxng/hqdefault.jpg" alt="Thumbnail for FLEA MARKET TRASH? by KingSlay727" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">FLEA MARKET TRASH?</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">KingSlay727</span> &middot; <time datetime="2026-11-09">Nov 9, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/FHeyeAMaXvs/" aria-label="Open the video page for VOCÊ ESTÁ USANDO O THARGG ERRADO! | MONTE ESSA EQUIPE! by Punho Viltrumita">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/FHeyeAMaXvs/hqdefault.jpg" alt="Thumbnail for VOCÊ ESTÁ USANDO O THARGG ERRADO! | MONTE ESSA EQUIPE! by Punho Viltrumita" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">VOCÊ ESTÁ USANDO O THARGG ERRADO! | MONTE ESSA EQUIPE!</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">Punho Viltrumita</span> &middot; <time datetime="2026-11-09">Nov 9, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/92hAb_bvofM/" aria-label="Open the video page for I Spent 12,000 TOKENS on Halloween Wish in Invincible GTG… This Happened 💀🎃 by Gxlden">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/92hAb_bvofM/hqdefault.jpg" alt="Thumbnail for I Spent 12,000 TOKENS on Halloween Wish in Invincible GTG… This Happened 💀🎃 by Gxlden" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">I Spent 12,000 TOKENS on Halloween Wish in Invincible GTG… This Happened 💀🎃</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">Gxlden</span> &middot; <time datetime="2026-10-31">Oct 31, 2026</time></span>
+            </a>
+          </div>
+          <div class="gem-video-ticker__group" aria-hidden="true">
+            <a class="gem-video-ticker__card" href="../../watch/1OaG7uyXcLU/" tabindex="-1" aria-hidden="true" aria-label="Open the video page for How Far Can This META Team Go?? Invincible Guarding The Globe by LAVAMOOSE">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/1OaG7uyXcLU/hqdefault.jpg" alt="Thumbnail for How Far Can This META Team Go?? Invincible Guarding The Globe by LAVAMOOSE" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">How Far Can This META Team Go?? Invincible Guarding The Globe</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">LAVAMOOSE</span> &middot; <time datetime="2026-11-13">Nov 13, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/BDdBEzLtSYA/" tabindex="-1" aria-hidden="true" aria-label="Open the video page for Criminal Faction Recruitment Event on INVINCIBLE: Guarding The Globe 🌎 by INVINCIBLE GTG OMNI-FAN">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/BDdBEzLtSYA/hqdefault.jpg" alt="Thumbnail for Criminal Faction Recruitment Event on INVINCIBLE: Guarding The Globe 🌎 by INVINCIBLE GTG OMNI-FAN" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">Criminal Faction Recruitment Event on INVINCIBLE: Guarding The Globe 🌎</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">INVINCIBLE GTG OMNI-FAN</span> &middot; <time datetime="2026-11-13">Nov 13, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/13IACa54UIQ/" tabindex="-1" aria-hidden="true" aria-label="Open the video page for CRIMINALS RECRUITMENT EVENT IN IGTG! by CHernandez88">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/13IACa54UIQ/hqdefault.jpg" alt="Thumbnail for CRIMINALS RECRUITMENT EVENT IN IGTG! by CHernandez88" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">CRIMINALS RECRUITMENT EVENT IN IGTG!</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">CHernandez88</span> &middot; <time datetime="2026-11-13">Nov 13, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/8CZd5S2BkiQ/" tabindex="-1" aria-hidden="true" aria-label="Open the video page for All Shine, No Substance? - Invincible: Guarding the Globe by Avatar Shuvd">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/8CZd5S2BkiQ/hqdefault.jpg" alt="Thumbnail for All Shine, No Substance? - Invincible: Guarding the Globe by Avatar Shuvd" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">All Shine, No Substance? - Invincible: Guarding the Globe</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">Avatar Shuvd</span> &middot; <time datetime="2026-11-12">Nov 12, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/tn3i3TWASi4/" tabindex="-1" aria-hidden="true" aria-label="Open the video page for FREE Hero Locks Best in Slot Event!! - Invincible: Guarding the Globe by TH3O">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/tn3i3TWASi4/hqdefault.jpg" alt="Thumbnail for FREE Hero Locks Best in Slot Event!! - Invincible: Guarding the Globe by TH3O" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">FREE Hero Locks Best in Slot Event!! - Invincible: Guarding the Globe</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">TH3O</span> &middot; <time datetime="2026-11-11">Nov 11, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/xqJaAABIx7M/" tabindex="-1" aria-hidden="true" aria-label="Open the video page for Así es el Equipo Invencible: La alineación que rompe el PvP en Guarding the Globe by mompish">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/xqJaAABIx7M/hqdefault.jpg" alt="Thumbnail for Así es el Equipo Invencible: La alineación que rompe el PvP en Guarding the Globe by mompish" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">Así es el Equipo Invencible: La alineación que rompe el PvP en Guarding the Globe</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">mompish</span> &middot; <time datetime="2026-11-11">Nov 11, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/bFvbFlZ7LKw/" tabindex="-1" aria-hidden="true" aria-label="Open the video page for Invincible Guarding The Globe - Nightmare: The Astounding Wolf-Man| lvl 599 OMNIPOTENT+ 10 Stars⭐️ by OMNI-BANE">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/bFvbFlZ7LKw/hqdefault.jpg" alt="Thumbnail for Invincible Guarding The Globe - Nightmare: The Astounding Wolf-Man| lvl 599 OMNIPOTENT+ 10 Stars⭐️ by OMNI-BANE" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">Invincible Guarding The Globe - Nightmare: The Astounding Wolf-Man| lvl 599 OMNIPOTENT+ 10 Stars⭐️</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">OMNI-BANE</span> &middot; <time datetime="2026-11-10">Nov 10, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/DpBpsKG3BO8/" tabindex="-1" aria-hidden="true" aria-label="Open the video page for so my neighbor got arrested... by rapid">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/DpBpsKG3BO8/hqdefault.jpg" alt="Thumbnail for so my neighbor got arrested... by rapid" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">so my neighbor got arrested...</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">rapid</span> &middot; <time datetime="2026-11-09">Nov 9, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/Vvfn_eTjxng/" tabindex="-1" aria-hidden="true" aria-label="Open the video page for FLEA MARKET TRASH? by KingSlay727">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/Vvfn_eTjxng/hqdefault.jpg" alt="Thumbnail for FLEA MARKET TRASH? by KingSlay727" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">FLEA MARKET TRASH?</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">KingSlay727</span> &middot; <time datetime="2026-11-09">Nov 9, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/FHeyeAMaXvs/" tabindex="-1" aria-hidden="true" aria-label="Open the video page for VOCÊ ESTÁ USANDO O THARGG ERRADO! | MONTE ESSA EQUIPE! by Punho Viltrumita">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/FHeyeAMaXvs/hqdefault.jpg" alt="Thumbnail for VOCÊ ESTÁ USANDO O THARGG ERRADO! | MONTE ESSA EQUIPE! by Punho Viltrumita" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">VOCÊ ESTÁ USANDO O THARGG ERRADO! | MONTE ESSA EQUIPE!</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">Punho Viltrumita</span> &middot; <time datetime="2026-11-09">Nov 9, 2026</time></span>
+            </a>
+            <a class="gem-video-ticker__card" href="../../watch/92hAb_bvofM/" tabindex="-1" aria-hidden="true" aria-label="Open the video page for I Spent 12,000 TOKENS on Halloween Wish in Invincible GTG… This Happened 💀🎃 by Gxlden">
+              <span class="gem-video-ticker__thumb">
+                <img src="https://i.ytimg.com/vi/92hAb_bvofM/hqdefault.jpg" alt="Thumbnail for I Spent 12,000 TOKENS on Halloween Wish in Invincible GTG… This Happened 💀🎃 by Gxlden" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">
+                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>
+              </span>
+              <span class="gem-video-ticker__title">I Spent 12,000 TOKENS on Halloween Wish in Invincible GTG… This Happened 💀🎃</span>
+              <span class="gem-video-ticker__meta"><span class="gem-video-ticker__creator">Gxlden</span> &middot; <time datetime="2026-10-31">Oct 31, 2026</time></span>
+            </a>
+          </div>
+        </div>
+      </section>
       <section class="gem-creators__signal" aria-labelledby="creatorFeedTitle">
         <div class="gem-creators__signal-copy">
           <p class="gem-creators__eyebrow">ACTIVITY FEED</p>
@@ -1611,7 +1928,7 @@
           </ul>
         </div>
       </section>
-<!--FEATURED_CREATOR_END-->
+<!--RECENT_VIDEOS_END-->
 
 <!--CREATOR_SECTIONS_START-->
       <section class="gem-creators__feed-shell" aria-labelledby="creatorFeedListTitle">

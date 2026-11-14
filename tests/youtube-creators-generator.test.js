@@ -49,8 +49,8 @@ function makeTemplate() {
     '<head><title>Test Page</title></head>',
     '<body>',
     '<main>',
-    '<!--FEATURED_CREATOR_START-->',
-    '<!--FEATURED_CREATOR_END-->',
+    '<!--RECENT_VIDEOS_START-->',
+    '<!--RECENT_VIDEOS_END-->',
     '',
     '<!--CREATOR_SECTIONS_START-->',
     '<!--CREATOR_SECTIONS_END-->',
@@ -220,21 +220,49 @@ function test(name, fn) {
 
 console.log('\nPositive generation tests:');
 
-test('Valid active creator generates featured hero with 6 cards plus expansion data', function () {
-  var data = makeValidData([makeActiveCreator('avatar-shuvd', 1)]);
-  var html = gen.renderFeaturedCreatorHtml(data);
-  assert.ok(html.indexOf('gem-creators__featured') !== -1, 'Should have featured class');
-  assert.ok(html.indexOf('creator-hero-avatar-shuvd') !== -1, 'Should have hero id');
-  assert.ok(html.indexOf('Creator avatar-shuvd') !== -1, 'Should contain creator name');
-  assert.ok(html.indexOf('Visit Channel') !== -1, 'Should have channel link');
-  // Count video cards
-  var matches = html.match(/gem-creator-video"/g);
-  assert.strictEqual(matches ? matches.length : 0, 8, 'Should have 6 featured cards plus 2 expansion cards');
-  assert.ok(html.indexOf('Show more videos') !== -1, 'Should expose additional validated videos behind an expansion control');
-  // Check thumbnail attributes
+test('Recent video ticker renders one newest video per creator inside the window', function () {
+  var data = makeValidData([makeActiveCreator('alpha-one', 1), makeActiveCreator('beta-two', 2)]);
+  var html = gen.renderRecentVideosHtml(data);
+
+  assert.ok(html.indexOf('class="gem-video-ticker"') !== -1, 'Should render the ticker section');
+  assert.ok(html.indexOf('last ' + gen.RECENT_TICKER_DAYS + ' days') !== -1, 'Label should state the window');
+  assert.ok(html.indexOf('Visit Channel') === -1, 'Creator meta text must not render above the ticker');
+  assert.ok(html.indexOf('gem-creator__meta') === -1, 'No hero meta block');
+  assert.ok(html.indexOf('gem-creator__handle') === -1, 'No handle line');
+
+  // Two creators, one card each, rendered twice for the seamless loop.
+  var links = html.match(/href="\.\.\/\.\.\/watch\/[A-Za-z0-9_-]{11}\/"/g);
+  assert.strictEqual(links ? links.length : 0, 4, 'Two cards plus their duplicates');
+  var hidden = html.match(/gem-video-ticker__group" aria-hidden="true"/g);
+  assert.strictEqual(hidden ? hidden.length : 0, 1, 'Duplicate group is hidden from assistive tech');
+  assert.strictEqual((html.match(/tabindex="-1"/g) || []).length, 2, 'Duplicate cards are not tabbable');
+
+  // Only the newest video of each creator reaches the ticker.
+  assert.ok(html.indexOf('Video 1 by alpha-one') !== -1, 'Newest video of the first creator is in the ticker');
+  assert.ok(html.indexOf('Video 1 by beta-two') !== -1, 'Newest video of the second creator is in the ticker');
+  assert.strictEqual(html.indexOf('Video 2 by alpha-one'), -1, 'Older videos stay out of the ticker');
+
+  // Thumbnails keep the fallback contract.
   assert.ok(html.indexOf('data-thumbnail-fallback="hqdefault"') !== -1, 'Should have fallback attribute');
   assert.ok(html.indexOf('loading="lazy"') !== -1, 'Should have lazy loading');
   assert.ok(html.indexOf('hqdefault.jpg') !== -1, 'Should use reliable hqdefault thumbnails');
+});
+
+test('Recent video ticker excludes creators whose newest upload is outside the window', function () {
+  var fresh = makeActiveCreator('fresh-one', 1);
+  var stale = makeActiveCreator('stale-one', 2);
+  for (var i = 0; i < stale.videos.length; i++) {
+    stale.videos[i].published = daysAgo(gen.RECENT_TICKER_DAYS + 5);
+  }
+  var data = makeValidData([fresh, stale]);
+  var html = gen.renderRecentVideosHtml(data);
+  assert.ok(html.indexOf('Fresh-one') === -1 || html.indexOf('Creator fresh-one') !== -1, 'Fresh creator present');
+  assert.ok(html.indexOf('Creator stale-one') === -1, 'Stale creator dropped from the ticker');
+});
+
+test('Recent video ticker stays empty when fewer than two creators qualify', function () {
+  var single = makeValidData([makeActiveCreator('only-one', 1)]);
+  assert.strictEqual(gen.renderRecentVideosHtml(single), '', 'A marquee with one card has nothing to loop');
 });
 
 test('Featured creator excluded from normal list', function () {
@@ -286,13 +314,13 @@ test('Hidden creator absent from all output', function () {
   var hidden = makeHiddenCreator('hidden-one', 2);
   var data = makeValidData([active, hidden]);
 
-  var featured = gen.renderFeaturedCreatorHtml(data);
+  var featured = gen.renderRecentVideosHtml(data);
   var sections = gen.renderCreatorSectionsHtml(data);
   var js = gen.renderJsOutput(data);
   var noscript = gen.renderNoscriptHtml(data);
   var jsonLd = gen.renderJsonLdHtml(data);
 
-  assert.ok(featured.indexOf('hidden-one') === -1, 'Hidden not in featured');
+  assert.ok(featured.indexOf('hidden-one') === -1, 'Hidden not in the ticker');
   assert.ok(sections.indexOf('hidden-one') === -1, 'Hidden not in sections');
   assert.ok(js.indexOf('hidden-one') === -1, 'Hidden not in JS output');
   assert.ok(noscript.indexOf('hidden-one') === -1, 'Hidden not in noscript');
@@ -391,13 +419,14 @@ test('JS output excludes hidden creators', function () {
   assert.strictEqual(context.window.__YOUTUBE_CREATORS[0].id, 'active-one');
 });
 
-test('Creator tags appear in featured hero and normal sections', function () {
-  var creator = makeActiveCreator('test-creator', 1);
-  var data = makeValidData([creator]);
-  var featured = gen.renderFeaturedCreatorHtml(data);
+test('Creator tags render in the creator sections, not the ticker', function () {
+  var featured = makeActiveCreator('featured-one', 1);
+  var listed = makeActiveCreator('listed-two', 2);
+  var data = makeValidData([featured, listed]);
+  var ticker = gen.renderRecentVideosHtml(data);
   var sections = gen.renderCreatorSectionsHtml(data);
-  assert.ok(featured.indexOf('gem-creator__tags') !== -1, 'Featured should have tags');
-  assert.ok(featured.indexOf('Guides') !== -1, 'Featured should show tag text');
+  assert.ok(sections.indexOf('gem-creator__tags') !== -1, 'Sections should have tags');
+  assert.strictEqual(ticker.indexOf('gem-creator__tags'), -1, 'Ticker must not carry the creator meta block');
 });
 
 test('Creator sections show lastChecked date', function () {
@@ -731,7 +760,7 @@ test('Missing lastChecked on video rejected', function () {
 console.log('\nMarker tests:');
 
 test('Missing marker pair detected', function () {
-  var badHtml = '<html><!--FEATURED_CREATOR_START--><!--FEATURED_CREATOR_END--></html>';
+  var badHtml = '<html><!--RECENT_VIDEOS_START--><!--RECENT_VIDEOS_END--></html>';
   assertThrows(
     function () { gen.assertMarkers(badHtml, gen.MARKER_PAIRS); },
     'Missing markers'
@@ -739,9 +768,9 @@ test('Missing marker pair detected', function () {
 });
 
 test('Duplicated marker pair detected', function () {
-  var badHtml = '<!--FEATURED_CREATOR_START--><!--FEATURED_CREATOR_END--><!--FEATURED_CREATOR_START--><!--FEATURED_CREATOR_END-->';
+  var badHtml = '<!--RECENT_VIDEOS_START--><!--RECENT_VIDEOS_END--><!--RECENT_VIDEOS_START--><!--RECENT_VIDEOS_END-->';
   assertThrows(
-    function () { gen.assertMarkers(badHtml, ['FEATURED_CREATOR']); },
+    function () { gen.assertMarkers(badHtml, ['RECENT_VIDEOS']); },
     'Duplicated'
   );
 });
@@ -766,8 +795,8 @@ test('replaceMarker replaces content between markers', function () {
 test('replaceMarker is idempotent', function () {
   var template = makeTemplate();
   var content = '<p>test content</p>';
-  var result1 = gen.replaceMarker(template, 'FEATURED_CREATOR', content);
-  var result2 = gen.replaceMarker(result1, 'FEATURED_CREATOR', content);
+  var result1 = gen.replaceMarker(template, 'RECENT_VIDEOS', content);
+  var result2 = gen.replaceMarker(result1, 'RECENT_VIDEOS', content);
   assert.strictEqual(result1, result2, 'Second replacement should produce identical output');
 });
 
@@ -832,8 +861,8 @@ test('generate() produces valid output for complete valid data', function () {
     assert.ok(result.html.indexOf('independent community members') !== -1, 'Should have disclaimer');
 
     // Check markers preserved
-    assert.ok(result.html.indexOf('<!--FEATURED_CREATOR_START-->') !== -1, 'Featured marker preserved');
-    assert.ok(result.html.indexOf('<!--FEATURED_CREATOR_END-->') !== -1, 'Featured end marker preserved');
+    assert.ok(result.html.indexOf('<!--RECENT_VIDEOS_START-->') !== -1, 'Featured marker preserved');
+    assert.ok(result.html.indexOf('<!--RECENT_VIDEOS_END-->') !== -1, 'Featured end marker preserved');
     assert.ok(result.html.indexOf('<!--CREATOR_SECTIONS_START-->') !== -1, 'Sections marker preserved');
     assert.ok(result.html.indexOf('<!--CREATOR_SECTIONS_END-->') !== -1, 'Sections end marker preserved');
     assert.ok(result.html.indexOf('<!--CREATORS_JSON_LD_START-->') !== -1, 'JSON-LD marker preserved');
@@ -957,7 +986,7 @@ test('generate() fails on template with duplicated markers', function () {
   try {
     var creator = makeActiveCreator('test-creator', 1);
     var data = makeValidData([creator]);
-    var badTemplate = makeTemplate() + '\n<!--FEATURED_CREATOR_START--><!--FEATURED_CREATOR_END-->';
+    var badTemplate = makeTemplate() + '\n<!--RECENT_VIDEOS_START--><!--RECENT_VIDEOS_END-->';
     var paths = writeFixture(dir, data, badTemplate);
     var result = gen.generate(paths.sourcePath, paths.templatePath);
     assert.ok(!result.success, 'Should fail with duplicated markers');
@@ -980,8 +1009,8 @@ test('JSON-LD escaping prevents script injection', function () {
 test('html escaping prevents XSS in creator names', function () {
   var creator = makeActiveCreator('test-creator', 1);
   creator.name = '<img src=x onerror=alert(1)>';
-  var data = makeValidData([creator]);
-  var html = gen.renderFeaturedCreatorHtml(data);
+  var data = makeValidData([creator, makeActiveCreator('other-creator', 2)]);
+  var html = gen.renderRecentVideosHtml(data);
   assert.ok(html.indexOf('<img src=x') === -1, 'Should not contain raw HTML in name');
   assert.ok(html.indexOf('&lt;img') !== -1, 'Should escape HTML entities');
 });
