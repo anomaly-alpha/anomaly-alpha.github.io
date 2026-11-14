@@ -1,3 +1,9 @@
+# NOTE: this is a Cloudflare Pages / Netlify config file. GitHub Pages ignores it entirely —
+# the live response for every page carries `Server: GitHub.com` and `Cache-Control: max-age=600`,
+# and no Referrer-Policy header. That is why Lighthouse reports "Use efficient cache lifetimes"
+# on every page, and why a Permissions-Policy cannot be set here. The rules below only take
+# effect if the site is ever fronted by Cloudflare Pages.
+
 # Rarely-changed assets: 1 year
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable

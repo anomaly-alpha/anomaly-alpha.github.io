@@ -55,8 +55,10 @@ function buildPlaylistGrid(playlists) {
     const card = [
       '<div class="gem-music-card">',
       '  <span class="gem-music-card__badge gem-music-card__badge--' + escHtml(p.color) + '">' + escHtml(p.pageName) + '</span>',
-      '  <h3 class="gem-music-card__title">' + escHtml(p.name) + '</h3>',
-      '  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/' + encodeURIComponent(p.id) + '?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
+      '  <h2 class="gem-music-card__title">' + escHtml(p.name) + '</h2>',
+      // title: WCAG 4.1.2 requires an accessible name for frames. allowfullscreen is dropped because
+      // the allow attribute already delegates "fullscreen" and Chrome warns the two conflict.
+      '  <iframe style="border-radius:12px" title="Spotify playlist: ' + escHtml(p.name) + '" src="https://open.spotify.com/embed/playlist/' + encodeURIComponent(p.id) + '?utm_source=generator" width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>',
       '  <p class="gem-music-card__desc">' + escHtml(p.description) + '</p>',
       '  <a href="' + escHtml(relativize(p.page)) + '" class="gem-music-card__link">Go to ' + escHtml(p.pageName) + ' &rarr;</a>',
       '</div>'

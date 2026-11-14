@@ -423,7 +423,9 @@ function validateData(data) {
 
 function renderVideoCard(video, creator) {
   var thumbnailUrl = 'https://i.ytimg.com/vi/' + video.id + '/hqdefault.jpg';
-  var altText = 'Thumbnail for ' + video.title + ' by ' + creator.name;
+  // The thumbnail is decorative: the title and creator are visible text beside it, so an alt
+  // description would only repeat them inside the card's accessible name.
+  var altText = '';
   var badge = getCreatorBadge(creator);
   var badgeModifier = getCreatorBadgeModifier(creator);
 
@@ -434,7 +436,6 @@ function renderVideoCard(video, creator) {
   html += '          class="gem-creator-video"\n';
   html += '          data-youtube-video-id="' + escapeHtml(video.id) + '"\n';
   html += '          data-creator-id="' + escapeHtml(creator.id) + '"\n';
-  html += '          aria-label="Play ' + escapeHtml(video.title) + ' by ' + escapeHtml(creator.name) + '"\n';
   html += '        >\n';
   html += '          <div class="gem-creator-video__thumbnail">\n';
   html += '            <img\n';
@@ -494,9 +495,9 @@ function renderTickerCard(video, creator, duplicate) {
   var html = '';
   html += '            <a class="gem-video-ticker__card" href="../../watch/' + escapeHtml(video.id) + '/"' +
     (duplicate ? ' tabindex="-1" aria-hidden="true"' : '') +
-    ' aria-label="Open the video page for ' + escapeHtml(video.title) + ' by ' + escapeHtml(creator.name) + '">\n';
+    '>\n';
   html += '              <span class="gem-video-ticker__thumb">\n';
-  html += '                <img src="https://i.ytimg.com/vi/' + escapeHtml(video.id) + '/hqdefault.jpg" alt="Thumbnail for ' + escapeHtml(video.title) + ' by ' + escapeHtml(creator.name) + '" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">\n';
+  html += '                <img src="https://i.ytimg.com/vi/' + escapeHtml(video.id) + '/hqdefault.jpg" alt="" loading="lazy" decoding="async" width="480" height="360" data-thumbnail-fallback="hqdefault">\n';
   html += '                <span class="gem-video-ticker__play" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" focusable="false"><path d="M8 5v14l11-7z"/></svg></span>\n';
   html += '              </span>\n';
   html += '              <span class="gem-video-ticker__title">' + escapeHtml(video.title) + '</span>\n';
@@ -959,7 +960,9 @@ function renderJsOutput(data) {
       };
     });
 
-  return 'window.__YOUTUBE_CREATORS=' + JSON.stringify(publicCreators, null, 2) + ';\n';
+  // Compact output: this bundle is shipped to every visitor of the creators page, so the
+  // indentation of the source data is pure download cost.
+  return 'window.__YOUTUBE_CREATORS=' + JSON.stringify(publicCreators) + ';\n';
 }
 
 // ===== MARKER OPERATIONS =====

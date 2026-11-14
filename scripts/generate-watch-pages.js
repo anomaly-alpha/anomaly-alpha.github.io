@@ -525,27 +525,29 @@ function renderDisclosure() {
 function renderGuideCards() {
   var h = [];
   h.push('        <section class="gem-grid--cards mx-4 mb-8">');
-  h.push('            <a href="../../guide/creators/" class="gem-card gem-card--code p-5 text-center" aria-label="YouTube Creators">');
+  // No aria-label on these cards: the visible heading and description already name them, and an
+  // aria-label that reworded the heading tripped WCAG 2.5.3 (Label in Name) on every watch page.
+  h.push('            <a href="../../guide/creators/" class="gem-card gem-card--code p-5 text-center">');
   h.push('                <h3 class="text-lg font-bold gem-text--cyan mb-2">Creator Directory</h3>');
   h.push('                <p class="text-white/60 text-sm">Every indexed video from every tracked creator</p>');
   h.push('            </a>');
-  h.push('            <a href="../../guide/code/" class="gem-card gem-card--code p-5 text-center" aria-label="Invincible Guarding the Globe Codes">');
+  h.push('            <a href="../../guide/code/" class="gem-card gem-card--code p-5 text-center">');
   h.push('                <h3 class="text-lg font-bold gem-text--code mb-2">Codes</h3>');
   h.push('                <p class="text-white/60 text-sm">Active promo codes, rewards, and how to redeem</p>');
   h.push('            </a>');
-  h.push('            <a href="../../guide/event/" class="gem-card gem-card--event p-5 text-center" aria-label="Event Rewards Guide">');
+  h.push('            <a href="../../guide/event/" class="gem-card gem-card--event p-5 text-center">');
   h.push('                <h3 class="text-lg font-bold gem-text--event mb-2">Events</h3>');
   h.push('                <p class="text-white/60 text-sm">Reward brackets and ranking strategies</p>');
   h.push('            </a>');
-  h.push('            <a href="../../guide/pvp/" class="gem-card gem-card--pvp p-5 text-center" aria-label="PvP Rewards Guide">');
+  h.push('            <a href="../../guide/pvp/" class="gem-card gem-card--pvp p-5 text-center">');
   h.push('                <h3 class="text-lg font-bold gem-text--pvp mb-2">PvP</h3>');
   h.push('                <p class="text-white/60 text-sm">All 14 leagues and payout tables explained</p>');
   h.push('            </a>');
-  h.push('            <a href="../../guide/xp/" class="gem-card gem-card--code p-5 text-center" aria-label="XP and Rank-Up Guide">');
+  h.push('            <a href="../../guide/xp/" class="gem-card gem-card--code p-5 text-center">');
   h.push('                <h3 class="text-lg font-bold gem-text--cyan mb-2">XP &amp; Rank-Up</h3>');
   h.push('                <p class="text-white/60 text-sm">Hero, Agent, and Special XP requirements</p>');
   h.push('            </a>');
-  h.push('            <a href="../../guide/login/" class="gem-card gem-card--login p-5 text-center" aria-label="Login Rewards Guide">');
+  h.push('            <a href="../../guide/login/" class="gem-card gem-card--login p-5 text-center">');
   h.push('                <h3 class="text-lg font-bold gem-text--login mb-2">Login Rewards</h3>');
   h.push('                <p class="text-white/60 text-sm">Daily, weekly, and monthly bonuses</p>');
   h.push('            </a>');
