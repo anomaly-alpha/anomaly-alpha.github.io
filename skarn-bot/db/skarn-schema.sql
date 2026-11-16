@@ -739,3 +739,19 @@ CREATE INDEX IF NOT EXISTS idx_channel_context_summary_segments_window
 
 CREATE INDEX IF NOT EXISTS idx_channel_context_summary_segments_author
   ON channel_context_summary_segments(guild_id, channel_id, updated_at);
+
+CREATE TABLE IF NOT EXISTS guild_membership_log (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  guild_id TEXT NOT NULL,
+  guild_name TEXT,
+  event TEXT NOT NULL CHECK (event IN ('joined', 'left')),
+  reason TEXT,
+  member_count INTEGER,
+  occurred_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_guild_membership_log_time
+  ON guild_membership_log(occurred_at DESC);
+
+CREATE INDEX IF NOT EXISTS idx_guild_membership_log_guild
+  ON guild_membership_log(guild_id, occurred_at DESC);

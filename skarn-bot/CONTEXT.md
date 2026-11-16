@@ -204,6 +204,16 @@ This is the primary gate for non-reply, non-mention AI responses. Disabling it w
 
 Typing pacing uses a single `getTypingDelay` curve (`features/discordNative/typingSim.js`) plus `startTypingKeepalive` — the keepalive keeps the indicator visible for the whole thinking duration, and one length-scaled pre-send pause (0.5–4 s) runs before the reply is sent, followed by a single `sendTyping()` ping when a channel exists. The redundant stacked delay (`simulateTyping`'s internal sleep + `estimateDelay` from `typingController.js`) was removed 2026-08-04 — the indicator and the "drafting" beat are preserved, but long-reply pauses are intentionally roughly halved. `typingController.js` was deleted.
 
+### 7.9 Guild allowlist and membership log
+
+**File**: `features/safety/guildAllowlist.js`, `db/guildMembership.js`
+
+A Discord bot **cannot decline an invite** — the join completes before any bot code runs, and anyone with Manage Server can add it. Approval is therefore enforced after the fact. `SKARN_APPROVED_GUILDS` (comma-separated guild IDs) is the approved set; on `guildCreate` an unapproved guild is left immediately, and a startup sweep (`enforce()`, called from `clientReady` in `bot.js`) catches guilds that arrived while the variable was unset, since those never re-fire `guildCreate`. **An empty or missing `SKARN_APPROVED_GUILDS` disables enforcement rather than denying everything** — a typo in that variable would otherwise make the bot leave every server it is in, including the operator's own.
+
+Every join and leave is appended to `guild_membership_log` **regardless of whether enforcement is enabled**, so the record stays complete if the allowlist is switched off. `reason` distinguishes `allowlisted`, `unapproved`, `allowlist_disabled`, `external` (a `guildDelete` the bot did not cause — admin kick or operator action), and `leave_failed`. A `guildDelete` carrying `unavailable: true` is a Discord outage, not a leave, and is skipped; leaves the bot initiated are recorded once by `leaveGuild()` and skipped by the `guildDelete` handler. Read it with `npm run membership:log` (add `--guild <id>` or `--limit N`).
+
+Removal would let any server owner pull the bot into an unvetted guild, and would erase the only persistent record of which guilds it has been in.
+
 ## 8. Known trade-offs, accepted deliberately
 
 The following architectural trade-offs are consciously accepted rather than accidental. Each is documented with the rationale and the condition under which it should be revisited.

@@ -223,6 +223,11 @@ client.once('clientReady', () => {
 
   console.log('[SlurFilter] Gate 1 active — safety instruction in system prompt');
 
+  // Leave any guild the operator has not pre-approved. Registered here (rather
+  // than at module load) so the sweep runs once the cache is fully populated.
+  const allowlist = require('./features/safety/guildAllowlist').registerGuildAllowlist(client);
+  if (allowlist.enabled) allowlist.enforce().catch((e) => console.error('[GuildAllowlist] Sweep failed:', e.message));
+
   // Scan command files for activation phrases
   require('./features/activation/activationRegistry').scanCommands();
 
