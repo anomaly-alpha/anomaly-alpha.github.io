@@ -228,6 +228,9 @@ client.once('clientReady', () => {
   const allowlist = require('./features/safety/guildAllowlist').registerGuildAllowlist(client);
   if (allowlist.enabled) allowlist.enforce().catch((e) => console.error('[GuildAllowlist] Sweep failed:', e.message));
 
+  // Daily per-server activity summary, DMed to the operator.
+  require('./features/guildStats/dailySummary').startDailySummary(client);
+
   // Scan command files for activation phrases
   require('./features/activation/activationRegistry').scanCommands();
 
@@ -363,6 +366,12 @@ client.on('messageCreate', async function(message) {
   // Archive human message bodies only for the explicitly configured guild.
   try { require('./db/messageActivityArchive').recordMessage(message); }
   catch (e) { console.error('[MessageArchive] Failed to record message:', e.message); }
+
+  // Per-guild daily counters for the operator summary. Counts every human
+  // message, including the ones the prefix skips below drop.
+  if (message.guild) {
+    require('./db/guildStats').bumpDailyMessage(message.guild.id, message.author.id, message.createdTimestamp || Date.now());
+  }
 
   // Step 2: Skip messages starting with * or + (prefix markers)
   if (message.content.startsWith('*') || message.content.startsWith('+')) return;

@@ -24,6 +24,7 @@ const ops = require('./ops');
 const humor = require('./humor');
 const stories = require('./stories');
 const guildMembership = require('./guildMembership');
+const guildStats = require('./guildStats');
 
 module.exports = Object.assign(
   {},
@@ -48,4 +49,5 @@ module.exports = Object.assign(
   humor,
   stories,
   guildMembership,
+  guildStats,
 );

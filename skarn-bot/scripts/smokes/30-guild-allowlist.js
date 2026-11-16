@@ -56,7 +56,7 @@ async function main() {
     const left = [];
     const record = recorder();
     const client = fakeClient([]);
-    const result = registerGuildAllowlist(client, { rawList: undefined, log: silent(), record });
+    const result = registerGuildAllowlist(client, { rawList: undefined, log: silent(), record, notify: async () => true });
     assert.strictEqual(result.enabled, false);
     assert.deepStrictEqual(result.approved, []);
     assert.strictEqual(typeof client.handlers.guildCreate, 'function', 'still listens to record joins');
@@ -76,7 +76,7 @@ async function main() {
     const left = [];
     const record = recorder();
     const client = fakeClient([]);
-    const result = registerGuildAllowlist(client, { rawList: `${GOOD},${OTHER}`, log: silent(), record });
+    const result = registerGuildAllowlist(client, { rawList: `${GOOD},${OTHER}`, log: silent(), record, notify: async () => true });
     assert.strictEqual(result.enabled, true);
     assert.deepStrictEqual(result.approved, [GOOD, OTHER]);
 
@@ -103,7 +103,7 @@ async function main() {
     const left = [];
     const record = recorder();
     const client = fakeClient([]);
-    registerGuildAllowlist(client, { rawList: GOOD, log: silent(), record });
+    registerGuildAllowlist(client, { rawList: GOOD, log: silent(), record, notify: async () => true });
 
     client.handlers.guildDelete({ id: ROGUE, name: 'Kicked', unavailable: false });
     assert.deepStrictEqual(record.events(), [`${ROGUE}:left:external`], 'admin removal logged as external');
@@ -127,7 +127,7 @@ async function main() {
       fakeGuild(ROGUE, 'Rogue', left),
       fakeGuild('732943799772512417', 'Rogue2', left),
     ]);
-    const result = registerGuildAllowlist(client, { rawList: GOOD, log: silent(), record });
+    const result = registerGuildAllowlist(client, { rawList: GOOD, log: silent(), record, notify: async () => true });
     const sweep = await result.enforce();
     assert.deepStrictEqual(sweep, { left: 2, kept: 1 });
     assert.deepStrictEqual(left, [ROGUE, '732943799772512417']);
@@ -142,7 +142,7 @@ async function main() {
     const record = recorder();
     const log = silent();
     const client = fakeClient([]);
-    const result = registerGuildAllowlist(client, { rawList: GOOD, log, record });
+    const result = registerGuildAllowlist(client, { rawList: GOOD, log, record, notify: async () => true });
     const broken = { id: ROGUE, name: 'Broken', memberCount: 3, async leave() { throw new Error('missing access'); } };
     await client.handlers.guildCreate(broken);
     client.guilds.cache.set(ROGUE, broken);
@@ -158,10 +158,75 @@ async function main() {
     const client = fakeClient([]);
     const boom = () => { throw new Error('db down'); };
     const log = silent();
-    registerGuildAllowlist(client, { rawList: GOOD, log, record: boom });
+    registerGuildAllowlist(client, { rawList: GOOD, log, record: boom, notify: async () => true });
     await client.handlers.guildCreate(fakeGuild(ROGUE, 'Rogue', left));
     assert.deepStrictEqual(left, [ROGUE], 'still leaves even when logging fails');
     assert.ok(log.lines.some((l) => l.includes('log write failed')));
+  }
+
+  // Unapproved joins raise exactly one operator alert, carrying the id to approve.
+  {
+    const left = [];
+    const alerts = [];
+    const client = fakeClient([]);
+    registerGuildAllowlist(client, {
+      rawList: GOOD,
+      log: silent(),
+      record: recorder(),
+      notify: async (text) => { alerts.push(text); return true; },
+    });
+
+    const rogue = { id: ROGUE, name: 'Some Server', memberCount: 42, async leave() { left.push(ROGUE); } };
+    await client.handlers.guildCreate(rogue);
+    assert.strictEqual(alerts.length, 1, 'one alert per unapproved invite');
+    assert.ok(alerts[0].includes(ROGUE), 'alert carries the guild id to approve');
+    assert.ok(alerts[0].includes('Some Server'), 'alert names the server');
+    assert.ok(alerts[0].includes('42 members'), 'alert carries the member count');
+    assert.ok(alerts[0].includes('SKARN_APPROVED_GUILDS'), 'alert names the variable to edit');
+    assert.ok(alerts[0].includes('left immediately'), 'alert confirms the leave');
+
+    await client.handlers.guildCreate({ id: GOOD, name: 'Approved', memberCount: 10, async leave() {} });
+    assert.strictEqual(alerts.length, 1, 'approved joins raise no alert');
+
+    // A failed leave is louder, not silent — it needs a human.
+    const brokenClient = fakeClient([]);
+    const brokenAlerts = [];
+    registerGuildAllowlist(brokenClient, {
+      rawList: GOOD,
+      log: silent(),
+      record: recorder(),
+      notify: async (text) => { brokenAlerts.push(text); return true; },
+    });
+    await brokenClient.handlers.guildCreate({
+      id: ROGUE, name: 'Stuck', memberCount: 7,
+      async leave() { throw new Error('missing access'); },
+    });
+    assert.strictEqual(brokenAlerts.length, 1, 'still alerts when the leave fails');
+    assert.ok(brokenAlerts[0].includes('could not leave'), 'alert escalates a failed leave');
+
+    // A throwing notifier must not break enforcement or the log.
+    const throwingClient = fakeClient([]);
+    const throwingLeft = [];
+    registerGuildAllowlist(throwingClient, {
+      rawList: GOOD,
+      log: silent(),
+      record: recorder(),
+      notify: async () => { throw new Error('DMs closed'); },
+    });
+    await throwingClient.handlers.guildCreate({ id: ROGUE, name: 'X', memberCount: 1, async leave() { throwingLeft.push(ROGUE); } });
+    assert.deepStrictEqual(throwingLeft, [ROGUE], 'leaves even when the alert throws');
+  }
+
+  // With no operator configured the default notifier reports rather than throwing.
+  {
+    const priorOperator = process.env.SKARN_OPERATOR_USER_ID;
+    delete process.env.SKARN_OPERATOR_USER_ID;
+    const log = silent();
+    const client = fakeClient([]);
+    registerGuildAllowlist(client, { rawList: GOOD, log, record: recorder() });
+    await client.handlers.guildCreate({ id: ROGUE, name: 'No operator', memberCount: 3, async leave() {} });
+    assert.ok(log.lines.some((l) => l.includes('SKARN_OPERATOR_USER_ID')), 'logs the missing operator id');
+    if (priorOperator !== undefined) process.env.SKARN_OPERATOR_USER_ID = priorOperator;
   }
 
   console.log('Guild allowlist smoke passed');

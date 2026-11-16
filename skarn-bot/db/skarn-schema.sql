@@ -755,3 +755,22 @@ CREATE INDEX IF NOT EXISTS idx_guild_membership_log_time
 
 CREATE INDEX IF NOT EXISTS idx_guild_membership_log_guild
   ON guild_membership_log(guild_id, occurred_at DESC);
+
+CREATE TABLE IF NOT EXISTS guild_daily_stats (
+  guild_id TEXT NOT NULL,
+  day TEXT NOT NULL,
+  messages INTEGER NOT NULL DEFAULT 0,
+  moderation_blocks INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (guild_id, day)
+);
+
+CREATE TABLE IF NOT EXISTS guild_daily_speaker (
+  guild_id TEXT NOT NULL,
+  day TEXT NOT NULL,
+  user_id TEXT NOT NULL,
+  messages INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (guild_id, day, user_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_guild_daily_stats_day
+  ON guild_daily_stats(day);

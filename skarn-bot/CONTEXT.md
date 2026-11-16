@@ -214,6 +214,26 @@ Every join and leave is appended to `guild_membership_log` **regardless of wheth
 
 Removal would let any server owner pull the bot into an unvetted guild, and would erase the only persistent record of which guilds it has been in.
 
+An unapproved invite also **DMs the operator** (`SKARN_OPERATOR_USER_ID`) with the server name, member count, and the exact id to add to the allowlist, so the invite is a decision rather than a silent loss. A failed leave says so explicitly, because that case needs a human. With no operator id configured the alert is skipped and logged; a DM that cannot be delivered (closed DMs, no shared guild) is logged and never propagates — enforcement must not depend on the notification succeeding.
+
+### 7.10 Daily per-server summary
+
+**File**: `features/guildStats/dailySummary.js`, `db/guildStats.js`
+
+Once a day at `SKARN_SUMMARY_HOUR_UTC` (default 09:00 UTC) the bot DMs the operator one message per guild it is in, covering the previous UTC day: human message volume and distinct speakers, the top three speakers, AI exchanges/threads/people, inputs blocked by moderation, joins and leaves, and the current member count. A guild with no activity reports "nothing happened" rather than an empty message.
+
+Three data sources, none of which required rewriting existing behaviour:
+
+- **Human traffic** is counted live. `messageCreate` calls `bumpDailyMessage()` for every human message in a guild, including messages the prefix skips drop — it sits in the handler **before** those skips precisely so the count reflects what people typed, not what the bot acted on. This is new instrumentation: before it, message volume was only known for the single `SKARN_MESSAGE_RETENTION_GUILD_ID` guild.
+- **Moderation blocks** are counted at the one place they already happen, the `inputCheck.action === 'block'` branch of `moderatedChatCompletion()` (`ai/client.js`). Blocks were previously console-log only, so this is the first persistent record of them.
+- **AI use** needs no instrumentation at all — `conversation_messages` already carries `guild_id` and `created_at`, so exchanges, threads, and distinct users are a single grouped query.
+
+Every write in `db/guildStats.js` swallows its own error. These run on the `messageCreate` hot path and inside the AI admission gate, and a counting failure must never drop a message or an AI reply. Counters are bucketed by UTC day (`guild_daily_stats`, `guild_daily_speaker`) and pruned to 90 days on each daily run.
+
+Scoping note: the counters are **per guild**, not per user — `guild_daily_speaker` holds `(guild_id, day, user_id, messages)` purely to produce a distinct-speaker count and a top-three list. It is operator-only reporting data and is pruned on the same schedule.
+
+Removal would leave the operator with no passive visibility into the servers the bot is in, and would make message volume and moderation blocks observable only by grepping Railway logs inside a ~24h retention window.
+
 ## 8. Known trade-offs, accepted deliberately
 
 The following architectural trade-offs are consciously accepted rather than accidental. Each is documented with the rationale and the condition under which it should be revisited.
@@ -316,6 +336,9 @@ The following environment variables are consumed by the codebase. Variables are 
 | `GUILD_AI_DAILY_LIMIT` | No | `2000` | Per-guild daily AI call budget for chat buckets (`features/ai/guildBudget.js`) |
 | `CONFIDANT_DAILY_CALL_LIMIT` | No | `300` | Global daily Confidant AI-call limit (`features/confidant/confidantRateLimit.js`) |
 | `SKARN_DB_PATH` | No | `data/skarn.db` | SQLite database path (`db/db.js:9`); the smoke suites use it for temp-DB isolation |
+| `SKARN_APPROVED_GUILDS` | No | unset | Comma-separated guild IDs allowed to keep the bot. Unapproved guilds are left on join, logged to `guild_membership_log`. **Unset or empty disables enforcement** rather than denying every guild (`features/safety/guildAllowlist.js`) |
+| `SKARN_OPERATOR_USER_ID` | No | unset | Discord user ID that receives unapproved-invite alerts and the daily per-server summaries. Unset disables both notifications but not enforcement (`features/safety/guildAllowlist.js`, `features/guildStats/dailySummary.js`) |
+| `SKARN_SUMMARY_HOUR_UTC` | No | `9` | UTC hour (0–23) the daily per-server summary DM is sent. Out-of-range values fall back to 9 (`features/guildStats/dailySummary.js`) |
 
 > **Note**: `AI_MODEL` and `AI_MODEL_COMPLEX` **are documented in `.env.example`** (as commented-out optional defaults, matching the table above). They are consumed by `features/intelligence/modelRouter.js`.
 >

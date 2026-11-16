@@ -71,6 +71,7 @@ async function moderatedChatCompletion(params) {
   }
   if (inputCheck.action === 'block') {
     console.log('[Moderation] Input blocked for user', userId);
+    if (guildId) require('../db/guildStats').bumpDailyModerationBlock(guildId);
     releaseCall(userId, bucket, reservationId);
     return { success: false, safeMessage: getSafeMessage(inputCheck.categories, inputCheck.unavailable) };
   }

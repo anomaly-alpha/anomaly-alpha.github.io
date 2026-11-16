@@ -14,7 +14,33 @@
 // switched off.
 
 const ENV_KEY = 'SKARN_APPROVED_GUILDS';
+const OPERATOR_ENV_KEY = 'SKARN_OPERATOR_USER_ID';
 const ID_PATTERN = /^\d{17,20}$/;
+
+function formatUtc(date) {
+  return date.toISOString().slice(0, 19).replace('T', ' ') + ' UTC';
+}
+
+function buildInviteAlert(guild, options) {
+  const config = options || {};
+  const left = config.left;
+  const when = config.now ? new Date(config.now) : new Date();
+  const outcome = left === false
+    ? 'skarn could not leave — remove it by hand.'
+    : 'skarn left immediately.';
+
+  return [
+    'skarn was added to a server that is not approved.',
+    '',
+    (guild.name || 'unknown') + ' (' + guild.id + ')',
+    (guild.memberCount ? guild.memberCount + ' members · ' : '') + formatUtc(when),
+    '',
+    outcome,
+    '',
+    'to approve it, add this id to ' + ENV_KEY + ':',
+    String(guild.id),
+  ].join('\n');
+}
 
 function parseApprovedList(raw) {
   return String(raw == null ? '' : raw)
@@ -32,6 +58,21 @@ function registerGuildAllowlist(client, options) {
   const raw = config.rawList !== undefined ? config.rawList : process.env[ENV_KEY];
   const log = config.log || ((message) => console.log('[GuildAllowlist] ' + message));
   const record = config.record || ((entry) => require('../../db/guildMembership').logGuildEvent(entry));
+  const operatorId = config.operatorId !== undefined ? config.operatorId : (process.env[OPERATOR_ENV_KEY] || '');
+  const notify = config.notify || (async (text) => {
+    if (!operatorId) {
+      log('no ' + OPERATOR_ENV_KEY + ' set — invite alert not sent');
+      return false;
+    }
+    try {
+      const user = await client.users.fetch(operatorId);
+      await user.send({ content: text, allowedMentions: { parse: [] } });
+      return true;
+    } catch (error) {
+      log('invite alert failed: ' + error.message);
+      return false;
+    }
+  });
   const approved = parseApprovedList(raw);
   const enabled = approved.length > 0;
   const selfLeft = new Set();
@@ -79,7 +120,12 @@ function registerGuildAllowlist(client, options) {
       return;
     }
     write(guild, 'joined', 'unapproved');
-    await leaveGuild(guild, 'unapproved');
+    const left = await leaveGuild(guild, 'unapproved');
+    try {
+      await notify(buildInviteAlert(guild, { left }));
+    } catch (error) {
+      log('invite alert threw: ' + error.message);
+    }
   });
 
   client.on('guildDelete', (guild) => {
@@ -118,4 +164,4 @@ function registerGuildAllowlist(client, options) {
   return { enabled, approved, enforce };
 }
 
-module.exports = { ENV_KEY, parseApprovedList, isApproved, registerGuildAllowlist };
+module.exports = { ENV_KEY, OPERATOR_ENV_KEY, parseApprovedList, isApproved, buildInviteAlert, registerGuildAllowlist };
