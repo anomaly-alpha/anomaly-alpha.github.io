@@ -23,6 +23,7 @@ const channelContext = require('./channelContext');
 const ops = require('./ops');
 const humor = require('./humor');
 const stories = require('./stories');
+const guildMembership = require('./guildMembership');
 
 module.exports = Object.assign(
   {},
@@ -46,4 +47,5 @@ module.exports = Object.assign(
   ops,
   humor,
   stories,
+  guildMembership,
 );
