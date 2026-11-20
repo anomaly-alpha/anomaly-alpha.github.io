@@ -10,8 +10,9 @@ everything else for review.
 2. **Add it as a repository secret:** GitHub → Settings → Secrets and variables →
    Actions → New repository secret → name `GEMINI_API_KEY`.
 3. **Optional model override:** add a repository *variable* `GEMINI_MODEL`. The default is
-   `gemini-3.5-flash-lite`, which supports Google Search grounding and is the cheapest
-   grounded model.
+   `gemini-2.5-flash-lite`, which still includes free-tier Google Search grounding.
+   Gemini 3 and newer reserve grounding for paid projects, which surfaces as HTTP 429
+   with a billing hint.
 4. **Confirm Pages is branch-deployed:** Settings → Pages → Source should be
    *Deploy from a branch* → `main` → `/ (root)`. The workflow pushes to `main`, which
    triggers the Pages rebuild. If Pages is set to *GitHub Actions*, a push alone will not
@@ -71,7 +72,7 @@ A commit happens only when something changed. The job also updates the rolling
 
 ## Cost
 
-One grounded interaction per day. Gemini 3 and newer bill grounding per search query, with
-5,000 free search requests per month shared across those models; a run that issues a
-handful of queries stays inside the free tier. Check the current Gemini API pricing if the
-prompt or model changes.
+One grounded interaction per day. The default 2.5 Flash-Lite includes Google Search
+grounding on the free tier (500 grounded requests per day, shared with Flash). Gemini 3 and
+newer reserve grounding for paid projects and bill per search query after 5,000 free
+requests per month, so switching the model requires billing to be enabled.

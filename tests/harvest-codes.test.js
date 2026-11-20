@@ -259,6 +259,46 @@ assert.strictEqual(text, '500 & Gems', 'scripts, styles and tags must be strippe
       ['https://cited.example/codes'],
       'annotation citations must fill in missing source URLs',
     );
+
+    // Gemini 2.5 may reject response_format combined with tools; the client must
+    // retry once without the schema instead of dropping the web-search step.
+    let attempts = 0;
+    global.fetch = async (url, options) => {
+      attempts += 1;
+      const body = JSON.parse(options.body);
+      if (body.response_format) {
+        return {
+          ok: false,
+          status: 400,
+          headers: { get: () => 'application/json' },
+          text: async () =>
+            JSON.stringify({
+              error: { message: 'response_format is not supported with tools', status: 'INVALID_ARGUMENT' },
+            }),
+        };
+      }
+      return {
+        ok: true,
+        status: 200,
+        headers: { get: () => 'application/json' },
+        json: async () => ({
+          steps: [
+            {
+              type: 'model_output',
+              content: [
+                {
+                  type: 'text',
+                  text: JSON.stringify({ codes: [{ code: 'FALLB4CK', reward: '500 Gems', sourceUrls: [] }] }),
+                },
+              ],
+            },
+          ],
+        }),
+      };
+    };
+    const fallback = await discoverCodes({ apiKey: 'dummy', today: '2026-11-19' });
+    assert.strictEqual(fallback.codes.length, 1);
+    assert.strictEqual(attempts, 2, 'a 400 must retry exactly once without response_format');
   } finally {
     global.fetch = originalFetch;
   }

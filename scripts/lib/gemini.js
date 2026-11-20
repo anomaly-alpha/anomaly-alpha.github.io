@@ -5,7 +5,10 @@
 // looked somewhere, not that the code it printed exists on the page.
 
 const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/interactions';
-const DEFAULT_MODEL = 'gemini-3.5-flash-lite';
+// 2.5 Flash-Lite is the newest model that still includes Google Search grounding on
+// the free tier. Gemini 3 and newer reserve grounding for paid projects, where the
+// API answers 429 RESOURCE_EXHAUSTED with a billing hint.
+const DEFAULT_MODEL = 'gemini-2.5-flash-lite';
 const API_REVISION = '2026-05-20';
 const RETRY_DELAYS_MS = [2000, 8000];
 const REQUEST_TIMEOUT_MS = 90000;
@@ -163,8 +166,9 @@ async function discoverCodes({ apiKey, model = DEFAULT_MODEL, knownCodes = [], t
         rawText: text,
       };
     } catch (error) {
-      // Older endpoints reject response_format; retry once without it before failing.
-      if (useSchema && error.status === 400 && /response_format|schema|INVALID_ARGUMENT/i.test(error.detail || '')) {
+      // A 400 usually means this model rejects the schema/tool combination; retry
+      // once without the schema before giving up.
+      if (useSchema && error.status === 400) {
         useSchema = false;
         continue;
       }

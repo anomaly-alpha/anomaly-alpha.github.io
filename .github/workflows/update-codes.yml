@@ -43,7 +43,7 @@ jobs:
       - name: Harvest and verify codes
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.5-flash-lite' }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.5-flash-lite' }}
           DRY_RUN: ${{ inputs.dry_run }}
         run: |
           set -euo pipefail
