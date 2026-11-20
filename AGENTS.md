@@ -68,6 +68,12 @@ Open `index.html` in a browser. Works from `file://`.
 | `scripts/pull-ga4.js` | Pulls GA4 Data API data into `data/ga4-api/<date>/` (`npm run pull-ga4`); requires Viewer access for the service account on the property |
 | `scripts/lib/google-auth.js` | Shared credential discovery and service-account JWT minting for the two pullers; service-account key only (no user ADC), keys live outside the repo |
 | `scripts/check-code-sources.js` | Diffs the publisher's patch-note reward codes and dates against `data/codes.json` (`npm run check-codes`); exits 1 on drift |
+| `scripts/lib/patch-notes.js` | Shared patch-note harvest + slug/date parsing used by both code scripts |
+| `scripts/harvest-codes.js` | Daily sync: publisher harvest + Gemini web search, verifies every candidate, auto-publishes only publisher-dated codes with a verified gem/ticket reward (`npm run harvest-codes`) |
+| `scripts/lib/gemini.js` | Gemini Interactions API client (Google Search grounding, JSON-schema output) for code discovery |
+| `data/code-candidates.json` | Review queue: codes found on the web but not auto-publishable, with evidence and status |
+| `.github/workflows/update-codes.yml` | Daily cron that runs the sync, regenerates code pages, commits, pushes, and maintains the review issue |
+| `tests/harvest-codes.test.js` | Offline tests for reward parsing, publication rules, URL safety, and model output |
 | `scripts/analyze-gsc.js` | Analyzes GSC exports and rewrites `docs/reports/2026-08-20/unknown/SEO_PERFORMANCE.md` (`npm run analyze-gsc`) |
 | `scripts/add-meta.js` / `add-more.js` / `add-schema.js` | Legacy guide-page meta/tag/schema helpers |
 | `scripts/run-psi-audit.js` | PageSpeed Insights audit across the 8 audited pages |
@@ -98,7 +104,8 @@ Open `index.html` in a browser. Works from `file://`.
 - **Never use `fetch()`** — all data from inline JSON configs loaded via `loadConfig(id)`
 - **Forecaster (not yet implemented)** — `initForecastChart()` creates a 4th Chart.js line chart instance (separate from the 3 existing charts). Destroyed and recreated only when the forecaster toggles off/on; otherwise updated via `chart.update('none')`. **Note: HTML elements not yet added to index.html — JS functions exist but are unreachable.**
 - **Ads disabled, site-message fallback** — Each eligible page has an `ads-config` inline JSON block with `"enabled": false` and a lower-content `gem-site-message` HTML fallback. GA4 analytics is active (`G-21RZK3GKKZ`) across all pages. `ads.txt` exists but no ad-serving runtime is loaded. The fallback is validated by `npm run test:ads-fallback` and `npm run test:ads-txt`.
-- **No standard test framework** — custom Node test scripts in `tests/` (e.g. `npm run test:creators`, `npm run test:ads-fallback`, `npm run test:ads-txt`). Manual QA via browser open/reload for HTML/CSS/JS changes. No CI/CD pipeline — commits are pushed directly to GitHub Pages.
+- **No standard test framework** — custom Node test scripts in `tests/` (e.g. `npm run test:creators`, `npm run test:ads-fallback`, `npm run test:ads-txt`). Manual QA via browser open/reload for HTML/CSS/JS changes. No general CI pipeline; the only workflow is the daily code sync below, and commits are pushed directly to GitHub Pages.
+- **Daily code automation is publisher-gated** — `.github/workflows/update-codes.yml` runs `npm run harvest-codes` at 06:23 UTC. A code auto-publishes only when the publisher dated it (patch-note slug) and a fetched page shows a gem/ticket reward next to it. Web-only codes, item/hero or mixed rewards, and disagreeing sources go to `data/code-candidates.json` plus the rolling `Promo code review queue` issue. Nothing auto-expires. `GEMINI_API_KEY` is a repo secret; without it the job runs official-only instead of failing.
 - **Charts are lazy-loaded** — Chart.js loaded dynamically on first "Show Charts" click via `loadChartJs()` + `initCharts()`
 - **Never recreate charts** — create once via `initCharts()`, update via `chart.update('none')`
 - **Never use JSDoc** — minimal inline comments, section headers (`// ===== NAME =====`) only
@@ -120,6 +127,8 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run build:tailwind` — Tailwind rebuild only (skip minification)
 - `npm run update-codes` — Regenerate `data/generated/promo-codes.js` and update all code counts/descriptions/chips in `guide/code/index.html` from `data/codes.json`
 - `npm run check-codes` — Diff the publisher's patch-note reward codes and release dates against `data/codes.json`; exits non-zero on drift. Run before shipping any code update
+- `npm run harvest-codes` — Daily sync: harvest the publisher, search the web via Gemini, verify every candidate, and write `data/codes.json` / `data/code-candidates.json` (flags: `--dry-run`, `--no-llm`, `--report <path>`, `--summary <path>`, `--today <YYYY-MM-DD>`)
+- `npm run test:harvest` — Offline tests for reward parsing, publication rules, URL safety, and model output
 - `npm run generate-creators` — Validate creator source data and regenerate the static creators guide and browser data
 - `npm run generate-watch` — Regenerate all `/watch/` pages, the hub, and the watch region of `sitemap.xml`
 - `npm run enrich-creators` — Refresh real YouTube metadata for creator videos (duration, views, upload timestamp, description, playability)

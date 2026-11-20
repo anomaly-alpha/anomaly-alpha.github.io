@@ -1,0 +1,120 @@
+name: Update promo codes
+
+on:
+  schedule:
+    # 06:23 UTC daily. GitHub delays scheduled runs under load; the time is a hint.
+    - cron: '23 6 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Compute the sync without writing or committing
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: update-codes
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Harvest and verify codes
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-3.5-flash-lite' }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          ARGS=()
+          if [ "${DRY_RUN:-false}" = "true" ]; then ARGS+=("--dry-run"); fi
+          node scripts/harvest-codes.js \
+            --report "$RUNNER_TEMP/codes-report.md" \
+            --summary "$RUNNER_TEMP/codes-summary.json" \
+            "${ARGS[@]}"
+
+      - name: Publish report to the job summary
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/codes-report.md" ]; then
+            cat "$RUNNER_TEMP/codes-report.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Regenerate code pages
+        if: ${{ inputs.dry_run != true }}
+        run: npm run update-codes
+
+      - name: Validate generated output
+        run: |
+          node tests/harvest-codes.test.js
+          node tests/promo-codes-generator.test.js
+
+      - name: Publisher drift check (informational)
+        continue-on-error: true
+        run: npm run check-codes
+
+      - name: Commit and push
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/codes.json data/code-candidates.json data/generated/promo-codes.js \
+            guide index.html sitemap.xml
+          if git diff --cached --quiet; then
+            echo "No code changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(codes): daily sync from publisher and verified sources"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 5))
+          done
+          echo "Push failed after 3 attempts" >&2
+          exit 1
+
+      - name: Update review issue
+        if: ${{ inputs.dry_run != true }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          PENDING=$(node -p "require('$RUNNER_TEMP/codes-summary.json').pending.length")
+          NUM=$(gh issue list --state open \
+            --search '"Promo code review queue" in:title' \
+            --json number --jq '.[0].number // empty')
+          if [ "$PENDING" -gt 0 ]; then
+            if [ -n "$NUM" ]; then
+              gh issue edit "$NUM" --body-file "$RUNNER_TEMP/codes-report.md"
+            else
+              gh issue create \
+                --title "Promo code review queue" \
+                --body-file "$RUNNER_TEMP/codes-report.md"
+            fi
+          elif [ -n "$NUM" ]; then
+            gh issue close "$NUM" --comment "All queued codes resolved."
+          fi
