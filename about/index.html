@@ -3,7 +3,24 @@
 <head>
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ"></script>
+<script>
+  // gtag.js is queued through dataLayer and injected after load so its ~350 ms of
+  // main-thread work stops competing with first paint. Commands queued below are
+  // replayed when the library arrives, so page views are still recorded.
+  (function(){
+    var src="https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ";
+    function load(){
+      var s=document.createElement("script");
+      s.async=true; s.src=src; document.head.appendChild(s);
+    }
+    function schedule(){
+      if("requestIdleCallback" in window){ requestIdleCallback(load,{timeout:3000}); }
+      else { setTimeout(load,1); }
+    }
+    if(document.readyState==="complete"){ schedule(); }
+    else { window.addEventListener("load", schedule); }
+  })();
+</script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -25,7 +42,7 @@
     <link rel="icon" href="../favicon.ico" sizes="any">
     <link rel="author" href="https://anomaly-alpha.github.io/authors/anomaly/">
     <link rel="canonical" href="https://anomaly-alpha.github.io/about/">
-    <meta property="og:title" content="About Anomaly Alpha — Where These Invincible GTG Numbers Come From">
+    <meta property="og:title" content="About Anomaly Alpha — Invincible GTG Data Sources">
     <meta property="og:description" content="Who runs Anomaly Alpha, where every Invincible GTG number on this site comes from, and how promo codes, PvP payouts, and reward totals are checked.">
     <meta property="og:site_name" content="Invincible GTG">
     <meta property="og:locale" content="en_US">
@@ -42,9 +59,9 @@
     <meta name="twitter:creator" content="@anomaly_alpha">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://anomaly-alpha.github.io/og-images/home.png">
-    <meta name="twitter:title" content="About Anomaly Alpha — Where These Invincible GTG Numbers Come From">
+    <meta name="twitter:title" content="About Anomaly Alpha — Invincible GTG Data Sources">
     <meta name="twitter:description" content="Who runs Anomaly Alpha, where every Invincible GTG number on this site comes from, and how promo codes, PvP payouts, and reward totals are checked.">
-    <title>About Anomaly Alpha — Where These Invincible GTG Numbers Come From</title>
+    <title>About Anomaly Alpha — Invincible GTG Data Sources</title>
     <link rel="stylesheet" href="../tailwind.css">
     <link rel="stylesheet" href="../styles.css">
     <script type="application/ld+json">
@@ -54,7 +71,7 @@
         {
           "@type": "AboutPage",
           "@id": "https://anomaly-alpha.github.io/about/#page",
-          "headline": "About Anomaly Alpha — Where These Invincible GTG Numbers Come From",
+          "headline": "About Anomaly Alpha — Invincible GTG Data Sources",
           "description": "Who runs Anomaly Alpha, where every Invincible GTG number on this site comes from, and how promo codes, PvP payouts, and reward totals are checked.",
           "url": "https://anomaly-alpha.github.io/about/",
           "datePublished": "2026-11-07T00:00:00+00:00",

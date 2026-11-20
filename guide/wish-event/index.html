@@ -11,7 +11,24 @@
     </script>
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ"></script>
+<script>
+  // gtag.js is queued through dataLayer and injected after load so its ~350 ms of
+  // main-thread work stops competing with first paint. Commands queued below are
+  // replayed when the library arrives, so page views are still recorded.
+  (function(){
+    var src="https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ";
+    function load(){
+      var s=document.createElement("script");
+      s.async=true; s.src=src; document.head.appendChild(s);
+    }
+    function schedule(){
+      if("requestIdleCallback" in window){ requestIdleCallback(load,{timeout:3000}); }
+      else { setTimeout(load,1); }
+    }
+    if(document.readyState==="complete"){ schedule(); }
+    else { window.addEventListener("load", schedule); }
+  })();
+</script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -27,7 +44,7 @@
     <meta name="apple-mobile-web-app-title" content="Invincible GTG">
     <meta name="color-scheme" content="dark light">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta name="description" content="A limited-time summon event that pays heroes and gear, not gems. Also called the jackpot or wish token event: GDA Event Chips, level 1–10 shop, Trophy Road.">
+    <meta name="description" content="A limited-time summon event paying heroes and gear, not gems. Also called the jackpot or wish token event: GDA Event Chips, level 1–10 shop, Trophy Road.">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="robots" content="max-snippet:150, max-image-preview:large">
     <meta name="date" content="2026-11-07">
@@ -36,7 +53,7 @@
     <link rel="author" href="https://anomaly-alpha.github.io/authors/anomaly/">
     <link rel="canonical" href="https://anomaly-alpha.github.io/guide/wish-event/">
     <meta property="og:title" content="Invincible GTG Wish Event — Shop Levels & Chips [Nov 2026]">
-    <meta property="og:description" content="A limited-time summon event that pays heroes and gear, not gems. Also called the jackpot or wish token event: GDA Event Chips, level 1–10 shop, Trophy Road.">
+    <meta property="og:description" content="A limited-time summon event paying heroes and gear, not gems. Also called the jackpot or wish token event: GDA Event Chips, level 1–10 shop, Trophy Road.">
     <meta property="og:site_name" content="Invincible GTG">
     <meta property="og:locale" content="en_US">
     <meta property="og:url" content="https://anomaly-alpha.github.io/guide/wish-event/">
@@ -61,7 +78,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://anomaly-alpha.github.io/og-images/event.png">
     <meta name="twitter:title" content="Invincible GTG Wish Event — Shop Levels & Chips [Nov 2026]">
-    <meta name="twitter:description" content="A limited-time summon event that pays heroes and gear, not gems. Also called the jackpot or wish token event: GDA Event Chips, level 1–10 shop, Trophy Road.">
+    <meta name="twitter:description" content="A limited-time summon event paying heroes and gear, not gems. Also called the jackpot or wish token event: GDA Event Chips, level 1–10 shop, Trophy Road.">
     <title>Invincible GTG Wish Event — Shop Levels &amp; Chips [Nov 2026]</title>
     <link rel="stylesheet" href="../../tailwind.css">
     <link rel="stylesheet" href="../../styles.css">

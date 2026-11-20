@@ -1,7 +1,15 @@
 window.__PROMO_CODES=[
   {
-    "code": "STACHE",
+    "code": "RAC3R8",
     "position": 1,
+    "gems": 500,
+    "tickets": 0,
+    "tier": "HIGH",
+    "dateAdded": "2026-11-18"
+  },
+  {
+    "code": "STACHE",
+    "position": 2,
     "gems": 0,
     "tickets": 0,
     "rewards": [
@@ -22,7 +30,7 @@ window.__PROMO_CODES=[
   },
   {
     "code": "TRICKY",
-    "position": 2,
+    "position": 3,
     "gems": 500,
     "tickets": 0,
     "reward": "500 Gems + 2 x Gold Dossiers",
@@ -31,7 +39,7 @@ window.__PROMO_CODES=[
   },
   {
     "code": "SAVE37",
-    "position": 3,
+    "position": 4,
     "gems": 500,
     "tickets": 0,
     "tier": "HIGH",
@@ -39,7 +47,7 @@ window.__PROMO_CODES=[
   },
   {
     "code": "KREGG4",
-    "position": 4,
+    "position": 5,
     "gems": 0,
     "tickets": 0,
     "reward": "1 x Kregg",

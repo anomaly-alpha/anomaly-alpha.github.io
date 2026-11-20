@@ -3,7 +3,24 @@
 <head>
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ"></script>
+<script>
+  // gtag.js is queued through dataLayer and injected after load so its ~350 ms of
+  // main-thread work stops competing with first paint. Commands queued below are
+  // replayed when the library arrives, so page views are still recorded.
+  (function(){
+    var src="https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ";
+    function load(){
+      var s=document.createElement("script");
+      s.async=true; s.src=src; document.head.appendChild(s);
+    }
+    function schedule(){
+      if("requestIdleCallback" in window){ requestIdleCallback(load,{timeout:3000}); }
+      else { setTimeout(load,1); }
+    }
+    if(document.readyState==="complete"){ schedule(); }
+    else { window.addEventListener("load", schedule); }
+  })();
+</script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -14,25 +31,25 @@
 </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Anomaly — creator of the Invincible GTG Gem Calculator and guide pages.">
+    <meta name="description" content="Anomaly builds the Invincible GTG gem calculator, promo code tracker, and reward guides at Anomaly Alpha, checked against in-game payouts.">
     <meta name="robots" content="max-snippet:150, max-image-preview:large">
     <link rel="canonical" href="https://anomaly-alpha.github.io/authors/anomaly/">
-    <meta property="og:title" content="Anomaly — Author Profile">
-    <meta property="og:description" content="Creator of the Invincible GTG Gem Calculator.">
+    <meta property="og:title" content="Anomaly — Invincible GTG Guide Author">
+    <meta property="og:description" content="Anomaly builds the Invincible GTG gem calculator, promo code tracker, and reward guides at Anomaly Alpha, checked against in-game payouts.">
     <meta property="og:url" content="https://anomaly-alpha.github.io/authors/anomaly/">
     <meta property="og:type" content="profile">
     <meta property="og:image" content="https://anomaly-alpha.github.io/og-images/home.png">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="Anomaly — Author Profile">
+    <meta property="og:image:alt" content="Anomaly — Invincible GTG Guide Author">
     <meta name="twitter:site" content="@InvincibleGtG">
     <meta name="twitter:creator" content="@anomaly_alpha">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://anomaly-alpha.github.io/og-images/home.png">
-    <meta name="twitter:title" content="Anomaly — Author Profile">
-    <meta name="twitter:description" content="Creator of the Invincible GTG Gem Calculator and guide pages.">
-    <title>Anomaly — Author Profile</title>
+    <meta name="twitter:title" content="Anomaly — Invincible GTG Guide Author">
+    <meta name="twitter:description" content="Anomaly builds the Invincible GTG gem calculator, promo code tracker, and reward guides at Anomaly Alpha, checked against in-game payouts.">
+    <title>Anomaly — Invincible GTG Guide Author</title>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -40,7 +57,7 @@
         {
           "@type": "ProfilePage",
           "@id": "https://anomaly-alpha.github.io/authors/anomaly/",
-          "headline": "Anomaly — Author Profile",
+          "headline": "Anomaly — Invincible GTG Guide Author",
           "description": "Creator of the Invincible GTG Gem Calculator and guide pages.",
           "url": "https://anomaly-alpha.github.io/authors/anomaly/",
           "dateCreated": "2025-01-01T00:00:00+00:00",

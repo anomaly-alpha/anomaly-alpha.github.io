@@ -11,7 +11,24 @@
     </script>
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ"></script>
+<script>
+  // gtag.js is queued through dataLayer and injected after load so its ~350 ms of
+  // main-thread work stops competing with first paint. Commands queued below are
+  // replayed when the library arrives, so page views are still recorded.
+  (function(){
+    var src="https://www.googletagmanager.com/gtag/js?id=G-21RZK3GKKZ";
+    function load(){
+      var s=document.createElement("script");
+      s.async=true; s.src=src; document.head.appendChild(s);
+    }
+    function schedule(){
+      if("requestIdleCallback" in window){ requestIdleCallback(load,{timeout:3000}); }
+      else { setTimeout(load,1); }
+    }
+    if(document.readyState==="complete"){ schedule(); }
+    else { window.addEventListener("load", schedule); }
+  })();
+</script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -26,15 +43,15 @@
     <meta name="apple-mobile-web-app-title" content="Invincible GTG">
     <meta name="color-scheme" content="dark light">
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <meta name="description" content="Open the official Invincible GTG redeem portal at redeem.invincible.ubisoft.barcelona. Generate a verification code, submit promo codes, and fix expired or invalid code errors.">
+    <meta name="description" content="Open redeem.invincible.ubisoft.barcelona for Invincible GTG codes: get a verification code, submit promo codes, and fix invalid or expired code errors.">
     <meta name="robots" content="max-snippet:150, max-image-preview:large">
     <meta name="date" content="2026-11-07">
     <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
     <link rel="icon" href="../../favicon.ico" sizes="any">
     <link rel="author" href="https://anomaly-alpha.github.io/authors/anomaly/">
     <link rel="canonical" href="https://anomaly-alpha.github.io/guide/redeem/">
-    <meta property="og:title" content="Invincible GTG Redeem Portal — Official Ubisoft Link [Nov 2026]">
-    <meta property="og:description" content="Open the official Invincible GTG redeem portal at redeem.invincible.ubisoft.barcelona. Generate a verification code, submit promo codes, and fix expired or invalid code errors.">
+    <meta property="og:title" content="Invincible GTG Redeem Portal — Steps and Error Fixes [Nov 2026]">
+    <meta property="og:description" content="Open redeem.invincible.ubisoft.barcelona for Invincible GTG codes: get a verification code, submit promo codes, and fix invalid or expired code errors.">
     <meta property="og:site_name" content="Invincible GTG">
     <meta property="og:locale" content="en_US">
     <meta property="og:url" content="https://anomaly-alpha.github.io/guide/redeem/">
@@ -56,9 +73,9 @@
     <meta name="twitter:creator" content="@anomaly_alpha">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://anomaly-alpha.github.io/og-images/code.png">
-    <meta name="twitter:title" content="Invincible GTG Redeem Portal — Official Ubisoft Link [Nov 2026]">
-    <meta name="twitter:description" content="Open the official Invincible GTG redeem portal at redeem.invincible.ubisoft.barcelona. Generate a verification code, submit promo codes, and fix expired or invalid code errors.">
-    <title>redeem.invincible.ubisoft.barcelona — Official Portal [Nov 2026]</title>
+    <meta name="twitter:title" content="Invincible GTG Redeem Portal — Steps and Error Fixes [Nov 2026]">
+    <meta name="twitter:description" content="Open redeem.invincible.ubisoft.barcelona for Invincible GTG codes: get a verification code, submit promo codes, and fix invalid or expired code errors.">
+    <title>redeem.invincible.ubisoft.barcelona — Redeem Help [Nov 2026]</title>
     <style>
     </style>
     <link rel="stylesheet" href="../../tailwind.css">
@@ -101,7 +118,7 @@
         },
         {
           "@type": "Article",
-          "headline": "Invincible GTG Redeem Portal — Official Ubisoft Link [Nov 2026]",
+          "headline": "Invincible GTG Redeem Portal — Steps and Error Fixes [Nov 2026]",
           "description": "The official Invincible Guarding the Globe redeem portal address, plus verification-code generation, submission steps, and fixes for expired or invalid promo codes.",
           "url": "https://anomaly-alpha.github.io/guide/redeem/",
           "mainEntityOfPage": "https://anomaly-alpha.github.io/guide/redeem/",
@@ -139,7 +156,7 @@
             "url": "https://anomaly-alpha.github.io/og-images/code.png",
             "width": 1200,
             "height": 630,
-            "caption": "Invincible GTG Redeem Portal — Official Ubisoft Link [Nov 2026]",
+            "caption": "Invincible GTG Redeem Portal — Steps and Error Fixes [Nov 2026]",
             "license": "https://anomaly-alpha.github.io/",
             "acquireLicensePage": "https://anomaly-alpha.github.io/",
             "creditText": "Anomaly Alpha",
