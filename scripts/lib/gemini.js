@@ -5,10 +5,10 @@
 // looked somewhere, not that the code it printed exists on the page.
 
 const ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/interactions';
-// 2.5 Flash-Lite is the newest model that still includes Google Search grounding on
-// the free tier. Gemini 3 and newer reserve grounding for paid projects, where the
-// API answers 429 RESOURCE_EXHAUSTED with a billing hint.
-const DEFAULT_MODEL = 'gemini-2.5-flash-lite';
+// 3.5 Flash-Lite is the model new projects can use. Its Google Search grounding
+// requires billing enabled (Tier 1), which includes 5,000 free grounded searches per
+// month. Older models with free grounding are closed to new projects.
+const DEFAULT_MODEL = 'gemini-3.5-flash-lite';
 const API_REVISION = '2026-05-20';
 const RETRY_DELAYS_MS = [2000, 8000];
 const REQUEST_TIMEOUT_MS = 90000;

@@ -7,17 +7,22 @@ everything else for review.
 ## One-time setup
 
 1. **Create a Gemini API key** at <https://aistudio.google.com/apikey>.
-2. **Add it as a repository secret:** GitHub → Settings → Secrets and variables →
+2. **Enable billing on that key's project** (AI Studio → API keys → *Upgrade to
+   Paid*, or the project's billing settings). Google Search grounding is a paid-tier
+   feature; Tier 1 includes 5,000 free grounded searches per month, which covers one
+   run per day. Without billing the job still runs, but Gemini skips the search step
+   with HTTP 429.
+3. **Add the key as a repository secret:** GitHub → Settings → Secrets and variables →
    Actions → New repository secret → name `GEMINI_API_KEY`.
-3. **Optional model override:** add a repository *variable* `GEMINI_MODEL`. The default is
-   `gemini-2.5-flash-lite`, which still includes free-tier Google Search grounding.
-   Gemini 3 and newer reserve grounding for paid projects, which surfaces as HTTP 429
-   with a billing hint.
-4. **Confirm Pages is branch-deployed:** Settings → Pages → Source should be
+4. **Optional model override:** add a repository *variable* `GEMINI_MODEL`. The default is
+   `gemini-3.5-flash-lite`, the model new projects can use. Older models such as
+   `gemini-2.5-flash-lite` still have free grounding but are closed to new projects
+   (`404 ... no longer available to new users`).
+5. **Confirm Pages is branch-deployed:** Settings → Pages → Source should be
    *Deploy from a branch* → `main` → `/ (root)`. The workflow pushes to `main`, which
    triggers the Pages rebuild. If Pages is set to *GitHub Actions*, a push alone will not
    deploy and a deploy workflow is required.
-5. **Actions must be enabled** for the repository (they are by default on public repos).
+6. **Actions must be enabled** for the repository (they are by default on public repos).
 
 Without the secret the job still runs, harvests the publisher, and reports that the web
 search step was skipped. It does not fail.
@@ -62,8 +67,9 @@ A commit happens only when something changed. The job also updates the rolling
 
 | Symptom | Cause / fix |
 |---|---|
-| `Gemini HTTP 429` in the report | Quota or rate limit. The job continues publisher-only; re-run later. |
+| `Gemini HTTP 429` in the report | Grounding is not available on the free tier. Enable billing on the key's project; the job continues publisher-only until then. |
 | `Gemini HTTP 400` mentioning `response_format` | The client retries once without the schema automatically. If it persists, the model string is wrong. |
+| `Gemini HTTP 404 ... no longer available to new users` | The model is closed to new projects. Use `gemini-3.5-flash-lite` or another model the project can access. |
 | No review issue appears | The job needs `issues: write`; check the workflow permissions block. |
 | Push rejected | The workflow rebases and retries three times. Persistent rejection usually means branch protection blocks `github-actions[bot]`. |
 | Scheduled runs stop after a while | GitHub disables schedules after 60 days without repository activity. Re-enable the workflow from the Actions tab. |
@@ -72,7 +78,8 @@ A commit happens only when something changed. The job also updates the rolling
 
 ## Cost
 
-One grounded interaction per day. The default 2.5 Flash-Lite includes Google Search
-grounding on the free tier (500 grounded requests per day, shared with Flash). Gemini 3 and
-newer reserve grounding for paid projects and bill per search query after 5,000 free
-requests per month, so switching the model requires billing to be enabled.
+One grounded interaction per day. On Tier 1, Google Search grounding includes 5,000 free
+search queries per month (shared across Gemini 3+ models), then $14 per 1,000. A daily run
+that issues a handful of queries stays inside the free allowance, so the job costs nothing
+at this volume. Billing must be enabled once on the key's project; Gemini 3+ has no
+free-tier grounding.

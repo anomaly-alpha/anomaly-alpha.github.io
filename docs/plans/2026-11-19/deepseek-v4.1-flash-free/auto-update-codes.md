@@ -86,8 +86,9 @@ the common case for update codes (most are 500 gems).
   `npm run update-codes` → tests → commit only the generated code files (including all
   guide pages whose `[Mon YYYY]` token the generator syncs) → push with a rebase retry →
   update the rolling issue from the report.
-- `GEMINI_MODEL` defaults to `gemini-2.5-flash-lite`, the newest model whose free tier
-  still includes Google Search grounding (Gemini 3+ grounding is paid-only).
+- `GEMINI_MODEL` defaults to `gemini-3.5-flash-lite`, the model new projects can use.
+  Its Google Search grounding requires billing enabled; Tier 1 includes 5,000 free
+  grounded searches per month.
 - A failed Gemini call logs a warning and continues with the official source only.
 
 ## Verification
@@ -112,9 +113,11 @@ the common case for update codes (most are 500 gems).
 - Gemini's live call path is still unexercised locally because no key is available; the
   workflow's `dry_run` dispatch is the first live check.
 - First live run (2026-11-20): the publisher harvest succeeded, but Gemini returned
-  `429 RESOURCE_EXHAUSTED` because Gemini 3.5 Flash-Lite grounding is paid-only. The
-  default is now `gemini-2.5-flash-lite`, whose free tier includes 500 grounded
-  requests per day (shared with Flash).
+  `429 RESOURCE_EXHAUSTED` because Gemini 3.5 Flash-Lite grounding is paid-only. Gemini
+  2.5 Flash-Lite still had free grounding but is closed to new projects
+  (`404 ... no longer available to new users`), so the chosen fix is to enable billing
+  on the key's project and keep 3.5 Flash-Lite; Tier 1 includes 5,000 free grounded
+  searches per month.
 
 ## Risks
 
