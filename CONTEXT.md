@@ -25,8 +25,8 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 ### YouTube Creator Directory
 - **Creator** — An independent community channel with publicly verified Invincible: Guarding the Globe coverage.
 - **Eligible video** — A public standard video or replayable livestream with confirmed GTG relevance, title, publication date, video ID, and evidence; Shorts are excluded.
-- **Active creator** — A creator with at least six eligible videos, including at least three published within the previous 180 days.
-- **Pending creator** — A verified candidate with at least one eligible video that does not yet meet the active threshold; it appears after active creators.
+- **Active creator** — A creator with at least six eligible videos whose newest eligible video is no more than 60 days old. Active status is what unlocks the discovery surfaces: the editorial video rail, the creators-page ticker, and the "Channels in this feed" roster.
+- **Pending creator** — A verified candidate with at least one eligible video that does not yet meet the active threshold; it appears after active creators and keeps its own videos in the timeline, but is never advertised in the rail, ticker or channel roster.
 - **Hidden candidate** — A retained research record with zero eligible videos; it does not appear in the public directory.
 - **Featured creator** — The approved active creator shown in the static hero; Avatar Shuvd is preferred when qualified.
 
