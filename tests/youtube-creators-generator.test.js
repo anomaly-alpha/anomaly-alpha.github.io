@@ -271,6 +271,56 @@ test('Recent video ticker stays empty when fewer than two creators qualify', fun
   assert.strictEqual(gen.renderRecentVideosHtml(single), '', 'A marquee with one card has nothing to loop');
 });
 
+// =====================================================================
+// ACTIVE-CREATOR DISCOVERY GATES
+// =====================================================================
+
+console.log('\nActive-creator discovery gate tests:');
+
+test('Channels in this feed lists active creators only', function () {
+  var pending = makePendingCreator('pending-two', 2);
+  var data = makeValidData([makeActiveCreator('active-one', 1), pending]);
+  var html = gen.renderFeedSummaryHtml(data);
+
+  assert.ok(html.indexOf('Channels in this feed') !== -1, 'Should render the channel roster');
+  assert.ok(html.indexOf('Creator active-one') !== -1, 'Active creator is listed');
+  assert.strictEqual(html.indexOf('Creator pending-two'), -1, 'Pending creator is not advertised');
+});
+
+test('Feed summary counts cover active creators only', function () {
+  var active = makeActiveCreator('active-one', 1); // 8 active videos
+  var pending = makePendingCreator('pending-two', 2); // 1 active video
+  var data = makeValidData([active, pending]);
+  var html = gen.renderFeedSummaryHtml(data);
+
+  assert.ok(html.indexOf('<strong>8</strong> videos') !== -1, 'Video count excludes the pending creator');
+  assert.ok(html.indexOf('<strong>1</strong> creators') !== -1, 'Creator count excludes the pending creator');
+});
+
+test('Recent video ticker excludes pending creators even when their upload is fresh', function () {
+  var pending = makePendingCreator('pending-three', 3);
+  pending.videos[0].published = daysAgo(2);
+  var data = makeValidData([
+    makeActiveCreator('active-one', 1),
+    makeActiveCreator('active-two', 2),
+    pending
+  ]);
+  var html = gen.renderRecentVideosHtml(data);
+
+  assert.ok(html.indexOf('Video 1 by active-one') !== -1, 'Active creators still reach the ticker');
+  assert.strictEqual(html.indexOf('Pending Video by pending-three'), -1, 'Pending upload stays out of the ticker');
+});
+
+test('getActiveCreators drops pending and hidden creators', function () {
+  var data = makeValidData([
+    makeActiveCreator('active-one', 1),
+    makePendingCreator('pending-two', 2),
+    makeHiddenCreator('hidden-three', 3)
+  ]);
+  var ids = gen.getActiveCreators(data).map(function (c) { return c.id; });
+  assert.deepStrictEqual(ids, ['active-one'], 'Only the active creator survives the gate');
+});
+
 test('Featured creator excluded from normal list', function () {
   var c1 = makeActiveCreator('creator-one', 1);
   var c2 = makeActiveCreator('creator-two', 2);
@@ -561,13 +611,16 @@ test('Fewer than 6 active items rejected for active creator', function () {
   assert.ok(errs.some(function (e) { return e.indexOf('at least 6') !== -1; }), 'Should require at least 6 items');
 });
 
-test('Fewer than 3 recent items rejected for active creator', function () {
+test('Active creator whose newest item is outside the recency window is rejected', function () {
   var creator = makeActiveCreator('test-creator', 1, 8);
-  // Set all published dates to > 180 days ago
+  // Every item older than the 60-day window
   creator.videos.forEach(function (v) { v.published = daysAgo(200); });
   var data = makeValidData([creator]);
   var errs = gen.validateData(data);
-  assert.ok(errs.some(function (e) { return e.indexOf('180 days') !== -1; }), 'Should require 3 items in previous 180 days');
+  assert.ok(
+    errs.some(function (e) { return e.indexOf('60 days') !== -1; }),
+    'Should require the newest item inside 60 days'
+  );
 });
 
 test('Pending creator with zero eligible items rejected', function () {
@@ -1029,7 +1082,6 @@ console.log('\nCreator count / threshold tests:');
 
 test('Active creator with exactly 6 items passes', function () {
   var creator = makeActiveCreator('test-creator', 1, 6);
-  // Ensure at least 3 are recent
   creator.videos[0].published = daysAgo(5);
   creator.videos[1].published = daysAgo(20);
   creator.videos[2].published = daysAgo(50);
@@ -1038,10 +1090,10 @@ test('Active creator with exactly 6 items passes', function () {
   creator.videos[5].published = daysAgo(300);
   var data = makeValidData([creator]);
   var errs = gen.validateData(data);
-  assert.strictEqual(errs.length, 0, 'Should pass with 6 items and 3 recent: ' + errs.join('; '));
+  assert.strictEqual(errs.length, 0, 'Should pass with 6 items and a recent newest: ' + errs.join('; '));
 });
 
-test('Active creator with 6 items but only 2 recent rejected', function () {
+test('Active creator with only 2 recent items passes when the newest is inside the window', function () {
   var creator = makeActiveCreator('test-creator', 1, 6);
   creator.videos[0].published = daysAgo(10);
   creator.videos[1].published = daysAgo(20);
@@ -1051,7 +1103,7 @@ test('Active creator with 6 items but only 2 recent rejected', function () {
   creator.videos[5].published = daysAgo(350);
   var data = makeValidData([creator]);
   var errs = gen.validateData(data);
-  assert.ok(errs.some(function (e) { return e.indexOf('180 days') !== -1; }), 'Should fail with only 2 recent');
+  assert.strictEqual(errs.length, 0, 'Recency is a newest-item rule, not a cadence count: ' + errs.join('; '));
 });
 
 test('Exactly 6 featured:true items required for active creator', function () {

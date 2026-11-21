@@ -21,7 +21,11 @@ const YT_URL_RE = /^https:\/\/www\.youtube\.com\//;
 const MAX_VIDEOS_PER_CREATOR = 12;
 const FEATURED_PER_CREATOR = 6;
 const RECENT_TICKER_DAYS = 14;
-const RECENT_DAYS = 180;
+// An active creator must have published inside this window. The directory uses
+// "active" to decide which channels reach the discovery surfaces (the editorial
+// rail, the creators-page ticker and the "Channels in this feed" roster), so the
+// window measures whether a channel is still posting, not how large its archive is.
+const ACTIVE_RECENCY_DAYS = 60;
 const SITE_ORIGIN = 'https://anomaly-alpha.github.io';
 const GAME_NAME = 'Invincible Guarding the Globe';
 
@@ -287,7 +291,7 @@ function validateData(data) {
     }
 
     var eligibleCount = 0;
-    var recentCount = 0;
+    var newestEligibleDays = null;
     var featuredCount = 0;
 
     for (var vi = 0; vi < c.videos.length; vi++) {
@@ -355,8 +359,9 @@ function validateData(data) {
       // Count eligible items for threshold checks
       if (v.status === 'active') {
         eligibleCount++;
-        if (v.published && isValidDate(v.published) && daysBetween(v.published, today) <= RECENT_DAYS) {
-          recentCount++;
+        if (v.published && isValidDate(v.published)) {
+          var ageDays = daysBetween(v.published, today);
+          if (newestEligibleDays === null || ageDays < newestEligibleDays) newestEligibleDays = ageDays;
         }
       }
       if (v.featured === true) {
@@ -369,8 +374,8 @@ function validateData(data) {
       if (eligibleCount < 6) {
         errors.push(cp + ' has ' + eligibleCount + ' eligible items; active creators require at least 6.');
       }
-      if (recentCount < 3) {
-        errors.push(cp + ' has ' + recentCount + ' items published in previous ' + RECENT_DAYS + ' days; active creators require at least 3.');
+      if (newestEligibleDays === null || newestEligibleDays > ACTIVE_RECENCY_DAYS) {
+        errors.push(cp + ' newest item is ' + (newestEligibleDays === null ? 'missing' : newestEligibleDays + ' days old') + '; active creators must publish within ' + ACTIVE_RECENCY_DAYS + ' days.');
       }
       if (featuredCount !== 6) {
         errors.push(cp + ' has ' + featuredCount + ' featured:true items; active creators must have exactly 6.');
@@ -469,7 +474,7 @@ function renderVideoCard(video, creator) {
 // One card per creator: their newest playable video, dropped once it is older than the window.
 function recentVideosForTicker(data) {
   var today = data.updated || new Date().toISOString().slice(0, 10);
-  var creators = getVisibleCreators(data);
+  var creators = getActiveCreators(data);
   var items = [];
   for (var ci = 0; ci < creators.length; ci++) {
     var creator = creators[ci];
@@ -640,9 +645,16 @@ function getVisibleCreators(data) {
     });
 }
 
-function getVisibleFeedItems(data) {
+// Discovery surfaces (rail, ticker, channel roster) advertise active creators only.
+// Pending creators keep their videos in the timeline; they just are not promoted.
+function getActiveCreators(data) {
+  return data.creators
+    .filter(function (creator) { return creator.status === 'active'; })
+    .sort(function (a, b) { return a.displayOrder - b.displayOrder; });
+}
+
+function getFeedItems(data, creators) {
   var items = [];
-  var creators = getVisibleCreators(data);
   for (var ci = 0; ci < creators.length; ci++) {
     var creator = creators[ci];
     var videos = creator.videos
@@ -661,6 +673,10 @@ function getVisibleFeedItems(data) {
   return items;
 }
 
+function getVisibleFeedItems(data) {
+  return getFeedItems(data, getVisibleCreators(data));
+}
+
 function formatFeedDate(dateString) {
   var date = new Date(dateString + 'T00:00:00Z');
   var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -668,8 +684,8 @@ function formatFeedDate(dateString) {
 }
 
 function renderFeedSummaryHtml(data) {
-  var creators = getVisibleCreators(data);
-  var items = getVisibleFeedItems(data);
+  var creators = getActiveCreators(data);
+  var items = getFeedItems(data, creators);
   var html = '';
   html += '      <section class="gem-creators__signal" aria-labelledby="creatorFeedTitle">\n';
   html += '        <div class="gem-creators__signal-copy">\n';
@@ -1220,8 +1236,12 @@ module.exports = {
   MAX_VIDEOS_PER_CREATOR: MAX_VIDEOS_PER_CREATOR,
   FEATURED_PER_CREATOR: FEATURED_PER_CREATOR,
   RECENT_TICKER_DAYS: RECENT_TICKER_DAYS,
-  RECENT_DAYS: RECENT_DAYS,
+  RECENT_DAYS: ACTIVE_RECENCY_DAYS,
+  ACTIVE_RECENCY_DAYS: ACTIVE_RECENCY_DAYS,
   SITE_ORIGIN: SITE_ORIGIN,
   GAME_NAME: GAME_NAME,
-  getCreatorBadge: getCreatorBadge
+  getCreatorBadge: getCreatorBadge,
+  getActiveCreators: getActiveCreators,
+  getFeedItems: getFeedItems,
+  recentVideosForTicker: recentVideosForTicker
 };
