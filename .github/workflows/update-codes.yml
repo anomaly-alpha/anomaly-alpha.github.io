@@ -25,13 +25,13 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Check out main
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: main
           fetch-depth: 0
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           # Lighthouse and puppeteer require >=22.19; 24 is the current LTS.
           node-version: 24
