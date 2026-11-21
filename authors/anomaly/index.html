@@ -101,21 +101,61 @@
       ]
     }
     </script>
-    <style>
-      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #050a14; color: #fff; max-width: 640px; margin: 0 auto; padding: 2rem; line-height: 1.6; }
-      a { color: #00e5ff; }
-      h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
-      p { color: rgba(255,255,255,0.7); }
-      .back { margin-top: 2rem; display: block; }
-    </style>
+    <link rel="preload" href="../../fonts/Barlow-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../fonts/Orbitron-Variable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../fonts/Rajdhani-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="../../tailwind.css">
+    <link rel="stylesheet" href="../../styles.css">
 </head>
-<body>
-    <main>
-    <h1>Anomaly</h1>
-    <p>Creator of the <a href="https://anomaly-alpha.github.io/">Invincible GTG Gem Calculator</a> — a community-driven fan site for Invincible Guarding the Globe players. Builds tools, calculators, and guides to help players maximize their gem income.</p>
-    <p>How the data is produced and checked: <a href="https://anomaly-alpha.github.io/about/">about this site</a>.</p>
-    <p>Find on <a href="https://github.com/anomaly-alpha">GitHub</a>.</p>
-    <a href="https://anomaly-alpha.github.io/" class="back">&larr; Invincible GTG</a>
-    </main>
+<body class="relative min-h-screen p-5 md:p-10 gem-grid-bg flex items-center justify-center">
+    <div class="relative gem-container gem-container__shadow max-w-2xl mx-auto">
+        <div class="gem-corner gem-corner--tl"></div>
+        <div class="gem-corner gem-corner--tr"></div>
+        <div class="gem-corner gem-corner--bl"></div>
+        <div class="gem-corner gem-corner--br"></div>
+
+        <main class="py-6 px-2">
+            <div class="gem-header-icon">
+                <div class="gem-header-icon__inner"></div>
+            </div>
+
+            <h1 class="gem-title--hero text-center">Anomaly</h1>
+            <p class="gem-subtitle--hero text-center mb-6">FOUNDER AND EDITOR</p>
+
+            <p class="text-white/70 leading-relaxed mb-4">
+                Creator of the <a href="../../" class="gem-text--cyan hover:text-white transition-colors">Invincible GTG Gem Calculator</a> — a community-driven fan site for Invincible Guarding the Globe players. Builds tools, calculators, and guides to help players maximize their gem income.
+            </p>
+            <p class="text-white/70 leading-relaxed mb-4">
+                How the data is produced and checked: <a href="../../about/" class="gem-text--cyan hover:text-white transition-colors">about this site</a>.
+            </p>
+            <p class="text-white/70 leading-relaxed mb-8">
+                Find on <a href="https://github.com/anomaly-alpha" class="gem-text--cyan hover:text-white transition-colors" rel="me">GitHub</a>.
+            </p>
+
+            <a href="../../" class="inline-block gem-mode-btn gem-mode-btn--all active px-8 py-3 mb-8">
+                <span class="gem-text--cyan font-bold tracking-wider">&larr; BACK TO GEM REWARDS</span>
+            </a>
+
+            <div class="border-t border-white/10 pt-6 mt-6">
+                <p class="text-white/40 text-xs tracking-wider mb-4">EXPLORE GUIDES</p>
+                <div class="flex flex-wrap gap-3">
+                    <a href="../../guide/code/" class="text-xs gem-text--code hover:text-white transition-colors tracking-wider">Code</a>
+                    <a href="../../guide/event/" class="text-xs gem-text--event hover:text-white transition-colors tracking-wider">Events</a>
+                    <a href="../../guide/pvp/" class="text-xs gem-text--pvp hover:text-white transition-colors tracking-wider">PvP</a>
+                    <a href="../../guide/login/" class="text-xs gem-text--login hover:text-white transition-colors tracking-wider">Login</a>
+                    <a href="../../guide/faq/" class="text-xs gem-text--cyan hover:text-white transition-colors tracking-wider">FAQ</a>
+                    <a href="../../guide/beginners/" class="text-xs gem-text--cyan hover:text-white transition-colors tracking-wider">New Players</a>
+                    <a href="../../guide/xp/" class="text-xs gem-text--cyan hover:text-white transition-colors tracking-wider">XP</a>
+                    <a href="../../guide/creators/" class="text-xs gem-text--cyan hover:text-white transition-colors tracking-wider">Creators</a>
+                </div>
+            </div>
+        </main>
+
+        <footer class="gem-legal-footer mt-6">
+            <a href="../../terms/" class="gem-legal-footer__link">Terms of Service</a>
+            <span class="gem-legal-footer__sep">&middot;</span>
+            <a href="../../privacy/" class="gem-legal-footer__link">Privacy Policy</a>
+        </footer>
+    </div>
 </body>
 </html>
