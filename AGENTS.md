@@ -35,6 +35,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators) |
 | `404.html` | Custom 404 error page (GA4-tagged, no `og:site_name`) |
 | `_headers` | Cloudflare Pages cache-control and security headers |
+| `.nojekyll` | Empty marker that disables GitHub Pages' Jekyll build. Required: Jekyll silently excludes every `_`-prefixed path, which dropped the two watch pages whose YouTube IDs start with an underscore (`watch/_N_4zobsTWA/`, `watch/_nPghrSVmkI/`) from the live site. Do not delete |
 | `ads.txt` | AdSense publisher authorization record (no ad runtime loaded) |
 | `googleeb60e8e5ee55440e.html` | Google Search Console verification |
 | `seo/index.html` | SEO utilities page |
