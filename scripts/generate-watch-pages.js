@@ -347,6 +347,8 @@ function renderHead(video, creator, meta, entities) {
   h.push('    <link rel="stylesheet" href="../../styles.css">');
   h.push('    <link rel="stylesheet" href="../' + WATCH_CSS + '">');
   h.push('    <link rel="preload" href="../../fonts/Barlow-Regular.woff2" as="font" type="font/woff2" crossorigin>');
+  h.push('    <link rel="preload" href="../../fonts/Barlow-Medium.woff2" as="font" type="font/woff2" crossorigin>');
+  h.push('    <link rel="preload" href="../../fonts/Barlow-SemiBold.woff2" as="font" type="font/woff2" crossorigin>');
   h.push('    <link rel="preload" href="../../fonts/Orbitron-Variable.woff2" as="font" type="font/woff2" crossorigin>');
   h.push('    <link rel="preload" href="../../fonts/Rajdhani-SemiBold.woff2" as="font" type="font/woff2" crossorigin>');
   h.push('    <script type="application/ld+json">');

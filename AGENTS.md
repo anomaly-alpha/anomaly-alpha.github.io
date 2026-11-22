@@ -225,7 +225,7 @@ After any major HTML/CSS/JS changes, always:
 - **Chart.js** — self-hosted `vendor/chart.umd.js` (downloaded via `npm run update-assets`)
 - **Tailwind CSS** — local build via `npm run build`, committed as `tailwind.css`
 - **Icons** — inline SVGs (replaced Font Awesome, ~300 KB saved)
-- **Fonts** — self-hosted woff2 files in `fonts/` (Barlow 400/500/600 for body copy, Rajdhani 400/600/700 for labels and UI, Orbitron 500-900 for display headings). Only Barlow-Regular, Orbitron-Variable, and Rajdhani-SemiBold are preloaded; keep that preload set in sync with `scripts/generate-watch-pages.js` when changing it
+- **Fonts** — self-hosted woff2 files in `fonts/` (Barlow 400/500/600 for body copy, Rajdhani 400/600/700 for labels and UI, Orbitron 500-900 for display headings). Preloaded: Barlow-Regular, Barlow-Medium, Barlow-SemiBold, Orbitron-Variable, Rajdhani-SemiBold; keep that preload set in sync with `scripts/generate-watch-pages.js` when changing it. Every face is `font-display: swap`, so `styles.css` also declares metric-matched `"Barlow Fallback"` / `"Rajdhani Fallback"` faces whose `size-adjust` is the real face's advance width over Arial at 100px (Barlow ≈ 93%, Rajdhani ≈ 88%). Without those, a late swap re-wraps body text and moves `<main>` by ~280px on a long article — the 0.188 CLS that appeared when the Rajdhani preloads were dropped
 
 ## SEO conventions
 
