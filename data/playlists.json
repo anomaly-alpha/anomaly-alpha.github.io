@@ -1,24 +1,24 @@
 {
-  "updated": "2026-11-21",
-  "reviewed": "2026-11-21",
+  "updated": "2026-11-22",
+  "reviewed": "2026-11-22",
   "pages": [
     {
-      "path": "/",
-      "pageName": "Home",
+      "path": "/guide/code/",
+      "pageName": "Code Guide",
       "id": "7268bAOK23jvpBGy2Kw9Jd",
       "name": "GTA 6 SOUNDTRACK",
-      "color": "pvp",
+      "color": "code",
       "featured": true,
       "description": "Every confirmed song from Grand Theft Auto VI — the album, the Justice score, and the licensed radio cuts — collected by Rockstar Games."
     },
     {
-      "path": "/guide/code/",
-      "pageName": "Code Guide",
+      "path": "/",
+      "pageName": "Home",
       "id": "37i9dQZF1DXdPec7aLTmlC",
       "name": "Happy Hits!",
-      "color": "code",
+      "color": "pvp",
       "featured": true,
-      "description": "Upbeat and uplifting. Perfect for discovering new promo codes."
+      "description": "Upbeat and uplifting. Bright energy for the reward calculator and today's totals."
     },
     {
       "path": "/guide/redeem/",

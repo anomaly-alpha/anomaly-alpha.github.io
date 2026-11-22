@@ -25,10 +25,14 @@ for (const creator of data.creators) {
 assert.ok(data.pages.length >= 19, 'every editorial page needs a playlist');
 assert.ok(data.creators.length >= 20, 'every tracked creator needs a playlist');
 
-// --- the home page leads with the GTA 6 soundtrack ------------------------
+// --- the GTA 6 soundtrack rides the most-visited page ---------------------
 const home = data.pages.find((page) => page.path === '/');
-assert.strictEqual(home.id, '7268bAOK23jvpBGy2Kw9Jd', 'home page banner must point at the GTA 6 SOUNDTRACK playlist');
-assert.strictEqual(home.name, 'GTA 6 SOUNDTRACK');
+assert.strictEqual(home.id, '37i9dQZF1DXdPec7aLTmlC', 'home page banner must point at the Happy Hits! playlist');
+assert.strictEqual(home.name, 'Happy Hits!');
+
+const code = data.pages.find((page) => page.path === '/guide/code/');
+assert.strictEqual(code.id, '7268bAOK23jvpBGy2Kw9Jd', 'code guide banner must point at the GTA 6 SOUNDTRACK playlist');
+assert.strictEqual(code.name, 'GTA 6 SOUNDTRACK');
 
 // --- static banner markup on every editorial page -------------------------
 for (const page of data.pages) {

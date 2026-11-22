@@ -96,7 +96,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `tests/youtube-watch-pages.test.js` | Validates watch page VideoObject shape, uploadDate format, SEO head, meta uniqueness, sitemap coverage, pruning |
 | `tests/youtube-creators-audit.test.js` | Validates creator audit output |
 | `tests/structured-data.test.js` | Validates JSON-LD structured data across pages |
-| `tests/music-banners.test.js` | Validates the music banners: unique playlist per page and per creator, home page pointing at `GTA 6 SOUNDTRACK`, static link markup on every page, one banner per page, watch pages inheriting their creator's playlist, and the `/music/` card grid matching `data/playlists.json` |
+| `tests/music-banners.test.js` | Validates the music banners: unique playlist per page and per creator, `GTA 6 SOUNDTRACK` on the code guide (the most-visited page), static link markup on every page, one banner per page, watch pages inheriting their creator's playlist, and the `/music/` card grid matching `data/playlists.json` |
 | `tests/back-to-top.test.js` | Tests back-to-top button behavior. **Browser-only** — it uses `document`/`window`/`getComputedStyle`, so `node tests/back-to-top.test.js` fails with `describe is not defined`. Open `tests/back-to-top.html` (which loads `test-harness.js` first) in a browser to run it |
 | `tests/test-harness.js` | Shared test helpers |
 | `serp-dumps/YYYY-MM-DD/` | Historical SERP snapshot directories (INDEX.md + 40 query files, regenerated periodically) |
