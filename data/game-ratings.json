@@ -1,0 +1,78 @@
+{
+  "game": "Invincible Guarding the Globe",
+  "updated": "2026-11-22",
+  "notes": [
+    "Only store-published ratings and reviews belong in this file. Never hand-enter a value.",
+    "ratingValue is the figure the store itself displays (App Store shows 4.8 for 4.78562; Play shows 4.4 for 4.39508). rawRatingValue keeps the unrounded figure for audit.",
+    "ratingCount is the store's own userRatingCount / ratingCount at retrieval time and moves daily - re-run scripts/pull-game-ratings.js and this file before treating it as current.",
+    "Reviews are quoted verbatim from Apple's public customerreviews feed, including the author's own spelling. Do not tidy the prose."
+  ],
+  "ratings": [
+    {
+      "platform": "iOS",
+      "store": "App Store",
+      "storeUrl": "https://apps.apple.com/us/app/invincible-guarding-the-globe/id6449294809",
+      "appId": "6449294809",
+      "ratingValue": 4.8,
+      "rawRatingValue": 4.78562,
+      "ratingCount": 63051,
+      "bestRating": 5,
+      "worstRating": 1,
+      "retrieved": "2026-11-22",
+      "source": "https://itunes.apple.com/lookup?id=6449294809&country=us",
+      "sourceFields": "averageUserRating, userRatingCount"
+    },
+    {
+      "platform": "Android",
+      "store": "Google Play",
+      "storeUrl": "https://play.google.com/store/apps/details?id=com.ubisoft.invincible.guardians.globe.idle.superhero.rpg.battle.afk",
+      "packageId": "com.ubisoft.invincible.guardians.globe.idle.superhero.rpg.battle.afk",
+      "ratingValue": 4.4,
+      "rawRatingValue": 4.39508056640625,
+      "ratingCount": 87749,
+      "bestRating": 5,
+      "worstRating": 1,
+      "retrieved": "2026-11-22",
+      "source": "https://play.google.com/store/apps/details?id=com.ubisoft.invincible.guardians.globe.idle.superhero.rpg.battle.afk&hl=en_US&gl=US",
+      "sourceFields": "ratingValue, ratingCount (page payload)"
+    }
+  ],
+  "reviews": [
+    {
+      "platform": "iOS",
+      "store": "App Store",
+      "reviewId": "14807564316",
+      "author": "Very Smart Trustworthy Guy",
+      "ratingValue": 5,
+      "title": "Good If Consistently Played",
+      "body": "We need a GDA Case File for Thaedus!! Events are paced decently, I feel like character access becomes limited as you progress without waiting for a deal where you can purchase elite characters. Other than that, been playing pretty steady for 4-5 months and still enjoy the game",
+      "datePublished": "2026-11-18T22:11:52-07:00",
+      "appVersion": "3.8.17",
+      "source": "https://itunes.apple.com/us/rss/customerreviews/id=6449294809/sortBy=mostRecent/json"
+    },
+    {
+      "platform": "iOS",
+      "store": "App Store",
+      "reviewId": "14783980114",
+      "author": "Lukey-Bear36",
+      "ratingValue": 4,
+      "title": "I have loved this game this launch 💚, please update for duo",
+      "body": "I swear I have played this games since launch for an hour a day or more, it’s so much fun upgrading and completing missions and having epic battles with your favorite hero’s, however it’s a pretty rough experience so far on the iPhone Duo. Small and not optimized hard to see on the front screen and you have to weirdly zoom the app when opened. Please save us with an update for it 💚",
+      "datePublished": "2026-11-12T20:17:25-07:00",
+      "appVersion": "3.7.10",
+      "source": "https://itunes.apple.com/us/rss/customerreviews/id=6449294809/sortBy=mostRecent/json"
+    },
+    {
+      "platform": "iOS",
+      "store": "App Store",
+      "reviewId": "14763870915",
+      "author": "ShadowApex88",
+      "ratingValue": 3,
+      "title": "Love the game",
+      "body": "Love the game but the multiverse arena leagues matchups make no sense, I’m at 14 million power for my team there’s nothing at all I can do matched with that choices of 60 million power plus, it’s a lose lose situation, I can’t beat any of those teams so I’m stuck in a junior 2 league in a league of 14 different leagues after promotion, but those high power teams shouldn’t be sitting in a junior league 2 they should be ranked higher but because of possible inactivity they sit in a low rank league and promotion is impossible passed certain leagues",
+      "datePublished": "2026-11-07T17:49:22-07:00",
+      "appVersion": "3.7.10",
+      "source": "https://itunes.apple.com/us/rss/customerreviews/id=6449294809/sortBy=mostRecent/json"
+    }
+  ]
+}

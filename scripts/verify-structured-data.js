@@ -122,8 +122,35 @@ const EXTRACT = `(() => {
 // ===== Invariants =====
 
 const PAGE_NODE_TYPES = new Set(['WebPage', 'CollectionPage', 'ProfilePage', 'AboutPage', 'Article', 'ItemPage', 'ContactPage']);
-const FORBIDDEN_TYPES = new Set(['HowTo', 'Product', 'Review', 'ClaimReview', 'SpecialAnnouncement', 'Course']);
-const FORBIDDEN_PROPS = ['aggregateRating'];
+const FORBIDDEN_TYPES = new Set(['HowTo', 'Product', 'ClaimReview', 'SpecialAnnouncement', 'Course']);
+
+// aggregateRating and Review are not banned, but they are only legitimate when the exact values
+// appear in data/game-ratings.json, which is refreshed from the App Store and Google Play. A
+// hand-typed rating would pass every other check here, so the cross-reference is the guard.
+const GAME_RATINGS = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'game-ratings.json'), 'utf8'));
+const SOURCED_RATINGS = GAME_RATINGS.ratings.map((r) => r.ratingValue + '|' + r.ratingCount);
+const SOURCED_REVIEWS = new Map(GAME_RATINGS.reviews.map((r) => [r.author, r]));
+
+function checkSourcedRating(node) {
+  const key = node.ratingValue + '|' + node.ratingCount;
+  if (SOURCED_RATINGS.indexOf(key) === -1) {
+    fail('aggregateRating ' + key + ' is not published in data/game-ratings.json');
+  }
+  if (node.bestRating === undefined || node.worstRating === undefined) {
+    fail('aggregateRating missing bestRating/worstRating');
+  }
+}
+
+function checkSourcedReview(node) {
+  const author = node.author && node.author.name;
+  const sourced = SOURCED_REVIEWS.get(author);
+  if (!sourced) fail('Review author "' + author + '" is not published in data/game-ratings.json');
+  if (node.reviewBody !== sourced.body) fail('Review body for "' + author + '" does not match data/game-ratings.json');
+  if (!node.reviewRating || node.reviewRating.ratingValue !== sourced.ratingValue) {
+    fail('Review rating for "' + author + '" does not match data/game-ratings.json');
+  }
+  if (node.datePublished !== sourced.datePublished) fail('Review date for "' + author + '" does not match data/game-ratings.json');
+}
 
 function nodeTypes(node) {
   const t = node['@type'];
@@ -290,15 +317,14 @@ function checkPage(rel, payload) {
     }
   });
 
-  // I6 - retired or policy-risky markup
+  // I6 - retired or policy-risky markup, plus sourced ratings/reviews
   types.forEach(type => {
     if (FORBIDDEN_TYPES.has(type)) fail('forbidden @type ' + type);
   });
   walk(blocks, obj => {
-    for (const key of FORBIDDEN_PROPS) {
-      if (obj[key] !== undefined) fail('forbidden property ' + key);
-    }
     if (obj['@type'] === 'SearchAction') fail('SearchAction is retired');
+    if (obj.aggregateRating) checkSourcedRating(obj.aggregateRating);
+    if (obj['@type'] === 'Review') checkSourcedReview(obj);
   });
 
   // Watch pages: exactly one VideoObject, and only there

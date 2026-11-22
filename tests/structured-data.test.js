@@ -221,7 +221,10 @@ for (const file of PAGES) {
 
   for (const node of allNodes(blocks)) {
     assert.notStrictEqual(node['@type'], 'Product', file + ': unexpected Product schema (no visible content contract)');
-    assert.notStrictEqual(node['@type'], 'Review', file + ': unexpected Review schema (no visible content contract)');
+    if (node['@type'] === 'Review') {
+      assert(node.reviewBody, file + ': Review missing reviewBody');
+      assert(vis.includes(normalize(node.reviewBody)), file + ': Review body is not visible on the page');
+    }
     if (node['@type'] === 'VideoObject') {
       const hasVisibleName = node.name && vis.includes(normalize(node.name));
       const hasVisibleDesc = node.description && vis.includes(normalize(node.description));
@@ -273,7 +276,14 @@ for (const file of PAGES) {
 // Mirrors scripts/verify-structured-data.js so the static and browser suites cannot drift.
 
 const PAGE_NODE_TYPES = new Set(['WebPage', 'CollectionPage', 'ProfilePage', 'AboutPage', 'Article', 'ItemPage']);
-const FORBIDDEN_TYPES = new Set(['HowTo', 'SearchAction', 'Product', 'Review']);
+const FORBIDDEN_TYPES = new Set(['HowTo', 'SearchAction', 'Product']);
+
+// aggregateRating and Review are allowed, but only with the exact values published in
+// data/game-ratings.json — which is refreshed from the App Store and Google Play by
+// scripts/pull-game-ratings.js. A hand-typed rating must fail here, not reach production.
+const GAME_RATINGS = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'game-ratings.json'), 'utf8'));
+const SOURCED_RATINGS = GAME_RATINGS.ratings.map(r => r.ratingValue + '|' + r.ratingCount);
+const SOURCED_REVIEWS = new Map(GAME_RATINGS.reviews.map(r => [r.author, r]));
 const DATE_PROPERTIES = ['datePublished', 'dateModified', 'dateCreated', 'uploadDate', 'expires'];
 const OFFSET_QUALIFIED_DATE = /T\d{2}:\d{2}(:\d{2})?([+-]\d{2}:\d{2}|Z)$/;
 
@@ -322,12 +332,26 @@ for (const file of PAGES) {
       file + ': ImageObject missing license/creator/creditText/copyrightNotice: ' + imageUrl);
   });
 
-  // I6 - retired and policy-risky markup
+  // I6 - retired and policy-risky markup; ratings and reviews must be store-sourced
   walkWithPath(blocks, node => {
     nodeTypes(node).forEach(type => {
       assert(!FORBIDDEN_TYPES.has(type), file + ': forbidden @type ' + type);
     });
-    assert.strictEqual(node.aggregateRating, undefined, file + ': forbidden property aggregateRating');
+    if (node.aggregateRating) {
+      const key = node.aggregateRating.ratingValue + '|' + node.aggregateRating.ratingCount;
+      assert(SOURCED_RATINGS.indexOf(key) !== -1,
+        file + ': aggregateRating ' + key + ' is not published in data/game-ratings.json');
+      assert(node.aggregateRating.bestRating !== undefined && node.aggregateRating.worstRating !== undefined,
+        file + ': aggregateRating missing bestRating/worstRating');
+    }
+    if (node['@type'] === 'Review') {
+      const sourced = SOURCED_REVIEWS.get(node.author && node.author.name);
+      assert(sourced, file + ': Review author is not published in data/game-ratings.json');
+      assert.strictEqual(node.reviewBody, sourced.body, file + ': Review body drifted from data/game-ratings.json');
+      assert.strictEqual(node.datePublished, sourced.datePublished, file + ': Review date drifted from data/game-ratings.json');
+      assert(node.reviewRating && node.reviewRating.ratingValue === sourced.ratingValue,
+        file + ': Review rating drifted from data/game-ratings.json');
+    }
   });
 }
 
@@ -336,7 +360,8 @@ for (const file of PAGES) {
 const generators = [
   ['scripts/generate-codes.js', ['data/generated/promo-codes.js', 'guide/code/index.html', 'guide/faq/index.html', 'index.html', 'sitemap.xml']],
   ['scripts/generate-youtube-creators.js', ['data/generated/youtube-creators.js', 'guide/creators/index.html']],
-  ['scripts/generate-music.js', ['music/index.html']]
+  ['scripts/generate-music.js', ['music/index.html']],
+  ['scripts/generate-game-ratings.js', ['index.html']]
 ];
 for (const [script, outputs] of generators) {
   const snapshots = outputs.map(f => fs.readFileSync(path.join(ROOT, f)));
