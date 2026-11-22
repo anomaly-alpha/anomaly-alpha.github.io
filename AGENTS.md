@@ -20,7 +20,7 @@ Open `index.html` in a browser. Works from `file://`.
 
 | File | Role |
 |------|------|
-| `index.html` | HTML + 9 inline `<script type="application/json">` configs in `<head>` (ads, game, rewards, contributors, chart, countdown, ui, theme, music) + OG/Twitter/canonical tags + structured data |
+| `index.html` | HTML + 8 inline `<script type="application/json">` configs in `<head>` (ads, game, rewards, contributors, chart, countdown, ui, theme) + OG/Twitter/canonical tags + structured data |
 | `script.js` | All JS (global scope, no imports/exports, minified via terser) |
 | `theme.js` | Colour-mode module: applies `light-mode` to `<html>` before first paint, injects the fixed toggle, persists `gem_theme`, re-colours charts, updates `meta[theme-color]`. Loaded first in `<head>` on every page (hand-maintained, deliberately unminified) |
 | `styles.css` | CSS custom property tokens + BEM classes (minified via csso) |
@@ -31,7 +31,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `robots.txt` | Crawl directives, sitemap reference |
 | `.editorconfig` | Editor formatting defaults (indent, line endings, charset) |
 | `CHANGELOG.md` | Release history (auto-curated from git log) |
-| `sitemap.xml` | 210 URLs: 16 editorial pages (home, 10 guide pages, authors/anomaly, music, about, privacy, terms) + `/watch/` hub + 193 watch pages (one per indexed creator video), injected between `<!--WATCH_SITEMAP_START-->` / `_END` markers. `/seo/`, `/skarn-bot/`, and `404.html` are intentionally excluded |
+| `sitemap.xml` | 229 URLs: 16 editorial pages (home, 10 guide pages, authors/anomaly, music, about, privacy, terms) + `/watch/` hub + 212 watch pages (one per indexed creator video), injected between `<!--WATCH_SITEMAP_START-->` / `_END` markers. `/seo/`, `/skarn-bot/`, and `404.html` are intentionally excluded |
 | `og-images/*.png` | Per-page OG image PNGs (home, code, event, pvp, login, faq, beginners, xp, creators) |
 | `404.html` | Custom 404 error page (GA4-tagged, no `og:site_name`) |
 | `_headers` | Cloudflare Pages cache-control and security headers |
@@ -51,21 +51,23 @@ Open `index.html` in a browser. Works from `file://`.
 | `data/generated/seo-data.js` | Generated SEO data bundle (`npm run pull-gsc` / `npm run analyze-gsc`) |
 | `data/gsc-api/YYYY-MM-DD/` | Search Console API snapshots (summary, queries, pages, sitemaps, URL inspection) written by `npm run pull-gsc` |
 | `data/ga4-api/YYYY-MM-DD/` | Google Analytics 4 snapshots (daily, pages, countries, events, summary) written by `npm run pull-ga4` |
-| `data/playlists.json` | Music playlist source data for `npm run update-music` |
+| `music-banner.js` | Collapse/toggle behaviour for the music banner: restores and persists `gem_music_banner`, flips `aria-expanded`, shows the floating trigger. Loaded with `defer` on every page (hand-maintained, deliberately unminified). It never writes the banner content — that markup is static |
+| `data/playlists.json` | Single source of truth for music: `pages[]` assigns one Spotify playlist to each editorial/hub page (with `featured` cards shown on `/music/`), and `creators[]` assigns one playlist per YouTube channel used by the watch pages |
 | `data/countries-list.txt` | Country reference data used by GSC analysis |
 | `scripts/generate-codes.js` | Generator: reads `data/codes.json`, writes `data/generated/promo-codes.js` + updates `guide/code/index.html` via markers + updates `index.html` inline promo codes |
 | `data/youtube-creators.json` | Approved creator/video source data with provenance and status history |
 | `data/generated/youtube-creators.js` | Generated public creator data loaded by the creators guide |
 | `scripts/generate-youtube-creators.js` | Validates creator data and generates creator HTML, JSON-LD, noscript links, and browser data. Exports `buildVideoObject()` / `toIsoDateTime()` used by the watch page generator |
-| `scripts/generate-watch-pages.js` | Generates `watch/<videoId>/index.html` per indexed video plus the `/watch/` hub, prunes stale directories, and rewrites the watch region of `sitemap.xml` |
+| `scripts/generate-watch-pages.js` | Generates `watch/<videoId>/index.html` per indexed video plus the `/watch/` hub, prunes stale directories, and rewrites the watch region of `sitemap.xml`. Each generated page carries its creator's music banner from `data/playlists.json` |
 | `scripts/generate-video-rail.js` | Injects the auto-scrolling video rail into 14 editorial pages between `<!--VIDEO_RAIL_START-->` / `_END` markers, directly after the hero block (`npm run generate-rail`) |
 | `watch/watch.css` | Shared stylesheet for watch pages and the hub |
 | `watch/index.html` | Generated watch page hub, grouped by creator |
 | `watch/<videoId>/index.html` | Generated per-video watch page: one `VideoObject`, eager player, breadcrumbs, related videos |
 | `scripts/enrich-youtube-creators.js` | Harvests real per-video metadata (duration, view count, true upload timestamp, creator description, playability, embeddability) from the public watch page into `data/youtube-creators.json` under each video's `youtube` key (`npm run enrich-creators`). Re-runs skip records refreshed within 14 days; `--force` re-checks all |
 | `scripts/audit-youtube-creators.js` | Audits creator video availability over HTTP (`npm run audit-creators`) |
+| `scripts/audit-rich-results.js` | Drives the live Google Rich Results Test in headless Chrome across `sitemap.xml` (`npm run audit-rich-results`). Google publishes no API for this tool, so it is rate limited rather than quota'd: each URL needs a fresh landing-page load, and a refusal triggers a cooldown. Writes `data/rrt/<date>/results.json`; supports `--scope all\|editorial\|watch`, `--sample N`, `--limit`, `--url`, `--gap`, `--cooldown`, `--resume` |
 | `data/game-context.json` | Verified game-context knowledge base: one entry per game event/mode/system, each with aliases for matching against video text and a publisher-controlled `source.url`. Watch pages surface an entry only when its name actually appears in the video's title, description, or creator excerpt |
-| `scripts/generate-music.js` | Generates music page data from source playlists |
+| `scripts/generate-music.js` | Rewrites the `/music/` card grid and ItemList schema and regenerates the static music banner on every page listed in `data/playlists.json`, between `<!--MUSIC_BANNER_START-->` / `_END` markers. Fails the build on a duplicate playlist, an unknown colour, or a page/creator without a playlist |
 | `scripts/generate-skarn-index.js` | Regenerates the docs index inside `skarn-bot/index.html` via markers (`npm run skarn-index`) |
 | `scripts/pull-gsc.js` | Pulls Search Analytics API data into `data/gsc-api/<date>/` (`npm run pull-gsc`; service-account auth, `--key <path>` overrides the key) |
 | `scripts/pull-ga4.js` | Pulls GA4 Data API data into `data/ga4-api/<date>/` (`npm run pull-ga4`); requires Viewer access for the service account on the property |
@@ -81,7 +83,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `scripts/add-meta.js` / `add-more.js` / `add-schema.js` | Legacy guide-page meta/tag/schema helpers |
 | `scripts/run-psi-audit.js` | PageSpeed Insights audit across the 8 audited pages |
 | `scripts/serve.js` | Local development server (`npm start`) |
-| `music/index.html` | Generated music page (standalone, inline `music-config` block; playlists sourced from `data/playlists.json`) |
+| `music/index.html` | Generated music page (hand-maintained shell; card grid, ItemList schema, dates and banner are rewritten from `data/playlists.json`) |
 | `vendor/chart.umd.js` | Self-hosted Chart.js (downloaded via `npm run update-assets`) |
 | `lighthouse-config.js` | Shared Lighthouse audit config (mobile, 3G, 4× CPU) |
 | `lighthouserc.js` | CI assertion budget for Lighthouse performance checks |
@@ -94,6 +96,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `tests/youtube-watch-pages.test.js` | Validates watch page VideoObject shape, uploadDate format, SEO head, meta uniqueness, sitemap coverage, pruning |
 | `tests/youtube-creators-audit.test.js` | Validates creator audit output |
 | `tests/structured-data.test.js` | Validates JSON-LD structured data across pages |
+| `tests/music-banners.test.js` | Validates the music banners: unique playlist per page and per creator, home page pointing at `GTA 6 SOUNDTRACK`, static link markup on every page, one banner per page, watch pages inheriting their creator's playlist, and the `/music/` card grid matching `data/playlists.json` |
 | `tests/back-to-top.test.js` | Tests back-to-top button behavior. **Browser-only** — it uses `document`/`window`/`getComputedStyle`, so `node tests/back-to-top.test.js` fails with `describe is not defined`. Open `tests/back-to-top.html` (which loads `test-harness.js` first) in a browser to run it |
 | `tests/test-harness.js` | Shared test helpers |
 | `serp-dumps/YYYY-MM-DD/` | Historical SERP snapshot directories (INDEX.md + 40 query files, regenerated periodically) |
@@ -117,7 +120,9 @@ Open `index.html` in a browser. Works from `file://`.
 - **Build tools (npm scripts) generate local Tailwind CSS** — output is committed, no runtime build needed
 - **Prefer local assets over CDN dependencies** when practical for performance
 - **One `VideoObject` per page, on watch pages only** — Google indexes videos only from *watch pages*: a page whose main purpose is a single video. `guide/creators/` is a category page, so it must declare a `CollectionPage` + `ItemList` of **links** to watch pages and must **never** emit `VideoObject` (doing so triggered "Video isn't on a watch page" for all 142 videos). Watch pages carry exactly one `VideoObject` whose `@id` is the target of `WebPage.mainEntity`.
-- **Watch pages need no JavaScript** — the player is a plain `<iframe>` with `loading="eager"` placed directly after the `<h1>`, so it exists at load without user interaction. A click-to-load facade would re-trigger "Cannot determine video position and size".
+- **Watch pages need no JavaScript** — the player is a plain `<iframe>` with `loading="eager"` placed directly after the `<h1>`, so it exists at load without user interaction. A click-to-load facade would re-trigger "Cannot determine video position and size". The music banner is the one script they carry (`music-banner.js`, deferred, collapse state only); its link is static markup, so playback still needs no JS.
+- **The music banner is static markup with one playlist per page** — every page's bar is written at build time between `<!--MUSIC_BANNER_START-->` / `_END` (editorial pages via `scripts/generate-music.js`, watch pages via `scripts/generate-watch-pages.js`) with the page's own Spotify playlist from `data/playlists.json`. Never reintroduce a `music-config` inline block or a JS-injected label: the old `initMusicBanner()` rendered `Listen: undefined` once the config was absent, left `/music/` stuck on "Loading..." because that page loads no `script.js`, and hid the link from crawlers and no-JS visitors. One playlist per page is enforced — two pages sharing an ID fails `npm run test:music`. Watch pages inherit their creator's playlist, since a channel is the only meaningful axis across 212 pages.
+- **Banner link colours must clear 4.5:1 in both colour modes** — the label is 13px at normal weight, so the neon category tokens are only usable because `--gem-*` is darkened for light mode. Measured on the bar (`--gem-bg-dark`): dark mode gives event 6.99, pvp 4.73, login 9.03, code 9.43, cyan 12.88; light mode gives event 4.96, pvp 6.55, login 5.67, code 4.54, cyan 5.5. `purple` is excluded from `COLORS` in `scripts/generate-music.js` — #9b59b6 scores 4.24 on the dark bar, which is what caught it in Lighthouse.
 - **The editorial video rail is static markup, but it moves** — `scripts/generate-video-rail.js` writes the rail directly after the hero block (the `<h1>`'s parent element) and before the page's content, matching the creators guide. It auto-scrolls with a duplicated card set and a `translateX(-50%)` loop, so each group carries `padding-right` equal to the card gap — otherwise `-50%` lands mid-gap and the seam jumps. The duplicate group is `aria-hidden` with `tabindex="-1"`, hover/focus pauses it, and `prefers-reduced-motion` stops the animation, hides the duplicate and restores manual horizontal scrolling. Keep it static HTML: these pages do not load the 57 KB `youtube-creators.js` bundle, and its purpose is internal links to `/watch/` pages, which have no Search Console impressions.
 - **`authors/anomaly/` uses the shared chrome but stays out of the rail** — it links `tailwind.css` + `styles.css`, wraps its content in `.gem-container`, and inherits Barlow/Rajdhani/Orbitron like every other page, so the rail would render correctly there now. It is still left out of `scripts/generate-video-rail.js` by choice; drop it from that exclusion list if the profile should carry the creator strip.
 - **`uploadDate` must carry a timezone** — prefer the harvested `youtube.publishedAt`, which already carries the creator's real UTC offset. Fall back to `toIsoDateTime(published)` (`YYYY-MM-DDT00:00:00+00:00`) only when metadata is missing. Bare dates fail Google's datetime validation.
@@ -142,7 +147,8 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run generate-rail` — Regenerate the video rail region on the 14 editorial pages (static markup, no runtime JS)
 - `npm run enrich-creators` — Refresh real YouTube metadata for creator videos (duration, views, upload timestamp, description, playability)
 - `npm run audit-creators` — Audit creator video availability over HTTP
-- `npm run update-music` — Regenerate music page data from source playlists
+- `npm run audit-rich-results` — Run Google's live Rich Results Test over `sitemap.xml` in headless Chrome (no official API exists; rate limited, so `--sample N` for large page sets and `--resume` to continue). Writes `data/rrt/<date>/results.json`. Complements `npm run pull-gsc`, whose URL Inspection API under-reports: it does not surface `Organization` or `Software Apps` items and called the homepage PASS while the Rich Results Test found a critical issue
+- `npm run update-music` — Regenerate the `/music/` cards and every page's music banner from `data/playlists.json`
 - `npm run skarn-index` — Regenerate the docs index inside `skarn-bot/index.html` via markers
 - `npm run pull-gsc` — Pull Search Console API data into `data/gsc-api/<date>/` (service-account key only: `%APPDATA%\gcloud\service-account.json`, `GOOGLE_APPLICATION_CREDENTIALS`, or `--key <path>`)
 - `npm run pull-ga4` — Pull Google Analytics 4 data into `data/ga4-api/<date>/` (same key; the service account needs Viewer on the GA4 property)
@@ -153,6 +159,7 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run test:ads-txt` — Validate ads.txt content
 - `npm run test:ads-fallback` — Validate ads-config and site-message fallback across pages
 - `npm run test:structured-data` — Validate JSON-LD structured data across pages
+- `npm run test:music` — Validate music banners (unique playlists, static links, creator coverage) and the `/music/` card grid
 - `node tests/promo-codes-generator.test.js` — Validate promo code generation from `data/codes.json` (no npm alias)
 - `npm run update-assets` — Download the pinned Chart.js build into `vendor/chart.umd.js` (fonts are committed by hand, not fetched by this script)
 - `npm run lighthouse:home` — Run Lighthouse audit on homepage

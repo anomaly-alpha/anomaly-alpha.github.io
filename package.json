@@ -17,6 +17,7 @@
     "update-music": "node scripts/generate-music.js",
     "skarn-index": "node scripts/generate-skarn-index.js",
     "audit-creators": "node scripts/audit-youtube-creators.js",
+    "audit-rich-results": "node scripts/audit-rich-results.js",
     "enrich-creators": "node scripts/enrich-youtube-creators.js",
     "generate-creators": "node scripts/generate-youtube-creators.js",
     "generate-watch": "node scripts/generate-watch-pages.js",
@@ -26,6 +27,7 @@
     "test:ads-txt": "node tests/ads-txt.test.js",
     "test:ads-fallback": "node tests/ads-fallback.test.js",
     "test:structured-data": "node tests/structured-data.test.js",
+    "test:music": "node tests/music-banners.test.js",
     "test:watch-pages": "node tests/youtube-watch-pages.test.js",
     "verify:schema": "node scripts/verify-structured-data.js",
     "build": "node scripts/generate-codes.js && node scripts/generate-music.js && node scripts/generate-youtube-creators.js && node scripts/generate-watch-pages.js && node scripts/generate-video-rail.js && npm run build:css && npm run build:js",
@@ -47,6 +49,7 @@
     "@lhci/cli": "^0.16.0",
     "csso": "^5.0.5",
     "lighthouse": "13.6.0",
+    "puppeteer-core": "^25.16.0",
     "tailwindcss": "^3.4.17",
     "terser": "^5.46.2"
   },

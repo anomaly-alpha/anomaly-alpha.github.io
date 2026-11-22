@@ -223,23 +223,21 @@
       ]
     }
     </script>
-    <!-- Music Banner Config -->
-    <script type="application/json" id="music-config">
-    {"name":"Gaming Time!","page":"../../music/","color":"event"}
-    </script>
 </head>
 <body class="relative min-h-screen p-5 md:p-10 gem-grid-bg">
-    <!-- Music Banner -->
-    <div id="musicBanner" class="gem-music-banner gem-music-banner--expanded">
+    <!--MUSIC_BANNER_START-->
+    <aside id="musicBanner" class="gem-music-banner gem-music-banner--expanded" aria-label="Music playlist">
         <div class="gem-music-banner__content">
-            <span class="gem-music-banner__icon">&#x1F3B5;</span>
-            <span class="gem-music-banner__label" id="musicBannerLabel">Loading...</span>
+            <span class="gem-music-banner__icon" aria-hidden="true">&#x1F3B5;</span>
+            <span class="gem-music-banner__label" id="musicBannerLabel">Listen: <a href="https://open.spotify.com/playlist/37i9dQZF1DX4eRPd9frC1m" class="gem-text--event" target="_blank" rel="noopener noreferrer" aria-label="Hype on Spotify (opens in a new tab)">Hype <span aria-hidden="true">&#x2197;</span></a></span>
         </div>
         <div class="gem-music-banner__actions">
-            <button id="musicBannerToggle" class="gem-music-banner__btn" aria-label="Minimize music banner">&minus;</button>
+            <button id="musicBannerToggle" class="gem-music-banner__btn" aria-label="Minimize music banner" aria-expanded="true">&minus;</button>
         </div>
-    </div>
+    </aside>
     <button id="musicBannerTrigger" class="gem-music-banner__trigger" aria-label="Show music banner" hidden>&#x1F3B5;</button>
+    <script src="../../music-banner.js" defer></script>
+    <!--MUSIC_BANNER_END-->
 
         <div class="relative gem-container gem-container__shadow max-w-4xl mx-auto">
         <div class="gem-corner gem-corner--tl"></div>

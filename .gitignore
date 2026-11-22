@@ -21,6 +21,7 @@ _dream_tmp*.py
 .lhci/
 .lighthouseci/
 .playwright-mcp/
+.rrt-profile/
 journal/
 scripts/start-mimo-with-github-agent.sh
 

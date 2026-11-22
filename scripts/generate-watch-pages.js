@@ -4,6 +4,29 @@ const fs = require('fs');
 const path = require('path');
 
 const gen = require('./generate-youtube-creators');
+const music = require('./generate-music');
+
+// ===== MUSIC BANNER =====
+
+var MUSIC_PLAYLISTS = music.loadPlaylists();
+var CREATOR_PLAYLISTS = {};
+MUSIC_PLAYLISTS.creators.forEach(function (entry) {
+  CREATOR_PLAYLISTS[entry.creatorId] = entry;
+});
+var HUB_PLAYLIST = MUSIC_PLAYLISTS.pages.filter(function (page) { return page.path === '/watch/'; })[0];
+if (!HUB_PLAYLIST) {
+  throw new Error('data/playlists.json needs a "/watch/" entry for the video hub music banner');
+}
+
+function creatorPlaylist(creator) {
+  // scripts/generate-music.js refuses to build when a real creator has no playlist; the hub
+  // playlist keeps synthetic fixtures (tests/) renderable.
+  return CREATOR_PLAYLISTS[creator.id] || HUB_PLAYLIST;
+}
+
+function renderMusicBanner(entry, file) {
+  return music.buildBanner(entry, file);
+}
 
 // ===== CONSTANTS =====
 
@@ -631,6 +654,7 @@ function renderPage(data, video, creator, meta, entities) {
   h.push(renderHead(video, creator, meta, entities));
   h.push('</head>');
   h.push('<body class="relative min-h-screen p-5 md:p-10 gem-grid-bg">');
+  h.push(renderMusicBanner(creatorPlaylist(creator), 'watch/' + video.id + '/index.html'));
   h.push('    <div class="relative gem-container gem-container__shadow max-w-4xl mx-auto">');
   h.push('        <div class="gem-corner gem-corner--tl"></div>');
   h.push('        <div class="gem-corner gem-corner--tr"></div>');
@@ -772,6 +796,7 @@ function renderHub(data) {
   h.push('    </script>');
   h.push('</head>');
   h.push('<body class="relative min-h-screen p-5 md:p-10 gem-grid-bg">');
+  h.push(renderMusicBanner(HUB_PLAYLIST, 'watch/index.html'));
   h.push('    <div class="relative gem-container gem-container__shadow max-w-4xl mx-auto">');
   h.push('        <div class="gem-corner gem-corner--tl"></div>');
   h.push('        <div class="gem-corner gem-corner--tr"></div>');

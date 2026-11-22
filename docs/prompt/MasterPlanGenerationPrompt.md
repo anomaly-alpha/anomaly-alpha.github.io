@@ -26,7 +26,7 @@ Static HTML/JS/CSS site for "Invincible: Guarding the Globe." Calculates weekly 
 - 10 guide pages at `guide/{code,event,wish-event,pvp,login,faq,beginners,xp,redeem,creators}/index.html`, plus `index.html`, `about/`, `authors/anomaly/`, `music/`, `privacy/`, `terms/`, `seo/`, the generated `watch/` tree (193 per-video pages + hub), and `404.html`
 - Single JS file: `script.js` — global scope, no modules; ES2017+ (46 arrow functions, 31 optional-chaining uses) with `onclick` attributes, ~65 named functions
 - CSS: `styles.css` (BEM + custom props, ~48 KB) + `tailwind.css` (utilities, ~16 KB)
-- 9 inline JSON configs in `index.html <head>`: game-config, rewards-config, contributors-config, chart-config, countdown-config, ui-config, theme-config, ads-config, music-config
+- 8 inline JSON configs in `index.html <head>`: game-config, rewards-config, contributors-config, chart-config, countdown-config, ui-config, theme-config, ads-config (the music banner is static markup generated from `data/playlists.json`, not a config)
 - No `fetch()` — all data inline. No CDN — all assets self-hosted.
 - State: localStorage keys `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`, `gem_theme`, `gem_copiedCode`, `gem_music_banner`, `gem_visits`, `gem_beacon`. URL params `?theme=&mode=&chart=`.
 - Build: `npm run build` = 4 generators (`generate-codes`, `generate-music`, `generate-youtube-creators`, `generate-watch-pages`) → Tailwind → csso → terser. Generated files committed.

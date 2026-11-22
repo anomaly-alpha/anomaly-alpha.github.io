@@ -1,70 +1,288 @@
 {
-  "updated": "2026-07-17",
-  "reviewed": "2026-09-04",
-  "playlists": [
+  "updated": "2026-11-21",
+  "reviewed": "2026-11-21",
+  "pages": [
     {
-      "id": "37i9dQZF1E8Ligr8EnF31Q",
-      "name": "Today's Top Hits",
-      "description": "The biggest songs right now. Great background while planning your gem stack.",
-      "page": "/",
+      "path": "/",
       "pageName": "Home",
+      "id": "7268bAOK23jvpBGy2Kw9Jd",
+      "name": "GTA 6 SOUNDTRACK",
+      "color": "pvp",
+      "featured": true,
+      "description": "Every confirmed song from Grand Theft Auto VI — the album, the Justice score, and the licensed radio cuts — collected by Rockstar Games."
+    },
+    {
+      "path": "/guide/code/",
+      "pageName": "Code Guide",
+      "id": "37i9dQZF1DXdPec7aLTmlC",
+      "name": "Happy Hits!",
+      "color": "code",
+      "featured": true,
+      "description": "Upbeat and uplifting. Perfect for discovering new promo codes."
+    },
+    {
+      "path": "/guide/redeem/",
+      "pageName": "Redeem Guide",
+      "id": "37i9dQZF1DWWQRwui0ExPn",
+      "name": "lofi beats",
+      "color": "code",
+      "featured": true,
+      "description": "Low-key loops for pasting codes into the redemption portal without the drama."
+    },
+    {
+      "path": "/guide/event/",
+      "pageName": "Event Guide",
+      "id": "37i9dQZF1DWSfv493aPhol",
+      "name": "Gaming Time!",
+      "color": "event",
+      "featured": true,
+      "description": "Epic gaming tracks for event battles and alliance wars."
+    },
+    {
+      "path": "/guide/wish-event/",
+      "pageName": "Wish Event",
+      "id": "37i9dQZF1DX4eRPd9frC1m",
+      "name": "Hype",
+      "color": "event",
+      "featured": true,
+      "description": "High-stakes build-up for summon pulls and wish-event banners."
+    },
+    {
+      "path": "/guide/pvp/",
+      "pageName": "PvP Guide",
+      "id": "37i9dQZF1DX76Wlfdnj7AP",
+      "name": "Beast Mode",
+      "color": "pvp",
+      "featured": true,
+      "description": "Get hyped. High-energy tracks for climbing the PvP ladder."
+    },
+    {
+      "path": "/guide/login/",
+      "pageName": "Login Guide",
+      "id": "37i9dQZF1DX4WYpdgoIcn6",
+      "name": "Chill Hits",
+      "color": "login",
+      "featured": true,
+      "description": "Kick back and relax. Easy listening for daily login rewards."
+    },
+    {
+      "path": "/guide/beginners/",
+      "pageName": "Beginner Guide",
+      "id": "37i9dQZF1DXc5e2bJhV6pu",
+      "name": "Morning Motivation",
+      "color": "cyan",
+      "featured": true,
+      "description": "Start your journey right. Motivating tracks for new players."
+    },
+    {
+      "path": "/guide/xp/",
+      "pageName": "XP Guide",
+      "id": "37i9dQZF1DWZeKCadgRdKQ",
+      "name": "Deep Focus",
+      "color": "cyan",
+      "featured": true,
+      "description": "Concentrate. Focused beats for studying hero rank-up costs."
+    },
+    {
+      "path": "/guide/faq/",
+      "pageName": "FAQ",
+      "id": "37i9dQZF1DX4sWSpwq3LiO",
+      "name": "Peaceful Piano",
+      "color": "cyan",
+      "featured": true,
+      "description": "Calm piano pieces. Relax while browsing FAQs and guides."
+    },
+    {
+      "path": "/guide/creators/",
+      "pageName": "Creator Directory",
+      "id": "37i9dQZF1DX2L0iB23Enbq",
+      "name": "Viral Hits",
+      "color": "cyan",
+      "featured": true,
+      "description": "The songs the timeline is already shouting about — soundtrack for a creator binge."
+    },
+    {
+      "path": "/music/",
+      "pageName": "Music & Playlists",
+      "id": "37i9dQZF1DXcBWIGoYBM5M",
+      "name": "Today's Top Hits",
       "color": "cyan"
     },
     {
-      "id": "37i9dQZF1DX76Wlfdnj7AP",
-      "name": "Beast Mode",
-      "description": "Get hyped. High-energy tracks for climbing the PvP ladder.",
-      "page": "/guide/pvp/",
-      "pageName": "PvP Guide",
-      "color": "pvp"
+      "path": "/about/",
+      "pageName": "About",
+      "id": "37i9dQZF1DX1g0iEXLFycr",
+      "name": "Feel Good Friday",
+      "color": "cyan"
     },
     {
-      "id": "37i9dQZF1DWSfv493aPhol",
-      "name": "Gaming Time!",
-      "description": "Epic gaming tracks for event battles and alliance wars.",
-      "page": "/guide/event/",
-      "pageName": "Event Guide",
+      "path": "/authors/anomaly/",
+      "pageName": "Author Profile",
+      "id": "37i9dQZF1DX9GRpeH4CL0S",
+      "name": "Essential Alternative",
+      "color": "cyan"
+    },
+    {
+      "path": "/privacy/",
+      "pageName": "Privacy Policy",
+      "id": "37i9dQZF1DX0jgyAiPl8Af",
+      "name": "Peaceful Guitar",
+      "color": "cyan"
+    },
+    {
+      "path": "/terms/",
+      "pageName": "Terms of Service",
+      "id": "37i9dQZF1DWWEJlAGA9gs0",
+      "name": "Classical Essentials",
+      "color": "cyan"
+    },
+    {
+      "path": "/seo/",
+      "pageName": "SEO Utilities",
+      "id": "37i9dQZF1DWXLeA8Omikj7",
+      "name": "Brain Food",
+      "color": "cyan"
+    },
+    {
+      "path": "/404.html",
+      "pageName": "Page Not Found",
+      "id": "37i9dQZF1DX7qK8ma5wgG1",
+      "name": "Sad Songs",
       "color": "event"
     },
     {
-      "id": "37i9dQZF1DX4WYpdgoIcn6",
-      "name": "Chill Hits",
-      "description": "Kick back and relax. Easy listening for daily login rewards.",
-      "page": "/guide/login/",
-      "pageName": "Login Guide",
-      "color": "login"
-    },
-    {
-      "id": "37i9dQZF1DXdPec7aLTmlC",
-      "name": "Happy Hits!",
-      "description": "Upbeat and uplifting. Perfect for discovering new promo codes.",
-      "page": "/guide/code/",
-      "pageName": "Code Guide",
-      "color": "code"
-    },
-    {
-      "id": "37i9dQZF1DXc5e2bJhV6pu",
-      "name": "Morning Motivation",
-      "description": "Start your journey right. Motivating tracks for new players.",
-      "page": "/guide/beginners/",
-      "pageName": "Beginner Guide",
+      "path": "/watch/",
+      "pageName": "Video Library",
+      "id": "37i9dQZF1DX5Vy6DFOcx00",
+      "name": "big on the internet",
       "color": "cyan"
+    }
+  ],
+  "creators": [
+    {
+      "creatorId": "avatar-shuvd",
+      "id": "37i9dQZF1DXa2SPUyWl8Y5",
+      "name": "Beats to think to"
     },
     {
-      "id": "37i9dQZF1DX4sWSpwq3LiO",
-      "name": "Peaceful Piano",
-      "description": "Calm piano pieces. Relax while browsing FAQs and guides.",
-      "page": "/guide/faq/",
-      "pageName": "FAQ",
-      "color": "cyan"
+      "creatorId": "rapid-gtg",
+      "id": "37i9dQZF1DX32NsLKyzScr",
+      "name": "Power Hour"
     },
     {
-      "id": "37i9dQZF1DWZeKCadgRdKQ",
-      "name": "Deep Focus",
-      "description": "Concentrate. Focused beats for studying hero rank-up costs.",
-      "page": "/guide/xp/",
-      "pageName": "XP Guide",
-      "color": "cyan"
+      "creatorId": "tutaaa-gtg",
+      "id": "37i9dQZF1DX4dyzvuaRJ0n",
+      "name": "mint"
+    },
+    {
+      "creatorId": "th3o",
+      "id": "37i9dQZF1DWY6tYEFs22tT",
+      "name": "Hip-Hop Central"
+    },
+    {
+      "creatorId": "lavamoose",
+      "id": "37i9dQZF1DX2sUQwD7tbmL",
+      "name": "Feel-Good Indie Rock"
+    },
+    {
+      "creatorId": "omni-bane",
+      "id": "37i9dQZF1DWSVtp02hITpN",
+      "name": "The Pop List"
+    },
+    {
+      "creatorId": "just-a-guy-named-francis",
+      "id": "37i9dQZF1DX4JAvHpjipBk",
+      "name": "New Music Friday"
+    },
+    {
+      "creatorId": "beaoloooo",
+      "id": "37i9dQZF1DXaKIA8E7WcJj",
+      "name": "All Out 60s"
+    },
+    {
+      "creatorId": "kingslay727",
+      "id": "37i9dQZF1DX0XUsuxWHRQd",
+      "name": "RapCaviar"
+    },
+    {
+      "creatorId": "invincible-gtg-omni-fan",
+      "id": "37i9dQZF1DWY4xHQp97fN6",
+      "name": "Get Turnt"
+    },
+    {
+      "creatorId": "alexandergzmn-invincible",
+      "id": "37i9dQZF1DX2pSTOxoPbx9",
+      "name": "Dark & Stormy"
+    },
+    {
+      "creatorId": "gotcha-beast",
+      "id": "37i9dQZF1DX3oM43CtKnRV",
+      "name": "00s Rock Anthems"
+    },
+    {
+      "creatorId": "subsktro",
+      "id": "37i9dQZF1DX8tZsk68tuDw",
+      "name": "Dance Rising"
+    },
+    {
+      "creatorId": "gxlden",
+      "id": "37i9dQZF1DXa8NOEUWPn9W",
+      "name": "Housewerk"
+    },
+    {
+      "creatorId": "x-gamers-asylum",
+      "id": "37i9dQZF1DX3YSRoSdA634",
+      "name": "Life Sucks"
+    },
+    {
+      "creatorId": "hero-haven-gtg",
+      "id": "37i9dQZF1DX4SBhb3fqCJd",
+      "name": "RNB X"
+    },
+    {
+      "creatorId": "pops-meta",
+      "id": "37i9dQZF1DWSqmBTGDYngZ",
+      "name": "Songs to Sing in the Shower"
+    },
+    {
+      "creatorId": "punho-viltrumita",
+      "id": "37i9dQZF1DX4UtSsGT1Sbe",
+      "name": "All Out 80s"
+    },
+    {
+      "creatorId": "chernandez88",
+      "id": "37i9dQZF1DX5Ejj0EkURtP",
+      "name": "All Out 2010s"
+    },
+    {
+      "creatorId": "mompish",
+      "id": "37i9dQZF1DWY7IeIP1cdjF",
+      "name": "Baila Reggaeton"
+    },
+    {
+      "creatorId": "theseenpix-gtg",
+      "id": "37i9dQZF1DWXbttAJcbphz",
+      "name": "I Love My '10s R&B"
+    },
+    {
+      "creatorId": "omni-tactics",
+      "id": "37i9dQZF1DX82GYcclJ3Ug",
+      "name": "the new alt"
+    },
+    {
+      "creatorId": "omni-m1ke",
+      "id": "37i9dQZF1DX66m4icL86Ru",
+      "name": "BBE"
+    },
+    {
+      "creatorId": "kabraxis-512",
+      "id": "37i9dQZF1DX9oh43oAzkyx",
+      "name": "Beast Mode Hip-Hop"
+    },
+    {
+      "creatorId": "connor",
+      "id": "37i9dQZF1DX9XIFQuFvzM4",
+      "name": "Feelin' Good"
     }
   ]
 }

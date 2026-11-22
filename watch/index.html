@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="../theme.js"></script>
+    <script src="../../theme.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#050a14">
@@ -25,11 +25,6 @@
     <meta name="twitter:title" content="Invincible GTG Video Watch Pages">
     <meta name="twitter:description" content="Watch page index for every tracked Invincible: Guarding the Globe creator video.">
     <title>Invincible GTG Video Watch Pages</title>
-    <link rel="preload" href="../fonts/Barlow-Regular.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="../fonts/Barlow-Medium.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="../fonts/Barlow-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="../fonts/Orbitron-Variable.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="../fonts/Rajdhani-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../tailwind.css">
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="watch.css">
@@ -1339,6 +1334,17 @@
     </script>
 </head>
 <body class="relative min-h-screen p-5 md:p-10 gem-grid-bg">
+    <aside id="musicBanner" class="gem-music-banner gem-music-banner--expanded" aria-label="Music playlist">
+        <div class="gem-music-banner__content">
+            <span class="gem-music-banner__icon" aria-hidden="true">&#x1F3B5;</span>
+            <span class="gem-music-banner__label" id="musicBannerLabel">Listen: <a href="https://open.spotify.com/playlist/37i9dQZF1DX5Vy6DFOcx00" class="gem-text--cyan" target="_blank" rel="noopener noreferrer" aria-label="big on the internet on Spotify (opens in a new tab)">big on the internet <span aria-hidden="true">&#x2197;</span></a></span>
+        </div>
+        <div class="gem-music-banner__actions">
+            <button id="musicBannerToggle" class="gem-music-banner__btn" aria-label="Minimize music banner" aria-expanded="true">&minus;</button>
+        </div>
+    </aside>
+    <button id="musicBannerTrigger" class="gem-music-banner__trigger" aria-label="Show music banner" hidden>&#x1F3B5;</button>
+    <script src="../music-banner.js" defer></script>
     <div class="relative gem-container gem-container__shadow max-w-4xl mx-auto">
         <div class="gem-corner gem-corner--tl"></div>
         <div class="gem-corner gem-corner--tr"></div>

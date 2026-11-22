@@ -62,7 +62,7 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 
 ## Architecture
 - Inline JSON configs in HTML `<head>` (no fetch, works from `file://`)
-- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME` — global config objects loaded from 6 inline `<script>` tags; `contributors-config` is a 7th, `music-config` is an 8th, `ads-config` is a 9th (ads disabled, site-message fallback)
+- `GAME`, `REWARDS`, `CHARTS`, `COUNTDOWN`, `UI`, `THEME` — global config objects loaded from 6 inline `<script>` tags; `contributors-config` is a 7th, `ads-config` is an 8th (ads disabled, site-message fallback). The music banner is no longer a config: its markup and Spotify link are generated into each page from `data/playlists.json`
 - `getPvpPayout(arena, leagueId, rank)` — core PvP calculation function, reads per-league payout tables from `GAME.pvp.arenas` (restricted/open) and `GAME.pvp.multiverse` (6 grouped leagues for Alliance War)
 - Modal data lives in `REWARDS.cards[].modal` — loaded via `findCardById(id)` helper
 - `showCardModal(cardId)` / `closeCardModal()` — modal lifecycle
