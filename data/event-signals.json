@@ -1,0 +1,922 @@
+{
+  "updated": "2026-11-22",
+  "window": {
+    "days": 7,
+    "minVideos": 5,
+    "minCreators": 3
+  },
+  "bursts": [
+    {
+      "start": "2026-11-14",
+      "end": "2026-11-20",
+      "videoCount": 26,
+      "creatorCount": 7,
+      "status": "derived",
+      "label": "Update 3.8",
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Events",
+      "categories": {
+        "Events": 9,
+        "Updates": 8,
+        "Gameplay": 5,
+        "Livestreams": 3,
+        "Tier Lists": 1
+      },
+      "videos": [
+        "ZXmB8-wrx5Q",
+        "NQnVrTDr5h0",
+        "Rlz-atWaBT8",
+        "WFxKZ78v35s",
+        "nZwg54ljuGU",
+        "I5BiYQr1IJo",
+        "canuWYceCXU",
+        "BB_zJ9lGTaA",
+        "ag0u7GF5OPI",
+        "n1E7dmWhikA",
+        "4qxqaF6fObE",
+        "F1FvwGhw_v4",
+        "e80HOAcKMjg",
+        "9OTU7wkyVhA",
+        "xhxYAYzzgW0",
+        "SmDhReRsSzs",
+        "3oXUh_gVEWA",
+        "AawkOqTn36E",
+        "fUVH3hyxBGI",
+        "A4rx5csmOcM",
+        "4GO7o_rEqxk",
+        "e6sCO7Gk6Bw",
+        "otmlxHRat-Q",
+        "ov3LMcpUBEE",
+        "DJNqKPMMnXk",
+        "Sq9U9t1P4b8"
+      ]
+    },
+    {
+      "start": "2026-11-07",
+      "end": "2026-11-13",
+      "videoCount": 26,
+      "creatorCount": 10,
+      "status": "confirmed",
+      "label": "Faction Recruitment",
+      "entityId": "faction-recruitment",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe (official)",
+        "title": "Faction Recruitment is open for a limited time",
+        "url": "https://x.com/InvincibleGtG/status/1796209959325323691",
+        "verifiedAt": "2026-11-01"
+      },
+      "guideHref": "/guide/beginners/",
+      "topCategory": "Events",
+      "categories": {
+        "Events": 13,
+        "Gameplay": 7,
+        "Team Building": 4,
+        "Livestreams": 2
+      },
+      "videos": [
+        "M9v0LR6qmIk",
+        "13IACa54UIQ",
+        "BDdBEzLtSYA",
+        "A6hVhRK8KJA",
+        "1OaG7uyXcLU",
+        "NAvYAgX41NI",
+        "8CZd5S2BkiQ",
+        "2THLKq7F7vM",
+        "2iQvZa8WHMg",
+        "xqJaAABIx7M",
+        "tn3i3TWASi4",
+        "d_AMR6vMqgs",
+        "bFvbFlZ7LKw",
+        "xMxqySf-jNo",
+        "Vvfn_eTjxng",
+        "fG50HubO1ls",
+        "VFc8lRTGulw",
+        "G_4oAeU9ymA",
+        "FHeyeAMaXvs",
+        "DpBpsKG3BO8",
+        "bhrEdHFdx6A",
+        "4dx2t-wmJsA",
+        "dVPcBKHdVSQ",
+        "URRPl8kY9XI",
+        "_N_4zobsTWA",
+        "XtcZhI82Xfo"
+      ]
+    },
+    {
+      "start": "2026-10-31",
+      "end": "2026-11-06",
+      "videoCount": 24,
+      "creatorCount": 9,
+      "status": "confirmed",
+      "label": "Trick or Treat",
+      "entityId": "trick-or-treat",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe official App Store listing",
+        "title": "Events: Trick or Treat",
+        "url": "https://apps.apple.com/us/app/invincible-guarding-the-globe/id6449294809",
+        "verifiedAt": "2026-11-01"
+      },
+      "guideHref": "/guide/event/",
+      "topCategory": "Events",
+      "categories": {
+        "Events": 14,
+        "Tier Lists": 4,
+        "Gameplay": 3,
+        "Livestreams": 2,
+        "Guides": 1
+      },
+      "videos": [
+        "Gtk7IanJULU",
+        "IbFs7BI6ybw",
+        "BcRRt-rUmRI",
+        "s-C6avp3mJg",
+        "W9WFai_Feag",
+        "a7sNvdvYuPE",
+        "cJoKvjn71Ps",
+        "vhSv1V0yhhI",
+        "FLfZZgPUZ-E",
+        "E9U_8VmKJG4",
+        "BDwSIIUzjjY",
+        "wf4_YWijOk8",
+        "C6eQ1iu0MzQ",
+        "QcFdhySuwZA",
+        "rWiIpQH4cHw",
+        "YZXV62mJFWM",
+        "MUlDGEW7eBA",
+        "9EB8HRh2ylc",
+        "AuXyUTL85cI",
+        "CvGfH0fJn-8",
+        "ejLWNWAYgyw",
+        "z2aG7UMHQv8",
+        "92hAb_bvofM",
+        "v6VSgbnO6RA"
+      ]
+    },
+    {
+      "start": "2026-10-24",
+      "end": "2026-10-30",
+      "videoCount": 29,
+      "creatorCount": 8,
+      "status": "confirmed",
+      "label": "Trick or Treat",
+      "entityId": "trick-or-treat",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe official App Store listing",
+        "title": "Events: Trick or Treat",
+        "url": "https://apps.apple.com/us/app/invincible-guarding-the-globe/id6449294809",
+        "verifiedAt": "2026-11-01"
+      },
+      "guideHref": "/guide/event/",
+      "topCategory": "Events",
+      "categories": {
+        "Events": 12,
+        "Gameplay": 5,
+        "Guides": 5,
+        "Updates": 4,
+        "Livestreams": 3
+      },
+      "videos": [
+        "qb6hWWX1Kr0",
+        "E9TqBxmTuM4",
+        "IoI-mak2p5I",
+        "HFeNbDaxfV0",
+        "f9aYtlaq7d4",
+        "C3lp_4ZEZv4",
+        "bQDZczWx0u0",
+        "-2BF6pSmbTE",
+        "Z8YncH-ZfRY",
+        "4Xs3tvA7M3c",
+        "rFRVUyKk4jk",
+        "3F42EHpUx0U",
+        "ib2YWK5Hdnc",
+        "2baCGmxSLb0",
+        "bHNhQvcTslA",
+        "xTGiN5kleDE",
+        "45Znt_CCOjM",
+        "RKqNLOzB44g",
+        "CsBpoj0h2kc",
+        "Yuxu3uiSnpI",
+        "dkzq2FVg_UY",
+        "X4dq1ff6JQA",
+        "IQmgXG011PM",
+        "Z3N6BceB3TU",
+        "W0KV5Hf_6x4",
+        "clp4FcJHmzg",
+        "3VmRUbqhTWs",
+        "pN4tKDmdIKs",
+        "q4Mwyb74H30"
+      ]
+    },
+    {
+      "start": "2026-10-17",
+      "end": "2026-10-23",
+      "videoCount": 24,
+      "creatorCount": 7,
+      "status": "derived",
+      "label": "Update 3.7",
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Events",
+      "categories": {
+        "Events": 9,
+        "Updates": 9,
+        "Gameplay": 4,
+        "Livestreams": 1,
+        "Tier Lists": 1
+      },
+      "videos": [
+        "8o1KE1_OGO0",
+        "PQs3dCpC24o",
+        "fVuOHMN_8YE",
+        "6uiR3s54xCQ",
+        "2MZvESNTCCE",
+        "cNtcMNVOhfc",
+        "bImw5Xp777E",
+        "tGVLhso8AXU",
+        "kj4gAGBFuXU",
+        "8xtQsvp3mII",
+        "5jCkr4sZIV8",
+        "SCt9DHfqtjs",
+        "R_BFT9k0cKs",
+        "czbqnc8mQJI",
+        "qRfwTXb8OCY",
+        "hkWTI3erN2I",
+        "vUNIhdD2mRA",
+        "_VoCVROT-mc",
+        "EClXP5eE-bw",
+        "29GJpWBjEDs",
+        "iQi8iFx52Pw",
+        "o3spJYPvP-E",
+        "p4_7nFZqVSU",
+        "jwMBZoI3baI"
+      ]
+    },
+    {
+      "start": "2026-10-10",
+      "end": "2026-10-16",
+      "videoCount": 11,
+      "creatorCount": 5,
+      "status": "confirmed",
+      "label": "Lock & Reload",
+      "entityId": "lock-and-reload",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe (official)",
+        "title": "Locked & Reload event is here",
+        "url": "https://www.instagram.com/p/DanJD2wjErt",
+        "verifiedAt": "2026-11-01"
+      },
+      "guideHref": "/guide/creators/",
+      "topCategory": "Events",
+      "categories": {
+        "Events": 6,
+        "Guides": 3,
+        "Gameplay": 1,
+        "Team Building": 1
+      },
+      "videos": [
+        "wiQtWcBNHts",
+        "wouY_njruFM",
+        "cDiYl43pawY",
+        "dmmsEqNdQkc",
+        "21EmQ4aL8qY",
+        "vCE19xJbehw",
+        "FXJEVp5DQG4",
+        "kDqQ3IfkQzc",
+        "JjytTqc_Jr4",
+        "lbN7SeV1vSM",
+        "6i2O9Qf8uHs"
+      ]
+    },
+    {
+      "start": "2026-10-03",
+      "end": "2026-10-09",
+      "videoCount": 11,
+      "creatorCount": 5,
+      "status": "confirmed",
+      "label": "Art's Outlet",
+      "entityId": "arts-outlet",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe (official)",
+        "title": "Art Rosenbaum got inspired and the equipment shop will never be the same",
+        "url": "https://www.facebook.com/InvincibleGtG/posts/art-rosenbaum-got-inspired-and-the-equipment-shop-will-never-be-the-sameswing-by/642054355635524",
+        "verifiedAt": "2026-11-01"
+      },
+      "guideHref": "/guide/beginners/",
+      "topCategory": "Gameplay",
+      "categories": {
+        "Gameplay": 7,
+        "Events": 3,
+        "Guides": 1
+      },
+      "videos": [
+        "1QEE0Mb5WRM",
+        "ALHFAkF29vk",
+        "7jP2sNN9VKg",
+        "qrtvEGPMcuA",
+        "yrTGtWZzkgE",
+        "JERbBuh-eOk",
+        "ezcqCuJQg5g",
+        "t5iDbRzLdJI",
+        "LhhEuOSagd0",
+        "r5wksZNd7ZY",
+        "M8VDHzE28yo"
+      ]
+    },
+    {
+      "start": "2026-09-26",
+      "end": "2026-10-02",
+      "videoCount": 10,
+      "creatorCount": 7,
+      "status": "unlabelled",
+      "label": null,
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Events",
+      "categories": {
+        "Events": 6,
+        "Gameplay": 2,
+        "Guides": 1,
+        "Livestreams": 1
+      },
+      "videos": [
+        "D3DzitI4Ivc",
+        "D6vJjLx06kI",
+        "5BDMQSkk28E",
+        "xozAkJa_Gho",
+        "6Fu3nbh7G8k",
+        "8_CXQ3FSkrE",
+        "qKPLZAM3FU0",
+        "PiFQmA3KaLc",
+        "G6yRvEUcRX4",
+        "qPlTBMcGDLk"
+      ]
+    },
+    {
+      "start": "2026-09-19",
+      "end": "2026-09-25",
+      "videoCount": 8,
+      "creatorCount": 5,
+      "status": "unlabelled",
+      "label": null,
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Gameplay",
+      "categories": {
+        "Gameplay": 4,
+        "Events": 2,
+        "Guides": 1,
+        "Updates": 1
+      },
+      "videos": [
+        "j3cn5D-8Bbk",
+        "5ZvcezDduAI",
+        "-sS1LA0f18k",
+        "aMdPAHQR8t4",
+        "WRMBqOv0A2U",
+        "AnXSM0liVyw",
+        "WZKb4_2Xbi0",
+        "dYdTwfQsTJw"
+      ]
+    },
+    {
+      "start": "2026-09-13",
+      "end": "2026-09-18",
+      "videoCount": 10,
+      "creatorCount": 7,
+      "status": "derived",
+      "label": "Update 3.6",
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Updates",
+      "categories": {
+        "Updates": 7,
+        "Events": 1,
+        "Guides": 1,
+        "Livestreams": 1
+      },
+      "videos": [
+        "nLlG0w7sUgU",
+        "UcgJajY53VQ",
+        "AXSxYMKt47E",
+        "3IzcMQOWzak",
+        "DFmOISvkUeI",
+        "7uTggpahjp0",
+        "NroWP9Hmnn8",
+        "3QmKRqMfRnU",
+        "MgA9W8gXPDo",
+        "YuL1k9LVTRk"
+      ]
+    },
+    {
+      "start": "2026-09-05",
+      "end": "2026-09-11",
+      "videoCount": 10,
+      "creatorCount": 6,
+      "status": "unlabelled",
+      "label": null,
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Events",
+      "categories": {
+        "Events": 2,
+        "Gameplay": 2,
+        "Guides": 2,
+        "Updates": 2,
+        "Livestreams": 1,
+        "Tier Lists": 1
+      },
+      "videos": [
+        "Jd-6TwPQXdM",
+        "lVeD_GWwZ6M",
+        "e7stELBaUcA",
+        "_2o8CpxnhyE",
+        "CgkOE8RyerQ",
+        "I2pDn30qPpY",
+        "9BR4wPqbcx0",
+        "njpaH7V4vw4",
+        "xkD7cYw70KE",
+        "zXQuufSmxUU"
+      ]
+    },
+    {
+      "start": "2026-08-29",
+      "end": "2026-09-04",
+      "videoCount": 8,
+      "creatorCount": 4,
+      "status": "confirmed",
+      "label": "Boss Raid",
+      "entityId": "boss-raid",
+      "source": {
+        "publisher": "Ubisoft Mobile Support",
+        "title": "What is Boss Raid?",
+        "url": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2528-what-is-boss-raid?p=ios",
+        "verifiedAt": "2026-11-01"
+      },
+      "guideHref": "/guide/pvp/",
+      "topCategory": "Events",
+      "categories": {
+        "Events": 4,
+        "Updates": 2,
+        "Gameplay": 1,
+        "Livestreams": 1
+      },
+      "videos": [
+        "buXNXHGQXLc",
+        "xT5lSyRPiqY",
+        "Xk0irGBsyx4",
+        "dXG8h5h3pfI",
+        "u9omBhW9Dpg",
+        "_8VqAmjI_hg",
+        "06upXNh41R0",
+        "nM7SPDZhjzw"
+      ]
+    },
+    {
+      "start": "2026-08-22",
+      "end": "2026-08-28",
+      "videoCount": 15,
+      "creatorCount": 8,
+      "status": "confirmed",
+      "label": "Faction Recruitment",
+      "entityId": "faction-recruitment",
+      "source": {
+        "publisher": "Invincible: Guarding the Globe (official)",
+        "title": "Faction Recruitment is open for a limited time",
+        "url": "https://x.com/InvincibleGtG/status/1796209959325323691",
+        "verifiedAt": "2026-11-01"
+      },
+      "guideHref": "/guide/beginners/",
+      "topCategory": "Events",
+      "categories": {
+        "Events": 7,
+        "Updates": 6,
+        "Gameplay": 1,
+        "Guides": 1
+      },
+      "videos": [
+        "k3jdh4STxMM",
+        "l6QTGhi0zaw",
+        "l0CHsWcE3mY",
+        "fvFDH5i2E8Y",
+        "YvXN5RSG270",
+        "TWeqQO10tIQ",
+        "EG2jpxYiLlY",
+        "WnlpzjtV3MQ",
+        "YSxoKnFRF_Y",
+        "fxIVp3QKMyk",
+        "jChfgcbDUcU",
+        "CDRlMgW4V5M",
+        "WDKu6p_3ubY",
+        "-o-kp4fNBzo",
+        "sh_DDPXKBik"
+      ]
+    },
+    {
+      "start": "2026-08-15",
+      "end": "2026-08-21",
+      "videoCount": 25,
+      "creatorCount": 10,
+      "status": "derived",
+      "label": "Update 3.5",
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Updates",
+      "categories": {
+        "Updates": 9,
+        "Events": 7,
+        "Gameplay": 3,
+        "Guides": 2,
+        "Tier Lists": 2,
+        "Livestreams": 1,
+        "Team Building": 1
+      },
+      "videos": [
+        "fI-csyoqLV4",
+        "epbWhgEaY1U",
+        "pK9C7mUMceI",
+        "-aMhCGchgoA",
+        "5zxYJNuuxSg",
+        "wNKoLf9xKJA",
+        "P9AAkj2Ka9Y",
+        "NDBPPgJiqz0",
+        "o8A1Sr5d9yU",
+        "k6PUaQcTUV8",
+        "BdnzW_C5IAM",
+        "zotsKm0dF8k",
+        "piT45EIGq0Q",
+        "Benn_Q0cqRM",
+        "z2yBATpteWM",
+        "zK1ggBR_xRE",
+        "Er5x-C1vj9Q",
+        "k3RSXirocqw",
+        "QS4fxdrUVC4",
+        "SCKjyZnmxoE",
+        "mCw0PowHTls",
+        "pANOjNp28J0",
+        "_nPghrSVmkI",
+        "VLPxFjemWNI",
+        "YfU7wSiLegk"
+      ]
+    },
+    {
+      "start": "2026-08-09",
+      "end": "2026-08-14",
+      "videoCount": 6,
+      "creatorCount": 5,
+      "status": "confirmed",
+      "label": "Boss Raid",
+      "entityId": "boss-raid",
+      "source": {
+        "publisher": "Ubisoft Mobile Support",
+        "title": "What is Boss Raid?",
+        "url": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2528-what-is-boss-raid?p=ios",
+        "verifiedAt": "2026-11-01"
+      },
+      "guideHref": "/guide/pvp/",
+      "topCategory": "Gameplay",
+      "categories": {
+        "Gameplay": 2,
+        "Updates": 2,
+        "Events": 1,
+        "Livestreams": 1
+      },
+      "videos": [
+        "r4c19_n0wr4",
+        "I_REN8SjalU",
+        "vZ0pb6iUPP0",
+        "P6yTQHW6YFA",
+        "KNWM3sFr9HA",
+        "1NF0U3lJYoo"
+      ]
+    },
+    {
+      "start": "2026-08-01",
+      "end": "2026-08-07",
+      "videoCount": 10,
+      "creatorCount": 7,
+      "status": "confirmed",
+      "label": "Boss Raid",
+      "entityId": "boss-raid",
+      "source": {
+        "publisher": "Ubisoft Mobile Support",
+        "title": "What is Boss Raid?",
+        "url": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2528-what-is-boss-raid?p=ios",
+        "verifiedAt": "2026-11-01"
+      },
+      "guideHref": "/guide/pvp/",
+      "topCategory": "Events",
+      "categories": {
+        "Events": 3,
+        "Gameplay": 3,
+        "Livestreams": 2,
+        "Guides": 1,
+        "Updates": 1
+      },
+      "videos": [
+        "odADE4pjnlI",
+        "ww7n8PRvF7Q",
+        "LybFKAVm6v0",
+        "CGsr2QCb3Zg",
+        "CYnZfZiKRow",
+        "MDuEcEjDzYE",
+        "Iq5neDgReL0",
+        "lxL0uBNop68",
+        "r_Aw7DQYAtg",
+        "pQ0g77eKL5g"
+      ]
+    },
+    {
+      "start": "2026-07-25",
+      "end": "2026-07-31",
+      "videoCount": 20,
+      "creatorCount": 12,
+      "status": "confirmed",
+      "label": "Boss Raid",
+      "entityId": "boss-raid",
+      "source": {
+        "publisher": "Ubisoft Mobile Support",
+        "title": "What is Boss Raid?",
+        "url": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2528-what-is-boss-raid?p=ios",
+        "verifiedAt": "2026-11-01"
+      },
+      "guideHref": "/guide/pvp/",
+      "topCategory": "Guides",
+      "categories": {
+        "Guides": 6,
+        "Gameplay": 5,
+        "Updates": 5,
+        "Events": 2,
+        "Livestreams": 1,
+        "Tier Lists": 1
+      },
+      "videos": [
+        "KGxBD5K_DVk",
+        "6UVvBmrMXik",
+        "kPDC78Dv1NI",
+        "KIZawadnPxo",
+        "b3LBsa_jDuc",
+        "vYzbbIWnSew",
+        "lD-o3dcPNdw",
+        "w-uzFywwDFg",
+        "WmRoQRCfYi4",
+        "uHtsSkEdxMQ",
+        "k937xf1JkrI",
+        "2-Qfs76LnWY",
+        "FdqTFZ2iAsM",
+        "y2Dk_boF6Ek",
+        "pGJO75TuYtk",
+        "quqoF9PjsOs",
+        "192yKBOQ-fw",
+        "0YlDnhMbdrA",
+        "VJMZor5zeVQ",
+        "kHopRBXLHXI"
+      ]
+    },
+    {
+      "start": "2026-07-18",
+      "end": "2026-07-24",
+      "videoCount": 8,
+      "creatorCount": 6,
+      "status": "confirmed",
+      "label": "Cecil's Nightmares",
+      "entityId": "cecils-nightmares",
+      "source": {
+        "publisher": "Ubisoft Mobile Support",
+        "title": "What is Cecil's Nightmares?",
+        "url": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2122-what-is-cecil-s-nightmares",
+        "verifiedAt": "2026-11-01"
+      },
+      "guideHref": "/guide/pvp/",
+      "topCategory": "Updates",
+      "categories": {
+        "Updates": 3,
+        "Gameplay": 2,
+        "Events": 1,
+        "Team Building": 1,
+        "Tier Lists": 1
+      },
+      "videos": [
+        "cTC0z2z0lGA",
+        "KUlfNLLY4TE",
+        "9nMtN3-iPFc",
+        "x2T7U0cjz-w",
+        "zPKc3EPP1kI",
+        "A50SrEUlKp8",
+        "RyBAiJ3S3vM",
+        "zVRvMNgLasU"
+      ]
+    },
+    {
+      "start": "2026-07-12",
+      "end": "2026-07-17",
+      "videoCount": 6,
+      "creatorCount": 6,
+      "status": "unlabelled",
+      "label": null,
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Gameplay",
+      "categories": {
+        "Gameplay": 3,
+        "Events": 2,
+        "Tier Lists": 1
+      },
+      "videos": [
+        "4nqYznDItBw",
+        "RB4pqQgoOwY",
+        "NEN0FIUmmz8",
+        "BIC2rGvRB-U",
+        "VDSd50ckvz8",
+        "Ol817ImArik"
+      ]
+    },
+    {
+      "start": "2026-07-08",
+      "end": "2026-07-10",
+      "videoCount": 6,
+      "creatorCount": 5,
+      "status": "unlabelled",
+      "label": null,
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Events",
+      "categories": {
+        "Events": 3,
+        "Gameplay": 1,
+        "Guides": 1,
+        "Livestreams": 1
+      },
+      "videos": [
+        "B-hL0GtWKXo",
+        "aL6ZXLWkkGA",
+        "DAF-Vk_2tUY",
+        "-LxlUf2u91I",
+        "LQkC3833H5E",
+        "WN-eDij45Wk"
+      ]
+    },
+    {
+      "start": "2026-06-26",
+      "end": "2026-07-02",
+      "videoCount": 8,
+      "creatorCount": 5,
+      "status": "unlabelled",
+      "label": null,
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Guides",
+      "categories": {
+        "Guides": 3,
+        "Events": 2,
+        "Updates": 2,
+        "Livestreams": 1
+      },
+      "videos": [
+        "yZhHetVXYAg",
+        "twty-rRpiL4",
+        "D2_v2apuL0w",
+        "Y7vWYWMLH-Q",
+        "Y45WOVJiC8A",
+        "u_qi_xePzLA",
+        "8PydEGIaqKs",
+        "upZSpwIDvfA"
+      ]
+    },
+    {
+      "start": "2026-05-31",
+      "end": "2026-06-06",
+      "videoCount": 6,
+      "creatorCount": 5,
+      "status": "unlabelled",
+      "label": null,
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Guides",
+      "categories": {
+        "Guides": 3,
+        "Updates": 2,
+        "Events": 1
+      },
+      "videos": [
+        "z6C5yvy4e9c",
+        "BKJXqCJg9OQ",
+        "W5iv4dHwc9M",
+        "Fp1D-y0s0f8",
+        "Ss-Mcp8V9lk",
+        "TkM6uOBnnqc"
+      ]
+    },
+    {
+      "start": "2026-05-23",
+      "end": "2026-05-29",
+      "videoCount": 7,
+      "creatorCount": 3,
+      "status": "unlabelled",
+      "label": null,
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Updates",
+      "categories": {
+        "Updates": 3,
+        "Events": 2,
+        "Guides": 2
+      },
+      "videos": [
+        "rG6dZ6uTokg",
+        "7TaH3gBEOGA",
+        "qsAcfDMxXxQ",
+        "8rXgBnHdFzU",
+        "AYPmYUiYOzU",
+        "Q6f5qoZUwsc",
+        "HxD6BBw7XF8"
+      ]
+    },
+    {
+      "start": "2026-05-03",
+      "end": "2026-05-09",
+      "videoCount": 5,
+      "creatorCount": 5,
+      "status": "unlabelled",
+      "label": null,
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Events",
+      "categories": {
+        "Events": 2,
+        "Team Building": 1,
+        "Tier Lists": 1,
+        "Updates": 1
+      },
+      "videos": [
+        "BAlF2ozGucc",
+        "OHOxofIK2mk",
+        "JBsR1Bqaz9Q",
+        "UTGlZFFbQEg",
+        "T6u2uh_jjuk"
+      ]
+    },
+    {
+      "start": "2026-04-14",
+      "end": "2026-04-20",
+      "videoCount": 5,
+      "creatorCount": 4,
+      "status": "unlabelled",
+      "label": null,
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Events",
+      "categories": {
+        "Events": 2,
+        "Gameplay": 2,
+        "Tier Lists": 1
+      },
+      "videos": [
+        "Whj3pwqY5QE",
+        "fG2byXoMDMs",
+        "pys8kE7PQ6k",
+        "XVSSOg4grxg",
+        "H2gEk34g-50"
+      ]
+    },
+    {
+      "start": "2026-02-21",
+      "end": "2026-02-27",
+      "videoCount": 5,
+      "creatorCount": 4,
+      "status": "unlabelled",
+      "label": null,
+      "entityId": null,
+      "source": null,
+      "guideHref": null,
+      "topCategory": "Gameplay",
+      "categories": {
+        "Gameplay": 2,
+        "Events": 1,
+        "Livestreams": 1,
+        "Tier Lists": 1
+      },
+      "videos": [
+        "R6ULNcp3jTc",
+        "f0rVMVPgIls",
+        "u6m0gmOzwfs",
+        "EdEMKD6H5OU",
+        "QPwukT8mj8c"
+      ]
+    }
+  ]
+}

@@ -361,7 +361,8 @@ const generators = [
   ['scripts/generate-codes.js', ['data/generated/promo-codes.js', 'guide/code/index.html', 'guide/faq/index.html', 'index.html', 'sitemap.xml']],
   ['scripts/generate-youtube-creators.js', ['guide/creators/index.html']],
   ['scripts/generate-music.js', ['music/index.html']],
-  ['scripts/generate-game-ratings.js', ['index.html']]
+  ['scripts/generate-game-ratings.js', ['index.html']],
+  ['scripts/generate-event-timeline.js', ['data/event-signals.json']]
 ];
 for (const [script, outputs] of generators) {
   const snapshots = outputs.map(f => fs.readFileSync(path.join(ROOT, f)));

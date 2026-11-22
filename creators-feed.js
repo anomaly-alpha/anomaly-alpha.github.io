@@ -116,8 +116,8 @@ function monthRange(items, key) {
 
 // ===== LABELS =====
 
-function loadMoreLabel(remaining) {
-  return 'Show ' + Math.min(remaining, FEED_BATCH_ITEMS) + ' more videos (' + remaining + ' remaining)';
+function loadMoreLabel(count, remaining) {
+  return 'Show ' + count + ' more videos (' + remaining + ' remaining)';
 }
 
 function mediaCountLabel(shown, total) {
@@ -130,15 +130,18 @@ function initFeedBrowsing(doc, win) {
   var list = doc.getElementById('creatorFeedList');
   if (!list) return;
 
-  var cards = Array.prototype.slice.call(list.children).filter(function (el) {
-    return el.classList.contains('gem-creators__item');
-  });
+  var cards = Array.prototype.slice.call(list.querySelectorAll('.gem-creators__item'));
   if (!cards.length) return;
 
+  var days = Array.prototype.slice.call(list.querySelectorAll('.gem-creators__day'));
+
   var items = cards.map(function (el) {
-    var category = el.getAttribute('data-category') || '';
-    var published = el.getAttribute('data-published') || '';
-    return { el: el, category: category, published: published };
+    return {
+      el: el,
+      day: el.closest ? el.closest('.gem-creators__day') : el.parentNode.parentNode,
+      category: el.getAttribute('data-category') || '',
+      published: el.getAttribute('data-published') || ''
+    };
   });
 
   var chipGroup = doc.querySelector('[data-feed-categories]');
@@ -170,16 +173,35 @@ function initFeedBrowsing(doc, win) {
 
   function render(announcement) {
     var index = 0;
+    var inSetByDay = new Map();
+    var shownByDay = new Map();
+
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
       var inSet = activeCategory === ALL_CATEGORIES || item.category === activeCategory;
       item.el.classList.toggle('gem-creators__item--filtered', !inSet);
-      if (!inSet) {
-        item.el.classList.add('gem-creators__item--deferred');
-        continue;
-      }
-      item.el.classList.toggle('gem-creators__item--deferred', index >= revealed);
+      if (!inSet) continue;
+
+      var shown = index < revealed;
+      item.el.classList.toggle('gem-creators__item--deferred', !shown);
       index++;
+
+      inSetByDay.set(item.day, (inSetByDay.get(item.day) || 0) + 1);
+      if (shown) shownByDay.set(item.day, (shownByDay.get(item.day) || 0) + 1);
+    }
+
+    // A day owns its marker and its cards, so it hides as a unit and its marker counts the
+    // cards actually under it rather than the whole date.
+    for (var d = 0; d < days.length; d++) {
+      var day = days[d];
+      var shownInDay = shownByDay.get(day) || 0;
+      var inSetInDay = inSetByDay.get(day) || 0;
+      day.classList.toggle('gem-creators__day--hidden', shownInDay === 0);
+      var countNode = day.querySelector('[data-day-count]');
+      if (countNode) {
+        var text = inSetInDay + (inSetInDay === 1 ? ' video' : ' videos');
+        if (countNode.textContent !== text) countNode.textContent = text;
+      }
     }
 
     list.classList.toggle('gem-creators__feed--filtered', activeCategory !== ALL_CATEGORIES);
@@ -198,12 +220,14 @@ function initFeedBrowsing(doc, win) {
       }
     }
 
-    var remaining = visible.length - Math.min(revealed, visible.length);
+    var shownCount = Math.min(revealed, visible.length);
+    var remaining = visible.length - shownCount;
     if (moreButton) {
       if (remaining > 0) {
+        var nextEnd = nextBatchEnd(visible, shownCount);
         moreButton.hidden = false;
         moreButton.disabled = false;
-        moreButton.textContent = loadMoreLabel(remaining);
+        moreButton.textContent = loadMoreLabel(nextEnd - shownCount, remaining);
       } else {
         moreButton.hidden = true;
       }
@@ -213,9 +237,8 @@ function initFeedBrowsing(doc, win) {
     if (creatorStat) {
       var seen = {};
       var creators = 0;
-      for (var s = 0; s < items.length; s++) {
-        if (activeCategory !== ALL_CATEGORIES && items[s].category !== activeCategory) continue;
-        var key = items[s].el.getAttribute('data-creator-key');
+      for (var s = 0; s < visible.length; s++) {
+        var key = visible[s].el.getAttribute('data-creator-key');
         if (seen[key]) continue;
         seen[key] = true;
         creators++;
@@ -223,7 +246,7 @@ function initFeedBrowsing(doc, win) {
       creatorStat.innerHTML = '<strong>' + creators + '</strong> creators';
     }
 
-    announce(announcement || mediaCountLabel(Math.min(revealed, visible.length), visible.length));
+    announce(announcement || mediaCountLabel(shownCount, visible.length));
   }
 
   function applyCategory(category, revealFirstBatch) {
@@ -239,7 +262,6 @@ function initFeedBrowsing(doc, win) {
   }
 
   if (moreButton) {
-    moreButton.hidden = false;
     moreButton.addEventListener('click', function () {
       revealed = nextBatchEnd(visible, revealed);
       render();
@@ -262,16 +284,28 @@ function initFeedBrowsing(doc, win) {
       if (!range) return;
       revealed = range.lastIndex + 1;
       render('Showing videos through ' + monthLabel(key));
+      // Scroll to the day, not the card: the day's marker is what identifies the month.
+      // Instant rather than smooth — a jump across the whole feed can be tens of thousands
+      // of pixels, and an animated version is both slow and unfriendly to reduced motion.
       var target = visible[range.firstIndex];
-      if (target && target.el.scrollIntoView) {
-        target.el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+      var scrollTo = target && (target.day || target.el);
+      if (scrollTo && scrollTo.scrollIntoView) {
+        scrollTo.scrollIntoView({ block: 'start' });
       }
     });
   }
 
   var params = /[?&]category=([^&#]*)/.exec(win.location.search);
-  var initial = params ? slugToCategory(decodeURIComponent(params[1]), categories) : ALL_CATEGORIES;
-  applyCategory(initial, true);
+  var requested = ALL_CATEGORIES;
+  if (params) {
+    try {
+      requested = slugToCategory(decodeURIComponent(params[1]), categories);
+    } catch (err) {
+      // A malformed percent-escape must not abort init and take the controls with it.
+      requested = ALL_CATEGORIES;
+    }
+  }
+  applyCategory(requested, true);
 }
 
 if (typeof module !== 'undefined' && module.exports) {

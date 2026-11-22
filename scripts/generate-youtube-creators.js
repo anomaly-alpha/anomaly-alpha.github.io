@@ -799,25 +799,38 @@ function renderCreatorFeedHtml(data) {
   html += '        <p class="gem-creators__feed-subtitle">Every card is one video. Date markers make bursts around the same event easy to spot. Filter by category or jump to a month, and load more to work further back through the archive.</p>\n';
   html += renderCreatorsFeedToolbarHtml(items);
   html += '        <ol id="creatorFeedList" class="gem-creators__feed" aria-label="Creator videos sorted newest first">\n';
+
+  // Each date owns its marker and its cards. A flat list would put the marker inside the
+  // first card of the day, so hiding that card — which is what a category filter does —
+  // would orphan every sibling under no heading at all.
   var previousDate = '';
+  var dayOpen = false;
   for (var ii = 0; ii < items.length; ii++) {
     var item = items[ii];
     var date = item.video.published;
-    var itemClass = 'gem-creators__item' + (ii >= firstBatchEnd ? ' gem-creators__item--deferred' : '');
-    html += '          <li class="' + itemClass + '" data-published="' + escapeHtml(date) + '" data-category="' + escapeHtml(item.video.category) + '" data-creator-key="' + escapeHtml(item.creator.id) + '">\n';
     if (date !== previousDate) {
+      if (dayOpen) html += '            </ol>\n          </li>\n';
+      html += '          <li class="gem-creators__day" data-day="' + escapeHtml(date) + '">\n';
       html += '            <div class="gem-creators__date-marker">\n';
       html += '              <time datetime="' + escapeHtml(date) + '">' + escapeHtml(formatFeedDate(date)) + '</time>\n';
-      html += '              <span>' + dateCounts[date] + (dateCounts[date] === 1 ? ' video' : ' videos') + '</span>\n';
+      html += '              <span data-day-count="' + dateCounts[date] + '">' + dateCounts[date] + (dateCounts[date] === 1 ? ' video' : ' videos') + '</span>\n';
       html += '            </div>\n';
+      html += '            <ol class="gem-creators__day-list">\n';
+      dayOpen = true;
       previousDate = date;
     }
+    var itemClass = 'gem-creators__item' + (ii >= firstBatchEnd ? ' gem-creators__item--deferred' : '');
+    html += '              <li class="' + itemClass + '" data-published="' + escapeHtml(date) + '" data-category="' + escapeHtml(item.video.category) + '" data-creator-key="' + escapeHtml(item.creator.id) + '">\n';
     html += renderVideoCard(item.video, item.creator);
-    html += '          </li>\n';
+    html += '              </li>\n';
   }
+  if (dayOpen) html += '            </ol>\n          </li>\n';
   html += '        </ol>\n';
   if (remaining > 0) {
-    html += '        <button type="button" class="gem-creators__more" data-feed-more aria-controls="creatorFeedList" hidden>' + escapeHtml(feedLogic.loadMoreLabel(remaining)) + '</button>\n';
+    // The next batch can exceed FEED_BATCH_ITEMS because it finishes the date group it ends
+    // on, so the label states what the click will actually reveal.
+    var nextBatchEnd = feedLogic.nextBatchEnd(facets, firstBatchEnd);
+    html += '        <button type="button" class="gem-creators__more" data-feed-more aria-controls="creatorFeedList" hidden>' + escapeHtml(feedLogic.loadMoreLabel(nextBatchEnd - firstBatchEnd, remaining)) + '</button>\n';
   }
   html += '        <p class="gem-creators__feed-status" data-feed-status role="status" tabindex="-1"></p>\n';
   html += '      </section>\n';

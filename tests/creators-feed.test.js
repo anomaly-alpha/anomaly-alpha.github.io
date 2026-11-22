@@ -246,11 +246,13 @@ test('the month jump target is inside the filtered set, not the full set', funct
 section('Labels');
 
 test('the load more label names the batch and the remainder', function () {
-  assert.strictEqual(feed.loadMoreLabel(340), 'Show 50 more videos (340 remaining)');
+  assert.strictEqual(feed.loadMoreLabel(50, 340), 'Show 50 more videos (340 remaining)');
 });
 
-test('the load more label never promises more than one batch', function () {
-  assert.strictEqual(feed.loadMoreLabel(12), 'Show 12 more videos (12 remaining)');
+test('the load more label states the real count when a date group extends the batch', function () {
+  // nextBatchEnd can return more than FEED_BATCH_ITEMS to finish a date, so the label must
+  // quote what the click reveals rather than the batch constant.
+  assert.strictEqual(feed.loadMoreLabel(57, 57), 'Show 57 more videos (57 remaining)');
 });
 
 test('the count label reports shown against total', function () {

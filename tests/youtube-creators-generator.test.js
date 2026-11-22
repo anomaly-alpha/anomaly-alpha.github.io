@@ -477,6 +477,32 @@ test('Pending creator without 6 items shows "More videos coming soon"', function
   assert.ok(sections.indexOf('More videos coming soon') !== -1, 'Should show coming soon message');
 });
 
+// The date marker used to live inside the first card of each day, so a category filter
+// hiding that card orphaned its siblings under no heading at all. The marker is now owned
+// by a day wrapper, and this asserts the structure that makes filtering safe.
+test('every feed card sits inside a day that carries its own date marker', function () {
+  var html = fs.readFileSync(path.join(__dirname, '..', 'guide', 'creators', 'index.html'), 'utf8');
+  var start = html.indexOf('<ol id="creatorFeedList"');
+  assert.ok(start !== -1, 'feed list must carry an id for aria-controls');
+  var feed = html.slice(start, html.indexOf('</section>', start));
+  var days = feed.split('class="gem-creators__day"').slice(1);
+  assert.ok(days.length > 0, 'expected day wrappers');
+
+  var cards = 0;
+  for (var i = 0; i < days.length; i++) {
+    var markerAt = days[i].indexOf('gem-creators__date-marker');
+    var firstCardAt = days[i].search(/class="gem-creators__item[ "]/);
+    assert.ok(markerAt !== -1, 'day ' + i + ' carries no date marker');
+    assert.ok(firstCardAt !== -1, 'day ' + i + ' carries no cards');
+    assert.ok(markerAt < firstCardAt, 'day ' + i + ' must place its marker before its cards');
+    cards += (days[i].match(/class="gem-creators__item[ "]/g) || []).length;
+  }
+  assert.ok(cards > 0, 'expected cards in the feed');
+
+  var declared = (html.match(/class="gem-creators__item/g) || []).length;
+  assert.strictEqual(cards, declared, 'every card must live inside a day wrapper');
+});
+
 test('Chronological feed merges creators and keeps card identity visible', function () {
   var active = makeActiveCreator('alpha', 1, 6);
   var pending = makePendingCreator('pending-one', 2);

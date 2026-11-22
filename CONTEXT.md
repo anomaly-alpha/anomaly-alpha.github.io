@@ -25,10 +25,20 @@ Display weekly gem reward sources with interactive filtering, dynamic charts, de
 ### YouTube Creator Directory
 - **Creator** — An independent community channel with publicly verified Invincible: Guarding the Globe coverage.
 - **Eligible video** — A public standard video or replayable livestream with confirmed GTG relevance, title, publication date, video ID, and evidence; Shorts are excluded.
-- **Active creator** — A creator with at least six eligible videos whose newest eligible video is no more than 60 days old. Active status is what unlocks the discovery surfaces: the editorial video rail, the creators-page ticker, and the "Channels in this feed" roster.
+- **Active creator** — A creator with at least six eligible videos whose newest eligible video is no more than 60 days old. Active status is what unlocks the discovery surfaces: the editorial video rail, the creators-page ticker, and the "Active channels" roster.
 - **Pending creator** — A verified candidate with at least one eligible video that does not yet meet the active threshold; it appears after active creators and keeps its own videos in the timeline, but is never advertised in the rail, ticker or channel roster.
 - **Hidden candidate** — A retained research record with zero eligible videos; it does not appear in the public directory.
 - **Featured creator** — The approved active creator shown in the static hero; Avatar Shuvd is preferred when qualified.
+- **Feed batch** — A slice of the creators activity feed revealed by the load-more control. Batches hold 50 videos but never split a publication date, because the feed shows one date marker per day.
+- **Category filter** — A single-select chip narrowing the feed to one video category, reflected in the URL as `?category=`. Filtering narrows the set and re-batches it from the start; counts always describe the full feed.
+- **Month jump** — A native `<select>` that reveals the feed through a chosen month and scrolls to it, always within the active category filter.
+
+### Event Activity Timeline
+- **Burst** — A 7-day window containing at least five videos from at least three visible creators. A burst is evidence that something happened in game, not proof of a named event.
+- **Confirmed burst** — A burst whose videos name a curated `data/game-context.json` entity (type `event`, `mode` or `update`, matched on a multi-word alias) across at least two creators. Carries the entity's guide link and publisher source.
+- **Derived burst** — A burst whose titles quote the same version (`Update 3.8`) across at least two creators. Verbatim, but has no publisher source of its own.
+- **Unlabelled burst** — A burst with a datable shape but no source-supported name. Rendered below the named rows and never suppressed.
+- **Event signal** — One entry in `data/event-signals.json`; the generated record of a burst and how it was labelled.
 
 ### Mode System
 - **selectedModes** — Array of active category modes (`event`, `pvp`, `login`, `code`); defaults to `event`, `pvp`, `login` (code inactive by default)
