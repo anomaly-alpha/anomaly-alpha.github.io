@@ -220,6 +220,8 @@ After any major HTML/CSS/JS changes, always:
 | code | `#2ecc71` |
 | cyan (accent) | `#00e5ff` |
 
+These fills are neon and fail AA against white text — white on `#2ecc71` is 2.1:1 and on `#e91e8a` 4.2:1, both under the 4.5:1 needed at the tab's 11.2px bold size. `.gem-card__tab` therefore uses dark ink (`#050a14`) in both colour modes, which clears 4.5:1 on all five variants (`--pvp` is the tightest at 4.73:1). The same rule is duplicated in the inline critical CSS of the six guide pages — change both together. Never put white text on these fills.
+
 ## Asset sources (zero CDN dependencies)
 
 - **Chart.js** — self-hosted `vendor/chart.umd.js` (downloaded via `npm run update-assets`)
