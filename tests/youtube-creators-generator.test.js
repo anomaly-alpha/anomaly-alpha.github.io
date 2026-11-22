@@ -9,7 +9,6 @@ var assert = require('assert');
 var fs = require('fs');
 var os = require('os');
 var path = require('path');
-var vm = require('vm');
 
 var gen = require('../scripts/generate-youtube-creators');
 
@@ -277,24 +276,26 @@ test('Recent video ticker stays empty when fewer than two creators qualify', fun
 
 console.log('\nActive-creator discovery gate tests:');
 
-test('Channels in this feed lists active creators only', function () {
+test('Active channels roster lists active creators only', function () {
   var pending = makePendingCreator('pending-two', 2);
   var data = makeValidData([makeActiveCreator('active-one', 1), pending]);
   var html = gen.renderFeedSummaryHtml(data);
 
-  assert.ok(html.indexOf('Channels in this feed') !== -1, 'Should render the channel roster');
+  assert.ok(html.indexOf('Active channels') !== -1, 'Should render the channel roster');
   assert.ok(html.indexOf('Creator active-one') !== -1, 'Active creator is listed');
   assert.strictEqual(html.indexOf('Creator pending-two'), -1, 'Pending creator is not advertised');
 });
 
-test('Feed summary counts cover active creators only', function () {
+// The stats sit directly above the feed, so they count the feed. The roster below them is a
+// discovery surface and stays active-only, which is why it carries its own label.
+test('Feed summary counts cover the complete visible feed', function () {
   var active = makeActiveCreator('active-one', 1); // 8 active videos
   var pending = makePendingCreator('pending-two', 2); // 1 active video
   var data = makeValidData([active, pending]);
   var html = gen.renderFeedSummaryHtml(data);
 
-  assert.ok(html.indexOf('<strong>8</strong> videos') !== -1, 'Video count excludes the pending creator');
-  assert.ok(html.indexOf('<strong>1</strong> creators') !== -1, 'Creator count excludes the pending creator');
+  assert.ok(html.indexOf('<strong>9</strong> videos') !== -1, 'Video count covers the pending creator too');
+  assert.ok(html.indexOf('<strong>2</strong> creators') !== -1, 'Creator count covers the pending creator too');
 });
 
 test('Recent video ticker excludes pending creators even when their upload is fresh', function () {
@@ -372,13 +373,11 @@ test('Hidden creator absent from all output', function () {
 
   var featured = gen.renderRecentVideosHtml(data);
   var sections = gen.renderCreatorSectionsHtml(data);
-  var js = gen.renderJsOutput(data);
   var noscript = gen.renderNoscriptHtml(data);
   var jsonLd = gen.renderJsonLdHtml(data);
 
   assert.ok(featured.indexOf('hidden-one') === -1, 'Hidden not in the ticker');
   assert.ok(sections.indexOf('hidden-one') === -1, 'Hidden not in sections');
-  assert.ok(js.indexOf('hidden-one') === -1, 'Hidden not in JS output');
   assert.ok(noscript.indexOf('hidden-one') === -1, 'Hidden not in noscript');
   assert.ok(jsonLd.indexOf('hidden-one') === -1, 'Hidden not in JSON-LD');
 });
@@ -442,38 +441,7 @@ test('Disclaimer renders privacy note and independence disclaimer', function () 
   assert.ok(html.indexOf('Anomaly Alpha') !== -1, 'Should mention Anomaly Alpha');
 });
 
-test('window.__YOUTUBE_CREATORS output is valid JS', function () {
-  var creator = makeActiveCreator('test-creator', 1, 8);
-  var data = makeValidData([creator]);
-  var js = gen.renderJsOutput(data);
-  assert.ok(js.indexOf('window.__YOUTUBE_CREATORS=') === 0, 'Should start with assignment');
-  // Evaluate in isolated context
-  var context = { window: {} };
-  vm.createContext(context);
-  vm.runInContext(js, context);
-  assert.ok(Array.isArray(context.window.__YOUTUBE_CREATORS), 'Should produce array');
-  assert.strictEqual(context.window.__YOUTUBE_CREATORS.length, 1, 'Should have 1 creator');
-  var c = context.window.__YOUTUBE_CREATORS[0];
-  assert.strictEqual(c.id, 'test-creator');
-  assert.strictEqual(c.name, 'Creator test-creator');
-  assert.strictEqual(c.status, 'active');
-  assert.strictEqual(c.videos.length, 8, 'Should have 8 videos');
-  assert.ok(c.videos[0].title, 'Video should have title');
-  assert.ok(c.videos[0].category, 'Video should have category');
-  assert.ok(c.videos[0].published, 'Video should have published date');
-});
 
-test('JS output excludes hidden creators', function () {
-  var active = makeActiveCreator('active-one', 1);
-  var hidden = makeHiddenCreator('hidden-one', 2);
-  var data = makeValidData([active, hidden]);
-  var js = gen.renderJsOutput(data);
-  var context = { window: {} };
-  vm.createContext(context);
-  vm.runInContext(js, context);
-  assert.strictEqual(context.window.__YOUTUBE_CREATORS.length, 1, 'Should have only 1 creator');
-  assert.strictEqual(context.window.__YOUTUBE_CREATORS[0].id, 'active-one');
-});
 
 test('Creator tags render in the creator sections, not the ticker', function () {
   var featured = makeActiveCreator('featured-one', 1);
@@ -896,7 +864,6 @@ test('generate() produces valid output for complete valid data', function () {
     var result = gen.generate(paths.sourcePath, paths.templatePath);
     assert.ok(result.success, 'Should succeed: ' + result.errors.join('; '));
     assert.ok(result.html, 'Should produce HTML');
-    assert.ok(result.js, 'Should produce JS');
 
     // Check chronological feed summary and cards
     assert.ok(result.html.indexOf('gem-creators__signal') !== -1, 'Should have feed summary');
@@ -930,9 +897,6 @@ test('generate() produces valid output for complete valid data', function () {
     assert.ok(result.html.indexOf('<!--CREATORS_NOSCRIPT_END-->') !== -1, 'Noscript end marker preserved');
     assert.ok(result.html.indexOf('<!--CREATORS_NOTE_START-->') !== -1, 'Note marker preserved');
     assert.ok(result.html.indexOf('<!--CREATORS_NOTE_END-->') !== -1, 'Note end marker preserved');
-
-    // Check JS output
-    assert.ok(result.js.indexOf('window.__YOUTUBE_CREATORS=') === 0, 'JS should start correctly');
   } finally {
     cleanupDir(dir);
   }
@@ -954,7 +918,6 @@ test('Second generate() produces byte-identical output (idempotency)', function 
     var result2 = gen.generate(paths.sourcePath, paths.templatePath);
     assert.ok(result2.success, 'Second run should succeed');
     assert.strictEqual(result1.html, result2.html, 'HTML should be byte-identical');
-    assert.strictEqual(result1.js, result2.js, 'JS should be byte-identical');
   } finally {
     cleanupDir(dir);
   }
@@ -1009,7 +972,7 @@ test('generate() skips gracefully when template file missing', function () {
   }
 });
 
-test('generate() works without template (JS-only output)', function () {
+test('generate() works without a template', function () {
   var dir = makeTempDir();
   try {
     var creator = makeActiveCreator('test-creator', 1);
@@ -1020,7 +983,6 @@ test('generate() works without template (JS-only output)', function () {
     var result = gen.generate(sourcePath, null);
     assert.ok(result.success, 'Should succeed without template');
     assert.strictEqual(result.html, null, 'HTML should be null');
-    assert.ok(result.js.indexOf('window.__YOUTUBE_CREATORS=') === 0, 'Should produce JS');
   } finally {
     cleanupDir(dir);
   }
@@ -1137,15 +1099,6 @@ test('JSON-LD caps at 12 items per creator', function () {
   assert.strictEqual(listItems ? listItems.length : 0, 12, 'Should cap at 12 watch pages per creator');
 });
 
-test('JS output caps at 12 items per creator', function () {
-  var creator = makeActiveCreator('test-creator', 1, 15);
-  var data = makeValidData([creator]);
-  var js = gen.renderJsOutput(data);
-  var context = { window: {} };
-  vm.createContext(context);
-  vm.runInContext(js, context);
-  assert.strictEqual(context.window.__YOUTUBE_CREATORS[0].videos.length, 12, 'JS should cap at 12 videos');
-});
 
 // =====================================================================
 // SUMMARY

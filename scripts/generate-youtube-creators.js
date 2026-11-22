@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const feedLogic = require('../creators-feed.js');
 
 // ===== CONSTANTS =====
 
@@ -653,14 +654,17 @@ function getActiveCreators(data) {
     .sort(function (a, b) { return a.displayOrder - b.displayOrder; });
 }
 
-function getFeedItems(data, creators) {
+// Collecting feed items is shared by two consumers that need different caps: the timeline
+// feed renders every playable video, while the JSON-LD index and the noscript list are
+// bounded surfaces that keep MAX_VIDEOS_PER_CREATOR.
+function collectFeedItems(creators, perCreatorLimit) {
   var items = [];
   for (var ci = 0; ci < creators.length; ci++) {
     var creator = creators[ci];
     var videos = creator.videos
       .filter(function (video) { return video.status === 'active'; })
-      .sort(function (a, b) { return new Date(b.published) - new Date(a.published); })
-      .slice(0, MAX_VIDEOS_PER_CREATOR);
+      .sort(function (a, b) { return new Date(b.published) - new Date(a.published); });
+    if (perCreatorLimit) videos = videos.slice(0, perCreatorLimit);
     for (var vi = 0; vi < videos.length; vi++) {
       items.push({ creator: creator, video: videos[vi] });
     }
@@ -673,9 +677,52 @@ function getFeedItems(data, creators) {
   return items;
 }
 
+function getFeedItems(data, creators) {
+  return collectFeedItems(creators, MAX_VIDEOS_PER_CREATOR);
+}
+
 function getVisibleFeedItems(data) {
   return getFeedItems(data, getVisibleCreators(data));
 }
+
+// The rendered feed is the archive: every playable video from every visible creator.
+function getCompleteFeedItems(data) {
+  return collectFeedItems(getVisibleCreators(data), 0);
+}
+
+// The toolbar is the generated half of the browsing UI: the counting, ordering and month
+// shaping live in creators-feed.js so the browser only has to toggle state.
+function renderCreatorsFeedToolbarHtml(feedItems) {
+  var facets = feedItems.map(function (item) {
+    return { published: item.video.published, category: item.video.category };
+  });
+  var counts = feedLogic.countByCategory(facets, VALID_CATEGORIES);
+  var months = feedLogic.monthOptions(facets);
+
+  var html = '';
+  html += '        <div class="gem-creators__toolbar">\n';
+  html += '          <div class="gem-creators__filters" data-feed-categories role="group" aria-label="Filter videos by category">\n';
+  html += '            <button type="button" class="gem-creators__chip" data-feed-category="all" aria-pressed="true" aria-label="All videos, ' + counts.all + ' total">All';
+  html += ' <span class="gem-creators__chip-count" aria-hidden="true">' + counts.all + '</span></button>\n';
+  for (var i = 0; i < VALID_CATEGORIES.length; i++) {
+    var category = VALID_CATEGORIES[i];
+    html += '            <button type="button" class="gem-creators__chip" data-feed-category="' + escapeHtml(category) + '" aria-pressed="false" aria-label="' + escapeHtml(category) + ' videos, ' + counts[category] + ' total">' + escapeHtml(category);
+    html += ' <span class="gem-creators__chip-count" aria-hidden="true">' + counts[category] + '</span></button>\n';
+  }
+  html += '          </div>\n';
+  html += '          <label class="gem-creators__month">\n';
+  html += '            <span class="gem-creators__month-label">Jump to month</span>\n';
+  html += '            <select class="gem-creators__month-select" data-feed-month>\n';
+  html += '              <option value="">Choose a month</option>\n';
+  for (var m = 0; m < months.length; m++) {
+    html += '              <option value="' + escapeHtml(months[m].key) + '">' + escapeHtml(months[m].label) + ' (' + months[m].count + ')</option>\n';
+  }
+  html += '            </select>\n';
+  html += '          </label>\n';
+  html += '        </div>\n';
+  return html;
+}
+
 
 function formatFeedDate(dateString) {
   var date = new Date(dateString + 'T00:00:00Z');
@@ -684,24 +731,28 @@ function formatFeedDate(dateString) {
 }
 
 function renderFeedSummaryHtml(data) {
-  var creators = getActiveCreators(data);
-  var items = getFeedItems(data, creators);
+  // The stats describe the feed rendered below them, so they count the same complete
+  // item set. The roster below stays active-only: AGENTS.md makes it a discovery surface,
+  // which is why it is labelled for what it lists rather than for the feed.
+  var feedItems = getCompleteFeedItems(data);
+  var feedCreatorCount = countDistinctCreators(feedItems);
+  var activeCreators = getActiveCreators(data);
   var html = '';
   html += '      <section class="gem-creators__signal" aria-labelledby="creatorFeedTitle">\n';
   html += '        <div class="gem-creators__signal-copy">\n';
   html += '          <p class="gem-creators__eyebrow">ACTIVITY FEED</p>\n';
   html += '          <h2 id="creatorFeedTitle">Fresh coverage, newest first</h2>\n';
-  html += '          <p>When a major update or event lands, videos from different creators stack together here so the community response reads as one burst of activity. Each card represents a single video, sorted newest first.</p>\n';
+  html += '          <p>When a major update or event lands, videos from different creators stack together here so the community response reads as one burst of activity. Every playable video from every channel below is listed, newest first, and revealed a batch at a time.</p>\n';
   html += '        </div>\n';
   html += '        <div class="gem-creators__stats" aria-label="Feed summary">\n';
-  html += '          <span><strong>' + items.length + '</strong> videos</span>\n';
-  html += '          <span><strong>' + creators.length + '</strong> creators</span>\n';
+  html += '          <span id="feedVideoStat"><strong>' + feedItems.length + '</strong> videos</span>\n';
+  html += '          <span id="feedCreatorStat"><strong>' + feedCreatorCount + '</strong> creators</span>\n';
   html += '        </div>\n';
   html += '        <div class="gem-creators__channels">\n';
-  html += '          <span class="gem-creators__channels-label">Channels in this feed</span>\n';
+  html += '          <span class="gem-creators__channels-label">Active channels</span>\n';
   html += '          <ul>\n';
-  for (var ci = 0; ci < creators.length; ci++) {
-    var creator = creators[ci];
+  for (var ci = 0; ci < activeCreators.length; ci++) {
+    var creator = activeCreators[ci];
     var badge = getCreatorBadge(creator);
     var badgeModifier = getCreatorBadgeModifier(creator);
     html += '            <li><a href="' + escapeHtml(creator.channelUrl) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(creator.name) + '</a>';
@@ -714,25 +765,46 @@ function renderFeedSummaryHtml(data) {
   return html;
 }
 
+function countDistinctCreators(items) {
+  var seen = {};
+  var count = 0;
+  for (var i = 0; i < items.length; i++) {
+    if (seen[items[i].creator.id]) continue;
+    seen[items[i].creator.id] = true;
+    count++;
+  }
+  return count;
+}
+
 function renderCreatorFeedHtml(data) {
-  var items = getVisibleFeedItems(data);
+  // The feed is the archive, so it renders every playable video rather than the capped set
+  // the JSON-LD index and noscript list use.
+  var items = getCompleteFeedItems(data);
   if (items.length === 0) return '';
 
   var dateCounts = {};
+  var facets = [];
   for (var i = 0; i < items.length; i++) {
-    dateCounts[items[i].video.published] = (dateCounts[items[i].video.published] || 0) + 1;
+    var published = items[i].video.published;
+    dateCounts[published] = (dateCounts[published] || 0) + 1;
+    facets.push({ published: published, category: items[i].video.category });
   }
+
+  var firstBatchEnd = feedLogic.nextBatchEnd(facets, 0);
+  var remaining = items.length - firstBatchEnd;
 
   var html = '';
   html += '      <section class="gem-creators__feed-shell" aria-labelledby="creatorFeedListTitle">\n';
   html += '        <h2 id="creatorFeedListTitle" class="gem-creators__feed-title">Community activity</h2>\n';
-  html += '        <p class="gem-creators__feed-subtitle">Every card is one video. Date markers make bursts around the same event easy to spot.</p>\n';
-  html += '        <ol class="gem-creators__feed" aria-label="Creator videos sorted newest first">\n';
+  html += '        <p class="gem-creators__feed-subtitle">Every card is one video. Date markers make bursts around the same event easy to spot. Filter by category or jump to a month, and load more to work further back through the archive.</p>\n';
+  html += renderCreatorsFeedToolbarHtml(items);
+  html += '        <ol id="creatorFeedList" class="gem-creators__feed" aria-label="Creator videos sorted newest first">\n';
   var previousDate = '';
   for (var ii = 0; ii < items.length; ii++) {
     var item = items[ii];
     var date = item.video.published;
-    html += '          <li class="gem-creators__item" data-published="' + escapeHtml(date) + '">\n';
+    var itemClass = 'gem-creators__item' + (ii >= firstBatchEnd ? ' gem-creators__item--deferred' : '');
+    html += '          <li class="' + itemClass + '" data-published="' + escapeHtml(date) + '" data-category="' + escapeHtml(item.video.category) + '" data-creator-key="' + escapeHtml(item.creator.id) + '">\n';
     if (date !== previousDate) {
       html += '            <div class="gem-creators__date-marker">\n';
       html += '              <time datetime="' + escapeHtml(date) + '">' + escapeHtml(formatFeedDate(date)) + '</time>\n';
@@ -744,6 +816,10 @@ function renderCreatorFeedHtml(data) {
     html += '          </li>\n';
   }
   html += '        </ol>\n';
+  if (remaining > 0) {
+    html += '        <button type="button" class="gem-creators__more" data-feed-more aria-controls="creatorFeedList" hidden>' + escapeHtml(feedLogic.loadMoreLabel(remaining)) + '</button>\n';
+  }
+  html += '        <p class="gem-creators__feed-status" data-feed-status role="status" tabindex="-1"></p>\n';
   html += '      </section>\n';
   return html;
 }
@@ -936,51 +1012,6 @@ function renderMetaDateHtml(data) {
   return '    <meta name="date" content="' + escapeHtml(updatedDate(data)) + '">';
 }
 
-// ===== RENDERING: WINDOW.__YOUTUBE_CREATORS JS =====
-
-function renderJsOutput(data) {
-  var featuredId = data.featuredCreatorId;
-  var publicCreators = data.creators
-    .filter(function (c) { return c.status === 'active' || c.status === 'pending'; })
-    .sort(function (a, b) {
-      if (a.status !== b.status) return a.status === 'active' ? -1 : 1;
-      return a.displayOrder - b.displayOrder;
-    })
-    .map(function (c) {
-      var visibleVideos = c.videos
-        .filter(function (v) { return v.status === 'active'; })
-        .sort(function (a, b) { return new Date(b.published) - new Date(a.published); })
-        .slice(0, MAX_VIDEOS_PER_CREATOR)
-        .map(function (v) {
-          return {
-            id: v.id,
-            title: v.title,
-            description: v.description,
-            category: v.category,
-            published: v.published,
-            featured: v.featured === true
-          };
-        });
-
-      return {
-        id: c.id,
-        name: c.name,
-        handle: c.handle,
-        channelUrl: c.channelUrl,
-        description: c.description,
-        tags: c.tags || [],
-        badge: getCreatorBadge(c),
-        status: c.status,
-        displayOrder: c.displayOrder,
-        videos: visibleVideos
-      };
-    });
-
-  // Compact output: this bundle is shipped to every visitor of the creators page, so the
-  // indentation of the source data is pure download cost.
-  return 'window.__YOUTUBE_CREATORS=' + JSON.stringify(publicCreators) + ';\n';
-}
-
 // ===== MARKER OPERATIONS =====
 
 function assertMarkers(html, markerNames) {
@@ -1060,11 +1091,10 @@ function generate(sourcePath, templatePath) {
   var jsonLdHtml = renderJsonLdHtml(data);
   var noscriptHtml = renderNoscriptHtml(data);
   var disclaimerHtml = renderDisclaimerHtml();
-  var jsOutput = renderJsOutput(data);
 
-  // If no template, just return JS output
+
   if (!templatePath) {
-    return { success: true, errors: [], html: null, js: jsOutput };
+    return { success: true, errors: [], html: null };
   }
 
   var templateHtml;
@@ -1102,7 +1132,7 @@ function generate(sourcePath, templatePath) {
     templateHtml = templateHtml.replace(/\r\n/g, '\n');
   }
 
-  return { success: true, errors: [], html: templateHtml, js: jsOutput };
+  return { success: true, errors: [], html: templateHtml };
 }
 
 // ===== SITEMAP =====
@@ -1134,7 +1164,7 @@ if (require.main === module) {
   var rootDir = path.resolve(__dirname, '..');
   var sourcePath = path.join(rootDir, 'data', 'youtube-creators.json');
   var templatePath = path.join(rootDir, 'guide', 'creators', 'index.html');
-  var jsOutputPath = path.join(rootDir, 'data', 'generated', 'youtube-creators.js');
+
 
   // Graceful skip when source file does not exist yet
   if (!fs.existsSync(sourcePath)) {
@@ -1151,11 +1181,6 @@ if (require.main === module) {
     }
     process.exit(1);
   }
-
-  // Write JS output
-  fs.mkdirSync(path.dirname(jsOutputPath), { recursive: true });
-  fs.writeFileSync(jsOutputPath, result.js, 'utf8');
-  console.log('Wrote ' + jsOutputPath);
 
   // Write HTML template if available
   if (result.html) {
@@ -1178,7 +1203,7 @@ if (require.main === module) {
       }
       process.exit(1);
     }
-    if (result.html !== result2.html || result.js !== result2.js) {
+    if (result.html !== result2.html) {
       console.error('Idempotency check failed: second run produced different output.');
       process.exit(1);
     }
@@ -1204,7 +1229,7 @@ module.exports = {
   renderUpdatedHtml: renderUpdatedHtml,
   renderMetaDateHtml: renderMetaDateHtml,
   updatedDate: updatedDate,
-  renderJsOutput: renderJsOutput,
+
   renderVideoCard: renderVideoCard,
   // Video objects + watch pages
   buildVideoObject: buildVideoObject,
