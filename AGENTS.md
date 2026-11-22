@@ -22,6 +22,7 @@ Open `index.html` in a browser. Works from `file://`.
 |------|------|
 | `index.html` | HTML + 9 inline `<script type="application/json">` configs in `<head>` (ads, game, rewards, contributors, chart, countdown, ui, theme, music) + OG/Twitter/canonical tags + structured data |
 | `script.js` | All JS (global scope, no imports/exports, minified via terser) |
+| `theme.js` | Colour-mode module: applies `light-mode` to `<html>` before first paint, injects the fixed toggle, persists `gem_theme`, re-colours charts, updates `meta[theme-color]`. Loaded first in `<head>` on every page (hand-maintained, deliberately unminified) |
 | `styles.css` | CSS custom property tokens + BEM classes (minified via csso) |
 | `tailwind.css` | Generated Tailwind utility classes (from `npm run build`, minified via csso) |
 | `package.json` | Dependencies (`chrome-launcher`) and devDependencies (`tailwindcss`, `csso`, `terser`) |
@@ -103,6 +104,8 @@ Open `index.html` in a browser. Works from `file://`.
 ## Architecture rules
 
 - **Never use `fetch()`** — all data from inline JSON configs loaded via `loadConfig(id)`
+- **Colour mode is a class on `<html>`, set before first paint** — every light-mode rule is scoped `:root.light-mode`, so the theme must be applied to `documentElement`, never `body`. `theme.js` must stay the first element in `<head>` on every page (it is emitted by the watch generator too); moving it after the stylesheets reintroduces a dark→light flash. Dark is the default when nothing is stored: the site's identity is dark, so `prefers-color-scheme` is intentionally not consulted on first visit
+- **Charts are re-coloured, never recreated, on theme change** — `theme.js` rewrites axis tick/grid colours on existing instances via `Chart.getChart(canvas)` and calls `chart.update('none')`, which keeps the "never recreate charts" rule intact
 - **Forecaster (not yet implemented)** — `initForecastChart()` creates a 4th Chart.js line chart instance (separate from the 3 existing charts). Destroyed and recreated only when the forecaster toggles off/on; otherwise updated via `chart.update('none')`. **Note: HTML elements not yet added to index.html — JS functions exist but are unreachable.**
 - **Ads disabled, site-message fallback** — Each eligible page has an `ads-config` inline JSON block with `"enabled": false` and a lower-content `gem-site-message` HTML fallback. GA4 analytics is active (`G-21RZK3GKKZ`) across all pages. `ads.txt` exists but no ad-serving runtime is loaded. The fallback is validated by `npm run test:ads-fallback` and `npm run test:ads-txt`.
 - **No standard test framework** — custom Node test scripts in `tests/` (e.g. `npm run test:creators`, `npm run test:ads-fallback`, `npm run test:ads-txt`). Manual QA via browser open/reload for HTML/CSS/JS changes. No general CI pipeline; the only workflow is the daily code sync below, and commits are pushed directly to GitHub Pages.
@@ -173,8 +176,8 @@ After any major HTML/CSS/JS changes, always:
 - **CSS**: BEM (`.gem-block__element--modifier`), custom property tokens (`--gem-*`), category suffixes (`--event`, `--pvp`, `--login`, `--code`)
 - **Config**: inline JSON in HTML, always use `loadConfig(id)` to parse
 - **State**: `selectedModes` array (defaults: event, pvp, login — CODE inactive) + `currentChartFilter` string, persisted via `savePageState()`/`loadPageState()`
-- **localStorage keys**: `gem_theme` (read-only, legacy), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`, `gem_copiedCode`, `gem_music_banner`, `gem_visits`. `gem_beacon` (changelog freshness beacon) is a **sessionStorage** key, not localStorage
-- **URL params**: `?theme=light&mode=<name>&chart=<name>` restored on page load
+- **localStorage keys**: `gem_theme` (`light`/`dark`, written by the theme toggle), `gem_modes`, `gem_chartFilter`, `gem_chartsVisible`, `pvp{1,2,3}_league`, `pvp{1,2,3}_rank`, `gem_copiedCode`, `gem_music_banner`, `gem_visits`. `gem_beacon` (changelog freshness beacon) is a **sessionStorage** key, not localStorage
+- **URL params**: `?theme=light|dark&mode=<name>&chart=<name>` restored on page load (`theme.js` reads the theme param, persists it, and wins over the stored value)
 - **Code rewards**: defined in `REWARDS.promoCodes[]` with per-code gem/ticket values; `promo` card total animates via `animateValue()`
 - **Single source of truth**: `data/codes.json` is the only hand-edited file for promo codes. Run `npm run update-codes` to regenerate `data/generated/promo-codes.js` (active codes) and update all dynamic content in `guide/code/index.html` via markers
 - **`dateAdded` is the publisher's release date, never an aggregator's listing date**: patch-note codes take theirs from the help-centre article (the section index slug carries the date, each article ends with `Reward Code: XXX`), social codes from the dated official post on `x.com/InvincibleGtG`. Code-aggregator "added" columns lag by 3–10 days and caused the site to trail real drops by 3–4 days. `npm run check-codes` verifies every patch-note code against the source

@@ -625,6 +625,7 @@ function renderPage(data, video, creator, meta, entities) {
   h.push('<!DOCTYPE html>');
   h.push('<html lang="en">');
   h.push('<head>');
+  h.push('    <script src="../../theme.js"></script>');
   h.push(renderHead(video, creator, meta, entities));
   h.push('</head>');
   h.push('<body class="relative min-h-screen p-5 md:p-10 gem-grid-bg">');
@@ -708,6 +709,7 @@ function renderHub(data) {
   h.push('<!DOCTYPE html>');
   h.push('<html lang="en">');
   h.push('<head>');
+  h.push('    <script src="../../theme.js"></script>');
   h.push('    <meta charset="UTF-8">');
   h.push('    <meta name="viewport" content="width=device-width, initial-scale=1.0">');
   h.push('    <meta name="theme-color" content="#050a14">');
