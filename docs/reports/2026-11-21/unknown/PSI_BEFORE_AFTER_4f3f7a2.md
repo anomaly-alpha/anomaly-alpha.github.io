@@ -197,5 +197,48 @@ End-to-end on the beginners page, simulating the pre-swap state by rendering in 
 
 - `npm run test:watch-pages` — 42/42 · `npm run test:creators` — 76/76 · `npm run test:structured-data` — 16 pages · `npm run test:ads-fallback` — pass.
 - Diffs are two added lines per HTML file plus the stylesheet and generator; no regenerated watch pages, no sitemap churn.
-- The CLS improvement cannot be confirmed through PSI until this is deployed — run `node scripts/run-psi-audit.js` after pushing and compare against `psi-new{1..4}.json`.
+- PSI confirmation is recorded below.
+
+---
+
+# Post-deploy verification — `492eb33`
+
+Deployed 2026-11-22T03:09:01Z. Live assets were checked before measuring so the numbers could not belong to the previous build:
+
+- `styles.css` serves the `"Barlow Fallback"` faces and `color:#050a14` on `.gem-card__tab`; no white ink remains.
+- `index.html` serves 5 font preloads.
+- CDN `Last-Modified` matches the build time and the edge copy was a HIT of that response.
+
+Four fresh PSI passes per page (`lighthouse-reports/psi-fix{1..4}.json`).
+
+### Accessibility — restored
+
+| Page | baseline `cc40ba3` | pre-fix `4f3f7a2` | post-fix `492eb33` |
+|------|--------------------|-------------------|--------------------|
+| home | 100/100/100/100 | 100/100/100/100 | 100/100/100/100 |
+| code | 100/100/100/100 | 96/96/96/96 | **100/100/100/100** |
+| event | 100/100/100/100 | 96/96/96/96 | **100/100/100/100** |
+| pvp | 100/100/100/100 | 96/96/96/96 | **100/100/100/100** |
+| login | 100/100/100/100 | 96/96/96/96 | **100/100/100/100** |
+| faq | 100/100/100/100 | 100/100/100/100 | 100/100/100/100 |
+| beginners | 100/100/100/100 | 96/96/96/96 | **100/100/100/100** |
+| xp | 100/100/100/100 | 100/100/100/100 | 100/100/100/100 |
+
+32/32 samples at 100, no residual `color-contrast` items.
+
+### CLS — regression cleared
+
+Every page is 0 in all four post-fix passes (worst 0):
+
+| Page | pre-fix | post-fix |
+|------|---------|----------|
+| beginners | 0 / **0.188** / 0.188 / 0.188 | 0 / 0 / 0 / 0 |
+| code | 0.004 ×4 | 0 ×4 |
+| pvp | 0 / 0.008 / 0.008 / 0.006 | 0 ×4 |
+| other five | 0 | 0 |
+
+Performance is fully recovered as a side effect: `beginners` 91 → 100 (100–100), `code` 100 (its 89 outlier gone), and every other page 100 except `login` at 99.5 (99–100). TBT and SI moved inside the previously measured noise envelope.
+
+Net effect of the two commits: five pages' accessibility restored to 100, one page's CLS from 0.188 to 0, and no performance regression anywhere.
+
 
