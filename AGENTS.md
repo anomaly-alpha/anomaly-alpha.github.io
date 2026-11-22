@@ -60,6 +60,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `scripts/generate-youtube-creators.js` | Validates creator data and generates creator HTML, JSON-LD, noscript links, and browser data. Exports `buildVideoObject()` / `toIsoDateTime()` used by the watch page generator |
 | `scripts/generate-watch-pages.js` | Generates `watch/<videoId>/index.html` per indexed video plus the `/watch/` hub, prunes stale directories, and rewrites the watch region of `sitemap.xml`. Each generated page carries its creator's music banner from `data/playlists.json` |
 | `scripts/generate-video-rail.js` | Injects the auto-scrolling video rail into 14 editorial pages between `<!--VIDEO_RAIL_START-->` / `_END` markers, directly after the hero block (`npm run generate-rail`) |
+| `scripts/generate-guide-nav.js` | Owns the guide-cluster nav: writes the same link order into the `<!--GUIDE_NAV_START-->` / `_END` markers on all 10 guide pages and renders the current page as a non-link span (`npm run generate-nav`). Exports `ITEMS` / `renderNav()` used by `tests/guide-nav.test.js` |
 | `watch/watch.css` | Shared stylesheet for watch pages and the hub |
 | `watch/index.html` | Generated watch page hub, grouped by creator |
 | `watch/<videoId>/index.html` | Generated per-video watch page: one `VideoObject`, eager player, breadcrumbs, related videos |
@@ -96,6 +97,7 @@ Open `index.html` in a browser. Works from `file://`.
 | `tests/youtube-watch-pages.test.js` | Validates watch page VideoObject shape, uploadDate format, SEO head, meta uniqueness, sitemap coverage, pruning |
 | `tests/youtube-creators-audit.test.js` | Validates creator audit output |
 | `tests/structured-data.test.js` | Validates JSON-LD structured data across pages |
+| `tests/guide-nav.test.js` | Validates the generated guide nav on all 10 guide pages plus the homepage: identical link order, exactly one `aria-current` per page, current page rendered as text not a self-link, and the `#gem-calculator` anchor sitting on the top-level container |
 | `tests/music-banners.test.js` | Validates the music banners: unique playlist per page and per creator, `GTA 6 SOUNDTRACK` on the code guide (the most-visited page), static link markup on every page, one banner per page, watch pages inheriting their creator's playlist, and the `/music/` card grid matching `data/playlists.json` |
 | `tests/back-to-top.test.js` | Tests back-to-top button behavior. **Browser-only** — it uses `document`/`window`/`getComputedStyle`, so `node tests/back-to-top.test.js` fails with `describe is not defined`. Open `tests/back-to-top.html` (which loads `test-harness.js` first) in a browser to run it |
 | `tests/test-harness.js` | Shared test helpers |
@@ -126,6 +128,8 @@ Open `index.html` in a browser. Works from `file://`.
 - **Banner link colours must clear 4.5:1 in both colour modes** — the label is 13px at normal weight, so the neon category tokens are only usable because `--gem-*` is darkened for light mode. Measured on the bar (`--gem-bg-dark`): dark mode gives event 6.99, pvp 4.73, login 9.03, code 9.43, cyan 12.88; light mode gives event 4.96, pvp 6.55, login 5.67, code 4.54, cyan 5.5. `purple` is excluded from `COLORS` in `scripts/generate-music.js` — #9b59b6 scores 4.24 on the dark bar, which is what caught it in Lighthouse.
 - **The editorial video rail is static markup, but it moves** — `scripts/generate-video-rail.js` writes the rail directly after the hero block (the `<h1>`'s parent element) and before the page's content, matching the creators guide. It auto-scrolls with a duplicated card set and a `translateX(-50%)` loop, so each group carries `padding-right` equal to the card gap — otherwise `-50%` lands mid-gap and the seam jumps. The duplicate group is `aria-hidden` with `tabindex="-1"`, hover/focus pauses it, and `prefers-reduced-motion` stops the animation, hides the duplicate and restores manual horizontal scrolling. Keep it static HTML: these pages do not load the 57 KB `youtube-creators.js` bundle, and its purpose is internal links to `/watch/` pages, which have no Search Console impressions.
 - **`authors/anomaly/` uses the shared chrome but stays out of the rail** — it links `tailwind.css` + `styles.css`, wraps its content in `.gem-container`, and inherits Barlow/Rajdhani/Orbitron like every other page, so the rail would render correctly there now. It is still left out of `scripts/generate-video-rail.js` by choice; drop it from that exclusion list if the profile should carry the creator strip.
+- **The guide nav order lives in one place, and the current page is rendered as text** — `scripts/generate-guide-nav.js` writes the nav between markers on all 10 guide pages, in the order `Codes · Redeem · Events · Wish Event · PvP · Login · FAQ · XP · Beginner Guide · Creators`, behind the pinned "← Gem calculator" backlink. The page's own entry is a `<span aria-current="page">` in its normal slot, not a link and not moved to the end. Hand-copying this nav is what produced six variants with different orders, three labels for the codes page, and a redeem page whose `aria-current` no stylesheet rendered — so never fix one page's links by hand; edit `ITEMS` and run `npm run generate-nav`. The homepage nav in `index.html` is hand-written but must keep the same destinations in the same order (asserted by `npm run test:nav`).
+- **The `#gem-calculator` anchor belongs at the top of `index.html`** — it sits on the `.gem-container` element with `scroll-mt-11` (44px, the fixed music banner's height) so the guide pages' "← Gem calculator" links land on the page top with the hero clear of the banner. It used to be on the "Your Weekly Gem Summary" card near the bottom, so every backlink dumped the visitor at the end of a long page.
 - **`uploadDate` must carry a timezone** — prefer the harvested `youtube.publishedAt`, which already carries the creator's real UTC offset. Fall back to `toIsoDateTime(published)` (`YYYY-MM-DDT00:00:00+00:00`) only when metadata is missing. Bare dates fail Google's datetime validation.
 - **Never publish a watch page for an unplayable video** — `npm run enrich-creators` flags active videos that are removed, embedding-disabled, or zero-duration (streams that never went live). Mark those `status: "unavailable"` with a `statusReason`; the generators then skip their watch page, card, and sitemap entry automatically. A watch page with a dead player cannot be indexed.
 - **Discovery surfaces are gated to active creators** — the editorial video rail (`scripts/generate-video-rail.js`), the creators-page ticker, and the "Channels in this feed" roster plus its summary counts (all via `getActiveCreators()` in `scripts/generate-youtube-creators.js`) advertise active creators only. Pending creators keep their videos in the timeline, their watch pages, and their own directory section; they are simply never promoted to a surface a visitor treats as "what's happening now". Active status is derived rather than editorial: at least six eligible videos and a newest eligible video inside `ACTIVE_RECENCY_DAYS` (60) — a cadence-of-one-a-quarter window that keeps a channel that stopped months ago out of the rail while leaving its archive browsable.
@@ -135,7 +139,7 @@ Open `index.html` in a browser. Works from `file://`.
 
 - `npm install` — Install dev dependencies (tailwindcss, csso, terser)
 - `npm start` — Serve the site locally via `scripts/serve.js`
-- `npm run build` — Full build: generate codes + generate music + generate creators + generate watch pages + Tailwind + CSS minification + JS minification
+- `npm run build` — Full build: generate codes + generate music + generate creators + generate watch pages + video rail + guide nav + Tailwind + CSS minification + JS minification
 - `npm run build:css` — Tailwind + CSS minification only (skip code gen and JS minification)
 - `npm run build:js` — JS minification only (via terser)
 - `npm run build:tailwind` — Tailwind rebuild only (skip minification)
@@ -146,6 +150,7 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run generate-creators` — Validate creator source data and regenerate the static creators guide and browser data
 - `npm run generate-watch` — Regenerate all `/watch/` pages, the hub, and the watch region of `sitemap.xml`
 - `npm run generate-rail` — Regenerate the video rail region on the 14 editorial pages (static markup, no runtime JS)
+- `npm run generate-nav` — Regenerate the guide nav region on the 10 guide pages from the canonical order in `scripts/generate-guide-nav.js`
 - `npm run enrich-creators` — Refresh real YouTube metadata for creator videos (duration, views, upload timestamp, description, playability)
 - `npm run audit-creators` — Audit creator video availability over HTTP
 - `npm run audit-rich-results` — Run Google's live Rich Results Test over `sitemap.xml`. Launch the Chrome app first, then attach to it — a self-launched headless browser is reCAPTCHA-refused after a few pages:
@@ -166,6 +171,7 @@ Open `index.html` in a browser. Works from `file://`.
 - `npm run test:ads-fallback` — Validate ads-config and site-message fallback across pages
 - `npm run test:structured-data` — Validate JSON-LD structured data across pages
 - `npm run test:music` — Validate music banners (unique playlists, static links, creator coverage) and the `/music/` card grid
+- `npm run test:nav` — Validate the guide nav: identical link order on all 10 guide pages plus the homepage, one `aria-current` per page, no self-link
 - `node tests/promo-codes-generator.test.js` — Validate promo code generation from `data/codes.json` (no npm alias)
 - `npm run update-assets` — Download the pinned Chart.js build into `vendor/chart.umd.js` (fonts are committed by hand, not fetched by this script)
 - `npm run lighthouse:home` — Run Lighthouse audit on homepage
