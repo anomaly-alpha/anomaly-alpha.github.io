@@ -1,0 +1,81 @@
+{
+  "meta": {
+    "generatedAt": "2026-11-22T14:06:53.870Z",
+    "scope": "editorial",
+    "gapMs": 15000,
+    "cooldownMs": 660000,
+    "source": "Google Rich Results Test (driven headlessly, no official API)"
+  },
+  "results": [
+    {
+      "url": "https://anomaly-alpha.github.io/guide/code/",
+      "state": "ok",
+      "checkedAt": "2026-11-22T14:05:26.764Z",
+      "summary": "4 valid items detected",
+      "verdict": "valid",
+      "types": [
+        {
+          "kind": "check_circle",
+          "name": "Articles",
+          "detail": "1 valid item detected / Non-critical issues detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Breadcrumbs",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Image Metadata",
+          "detail": "2 valid items detected"
+        }
+      ],
+      "elapsedMs": 14569
+    },
+    {
+      "url": "https://anomaly-alpha.github.io/guide/xp/",
+      "state": "ok",
+      "checkedAt": "2026-11-22T14:06:08.768Z",
+      "summary": "4 valid items detected",
+      "verdict": "valid",
+      "types": [
+        {
+          "kind": "check_circle",
+          "name": "Articles",
+          "detail": "1 valid item detected / Non-critical issues detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Breadcrumbs",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Image Metadata",
+          "detail": "2 valid items detected"
+        }
+      ],
+      "elapsedMs": 19992
+    },
+    {
+      "url": "https://anomaly-alpha.github.io/authors/anomaly/",
+      "state": "ok",
+      "checkedAt": "2026-11-22T14:06:43.773Z",
+      "summary": "2 valid items detected",
+      "verdict": "valid",
+      "types": [
+        {
+          "kind": "check_circle",
+          "name": "Profile page",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Software Apps",
+          "detail": "1 valid item detected / Non-critical issues detected"
+        }
+      ],
+      "elapsedMs": 10094
+    }
+  ]
+}

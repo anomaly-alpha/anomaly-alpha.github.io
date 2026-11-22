@@ -75,6 +75,23 @@
       "@context": "https://schema.org",
       "@graph": [
         {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://anomaly-alpha.github.io/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "About",
+              "item": "https://anomaly-alpha.github.io/about/"
+            }
+          ]
+        },
+        {
           "@type": "AboutPage",
           "@id": "https://anomaly-alpha.github.io/about/#page",
           "headline": "About Anomaly Alpha — Invincible GTG Data Sources",
@@ -91,23 +108,7 @@
           "mainEntity": {
             "@id": "https://anomaly-alpha.github.io/about/#site-purpose"
           },
-          "publisher": {
-            "@type": "Organization",
-            "@id": "https://anomaly-alpha.github.io/#organization",
-            "name": "Anomaly Alpha",
-            "url": "https://anomaly-alpha.github.io/",
-            "logo": {
-              "@type": "ImageObject",
-              "url": "https://anomaly-alpha.github.io/og-images/home.png",
-              "width": 1200,
-              "height": 630,
-              "license": "https://anomaly-alpha.github.io/",
-              "acquireLicensePage": "https://anomaly-alpha.github.io/",
-              "creditText": "Anomaly Alpha",
-              "copyrightNotice": "© Anomaly Alpha",
-              "creator": { "@type": "Organization", "name": "Anomaly Alpha", "@id": "https://anomaly-alpha.github.io/#organization" }
-            }
-          },
+          "publisher": { "@type": "Organization", "@id": "https://anomaly-alpha.github.io/#organization" },
           "isPartOf": {
             "@id": "https://anomaly-alpha.github.io/#website"
           },
@@ -126,6 +127,33 @@
           "url": "https://anomaly-alpha.github.io/authors/anomaly/",
           "description": "Community developer and maintainer of Anomaly Alpha, an independent Invincible: Guarding the Globe fan site.",
           "sameAs": ["https://github.com/anomaly-alpha"]
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://anomaly-alpha.github.io/#organization",
+          "name": "Anomaly Alpha",
+          "alternateName": "Invincible GTG",
+          "url": "https://anomaly-alpha.github.io/",
+          "description": "Independent fan site publishing Invincible: Guarding the Globe reward data, promo codes and progress guides.",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://anomaly-alpha.github.io/og-images/home.png",
+            "width": 1200,
+            "height": 630,
+            "license": "https://anomaly-alpha.github.io/",
+            "acquireLicensePage": "https://anomaly-alpha.github.io/",
+            "creditText": "Anomaly Alpha",
+            "copyrightNotice": "© Anomaly Alpha",
+            "creator": { "@type": "Organization", "name": "Anomaly Alpha" }
+          },
+          "foundingDate": "2025",
+          "founder": { "@type": "Person", "name": "Anomaly", "url": "https://anomaly-alpha.github.io/authors/anomaly/" },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "url": "https://github.com/anomaly-alpha/anomaly-alpha.github.io"
+          },
+          "sameAs": ["https://github.com/anomaly-alpha/anomaly-alpha.github.io"]
         },
         {
           "@id": "https://anomaly-alpha.github.io/#website",

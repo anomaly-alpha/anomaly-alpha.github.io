@@ -774,6 +774,7 @@ function renderHub(data) {
         'description': 'Index of dedicated watch pages for tracked Invincible: Guarding the Globe creator videos.',
         'inLanguage': 'en',
         'isPartOf': { '@id': SITE_ORIGIN + '/#website' },
+        'breadcrumb': { '@id': SITE_ORIGIN + '/watch/#breadcrumb' },
         'mainEntity': {
           '@type': 'ItemList',
           'numberOfItems': total,
@@ -789,6 +790,15 @@ function renderHub(data) {
             return acc;
           }, [])
         }
+      },
+      {
+        '@type': 'BreadcrumbList',
+        '@id': SITE_ORIGIN + '/watch/#breadcrumb',
+        'itemListElement': [
+          { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': SITE_ORIGIN + '/' },
+          { '@type': 'ListItem', 'position': 2, 'name': 'Creator Videos', 'item': SITE_ORIGIN + '/guide/creators/' },
+          { '@type': 'ListItem', 'position': 3, 'name': 'Watch Pages', 'item': SITE_ORIGIN + '/watch/' }
+        ]
       },
       websiteNode()
     ]
