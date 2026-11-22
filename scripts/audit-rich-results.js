@@ -22,6 +22,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { spawn } = require('child_process');
 const { Launcher } = require('chrome-launcher');
 const puppeteer = require('puppeteer-core');
 
@@ -82,7 +83,7 @@ function targets() {
     const step = selected.length / SAMPLE;
     selected = Array.from({ length: SAMPLE }, (_, i) => selected[Math.floor(i * step)]);
   }
-  return LIMIT ? selected.slice(0, LIMIT) : selected;
+  return selected;
 }
 
 // ===== RESULT PARSING =====
@@ -113,8 +114,54 @@ function parseResults(text) {
 
 // ===== DRIVER =====
 
+async function cdpReady(endpoint) {
+  try {
+    const res = await fetch(endpoint.replace(/\/$/, '') + '/json/version');
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function waitForCdp(endpoint, timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    if (await cdpReady(endpoint)) return true;
+    await sleep(500);
+  }
+  return false;
+}
+
+// Detached so Chrome outlives this process; a Chrome started as a child of the run
+// is killed when the run exits, which is what produced detached-frame errors mid-audit.
+function spawnChromeApp(port) {
+  const installs = Launcher.getInstallations();
+  if (!installs.length) throw new Error('no Chrome installation found');
+  const child = spawn(
+    installs[0],
+    [
+      '--remote-debugging-port=' + port,
+      '--user-data-dir=' + path.join(ROOT, '.rrt-profile'),
+      '--no-first-run',
+      '--no-default-browser-check',
+      '--disable-blink-features=AutomationControlled',
+      RRT_URL,
+    ],
+    { detached: true, stdio: 'ignore' }
+  );
+  child.unref();
+}
+
 async function open() {
   if (CDP) {
+    const port = Number((CDP.match(/:(\d+)/) || [])[1] || 9222);
+    if (!(await cdpReady(CDP))) {
+      console.log('no Chrome app on ' + CDP + ' — launching one');
+      spawnChromeApp(port);
+      if (!(await waitForCdp(CDP, 25000))) {
+        throw new Error('Chrome app did not expose CDP at ' + CDP);
+      }
+    }
     const browser = await puppeteer.connect({ browserURL: CDP, defaultViewport: null });
     const page = await browser.newPage();
     return { browser, page, owned: false };
@@ -187,6 +234,10 @@ function loadPrior() {
 
 function save(results) {
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
+  // Last record per URL wins, so a resumed run replaces earlier error/blocked entries
+  // instead of accumulating duplicates.
+  const byUrl = new Map();
+  for (const record of results) byUrl.set(record.url, record);
   const payload = {
     meta: {
       generatedAt: new Date().toISOString(),
@@ -195,7 +246,7 @@ function save(results) {
       cooldownMs: COOLDOWN,
       source: 'Google Rich Results Test (driven headlessly, no official API)',
     },
-    results,
+    results: [...byUrl.values()],
   };
   fs.writeFileSync(OUT, JSON.stringify(payload, null, 2));
 }
@@ -207,9 +258,10 @@ async function main() {
   const prior = loadPrior();
   const seen = new Set(prior.results.filter((r) => r.state === 'ok').map((r) => r.url));
   const queue = all.filter((u) => !seen.has(u));
+  const batch = LIMIT ? queue.slice(0, LIMIT) : queue;
 
   console.log(
-    `scope=${SCOPE} queued=${queue.length}/${all.length} gap=${GAP}ms cooldown=${Math.round(
+    `scope=${SCOPE} queued=${batch.length}/${all.length} gap=${GAP}ms cooldown=${Math.round(
       COOLDOWN / 1000
     )}s`
   );
@@ -223,7 +275,7 @@ async function main() {
           : 'self-launched headless (likely refused — prefer --cdp)')
   );
 
-  const { browser, page, owned } = await open();
+  let { browser, page, owned } = await open();
 
   const results = prior.results.filter((r) => r.state !== 'blocked');
   let blocked = 0;
@@ -235,8 +287,8 @@ async function main() {
     process.exit(130);
   });
 
-  for (let i = 0; i < queue.length; i++) {
-    const url = queue[i];
+  for (let i = 0; i < batch.length; i++) {
+    const url = batch[i];
     const short = url.replace(/^https?:\/\/[^/]+/, '') || '/';
     let record;
 
@@ -251,6 +303,15 @@ async function main() {
           checkedAt: new Date().toISOString(),
           elapsedMs: 0,
         };
+        if (CDP && attempt < MAX_ATTEMPTS) {
+          try {
+            ({ browser, page } = await open());
+            console.log('  browser went away — re-attached, retrying');
+            continue;
+          } catch (reopenError) {
+            console.log('  re-attach failed: ' + reopenError.message);
+          }
+        }
       }
       if (record.state !== 'blocked') break;
       if (attempt === MAX_ATTEMPTS) break;
@@ -263,7 +324,7 @@ async function main() {
 
     const invalid = (record.types || []).filter((t) => t.kind !== 'check_circle');
     console.log(
-      `[${i + 1}/${queue.length}] ${short} -> ${record.state}/${record.verdict || '-'} ` +
+      `[${i + 1}/${batch.length}] ${short} -> ${record.state}/${record.verdict || '-'} ` +
         `${record.summary ? '| ' + record.summary : ''}` +
         (invalid.length ? ' !! ' + invalid.map((t) => `${t.name} (${t.detail})`).join('; ') : '')
     );
@@ -278,7 +339,7 @@ async function main() {
       blocked = 0;
     }
 
-    if (i < queue.length - 1) await sleep(GAP);
+    if (i < batch.length - 1) await sleep(GAP);
   }
 
   if (owned) await browser.close();

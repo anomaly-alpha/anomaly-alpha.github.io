@@ -1,0 +1,222 @@
+{
+  "meta": {
+    "generatedAt": "2026-11-22T04:51:57.510Z",
+    "scope": "editorial",
+    "gapMs": 25000,
+    "cooldownMs": 180000,
+    "source": "Google Rich Results Test (driven headlessly, no official API)"
+  },
+  "results": [
+    {
+      "url": "https://anomaly-alpha.github.io/",
+      "state": "ok",
+      "checkedAt": "2026-11-22T04:39:35.559Z",
+      "summary": "8 items detected: Some are invalid",
+      "verdict": "invalid",
+      "types": [
+        {
+          "kind": "check_circle",
+          "name": "Breadcrumbs",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Image Metadata",
+          "detail": "2 valid items detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Organization",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "error",
+          "name": "Software Apps",
+          "detail": "4 items detected: Some are invalid"
+        }
+      ],
+      "elapsedMs": 21042
+    },
+    {
+      "url": "https://anomaly-alpha.github.io/guide/code/",
+      "state": "ok",
+      "checkedAt": "2026-11-22T04:40:21.611Z",
+      "summary": "4 valid items detected",
+      "verdict": "valid",
+      "types": [
+        {
+          "kind": "check_circle",
+          "name": "Articles",
+          "detail": "1 valid item detected / Non-critical issues detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Breadcrumbs",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Image Metadata",
+          "detail": "2 valid items detected"
+        }
+      ],
+      "elapsedMs": 19051
+    },
+    {
+      "url": "https://anomaly-alpha.github.io/guide/beginners/",
+      "state": "ok",
+      "checkedAt": "2026-11-22T04:41:05.671Z",
+      "summary": "4 valid items detected",
+      "verdict": "valid",
+      "types": [
+        {
+          "kind": "check_circle",
+          "name": "Articles",
+          "detail": "1 valid item detected / Non-critical issues detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Breadcrumbs",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Image Metadata",
+          "detail": "2 valid items detected"
+        }
+      ],
+      "elapsedMs": 14638
+    },
+    {
+      "url": "https://anomaly-alpha.github.io/guide/event/",
+      "state": "ok",
+      "checkedAt": "2026-11-22T04:41:45.313Z",
+      "summary": "4 valid items detected",
+      "verdict": "valid",
+      "types": [
+        {
+          "kind": "check_circle",
+          "name": "Articles",
+          "detail": "1 valid item detected / Non-critical issues detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Breadcrumbs",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Image Metadata",
+          "detail": "2 valid items detected"
+        }
+      ],
+      "elapsedMs": 26981
+    },
+    {
+      "url": "https://anomaly-alpha.github.io/guide/wish-event/",
+      "state": "ok",
+      "checkedAt": "2026-11-22T04:42:37.311Z",
+      "summary": "4 valid items detected",
+      "verdict": "valid",
+      "types": [
+        {
+          "kind": "check_circle",
+          "name": "Articles",
+          "detail": "1 valid item detected / Non-critical issues detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Breadcrumbs",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Image Metadata",
+          "detail": "2 valid items detected"
+        }
+      ],
+      "elapsedMs": 23207
+    },
+    {
+      "url": "https://anomaly-alpha.github.io/guide/pvp/",
+      "state": "ok",
+      "checkedAt": "2026-11-22T04:43:25.527Z",
+      "summary": "4 valid items detected",
+      "verdict": "valid",
+      "types": [
+        {
+          "kind": "check_circle",
+          "name": "Articles",
+          "detail": "1 valid item detected / Non-critical issues detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Breadcrumbs",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Image Metadata",
+          "detail": "2 valid items detected"
+        }
+      ],
+      "elapsedMs": 16351
+    },
+    {
+      "url": "https://anomaly-alpha.github.io/guide/login/",
+      "state": "ok",
+      "checkedAt": "2026-11-22T04:44:06.892Z",
+      "summary": "4 valid items detected",
+      "verdict": "valid",
+      "types": [
+        {
+          "kind": "check_circle",
+          "name": "Articles",
+          "detail": "1 valid item detected / Non-critical issues detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Breadcrumbs",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Image Metadata",
+          "detail": "2 valid items detected"
+        }
+      ],
+      "elapsedMs": 20396
+    },
+    {
+      "url": "https://anomaly-alpha.github.io/guide/faq/",
+      "state": "ok",
+      "checkedAt": "2026-11-22T04:44:52.295Z",
+      "summary": "4 valid items detected",
+      "verdict": "valid",
+      "types": [
+        {
+          "kind": "check_circle",
+          "name": "Articles",
+          "detail": "1 valid item detected / Non-critical issues detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Breadcrumbs",
+          "detail": "1 valid item detected"
+        },
+        {
+          "kind": "check_circle",
+          "name": "Image Metadata",
+          "detail": "2 valid items detected"
+        }
+      ],
+      "elapsedMs": 20169
+    },
+    {
+      "url": "https://anomaly-alpha.github.io/guide/xp/",
+      "state": "blocked",
+      "checkedAt": "2026-11-22T04:51:50.919Z",
+      "elapsedMs": 6590
+    }
+  ]
+}
