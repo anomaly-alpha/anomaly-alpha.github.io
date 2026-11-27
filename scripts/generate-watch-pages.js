@@ -337,7 +337,7 @@ function renderHead(video, creator, meta, entities) {
   h.push('    <meta name="color-scheme" content="dark light">');
   h.push('    <meta name="referrer" content="strict-origin-when-cross-origin">');
   h.push('    <meta name="description" content="' + gen.escapeHtml(description) + '">');
-  h.push('    <meta name="robots" content="max-snippet:150, max-image-preview:large, max-video-preview:-1">');
+  h.push('    <meta name="robots" content="noindex, follow, max-snippet:150, max-image-preview:large, max-video-preview:-1">');
   h.push('    <meta name="date" content="' + gen.escapeHtml(video.published) + '">');
   h.push('    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">');
   h.push('    <link rel="icon" href="../../favicon.ico" sizes="any">');
@@ -742,7 +742,7 @@ function renderHub(data) {
   h.push('    <meta name="color-scheme" content="dark light">');
   h.push('    <meta name="referrer" content="strict-origin-when-cross-origin">');
   h.push('    <meta name="description" content="Watch page index for every tracked Invincible: Guarding the Globe creator video, grouped by creator with publish dates and categories.">');
-  h.push('    <meta name="robots" content="max-snippet:150, max-image-preview:large">');
+  h.push('    <meta name="robots" content="noindex, follow, max-snippet:150, max-image-preview:large">');
   h.push('    <link rel="icon" type="image/svg+xml" href="../favicon.svg">');
   h.push('    <link rel="canonical" href="' + SITE_ORIGIN + '/watch/">');
   h.push('    <meta property="og:title" content="Invincible GTG Video Watch Pages">');
@@ -867,28 +867,9 @@ function renderHub(data) {
 
 // ===== SITEMAP =====
 
-function renderSitemapEntries(data, lastmod) {
-  var items = gen.getVisibleFeedItems(data);
-  var lines = [];
-  lines.push('  <url>');
-  lines.push('    <loc>' + SITE_ORIGIN + '/watch/</loc>');
-  lines.push('    <lastmod>' + lastmod + '</lastmod>');
-  lines.push('    <changefreq>weekly</changefreq>');
-  lines.push('    <priority>0.5</priority>');
-  lines.push('  </url>');
-  for (var i = 0; i < items.length; i++) {
-    var video = items[i].video;
-    lines.push('  <url>');
-    lines.push('    <loc>' + gen.watchPageUrl(video) + '</loc>');
-    lines.push('    <lastmod>' + video.published + '</lastmod>');
-    lines.push('    <changefreq>monthly</changefreq>');
-    lines.push('    <priority>0.4</priority>');
-    lines.push('  </url>');
-  }
-  return lines.join('\n');
-}
+const SITEMAP_NOTE = '  <!-- intentionally empty: watch pages mirror a single creator video each, so they are noindex,follow and stay out of the sitemap -->';
 
-function updateSitemap(sitemapPath, data) {
+function updateSitemap(sitemapPath) {
   if (!fs.existsSync(sitemapPath)) {
     throw new Error('sitemap.xml not found at ' + sitemapPath);
   }
@@ -898,11 +879,9 @@ function updateSitemap(sitemapPath, data) {
   if (startIdx === -1 || endIdx === -1 || endIdx < startIdx) {
     throw new Error('sitemap.xml is missing ' + SITEMAP_START + ' / ' + SITEMAP_END + ' markers');
   }
-  var lastmod = data.updated;
-  var entries = renderSitemapEntries(data, lastmod);
-  var updated = xml.slice(0, startIdx) + SITEMAP_START + '\n' + entries + '\n' + SITEMAP_END + xml.slice(endIdx + SITEMAP_END.length);
+  var updated = xml.slice(0, startIdx) + SITEMAP_START + '\n' + SITEMAP_NOTE + '\n' + SITEMAP_END + xml.slice(endIdx + SITEMAP_END.length);
   fs.writeFileSync(sitemapPath, updated, 'utf8');
-  return entries;
+  return SITEMAP_NOTE;
 }
 
 // ===== MAIN =====
@@ -954,7 +933,7 @@ function generate(rootDir) {
   }
 
   var sitemapPath = path.join(rootDir, 'sitemap.xml');
-  updateSitemap(sitemapPath, data);
+  updateSitemap(sitemapPath);
 
   return {
     success: true,
@@ -1000,7 +979,6 @@ module.exports = {
   renderPage: renderPage,
   renderHub: renderHub,
   renderHead: renderHead,
-  renderSitemapEntries: renderSitemapEntries,
   updateSitemap: updateSitemap,
   buildGraph: buildGraph,
   matchEntities: matchEntities,

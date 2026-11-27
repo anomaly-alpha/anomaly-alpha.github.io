@@ -1,0 +1,1793 @@
+[
+  {
+    "keys": [
+      "usa"
+    ],
+    "clicks": 13369,
+    "impressions": 90907,
+    "ctr": 0.147062382434796,
+    "position": 4.780577953292926
+  },
+  {
+    "keys": [
+      "gbr"
+    ],
+    "clicks": 4248,
+    "impressions": 29764,
+    "ctr": 0.1427227523182368,
+    "position": 4.711497110603414
+  },
+  {
+    "keys": [
+      "can"
+    ],
+    "clicks": 1189,
+    "impressions": 8340,
+    "ctr": 0.14256594724220623,
+    "position": 4.635011990407674
+  },
+  {
+    "keys": [
+      "deu"
+    ],
+    "clicks": 808,
+    "impressions": 4373,
+    "ctr": 0.18477018065401327,
+    "position": 4.3160301852275325
+  },
+  {
+    "keys": [
+      "aus"
+    ],
+    "clicks": 724,
+    "impressions": 5204,
+    "ctr": 0.13912375096079937,
+    "position": 4.786510376633359
+  },
+  {
+    "keys": [
+      "bra"
+    ],
+    "clicks": 534,
+    "impressions": 4029,
+    "ctr": 0.1325390915860015,
+    "position": 5.598163315959295
+  },
+  {
+    "keys": [
+      "fra"
+    ],
+    "clicks": 389,
+    "impressions": 1991,
+    "ctr": 0.1953792064289302,
+    "position": 5.25715720743345
+  },
+  {
+    "keys": [
+      "esp"
+    ],
+    "clicks": 347,
+    "impressions": 1440,
+    "ctr": 0.24097222222222223,
+    "position": 5.626388888888889
+  },
+  {
+    "keys": [
+      "phl"
+    ],
+    "clicks": 347,
+    "impressions": 3172,
+    "ctr": 0.10939470365699874,
+    "position": 6.281210592686002
+  },
+  {
+    "keys": [
+      "ita"
+    ],
+    "clicks": 226,
+    "impressions": 1793,
+    "ctr": 0.1260457334076966,
+    "position": 5.313998884551032
+  },
+  {
+    "keys": [
+      "tur"
+    ],
+    "clicks": 189,
+    "impressions": 1661,
+    "ctr": 0.11378687537627935,
+    "position": 6.031908488862131
+  },
+  {
+    "keys": [
+      "mys"
+    ],
+    "clicks": 184,
+    "impressions": 1205,
+    "ctr": 0.15269709543568466,
+    "position": 5.50954356846473
+  },
+  {
+    "keys": [
+      "mex"
+    ],
+    "clicks": 179,
+    "impressions": 2110,
+    "ctr": 0.08483412322274882,
+    "position": 6.381042654028436
+  },
+  {
+    "keys": [
+      "pol"
+    ],
+    "clicks": 154,
+    "impressions": 1201,
+    "ctr": 0.12822647793505412,
+    "position": 4.894254787676935
+  },
+  {
+    "keys": [
+      "zaf"
+    ],
+    "clicks": 149,
+    "impressions": 1237,
+    "ctr": 0.12045270816491511,
+    "position": 4.839126919967663
+  },
+  {
+    "keys": [
+      "nld"
+    ],
+    "clicks": 146,
+    "impressions": 1770,
+    "ctr": 0.08248587570621468,
+    "position": 5.419774011299435
+  },
+  {
+    "keys": [
+      "tha"
+    ],
+    "clicks": 129,
+    "impressions": 902,
+    "ctr": 0.14301552106430154,
+    "position": 7.2150776053215075
+  },
+  {
+    "keys": [
+      "nzl"
+    ],
+    "clicks": 127,
+    "impressions": 987,
+    "ctr": 0.1286727456940223,
+    "position": 4.717325227963526
+  },
+  {
+    "keys": [
+      "irl"
+    ],
+    "clicks": 125,
+    "impressions": 1029,
+    "ctr": 0.12147716229348883,
+    "position": 5.036929057337221
+  },
+  {
+    "keys": [
+      "ind"
+    ],
+    "clicks": 116,
+    "impressions": 1277,
+    "ctr": 0.0908379013312451,
+    "position": 6.9021143304620205
+  },
+  {
+    "keys": [
+      "rus"
+    ],
+    "clicks": 95,
+    "impressions": 597,
+    "ctr": 0.15912897822445563,
+    "position": 6.075376884422111
+  },
+  {
+    "keys": [
+      "hun"
+    ],
+    "clicks": 93,
+    "impressions": 579,
+    "ctr": 0.16062176165803108,
+    "position": 4.72020725388601
+  },
+  {
+    "keys": [
+      "sgp"
+    ],
+    "clicks": 91,
+    "impressions": 609,
+    "ctr": 0.14942528735632185,
+    "position": 4.466338259441708
+  },
+  {
+    "keys": [
+      "bel"
+    ],
+    "clicks": 79,
+    "impressions": 551,
+    "ctr": 0.14337568058076225,
+    "position": 4.8584392014519056
+  },
+  {
+    "keys": [
+      "irn"
+    ],
+    "clicks": 79,
+    "impressions": 234,
+    "ctr": 0.33760683760683763,
+    "position": 5.316239316239316
+  },
+  {
+    "keys": [
+      "jpn"
+    ],
+    "clicks": 79,
+    "impressions": 563,
+    "ctr": 0.14031971580817051,
+    "position": 4.5435168738898755
+  },
+  {
+    "keys": [
+      "idn"
+    ],
+    "clicks": 74,
+    "impressions": 848,
+    "ctr": 0.08726415094339622,
+    "position": 8.26061320754717
+  },
+  {
+    "keys": [
+      "swe"
+    ],
+    "clicks": 73,
+    "impressions": 587,
+    "ctr": 0.12436115843270869,
+    "position": 4.4310051107325386
+  },
+  {
+    "keys": [
+      "jor"
+    ],
+    "clicks": 71,
+    "impressions": 232,
+    "ctr": 0.30603448275862066,
+    "position": 5.655172413793103
+  },
+  {
+    "keys": [
+      "ukr"
+    ],
+    "clicks": 67,
+    "impressions": 327,
+    "ctr": 0.20489296636085627,
+    "position": 5.672782874617737
+  },
+  {
+    "keys": [
+      "prt"
+    ],
+    "clicks": 61,
+    "impressions": 525,
+    "ctr": 0.11619047619047619,
+    "position": 5.266666666666667
+  },
+  {
+    "keys": [
+      "dnk"
+    ],
+    "clicks": 57,
+    "impressions": 391,
+    "ctr": 0.14578005115089515,
+    "position": 4.537084398976982
+  },
+  {
+    "keys": [
+      "isr"
+    ],
+    "clicks": 57,
+    "impressions": 565,
+    "ctr": 0.10088495575221239,
+    "position": 6.007079646017699
+  },
+  {
+    "keys": [
+      "arg"
+    ],
+    "clicks": 54,
+    "impressions": 583,
+    "ctr": 0.09262435677530018,
+    "position": 6.2778730703259
+  },
+  {
+    "keys": [
+      "egy"
+    ],
+    "clicks": 50,
+    "impressions": 302,
+    "ctr": 0.16556291390728478,
+    "position": 5.125827814569536
+  },
+  {
+    "keys": [
+      "nor"
+    ],
+    "clicks": 45,
+    "impressions": 296,
+    "ctr": 0.15202702702702703,
+    "position": 4.574324324324325
+  },
+  {
+    "keys": [
+      "rou"
+    ],
+    "clicks": 45,
+    "impressions": 444,
+    "ctr": 0.10135135135135136,
+    "position": 5.002252252252252
+  },
+  {
+    "keys": [
+      "cze"
+    ],
+    "clicks": 44,
+    "impressions": 349,
+    "ctr": 0.12607449856733524,
+    "position": 4.659025787965616
+  },
+  {
+    "keys": [
+      "chl"
+    ],
+    "clicks": 42,
+    "impressions": 477,
+    "ctr": 0.0880503144654088,
+    "position": 6.1572327044025155
+  },
+  {
+    "keys": [
+      "kor"
+    ],
+    "clicks": 39,
+    "impressions": 495,
+    "ctr": 0.07878787878787878,
+    "position": 5.466666666666667
+  },
+  {
+    "keys": [
+      "dza"
+    ],
+    "clicks": 38,
+    "impressions": 196,
+    "ctr": 0.19387755102040816,
+    "position": 8.408163265306122
+  },
+  {
+    "keys": [
+      "twn"
+    ],
+    "clicks": 38,
+    "impressions": 187,
+    "ctr": 0.20320855614973263,
+    "position": 5.53475935828877
+  },
+  {
+    "keys": [
+      "grc"
+    ],
+    "clicks": 34,
+    "impressions": 207,
+    "ctr": 0.1642512077294686,
+    "position": 5.164251207729468
+  },
+  {
+    "keys": [
+      "geo"
+    ],
+    "clicks": 31,
+    "impressions": 212,
+    "ctr": 0.14622641509433962,
+    "position": 4.580188679245283
+  },
+  {
+    "keys": [
+      "srb"
+    ],
+    "clicks": 31,
+    "impressions": 244,
+    "ctr": 0.12704918032786885,
+    "position": 5.188524590163935
+  },
+  {
+    "keys": [
+      "bgr"
+    ],
+    "clicks": 30,
+    "impressions": 193,
+    "ctr": 0.15544041450777202,
+    "position": 5.66321243523316
+  },
+  {
+    "keys": [
+      "kaz"
+    ],
+    "clicks": 30,
+    "impressions": 144,
+    "ctr": 0.20833333333333334,
+    "position": 4.8125
+  },
+  {
+    "keys": [
+      "are"
+    ],
+    "clicks": 29,
+    "impressions": 396,
+    "ctr": 0.07323232323232323,
+    "position": 5.383838383838384
+  },
+  {
+    "keys": [
+      "aut"
+    ],
+    "clicks": 29,
+    "impressions": 192,
+    "ctr": 0.15104166666666666,
+    "position": 4.59375
+  },
+  {
+    "keys": [
+      "lka"
+    ],
+    "clicks": 29,
+    "impressions": 146,
+    "ctr": 0.19863013698630136,
+    "position": 4.390410958904109
+  },
+  {
+    "keys": [
+      "tto"
+    ],
+    "clicks": 28,
+    "impressions": 218,
+    "ctr": 0.12844036697247707,
+    "position": 5.165137614678899
+  },
+  {
+    "keys": [
+      "vnm"
+    ],
+    "clicks": 28,
+    "impressions": 425,
+    "ctr": 0.06588235294117648,
+    "position": 14.27764705882353
+  },
+  {
+    "keys": [
+      "bgd"
+    ],
+    "clicks": 27,
+    "impressions": 255,
+    "ctr": 0.10588235294117647,
+    "position": 11.486274509803922
+  },
+  {
+    "keys": [
+      "cyp"
+    ],
+    "clicks": 27,
+    "impressions": 137,
+    "ctr": 0.19708029197080293,
+    "position": 4.9416058394160585
+  },
+  {
+    "keys": [
+      "sau"
+    ],
+    "clicks": 27,
+    "impressions": 266,
+    "ctr": 0.10150375939849623,
+    "position": 6.360902255639098
+  },
+  {
+    "keys": [
+      "mng"
+    ],
+    "clicks": 26,
+    "impressions": 142,
+    "ctr": 0.18309859154929578,
+    "position": 4.73943661971831
+  },
+  {
+    "keys": [
+      "brn"
+    ],
+    "clicks": 25,
+    "impressions": 128,
+    "ctr": 0.1953125,
+    "position": 4.2265625
+  },
+  {
+    "keys": [
+      "per"
+    ],
+    "clicks": 25,
+    "impressions": 240,
+    "ctr": 0.10416666666666667,
+    "position": 5.216666666666667
+  },
+  {
+    "keys": [
+      "hkg"
+    ],
+    "clicks": 23,
+    "impressions": 262,
+    "ctr": 0.08778625954198473,
+    "position": 5.068702290076335
+  },
+  {
+    "keys": [
+      "mar"
+    ],
+    "clicks": 21,
+    "impressions": 191,
+    "ctr": 0.1099476439790576,
+    "position": 8.581151832460733
+  },
+  {
+    "keys": [
+      "che"
+    ],
+    "clicks": 20,
+    "impressions": 205,
+    "ctr": 0.0975609756097561,
+    "position": 5.092682926829268
+  },
+  {
+    "keys": [
+      "fin"
+    ],
+    "clicks": 20,
+    "impressions": 217,
+    "ctr": 0.09216589861751152,
+    "position": 5.124423963133641
+  },
+  {
+    "keys": [
+      "ken"
+    ],
+    "clicks": 20,
+    "impressions": 113,
+    "ctr": 0.17699115044247787,
+    "position": 3.309734513274336
+  },
+  {
+    "keys": [
+      "khm"
+    ],
+    "clicks": 20,
+    "impressions": 80,
+    "ctr": 0.25,
+    "position": 3.6625
+  },
+  {
+    "keys": [
+      "svk"
+    ],
+    "clicks": 20,
+    "impressions": 120,
+    "ctr": 0.16666666666666666,
+    "position": 4.6
+  },
+  {
+    "keys": [
+      "hrv"
+    ],
+    "clicks": 19,
+    "impressions": 158,
+    "ctr": 0.12025316455696203,
+    "position": 4.879746835443038
+  },
+  {
+    "keys": [
+      "ltu"
+    ],
+    "clicks": 19,
+    "impressions": 134,
+    "ctr": 0.1417910447761194,
+    "position": 4.686567164179104
+  },
+  {
+    "keys": [
+      "ecu"
+    ],
+    "clicks": 18,
+    "impressions": 112,
+    "ctr": 0.16071428571428573,
+    "position": 5.776785714285714
+  },
+  {
+    "keys": [
+      "nga"
+    ],
+    "clicks": 18,
+    "impressions": 235,
+    "ctr": 0.07659574468085106,
+    "position": 4.897872340425532
+  },
+  {
+    "keys": [
+      "dom"
+    ],
+    "clicks": 17,
+    "impressions": 134,
+    "ctr": 0.12686567164179105,
+    "position": 5.701492537313433
+  },
+  {
+    "keys": [
+      "irq"
+    ],
+    "clicks": 17,
+    "impressions": 84,
+    "ctr": 0.20238095238095238,
+    "position": 6.119047619047619
+  },
+  {
+    "keys": [
+      "mkd"
+    ],
+    "clicks": 17,
+    "impressions": 128,
+    "ctr": 0.1328125,
+    "position": 4.75
+  },
+  {
+    "keys": [
+      "aze"
+    ],
+    "clicks": 16,
+    "impressions": 121,
+    "ctr": 0.1322314049586777,
+    "position": 4.677685950413223
+  },
+  {
+    "keys": [
+      "lva"
+    ],
+    "clicks": 16,
+    "impressions": 73,
+    "ctr": 0.2191780821917808,
+    "position": 3.671232876712329
+  },
+  {
+    "keys": [
+      "col"
+    ],
+    "clicks": 15,
+    "impressions": 181,
+    "ctr": 0.08287292817679558,
+    "position": 7.342541436464089
+  },
+  {
+    "keys": [
+      "slv"
+    ],
+    "clicks": 15,
+    "impressions": 79,
+    "ctr": 0.189873417721519,
+    "position": 4.924050632911392
+  },
+  {
+    "keys": [
+      "gtm"
+    ],
+    "clicks": 13,
+    "impressions": 105,
+    "ctr": 0.12380952380952381,
+    "position": 6.161904761904762
+  },
+  {
+    "keys": [
+      "lbn"
+    ],
+    "clicks": 13,
+    "impressions": 99,
+    "ctr": 0.13131313131313133,
+    "position": 4.898989898989899
+  },
+  {
+    "keys": [
+      "svn"
+    ],
+    "clicks": 13,
+    "impressions": 53,
+    "ctr": 0.24528301886792453,
+    "position": 5.113207547169812
+  },
+  {
+    "keys": [
+      "alb"
+    ],
+    "clicks": 12,
+    "impressions": 73,
+    "ctr": 0.1643835616438356,
+    "position": 3.808219178082192
+  },
+  {
+    "keys": [
+      "npl"
+    ],
+    "clicks": 12,
+    "impressions": 53,
+    "ctr": 0.22641509433962265,
+    "position": 5.547169811320755
+  },
+  {
+    "keys": [
+      "omn"
+    ],
+    "clicks": 12,
+    "impressions": 40,
+    "ctr": 0.3,
+    "position": 3.25
+  },
+  {
+    "keys": [
+      "pri"
+    ],
+    "clicks": 12,
+    "impressions": 161,
+    "ctr": 0.07453416149068323,
+    "position": 5.403726708074534
+  },
+  {
+    "keys": [
+      "brb"
+    ],
+    "clicks": 11,
+    "impressions": 43,
+    "ctr": 0.2558139534883721,
+    "position": 3.9767441860465116
+  },
+  {
+    "keys": [
+      "ven"
+    ],
+    "clicks": 11,
+    "impressions": 159,
+    "ctr": 0.06918238993710692,
+    "position": 6.6415094339622645
+  },
+  {
+    "keys": [
+      "isl"
+    ],
+    "clicks": 10,
+    "impressions": 70,
+    "ctr": 0.14285714285714285,
+    "position": 3.9285714285714284
+  },
+  {
+    "keys": [
+      "mda"
+    ],
+    "clicks": 10,
+    "impressions": 82,
+    "ctr": 0.12195121951219512,
+    "position": 3.402439024390244
+  },
+  {
+    "keys": [
+      "hnd"
+    ],
+    "clicks": 9,
+    "impressions": 72,
+    "ctr": 0.125,
+    "position": 5.347222222222222
+  },
+  {
+    "keys": [
+      "jam"
+    ],
+    "clicks": 9,
+    "impressions": 102,
+    "ctr": 0.08823529411764706,
+    "position": 4.715686274509804
+  },
+  {
+    "keys": [
+      "pak"
+    ],
+    "clicks": 9,
+    "impressions": 140,
+    "ctr": 0.06428571428571428,
+    "position": 8.507142857142856
+  },
+  {
+    "keys": [
+      "qat"
+    ],
+    "clicks": 9,
+    "impressions": 96,
+    "ctr": 0.09375,
+    "position": 4.385416666666666
+  },
+  {
+    "keys": [
+      "ury"
+    ],
+    "clicks": 9,
+    "impressions": 119,
+    "ctr": 0.07563025210084033,
+    "position": 5.7899159663865545
+  },
+  {
+    "keys": [
+      "gha"
+    ],
+    "clicks": 8,
+    "impressions": 49,
+    "ctr": 0.16326530612244897,
+    "position": 4.877551020408163
+  },
+  {
+    "keys": [
+      "kgz"
+    ],
+    "clicks": 8,
+    "impressions": 48,
+    "ctr": 0.16666666666666666,
+    "position": 4.8125
+  },
+  {
+    "keys": [
+      "mmr"
+    ],
+    "clicks": 8,
+    "impressions": 51,
+    "ctr": 0.1568627450980392,
+    "position": 5.529411764705882
+  },
+  {
+    "keys": [
+      "zwe"
+    ],
+    "clicks": 8,
+    "impressions": 65,
+    "ctr": 0.12307692307692308,
+    "position": 5.553846153846154
+  },
+  {
+    "keys": [
+      "est"
+    ],
+    "clicks": 7,
+    "impressions": 76,
+    "ctr": 0.09210526315789473,
+    "position": 4.5
+  },
+  {
+    "keys": [
+      "uzb"
+    ],
+    "clicks": 7,
+    "impressions": 85,
+    "ctr": 0.08235294117647059,
+    "position": 5.670588235294118
+  },
+  {
+    "keys": [
+      "blr"
+    ],
+    "clicks": 6,
+    "impressions": 47,
+    "ctr": 0.1276595744680851,
+    "position": 5.127659574468085
+  },
+  {
+    "keys": [
+      "cod"
+    ],
+    "clicks": 6,
+    "impressions": 22,
+    "ctr": 0.2727272727272727,
+    "position": 6.2727272727272725
+  },
+  {
+    "keys": [
+      "imn"
+    ],
+    "clicks": 6,
+    "impressions": 37,
+    "ctr": 0.16216216216216217,
+    "position": 5.297297297297297
+  },
+  {
+    "keys": [
+      "jey"
+    ],
+    "clicks": 6,
+    "impressions": 29,
+    "ctr": 0.20689655172413793,
+    "position": 5.482758620689655
+  },
+  {
+    "keys": [
+      "kwt"
+    ],
+    "clicks": 6,
+    "impressions": 45,
+    "ctr": 0.13333333333333333,
+    "position": 5.866666666666666
+  },
+  {
+    "keys": [
+      "mus"
+    ],
+    "clicks": 6,
+    "impressions": 48,
+    "ctr": 0.125,
+    "position": 5.270833333333333
+  },
+  {
+    "keys": [
+      "sur"
+    ],
+    "clicks": 6,
+    "impressions": 19,
+    "ctr": 0.3157894736842105,
+    "position": 8.31578947368421
+  },
+  {
+    "keys": [
+      "xkk"
+    ],
+    "clicks": 6,
+    "impressions": 19,
+    "ctr": 0.3157894736842105,
+    "position": 4.578947368421053
+  },
+  {
+    "keys": [
+      "cri"
+    ],
+    "clicks": 5,
+    "impressions": 110,
+    "ctr": 0.045454545454545456,
+    "position": 5.463636363636364
+  },
+  {
+    "keys": [
+      "gum"
+    ],
+    "clicks": 5,
+    "impressions": 25,
+    "ctr": 0.2,
+    "position": 4.8
+  },
+  {
+    "keys": [
+      "mlt"
+    ],
+    "clicks": 5,
+    "impressions": 48,
+    "ctr": 0.10416666666666667,
+    "position": 4.666666666666666
+  },
+  {
+    "keys": [
+      "mne"
+    ],
+    "clicks": 5,
+    "impressions": 55,
+    "ctr": 0.09090909090909091,
+    "position": 4.890909090909091
+  },
+  {
+    "keys": [
+      "pry"
+    ],
+    "clicks": 5,
+    "impressions": 58,
+    "ctr": 0.08620689655172414,
+    "position": 4.9655172413793105
+  },
+  {
+    "keys": [
+      "syr"
+    ],
+    "clicks": 5,
+    "impressions": 47,
+    "ctr": 0.10638297872340426,
+    "position": 5.51063829787234
+  },
+  {
+    "keys": [
+      "zmb"
+    ],
+    "clicks": 5,
+    "impressions": 28,
+    "ctr": 0.17857142857142858,
+    "position": 5.107142857142857
+  },
+  {
+    "keys": [
+      "bhs"
+    ],
+    "clicks": 4,
+    "impressions": 13,
+    "ctr": 0.3076923076923077,
+    "position": 5.153846153846154
+  },
+  {
+    "keys": [
+      "chn"
+    ],
+    "clicks": 4,
+    "impressions": 77,
+    "ctr": 0.05194805194805195,
+    "position": 6.4935064935064934
+  },
+  {
+    "keys": [
+      "cuw"
+    ],
+    "clicks": 4,
+    "impressions": 40,
+    "ctr": 0.1,
+    "position": 2.85
+  },
+  {
+    "keys": [
+      "fro"
+    ],
+    "clicks": 4,
+    "impressions": 18,
+    "ctr": 0.2222222222222222,
+    "position": 2.7222222222222223
+  },
+  {
+    "keys": [
+      "nam"
+    ],
+    "clicks": 4,
+    "impressions": 14,
+    "ctr": 0.2857142857142857,
+    "position": 4.428571428571429
+  },
+  {
+    "keys": [
+      "nic"
+    ],
+    "clicks": 4,
+    "impressions": 46,
+    "ctr": 0.08695652173913043,
+    "position": 5.217391304347826
+  },
+  {
+    "keys": [
+      "pan"
+    ],
+    "clicks": 4,
+    "impressions": 91,
+    "ctr": 0.04395604395604396,
+    "position": 5.989010989010989
+  },
+  {
+    "keys": [
+      "png"
+    ],
+    "clicks": 4,
+    "impressions": 11,
+    "ctr": 0.36363636363636365,
+    "position": 2.2727272727272725
+  },
+  {
+    "keys": [
+      "sen"
+    ],
+    "clicks": 4,
+    "impressions": 23,
+    "ctr": 0.17391304347826086,
+    "position": 5.217391304347826
+  },
+  {
+    "keys": [
+      "guy"
+    ],
+    "clicks": 3,
+    "impressions": 45,
+    "ctr": 0.06666666666666667,
+    "position": 4.688888888888889
+  },
+  {
+    "keys": [
+      "pse"
+    ],
+    "clicks": 3,
+    "impressions": 33,
+    "ctr": 0.09090909090909091,
+    "position": 4.9393939393939394
+  },
+  {
+    "keys": [
+      "reu"
+    ],
+    "clicks": 3,
+    "impressions": 19,
+    "ctr": 0.15789473684210525,
+    "position": 6.2105263157894735
+  },
+  {
+    "keys": [
+      "uga"
+    ],
+    "clicks": 3,
+    "impressions": 36,
+    "ctr": 0.08333333333333333,
+    "position": 5.527777777777778
+  },
+  {
+    "keys": [
+      "afg"
+    ],
+    "clicks": 2,
+    "impressions": 7,
+    "ctr": 0.2857142857142857,
+    "position": 1.8571428571428572
+  },
+  {
+    "keys": [
+      "ala"
+    ],
+    "clicks": 2,
+    "impressions": 2,
+    "ctr": 1,
+    "position": 1
+  },
+  {
+    "keys": [
+      "arm"
+    ],
+    "clicks": 2,
+    "impressions": 24,
+    "ctr": 0.08333333333333333,
+    "position": 5.5
+  },
+  {
+    "keys": [
+      "bhr"
+    ],
+    "clicks": 2,
+    "impressions": 46,
+    "ctr": 0.043478260869565216,
+    "position": 6.369565217391305
+  },
+  {
+    "keys": [
+      "bih"
+    ],
+    "clicks": 2,
+    "impressions": 58,
+    "ctr": 0.034482758620689655,
+    "position": 4.689655172413794
+  },
+  {
+    "keys": [
+      "bol"
+    ],
+    "clicks": 2,
+    "impressions": 70,
+    "ctr": 0.02857142857142857,
+    "position": 5.614285714285714
+  },
+  {
+    "keys": [
+      "eth"
+    ],
+    "clicks": 2,
+    "impressions": 18,
+    "ctr": 0.1111111111111111,
+    "position": 4.666666666666666
+  },
+  {
+    "keys": [
+      "swz"
+    ],
+    "clicks": 2,
+    "impressions": 7,
+    "ctr": 0.2857142857142857,
+    "position": 3.5714285714285716
+  },
+  {
+    "keys": [
+      "tjk"
+    ],
+    "clicks": 2,
+    "impressions": 24,
+    "ctr": 0.08333333333333333,
+    "position": 8.458333333333332
+  },
+  {
+    "keys": [
+      "tza"
+    ],
+    "clicks": 2,
+    "impressions": 10,
+    "ctr": 0.2,
+    "position": 6.1
+  },
+  {
+    "keys": [
+      "vct"
+    ],
+    "clicks": 2,
+    "impressions": 5,
+    "ctr": 0.4,
+    "position": 4.2
+  },
+  {
+    "keys": [
+      "vgb"
+    ],
+    "clicks": 2,
+    "impressions": 7,
+    "ctr": 0.2857142857142857,
+    "position": 3
+  },
+  {
+    "keys": [
+      "bmu"
+    ],
+    "clicks": 1,
+    "impressions": 4,
+    "ctr": 0.25,
+    "position": 6.5
+  },
+  {
+    "keys": [
+      "bwa"
+    ],
+    "clicks": 1,
+    "impressions": 6,
+    "ctr": 0.16666666666666666,
+    "position": 5.833333333333333
+  },
+  {
+    "keys": [
+      "cmr"
+    ],
+    "clicks": 1,
+    "impressions": 3,
+    "ctr": 0.3333333333333333,
+    "position": 4.333333333333334
+  },
+  {
+    "keys": [
+      "cub"
+    ],
+    "clicks": 1,
+    "impressions": 15,
+    "ctr": 0.06666666666666667,
+    "position": 5.4
+  },
+  {
+    "keys": [
+      "ggy"
+    ],
+    "clicks": 1,
+    "impressions": 16,
+    "ctr": 0.0625,
+    "position": 4.375
+  },
+  {
+    "keys": [
+      "gib"
+    ],
+    "clicks": 1,
+    "impressions": 6,
+    "ctr": 0.16666666666666666,
+    "position": 5
+  },
+  {
+    "keys": [
+      "glp"
+    ],
+    "clicks": 1,
+    "impressions": 4,
+    "ctr": 0.25,
+    "position": 4
+  },
+  {
+    "keys": [
+      "lca"
+    ],
+    "clicks": 1,
+    "impressions": 6,
+    "ctr": 0.16666666666666666,
+    "position": 5.666666666666667
+  },
+  {
+    "keys": [
+      "lux"
+    ],
+    "clicks": 1,
+    "impressions": 14,
+    "ctr": 0.07142857142857142,
+    "position": 5.214285714285714
+  },
+  {
+    "keys": [
+      "mdg"
+    ],
+    "clicks": 1,
+    "impressions": 7,
+    "ctr": 0.14285714285714285,
+    "position": 2.857142857142857
+  },
+  {
+    "keys": [
+      "mdv"
+    ],
+    "clicks": 1,
+    "impressions": 8,
+    "ctr": 0.125,
+    "position": 5.625
+  },
+  {
+    "keys": [
+      "pyf"
+    ],
+    "clicks": 1,
+    "impressions": 9,
+    "ctr": 0.1111111111111111,
+    "position": 6.444444444444445
+  },
+  {
+    "keys": [
+      "tkm"
+    ],
+    "clicks": 1,
+    "impressions": 5,
+    "ctr": 0.2,
+    "position": 4.6
+  },
+  {
+    "keys": [
+      "tun"
+    ],
+    "clicks": 1,
+    "impressions": 68,
+    "ctr": 0.014705882352941176,
+    "position": 5.338235294117647
+  },
+  {
+    "keys": [
+      "yem"
+    ],
+    "clicks": 1,
+    "impressions": 2,
+    "ctr": 0.5,
+    "position": 4.5
+  },
+  {
+    "keys": [
+      "abw"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 7
+  },
+  {
+    "keys": [
+      "ago"
+    ],
+    "clicks": 0,
+    "impressions": 16,
+    "ctr": 0,
+    "position": 6.6875
+  },
+  {
+    "keys": [
+      "asm"
+    ],
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 7.25
+  },
+  {
+    "keys": [
+      "atg"
+    ],
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 8
+  },
+  {
+    "keys": [
+      "ben"
+    ],
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 3.5
+  },
+  {
+    "keys": [
+      "bfa"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 14
+  },
+  {
+    "keys": [
+      "blz"
+    ],
+    "clicks": 0,
+    "impressions": 5,
+    "ctr": 0,
+    "position": 8.6
+  },
+  {
+    "keys": [
+      "btn"
+    ],
+    "clicks": 0,
+    "impressions": 11,
+    "ctr": 0,
+    "position": 3.6363636363636362
+  },
+  {
+    "keys": [
+      "civ"
+    ],
+    "clicks": 0,
+    "impressions": 9,
+    "ctr": 0,
+    "position": 7.777777777777778
+  },
+  {
+    "keys": [
+      "cog"
+    ],
+    "clicks": 0,
+    "impressions": 7,
+    "ctr": 0,
+    "position": 5.428571428571429
+  },
+  {
+    "keys": [
+      "cpv"
+    ],
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 5.666666666666667
+  },
+  {
+    "keys": [
+      "cym"
+    ],
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 5
+  },
+  {
+    "keys": [
+      "dji"
+    ],
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 9
+  },
+  {
+    "keys": [
+      "esh"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 6
+  },
+  {
+    "keys": [
+      "fji"
+    ],
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 2.666666666666667
+  },
+  {
+    "keys": [
+      "gab"
+    ],
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 4
+  },
+  {
+    "keys": [
+      "gmb"
+    ],
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 5.75
+  },
+  {
+    "keys": [
+      "gnq"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 9
+  },
+  {
+    "keys": [
+      "guf"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 1
+  },
+  {
+    "keys": [
+      "hti"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 7
+  },
+  {
+    "keys": [
+      "lao"
+    ],
+    "clicks": 0,
+    "impressions": 18,
+    "ctr": 0,
+    "position": 5.722222222222222
+  },
+  {
+    "keys": [
+      "lbr"
+    ],
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 2
+  },
+  {
+    "keys": [
+      "lby"
+    ],
+    "clicks": 0,
+    "impressions": 36,
+    "ctr": 0,
+    "position": 5.027777777777778
+  },
+  {
+    "keys": [
+      "mac"
+    ],
+    "clicks": 0,
+    "impressions": 23,
+    "ctr": 0,
+    "position": 5.217391304347826
+  },
+  {
+    "keys": [
+      "maf"
+    ],
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 10
+  },
+  {
+    "keys": [
+      "mli"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 8
+  },
+  {
+    "keys": [
+      "mnp"
+    ],
+    "clicks": 0,
+    "impressions": 23,
+    "ctr": 0,
+    "position": 5.478260869565218
+  },
+  {
+    "keys": [
+      "moz"
+    ],
+    "clicks": 0,
+    "impressions": 11,
+    "ctr": 0,
+    "position": 4.181818181818182
+  },
+  {
+    "keys": [
+      "mrt"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 4
+  },
+  {
+    "keys": [
+      "mtq"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 11
+  },
+  {
+    "keys": [
+      "mwi"
+    ],
+    "clicks": 0,
+    "impressions": 11,
+    "ctr": 0,
+    "position": 7.363636363636363
+  },
+  {
+    "keys": [
+      "myt"
+    ],
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 6.333333333333333
+  },
+  {
+    "keys": [
+      "ncl"
+    ],
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 5.333333333333333
+  },
+  {
+    "keys": [
+      "rwa"
+    ],
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 14
+  },
+  {
+    "keys": [
+      "sdn"
+    ],
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 5
+  },
+  {
+    "keys": [
+      "slb"
+    ],
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 8
+  },
+  {
+    "keys": [
+      "smr"
+    ],
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 8
+  },
+  {
+    "keys": [
+      "som"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 82
+  },
+  {
+    "keys": [
+      "sxm"
+    ],
+    "clicks": 0,
+    "impressions": 6,
+    "ctr": 0,
+    "position": 2.5
+  },
+  {
+    "keys": [
+      "syc"
+    ],
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 5.5
+  },
+  {
+    "keys": [
+      "tca"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 5
+  },
+  {
+    "keys": [
+      "tgo"
+    ],
+    "clicks": 0,
+    "impressions": 3,
+    "ctr": 0,
+    "position": 4
+  },
+  {
+    "keys": [
+      "vir"
+    ],
+    "clicks": 0,
+    "impressions": 4,
+    "ctr": 0,
+    "position": 2.25
+  },
+  {
+    "keys": [
+      "vut"
+    ],
+    "clicks": 0,
+    "impressions": 1,
+    "ctr": 0,
+    "position": 1
+  },
+  {
+    "keys": [
+      "wsm"
+    ],
+    "clicks": 0,
+    "impressions": 2,
+    "ctr": 0,
+    "position": 9
+  },
+  {
+    "keys": [
+      "zzz"
+    ],
+    "clicks": 0,
+    "impressions": 5,
+    "ctr": 0,
+    "position": 23.6
+  }
+]

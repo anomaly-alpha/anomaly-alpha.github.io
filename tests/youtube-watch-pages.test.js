@@ -468,18 +468,20 @@ test('generate is idempotent', function () {
   }
 });
 
-test('sitemap lists the hub and every watch page exactly once', function () {
+test('watch pages are noindex,follow and stay out of the sitemap', function () {
   var data = makeData([makeCreator('c1', 1)]);
   var root = makeTempRoot(data);
   try {
     watch.generate(root);
     var xml = fs.readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
     var locs = xml.match(/<loc>([^<]+)<\/loc>/g) || [];
-    assert.strictEqual(locs.length, 7, 'hub + 6 videos');
     var watchLocs = locs.filter(function (l) { return l.indexOf('/watch/') !== -1; });
-    assert.strictEqual(watchLocs.length, 7, 'all watch URLs present');
-    assert.strictEqual(new Set(watchLocs).size, 7, 'no duplicates');
-    assert.ok(watchLocs.some(function (l) { return l.indexOf('/watch/</loc>') !== -1; }), 'hub listed');
+    assert.strictEqual(watchLocs.length, 0, 'no watch URL may appear in the sitemap');
+
+    var page = fs.readFileSync(path.join(root, 'watch', data.creators[0].videos[0].id, 'index.html'), 'utf8');
+    assert.ok(/<meta name="robots" content="noindex, follow[^"]*">/.test(page), 'watch page must be noindex,follow');
+    var hub = fs.readFileSync(path.join(root, 'watch', 'index.html'), 'utf8');
+    assert.ok(/<meta name="robots" content="noindex, follow[^"]*">/.test(hub), 'hub must be noindex,follow');
   } finally {
     cleanup(root);
   }

@@ -123,9 +123,21 @@ if (gemOnly.length) {
     gemOnly.map(c => `${c.code}(${c.gems})`).join(', '));
 }
 
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+// The publisher's own release date. Aggregator "added" timestamps lag the real
+// drop by 3-10 days, so this is the one column a scraper cannot reproduce
+// without waiting for the same primary source.
+function codeAddedCell(c) {
+  const iso = typeof c.dateAdded === 'string' ? c.dateAdded : '';
+  const dt = /^\d{4}-\d{2}-\d{2}$/.test(iso) ? new Date(iso + 'T00:00:00Z') : null;
+  if (!dt || isNaN(dt.getTime())) return '<td class="p-2 text-white/40">&mdash;</td>';
+  return `<td class="p-2 text-white/60 whitespace-nowrap"><time datetime="${iso}">${months[dt.getUTCMonth()]} ${dt.getUTCDate()}, ${dt.getUTCFullYear()}</time></td>`;
+}
+
 function codeTableRow(c) {
   const tierClass = c.tier === 'HIGH' ? ' gem-text--code' : '';
-  return `<tr class="border-b border-white/5"><td class="p-2 gem-text--code font-mono font-bold">${c.code}</td><td class="p-2">${formatReward(c)}</td><td class="p-2${tierClass}">${c.tier}</td></tr>`;
+  return `<tr class="border-b border-white/5"><td class="p-2 gem-text--code font-mono font-bold">${c.code}</td><td class="p-2">${formatReward(c)}</td><td class="p-2${tierClass}">${c.tier}</td>${codeAddedCell(c)}</tr>`;
 }
 
 const codeTableRows = active.map(codeTableRow).join('\n');
@@ -143,7 +155,6 @@ console.log(`Wrote ${activeCount} active codes to data/generated/promo-codes.js`
 
 // Date formatting from codes.json updated field
 const d = new Date(updated + 'T00:00:00Z');
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const month = months[d.getUTCMonth()];
 const day = d.getUTCDate();
 const year = d.getUTCFullYear();
