@@ -128,11 +128,31 @@ const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 // The publisher's own release date. Aggregator "added" timestamps lag the real
 // drop by 3-10 days, so this is the one column a scraper cannot reproduce
 // without waiting for the same primary source.
+//
+// verifiedAt/source are written only by harvest-codes.js from a real match against
+// the publisher's release notes, and only 4 of the 37 active codes currently have
+// one (the rest are sourced from dated social posts), so the provenance rides inside
+// this cell instead of occupying a column that would be dashes 89% of the time.
 function codeAddedCell(c) {
   const iso = typeof c.dateAdded === 'string' ? c.dateAdded : '';
   const dt = /^\d{4}-\d{2}-\d{2}$/.test(iso) ? new Date(iso + 'T00:00:00Z') : null;
   if (!dt || isNaN(dt.getTime())) return '<td class="p-2 text-white/40">&mdash;</td>';
-  return `<td class="p-2 text-white/60 whitespace-nowrap"><time datetime="${iso}">${months[dt.getUTCMonth()]} ${dt.getUTCDate()}, ${dt.getUTCFullYear()}</time></td>`;
+  const label = `${months[dt.getUTCMonth()]} ${dt.getUTCDate()}, ${dt.getUTCFullYear()}`;
+  const time = `<time datetime="${iso}">${label}</time>`;
+
+  const checkedIso = typeof c.verifiedAt === 'string' ? c.verifiedAt : '';
+  const checkedDt = /^\d{4}-\d{2}-\d{2}$/.test(checkedIso) ? new Date(checkedIso + 'T00:00:00Z') : null;
+  const hasSource = typeof c.source === 'string' && /^https:\/\//.test(c.source);
+  if (!checkedDt || isNaN(checkedDt.getTime())) {
+    return `<td class="p-2 text-white/60 whitespace-nowrap">${time}</td>`;
+  }
+
+  const checkedLabel = `${months[checkedDt.getUTCMonth()]} ${checkedDt.getUTCDate()}, ${checkedDt.getUTCFullYear()}`;
+  const note = `<span class="sr-only">Verified against the publisher's release notes on ${checkedLabel}.</span>`;
+  const body = hasSource
+    ? `<a href="${c.source}" target="_blank" rel="noopener noreferrer" class="gem-text--code underline" aria-label="Publisher release notes carrying ${c.code} (opens in a new tab)">${time}</a>`
+    : time;
+  return `<td class="p-2 text-white/60 whitespace-nowrap">${body}${note}</td>`;
 }
 
 function codeTableRow(c) {

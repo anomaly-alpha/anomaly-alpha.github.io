@@ -5,7 +5,9 @@ window.__PROMO_CODES=[
     "gems": 500,
     "tickets": 0,
     "tier": "HIGH",
-    "dateAdded": "2026-11-18"
+    "dateAdded": "2026-11-18",
+    "verifiedAt": "2026-11-27",
+    "source": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2576-patch-notes-game-update-3-8-18-nov-26/"
   },
   {
     "code": "STACHE",
@@ -43,7 +45,9 @@ window.__PROMO_CODES=[
     "gems": 500,
     "tickets": 0,
     "tier": "HIGH",
-    "dateAdded": "2026-10-20"
+    "dateAdded": "2026-10-20",
+    "verifiedAt": "2026-11-27",
+    "source": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2574-patch-notes-game-update-3-7-20-oct-2026/"
   },
   {
     "code": "KREGG4",
@@ -61,7 +65,9 @@ window.__PROMO_CODES=[
     "gems": 500,
     "tickets": 0,
     "tier": "HIGH",
-    "dateAdded": "2026-09-15"
+    "dateAdded": "2026-09-15",
+    "verifiedAt": "2026-11-27",
+    "source": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2567-patch-notes-game-update-3-6-15-sep-2026/"
   },
   {
     "code": "RAID02",
@@ -84,7 +90,9 @@ window.__PROMO_CODES=[
     "gems": 500,
     "tickets": 0,
     "tier": "HIGH",
-    "dateAdded": "2026-08-18"
+    "dateAdded": "2026-08-18",
+    "verifiedAt": "2026-11-27",
+    "source": "https://ubisoft-mobile.helpshift.com/hc/en/57-invincible-guarding-the-globe/faq/2560-patch-notes-game-update-3-5-18-aug-2026/"
   },
   {
     "code": "THAEDS",

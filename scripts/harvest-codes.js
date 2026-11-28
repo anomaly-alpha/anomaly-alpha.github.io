@@ -251,13 +251,15 @@ function decide(entry) {
   return { action: 'queue', reason: 'no reward found next to the code' };
 }
 
-function buildCodeEntry(entry) {
+function buildCodeEntry(entry, today) {
   return {
     code: entry.code,
     gems: entry.verification.reward.gems,
     tickets: entry.verification.reward.tickets,
     tier: 'HIGH',
     dateAdded: entry.official.date,
+    verifiedAt: today,
+    source: entry.official.url,
   };
 }
 
@@ -268,6 +270,24 @@ function insertActiveCode(codes, entry) {
     if (!code.expired && typeof code.position === 'number') code.position += 1;
   }
   codes.unshift({ ...entry, position: 1 });
+}
+
+// Returns the codes whose provenance changed. Silent on an expired code, and silent
+// when the stamp already matches, so a no-op run stays a no-op.
+function stampVerifiedAt(codes, officialByCode, today, dryRun) {
+  const changed = [];
+  for (const code of codes) {
+    if (code.expired) continue;
+    const article = officialByCode.get(String(code.code).toUpperCase());
+    if (!article || !article.url) continue;
+    if (code.verifiedAt === today && code.source === article.url) continue;
+    changed.push(code.code);
+    if (!dryRun) {
+      code.verifiedAt = today;
+      code.source = article.url;
+    }
+  }
+  return changed;
 }
 
 function describeReward(entry) {
@@ -368,6 +388,11 @@ async function main() {
 
   const officialNew = [...officialByCode.values()].filter((a) => !tracked.has(a.code));
 
+  // Provenance for codes already on the page: which publisher article carries the code
+  // and when that was last confirmed. Stamped only from a real match on this run, so a
+  // network failure ages the date instead of silently refreshing it.
+  const reVerified = stampVerifiedAt(codesData.codes, officialByCode, args.today, args.dryRun);
+
   let llm = { used: false, model: DEFAULT_MODEL, candidates: 0, error: null };
   let llmCodes = [];
   if (args.useLlm) {
@@ -429,7 +454,7 @@ async function main() {
         evidence,
         source: entry.verification.results.find((r) => r.codeSeen && r.gems + r.tickets > 0)?.url || '',
       });
-      if (!args.dryRun) insertActiveCode(codesData.codes, buildCodeEntry(entry));
+      if (!args.dryRun) insertActiveCode(codesData.codes, buildCodeEntry(entry, args.today));
     }
 
     const existing = candidatesData.candidates.find((c) => c.code === entry.code);
@@ -466,7 +491,7 @@ async function main() {
     }
   }
 
-  const changed = added.length > 0 || dateFixed.length > 0;
+  const changed = added.length > 0 || dateFixed.length > 0 || reVerified.length > 0;
   if (changed) {
     codesData.updated = args.today;
     codesData.seoMonth = args.today.slice(0, 7);
@@ -507,12 +532,14 @@ async function main() {
       llm,
       added: added.map((a) => a.code),
       dateFixed: dateFixed.map((a) => a.code),
+      reVerified: reVerified.length,
       pending: openCandidates.map((p) => p.code),
       flags: flags.length,
     });
   }
 
   console.log(report);
+  if (reVerified.length) console.log(`Re-verified ${reVerified.length} active code(s) against the publisher's own release notes.`);
   if (args.dryRun) console.log('(dry run — no files written)');
 }
 
@@ -533,5 +560,6 @@ module.exports = {
   isSafeUrl,
   main,
   parseArgs,
+  stampVerifiedAt,
   verifyCandidate,
 };

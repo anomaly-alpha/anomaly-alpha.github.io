@@ -10,6 +10,7 @@ const {
   htmlToText,
   insertActiveCode,
   isSafeUrl,
+  stampVerifiedAt,
   verifyCandidate,
 } = require('../scripts/harvest-codes');
 
@@ -101,13 +102,15 @@ assert.strictEqual(
   'an unverified reward never publishes',
 );
 
-const entry = buildCodeEntry({ code: 'RAC3R8', official, verification: verified });
+const entry = buildCodeEntry({ code: 'RAC3R8', official, verification: verified }, '2026-11-27');
 assert.deepStrictEqual(entry, {
   code: 'RAC3R8',
   gems: 500,
   tickets: 0,
   tier: 'HIGH',
   dateAdded: '2026-11-18',
+  verifiedAt: '2026-11-27',
+  source: 'https://ubisoft.example/faq/1',
 });
 
 const list = [
@@ -123,6 +126,35 @@ assert.strictEqual(list[1].position, 2, 'pinned positions shift down');
 assert.strictEqual(list[2].position, 3, 'pinned relative order is preserved');
 assert.strictEqual(list[3].position, 1, 'expired codes keep their position');
 assert.strictEqual(list[4].position, undefined, 'unpositioned codes stay unpositioned');
+
+// ===== verification provenance =====
+
+const stamped = [
+  { code: 'RAC3R8', dateAdded: '2026-11-18' },
+  { code: 'SOCIAL', dateAdded: '2026-09-01' },
+  { code: 'GONE', dateAdded: '2025-01-01', expired: true },
+  { code: 'DONE', dateAdded: '2026-11-01', verifiedAt: '2026-11-27', source: 'https://ubisoft.example/faq/1' },
+];
+const noteByCode = new Map([
+  ['RAC3R8', { url: 'https://ubisoft.example/faq/1', date: '2026-11-18' }],
+  ['GONE', { url: 'https://ubisoft.example/faq/2', date: '2025-01-01' }],
+  ['DONE', { url: 'https://ubisoft.example/faq/1', date: '2026-11-01' }],
+]);
+const stampedChanged = stampVerifiedAt(stamped, noteByCode, '2026-11-27', false);
+assert.deepStrictEqual(stampedChanged, ['RAC3R8'], 'only the code that gained provenance is reported');
+assert.strictEqual(stamped[0].verifiedAt, '2026-11-27');
+assert.strictEqual(stamped[0].source, 'https://ubisoft.example/faq/1');
+assert.strictEqual(stamped[1].verifiedAt, undefined, 'a code with no publisher article is never stamped');
+assert.strictEqual(stamped[2].verifiedAt, undefined, 'an expired code is not re-verified');
+assert.deepStrictEqual(
+  stampVerifiedAt(stamped, noteByCode, '2026-11-27', false),
+  [],
+  'a second run on the same day is a no-op',
+);
+
+const dryTargets = [{ code: 'RAC3R8' }];
+stampVerifiedAt(dryTargets, noteByCode, '2026-11-28', true);
+assert.strictEqual(dryTargets[0].verifiedAt, undefined, 'a dry run reports without writing');
 
 // ===== URL safety =====
 

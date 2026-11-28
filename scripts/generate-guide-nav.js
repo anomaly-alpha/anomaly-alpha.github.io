@@ -31,10 +31,15 @@ const ITEMS = [
   { slug: 'faq', label: 'FAQ', color: 'cyan' },
   { slug: 'xp', label: 'XP', color: 'cyan' },
   { slug: 'beginners', label: 'Beginner Guide', color: 'cyan' },
-  { slug: 'creators', label: 'Creators', color: 'cyan' },
 ];
 
 const PAGES = ITEMS.map((item) => `guide/${item.slug}/index.html`);
+
+// The creators directory is noindex,follow and is no longer an ITEMS entry, but it still
+// renders the shared nav so the page is not a dead end. It gets the nine links with no
+// aria-current, because its own page is not one of the destinations.
+const SHARED_NAV_PAGES = ['guide/creators/index.html'];
+const ALL_PAGES = [...PAGES, ...SHARED_NAV_PAGES];
 
 function renderNav(activeSlug) {
   const links = ITEMS.map((item) => {
@@ -83,7 +88,7 @@ function main() {
   let written = 0;
   let unchanged = 0;
 
-  for (const page of PAGES) {
+  for (const page of ALL_PAGES) {
     const pagePath = path.join(rootDir, page);
     if (!fs.existsSync(pagePath)) throw new Error(`missing page: ${page}`);
 
@@ -97,9 +102,9 @@ function main() {
     written++;
   }
 
-  console.log(`guide nav: ${ITEMS.length} links across ${PAGES.length} pages (${written} rewritten, ${unchanged} already current)`);
+  console.log(`guide nav: ${ITEMS.length} links across ${ALL_PAGES.length} pages (${written} rewritten, ${unchanged} already current)`);
 }
 
-module.exports = { ITEMS, PAGES, START_MARKER, END_MARKER, renderNav, pageSlug };
+module.exports = { ITEMS, PAGES, ALL_PAGES, START_MARKER, END_MARKER, renderNav, pageSlug };
 
 if (require.main === module) main();

@@ -1148,29 +1148,6 @@ function generate(sourcePath, templatePath) {
   return { success: true, errors: [], html: templateHtml };
 }
 
-// ===== SITEMAP =====
-
-// Editorial sitemap entries are hand-maintained, so the directory's entry drifts ahead of or
-// behind the page unless the refresh that rewrites the page also rewrites it.
-function updateSitemapLastmod(sitemapPath, pageUrl, lastmod) {
-  if (!fs.existsSync(sitemapPath)) return false;
-  var xml = fs.readFileSync(sitemapPath, 'utf8');
-  var matched = false;
-  var next = xml.replace(/<url>[\s\S]*?<\/url>/g, function (block) {
-    var loc = block.match(/<loc>([^<]+)<\/loc>/);
-    if (!loc || loc[1] !== pageUrl) return block;
-    var lastmodMatches = block.match(/<lastmod>[^<]*<\/lastmod>/g) || [];
-    if (lastmodMatches.length !== 1) {
-      throw new Error('sitemap entry must have exactly one lastmod for ' + pageUrl);
-    }
-    matched = true;
-    return block.replace(/<lastmod>[^<]*<\/lastmod>/, '<lastmod>' + lastmod + '</lastmod>');
-  });
-  if (!matched) throw new Error('sitemap.xml has no entry for ' + pageUrl);
-  fs.writeFileSync(sitemapPath, next, 'utf8');
-  return true;
-}
-
 // ===== CLI =====
 
 if (require.main === module) {
@@ -1199,11 +1176,6 @@ if (require.main === module) {
   if (result.html) {
     fs.writeFileSync(templatePath, result.html, 'utf8');
     console.log('Updated ' + templatePath);
-
-    var sitemapPath = path.join(rootDir, 'sitemap.xml');
-    var sitemapLastmod = updatedDate(JSON.parse(fs.readFileSync(sourcePath, 'utf8')));
-    updateSitemapLastmod(sitemapPath, SITE_ORIGIN + '/guide/creators/', sitemapLastmod);
-    console.log('Updated sitemap lastmod for /guide/creators/ -> ' + sitemapLastmod);
   }
 
   // Idempotency check
